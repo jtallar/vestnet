@@ -25,5 +25,5 @@ hs_err_pid*
 # intellij conf
 
 /target/
-/.classpath
+/*.classpath
 /*.project
