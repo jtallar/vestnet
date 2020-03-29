@@ -28,3 +28,4 @@ hs_err_pid*
 /*.classpath
 /*.project
 /apache-tomcat-7.0.103/
+/jetty-distribution-9.4.27.v20200227/
