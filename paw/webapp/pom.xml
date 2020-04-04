@@ -50,6 +50,11 @@
       <artifactId>interfaces</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

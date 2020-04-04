@@ -38,6 +38,7 @@
           <element id="archive" name="model-1.0.jar">
             <element id="module-output" name="model" />
           </element>
+          <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
