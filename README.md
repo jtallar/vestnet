@@ -1,6 +1,6 @@
 # WinWings
 
-###Local Database configuration 
+### Local Database configuration 
 Run Postgre service (macOS)
 ```
 pg_ctl -D /usr/local/var/postgres start
