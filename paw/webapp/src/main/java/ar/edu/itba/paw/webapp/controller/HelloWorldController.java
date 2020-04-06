@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
@@ -13,6 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class HelloWorldController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -30,6 +34,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/main")
     public ModelAndView mainView() {
         final ModelAndView mav = new ModelAndView("mainView");
+        mav.addObject("list", projectService.findAllProjects());
         return mav;
     }
 

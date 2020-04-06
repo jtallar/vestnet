@@ -7,25 +7,18 @@
 </head>
 <body>
 <div id="app">
-    <div class="alert alert-primary" role="alert">
-        A simple primary alert—check it out!
-    </div>
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+    <c:forEach items="${list}" var="project">
+        <div class="card m-2">
+            <div class="card-header">
+                <c:out value="${project.date}"></c:out>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><c:out value="${project.name}"></c:out></h5>
+                <p class="card-text"><c:out value="${project.summary}"></c:out></p>
+                <a href="#" class="btn btn-primary">More info</a>
+            </div>
         </div>
-    </div>
-
-    <div class="card mt-5" style="width: 18rem;">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
-    </div>
+    </c:forEach>
 </div>
 </body>
 </html>

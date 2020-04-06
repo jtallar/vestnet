@@ -14,4 +14,6 @@ public interface ProjectDao {
     public List<Project> findByName(String name);
 
     public Project create(String name, String summary, long ownerId, Date date);
+
+    public List<Project> findAllProjects();
 }

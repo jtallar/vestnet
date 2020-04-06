@@ -9,9 +9,11 @@ import java.util.Optional;
 
 public interface ProjectService {
 
-    Project create(String name, String summary, int ownerId, Date date);
+    public Project create(String name, String summary, int ownerId, Date date);
 
-    Optional<Project> findById(long id);
+    public Optional<Project> findById(long id);
 
-    List<Project> findByName(String name);
+    public List<Project> findByName(String name);
+
+    public List<Project> findAllProjects();
 }

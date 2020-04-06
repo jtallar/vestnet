@@ -10,11 +10,15 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository
 
 public class ProjectJdbcDao implements ProjectDao {
+
+
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
@@ -27,6 +31,23 @@ public class ProjectJdbcDao implements ProjectDao {
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("startUp")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    @Override
+    public List<Project> findAllProjects() {
+        // just testing before database connection
+
+        List<Project> listPro = new LinkedList<>();
+        Date date = new Date();
+        Project samsung = new Project(1, "Samsung", "Una empresa que vende electrodomésticos",1,new Date());
+        Project lg = new Project(2, "LG", "Otra empresa que vende electrodomésticos",1,new Date());
+        Project google = new Project(3, "Google", "StartUp de informática",2,new Date());
+
+        listPro.add(samsung);
+        listPro.add(lg);
+        listPro.add(google);
+
+        return listPro;
     }
 
     @Override

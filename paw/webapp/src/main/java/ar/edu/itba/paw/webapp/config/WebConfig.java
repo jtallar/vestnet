@@ -42,6 +42,7 @@ public class WebConfig {
         dataSource.setPassword("root"); // TODO tu contrasena
         return dataSource;
     }
+    /*
 
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
@@ -55,4 +56,6 @@ public class WebConfig {
 //        dbp.addScript(schemaSql); // TODO Ponerle el create a schema.sql sino tira error por estar vacio
         return dbp;
     }
+
+ */
 }
