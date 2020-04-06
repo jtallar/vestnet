@@ -12,9 +12,4 @@ createuser root
 Create paw database and access to it
 ```
 createdb paw -O root
-psql -W paw root
-```
-Run file schema.sql on database
-```
-\i ~/Desktop/schema.sql
 ```
