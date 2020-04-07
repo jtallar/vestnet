@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS cities (
 ** Entrepreneur, Investor (natural or legal person).
 */
 CREATE TABLE IF NOT EXISTS roles (
-    id              SERIAL PRIMARY KEY,
-    user_role       VARCHAR(15) NOT NULL
+    id              SMALLINT PRIMARY KEY,
+    user_role       VARCHAR(25) NOT NULL
 );
 
 
@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS project_categories (
 */
 CREATE TABLE IF NOT EXISTS stage_types (
     id              SERIAL PRIMARY KEY,
+    category_id     INT REFERENCES categories ON DELETE SET NULL,
     type_name       VARCHAR(25) NOT NULL
 );
 
@@ -138,7 +139,7 @@ CREATE TABLE IF NOT EXISTS stages (
     stage_number    SMALLINT NOT NULL,
 
     -- TOP INFO
-    type_id         INT REFERENCES stage_types,
+    type_id         INT REFERENCES stage_types ON DELETE SET NULL,
     duration        INTERVAL NOT NULL,
     key_result      VARCHAR(50) NOT NULL,
     cost            INT NOT NULL DEFAULT 0,
@@ -160,6 +161,7 @@ CREATE TABLE IF NOT EXISTS resource_types (
 CREATE TABLE IF NOT EXISTS resource_items (
     id              SERIAL PRIMARY KEY,
     type_id         INT REFERENCES resource_types ON DELETE RESTRICT,
+    category_id     INT REFERENCES categories ON DELETE SET NULL,
     item_name       VARCHAR(20) NOT NULL
 );
 
