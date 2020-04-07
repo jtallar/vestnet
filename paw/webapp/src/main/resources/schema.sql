@@ -8,12 +8,11 @@
 ** To avoid user manual input.
 */
 CREATE TABLE IF NOT EXISTS countries (
-    id              SERIAL PRIMARY KEY,
+    prefix          SMALLINT PRIMARY KEY,
     country         VARCHAR(25) NOT NULL,
 
     -- Prefix of the country and length of the number after the prefix.
-    prefix          SMALLINT NOT NULL,
-    phone_length    SMALLINT NUT NULL
+    phone_length    SMALLINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS provinces (
@@ -172,13 +171,3 @@ CREATE TABLE IF NOT EXISTS resources (
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
 );
-
-
-
-
-/****************************************
-**    ADD ALL INSERTS TO POPULATE DB   **
-*****************************************/
-
-
-
