@@ -9,25 +9,25 @@
 */
 CREATE TABLE IF NOT EXISTS countries (
     id              SERIAL PRIMARY KEY,
-    country         VARCHAR(25),
+    country         VARCHAR(25) NOT NULL,
 
     -- Prefix of the country and length of the number after the prefix.
-    prefix          SMALLINT,
-    phone_length    SMALLINT
+    prefix          SMALLINT NOT NULL,
+    phone_length    SMALLINT NUT NULL
 );
 
 CREATE TABLE IF NOT EXISTS provinces (
     id              SERIAL PRIMARY KEY,
     country_id      INT REFERENCES countries ON DELETE CASCADE,
 
-    province        VARCHAR(25)
+    province        VARCHAR(25) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS cities (
     id              SERIAl PRIMARY KEY,
     province_id     INT REFERENCES provinces ON DELETE CASCADE,
 
-    city            VARCHAR(25)
+    city            VARCHAR(25) NOT NULL
 );
 
 
