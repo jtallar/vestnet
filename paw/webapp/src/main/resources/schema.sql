@@ -109,8 +109,75 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 CREATE TABLE IF NOT EXISTS project_categories (
-    project_id      INT REFERENCES project ON DELETE CASCADE,
+    project_id      INT REFERENCES projects ON DELETE CASCADE,
     category_id     INT REFERENCES categories ON DELETE CASCADE,
 
     PRIMARY KEY (project_id, category_id)
+);
+
+
+/*
+** Stages. Each project needs to have at least one.
+** They determine cost. Additional info for investors.
+*/
+CREATE TABLE IF NOT EXISTS stage_types (
+    id              SERIAL PRIMARY KEY,
+    type_name       VARCHAR(25) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS stages (
+    project_id      INT REFERENCES projects ON DELETE CASCADE,
+    stage_number    SMALLINT NOT NULL,
+
+    -- TOP INFO
+    type_id         INT REFERENCES stage_types,
+    duration        INTERVAL NOT NULL,
+    key_result      VARCHAR(50) NOT NULL,
+    cost            INT NOT NULL DEFAULT 0,
+
+    PRIMARY KEY (project_id, stage_number)
+);
+
+/*
+** Resources per stage tables.
+** Infrastructure, human and law resources.
+*/
+CREATE TABLE IF NOT EXISTS infrastructure_resources (
+    project_id      INT NOT NULL,
+    stage_number    SMALLINT NOT NULL,
+    item_number     SMALLINT NOT NULL,
+
+    -- INFO
+    item            VARCHAR(20) NOT NULL,
+    cost            INT NOT NULL,
+
+    FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, stage_number, item_number)
+);
+
+CREATE TABLE IF NOT EXISTS law_resources (
+    project_id      INT NOT NULL,
+    stage_number    SMALLINT NOT NULL,
+    item_number     SMALLINT NOT NULL,
+
+    -- INFO
+    item            VARCHAR(20) NOT NULL,
+    cost            INT NOT NULL,
+
+    FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, stage_number, item_number)
+);
+
+CREATE TABLE IF NOT EXISTS human_resources (
+    project_id      INT NOT NULL,
+    stage_number    SMALLINT NOT NULL,
+    item_number     SMALLINT NOT NULL,
+
+    -- INFO
+    worker_type     VARCHAR(20) NOT NULL,
+    total_hours     SMALLINT NOT NULL,
+    cost_hour       INT NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, stage_number, item_number)
 );
