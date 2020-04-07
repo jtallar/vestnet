@@ -38,8 +38,8 @@ public class WebConfig {
         final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriverClass(org.postgresql.Driver.class);
         dataSource.setUrl("jdbc:postgresql://localhost/paw");
-        dataSource.setUsername("root"); // TODO usuario linux
-        dataSource.setPassword("root"); // TODO tu contrasena
+        dataSource.setUsername("root");
+        dataSource.setPassword("root");
         return dataSource;
     }
 
@@ -52,7 +52,7 @@ public class WebConfig {
     }
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-//        dbp.addScript(schemaSql); // TODO Ponerle el create a schema.sql sino tira error por estar vacio
+        dbp.addScript(schemaSql);
         return dbp;
     }
 }
