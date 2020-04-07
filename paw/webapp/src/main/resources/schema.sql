@@ -171,3 +171,22 @@ CREATE TABLE IF NOT EXISTS resources (
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
 );
+
+
+
+-- Drop all created tables
+/*
+DROP TABLE countries CASCADE;
+DROP TABLE provinces CASCADE;
+DROP TABLE cities CASCADE;
+DROP TABLE roles CASCADE;
+DROP TABLE users CASCADE;
+DROP TABLE projects CASCADE;
+DROP TABLE categories CASCADE;
+DROP TABLE project_categories CASCADE;
+DROP TABLE stage_types CASCADE;
+DROP TABLE stages CASCADE;
+DROP TABLE resource_types CASCADE;
+DROP TABLE resource_items CASCADE;
+DROP TABLE resources CASCADE;
+*/
