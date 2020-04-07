@@ -1,3 +1,7 @@
+/****************************************
+**     CREATE ALL NECESSARY TABLES     **
+*****************************************/
+
 /*
 ** Countries, provinces and cities lists.
 ** Each references the previous one.
@@ -142,57 +146,39 @@ CREATE TABLE IF NOT EXISTS stages (
 ** Resources per stage tables.
 ** Infrastructure, human and law resources.
 */
-CREATE TABLE IF NOT EXISTS infrastructure_items (
+-- Human, infrastructure and law for example.
+CREATE TABLE IF NOT EXISTS resource_types (
     id              SERIAL PRIMARY KEY,
+    type_name       VARCHAR(20) NOT NULL
+);
+
+-- All items for each type of resource. Ex Software Developer -> Human resources.
+CREATE TABLE IF NOT EXISTS resource_items (
+    id              SERIAL PRIMARY KEY,
+    type_id         INT REFERENCES resource_types ON DELETE RESTRICT,
     item_name       VARCHAR(20) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS infrastructure_resources (
+CREATE TABLE IF NOT EXISTS resources (
     project_id      INT NOT NULL,
     stage_number    SMALLINT NOT NULL,
     item_number     SMALLINT NOT NULL,
 
     -- INFO
-    item_id         INT REFERENCES infrastructure_items ON DELETE RESTRICT,
+    item_id         INT REFERENCES resource_items ON DELETE RESTRICT,
+    quantity        SMALLINT NOT NULL DEFAULT 1,
     cost            INT NOT NULL,
 
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
 );
 
-CREATE TABLE IF NOT EXISTS law_items (
-    id              SERIAL PRIMARY KEY,
-    item_name       VARCHAR(20) NOT NULL
-);
 
-CREATE TABLE IF NOT EXISTS law_resources (
-    project_id      INT NOT NULL,
-    stage_number    SMALLINT NOT NULL,
-    item_number     SMALLINT NOT NULL,
 
-    -- INFO
-    item_id         INT REFERENCES law_items ON DELETE RESTRICT,
-    cost            INT NOT NULL,
 
-    FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
-    PRIMARY KEY (project_id, stage_number, item_number)
-);
+/****************************************
+**    ADD ALL INSERTS TO POPULATE DB   **
+*****************************************/
 
-CREATE TABLE IF NOT EXISTS worker_types (
-    id              SERIAL PRIMARY KEY,
-    worker_type     VARCHAR(20) NOT NULL
-);
 
-CREATE TABLE IF NOT EXISTS human_resources (
-    project_id      INT NOT NULL,
-    stage_number    SMALLINT NOT NULL,
-    item_number     SMALLINT NOT NULL,
 
-    -- INFO
-    worker_type_id  INT REFERENCES worker_types ON DELETE RESTRICT,
-    total_hours     SMALLINT NOT NULL,
-    cost_hour       INT NOT NULL DEFAULT 0,
-
-    FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
-    PRIMARY KEY (project_id, stage_number, item_number)
-);
