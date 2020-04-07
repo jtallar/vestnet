@@ -8,25 +8,27 @@
 ** To avoid user manual input.
 */
 CREATE TABLE IF NOT EXISTS countries (
-    prefix          SMALLINT PRIMARY KEY,
-    country         VARCHAR(25) NOT NULL,
+    id              SMALLINT PRIMARY KEY,
+    country         VARCHAR(50) NOT NULL,
 
-    -- Prefix of the country and length of the number after the prefix.
-    phone_length    SMALLINT NOT NULL
+    -- EXTRA INFO
+    iso2            VARCHAR(2),
+    phonecode       VARCHAR(10),
+    currency        VARCHAR(5)
 );
 
-CREATE TABLE IF NOT EXISTS provinces (
+CREATE TABLE IF NOT EXISTS states (
     id              SERIAL PRIMARY KEY,
-    country_id      INT REFERENCES countries ON DELETE CASCADE,
+    state           VARCHAR(50) NOT NULL,
 
-    province        VARCHAR(25) NOT NULL
+    country_id      INT REFERENCES countries ON DELETE CASCADE,
+    iso2            VARCHAR(2)
 );
 
 CREATE TABLE IF NOT EXISTS cities (
     id              SERIAl PRIMARY KEY,
-    province_id     INT REFERENCES provinces ON DELETE CASCADE,
-
-    city            VARCHAR(25) NOT NULL
+    city            VARCHAR(50) NOT NULL,
+    state_id        INT REFERENCES states ON DELETE CASCADE
 );
 
 
@@ -54,7 +56,7 @@ CREATE TABLE IF NOT EXISTS users (
     real_id         VARCHAR(15) NOT NULL,
     -- Location.
     country_id      INT REFERENCES countries ON DELETE RESTRICT,
-    province_id     INT REFERENCES provinces ON DELETE RESTRICT,
+    state_id        INT REFERENCES states ON DELETE RESTRICT,
     city_id         INT REFERENCES cities ON DELETE RESTRICT,
     -- Aux date. Format should be dd/mm/yyy. For natural persons its birth date.
     aux_date        DATE NOT NULL,
