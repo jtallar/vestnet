@@ -14,21 +14,24 @@ CREATE TABLE IF NOT EXISTS countries (
     -- EXTRA INFO
     iso2            VARCHAR(2),
     phonecode       VARCHAR(10),
-    currency        VARCHAR(5)
+    currency        VARCHAR(10),
+    last_update     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS states (
-    id              SERIAL PRIMARY KEY,
-    state           VARCHAR(50) NOT NULL,
+    id              INT PRIMARY KEY,
+    state           VARCHAR(75) NOT NULL,
 
     country_id      INT REFERENCES countries ON DELETE CASCADE,
-    iso2            VARCHAR(2)
+    iso2            VARCHAR(10),
+    last_update     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS cities (
-    id              SERIAl PRIMARY KEY,
-    city            VARCHAR(50) NOT NULL,
-    state_id        INT REFERENCES states ON DELETE CASCADE
+    id              INT PRIMARY KEY,
+    city            VARCHAR(75) NOT NULL,
+    state_id        INT REFERENCES states ON DELETE CASCADE,
+    last_update     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -173,22 +176,3 @@ CREATE TABLE IF NOT EXISTS resources (
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
 );
-
-
-
--- Drop all created tables
-/*
-DROP TABLE countries CASCADE;
-DROP TABLE provinces CASCADE;
-DROP TABLE cities CASCADE;
-DROP TABLE roles CASCADE;
-DROP TABLE users CASCADE;
-DROP TABLE projects CASCADE;
-DROP TABLE categories CASCADE;
-DROP TABLE project_categories CASCADE;
-DROP TABLE stage_types CASCADE;
-DROP TABLE stages CASCADE;
-DROP TABLE resource_types CASCADE;
-DROP TABLE resource_items CASCADE;
-DROP TABLE resources CASCADE;
-*/
