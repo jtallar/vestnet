@@ -33,6 +33,12 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(value = "/header")
+    public ModelAndView headerComponent() {
+        final ModelAndView mav = new ModelAndView("header");
+        return mav;
+    }
+
     @RequestMapping(value = "/create", method = {RequestMethod.POST})
     public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
         final User user = userService.create(username);
