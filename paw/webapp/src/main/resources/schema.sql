@@ -142,17 +142,27 @@ CREATE TABLE IF NOT EXISTS stages (
 ** Resources per stage tables.
 ** Infrastructure, human and law resources.
 */
+CREATE TABLE IF NOT EXISTS infrastructure_items (
+    id              SERIAL PRIMARY KEY,
+    item_name       VARCHAR(20) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS infrastructure_resources (
     project_id      INT NOT NULL,
     stage_number    SMALLINT NOT NULL,
     item_number     SMALLINT NOT NULL,
 
     -- INFO
-    item            VARCHAR(20) NOT NULL,
+    item_id         INT REFERENCES infrastructure_items ON DELETE RESTRICT,
     cost            INT NOT NULL,
 
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
+);
+
+CREATE TABLE IF NOT EXISTS law_items (
+    id              SERIAL PRIMARY KEY,
+    item_name       VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS law_resources (
@@ -161,11 +171,16 @@ CREATE TABLE IF NOT EXISTS law_resources (
     item_number     SMALLINT NOT NULL,
 
     -- INFO
-    item            VARCHAR(20) NOT NULL,
+    item_id         INT REFERENCES law_items ON DELETE RESTRICT,
     cost            INT NOT NULL,
 
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
+);
+
+CREATE TABLE IF NOT EXISTS worker_types (
+    id              SERIAL PRIMARY KEY,
+    worker_type     VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS human_resources (
@@ -174,7 +189,7 @@ CREATE TABLE IF NOT EXISTS human_resources (
     item_number     SMALLINT NOT NULL,
 
     -- INFO
-    worker_type     VARCHAR(20) NOT NULL,
+    worker_type_id  INT REFERENCES worker_types ON DELETE RESTRICT,
     total_hours     SMALLINT NOT NULL,
     cost_hour       INT NOT NULL DEFAULT 0,
 
