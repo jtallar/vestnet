@@ -44,11 +44,11 @@ public class HelloWorldController {
     @RequestMapping(value = "/projects/{id}")
     public ModelAndView singleProjectView(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("singleProjectView");
-        mav.addObject("project", new Project(id, "Proyecto de prueba 1", SUMMARY, 1, null));
+        mav.addObject("project", new Project(id, "Proyecto de prueba 1", SUMMARY, null, null, 0, 0, false, null, null, null, null));
         mav.addObject("owner", "Julian Tallar");
         return mav;
     }
-
+/*
     @RequestMapping(value = "/create", method = {RequestMethod.POST})
     public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
         final User user = userService.create(username);
