@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Primary
+/*@Primary
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -25,4 +25,4 @@ public class UserServiceImpl implements UserService {
     public User create(final String username) {
         return userDao.create(username);
     }
-}
+}*/
