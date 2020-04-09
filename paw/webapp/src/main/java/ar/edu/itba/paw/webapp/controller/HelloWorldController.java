@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.CategoriesDao;
+import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.ProjectCategories;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
@@ -19,6 +22,9 @@ public class HelloWorldController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CategoriesService categoriesService;
+
     //@Autowired
     //private ProjectService projectService;
 
@@ -33,6 +39,8 @@ public class HelloWorldController {
     public ModelAndView helloWorld(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
+        List<Category> catList = categoriesService.findAllCats();
+        //mav.addObject("cats", catList);
         return mav;
     }
 /*
