@@ -15,6 +15,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
+/*
 @Repository
 
 public class ProjectJdbcDao implements ProjectDao {
@@ -36,7 +38,9 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> filterProjectByCategory(ProjectCategories cat) {
+
         List<Project> listPro = new LinkedList<>();
+
         Date date = new Date();
         Project samsung = new Project(1, "Samsung", "Una empresa que vende electrodomésticos",1,new Date(), ProjectCategories.Financiero );
         Project lg = new Project(2, "LG", "Otra empresa que vende electrodomésticos",1,new Date(), ProjectCategories.Gastronomico);
@@ -54,7 +58,11 @@ public class ProjectJdbcDao implements ProjectDao {
             }
         });
 
+
+
         return listPro;
+
+
     }
 
     @Override
@@ -62,6 +70,7 @@ public class ProjectJdbcDao implements ProjectDao {
         // just testing before database connection
 
         List<Project> listPro = new LinkedList<>();
+        /*
         Date date = new Date();
         Project samsung = new Project(1, "Samsung", "Una empresa que vende electrodomésticos",1,new Date(), ProjectCategories.Financiero );
         Project lg = new Project(2, "LG", "Otra empresa que vende electrodomésticos",1,new Date(), ProjectCategories.Gastronomico);
@@ -70,6 +79,7 @@ public class ProjectJdbcDao implements ProjectDao {
         listPro.add(samsung);
         listPro.add(lg);
         listPro.add(google);
+
 
         return listPro;
     }
@@ -88,6 +98,7 @@ public class ProjectJdbcDao implements ProjectDao {
     @Override
     public Project create(String name, String summary, long ownerId, Date date, ProjectCategories cat) {
         Map<String, Object> values = new HashMap<String, Object>();
+
         values.put("name", name);
         values.put("summary", summary);
         values.put("ownerId", ownerId);
@@ -100,3 +111,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     //we will want to add list of projects
 }
+
+*/
+
+

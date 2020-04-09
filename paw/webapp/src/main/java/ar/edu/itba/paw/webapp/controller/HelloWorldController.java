@@ -16,11 +16,11 @@ import java.util.List;
 
 @Controller
 public class HelloWorldController {
-    @Autowired
-    private UserService userService;
+    //@Autowired
+    //private UserService userService;
 
-    @Autowired
-    private ProjectService projectService;
+    //@Autowired
+    //private ProjectService projectService;
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -28,6 +28,7 @@ public class HelloWorldController {
         return new ModelAndView("404");
     }
 
+    /*
     @RequestMapping("/{id}")
     public ModelAndView helloWorld(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("index");
@@ -49,4 +50,6 @@ public class HelloWorldController {
         final User user = userService.create(username);
         return new ModelAndView("redirect:/" + user.getId());
     }
+
+     */
 }

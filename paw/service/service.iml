@@ -26,6 +26,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.2.5.RELEASE" level="project" />
     <orderEntry type="module" module-name="interfaces" />
     <orderEntry type="module" module-name="model" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.10.5" level="project" />
     <orderEntry type="module" module-name="persistence" scope="RUNTIME" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.springframework:spring-jdbc:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.springframework:spring-tx:4.2.5.RELEASE" level="project" />

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+/*
 @Primary
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -45,4 +45,8 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> filterProjectByCategory(ProjectCategories cat) {
         return projectDao.filterProjectByCategory(cat);
     }
+
+
 }
+
+ */
