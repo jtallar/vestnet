@@ -23,7 +23,7 @@ public class Location {
         return city;
     }
 
-    public class Country {
+    public static class Country {
         private final int id;
         private final String name;
         private final String isoCode;
@@ -59,7 +59,7 @@ public class Location {
         }
     }
 
-    public class State {
+    public static class State {
         private final int id;
         private final String name;
         private final String isoCode;
@@ -83,7 +83,7 @@ public class Location {
         }
     }
 
-    public class City {
+    public static class City {
         private final int id;
         private final String name;
 

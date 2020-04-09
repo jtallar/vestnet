@@ -92,7 +92,7 @@ public class Project {
         this.stages = stages;
     }
 
-    public class ProjectBackOffice {
+    public static class ProjectBackOffice {
         private final boolean approved;
         private final int profitIndex;
         private final int riskIndex;
