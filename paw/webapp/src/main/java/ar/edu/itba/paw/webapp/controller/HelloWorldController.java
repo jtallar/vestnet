@@ -16,8 +16,8 @@ import java.util.List;
 
 @Controller
 public class HelloWorldController {
-    //@Autowired
-    //private UserService userService;
+    @Autowired
+    private UserService userService;
 
     //@Autowired
     //private ProjectService projectService;
@@ -28,14 +28,14 @@ public class HelloWorldController {
         return new ModelAndView("404");
     }
 
-    /*
+
     @RequestMapping("/{id}")
     public ModelAndView helloWorld(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         return mav;
     }
-
+/*
     @RequestMapping(value = "/main")
     public ModelAndView mainView() {
         final ModelAndView mav = new ModelAndView("mainView");
