@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.ProjectCategories;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Controller
 public class HelloWorldController {
-    @Autowired
-    private UserService userService;
+    //@Autowired
+    //private UserService userService;
 
-    @Autowired
-    private ProjectService projectService;
+    //@Autowired
+    //private ProjectService projectService;
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -24,6 +28,7 @@ public class HelloWorldController {
         return new ModelAndView("404");
     }
 
+    /*
     @RequestMapping("/{id}")
     public ModelAndView helloWorld(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("index");
@@ -35,6 +40,8 @@ public class HelloWorldController {
     public ModelAndView mainView() {
         final ModelAndView mav = new ModelAndView("mainView");
         mav.addObject("list", projectService.findAllProjects());
+        List<ProjectCategories> catList = Arrays.asList(ProjectCategories.class.getEnumConstants());
+        mav.addObject("cat", catList);
         return mav;
     }
 
@@ -43,4 +50,6 @@ public class HelloWorldController {
         final User user = userService.create(username);
         return new ModelAndView("redirect:/" + user.getId());
     }
+
+     */
 }

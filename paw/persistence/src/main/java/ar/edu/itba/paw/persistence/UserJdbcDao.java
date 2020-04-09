@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/*
 @Repository
 public class UserJdbcDao implements UserDao {
     private JdbcTemplate jdbcTemplate;
@@ -49,3 +50,4 @@ public class UserJdbcDao implements UserDao {
         return new User(keyNumber.longValue(), username);
     }
 }
+*/

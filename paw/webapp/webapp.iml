@@ -44,6 +44,7 @@
     <orderEntry type="module" module-name="persistence" scope="RUNTIME" />
     <orderEntry type="module" module-name="interfaces" />
     <orderEntry type="module" module-name="model" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.10.5" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:jstl:1.2" level="project" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.0.0.GA" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator:4.3.1.Final" level="project" />

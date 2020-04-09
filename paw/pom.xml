@@ -28,6 +28,7 @@
     <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
                     
     <org.eclipse.jetty.version>9.4.27.v20200227</org.eclipse.jetty.version>
+    <joda-time.version>2.10.5</joda-time.version>
   </properties>
 
   <dependencyManagement>
@@ -80,6 +81,12 @@
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${org.postgresql.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${joda-time.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
