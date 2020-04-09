@@ -41,11 +41,11 @@ public class WebConfig {
         final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriverClass(org.postgresql.Driver.class);
         dataSource.setUrl("jdbc:postgresql://localhost/paw");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setUsername("root"); // TODO usuario linux
+        dataSource.setPassword("root"); // TODO tu contrasena
         return dataSource;
     }
-/*
+
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
@@ -55,11 +55,11 @@ public class WebConfig {
     }
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-        dbp.addScript(schemaSql);
+        dbp.addScript(schemaSql); // TODO Ponerle el create a schema.sql sino tira error por estar vacio
         return dbp;
     }
 
- */
+
 
     @Bean
     public MessageSource messageSource() {
