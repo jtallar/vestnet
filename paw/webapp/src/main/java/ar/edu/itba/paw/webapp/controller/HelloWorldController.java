@@ -16,11 +16,11 @@ import java.util.List;
 
 @Controller
 public class HelloWorldController {
-    //@Autowired
-    //private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
-    //@Autowired
-    //private ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -28,28 +28,26 @@ public class HelloWorldController {
         return new ModelAndView("404");
     }
 
-    /*
-    @RequestMapping("/{id}")
+    /*@RequestMapping("/{id}")
     public ModelAndView helloWorld(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         return mav;
-    }
+    }*/
 
     @RequestMapping(value = "/main")
     public ModelAndView mainView() {
         final ModelAndView mav = new ModelAndView("mainView");
-        mav.addObject("list", projectService.findAllProjects());
+        mav.addObject("list", projectService.findAll());
         List<ProjectCategories> catList = Arrays.asList(ProjectCategories.class.getEnumConstants());
         mav.addObject("cat", catList);
         return mav;
     }
 
-    @RequestMapping(value = "/create", method = {RequestMethod.POST})
+    /*@RequestMapping(value = "/create", method = {RequestMethod.POST})
     public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
         final User user = userService.create(username);
         return new ModelAndView("redirect:/" + user.getId());
-    }
+    }*/
 
-     */
 }

@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.ProjectCategories;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 
 import java.util.Date;
 import java.util.List;
@@ -10,13 +8,30 @@ import java.util.Optional;
 
 public interface ProjectService {
 
-    public Project create(String name, String summary, int ownerId, Date date, ProjectCategories cat);
+    /**
+     * Finds a project given its id
+     * @param id The unique id for the project
+     * @return The matched project or null otherwise
+     */
+    Optional<Project> findById(long id);
 
-    public Optional<Project> findById(long id);
+    /**
+     * Find all available projects
+     * @return List of available projects
+     */
+    List<Project> findAll();
 
-    public List<Project> findByName(String name);
+    /**
+     * Finds a list of projects that matches one or more categories
+     * @param categories The list of categories to find
+     * @return List of available projects that fit those categories
+     */
+    List<Project> findByCategories(List<Category> categories);
 
-    public List<Project> findAllProjects();
-
-    public List<Project> filterProjectByCategory(ProjectCategories cat);
+    /**
+     * Create a project given all thes parameters
+     * @return The created project
+     */
+    Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
+                   List<Category> categories, List<Stage> stages);
 }
