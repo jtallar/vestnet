@@ -40,7 +40,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         List<Category> catList = categoriesService.findAllCats();
-        //mav.addObject("cats", catList);
+        mav.addObject("cats", catList);
         return mav;
     }
 /*

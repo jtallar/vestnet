@@ -6,6 +6,6 @@
     <h5>Your id is ${user.id}</h5>
 </body>
 <c:forEach items="${cats}" var="category">
-    <p>fewqf</p>
+    <p><c:out value="${category.name}"/></p>
 </c:forEach>
 </html>
