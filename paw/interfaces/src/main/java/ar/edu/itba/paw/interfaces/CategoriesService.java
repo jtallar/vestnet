@@ -7,4 +7,6 @@ import java.util.List;
 public interface CategoriesService {
 
     List<Category> findAllCats();
+
+    List<Category> findProjectCategories(long projectId);
 }

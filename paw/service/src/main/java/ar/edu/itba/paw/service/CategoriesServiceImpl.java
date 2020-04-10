@@ -21,4 +21,9 @@ public class CategoriesServiceImpl implements CategoriesService {
     public List<Category> findAllCats() {
         return categoriesDao.findAllCats();
     }
+
+    @Override
+    public List<Category> findProjectCategories(long projectId) {
+        return categoriesDao.findProjectCategories(projectId);
+    }
 }
