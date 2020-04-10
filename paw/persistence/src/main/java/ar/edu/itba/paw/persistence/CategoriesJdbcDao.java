@@ -20,7 +20,7 @@ public class CategoriesJdbcDao implements CategoriesDao {
     private JdbcTemplate jdbcTemplate;
 
     private final static RowMapper<Category> ROW_MAPPER = (rs, rowNum) ->
-            new Category(rs.getInt("id"), rs.getString("category"), null);
+            new Category(rs.getLong("id"), rs.getString("category"), rs.getLong("parent"));
 
 
     @Autowired
@@ -29,7 +29,19 @@ public class CategoriesJdbcDao implements CategoriesDao {
     }
     @Override
     public List<Category> findAllCats() {
-        List<Category> catList = jdbcTemplate.query("SELECT * FROM categories", ROW_MAPPER);
-        return catList;
+        return jdbcTemplate.query("SELECT * FROM categories", ROW_MAPPER);
+    }
+
+    // TODO> ESTE SE SUPONE QUE VA ACA O EN PROJECT? LO NECESITA PROJECT, PERO NECESITO ESTE ROW MAPPER
+    @Override
+    public List<Category> findProjectCategories(long projectId) {
+        return jdbcTemplate.query("SELECT categories.id, categories.category, categories.parent " +
+                "FROM categories JOIN project_categories ON project_categories.category_id = categories.id " +
+                "WHERE project_categories.project_id = ?", ROW_MAPPER, projectId);
+    }
+
+
+    static RowMapper<Category> getRowMapper() {
+        return ROW_MAPPER;
     }
 }

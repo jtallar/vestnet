@@ -20,7 +20,7 @@ public class UserJdbcDao implements UserDao {
     private SimpleJdbcInsert jdbcInsert;
 
     private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) ->
-            new User(rs.getInt("id"), rs.getString("first_name"),
+            new User(rs.getLong("id"), rs.getString("first_name"),
             rs.getString("last_name"), rs.getString("real_id"), rs.getDate("aux_date"),
             new Location(new Location.Country(rs.getInt("country_id"), rs.getString("country"), rs.getString("iso2"), rs.getString("phonecode"), rs.getString("currency")),
                     new Location.State(rs.getInt("state_id"),rs.getString("state"), rs.getString("iso2"), rs.getString("country")),

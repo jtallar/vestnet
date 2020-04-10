@@ -45,7 +45,9 @@ public class ProjectJdbcDao implements ProjectDao {
         Optional<Project> project = jdbcTemplate.query("SELECT * FROM projects WHERE projects.id = ?", ROW_MAPPER, id)
                 .stream().findFirst();
         if (project.isPresent()) {
-            // TODO:ADD CATEGORIES AND STAGES
+            // TODO:ADD STAGES
+            // TODO: VER SI ESTO ME MODIFICA EL OBJETO REFERENCIADO POR EL OPTIONAL
+            project.get().setCategories(findProjectCategories(project.get().getId()));
         }
         return project;
     }
@@ -55,7 +57,8 @@ public class ProjectJdbcDao implements ProjectDao {
         // TODO: TEST WHAT HAPPENS IF NO PROJECTS ARE LOADED --> NULL o EMPTY LIST?
         List<Project> projects = jdbcTemplate.query("SELECT * FROM projects", ROW_MAPPER);
         for(Project project : projects) {
-            // TODO:ADD CATEGORIES AND STAGES
+            // TODO:ADD STAGES
+            project.setCategories(findProjectCategories(project.getId()));
         }
         return projects;
     }
@@ -68,7 +71,8 @@ public class ProjectJdbcDao implements ProjectDao {
                 "WHERE project_categories.category_id IN (?)",
                 ROW_MAPPER, categories.stream().map(Category::getId).collect(Collectors.toList()));
         for(Project project : projects) {
-            // TODO:ADD CATEGORIES AND STAGES
+            // TODO:ADD STAGES
+            project.setCategories(findProjectCategories(project.getId()));
         }
         return projects;
     }
@@ -89,6 +93,13 @@ public class ProjectJdbcDao implements ProjectDao {
         return new Project(keyNumber.longValue(), name, summary, publishDate, updateDate, cost, 0, false, owner,
                 new Project.ProjectBackOffice(false, 0, 0), categories,
                 stages.stream().map(Stage::getId).collect(Collectors.toList()), stages);
+    }
+
+    // TODO: ESTE METODO VA ACA? O EN CATEGORIES DAO? SI VA ALLA, COMO LO LLAMO SI NO TENGO LA INSTANCIA?
+    private List<Category> findProjectCategories(long projectId) {
+        return jdbcTemplate.query("SELECT categories.id, categories.category, categories.parent " +
+                "FROM categories JOIN project_categories ON project_categories.category_id = categories.id " +
+                "WHERE project_categories.project_id = ?", CategoriesJdbcDao.getRowMapper(), projectId);
     }
 
 }
