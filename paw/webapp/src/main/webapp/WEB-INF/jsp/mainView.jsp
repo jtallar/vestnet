@@ -30,9 +30,9 @@
 
                 </div>
                 <div class="card-body">
-                    <c:out value="${project.date}"></c:out>
+                    <c:out value="${project.publishDate}"></c:out>
                     <p class="card-text"><c:out value="${project.summary}"></c:out></p>
-                    <p class="card-text" id="category"><spring:message code="${project.cat}"/></p>
+<%--                    <p class="card-text" id="category"><spring:message code="${project.cat}"/></p>--%>
                     <a href="#" class="btn btn-primary">More info</a>
                 </div>
             </div>

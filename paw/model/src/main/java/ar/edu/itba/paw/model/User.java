@@ -3,7 +3,7 @@ package ar.edu.itba.paw.model;
 import java.net.URI;
 import java.util.Date;
 
-public abstract class User {
+public class User {
 
     private final long id;
     // TODO> VER SI SON FINAL O EDITABLES. POR AHORA MANDO FINAL, CUALQUIER  COSA SACARLO
@@ -19,10 +19,10 @@ public abstract class User {
     private final String linkedin;
 
     private final Date joinDate;
-    private final URI profilePicture;
+    private final String profilePicture; //if we need URI then change it later
     private int trustIndex;
 
-    public User(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, URI profilePicture, Date joinDate, int trustIndex) {
+    public User(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -73,7 +73,7 @@ public abstract class User {
         return linkedin;
     }
 
-    public URI getProfilePicture() {
+    public String getProfilePicture() {
         return profilePicture;
     }
 

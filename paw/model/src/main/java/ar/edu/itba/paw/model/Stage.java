@@ -5,6 +5,7 @@ import org.joda.time.Interval;
 import java.util.List;
 
 public class Stage {
+    private final long id;
     private final int number;
     private final String keyResult;
     private final int cost;
@@ -12,13 +13,18 @@ public class Stage {
     private final Interval duration;
     private final List<StageResource> resources;
 
-    public Stage(int number, String keyResult, int cost, StageType type, Interval duration, List<StageResource> resources) {
+    public Stage(long id, int number, String keyResult, int cost, StageType type, Interval duration, List<StageResource> resources) {
+        this.id = id;
         this.number = number;
         this.keyResult = keyResult;
         this.cost = cost;
         this.type = type;
         this.duration = duration;
         this.resources = resources;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public int getNumber() {
