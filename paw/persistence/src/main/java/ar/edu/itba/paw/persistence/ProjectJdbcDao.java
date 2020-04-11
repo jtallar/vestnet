@@ -42,14 +42,15 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public Optional<Project> findById(long id) {
-        Optional<Project> project = jdbcTemplate.query("SELECT * FROM projects WHERE projects.id = ?", ROW_MAPPER, id)
+        Optional<Project> mayBeProject = jdbcTemplate.query("SELECT * FROM projects WHERE projects.id = ?", ROW_MAPPER, id)
                 .stream().findFirst();
-        if (project.isPresent()) {
+        if (mayBeProject.isPresent()) {
             // TODO:ADD STAGES
-            // TODO: VER SI ESTO ME MODIFICA EL OBJETO REFERENCIADO POR EL OPTIONAL
-            project.get().setCategories(findProjectCategories(project.get().getId()));
+            Optional<User> owner = findUserById(mayBeProject.get().getOwnerUserId());
+            if (owner.isPresent()) mayBeProject.get().setOwner(owner.get());
+            mayBeProject.get().setCategories(findProjectCategories(mayBeProject.get().getId()));
         }
-        return project;
+        return mayBeProject;
     }
 
     @Override
@@ -57,7 +58,9 @@ public class ProjectJdbcDao implements ProjectDao {
         // TODO: TEST WHAT HAPPENS IF NO PROJECTS ARE LOADED --> NULL o EMPTY LIST?
         List<Project> projects = jdbcTemplate.query("SELECT * FROM projects", ROW_MAPPER);
         for(Project project : projects) {
-            // TODO:ADD STAGES
+            // TODO: NO AGREGAR STAGES, NO?
+            Optional<User> owner = findUserById(project.getOwnerUserId());
+            if (owner.isPresent()) project.setOwner(owner.get());
             project.setCategories(findProjectCategories(project.getId()));
         }
         return projects;
@@ -71,7 +74,9 @@ public class ProjectJdbcDao implements ProjectDao {
                 "WHERE project_categories.category_id IN (?)",
                 ROW_MAPPER, categories.stream().map(Category::getId).collect(Collectors.toList()));
         for(Project project : projects) {
-            // TODO:ADD STAGES
+            // TODO:ADD STAGES?
+            Optional<User> owner = findUserById(project.getOwnerUserId());
+            if (owner.isPresent()) project.setOwner(owner.get());
             project.setCategories(findProjectCategories(project.getId()));
         }
         return projects;
@@ -100,6 +105,18 @@ public class ProjectJdbcDao implements ProjectDao {
         return jdbcTemplate.query("SELECT categories.id, categories.category, categories.parent " +
                 "FROM categories JOIN project_categories ON project_categories.category_id = categories.id " +
                 "WHERE project_categories.project_id = ?", CategoriesJdbcDao.getRowMapper(), projectId);
+    }
+
+    // TODO: ESTE METODO VA ACA? O EN USER DAO? SI VA ALLA, COMO LO LLAMO SI NO TENGO LA INSTANCIA?
+    private Optional<User> findUserById(long id) {
+        return jdbcTemplate.query(
+                "SELECT *" +
+                        "FROM users JOIN countries ON (users.country_id = countries.id) " +
+                        "JOIN cities ON (users.city_id = cities.id) " +
+                        "JOIN states ON (users.state_id = states.id) " +
+                        "WHERE users.id = ? "
+                , new Object[] {id}, UserJdbcDao.getRowMapper())
+                .stream().findFirst();
     }
 
 }
