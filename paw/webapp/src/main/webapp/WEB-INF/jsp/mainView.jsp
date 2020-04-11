@@ -12,7 +12,7 @@
                 <select class="custom-select mr-sm-2" id = "category" >
                     <option value="null" selected = "selected"><spring:message code="nofilter"/></option>
                     <c:forEach items="${cat}" var="category">
-                        <option value="${category}"><spring:message code="${category}"/></option>
+                        <option value="${category.name}"><spring:message code="${category.name}"/></option>
                     </c:forEach>
                 </select>
         </div>

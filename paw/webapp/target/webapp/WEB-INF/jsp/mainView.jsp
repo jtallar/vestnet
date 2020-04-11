@@ -12,7 +12,7 @@
                 <select class="custom-select mr-sm-2" id = "category" >
                     <option value="null" selected = "selected"><spring:message code="nofilter"/></option>
                     <c:forEach items="${cat}" var="category">
-                        <option value="${category}"><spring:message code="${category}"/></option>
+                        <option value="${category.name}"><spring:message code="${category.name}"/></option>
                     </c:forEach>
                 </select>
         </div>
@@ -30,9 +30,9 @@
 
                 </div>
                 <div class="card-body">
-                    <c:out value="${project.date}"></c:out>
+                    <c:out value="${project.publishDate}"></c:out>
                     <p class="card-text"><c:out value="${project.summary}"></c:out></p>
-                    <p class="card-text" id="category"><spring:message code="${project.cat}"/></p>
+<%--                    <p class="card-text" id="category"><spring:message code="${project.cat}"/></p>--%>
                     <a href="#" class="btn btn-primary">More info</a>
                 </div>
             </div>

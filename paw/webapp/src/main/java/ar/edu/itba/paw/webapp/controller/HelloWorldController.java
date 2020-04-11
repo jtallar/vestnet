@@ -49,7 +49,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("mainView");
         mav.addObject("list", projectService.findAll());
         // TODO: CAMBIARLO A findAllCats cuando sepamos que onda lo de locale obtenido de la BD
-        List<ProjectCategories> catList = Arrays.asList(ProjectCategories.class.getEnumConstants());
+        List<Category> catList = categoriesService.findAllCats();
         mav.addObject("cat", catList);
         return mav;
     }
