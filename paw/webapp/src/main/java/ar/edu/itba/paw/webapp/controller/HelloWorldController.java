@@ -5,8 +5,10 @@ import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
+import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.ProjectCategories;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class HelloWorldController {
@@ -28,7 +31,7 @@ public class HelloWorldController {
     @Autowired
     private CategoriesService categoriesService;
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler({UserNotFoundException.class, ProjectNotFoundException.class})
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {
         return new ModelAndView("404");
@@ -54,14 +57,13 @@ public class HelloWorldController {
         return mav;
     }
 
-    // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI NO TENGO QUE IR DE NUEVO A LA BD
-//    @RequestMapping(value = "/projects/{id}")
-//    public ModelAndView singleProjectView(@PathVariable("id") long id) {
-//        final ModelAndView mav = new ModelAndView("singleProjectView");
-//        mav.addObject("project", new Project(id, "Proyecto de prueba 1", SUMMARY, 1, null));
-//        mav.addObject("owner", "Julian Tallar");
-//        return mav;
-//    }
+    // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
+    @RequestMapping(value = "/projects/{id}")
+    public ModelAndView singleProjectView(@PathVariable("id") long id) {
+        final ModelAndView mav = new ModelAndView("singleProjectView");
+        mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
+        return mav;
+    }
 
     /*@RequestMapping(value = "/create", method = {RequestMethod.POST})
     public ModelAndView register(@RequestParam(name = "username", required = true) String username) {

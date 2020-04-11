@@ -109,6 +109,14 @@ public class Project {
         return owner;
     }
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public long getOwnerUserId() {
+        return ownerUserId;
+    }
+
     public ProjectBackOffice getBackOffice() {
         return backOffice;
     }

@@ -19,7 +19,7 @@ public class UserJdbcDao implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
 
-    private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) ->
+    final static RowMapper<User> ROW_MAPPER = (rs, rowNum) ->
             new User(rs.getLong("id"), rs.getString("first_name"),
             rs.getString("last_name"), rs.getString("real_id"), rs.getDate("aux_date"),
             new Location(new Location.Country(rs.getInt("country_id"), rs.getString("country"), rs.getString("iso2"), rs.getString("phonecode"), rs.getString("currency")),
@@ -77,6 +77,10 @@ public class UserJdbcDao implements UserDao {
         Number keyNumber = jdbcInsert.executeAndReturnKey(values);
 
         return new User(id,firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+    }
+
+    public static RowMapper<User> getRowMapper() {
+        return ROW_MAPPER;
     }
 }
 
