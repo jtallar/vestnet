@@ -78,9 +78,5 @@ public class UserJdbcDao implements UserDao {
 
         return new User(id,firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
     }
-
-    public static RowMapper<User> getRowMapper() {
-        return ROW_MAPPER;
-    }
 }
 

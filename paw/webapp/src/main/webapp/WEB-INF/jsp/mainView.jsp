@@ -13,6 +13,7 @@
             <c:url var="createUrl" value="/projects "></c:url>
             <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
                 <form:select class="custom-select mr-sm-2" path="categorySelector">
+                    <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
                     <c:forEach items="${cats}" var="category">
                         <form:option value="${category.name}"><spring:message code="${category.name}"></spring:message> </form:option>
                     </c:forEach>
@@ -38,7 +39,7 @@
                         <c:forEach items="${project.categories}" var="category">
                              <p class="card-text" id="category">- <spring:message code="${category.name}"/></p>
                         </c:forEach>
-                        <a href="<c:url value='./${project.id}'/>" class="btn btn-primary">More info</a>
+                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-primary">More info</a>
                     </div>
                 </div>
         </c:forEach>

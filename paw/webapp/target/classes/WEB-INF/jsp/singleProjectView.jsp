@@ -59,9 +59,9 @@
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>
                         <div class="card-body">
-                            <h5 class="card-title" ><b>${project.name}</b></h5>
-                            <footer class="blockquote-footer">by ${owner}</footer>
-                            <p class="card-text">${project.summary}</p>
+                            <h5 class="card-title" ><b><c:out value="${project.name}"/></b></h5>
+                            <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/> <c:out value="${project.owner.lastName}"/></footer>
+                            <p class="card-text"><c:out value="${project.summary}"/></p>
                             <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                         </div>
                     </div>
