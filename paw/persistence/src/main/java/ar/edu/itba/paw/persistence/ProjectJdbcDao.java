@@ -4,10 +4,13 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.Stage;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -15,73 +18,127 @@ import javax.sql.DataSource;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-/*
+import java.util.stream.Collectors;
+
 @Repository
-
 public class ProjectJdbcDao implements ProjectDao {
-
-
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+    // TODO: VER SI SE PUEDE HACER DE OTRA MANERA
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final static RowMapper<Project> ROW_MAPPER = (rs, rowNum) -> new Project(rs.getInt("id"), rs.getString("project_name",rs.getString("summary"),
-            rs.getDate("publish_date"),rs.getDate("update_date"),rs.getInt("cost"),rs.getInt("hits"), rs.getBoolean("images"),
-            (User)rs.getObject("owner_id"),
-            (Project.ProjectBackOffice) new Project.ProjectBackOffice (rs.getBoolean("aproved"), rs.getInt("profit_index"), rs.getInt("risk_index"),
-                    (List<Category>) rs.getObject("category"),(List))
-            )
+    private final static RowMapper<Project> ROW_MAPPER = (rs, rowNum) -> new Project(rs.getLong("id"),
+            rs.getString("project_name"), rs.getString("summary"),
+            rs.getDate("publish_date"), rs.getDate("update_date"),
+            rs.getLong("cost"), rs.getLong("hits"), rs.getBoolean("images"),
+            rs.getLong("owner_id"),
+            new Project.ProjectBackOffice(rs.getBoolean("aproved"), rs.getInt("profit_index"),
+                    rs.getInt("risk_index")), null, null);
+
     @Autowired
     public ProjectJdbcDao(final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("startUp")
+                .withTableName("projects")
                 .usingGeneratedKeyColumns("id");
+
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
-
-    @Override
-    public List<Project> findAllProjects() {
-        // just testing before database connection
-
-        List<Project> listPro = new LinkedList<>();
-        Date date = new Date();
-        Project samsung = new Project(1, "Samsung", "Una empresa que vende electrodomésticos",1,new Date());
-        Project lg = new Project(2, "LG", "Otra empresa que vende electrodomésticos",1,new Date());
-        Project google = new Project(3, "Google", "StartUp de informática",2,new Date());
-
-        listPro.add(samsung);
-        listPro.add(lg);
-        listPro.add(google);
-
-        return listPro;
-    }
-
 
     @Override
     public Optional<Project> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM startUp WHERE id = ?", new Object[] {id}, ROW_MAPPER)
+        Optional<Project> mayBeProject = jdbcTemplate.query("SELECT * FROM projects WHERE projects.id = ?", ROW_MAPPER, id)
+                .stream().findFirst();
+        if (mayBeProject.isPresent()) {
+            // TODO:ADD STAGES
+            Optional<User> owner = findUserById(mayBeProject.get().getOwnerUserId());
+            if (owner.isPresent()) mayBeProject.get().setOwner(owner.get());
+            mayBeProject.get().setCategories(findProjectCategories(mayBeProject.get().getId()));
+        }
+        return mayBeProject;
+    }
+
+    @Override
+    public List<Project> findAll() {
+        // TODO: TEST WHAT HAPPENS IF NO PROJECTS ARE LOADED --> NULL o EMPTY LIST?
+        List<Project> projects = jdbcTemplate.query("SELECT * FROM projects", ROW_MAPPER);
+        for(Project project : projects) {
+            // TODO: NO AGREGAR STAGES, NO?
+            Optional<User> owner = findUserById(project.getOwnerUserId());
+            if (owner.isPresent()) project.setOwner(owner.get());
+            project.setCategories(findProjectCategories(project.getId()));
+        }
+        return projects;
+    }
+
+    // TODO: VER SI HACE FALTA EL namedParamaeter o se puede de otra manera
+    @Override
+    public List<Project> findByCategories(List<Category> categories) {
+        if (categories == null) return findAll();
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
+
+//        List<Project> projects = jdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
+//                        "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
+//                        "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
+//                        "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
+//                        "WHERE project_categories.category_id IN (?)",
+//                ROW_MAPPER, categories.stream().map(Category::getId).collect(Collectors.toList()));
+
+        List<Project> projects = namedParameterJdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
+                "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
+                        "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
+                        "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
+                "WHERE project_categories.category_id IN (:categories)",
+                parameters, ROW_MAPPER);
+        for(Project project : projects) {
+            // TODO:ADD STAGES?
+            Optional<User> owner = findUserById(project.getOwnerUserId());
+            if (owner.isPresent()) project.setOwner(owner.get());
+            project.setCategories(findProjectCategories(project.getId()));
+        }
+        return projects;
+    }
+
+    @Override
+    public Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
+                          List<Category> categories, List<Stage> stages) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("project_name", name);
+        values.put("summary", summary);
+        values.put("publish_date", publishDate);
+        values.put("update_date", updateDate);
+        values.put("cost", cost);
+        values.put("owner_id", owner.getId());
+        Number keyNumber = jdbcInsert.executeAndReturnKey(values);
+        // TODO: INSERTAR LAS CATEGORIAS
+        // TODO: INSERTAR LOS STAGES
+        return new Project(keyNumber.longValue(), name, summary, publishDate, updateDate, cost, 0, false, owner,
+                new Project.ProjectBackOffice(false, 0, 0), categories,
+                stages.stream().map(Stage::getId).collect(Collectors.toList()), stages);
+    }
+
+    // TODO: ESTE METODO VA ACA? O EN CATEGORIES DAO? SI VA ALLA, COMO LO LLAMO SI NO TENGO LA INSTANCIA?
+    private List<Category> findProjectCategories(long projectId) {
+        return jdbcTemplate.query("SELECT categories.id, categories.category, categories.parent " +
+                "FROM categories JOIN project_categories ON project_categories.category_id = categories.id " +
+                "WHERE project_categories.project_id = ?", CategoriesJdbcDao.getRowMapper(), projectId);
+    }
+
+    // TODO: ESTE METODO VA ACA? O EN USER DAO? SI VA ALLA, COMO LO LLAMO SI NO TENGO LA INSTANCIA?
+    private Optional<User> findUserById(long id) {
+        return jdbcTemplate.query(
+                "SELECT *" +
+                        "FROM users JOIN countries ON (users.country_id = countries.id) " +
+                        "JOIN cities ON (users.city_id = cities.id) " +
+                        "JOIN states ON (users.state_id = states.id) " +
+                        "WHERE users.id = ? "
+                , new Object[] {id}, UserJdbcDao.getRowMapper())
                 .stream().findFirst();
     }
 
-    @Override
-    public List<Project> findByName(String name) {
-        return jdbcTemplate.query("SELECT * FROM startUp WHERE name = ?", ROW_MAPPER, name);
-    }
-
-    @Override
-    public Project create(String name, String summary, long ownerId, Date date) {
-        Map<String, Object> values = new HashMap<String, Object>();
-        values.put("name", name);
-        values.put("summary", summary);
-        values.put("ownerId", ownerId);
-        values.put("date", date);
-        Number keyNumber = jdbcInsert.executeAndReturnKey(values);
-
-        return new Project(keyNumber.longValue(), name, summary, ownerId, date);
-    }
-
-    //we will want to add list of projects
 }
 
 
- */

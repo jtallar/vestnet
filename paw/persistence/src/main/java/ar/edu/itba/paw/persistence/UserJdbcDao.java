@@ -19,11 +19,11 @@ public class UserJdbcDao implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
 
-    private final static RowMapper<User> ROW_MAPPER = (rs, rowNum) ->
-            new User(rs.getInt("id"), rs.getString("first_name"),
+    final static RowMapper<User> ROW_MAPPER = (rs, rowNum) ->
+            new User(rs.getLong("id"), rs.getString("first_name"),
             rs.getString("last_name"), rs.getString("real_id"), rs.getDate("aux_date"),
-            new Location(new Location.Country(rs.getInt("country_id"), rs.getString("country"), rs.getString("iso2"), rs.getString("phone_code"), rs.getString("currency")),
-                    new Location.State(rs.getInt("state_id"),rs.getString("state"), rs.getString("iso2_state"), rs.getString("country")),
+            new Location(new Location.Country(rs.getInt("country_id"), rs.getString("country"), rs.getString("iso2"), rs.getString("phonecode"), rs.getString("currency")),
+                    new Location.State(rs.getInt("state_id"),rs.getString("state"), rs.getString("iso2"), rs.getString("country")),
                     new Location.City(rs.getInt("city_id"), rs.getString("city"), rs.getString("state"))),
             rs.getString("email"), rs.getString("phone"), rs.getString("linkedin"),
             rs.getString("profile_pic"),rs.getDate("join_date"), rs.getInt("trust_index"));
@@ -38,7 +38,13 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<User> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE id = ?", new Object[] {id}, ROW_MAPPER)
+        return jdbcTemplate.query(
+                "SELECT *" +
+                        "FROM users JOIN countries ON (users.country_id = countries.id) " +
+                        "JOIN cities ON (users.city_id = cities.id) " +
+                        "JOIN states ON (users.state_id = states.id) " +
+                        "WHERE users.id = ? "
+                , new Object[] {id}, ROW_MAPPER)
                 .stream().findFirst();
     }
     /*
@@ -71,6 +77,10 @@ public class UserJdbcDao implements UserDao {
         Number keyNumber = jdbcInsert.executeAndReturnKey(values);
 
         return new User(id,firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+    }
+
+    public static RowMapper<User> getRowMapper() {
+        return ROW_MAPPER;
     }
 }
 

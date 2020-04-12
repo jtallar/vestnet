@@ -3,13 +3,14 @@ package ar.edu.itba.paw.model;
 public class Category {
     private final long id;
     private final String name;
-    private final Category parent;
+    private final long parentId;
 
-    public Category(long id, String name, Category parent) {
+    public Category(long id, String name, long parentId) {
         this.id = id;
         this.name = name;
-        this.parent = parent;
+        this.parentId = parentId;
     }
+
 
     public long getId() {
         return id;
@@ -19,7 +20,7 @@ public class Category {
         return name;
     }
 
-    public Category getParent() {
-        return parent;
+    public long getParent() {
+        return parentId;
     }
 }
