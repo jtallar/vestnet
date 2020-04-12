@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.EmailService;
+import  ar.edu.itba.paw.interfaces.EmailService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 

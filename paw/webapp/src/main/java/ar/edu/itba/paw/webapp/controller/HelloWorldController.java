@@ -1,21 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
-<<<<<<< HEAD
 import ar.edu.itba.paw.interfaces.EmailService;
-=======
 import ar.edu.itba.paw.interfaces.CategoriesService;
->>>>>>> develop
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-<<<<<<< HEAD
 import ar.edu.itba.paw.webapp.mail.MailFields;
-=======
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
->>>>>>> develop
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,18 +17,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-<<<<<<< HEAD
 import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
-
-@Controller
-public class HelloWorldController {
-
-    //@Autowired
-    //private UserService userService;
-=======
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
@@ -43,27 +29,22 @@ import java.util.function.Predicate;
 public class HelloWorldController {
     @Autowired
     private UserService userService;
->>>>>>> develop
 
     @Autowired
     private ProjectService projectService;
 
     @Autowired
-<<<<<<< HEAD
     private EmailService emailService;
 
-    @ExceptionHandler(UserNotFoundException.class)
-=======
+    @Autowired
     private CategoriesService categoriesService;
 
     @ExceptionHandler({UserNotFoundException.class, ProjectNotFoundException.class})
->>>>>>> develop
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {
         return new ModelAndView("404");
     }
 
-<<<<<<< HEAD
     @RequestMapping(value = "/contact", method = {RequestMethod.GET})
     public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields) {
             return new ModelAndView("contact");
@@ -83,10 +64,6 @@ public class HelloWorldController {
         return new ModelAndView("mainView");        // success jsp
     }
 
-    /*
-=======
-
->>>>>>> develop
     @RequestMapping("/{id}")
     public ModelAndView helloWorld(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("index");
