@@ -29,6 +29,9 @@
                     
     <org.eclipse.jetty.version>9.4.27.v20200227</org.eclipse.jetty.version>
     <joda-time.version>2.10.5</joda-time.version>
+    <javax.mail.version>1.6.0</javax.mail.version>
+
+
   </properties>
 
   <dependencyManagement>
@@ -88,6 +91,19 @@
         <artifactId>joda-time</artifactId>
         <version>${joda-time.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>javax.mail-api</artifactId>
+        <version>${javax.mail.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>1.6.2</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
           

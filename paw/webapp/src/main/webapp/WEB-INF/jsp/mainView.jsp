@@ -9,16 +9,23 @@
 </head>
 <body>
     <div>
-        <div class="form-row align-items-center">
+        <div class="form-row align-items-center" style="margin: 20px">
+
             <c:url var="createUrl" value="/projects "></c:url>
             <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
+            <div class="row">
+                <div class="col">
                 <form:select class="custom-select mr-sm-2" path="categorySelector">
                     <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
                     <c:forEach items="${cats}" var="category">
                         <form:option value="${category.name}"><spring:message code="${category.name}"></spring:message> </form:option>
                     </c:forEach>
                 </form:select>
-                <input type = "submit" class="btn btn-primary" value="<spring:message code='filter'/>"></input>
+                </div>
+                <div class="col">
+                <input type = "submit" class="btn btn-dark" value="<spring:message code='filter'/>">
+                </div>
+            </div>
             </form:form>
         </div>
     </div>
@@ -39,7 +46,7 @@
                         <c:forEach items="${project.categories}" var="category">
                              <p class="card-text" id="category">- <spring:message code="${category.name}"/></p>
                         </c:forEach>
-                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-primary">More info</a>
+                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark">More info</a>
                     </div>
                 </div>
         </c:forEach>
