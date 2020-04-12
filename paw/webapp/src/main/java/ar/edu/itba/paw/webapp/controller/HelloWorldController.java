@@ -1,21 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.CategoriesDao;
 import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.ProjectCategories;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Controller
 public class HelloWorldController {
@@ -45,12 +45,31 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView() {
+    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter) {
         final ModelAndView mav = new ModelAndView("mainView");
-        mav.addObject("list", projectService.findAll());
+        List<Project> projectList = projectService.findAll();
+        List<Project> toRemove = new ArrayList<>();
+        if (catFilter.getCategorySelector() != null){
+            projectList.forEach(project -> {
+                if(!project.hasCategory(catFilter.getCategorySelector())){
+
+                    toRemove.add(project);
+                }
+            });
+        }
+
+        toRemove.forEach(project -> {
+            projectList.remove(project);
+        });
+
+
+
+
+        mav.addObject("list", projectList);
+
         // TODO: CAMBIARLO A findAllCats cuando sepamos que onda lo de locale obtenido de la BD
         List<Category> catList = categoriesService.findAllCats();
-        mav.addObject("cat", catList);
+        mav.addObject("cats", catList);
         return mav;
     }
 
