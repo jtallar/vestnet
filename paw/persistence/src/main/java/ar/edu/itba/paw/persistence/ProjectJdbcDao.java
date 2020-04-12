@@ -25,6 +25,11 @@ public class ProjectJdbcDao implements ProjectDao {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+
+    @Autowired
+    private UserJdbcDao userJdbcDao;
+    @Autowired
+    private CategoriesJdbcDao categoriesJdbcDao;
     // TODO: VER SI SE PUEDE HACER DE OTRA MANERA
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -52,9 +57,9 @@ public class ProjectJdbcDao implements ProjectDao {
                 .stream().findFirst();
         if (mayBeProject.isPresent()) {
             // TODO:ADD STAGES
-            Optional<User> owner = findUserById(mayBeProject.get().getOwnerUserId());
+            Optional<User> owner = userJdbcDao.findById(mayBeProject.get().getOwnerUserId());
             if (owner.isPresent()) mayBeProject.get().setOwner(owner.get());
-            mayBeProject.get().setCategories(findProjectCategories(mayBeProject.get().getId()));
+            mayBeProject.get().setCategories(categoriesJdbcDao.findProjectCategories(mayBeProject.get().getId()));
         }
         return mayBeProject;
     }
@@ -65,9 +70,9 @@ public class ProjectJdbcDao implements ProjectDao {
         List<Project> projects = jdbcTemplate.query("SELECT * FROM projects", ROW_MAPPER);
         for(Project project : projects) {
             // TODO: NO AGREGAR STAGES, NO?
-            Optional<User> owner = findUserById(project.getOwnerUserId());
+            Optional<User> owner = userJdbcDao.findById(project.getOwnerUserId());
             if (owner.isPresent()) project.setOwner(owner.get());
-            project.setCategories(findProjectCategories(project.getId()));
+            project.setCategories(categoriesJdbcDao.findProjectCategories(project.getId()));
         }
         return projects;
     }
@@ -95,9 +100,9 @@ public class ProjectJdbcDao implements ProjectDao {
                 parameters, ROW_MAPPER);
         for(Project project : projects) {
             // TODO:ADD STAGES?
-            Optional<User> owner = findUserById(project.getOwnerUserId());
+            Optional<User> owner = userJdbcDao.findById(project.getOwnerUserId());
             if (owner.isPresent()) project.setOwner(owner.get());
-            project.setCategories(findProjectCategories(project.getId()));
+            project.setCategories(categoriesJdbcDao.findProjectCategories(project.getId()));
         }
         return projects;
     }
@@ -119,26 +124,6 @@ public class ProjectJdbcDao implements ProjectDao {
                 new Project.ProjectBackOffice(false, 0, 0), categories,
                 stages.stream().map(Stage::getId).collect(Collectors.toList()), stages);
     }
-
-    // TODO: ESTE METODO VA ACA? O EN CATEGORIES DAO? SI VA ALLA, COMO LO LLAMO SI NO TENGO LA INSTANCIA?
-    private List<Category> findProjectCategories(long projectId) {
-        return jdbcTemplate.query("SELECT categories.id, categories.category, categories.parent " +
-                "FROM categories JOIN project_categories ON project_categories.category_id = categories.id " +
-                "WHERE project_categories.project_id = ?", CategoriesJdbcDao.getRowMapper(), projectId);
-    }
-
-    // TODO: ESTE METODO VA ACA? O EN USER DAO? SI VA ALLA, COMO LO LLAMO SI NO TENGO LA INSTANCIA?
-    private Optional<User> findUserById(long id) {
-        return jdbcTemplate.query(
-                "SELECT *" +
-                        "FROM users JOIN countries ON (users.country_id = countries.id) " +
-                        "JOIN cities ON (users.city_id = cities.id) " +
-                        "JOIN states ON (users.state_id = states.id) " +
-                        "WHERE users.id = ? "
-                , new Object[] {id}, UserJdbcDao.getRowMapper())
-                .stream().findFirst();
-    }
-
 }
 
 
