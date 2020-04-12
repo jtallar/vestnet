@@ -38,7 +38,7 @@
                         <c:forEach items="${project.categories}" var="category">
                              <p class="card-text" id="category">- <spring:message code="${category.name}"/></p>
                         </c:forEach>
-                        <a href="#" class="btn btn-primary">More info</a>
+                        <a href="<c:url value='./${project.id}'/>" class="btn btn-primary">More info</a>
                     </div>
                 </div>
         </c:forEach>

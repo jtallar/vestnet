@@ -9,6 +9,8 @@ import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +25,8 @@ public class ProjectJdbcDao implements ProjectDao {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+    // TODO: VER SI SE PUEDE HACER DE OTRA MANERA
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final static RowMapper<Project> ROW_MAPPER = (rs, rowNum) -> new Project(rs.getLong("id"),
             rs.getString("project_name"), rs.getString("summary"),
@@ -38,6 +42,8 @@ public class ProjectJdbcDao implements ProjectDao {
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("projects")
                 .usingGeneratedKeyColumns("id");
+
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -66,13 +72,27 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    // TODO: VER SI HACE FALTA EL namedParamaeter o se puede de otra manera
     @Override
     public List<Project> findByCategories(List<Category> categories) {
-        List<Project> projects = jdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
-                "projects.publish_date, projects.update_date, projects.cost, projects.owner_id FROM projects JOIN " +
-                "project_categories ON projects.id = project_categories.project_id " +
-                "WHERE project_categories.category_id IN (?)",
-                ROW_MAPPER, categories.stream().map(Category::getId).collect(Collectors.toList()));
+        if (categories == null) return findAll();
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
+
+//        List<Project> projects = jdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
+//                        "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
+//                        "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
+//                        "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
+//                        "WHERE project_categories.category_id IN (?)",
+//                ROW_MAPPER, categories.stream().map(Category::getId).collect(Collectors.toList()));
+
+        List<Project> projects = namedParameterJdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
+                "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
+                        "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
+                        "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
+                "WHERE project_categories.category_id IN (:categories)",
+                parameters, ROW_MAPPER);
         for(Project project : projects) {
             // TODO:ADD STAGES?
             Optional<User> owner = findUserById(project.getOwnerUserId());
