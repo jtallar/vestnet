@@ -53,8 +53,9 @@ public class HelloWorldController {
         List<Project> projectList = new ArrayList<>();
         List<Category> catList = categoriesService.findAllCats();
         mav.addObject("cats", catList);
+        System.out.println(catFilter.getCategorySelector());
 
-        if (catFilter.getCategorySelector() != null) {
+        if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
             Optional<Category> selectedCategory = catList.stream()
                     .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
                     .findFirst();
