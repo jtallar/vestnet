@@ -164,4 +164,12 @@ public class Project {
             return riskIndex;
         }
     }
+
+        public boolean hasCategory(String cat){
+            boolean[] hasIt = {false};
+            this.getCategories().forEach(category -> {
+                if(category.getName().equals(cat)) hasIt[0] = true;
+            });
+            return hasIt[0];
+        }
 }
