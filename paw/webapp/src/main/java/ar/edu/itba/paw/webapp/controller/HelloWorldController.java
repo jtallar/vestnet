@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.mail.MailFields;
@@ -45,23 +46,29 @@ public class HelloWorldController {
         return new ModelAndView("404");
     }
 
-    @RequestMapping(value = "/contact", method = {RequestMethod.GET})
-    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields) {
-            return new ModelAndView("contact");
+    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
+    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
+           // return new ModelAndView("contact");
+        final ModelAndView mav = new ModelAndView("contact");
+        mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
+//       mailFields.setTo(userService.findById(owner_id).get().getEmail());
+ //       mailFields.setTo("julianmvuoso@gmail.com");
+        return mav;
     }
 
-    @RequestMapping(value = "/contact", method = {RequestMethod.POST})
-    public ModelAndView contactPost(@Valid @ModelAttribute("mailForm") final MailFields mailFields){
-           /* if (errors.hasErrors()) {
-                return index(form);
-            }*/
-           emailService.sendNewEmail(mailFields.getFrom(), mailFields.getSubject(), mailFields.getBody());
-           return new ModelAndView("redirect:/emailSuccess");
+    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.POST})
+    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors){
+            if (errors.hasErrors()) {
+                return contact(mailFields, p_id);
+            }
+            System.out.println(mailFields.toString());
+           emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
+           return new ModelAndView("redirect:/projects/{p_id}");
     }
 
     @RequestMapping("/emailSuccess")
     public ModelAndView emailSuccess(){
-        return new ModelAndView("mainView");        // success jsp
+        return new ModelAndView("redirect:/projects");        // success jsp
     }
 
     @RequestMapping("/{id}")

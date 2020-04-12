@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailSenderService implements EmailService {
 
-    public void sendNewEmail(String from, String subject, String body) {
+    public void sendNewEmail(String from, String body, String to) {
 
         Properties props = new Properties();
 
@@ -34,19 +34,19 @@ public class EmailSenderService implements EmailService {
         MimeMessage message = new MimeMessage(session);
 
         StringBuilder fullBodySB = new StringBuilder();
-        fullBodySB.append("VestNet informa:\n" + "El usuario " + from + " desea comunicarse contigo.\nEl mensaje es el siguiente:\n" + body + "\nNo conteste a este mail. Puede responderle a: " + from);
+        fullBodySB.append("VestNet informa:\n" + "El usuario " + from + " desea comunicarse contigo.\nEl mensaje es el siguiente:\n\n" + body + "\n\nNo conteste a este mail. Puede responderle a: " + from);
         String fullBody = fullBodySB.toString();
 
         try {
             // Quien envia el correo
             message.setFrom(new InternetAddress("noreply@google.com"));
             // A quien va dirigido
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress("julianmvuoso@gmail.com"));
-            message.setSubject("VestNet - Potencial inversor: " + subject);
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject("VestNet - Potential Investor");
             message.setText(fullBody);
 
             Transport t = session.getTransport("smtp");
-            t.connect("julianmvuoso@gmail.com","40675148.");
+            t.connect("julianmvuoso@gmail.com","40675148.");        // TODO : Ver como hacer para que no haga falta iniciar sesion en un mail (no-reply)
             t.sendMessage(message,message.getAllRecipients());
             t.close();
 
