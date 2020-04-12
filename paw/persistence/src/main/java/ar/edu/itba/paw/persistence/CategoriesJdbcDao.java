@@ -39,9 +39,4 @@ public class CategoriesJdbcDao implements CategoriesDao {
                 "FROM categories JOIN project_categories ON project_categories.category_id = categories.id " +
                 "WHERE project_categories.project_id = ?", ROW_MAPPER, projectId);
     }
-
-
-    static RowMapper<Category> getRowMapper() {
-        return ROW_MAPPER;
-    }
 }
