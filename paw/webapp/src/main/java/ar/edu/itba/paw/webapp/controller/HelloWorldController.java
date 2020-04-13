@@ -6,7 +6,9 @@ import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.comparators.AlphComparator;
+import ar.edu.itba.paw.model.comparators.CostComparator;
+import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.mail.MailFields;
@@ -23,8 +25,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Controller
 public class HelloWorldController {
@@ -86,35 +87,10 @@ public class HelloWorldController {
 
         // TODO: CAMBIARLO A findAllCats cuando sepamos que onda lo de locale obtenido de la BD
         List<Project> projectList = new ArrayList<>();
+
         List<Category> catList = categoriesService.findAllCats();
+        projectList = filter_order(catFilter,catList);
         mav.addObject("cats", catList);
-
-        if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().equals("allCats")) {
-            Optional<Category> selectedCategory = catList.stream()
-                    .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
-                    .findFirst();
-            if (selectedCategory.isPresent()) {
-                projectList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
-            }
-        } else {
-            projectList = projectService.findAll();
-        }
-
-
-//        List<Project> projectList = projectService.findAll();
-//        List<Project> toRemove = new ArrayList<>();
-//        if (catFilter.getCategorySelector() != null){
-//            projectList.forEach(project -> {
-//                if(!project.hasCategory(catFilter.getCategorySelector())){
-//
-//                    toRemove.add(project);
-//                }
-//            });
-//        }
-//
-//        toRemove.forEach(project -> {
-//            projectList.remove(project);
-//        });
 
 
 
@@ -123,6 +99,44 @@ public class HelloWorldController {
 
         return mav;
     }
+
+    private List<Project> filter_order(CategoryFilter catFilter, List<Category> catList){
+        List<Project> auxList = new ArrayList<>();
+        if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
+            Optional<Category> selectedCategory = catList.stream()
+                    .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
+                    .findFirst();
+            if (selectedCategory.isPresent()) {
+                auxList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
+            }
+        } else {
+            auxList = projectService.findAll();
+        }
+
+        if(catFilter.getOrderBy() != null) {
+            switch (catFilter.getOrderBy()) {
+                case "date":
+                    auxList = auxList.stream().sorted(new DateComparator()).collect(Collectors.toList());
+                    break;
+                case "cost-low-high":
+                    System.out.println("Hola1");
+                    auxList = auxList.stream().sorted(new CostComparator()).collect(Collectors.toList());
+                    break;
+                case "cost-high-low":
+                    System.out.println("Hola");
+                    auxList = auxList.stream().sorted(new CostComparator().reversed()).collect(Collectors.toList());
+                    break;
+                case "alf":
+                    auxList = auxList.stream().sorted(new AlphComparator()).collect(Collectors.toList());
+                    break;
+            }
+        }
+
+        return auxList;
+    }
+
+
+
 
     // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
     @RequestMapping(value = "/projects/{id}")

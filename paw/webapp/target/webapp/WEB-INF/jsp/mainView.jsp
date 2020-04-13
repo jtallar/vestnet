@@ -9,8 +9,7 @@
 </head>
 <body>
     <div>
-        <div class="form-row align-items-center" style="margin: 20px">
-
+        <div class="form-row align-items-center">
             <c:url var="createUrl" value="/projects "></c:url>
             <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
             <div class="row">
@@ -18,7 +17,7 @@
                 <form:select class="custom-select mr-sm-2" path="categorySelector">
                     <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
                     <c:forEach items="${cats}" var="category">
-                        <form:option value="${category.name}"><spring:message code="${category.name}"></spring:message> </form:option>
+                        <form:option value="${category.name}">${category.name}</form:option>
                     </c:forEach>
                 </form:select>
                 </div>
@@ -26,6 +25,14 @@
                 <input type = "submit" class="btn btn-dark" value="<spring:message code='filter'/>">
                 </div>
             </div>
+                <form:select path="orderBy" class="custom-select mr-sm-2">
+                    <form:option value="date"><spring:message code="date"></spring:message> </form:option>
+                    <form:option value="cost-low-high"><spring:message code="cost_l_h"></spring:message></form:option>
+                    <form:option value="cost-high-low"><spring:message code="cost_h_l"></spring:message></form:option>
+                    <form:option value="alf"><spring:message code="alf"></spring:message></form:option>
+                </form:select>
+
+                <input type = "submit" class="btn btn-primary" value="<spring:message code='filter'/>"></input>
             </form:form>
         </div>
     </div>
@@ -44,9 +51,11 @@
                         <p class="card-text"><c:out value="${project.summary}"></c:out></p>
                         <strong><spring:message code="categories"/></strong>
                         <c:forEach items="${project.categories}" var="category">
-                             <p class="card-text" id="category">- <spring:message code="${category.name}"/></p>
+                             <p class="card-text" id="category">-${category.name}</p>
                         </c:forEach>
-                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark">More info</a>
+                        <strong><spring:message code="price"/></strong>
+                        <p>${project.cost}</p>
+                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-primary">More info</a>
                     </div>
                 </div>
         </c:forEach>
