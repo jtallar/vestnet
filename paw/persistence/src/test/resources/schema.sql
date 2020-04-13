@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS users (
 
     -- BACK OFFICE INFO
     -- Trust Index. -100 to 100 range. Default 0.
-    trust_index     SMALLINT NOT NULL DEFAULT 0
+    trust_index     SMALLINT DEFAULT 0
 );
 
 
@@ -91,18 +91,18 @@ CREATE TABLE IF NOT EXISTS projects (
     -- TOP INFO
     project_name    VARCHAR(25) NOT NULL,
     summary         VARCHAR(250) NOT NULL,
-    cost            INT NOT NULL DEFAULT 0,
+    cost            INT DEFAULT 0,
 
     -- EXTRA INFO
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    images          BOOLEAN NOT NULL DEFAULT false,
-    hits            INT NOT NULL DEFAULT 0,
+    images          BOOLEAN DEFAULT false,
+    hits            INT DEFAULT 0,
 
     -- BACK OFFICE INFO
-    aproved         BOOLEAN NOT NULL DEFAULT false,
-    profit_index    INT NOT NULL DEFAULT 0,
-    risk_index      INT NOT NULL DEFAULT 0
+    aproved         BOOLEAN DEFAULT false,
+    profit_index    INT DEFAULT 0,
+    risk_index      INT DEFAULT 0
 );
 
 
@@ -140,9 +140,10 @@ CREATE TABLE IF NOT EXISTS stages (
 
     -- TOP INFO
     type_id         INT REFERENCES stage_types ON DELETE SET NULL,
-    duration        INTERVAL NOT NULL,
+--     TODO: CHECK IF INTERVAL DAY o QUE INTERVAL TYPE
+    duration        INTERVAL DAY NOT NULL,
     key_result      VARCHAR(50) NOT NULL,
-    cost            INT NOT NULL DEFAULT 0,
+    cost            INT DEFAULT 0,
 
     PRIMARY KEY (project_id, stage_number)
 );
@@ -172,7 +173,7 @@ CREATE TABLE IF NOT EXISTS resources (
 
     -- INFO
     item_id         INT REFERENCES resource_items ON DELETE RESTRICT,
-    quantity        SMALLINT NOT NULL DEFAULT 1,
+    quantity        SMALLINT DEFAULT 1,
     cost            INT NOT NULL,
 
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,

@@ -27,6 +27,8 @@ public class CategoriesJdbcDao implements CategoriesDao {
     public CategoriesJdbcDao (final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
+
+    // TODO: CHANGE TO findAll
     @Override
     public List<Category> findAllCats() {
         return jdbcTemplate.query("SELECT * FROM categories", ROW_MAPPER);

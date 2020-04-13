@@ -23,8 +23,8 @@ public class UserJdbcDao implements UserDao {
             new User(rs.getLong("id"), rs.getString("first_name"),
             rs.getString("last_name"), rs.getString("real_id"), rs.getDate("aux_date"),
             new Location(new Location.Country(rs.getInt("country_id"), rs.getString("country"), rs.getString("iso2"), rs.getString("phonecode"), rs.getString("currency")),
-                    new Location.State(rs.getInt("state_id"),rs.getString("state"), rs.getString("iso2"), rs.getString("country")),
-                    new Location.City(rs.getInt("city_id"), rs.getString("city"), rs.getString("state"))),
+                    new Location.State(rs.getInt("state_id"),rs.getString("state"), rs.getString("iso2")),
+                    new Location.City(rs.getInt("city_id"), rs.getString("city"))),
             rs.getString("email"), rs.getString("phone"), rs.getString("linkedin"),
             rs.getString("profile_pic"),rs.getDate("join_date"), rs.getInt("trust_index"));
 
@@ -36,6 +36,7 @@ public class UserJdbcDao implements UserDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    // TODO: REVISAR. NO CONVIENE HACERLO POR SEPARADO EL MAPEO DEL LOCATION?
     @Override
     public Optional<User> findById(long id) {
         return jdbcTemplate.query(
@@ -55,10 +56,14 @@ public class UserJdbcDao implements UserDao {
 
      */
 
+    // TODO: REVISAR LOS PARAMETROS --> SEPARAR EN ENTREPENEUR Y INVESTOR
+    //                              --> SACAR trust index, joinDate
+//                                  --> PROFILE PIC ES UN STRING??
+//                                  --> id es el role_id?
     @Override
     public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
         Map<String, Object> values = new HashMap<String, Object>();
-        values.put("id", id);
+        values.put("role_id", id);
         values.put("first_name",firstName);
         values.put("last_name", lastName);
         values.put("real_id", realId);
@@ -76,7 +81,7 @@ public class UserJdbcDao implements UserDao {
 
         Number keyNumber = jdbcInsert.executeAndReturnKey(values);
 
-        return new User(id,firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+        return new User(keyNumber.longValue(),firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
     }
 }
 
