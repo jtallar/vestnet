@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ include file = "header.jsp" %>
 
 <html>
 <head>
@@ -49,7 +50,7 @@
                         </c:forEach>
                         <strong><spring:message code="price"/></strong>
                         <p>${project.cost}</p>
-                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark">More info</a>
+                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
                     </div>
                 </div>
         </c:forEach>

@@ -1,0 +1,29 @@
+.navbar-custom {
+    color: #750096;
+    background-color: #222222;
+}
+
+.navbar-brand
+{
+    position: relative;
+    width: 60px;
+    height: 60px;
+    vertical-align: middle;
+}
+
+.logo-text
+{
+    color: #750096; font-family: 'Lato', sans-serif; font-size: 30px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center; margin-right: 30px;
+    vertical-align: middle;
+
+}
+
+.logo-text:active, .logo-text:hover
+{
+    color: #53006d;
+    text-decoration: none;
+}
+
+.dropdown-item{
+    font-family: 'Lato', sans-serif
+}

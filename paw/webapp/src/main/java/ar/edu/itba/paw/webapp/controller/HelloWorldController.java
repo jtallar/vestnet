@@ -93,6 +93,12 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(value = "/header")
+    public ModelAndView headerComponent() {
+        final ModelAndView mav = new ModelAndView("header");
+        return mav;
+    }
+
     private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList){
         List<Project> auxList = new ArrayList<>();
         if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
