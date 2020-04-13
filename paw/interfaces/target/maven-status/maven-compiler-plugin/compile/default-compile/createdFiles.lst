@@ -1,0 +1,8 @@
+ar/edu/itba/paw/interfaces/CategoriesService.class
+ar/edu/itba/paw/interfaces/App.class
+ar/edu/itba/paw/interfaces/UserService.class
+ar/edu/itba/paw/interfaces/CategoriesDao.class
+ar/edu/itba/paw/interfaces/UserDao.class
+ar/edu/itba/paw/interfaces/ProjectService.class
+ar/edu/itba/paw/interfaces/EmailService.class
+ar/edu/itba/paw/interfaces/ProjectDao.class
