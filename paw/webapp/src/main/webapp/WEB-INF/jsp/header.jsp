@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
 <head>
@@ -14,10 +15,10 @@
 <body>
 <c:url var="logo" value="/images/logo_bp.png"/>
 <nav class="navbar navbar-dark navbar-expand-sm navbar-custom">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="<c:url value='/1'/>">
         <img src=${logo} width="60" class="logo-img">
     </a>
-    <a class="logo-text" href="#">
+    <a class="logo-text" href="<c:url value='/1'/>">
         VestNet
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,20 +27,20 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="#">Feed</a>
+                <a class="nav-link" href="<c:url value='/projects'/>"><spring:message code="feed"></spring:message></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">My Projects</a>
+                <a class="nav-link" href="#"><spring:message code="myprojects"></spring:message></a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    More
+                    <spring:message code="more"></spring:message>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Edit Profile</a>
-                    <a class="dropdown-item" href="#">Help</a>
+                    <a class="dropdown-item" href="#"><spring:message code="editprofile"></spring:message></a>
+                    <a class="dropdown-item" href="#"><spring:message code="help"></spring:message></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Log Out</a>
+                    <a class="dropdown-item" href="#"><spring:message code="logout"></spring:message></a>
                 </div>
             </li>
         </ul>
