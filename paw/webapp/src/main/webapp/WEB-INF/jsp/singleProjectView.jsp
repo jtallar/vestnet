@@ -19,6 +19,7 @@
 <body>
 <div class="container" style="margin-top: 20px">
     <div>
+<%--        TODO: FIX BACK WHEN COMING FROM A CONTACT--%>
         <div class="d-flex justify-content-start">
             <button class="btn btn-dark" onclick="history.back()">Back</button>
         </div>

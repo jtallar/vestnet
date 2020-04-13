@@ -29,9 +29,10 @@
                     
     <org.eclipse.jetty.version>9.4.27.v20200227</org.eclipse.jetty.version>
     <joda-time.version>2.10.5</joda-time.version>
-    <javax.mail.version>1.6.0</javax.mail.version>
+    <javax.mail.version>1.6.2</javax.mail.version>
 
-
+    <mockito.version>2.25.1</mockito.version>
+    <org.hsqldb.version>2.3.1</org.hsqldb.version>
   </properties>
 
   <dependencyManagement>
@@ -101,9 +102,27 @@
       <dependency>
         <groupId>com.sun.mail</groupId>
         <artifactId>javax.mail</artifactId>
-        <version>1.6.2</version>
+        <version>${javax.mail.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${org.springframework.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>${org.hsqldb.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
           

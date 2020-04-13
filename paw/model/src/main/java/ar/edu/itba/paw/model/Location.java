@@ -64,7 +64,7 @@ public class Location {
         private final String name;
         private final String isoCode;
 
-        public State(int id, String name, String isoCode, String countryId) {
+        public State(int id, String name, String isoCode) {
             this.id = id;
             this.name = name;
             this.isoCode = isoCode;
@@ -87,7 +87,7 @@ public class Location {
         private final int id;
         private final String name;
 
-        public City(int id, String name, String stateId) {
+        public City(int id, String name) {
             this.id = id;
             this.name = name;
         }

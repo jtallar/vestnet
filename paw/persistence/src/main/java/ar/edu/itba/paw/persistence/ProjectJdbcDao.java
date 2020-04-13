@@ -64,9 +64,13 @@ public class ProjectJdbcDao implements ProjectDao {
         return mayBeProject;
     }
 
+    /**
+     * Search for every available project in the DB
+     * @return  A list of every single project with its owner and categories set (NO STAGES).
+     *          If no projects are found, returns empty list
+     */
     @Override
     public List<Project> findAll() {
-        // TODO: TEST WHAT HAPPENS IF NO PROJECTS ARE LOADED --> NULL o EMPTY LIST?
         List<Project> projects = jdbcTemplate.query("SELECT * FROM projects", ROW_MAPPER);
         for(Project project : projects) {
             // TODO: NO AGREGAR STAGES, NO?
@@ -77,10 +81,16 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    /**
+     * Search for every available project in the DB that matches the category list received
+     * @param categories The list of categories to find
+     * @return  A list of every single project with its owner and categories set (NO STAGES) that match those categories
+     *          If no projects are found, returns empty list. If list is null or empty, returns all projects.
+     */
     // TODO: VER SI HACE FALTA EL namedParamaeter o se puede de otra manera
     @Override
     public List<Project> findByCategories(List<Category> categories) {
-        if (categories == null) return findAll();
+        if (categories == null || categories.isEmpty()) return findAll();
 
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
