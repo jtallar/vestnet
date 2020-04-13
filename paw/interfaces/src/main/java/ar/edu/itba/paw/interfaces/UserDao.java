@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
+import java.util.Date;
 import java.util.Optional;
 
 public interface UserDao {
@@ -17,5 +19,5 @@ public interface UserDao {
      * @param username The name of the user.
      * @return The created user.
      */
-    User create(String username);
+    public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
 }
