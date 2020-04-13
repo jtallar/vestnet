@@ -62,7 +62,6 @@ public class HelloWorldController {
             if (errors.hasErrors()) {
                 return contact(mailFields, p_id);
             }
-            System.out.println(mailFields.toString());
            emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
            return new ModelAndView("redirect:/projects/{p_id}");
     }
@@ -119,11 +118,9 @@ public class HelloWorldController {
                     auxList = auxList.stream().sorted(new DateComparator()).collect(Collectors.toList());
                     break;
                 case "cost-low-high":
-                    System.out.println("Hola1");
                     auxList = auxList.stream().sorted(new CostComparator()).collect(Collectors.toList());
                     break;
                 case "cost-high-low":
-                    System.out.println("Hola");
                     auxList = auxList.stream().sorted(new CostComparator().reversed()).collect(Collectors.toList());
                     break;
                 case "alf":
