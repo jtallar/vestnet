@@ -1,19 +1,27 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.jws.WebParam;
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
@@ -27,6 +35,9 @@ public class HelloWorldController {
     private ProjectService projectService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private CategoriesService categoriesService;
 
     @ExceptionHandler({UserNotFoundException.class, ProjectNotFoundException.class})
@@ -35,6 +46,30 @@ public class HelloWorldController {
         return new ModelAndView("404");
     }
 
+    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
+    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
+           // return new ModelAndView("contact");
+        final ModelAndView mav = new ModelAndView("contact");
+        mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
+//       mailFields.setTo(userService.findById(owner_id).get().getEmail());
+ //       mailFields.setTo("julianmvuoso@gmail.com");
+        return mav;
+    }
+
+    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.POST})
+    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors){
+            if (errors.hasErrors()) {
+                return contact(mailFields, p_id);
+            }
+            System.out.println(mailFields.toString());
+           emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
+           return new ModelAndView("redirect:/projects/{p_id}");
+    }
+
+    @RequestMapping("/emailSuccess")
+    public ModelAndView emailSuccess(){
+        return new ModelAndView("redirect:/projects");        // success jsp
+    }
 
     @RequestMapping("/{id}")
     public ModelAndView helloWorld(@PathVariable("id") long id) {
