@@ -84,22 +84,16 @@ public class HelloWorldController {
     public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter) {
         final ModelAndView mav = new ModelAndView("mainView");
 
-        // TODO: CAMBIARLO A findAllCats cuando sepamos que onda lo de locale obtenido de la BD
-        List<Project> projectList = new ArrayList<>();
-
         List<Category> catList = categoriesService.findAllCats();
-        projectList = filter_order(catFilter,catList);
+        List<Project> projectList = filterOrder(catFilter,catList);
+
         mav.addObject("cats", catList);
-
-
-
-
         mav.addObject("list", projectList);
 
         return mav;
     }
 
-    private List<Project> filter_order(CategoryFilter catFilter, List<Category> catList){
+    private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList){
         List<Project> auxList = new ArrayList<>();
         if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
             Optional<Category> selectedCategory = catList.stream()

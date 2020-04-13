@@ -9,12 +9,13 @@
 </head>
 <body>
     <div>
-        <div class="form-row align-items-center">
+        <div class="form-row align-items-center" style="margin: 20px">
             <c:url var="createUrl" value="/projects "></c:url>
             <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
                 <form:select class="custom-select mr-sm-2" path="categorySelector">
                     <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
                     <c:forEach items="${cats}" var="category">
+                    <%-- TODO: VER COMO MOSTRAMOS CATEGORIAS INTERNACIONALIZADAS --%>
                         <form:option value="${category.name}">${category.name}</form:option>
                     </c:forEach>
                 </form:select>
@@ -25,7 +26,7 @@
                     <form:option value="alf"><spring:message code="alf"></spring:message></form:option>
                 </form:select>
 
-                <input type = "submit" class="btn btn-primary" value="<spring:message code='filter'/>"></input>
+                <input type = "submit" class="btn btn-dark" value="<spring:message code='filter'/>">
             </form:form>
         </div>
     </div>
@@ -48,7 +49,7 @@
                         </c:forEach>
                         <strong><spring:message code="price"/></strong>
                         <p>${project.cost}</p>
-                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-primary">More info</a>
+                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark">More info</a>
                     </div>
                 </div>
         </c:forEach>
