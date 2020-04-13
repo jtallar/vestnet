@@ -12,11 +12,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
-<c:url var="logo" value="/images/logo_wo.png"/>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<c:url var="logo" value="/images/logo_bp.png"/>
+<nav class="navbar navbar-dark navbar-expand-sm navbar-custom">
     <a class="navbar-brand" href="#">
-        <img src=${logo} />
-        <h1 class="my-custom-class">VestNet</h1>
+        <img src=${logo} width="60" class="logo-img">
+    </a>
+    <a class="logo-text" href="#">
+        VestNet
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -34,10 +36,10 @@
                     More
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Edit Profile</a>
+                    <a class="dropdown-item" href="#">Help</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Log Out</a>
                 </div>
             </li>
         </ul>
