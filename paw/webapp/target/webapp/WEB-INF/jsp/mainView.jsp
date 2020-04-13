@@ -12,19 +12,12 @@
         <div class="form-row align-items-center">
             <c:url var="createUrl" value="/projects "></c:url>
             <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
-            <div class="row">
-                <div class="col">
                 <form:select class="custom-select mr-sm-2" path="categorySelector">
                     <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
                     <c:forEach items="${cats}" var="category">
                         <form:option value="${category.name}">${category.name}</form:option>
                     </c:forEach>
                 </form:select>
-                </div>
-                <div class="col">
-                <input type = "submit" class="btn btn-dark" value="<spring:message code='filter'/>">
-                </div>
-            </div>
                 <form:select path="orderBy" class="custom-select mr-sm-2">
                     <form:option value="date"><spring:message code="date"></spring:message> </form:option>
                     <form:option value="cost-low-high"><spring:message code="cost_l_h"></spring:message></form:option>
