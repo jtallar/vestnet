@@ -10,23 +10,32 @@
     <title>Projects</title>
 </head>
 <body>
+    <c:url var="order" value="/images/order.png"></c:url>
+    <c:url var="filter" value="/images/filter.png"></c:url>
     <div>
         <div class="form-row align-items-center" style="margin: 20px">
             <c:url var="createUrl" value="/projects "></c:url>
+
             <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
-                <form:select class="custom-select mr-sm-2" path="categorySelector">
-                    <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
-                    <c:forEach items="${cats}" var="category">
-                    <%-- TODO: VER COMO MOSTRAMOS CATEGORIAS INTERNACIONALIZADAS --%>
-                        <form:option value="${category.name}">${category.name}</form:option>
-                    </c:forEach>
-                </form:select>
-                <form:select path="orderBy" class="custom-select mr-sm-2">
-                    <form:option value="date"><spring:message code="date"></spring:message> </form:option>
-                    <form:option value="cost-low-high"><spring:message code="cost_l_h"></spring:message></form:option>
-                    <form:option value="cost-high-low"><spring:message code="cost_h_l"></spring:message></form:option>
-                    <form:option value="alf"><spring:message code="alf"></spring:message></form:option>
-                </form:select>
+                <div>
+                    <img src="${filter}"width="30" class="logo-img">
+                    <form:select class="custom-select mr-sm-2" path="categorySelector">
+                        <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
+                        <c:forEach items="${cats}" var="category">
+                        <%-- TODO: VER COMO MOSTRAMOS CATEGORIAS INTERNACIONALIZADAS --%>
+                            <form:option value="${category.name}">${category.name}</form:option>
+                        </c:forEach>
+                    </form:select>
+                </div>
+                <div class="row">
+                    <img src="${order}" width="30" class="logo-img">
+                    <form:select path="orderBy" class="custom-select mr-sm-2">
+                        <form:option value="date"><spring:message code="date"></spring:message> </form:option>
+                        <form:option value="cost-low-high"><spring:message code="cost_l_h"></spring:message></form:option>
+                        <form:option value="cost-high-low"><spring:message code="cost_h_l"></spring:message></form:option>
+                        <form:option value="alf"><spring:message code="alf"></spring:message></form:option>
+                    </form:select>
+                </div>
 
                 <input type = "submit" class="btn btn-dark" value="<spring:message code='filter'/>">
             </form:form>
