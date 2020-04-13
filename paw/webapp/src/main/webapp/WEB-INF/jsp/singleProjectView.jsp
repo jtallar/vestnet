@@ -38,7 +38,7 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="https://www.creativefabrica.com/wp-content/uploads/2020/02/13/Green-Gradient-Background-Graphics-1-1-580x387.jpg"
+                            <img src="https://i.pinimg.com/originals/03/6d/a0/036da04d634aadb37d3226f849770712.jpg"
                                  class="d-block w-100" alt="" style="width: 100%; height:100% ">
                             <div class="carousel-caption d-none d-md-block">
                                 <p>This is a first view of the web prototype</p>
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="carousel-item">
-                            <img src="https://i.pinimg.com/originals/03/6d/a0/036da04d634aadb37d3226f849770712.jpg"
+                            <img src="https://www.creativefabrica.com/wp-content/uploads/2020/02/13/Green-Gradient-Background-Graphics-1-1-580x387.jpg"
                                  class="d-block w-100" alt="" style="width: 100%; height:100% ">
                             <div class="carousel-caption d-none d-md-block">
                                 <p>This is how we design de database</p>
@@ -78,7 +78,19 @@
                             <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/>
                                 <c:out value="${project.owner.lastName}"/></footer>
                             <p class="card-text"><c:out value="${project.summary}"/></p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+
+                            <h5 class="card-title"><b><spring:message code="categories"/></b></h5>
+                            <c:forEach var="category" items="${project.categories}">
+                                <li><c:out value="${category.name}"/></li>
+                            </c:forEach>
+                            <br/>
+                            <h5 class="card-title"><b><spring:message code="totalCost"/></b></h5>
+                            <p>U$D<c:out value="${project.cost}"/></p>
+
+                            <h5 class="card-title"><b><spring:message code="contactMail"/></b></h5>
+                            <p><c:out value="${project.owner.email}"/></p>
+
+                            <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out value="${project.updateDate}"/></small></p>
                         </div>
                     </div>
                 </div>

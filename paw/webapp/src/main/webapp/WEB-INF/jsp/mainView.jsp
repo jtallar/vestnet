@@ -7,6 +7,7 @@
 <head>
     <link rel="stylesheet" href="<c:url value = 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' />" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Projects</title>
 </head>
 <body>
     <div>
