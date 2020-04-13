@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ include file = "header.jsp" %>
 
 <html>
 <head>
@@ -8,24 +9,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+    <c:url var="order" value="/images/order.png"></c:url>
+    <c:url var="filter" value="/images/filter.png"></c:url>
     <div>
-        <div class="form-row align-items-center">
+        <div class="align-items-center" style="margin: 20px">
             <c:url var="createUrl" value="/projects "></c:url>
-            <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
-                <form:select class="custom-select mr-sm-2" path="categorySelector">
-                    <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
-                    <c:forEach items="${cats}" var="category">
-                        <form:option value="${category.name}">${category.name}</form:option>
-                    </c:forEach>
-                </form:select>
-                <form:select path="orderBy" class="custom-select mr-sm-2">
-                    <form:option value="date"><spring:message code="date"></spring:message> </form:option>
-                    <form:option value="cost-low-high"><spring:message code="cost_l_h"></spring:message></form:option>
-                    <form:option value="cost-high-low"><spring:message code="cost_h_l"></spring:message></form:option>
-                    <form:option value="alf"><spring:message code="alf"></spring:message></form:option>
-                </form:select>
 
-                <input type = "submit" class="btn btn-primary" value="<spring:message code='filter'/>"></input>
+            <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
+                <div>
+                    <img src="${filter}"width="30" class="logo-img">
+                    <form:select class="custom-select mr-sm-2" path="categorySelector">
+                        <form:option value="allCats"><spring:message code="nofilter"></spring:message> </form:option>
+                        <c:forEach items="${cats}" var="category">
+                        <%-- TODO: VER COMO MOSTRAMOS CATEGORIAS INTERNACIONALIZADAS --%>
+                            <form:option value="${category.name}">${category.name}</form:option>
+                        </c:forEach>
+                    </form:select>
+                </div>
+                <div class="row">
+                    <img src="${order}" width="30" class="logo-img">
+                    <form:select path="orderBy" class="custom-select mr-sm-2">
+                        <form:option value="date"><spring:message code="date"></spring:message> </form:option>
+                        <form:option value="cost-low-high"><spring:message code="cost_l_h"></spring:message></form:option>
+                        <form:option value="cost-high-low"><spring:message code="cost_h_l"></spring:message></form:option>
+                        <form:option value="alf"><spring:message code="alf"></spring:message></form:option>
+                    </form:select>
+                </div>
+
+                <input type = "submit" class="btn btn-dark" value="<spring:message code='filter'/>">
             </form:form>
         </div>
     </div>
@@ -48,7 +59,7 @@
                         </c:forEach>
                         <strong><spring:message code="price"/></strong>
                         <p>${project.cost}</p>
-                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-primary">More info</a>
+                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
                     </div>
                 </div>
         </c:forEach>

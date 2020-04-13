@@ -1,4 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ include file = "header.jsp" %>
+
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -21,7 +24,7 @@
     <div>
 <%--        TODO: FIX BACK WHEN COMING FROM A CONTACT--%>
         <div class="d-flex justify-content-start">
-            <button class="btn btn-dark" onclick="history.back()">Back</button>
+            <button class="btn btn-dark" onclick="history.back()"><spring:message code="back"></spring:message></button>
         </div>
 
         <div class="row" style="margin: 20px">
@@ -83,7 +86,7 @@
         </div>
     </div>
     <div class="d-flex justify-content-end">
-        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark">Contact Owner</a>
+        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark"><spring:message code="contactowner"></spring:message></a>
     </div>
     <%--        <h6>ID: ${project.id}</h6>--%>
     <%--        <h6>OWNER ID: ${project.ownerId}</h6>--%>
