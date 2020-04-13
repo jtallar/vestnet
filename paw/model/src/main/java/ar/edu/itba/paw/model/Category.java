@@ -3,8 +3,7 @@ package ar.edu.itba.paw.model;
 public class Category {
     private final long id;
     private final String name;
-    // TODO: QUE PASA SI NO TIENE PADRE? VA EN NULL O EN 0? SI ESTA EN 0, NO HAY CATEGORIA 0?
-    private final long parentId;
+    private final long parentId; // Si no tiene padre, parentId = 0
 
     public Category(long id, String name, long parentId) {
         this.id = id;

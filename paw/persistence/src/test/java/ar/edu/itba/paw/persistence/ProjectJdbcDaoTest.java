@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 public class ProjectJdbcDaoTest {
     private static final String PROJECTS_TABLE = "projects";
     private static final String PROJECT_NAME = "Project", PROJECT_SUMMARY = "Summary";
+    private static final String PROJECT_NAME_2 = "Project 2", PROJECT_SUMMARY_2 = "Summary 2";
 
     private static final String COUNTRIES_TABLE = "countries";
     private static final String STATES_TABLE = "states";
@@ -33,6 +34,7 @@ public class ProjectJdbcDaoTest {
 
     private static final String CATEGORIES_TABLE = "categories";
     private static final String CATEGORY_NAME = "Technology";
+    private static final String CATEGORY_NAME_2 = "Software";
     private static final String PROJECT_CATEGORY_TABLE = "project_categories";
 
     @Autowired
@@ -199,6 +201,44 @@ public class ProjectJdbcDaoTest {
         values.put("category_id", categoryId.longValue());
         values.put("project_id", projectId.longValue());
         jdbcInsertProjectCategory.execute(values);
+
+        // 2
+        List<Project> projects = projectJdbcDao.findByCategories(Collections.singletonList
+                (new Category(categoryId.longValue(), CATEGORY_NAME, 0)));
+
+        // 3
+        assertEquals(1, projects.size());
+        assertEquals(PROJECT_NAME, projects.get(0).getName());
+        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
+    }
+
+    @Test
+    public void testFindByCategoriesValidMultiple() {
+        // 1
+        Map<String, String> category = new HashMap<String, String>();
+        category.put("category", CATEGORY_NAME);
+        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+        Map<String, String> category2 = new HashMap<String, String>();
+        category2.put("category", CATEGORY_NAME_2);
+        Number categoryId2 = jdbcInsertCategory.executeAndReturnKey(category2);
+
+        Map<String, Object> project = new HashMap<>();
+        project.put("project_name", PROJECT_NAME);
+        project.put("summary", PROJECT_SUMMARY);
+        Number projectId = jdbcInsertProject.executeAndReturnKey(project);
+        Map<String, Object> project2 = new HashMap<>();
+        project2.put("project_name", PROJECT_NAME_2);
+        project2.put("summary", PROJECT_SUMMARY_2);
+        Number projectId2 = jdbcInsertProject.executeAndReturnKey(project2);
+
+        Map<String, Long> values = new HashMap<String, Long>();
+        values.put("category_id", categoryId.longValue());
+        values.put("project_id", projectId.longValue());
+        jdbcInsertProjectCategory.execute(values);
+        Map<String, Long> values2 = new HashMap<String, Long>();
+        values2.put("category_id", categoryId2.longValue());
+        values2.put("project_id", projectId2.longValue());
+        jdbcInsertProjectCategory.execute(values2);
 
         // 2
         List<Project> projects = projectJdbcDao.findByCategories(Collections.singletonList

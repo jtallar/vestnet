@@ -77,6 +77,7 @@ public class CategoriesJdbcDaoTest {
         // 3
         assertEquals(1, categories.size());
         assertEquals(CATEGORY_NAME, categories.get(0).getName());
+        // OJO: si no completo un campo, me pone 0, no null en el long/Long
         assertEquals(0, categories.get(0).getParent());
     }
 
@@ -115,6 +116,5 @@ public class CategoriesJdbcDaoTest {
         // 3
         assertEquals(1, categories.size());
         assertEquals(CATEGORY_NAME, categories.get(0).getName());
-        assertEquals(0, categories.get(0).getParent());
     }
 }

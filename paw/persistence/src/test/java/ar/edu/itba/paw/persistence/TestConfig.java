@@ -19,6 +19,7 @@ public class TestConfig {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
+    // OJO: en hsql, los IDENTITY (SERIAL) arrancan en 0!
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
