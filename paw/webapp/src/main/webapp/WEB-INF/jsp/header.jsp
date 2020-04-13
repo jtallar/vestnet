@@ -15,10 +15,10 @@
 <body>
 <c:url var="logo" value="/images/logo_bp.png"/>
 <nav class="navbar navbar-dark navbar-expand-sm navbar-custom">
-    <a class="navbar-brand" href="<c:url value='/1'/>">
+    <a class="navbar-brand" href="<c:url value='/'/>">
         <img src=${logo} width="60" class="logo-img">
     </a>
-    <a class="logo-text" href="<c:url value='/1'/>">
+    <a class="logo-text" href="<c:url value='/'/>">
         VestNet
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

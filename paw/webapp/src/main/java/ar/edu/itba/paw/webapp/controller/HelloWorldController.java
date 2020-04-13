@@ -66,9 +66,9 @@ public class HelloWorldController {
            return new ModelAndView("redirect:/projects/{p_id}");
     }
 
-    @RequestMapping("/emailSuccess")
-    public ModelAndView emailSuccess(){
-        return new ModelAndView("redirect:/projects");        // success jsp
+    @RequestMapping("/")
+    public ModelAndView index(){
+        return new ModelAndView("redirect:/projects");
     }
 
     @RequestMapping("/{id}")

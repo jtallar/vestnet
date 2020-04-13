@@ -24,7 +24,7 @@
     <div>
 <%--        TODO: FIX BACK WHEN COMING FROM A CONTACT--%>
         <div class="d-flex justify-content-start">
-            <button class="btn btn-dark" onclick="history.back()"><spring:message code="back"></spring:message></button>
+            <a href="<c:url value='/projects'/>" class="btn btn-dark"><spring:message code="back"></spring:message></a>
         </div>
 
         <div class="row" style="margin: 20px">
