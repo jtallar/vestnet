@@ -41,9 +41,15 @@ public class HelloWorldController {
     @Autowired
     private CategoriesService categoriesService;
 
-    @ExceptionHandler({UserNotFoundException.class, ProjectNotFoundException.class})
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {
+        return new ModelAndView("404");
+    }
+
+    @ExceptionHandler(ProjectNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ModelAndView noSuchProject() {
         return new ModelAndView("404");
     }
 
@@ -63,7 +69,7 @@ public class HelloWorldController {
                 return contact(mailFields, p_id);
             }
            emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
-           return new ModelAndView("redirect:/projects/{p_id}");
+           return new ModelAndView("redirect:/projects/{p_id}?mailSent=yes");
     }
 
     @RequestMapping("/")
@@ -71,14 +77,14 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/projects");
     }
 
-    @RequestMapping("/{id}")
+    /*@RequestMapping("/{id}")
     public ModelAndView helloWorld(@PathVariable("id") long id) {
         final ModelAndView mav = new ModelAndView("index");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         List<Category> catList = categoriesService.findAllCats();
         mav.addObject("cats", catList);
         return mav;
-    }
+    }*/
 
     @RequestMapping(value = "/projects")
     public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter) {
@@ -136,10 +142,13 @@ public class HelloWorldController {
 
 
     // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
+    // TODO: HACE FALTA EL REQUIRED = FALSE?
     @RequestMapping(value = "/projects/{id}")
-    public ModelAndView singleProjectView(@PathVariable("id") long id) {
+    public ModelAndView singleProjectView(@PathVariable("id") long id,
+                                          @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("mailSent", mailSent);
         return mav;
     }
 

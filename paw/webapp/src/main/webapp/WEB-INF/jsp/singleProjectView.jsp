@@ -23,10 +23,17 @@
 <div class="container" style="margin-top: 20px">
     <div>
 <%--        TODO: FIX BACK WHEN COMING FROM A CONTACT--%>
-        <div class="d-flex justify-content-start">
-            <a href="<c:url value='/projects'/>" class="btn btn-dark"><spring:message code="back"></spring:message></a>
-        </div>
-
+<%--        <div class="row">--%>
+            <div class="d-flex justify-content-between align-self-center">
+                <div class="p-2">
+                    <a href="<c:url value='/projects'/>" class="btn btn-dark"><spring:message code="back"/></a>
+                </div>
+                <c:if test="${mailSent}">
+                <div class="p-2 ml-8">
+                    <h5 class="card-title mr-4" style="color: blueviolet"><spring:message code="mailSent"/> <c:out value="${project.owner.email}"/></h5>
+                </div>
+                </c:if>
+            </div>
         <div class="row" style="margin: 20px">
             <div class="col">
                 <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel"

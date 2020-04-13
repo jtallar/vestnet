@@ -14,7 +14,7 @@
     <c:url var="filter" value="/images/filter.png"></c:url>
     <div>
         <div class="form-row align-items-center" style="margin: 20px">
-            <c:url var="createUrl" value="/projects "></c:url>
+            <c:url var="createUrl" value='/projects'></c:url>
 
             <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
                 <div>
@@ -37,7 +37,7 @@
                     </form:select>
                 </div>
 
-                <input type = "submit" class="btn btn-dark" value="<spring:message code='filter'/>">
+                <input type = "submit" class="btn btn-dark" value="<spring:message code='apply'/>">
             </form:form>
         </div>
     </div>
