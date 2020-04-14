@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.924" tests="9" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.917" tests="9" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="13"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="AR"/>
     <property name="sun.boot.library.path" value="/usr/local/Cellar/openjdk/13.0.2+8_2/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/mati/IdeaProjects/WinWings/paw/persistence/target/surefire/surefirebooter6121738488468822521.jar /Users/mati/IdeaProjects/WinWings/paw/persistence/target/surefire 2020-04-13T22-45-51_189-jvmRun1 surefire9310855113718816463tmp surefire_212172315452310823058tmp"/>
+    <property name="sun.java.command" value="/Users/mati/IdeaProjects/WinWings/paw/persistence/target/surefire/surefirebooter3276733648587636953.jar /Users/mati/IdeaProjects/WinWings/paw/persistence/target/surefire 2020-04-14T09-30-50_710-jvmRun1 surefire5774073965496521510tmp surefire_215610742425693110951tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/mati/IdeaProjects/WinWings/paw/persistence/target/test-classes:/Users/mati/IdeaProjects/WinWings/paw/persistence/target/classes:/Users/mati/.m2/repository/junit/junit/4.13/junit-4.13.jar:/Users/mati/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/mati/.m2/repository/org/springframework/spring-context/4.2.5.RELEASE/spring-context-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/org/springframework/spring-aop/4.2.5.RELEASE/spring-aop-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar:/Users/mati/.m2/repository/org/springframework/spring-beans/4.2.5.RELEASE/spring-beans-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/Users/mati/.m2/repository/org/springframework/spring-expression/4.2.5.RELEASE/spring-expression-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/org/springframework/spring-jdbc/4.2.5.RELEASE/spring-jdbc-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/org/springframework/spring-tx/4.2.5.RELEASE/spring-tx-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/org/postgresql/postgresql/42.2.5/postgresql-42.2.5.jar:/Users/mati/IdeaProjects/WinWings/paw/interfaces/target/interfaces-1.0.jar:/Users/mati/IdeaProjects/WinWings/paw/model/target/model-1.0.jar:/Users/mati/.m2/repository/joda-time/joda-time/2.10.5/joda-time-2.10.5.jar:/Users/mati/.m2/repository/org/springframework/spring-test/4.2.5.RELEASE/spring-test-4.2.5.RELEASE.jar:/Users/mati/.m2/repository/org/hsqldb/hsqldb/2.3.1/hsqldb-2.3.1.jar:"/>
@@ -28,7 +28,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/Users/mati/IdeaProjects/WinWings/paw/persistence/target/surefire/surefirebooter6121738488468822521.jar"/>
+    <property name="surefire.real.class.path" value="/Users/mati/IdeaProjects/WinWings/paw/persistence/target/surefire/surefirebooter3276733648587636953.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="13.0.2+8"/>
@@ -53,13 +53,13 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="57.0"/>
   </properties>
-  <testcase name="testFindByCategoriesNull" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.117"/>
-  <testcase name="testFindByCategoriesEmpty" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.079"/>
-  <testcase name="testFindByCategoriesValid" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.119"/>
-  <testcase name="testFindByCategoriesValidMultiple" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.134"/>
-  <testcase name="testFindByIdDoesntExists" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.021"/>
-  <testcase name="testFindByIdProjectExists" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.092"/>
-  <testcase name="testCreate" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.171"/>
-  <testcase name="testFindAllIfTableEmpty" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.013"/>
-  <testcase name="testFindAllIfTableNotEmpty" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.115"/>
+  <testcase name="testFindByCategoriesNull" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.151"/>
+  <testcase name="testFindByCategoriesEmpty" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.087"/>
+  <testcase name="testFindByCategoriesValid" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.169"/>
+  <testcase name="testFindByCategoriesValidMultiple" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.096"/>
+  <testcase name="testFindByIdDoesntExists" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.041"/>
+  <testcase name="testFindByIdProjectExists" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.112"/>
+  <testcase name="testCreate" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.073"/>
+  <testcase name="testFindAllIfTableEmpty" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.011"/>
+  <testcase name="testFindAllIfTableNotEmpty" classname="ar.edu.itba.paw.persistence.ProjectJdbcDaoTest" time="0.109"/>
 </testsuite>
