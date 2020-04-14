@@ -10,7 +10,7 @@
     <title>Projects</title>
 </head>
 <body>
-    <c:url var="order" value="/images/order.png"></c:url>
+    <c:url var="order" value="/images/filter.png"></c:url>
     <c:url var="filter" value="/images/filter.png"></c:url>
     <div>
         <div class="form-row align-items-center" style="margin: 20px">
@@ -27,7 +27,7 @@
                         </c:forEach>
                     </form:select>
                 </div>
-                <div class="row">
+                <div >
                     <img src="${order}" width="30" class="logo-img">
                     <form:select path="orderBy" class="custom-select mr-sm-2">
                         <form:option value="date"><spring:message code="date"></spring:message> </form:option>

@@ -27,7 +27,7 @@
                         </c:forEach>
                     </form:select>
                 </div>
-                <div class="row">
+                <div>
                     <img src="${order}" width="30" class="logo-img">
                     <form:select path="orderBy" class="custom-select mr-sm-2">
                         <form:option value="date"><spring:message code="date"></spring:message> </form:option>
