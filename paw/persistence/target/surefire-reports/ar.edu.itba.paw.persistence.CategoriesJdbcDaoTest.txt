@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ar.edu.itba.paw.persistence.CategoriesJdbcDaoTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.204 s - in ar.edu.itba.paw.persistence.CategoriesJdbcDaoTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.834 s - in ar.edu.itba.paw.persistence.CategoriesJdbcDaoTest

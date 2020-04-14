@@ -1,6 +1,6 @@
-/home/julian/Desktop/PAW/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/mail/MailFields.java
-/home/julian/Desktop/PAW/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/controller/HelloWorldController.java
-/home/julian/Desktop/PAW/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/exception/ProjectNotFoundException.java
-/home/julian/Desktop/PAW/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/exception/UserNotFoundException.java
-/home/julian/Desktop/PAW/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/forms/CategoryFilter.java
-/home/julian/Desktop/PAW/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/config/WebConfig.java
+/Users/mati/IdeaProjects/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/forms/CategoryFilter.java
+/Users/mati/IdeaProjects/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/controller/HelloWorldController.java
+/Users/mati/IdeaProjects/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/mail/MailFields.java
+/Users/mati/IdeaProjects/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/exception/UserNotFoundException.java
+/Users/mati/IdeaProjects/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/config/WebConfig.java
+/Users/mati/IdeaProjects/WinWings/paw/webapp/src/main/java/ar/edu/itba/paw/webapp/exception/ProjectNotFoundException.java

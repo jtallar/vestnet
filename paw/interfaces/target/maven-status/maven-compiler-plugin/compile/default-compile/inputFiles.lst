@@ -1,8 +1,8 @@
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/EmailService.java
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/CategoriesService.java
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/UserService.java
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/UserDao.java
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/CategoriesDao.java
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/ProjectDao.java
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/App.java
-/home/julian/Desktop/PAW/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/ProjectService.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/App.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/EmailService.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/CategoriesService.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/UserService.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/UserDao.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/CategoriesDao.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/ProjectService.java
+/Users/mati/IdeaProjects/WinWings/paw/interfaces/src/main/java/ar/edu/itba/paw/interfaces/ProjectDao.java
