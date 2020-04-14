@@ -10,7 +10,7 @@
     <title>Projects</title>
 </head>
 <body>
-    <c:url var="order" value="/images/filter.png"></c:url>
+    <c:url var="order" value="/images/order.png"></c:url>
     <c:url var="filter" value="/images/filter.png"></c:url>
     <div>
         <div class="form-row align-items-center" style="margin: 20px">
@@ -27,7 +27,7 @@
                         </c:forEach>
                     </form:select>
                 </div>
-                <div >
+                <div>
                     <img src="${order}" width="30" class="logo-img">
                     <form:select path="orderBy" class="custom-select mr-sm-2">
                         <form:option value="date"><spring:message code="date"></spring:message> </form:option>
@@ -52,14 +52,16 @@
 
                     </div>
                     <div class="card-body">
-                        <c:out value="${project.publishDate}"></c:out>
+<%--                        <c:out value="${project.publishDate}"></c:out>--%>
                         <p class="card-text"><c:out value="${project.summary}"></c:out></p>
-                        <strong><spring:message code="categories"/></strong>
-                        <c:forEach items="${project.categories}" var="category">
-                             <p class="card-text" id="category">-${category.name}</p>
-                        </c:forEach>
+<%--                        <strong><spring:message code="categories"/></strong>--%>
+<%--                        <c:forEach items="${project.categories}" var="category">--%>
+<%--                             <p class="card-text" id="category">-${category.name}</p>--%>
+<%--                        </c:forEach>--%>
+                        <strong><spring:message code="owner"/></strong>
+                        <p><c:out value="${project.owner.firstName}"/> <c:out value="${project.owner.lastName}"/></p>
                         <strong><spring:message code="price"/></strong>
-                        <p>${project.cost}</p>
+                        <p><c:out value="${project.cost}"/></p>
                         <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
                     </div>
                 </div>
