@@ -5,13 +5,13 @@ import javax.validation.constraints.Size;
 
 public class MailFields {
 
-    @Size(min = 1, max = 140)
+   // @Size(min = 1, max = 140)
     private String body;
 
 //    @Size(min = 1, max = 30)
 //    private String subject;
 
-    @Size(min = 2, max = 20)
+   // @Size(min = 2, max = 20)
     //@Pattern(regexp = "[a-zA-Z0-9]+")    // chequeo q sea mail
     private String from;
 
