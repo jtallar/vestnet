@@ -38,7 +38,15 @@
           <element id="archive" name="model-1.0.jar">
             <element id="module-output" name="model" />
           </element>
+          <element id="library" level="project" name="Maven: joda-time:joda-time:2.10.5" />
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
+          <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:4.3.1.Final" />
+          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.1.0.CR2" />
+          <element id="library" level="project" name="Maven: javax.mail:javax.mail-api:1.6.2" />
+          <element id="library" level="project" name="Maven: com.sun.mail:javax.mail:1.6.2" />
+          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+          <element id="library" level="project" name="Maven: org.jetbrains:annotations:19.0.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">

@@ -1,0 +1,6 @@
+ar/edu/itba/paw/webapp/mail/MailFields.class
+ar/edu/itba/paw/webapp/controller/HelloWorldController.class
+ar/edu/itba/paw/webapp/exception/UserNotFoundException.class
+ar/edu/itba/paw/webapp/forms/CategoryFilter.class
+ar/edu/itba/paw/webapp/config/WebConfig.class
+ar/edu/itba/paw/webapp/exception/ProjectNotFoundException.class
