@@ -29,6 +29,8 @@ hs_err_pid*
 .idea/
 *.iml
 *.iml.bak
+*.ipr
+*.iws
 
 target/
 *.classpath
