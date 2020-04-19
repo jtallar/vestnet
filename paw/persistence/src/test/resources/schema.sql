@@ -1,3 +1,4 @@
+-- HSQL WONT ACCEPT NOT NULL AND DEFAULT TOGETHER
 /****************************************
 **     CREATE ALL NECESSARY TABLES     **
 *****************************************/

@@ -82,14 +82,11 @@ public class ProjectJdbcDaoTest {
         Number userId = jdbcInsertUser.executeAndReturnKey(user);
 
         // 2
-        Project project = projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, null, null, 0,
-                new Entrepreneur(userId.longValue(), null, null, null, null, null, null, null, null, null, null, 0),
-                new ArrayList<>(), new ArrayList<>());
+//        public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages)
+
+        long projectId = projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, 0, userId.longValue(), new ArrayList<>(), new ArrayList<>());
 
         // 3
-        System.out.println(project.getId());
-        assertEquals(PROJECT_NAME, project.getName());
-        assertEquals(PROJECT_SUMMARY, project.getSummary());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, PROJECTS_TABLE));
     }
 
