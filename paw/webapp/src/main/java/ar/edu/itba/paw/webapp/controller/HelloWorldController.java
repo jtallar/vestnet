@@ -11,6 +11,7 @@ import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,4 +158,22 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/" + user.getId());
     }*/
 
+    @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
+    public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
+        final ModelAndView mav = new ModelAndView("newProject");
+        List<Category> catList = categoriesService.findAllCats();
+        mav.addObject("categories", catList);
+        return mav;
+    }
+
+    @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
+    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields newProjectFields, BindingResult errors){
+        if (errors.hasErrors()) {
+            return createProject(newProjectFields);
+        }
+        // TODO: Create Project
+        System.out.println(newProjectFields.toString());
+        long projectId = 1;
+        return new ModelAndView("redirect:/projects/" + projectId);
+    }
 }
