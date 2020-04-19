@@ -34,8 +34,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner, List<Category> categories, List<Stage> stages) {
-        return projectDao.create(name, summary, publishDate, updateDate, cost, owner, categories, stages);
+    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages) {
+        return projectDao.create(name, summary, cost, ownerId, categoriesIds, stages);
     }
 }
 

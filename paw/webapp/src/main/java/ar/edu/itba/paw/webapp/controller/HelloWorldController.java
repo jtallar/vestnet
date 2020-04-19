@@ -167,13 +167,14 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
-    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields newProjectFields, BindingResult errors){
+    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, BindingResult errors){
         if (errors.hasErrors()) {
-            return createProject(newProjectFields);
+            return createProject(projectFields);
         }
-        // TODO: Create Project
-        System.out.println(newProjectFields.toString());
-        long projectId = 1;
+        // TODO: GUARDAR UNA SESION PARA TENER EL OWNER ID, POR AHORA HARDCODEO 1
+        // TODO: AGREGAR STAGES
+        long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
+                projectFields.getCost(), 1, projectFields.getCategories(), null);
         return new ModelAndView("redirect:/projects/" + projectId);
     }
 }

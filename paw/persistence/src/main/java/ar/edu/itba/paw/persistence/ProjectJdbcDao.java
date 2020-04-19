@@ -22,9 +22,11 @@ import java.util.stream.Collectors;
 
 @Repository
 public class ProjectJdbcDao implements ProjectDao {
+    private static final String PROJECTS_TABLE = "projects";
+    private static final String PROJECT_CATEGORIES_TABLE = "project_categories";
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
+    private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink;
 
     @Autowired
     private UserJdbcDao userJdbcDao;
@@ -44,9 +46,13 @@ public class ProjectJdbcDao implements ProjectDao {
     @Autowired
     public ProjectJdbcDao(final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
+        // TODO: WHEN ADDING FIELDS IN CREATE, add them in Columns. SINO NO TOMA LOS DEFAULTS
         jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("projects")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(PROJECTS_TABLE)
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("owner_id", "project_name", "summary", "cost");
+        jdbcInsertCategoryLink = new SimpleJdbcInsert(dataSource)
+                .withTableName(PROJECT_CATEGORIES_TABLE);
 
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
@@ -117,22 +123,35 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID, TOTAL DE ACA DESEMBOCO EN BUSCARLO, NO?
     @Override
-    public Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
-                          List<Category> categories, List<Stage> stages) {
+    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages) {
         Map<String, Object> values = new HashMap<>();
+        values.put("owner_id", ownerId);
         values.put("project_name", name);
         values.put("summary", summary);
-        values.put("publish_date", publishDate);
-        values.put("update_date", updateDate);
+        // TODO: SACAR ESTE COST, LUEGO CALCULARLO CON LOS STAGES
         values.put("cost", cost);
-        values.put("owner_id", owner.getId());
+        // DATE SET TO DEFAULT --> CURRENT_TIMESTAMP
+        // TODO: AGREGAR IMAGENES
+        // IMAGES SET TO DEFAULT --> false
+        // HITS SET TO DEFAULT --> 0
+        // TODO: AGREGAR BACKOFFICE
+        // BACKOFFICE SET TO DEFAULT
+
         Number keyNumber = jdbcInsert.executeAndReturnKey(values);
-        // TODO: INSERTAR LAS CATEGORIAS
-        // TODO: INSERTAR LOS STAGES
-        return new Project(keyNumber.longValue(), name, summary, publishDate, updateDate, cost, 0, false, owner,
-                new Project.ProjectBackOffice(false, 0, 0), categories,
-                stages.stream().map(Stage::getId).collect(Collectors.toList()), stages);
+        for (long categoryId : categoriesIds) {
+            values.clear();
+            values.put("project_id", keyNumber.longValue());
+            values.put("category_id", categoryId);
+            jdbcInsertCategoryLink.execute(values);
+        }
+        // TODO: INSERTAR LOS STAGES con sus RESOURCES
+
+        return keyNumber.longValue();
+//        return new Project(keyNumber.longValue(), name, summary, publishDate, updateDate, cost, 0, false, owner,
+//                new Project.ProjectBackOffice(false, 0, 0), categories,
+//                stages.stream().map(Stage::getId).collect(Collectors.toList()), stages);
     }
 }
 

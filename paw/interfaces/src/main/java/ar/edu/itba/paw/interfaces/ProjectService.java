@@ -32,6 +32,9 @@ public interface ProjectService {
      * Create a project given all thes parameters
      * @return The created project
      */
-    Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
-                   List<Category> categories, List<Stage> stages);
+//    Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
+//                   List<Category> categories, List<Stage> stages);
+
+    // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID
+    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages);
 }

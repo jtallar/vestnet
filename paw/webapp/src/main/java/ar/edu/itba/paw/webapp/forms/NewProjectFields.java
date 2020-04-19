@@ -25,7 +25,7 @@ public class NewProjectFields {
 
     // TODO: VER POR QUE NO ME MUESTRA EL MENSAJE EN CASO DE ESTAR EMPTY
     @NotEmpty(message = "List cannot be empty")
-    private List<Integer> categoriesIds;
+    private List<Long> categoriesIds;
 
     public String getTitle() {
         return title;
@@ -39,7 +39,7 @@ public class NewProjectFields {
         return cost;
     }
 
-    public List<Integer> getCategories() {
+    public List<Long> getCategories() {
         return categoriesIds;
     }
 
@@ -55,7 +55,7 @@ public class NewProjectFields {
         this.cost = cost;
     }
 
-    public void setCategories(List<Integer> categoriesIds) {
+    public void setCategories(List<Long> categoriesIds) {
         this.categoriesIds = categoriesIds;
     }
 
