@@ -6,8 +6,10 @@ import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.Stage;
 import ar.edu.itba.paw.model.User;
+import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,6 +17,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -35,12 +38,19 @@ public class ProjectJdbcDao implements ProjectDao {
     // TODO: VER SI SE PUEDE HACER DE OTRA MANERA
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final static RowMapper<Project> ROW_MAPPER = (rs, rowNum) -> new Project(rs.getLong("id"),
-            rs.getString("project_name"), rs.getString("summary"),
-            rs.getDate("publish_date"), rs.getDate("update_date"),
-            rs.getLong("cost"), rs.getLong("hits"), rs.getBoolean("images"),
+    private final ResultSetExtractor<List<Project>> resultSetExtractor = JdbcTemplateMapperFactory
+            .newInstance()
+            .addKeys("id")
+            .newResultSetExtractor(Project.class);
+
+    private final static RowMapper<Project> ROW_MAPPER = (rs, rowNum) -> new Project(
+            rs.getLong("id"), rs.getString("project_name"),
+            rs.getString("summary"), rs.getDate("publish_date"),
+            rs.getDate("update_date"), rs.getLong("cost"),
+            rs.getLong("hits"), rs.getBoolean("images"),
             rs.getLong("owner_id"),
-            new Project.ProjectBackOffice(rs.getBoolean("aproved"), rs.getInt("profit_index"),
+            new Project.ProjectBackOffice(
+                    rs.getBoolean("aproved"), rs.getInt("profit_index"),
                     rs.getInt("risk_index")), null, null);
 
     @Autowired
@@ -77,13 +87,7 @@ public class ProjectJdbcDao implements ProjectDao {
      */
     @Override
     public List<Project> findAll() {
-        List<Project> projects = jdbcTemplate.query("SELECT * FROM projects", ROW_MAPPER);
-        for(Project project : projects) {
-            // TODO: NO AGREGAR STAGES, NO?
-            Optional<User> owner = userJdbcDao.findById(project.getOwnerUserId());
-            if (owner.isPresent()) project.setOwner(owner.get());
-            project.setCategories(categoriesJdbcDao.findProjectCategories(project.getId()));
-        }
+        List<Project> projects = jdbcTemplate.query(Queries.PROJECT_FIND_ALL, resultSetExtractor);
         return projects;
     }
 
@@ -101,14 +105,14 @@ public class ProjectJdbcDao implements ProjectDao {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
 
-//        List<Project> projects = jdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
+//        List<Project> projects = jdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary, " +
 //                        "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
 //                        "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
 //                        "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
 //                        "WHERE project_categories.category_id IN (?)",
 //                ROW_MAPPER, categories.stream().map(Category::getId).collect(Collectors.toList()));
 
-        List<Project> projects = namedParameterJdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
+        List<Project> projects = namedParameterJdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary, " +
                 "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
                         "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
                         "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
