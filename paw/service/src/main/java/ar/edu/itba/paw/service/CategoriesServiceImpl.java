@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.CategoriesDao;
 import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     CategoriesDao categoriesDao;
     @Override
     public List<Category> findAllCats() {
-        return categoriesDao.findAllCats();
+        return categoriesDao.findAll();
     }
 
     @Override

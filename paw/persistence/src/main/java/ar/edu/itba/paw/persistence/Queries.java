@@ -10,6 +10,16 @@ public class Queries {
     static final String PROJECT_CATEGORIES_TABLE = "project_categories";
     private static final String CATEGORIES_TABLE = "categories";
 
+    static final String CATEGORY_FIND_ALL = "SELECT " +
+            "cat.id, " +
+            "cat.category AS name, " +
+            "cat.parent AS parent_id " +
+            "FROM " + CATEGORIES_TABLE + " cat ";
+
+    static final String CATEGORY_FIND_BY_PROJECT_ID = CATEGORY_FIND_ALL +
+            "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (pcat.category_id = cat.id) " +
+            "WHERE pcat.project_id = ?";
+
     static final String USER_FIND_ALL = "SELECT " +
             "u.id, " +
             "u.first_name, " +
