@@ -1,3 +1,6 @@
+# MAC Folder files
+.DS_Store
+
 # Compiled class file
 *.class
 
@@ -23,9 +26,14 @@
 hs_err_pid*
 
 # intellij conf
+.idea/
+*.iml
+*.iml.bak
+*.ipr
+*.iws
 
-/target/
-/*.classpath
-/*.project
+target/
+*.classpath
+*.project
 /apache-tomcat-7.0.103/
 /jetty-distribution-9.4.27.v20200227/
