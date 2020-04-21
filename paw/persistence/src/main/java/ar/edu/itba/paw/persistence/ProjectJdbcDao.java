@@ -35,11 +35,11 @@ public class ProjectJdbcDao implements ProjectDao {
 
         // NOTE: Use columns when adding fields in create otherwise defaults wont work
         jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Queries.PROJECT_TABLE)
+                .withTableName(JdbcQueries.PROJECT_TABLE)
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("owner_id", "project_name", "summary", "cost");
         jdbcInsertCategoryLink = new SimpleJdbcInsert(dataSource)
-                .withTableName(Queries.PROJECT_CATEGORIES_TABLE);
+                .withTableName(JdbcQueries.PROJECT_CATEGORIES_TABLE);
 
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
@@ -51,7 +51,7 @@ public class ProjectJdbcDao implements ProjectDao {
      */
     @Override
     public Optional<Project> findById(long id) {
-        Optional<Project> project = jdbcTemplate.query(Queries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
+        Optional<Project> project = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
         // TODO add stages
         return project;
     }
@@ -63,7 +63,7 @@ public class ProjectJdbcDao implements ProjectDao {
      */
     @Override
     public List<Project> findAll() {
-        List<Project> projects = jdbcTemplate.query(Queries.PROJECT_FIND_ALL, RESULT_SET_EXTRACTOR);
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_ALL, RESULT_SET_EXTRACTOR);
         // TODO add stages?
         return projects;
     }
@@ -81,7 +81,7 @@ public class ProjectJdbcDao implements ProjectDao {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
 
-        List<Project> projects = namedParameterJdbcTemplate.query(Queries.PROJECT_FIND_BY_CAT, parameters, RESULT_SET_EXTRACTOR);
+        List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_CAT, parameters, RESULT_SET_EXTRACTOR);
         // TODO add stages?
         return projects;
     }

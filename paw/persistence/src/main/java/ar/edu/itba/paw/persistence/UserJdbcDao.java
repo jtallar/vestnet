@@ -28,7 +28,7 @@ public class UserJdbcDao implements UserDao {
     public UserJdbcDao (final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Queries.USER_TABLE)
+                .withTableName(JdbcQueries.USER_TABLE)
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -39,7 +39,7 @@ public class UserJdbcDao implements UserDao {
      */
     @Override
     public Optional<User> findById(long id) {
-        return jdbcTemplate.query(Queries.USER_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
+        return jdbcTemplate.query(JdbcQueries.USER_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
     }
 
 

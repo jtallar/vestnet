@@ -32,7 +32,7 @@ public class CategoriesJdbcDao implements CategoriesDao {
      */
     @Override
     public List<Category> findAll() {
-        return jdbcTemplate.query(Queries.CATEGORY_FIND_ALL, RESULT_SET_EXTRACTOR);
+        return jdbcTemplate.query(JdbcQueries.CATEGORY_FIND_ALL, RESULT_SET_EXTRACTOR);
     }
 
     /**
@@ -42,6 +42,6 @@ public class CategoriesJdbcDao implements CategoriesDao {
      */
     @Override
     public List<Category> findProjectCategories(long projectId) { // TODO check if its needed
-        return jdbcTemplate.query(Queries.CATEGORY_FIND_BY_PROJECT_ID, RESULT_SET_EXTRACTOR, projectId);
+        return jdbcTemplate.query(JdbcQueries.CATEGORY_FIND_BY_PROJECT_ID, RESULT_SET_EXTRACTOR, projectId);
     }
 }

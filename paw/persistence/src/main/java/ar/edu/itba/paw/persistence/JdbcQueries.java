@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-public class Queries {
+public class JdbcQueries {
 
     static final String PROJECT_TABLE = "projects";
     static final String USER_TABLE = "users";
