@@ -2,6 +2,15 @@ package ar.edu.itba.paw.persistence;
 
 public class Queries {
 
+    static final String PROJECT_TABLE = "projects";
+    private static final String USER_TABLE = "users";
+    private static final String COUNTRY_TABLE = "countries";
+    private static final String STATE_TABLE = "states";
+    private static final String CITY_TABLE = "cities";
+    static final String PROJECT_CATEGORIES_TABLE = "project_categories";
+    private static final String CATEGORIES_TABLE = "categories";
+
+
     static final String PROJECT_FIND_ALL = "SELECT " +
             "p.id, " +
             "p.project_name AS name, " +
@@ -46,13 +55,15 @@ public class Queries {
             "cat.category AS categories_name, " +
             "cat.parent AS categories_parent_id " +
 
-            "FROM projects p " +
-            "JOIN users u ON (p.owner_id = u.id) " +
-            "JOIN countries co ON (u.country_id = co.id) " +
-            "JOIN states st ON (u.state_id = st.id) " +
-            "JOIN cities ci ON (u.city_id = ci.id) " +
-            "JOIN project_categories pcat ON (p.id = pcat.project_id) " +
-            "JOIN categories cat ON (pcat.category_id = cat.id) ";
+            "FROM " + PROJECT_TABLE + " p " +
+            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
+            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
+            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
+            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
+            "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
+            "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) ";
 
-    static final String PROJECT_FIND_BY_ID = PROJECT_FIND_ALL + "";
+    static final String PROJECT_FIND_BY_ID = PROJECT_FIND_ALL + "WHERE p.id = ?";
+
+    static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + "WHERE pcat.category_id IN (:categories)";
 }
