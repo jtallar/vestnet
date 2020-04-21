@@ -3,13 +3,46 @@ package ar.edu.itba.paw.persistence;
 public class Queries {
 
     static final String PROJECT_TABLE = "projects";
-    private static final String USER_TABLE = "users";
+    static final String USER_TABLE = "users";
     private static final String COUNTRY_TABLE = "countries";
     private static final String STATE_TABLE = "states";
     private static final String CITY_TABLE = "cities";
     static final String PROJECT_CATEGORIES_TABLE = "project_categories";
     private static final String CATEGORIES_TABLE = "categories";
 
+    static final String USER_FIND_ALL = "SELECT " +
+            "u.id, " +
+            "u.first_name, " +
+            "u.last_name, " +
+            "u.real_id, " +
+
+            "u.aux_date AS birth_date, " +
+            "u.email, " +
+            "u.phone, " +
+            "u.linkedin, " +
+            "u.profile_pic AS profile_picture, " +
+            "u.join_date, " +
+            "u.trust_index, " +
+
+            "co.id AS location_country_id, " +
+            "co.country AS location_country_name, " +
+            "co.iso2 AS location_country_iso_code, " +
+            "co.phonecode AS location_country_phone_code, " +
+            "co.currency AS location_country_currency, " +
+
+            "st.id AS location_state_id, " +
+            "st.state AS location_state_name, " +
+            "st.iso2 AS location_state_iso_code, " +
+
+            "ci.id AS location_city_id, " +
+            "ci.city AS location_city_name " +
+
+            "FROM " + USER_TABLE + " u " +
+            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
+            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
+            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) ";
+
+    static final String USER_FIND_BY_ID = USER_FIND_ALL + "WHERE u.id = ?";
 
     static final String PROJECT_FIND_ALL = "SELECT " +
             "p.id, " +
