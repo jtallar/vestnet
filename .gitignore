@@ -26,7 +26,7 @@
 hs_err_pid*
 
 # intellij conf
-.idea/
+*/.idea/
 *.iml
 *.iml.bak
 *.ipr
