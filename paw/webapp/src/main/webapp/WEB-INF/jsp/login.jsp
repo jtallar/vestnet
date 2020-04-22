@@ -11,33 +11,47 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
 <head>
-    <title>Title</title>
+    <link rel="stylesheet" href="<c:url value="/css/signin.css"/>"/>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <title>Sign in</title>
 </head>
 <body>
-<c:url value="/login" var="loginUrl"></c:url>
-<form method="post" action="${loginUrl}" >
-    <div>
-        <label>
-            <spring:message code = "username"></spring:message>
-            <input name="username" placeholder="<spring:message code = "username"/>"/>
-        </label>
-    </div>
-    <div>
-        <label>
-            <spring:message code = "password"></spring:message>
-            <input name="password" type="password" placeholder="<spring:message code = "password"/>"/>
-        </label>
-    </div>
-    <div>
-        <label>
-            <input name="remember_me" type="checkbox"/>
-            <spring:message code = "rememberMe"></spring:message>
-        </label>
+
+<div class="sidenav">
+    <c:url var="logo" value="/images/logo_bp.png"/>
+    <div class="text-center mt-5">
+        <img src=${logo} class="rounded">
     </div>
 
-    <input type="submit"  value="<spring:message code = "submit"></spring:message>">
 
-</form>
+</div>
+<div class="main">
+    <div class="col-md-6 col-sm-12">
+        <div class="login-form">
+            <c:url value="/login" var="loginUrl"></c:url>
+            <form method="post" action="${loginUrl}" >
+                <div class="form-group">
+                    <label><spring:message code = "username"></spring:message></label>
+                    <input name="username" class="form-control" placeholder="<spring:message code = "username"/>"/>
+                </div>
+                <div class="form-group">
+                    <label><spring:message code = "password"></spring:message></label>
+                    <input name="password" class="form-control" type="password" placeholder="<spring:message code = "password"/>"/>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input name="remember_me" type="checkbox"/>
+                        <spring:message code = "rememberMe"></spring:message>
+                    </label>
+                </div>
+                <input type="submit"   class="btn btn-black" value="<spring:message code = "submit"></spring:message>">
+                <button type="submit" class="btn btn-secondary">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 </body>
