@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class User {
 
+    private String password; //TODO> add password to DAO
+
     private final long id;
     // TODO> VER SI SON FINAL O EDITABLES. POR AHORA MANDO FINAL, CUALQUIER  COSA SACARLO
     private final String firstName;
@@ -105,5 +107,9 @@ public class User {
                 ", profilePicture='" + profilePicture + '\'' +
                 ", trustIndex=" + trustIndex +
                 '}';
+    }
+
+    public String getPassword() {
+        return "password";
     }
 }

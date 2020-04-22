@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Optional;
 
 public interface UserDao {
+
+    public Optional<User> findByUsername(String username);
     /**
      * Finds a user given its id.
      * @param id The unique id for the user.

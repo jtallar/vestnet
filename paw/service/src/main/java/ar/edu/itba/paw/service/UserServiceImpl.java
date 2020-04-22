@@ -15,6 +15,10 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    //@Autowired passwordEncoder encoder
+
+    //TODO< encode password
+
     @Autowired
     private UserDao userDao;
 
@@ -26,5 +30,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
         return userDao.create(id, firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+    }
+
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userDao.findByUsername(username);
     }
 }

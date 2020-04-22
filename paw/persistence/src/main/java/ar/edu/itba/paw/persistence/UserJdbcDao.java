@@ -71,5 +71,12 @@ public class UserJdbcDao implements UserDao {
 
         return new User(keyNumber.longValue(),firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
     }
+
+
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return findById(4); //just for testing
+    }
 }
 

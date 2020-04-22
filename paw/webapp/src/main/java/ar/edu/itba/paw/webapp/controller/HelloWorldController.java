@@ -177,4 +177,17 @@ public class HelloWorldController {
                 projectFields.getCost(), 1, projectFields.getCategories(), null);
         return new ModelAndView("redirect:/projects/" + projectId);
     }
+
+
+    @RequestMapping(value = "/login")
+    public ModelAndView login(){
+        final ModelAndView mav = new ModelAndView("login");
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin")
+    public ModelAndView admin(){
+        final ModelAndView mav = new ModelAndView("admin");
+        return mav;
+    }
 }
