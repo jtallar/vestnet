@@ -9,6 +9,7 @@ public class JdbcQueries {
     private static final String CITY_TABLE = "cities";
     static final String PROJECT_CATEGORIES_TABLE = "project_categories";
     private static final String CATEGORIES_TABLE = "categories";
+    private static final String PASSWORDS_TABLE = "passwords";
 
     static final String CATEGORY_FIND_ALL = "SELECT " +
             "cat.id, " +
@@ -50,9 +51,13 @@ public class JdbcQueries {
             "FROM " + USER_TABLE + " u " +
             "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
             "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
-            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) ";
+            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id)";
 
     static final String USER_FIND_BY_ID = USER_FIND_ALL + "WHERE u.id = ?";
+
+    static final String USER_FIND_BY_USERNAME = USER_FIND_ALL + "WHERE u.email = ?";
+
+    static final String USER_FIND_PASSWORD = "SELECT password FROM " + PASSWORDS_TABLE + " p " + "WHERE p.id = ?";
 
     static final String PROJECT_FIND_ALL = "SELECT " +
             "p.id, " +

@@ -47,7 +47,11 @@
                     </label>
                 </div>
                 <input type="submit"   class="btn btn-black" value="<spring:message code = "submit"></spring:message>">
-                <button type="submit" class="btn btn-secondary">Register</button>
+                <c:url var="register" value="/signUp"></c:url>
+            </form>
+
+            <form action="${register}">
+                <input type="submit" class="btn btn-black" value="<spring:message code='sign_up'></spring:message>" />
             </form>
         </div>
     </div>

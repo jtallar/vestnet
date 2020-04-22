@@ -76,7 +76,20 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return findById(4); //just for testing
+
+        Optional<User> user =jdbcTemplate.query(JdbcQueries.USER_FIND_BY_USERNAME , RESULT_SET_EXTRACTOR, username).stream().findFirst();
+        if(user.isPresent()){
+            user.get().setPassword(findPassword(user.get().getId()));
+        }
+
+        return user;
+    }
+
+    private String findPassword(long id){
+        String pass = (String) jdbcTemplate.queryForObject(
+                JdbcQueries.USER_FIND_PASSWORD, new Object[] { id }, String.class);
+        return pass;
+
     }
 }
 

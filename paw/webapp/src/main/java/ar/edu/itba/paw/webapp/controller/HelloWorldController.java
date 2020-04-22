@@ -12,6 +12,7 @@ import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
+import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,6 +189,13 @@ public class HelloWorldController {
     @RequestMapping(value = "/admin")
     public ModelAndView admin(){
         final ModelAndView mav = new ModelAndView("admin");
+        return mav;
+    }
+
+
+    @RequestMapping(value = "/signUp")
+    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields){
+        final ModelAndView mav = new ModelAndView("signUp");
         return mav;
     }
 }
