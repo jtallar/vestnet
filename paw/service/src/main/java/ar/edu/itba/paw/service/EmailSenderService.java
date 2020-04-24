@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailSenderService implements EmailService {
 
-    public void sendNewEmail(String from, String body, String to) {
+    public void sendNewEmail(String from, String body, String to) throws MessagingException {
 
         Properties props = new Properties();
 
@@ -58,7 +58,7 @@ public class EmailSenderService implements EmailService {
         } catch (MessagingException me) {
             me.printStackTrace();   //Si se produce un error
             System.out.println("ERROR AL ENVIAR EMAIL");
-            return;
+            throw new MessagingException();
         }
     }
 }
