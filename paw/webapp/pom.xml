@@ -124,6 +124,11 @@
       <artifactId>logback-ext-spring</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>cz.jirutka.validator</groupId>
+      <artifactId>validator-spring</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

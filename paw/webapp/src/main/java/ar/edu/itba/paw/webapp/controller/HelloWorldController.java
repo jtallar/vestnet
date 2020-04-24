@@ -5,7 +5,9 @@ import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
+import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
@@ -194,8 +196,18 @@ public class HelloWorldController {
 
 
     @RequestMapping(value = "/signUp")
-    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields){
+    public ModelAndView signUp( @ModelAttribute("userForm") final NewUserFields userFields){
         final ModelAndView mav = new ModelAndView("signUp");
+        return mav;
+    }
+
+    @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
+    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields, final BindingResult errors){
+        if(errors.hasErrors()){
+            return signUp(userFields);
+        }
+        userService.create( userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),new Date(userFields.getYear(),userFields.getMonth(),userFields.getDay()), new Location(new Location.Country(1,"","","",""), new Location.State(1, "", ""), new Location.City(1, "")), userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),"HOLA",new Date(),0);
+        final ModelAndView mav = new ModelAndView("redirect:/login");
         return mav;
     }
 }

@@ -49,9 +49,8 @@ public class UserJdbcDao implements UserDao {
 //                                  --> PROFILE PIC ES UN STRING??
 //                                  --> id es el role_id?
     @Override
-    public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
+    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
         Map<String, Object> values = new HashMap<String, Object>();
-        values.put("role_id", id);
         values.put("first_name",firstName);
         values.put("last_name", lastName);
         values.put("real_id", realId);

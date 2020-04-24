@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
-        return userDao.create(id, firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
+        return userDao.create(firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
     }
 
 
