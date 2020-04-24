@@ -111,6 +111,8 @@ public class JdbcQueries {
             "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
             "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) ";
 
+    static final String PROJECT_FIND_BY_OWNER = PROJECT_FIND_ALL + "WHERE p.owner_id = ?";
+
     static final String PROJECT_FIND_BY_ID = PROJECT_FIND_ALL + "WHERE p.id = ?";
 
     static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + "WHERE pcat.category_id IN (:categories)";

@@ -206,9 +206,22 @@ public class HelloWorldController {
         if(errors.hasErrors()){
             return signUp(userFields);
         }
+
+        //TODO transaction here 
         User user = userService.create( userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),new Date(userFields.getYear(),userFields.getMonth(),userFields.getDay()), new Location(new Location.Country(1,"","","",""), new Location.State(1, "", ""), new Location.City(1, "")), userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),"HOLA",new Date(),0);
         userService.createPassword(user.getId(), userFields.getPassword());
         final ModelAndView mav = new ModelAndView("redirect:/login");
+        return mav;
+    }
+
+
+    @RequestMapping(value = "/{u_id}")
+    public ModelAndView userProfile(@PathVariable("u_id") long id){
+        final ModelAndView mav= new ModelAndView("userProfile");
+        User user = userService.findById(id).orElseThrow(NoClassDefFoundError::new);
+        mav.addObject("user", user);
+        mav.addObject("list", projectService.findByOwner(id));
+        System.out.println(userService.findById(id));
         return mav;
     }
 }

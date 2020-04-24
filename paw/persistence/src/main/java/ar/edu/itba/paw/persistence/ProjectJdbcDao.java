@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.Stage;
+import ar.edu.itba.paw.model.User;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +24,8 @@ public class ProjectJdbcDao implements ProjectDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private UserJdbcDao userJdbcDao;
+    private CategoriesJdbcDao categoriesJdbcDao;
 
     private final static ResultSetExtractor<List<Project>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -116,6 +119,19 @@ public class ProjectJdbcDao implements ProjectDao {
 //        return new Project(keyNumber.longValue(), name, summary, publishDate, updateDate, cost, 0, false, owner,
 //                new Project.ProjectBackOffice(false, 0, 0), categories,
 //                stages.stream().map(Stage::getId).collect(Collectors.toList()), stages);
+    }
+
+    @Override
+    public List<Project> findByOwner(long userId) {
+
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_OWNER, new Object[] {userId}, RESULT_SET_EXTRACTOR);
+        for(Project project : projects) {
+            // TODO: NO AGREGAR STAGES, NO?
+            //Optional<User> owner = userJdbcDao.findById(userId);
+            //if (owner.isPresent()) project.setOwner(owner.get());
+            //project.setCategories(categoriesJdbcDao.findProjectCategories(project.getId()));
+        }
+        return projects;
     }
 }
 
