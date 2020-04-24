@@ -34,6 +34,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value='/projects'/>"><spring:message code="feed"></spring:message></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<c:url value='/myProfile'/>"><spring:message code="my_profile"></spring:message></a>
+            </li>
+
 <%--            <li class="nav-item">--%>
 <%--                <a class="nav-link" href="#"><spring:message code="myprojects"></spring:message></a>--%>
 <%--            </li>--%>

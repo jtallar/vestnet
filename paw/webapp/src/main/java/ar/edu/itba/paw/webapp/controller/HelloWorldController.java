@@ -19,6 +19,8 @@ import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +45,10 @@ public class HelloWorldController {
 
     @Autowired
     private CategoriesService categoriesService;
+
+
+    private User sessionUser;
+
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
@@ -90,6 +96,9 @@ public class HelloWorldController {
 
     @RequestMapping("/")
     public ModelAndView index(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<User> user= userService.findByUsername(authentication.getName());
+        if(user.isPresent()) this.sessionUser = user.get();
         return new ModelAndView("redirect:/projects");
     }
 
@@ -111,6 +120,8 @@ public class HelloWorldController {
 
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
+
+
 
         return mav;
     }
@@ -228,13 +239,20 @@ public class HelloWorldController {
     }
 
 
-    @RequestMapping(value = "/{u_id}")
+    @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id){
         final ModelAndView mav= new ModelAndView("userProfile");
         User user = userService.findById(id).orElseThrow(NoClassDefFoundError::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
         System.out.println(userService.findById(id));
+        return mav;
+    }
+
+
+    @RequestMapping(value = "/myProfile")
+    public ModelAndView myProfile(){
+        final ModelAndView mav = new ModelAndView("redirect:/users/" + sessionUser.getId());
         return mav;
     }
 }
