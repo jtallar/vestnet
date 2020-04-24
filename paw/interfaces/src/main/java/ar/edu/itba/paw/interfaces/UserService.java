@@ -21,4 +21,6 @@ public interface UserService {
      * @return The created user.
      */
     public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+
+    public long createPassword(long id, String password);
 }

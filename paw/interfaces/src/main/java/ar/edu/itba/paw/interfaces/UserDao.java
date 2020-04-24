@@ -22,6 +22,8 @@ public interface UserDao {
      * @return The created user.
      */
 
+    public long createPass(long id, String password);
+
     //TODO add location
     public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
 }

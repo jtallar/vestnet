@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS resources (
 
 CREATE TABLE IF NOT EXISTS passwords (
     id              INT REFERENCES users ON DELETE SET NULL,
-    password       VARCHAR(50) NOT NULL,
+    password       VARCHAR(250) NOT NULL,
     PRIMARY KEY (id)
 );
 

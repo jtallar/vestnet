@@ -9,7 +9,7 @@ public class JdbcQueries {
     private static final String CITY_TABLE = "cities";
     static final String PROJECT_CATEGORIES_TABLE = "project_categories";
     private static final String CATEGORIES_TABLE = "categories";
-    private static final String PASSWORDS_TABLE = "passwords";
+    public static final String PASSWORDS_TABLE = "passwords";
 
     static final String CATEGORY_FIND_ALL = "SELECT " +
             "cat.id, " +

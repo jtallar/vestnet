@@ -18,6 +18,7 @@ import java.util.*;
 public class UserJdbcDao implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+    private SimpleJdbcInsert passJdbcInsert;
 
     private final static ResultSetExtractor<List<User>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -30,6 +31,8 @@ public class UserJdbcDao implements UserDao {
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(JdbcQueries.USER_TABLE)
                 .usingGeneratedKeyColumns("id");
+        passJdbcInsert = new SimpleJdbcInsert(dataSource)
+                        .withTableName(JdbcQueries.PASSWORDS_TABLE);
     }
 
     /**
@@ -68,9 +71,20 @@ public class UserJdbcDao implements UserDao {
 
         Number keyNumber = jdbcInsert.executeAndReturnKey(values);
 
+
+
         return new User(keyNumber.longValue(),firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
     }
 
+    @Override
+    public long createPass(long id, String password) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", id);
+        values.put("password", password);
+
+        passJdbcInsert.execute(values);
+        return id;
+    }
 
 
     @Override
