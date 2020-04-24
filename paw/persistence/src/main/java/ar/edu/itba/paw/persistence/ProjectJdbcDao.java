@@ -5,69 +5,55 @@ import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.Stage;
-import ar.edu.itba.paw.model.User;
+import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
 public class ProjectJdbcDao implements ProjectDao {
-    private static final String PROJECTS_TABLE = "projects";
-    private static final String PROJECT_CATEGORIES_TABLE = "project_categories";
-
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink;
-
-    @Autowired
-    private UserJdbcDao userJdbcDao;
-    @Autowired
-    private CategoriesJdbcDao categoriesJdbcDao;
-    // TODO: VER SI SE PUEDE HACER DE OTRA MANERA
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final static RowMapper<Project> ROW_MAPPER = (rs, rowNum) -> new Project(rs.getLong("id"),
-            rs.getString("project_name"), rs.getString("summary"),
-            rs.getDate("publish_date"), rs.getDate("update_date"),
-            rs.getLong("cost"), rs.getLong("hits"), rs.getBoolean("images"),
-            rs.getLong("owner_id"),
-            new Project.ProjectBackOffice(rs.getBoolean("aproved"), rs.getInt("profit_index"),
-                    rs.getInt("risk_index")), null, null);
+    private final static ResultSetExtractor<List<Project>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
+            .newInstance()
+            .addKeys("id")
+            .newResultSetExtractor(Project.class);
 
     @Autowired
     public ProjectJdbcDao(final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        // TODO: WHEN ADDING FIELDS IN CREATE, add them in Columns. SINO NO TOMA LOS DEFAULTS
+
+        // NOTE: Use columns when adding fields in create otherwise defaults wont work
         jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(PROJECTS_TABLE)
+                .withTableName(JdbcQueries.PROJECT_TABLE)
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("owner_id", "project_name", "summary", "cost");
         jdbcInsertCategoryLink = new SimpleJdbcInsert(dataSource)
-                .withTableName(PROJECT_CATEGORIES_TABLE);
+                .withTableName(JdbcQueries.PROJECT_CATEGORIES_TABLE);
 
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
+    /**
+     * Search for a specific project given its id.
+     * @param id The unique id for the project
+     * @return The entire project if found, otherwise null.
+     */
     @Override
     public Optional<Project> findById(long id) {
-        Optional<Project> mayBeProject = jdbcTemplate.query("SELECT * FROM projects WHERE projects.id = ?", ROW_MAPPER, id)
-                .stream().findFirst();
-        if (mayBeProject.isPresent()) {
-            // TODO:ADD STAGES
-            Optional<User> owner = userJdbcDao.findById(mayBeProject.get().getOwnerUserId());
-            if (owner.isPresent()) mayBeProject.get().setOwner(owner.get());
-            mayBeProject.get().setCategories(categoriesJdbcDao.findProjectCategories(mayBeProject.get().getId()));
-        }
-        return mayBeProject;
+        Optional<Project> project = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
+        // TODO add stages
+        return project;
     }
 
     /**
@@ -77,13 +63,8 @@ public class ProjectJdbcDao implements ProjectDao {
      */
     @Override
     public List<Project> findAll() {
-        List<Project> projects = jdbcTemplate.query("SELECT * FROM projects", ROW_MAPPER);
-        for(Project project : projects) {
-            // TODO: NO AGREGAR STAGES, NO?
-            Optional<User> owner = userJdbcDao.findById(project.getOwnerUserId());
-            if (owner.isPresent()) project.setOwner(owner.get());
-            project.setCategories(categoriesJdbcDao.findProjectCategories(project.getId()));
-        }
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_ALL, RESULT_SET_EXTRACTOR);
+        // TODO add stages?
         return projects;
     }
 
@@ -93,7 +74,6 @@ public class ProjectJdbcDao implements ProjectDao {
      * @return  A list of every single project with its owner and categories set (NO STAGES) that match those categories
      *          If no projects are found, returns empty list. If list is null or empty, returns all projects.
      */
-    // TODO: VER SI HACE FALTA EL namedParamaeter o se puede de otra manera
     @Override
     public List<Project> findByCategories(List<Category> categories) {
         if (categories == null || categories.isEmpty()) return findAll();
@@ -101,27 +81,11 @@ public class ProjectJdbcDao implements ProjectDao {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
 
-//        List<Project> projects = jdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
-//                        "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
-//                        "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
-//                        "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
-//                        "WHERE project_categories.category_id IN (?)",
-//                ROW_MAPPER, categories.stream().map(Category::getId).collect(Collectors.toList()));
-
-        List<Project> projects = namedParameterJdbcTemplate.query("SELECT projects.id, projects.project_name, projects.summary," +
-                "projects.publish_date, projects.update_date, projects.cost, projects.hits, projects.images, " +
-                        "projects.owner_id, projects.aproved, projects.profit_index, projects.risk_index " +
-                        "FROM projects JOIN project_categories ON projects.id = project_categories.project_id " +
-                "WHERE project_categories.category_id IN (:categories)",
-                parameters, ROW_MAPPER);
-        for(Project project : projects) {
-            // TODO:ADD STAGES?
-            Optional<User> owner = userJdbcDao.findById(project.getOwnerUserId());
-            if (owner.isPresent()) project.setOwner(owner.get());
-            project.setCategories(categoriesJdbcDao.findProjectCategories(project.getId()));
-        }
+        List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_CAT, parameters, RESULT_SET_EXTRACTOR);
+        // TODO add stages?
         return projects;
     }
+
 
     // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID, TOTAL DE ACA DESEMBOCO EN BUSCARLO, NO?
     @Override

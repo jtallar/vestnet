@@ -37,6 +37,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.simpleflatmapper</groupId>
+      <artifactId>sfm-springjdbc</artifactId>
+      <version>8.2.2</version>
+    </dependency>
+
+    <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>interfaces</artifactId>
       <version>${project.parent.version}</version>

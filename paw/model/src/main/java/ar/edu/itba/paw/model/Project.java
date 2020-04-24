@@ -141,6 +141,26 @@ public class Project {
         this.stages = stages;
     }
 
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", summary='" + summary + '\'' +
+                ", publishDate=" + publishDate +
+                ", updateDate=" + updateDate +
+                ", cost=" + cost +
+                ", hits=" + hits +
+                ", hasImages=" + hasImages +
+                ", ownerUserId=" + ownerUserId +
+                ", owner=" + owner +
+                ", backOffice=" + backOffice +
+                ", categories=" + categories +
+                ", stageIds=" + stageIds +
+                ", stages=" + stages +
+                '}';
+    }
+
     public static class ProjectBackOffice {
         private final boolean approved;
         private final int profitIndex;
@@ -162,6 +182,15 @@ public class Project {
 
         public int getRiskIndex() {
             return riskIndex;
+        }
+
+        @Override
+        public String toString() {
+            return "ProjectBackOffice{" +
+                    "approved=" + approved +
+                    ", profitIndex=" + profitIndex +
+                    ", riskIndex=" + riskIndex +
+                    '}';
         }
     }
 

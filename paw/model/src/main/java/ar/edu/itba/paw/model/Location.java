@@ -23,6 +23,15 @@ public class Location {
         return city;
     }
 
+    @Override
+    public String toString() {
+        return "Location{" +
+                "country=" + country +
+                ", state=" + state +
+                ", city=" + city +
+                '}';
+    }
+
     public static class Country {
         private final int id;
         private final String name;
@@ -57,6 +66,17 @@ public class Location {
         public String getCurrency() {
             return currency;
         }
+
+        @Override
+        public String toString() {
+            return "Country{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", isoCode='" + isoCode + '\'' +
+                    ", phoneCode='" + phoneCode + '\'' +
+                    ", currency='" + currency + '\'' +
+                    '}';
+        }
     }
 
     public static class State {
@@ -81,6 +101,15 @@ public class Location {
         public String getIsoCode() {
             return isoCode;
         }
+
+        @Override
+        public String toString() {
+            return "State{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", isoCode='" + isoCode + '\'' +
+                    '}';
+        }
     }
 
     public static class City {
@@ -98,6 +127,14 @@ public class Location {
 
         public String getName() {
             return name;
+        }
+
+        @Override
+        public String toString() {
+            return "City{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    '}';
         }
     }
 }
