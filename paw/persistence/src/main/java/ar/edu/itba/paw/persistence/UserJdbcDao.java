@@ -18,6 +18,7 @@ import java.util.*;
 public class UserJdbcDao implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+    private SimpleJdbcInsert passJdbcInsert;
 
     private final static ResultSetExtractor<List<User>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -30,6 +31,8 @@ public class UserJdbcDao implements UserDao {
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(JdbcQueries.USER_TABLE)
                 .usingGeneratedKeyColumns("id");
+        passJdbcInsert = new SimpleJdbcInsert(dataSource)
+                        .withTableName(JdbcQueries.PASSWORDS_TABLE);
     }
 
     /**
@@ -49,9 +52,8 @@ public class UserJdbcDao implements UserDao {
 //                                  --> PROFILE PIC ES UN STRING??
 //                                  --> id es el role_id?
     @Override
-    public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
+    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
         Map<String, Object> values = new HashMap<String, Object>();
-        values.put("role_id", id);
         values.put("first_name",firstName);
         values.put("last_name", lastName);
         values.put("real_id", realId);
@@ -69,7 +71,38 @@ public class UserJdbcDao implements UserDao {
 
         Number keyNumber = jdbcInsert.executeAndReturnKey(values);
 
+
+
         return new User(keyNumber.longValue(),firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+    }
+
+    @Override
+    public long createPass(long id, String password) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", id);
+        values.put("password", password);
+
+        passJdbcInsert.execute(values);
+        return id;
+    }
+
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+
+        Optional<User> user =jdbcTemplate.query(JdbcQueries.USER_FIND_BY_USERNAME , RESULT_SET_EXTRACTOR, username).stream().findFirst();
+        if(user.isPresent()){
+            user.get().setPassword(findPassword(user.get().getId()));
+        }
+
+        return user;
+    }
+
+    private String findPassword(long id){
+        String pass = (String) jdbcTemplate.queryForObject(
+                JdbcQueries.USER_FIND_PASSWORD, new Object[] { id }, String.class);
+        return pass;
+
     }
 }
 

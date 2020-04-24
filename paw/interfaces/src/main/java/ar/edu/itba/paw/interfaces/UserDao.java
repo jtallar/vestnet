@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Optional;
 
 public interface UserDao {
+
+    public Optional<User> findByUsername(String username);
     /**
      * Finds a user given its id.
      * @param id The unique id for the user.
@@ -19,5 +21,9 @@ public interface UserDao {
      * @param username The name of the user.
      * @return The created user.
      */
-    public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+
+    public long createPass(long id, String password);
+
+    //TODO add location
+    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
 }

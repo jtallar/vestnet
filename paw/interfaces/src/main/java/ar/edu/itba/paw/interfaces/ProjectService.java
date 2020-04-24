@@ -21,6 +21,8 @@ public interface ProjectService {
      */
     List<Project> findAll();
 
+    List<Project> findByOwner(long userId);
+
     /**
      * Finds a list of projects that matches one or more categories
      * @param categories The list of categories to find

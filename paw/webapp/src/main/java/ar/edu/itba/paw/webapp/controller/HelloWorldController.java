@@ -5,13 +5,16 @@ import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
+import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
+import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,5 +192,49 @@ public class HelloWorldController {
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
                 projectFields.getCost(), 1, projectFields.getCategories(), null);
         return new ModelAndView("redirect:/projects/" + projectId);
+    }
+
+
+    @RequestMapping(value = "/login")
+    public ModelAndView login(){
+        final ModelAndView mav = new ModelAndView("login");
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin")
+    public ModelAndView admin(){
+        final ModelAndView mav = new ModelAndView("admin");
+        return mav;
+    }
+
+
+    @RequestMapping(value = "/signUp")
+    public ModelAndView signUp( @ModelAttribute("userForm") final NewUserFields userFields){
+        final ModelAndView mav = new ModelAndView("signUp");
+        return mav;
+    }
+
+    @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
+    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields, final BindingResult errors){
+        if(errors.hasErrors()){
+            return signUp(userFields);
+        }
+
+        //TODO transaction here 
+        User user = userService.create( userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),new Date(userFields.getYear(),userFields.getMonth(),userFields.getDay()), new Location(new Location.Country(1,"","","",""), new Location.State(1, "", ""), new Location.City(1, "")), userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),"HOLA",new Date(),0);
+        userService.createPassword(user.getId(), userFields.getPassword());
+        final ModelAndView mav = new ModelAndView("redirect:/login");
+        return mav;
+    }
+
+
+    @RequestMapping(value = "/{u_id}")
+    public ModelAndView userProfile(@PathVariable("u_id") long id){
+        final ModelAndView mav= new ModelAndView("userProfile");
+        User user = userService.findById(id).orElseThrow(NoClassDefFoundError::new);
+        mav.addObject("user", user);
+        mav.addObject("list", projectService.findByOwner(id));
+        System.out.println(userService.findById(id));
+        return mav;
     }
 }

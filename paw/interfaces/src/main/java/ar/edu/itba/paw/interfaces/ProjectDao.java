@@ -16,6 +16,9 @@ public interface ProjectDao {
      */
     Optional<Project> findById(long id);
 
+
+    List<Project> findByOwner(long userId);
+
     /**
      * Find all available projects
      * @return List of available projects

@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Optional;
 
 public interface UserService {
+
+    Optional<User> findByUsername(String username);
     /**
      * Finds a user given its id.
      * @param id The unique id for the user.
@@ -18,5 +20,7 @@ public interface UserService {
      * @param username The name of the user.
      * @return The created user.
      */
-    public User create(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+
+    public long createPassword(long id, String password);
 }
