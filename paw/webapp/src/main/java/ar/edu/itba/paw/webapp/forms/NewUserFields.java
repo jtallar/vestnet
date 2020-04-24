@@ -38,7 +38,7 @@ public class NewUserFields {
     private String email;
     @Pattern(regexp = "[0-9]*")
     private String phone;
-    @Pattern(regexp = "^(.*(www\\.)?(linkedin\\.com/in/).*)?")
+    @Pattern(regexp = "^((www\\.)?(linkedin\\.com/in/).*)?")
     private String linkedin;
     private String profilePicture; //if we need URI then change it later
 
