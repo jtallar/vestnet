@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.interfaces;
 
+import javax.mail.MessagingException;
+
 public interface EmailService {
 
-    void sendNewEmail(String from, String body, String to);
+    void sendNewEmail(String from, String body, String to) throws MessagingException;
 }
