@@ -19,6 +19,8 @@ public interface ProjectDao {
 
     List<Project> findByOwner(long userId);
 
+    public List<Project> findCoincidence(String name);
+
     /**
      * Find all available projects
      * @return List of available projects

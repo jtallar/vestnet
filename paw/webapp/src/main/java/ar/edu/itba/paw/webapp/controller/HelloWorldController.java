@@ -255,4 +255,17 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("redirect:/users/" + sessionUser.getId());
         return mav;
     }
+
+
+    @RequestMapping(value = "/search")
+    public ModelAndView searchAux(@RequestParam("searching") String search){
+        final ModelAndView mav = new ModelAndView("search");
+        String aux = search.toLowerCase();
+
+        mav.addObject("projectsList", projectService.findCoincidence(aux));
+        mav.addObject("usersList", userService.findCoincidence(aux));
+        mav.addObject("string", search);
+
+        return mav;
+    }
 }

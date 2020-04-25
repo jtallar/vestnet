@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.Stage;
 import ar.edu.itba.paw.model.User;
+import com.sun.org.apache.regexp.internal.RE;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -131,6 +132,14 @@ public class ProjectJdbcDao implements ProjectDao {
             //if (owner.isPresent()) project.setOwner(owner.get());
             //project.setCategories(categoriesJdbcDao.findProjectCategories(project.getId()));
         }
+        return projects;
+    }
+
+    @Override
+    public List<Project> findCoincidence(String name) {
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_COINCIDENCE, new Object[] {"%"+ name +"%"}, RESULT_SET_EXTRACTOR);
+
+
         return projects;
     }
 }

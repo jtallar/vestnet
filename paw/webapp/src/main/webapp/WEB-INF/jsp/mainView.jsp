@@ -85,7 +85,7 @@
     <c:if test="${empty list}">
     <div class="card m-2">
         <div class="card-header">
-            <h5 class="card-title centered"><spring:message code="noProjFound"></spring:message> </h5>
+            <h5 class="card-title centered"><spring:message code="noProjFound" arguments=""></spring:message> </h5>
         </div>
     </div>
     </c:if>

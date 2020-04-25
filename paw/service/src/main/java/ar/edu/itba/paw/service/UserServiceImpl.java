@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -46,5 +47,8 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(username);
     }
 
-
+    @Override
+    public List<User> findCoincidence(String name) {
+        return userDao.findCoincidence(name);
+    }
 }

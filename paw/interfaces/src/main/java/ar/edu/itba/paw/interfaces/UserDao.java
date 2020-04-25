@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
@@ -21,6 +22,7 @@ public interface UserDao {
      * @param username The name of the user.
      * @return The created user.
      */
+    public List<User> findCoincidence(String name);
 
     public long createPass(long id, String password);
 
