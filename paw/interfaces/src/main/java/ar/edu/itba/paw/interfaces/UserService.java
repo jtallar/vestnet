@@ -20,7 +20,7 @@ public interface UserService {
      * @param username The name of the user.
      * @return The created user.
      */
-    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+    User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
 
-    public long createPassword(long id, String password);
+    long createPassword(long id, String password);
 }

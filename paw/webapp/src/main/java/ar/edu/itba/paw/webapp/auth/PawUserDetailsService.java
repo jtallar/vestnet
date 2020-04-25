@@ -31,6 +31,7 @@ public class PawUserDetailsService implements UserDetailsService{
         final User user =  us.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username + "not found"));
         Collection<GrantedAuthority> authorities = new HashSet<>();
 
+        // TODO: SET ROLE ACCORDING TO USER ROLE
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         authorities.add(new SimpleGrantedAuthority("ROLE_INVESTOR"));
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
