@@ -1,18 +1,19 @@
 package ar.edu.itba.paw.model;
 
-import java.net.URI;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class User {
 
     private String password; //TODO> add password to DAO
 
     private final long id;
+    // TODO: VER SI PUEDO GUARDAR UN USERROLE --> NO PUEDO MAPEAR 2 a INVESTOR(2)
+    private final int role;
     // TODO> VER SI SON FINAL O EDITABLES. POR AHORA MANDO FINAL, CUALQUIER  COSA SACARLO
     private final String firstName;
     private final String lastName;
     private final String realId; // CUIT/CUIL/DNI
-    private final Date birthDate;
+    private final LocalDate birthDate;
     // Aca si quiero que se complete despues, debiera poner un locationId que sea final y un Location que no lo sea
     private final Location location;
 
@@ -20,12 +21,13 @@ public class User {
     private final String phone;
     private final String linkedin;
 
-    private final Date joinDate;
+    private final LocalDate joinDate;
     private final String profilePicture; //if we need URI then change it later
     private int trustIndex;
 
-    public User(long id, String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
+    public User(long id, int role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, LocalDate joinDate, int trustIndex) {
         this.id = id;
+        this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
         this.realId = realId;
@@ -55,7 +57,7 @@ public class User {
         return realId;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
@@ -79,7 +81,7 @@ public class User {
         return profilePicture;
     }
 
-    public Date getJoinDate() {
+    public LocalDate getJoinDate() {
         return joinDate;
     }
 
@@ -89,6 +91,10 @@ public class User {
 
     public void setTrustIndex(int trustIndex) {
         this.trustIndex = trustIndex;
+    }
+
+    public int getRole() {
+        return role;
     }
 
     @Override
@@ -115,5 +121,34 @@ public class User {
 
     public void setPassword(String password){
         this.password = password;
+    }
+
+    public enum UserRole {
+        ENTREPRENEUR("Entrepreneur", 1), INVESTOR("Investor", 2),
+        NOTFOUND("Not found", 0);
+
+        private String role;
+        private int id;
+
+        UserRole(String role, int id) {
+            this.role = role;
+            this.id = id;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static UserRole valueOf(int id) {
+            for (UserRole role : UserRole.values()) {
+                if (role.getId() == id)
+                    return role;
+            }
+            return NOTFOUND;
+        }
     }
 }

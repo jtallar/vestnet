@@ -1,20 +1,17 @@
 package ar.edu.itba.paw.webapp.forms;
 
-import ar.edu.itba.paw.model.Location;
 import cz.jirutka.validator.spring.SpELAssert;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 //TODO cannot print this message
 @SpELAssert(value = "password.equals(repeatPassword)")
 public class NewUserFields {
 
+    @Size(max = 50)
     private String password; //TODO> add password to DAO
     private String repeatPassword;
     @Size(min = 1, max = 50)
@@ -30,6 +27,11 @@ public class NewUserFields {
     private Integer month;
     private Integer year;
 
+    private int country;
+    private int state;
+    private int city;
+
+    private String role;
 
 // Aca si quiero que se complete despues, debiera poner un locationId que sea final y un Location que no lo sea
     @Email
@@ -38,13 +40,41 @@ public class NewUserFields {
     private String email;
     @Pattern(regexp = "[0-9]*")
     private String phone;
-    @Pattern(regexp = "^((www\\.)?(linkedin\\.com/in/).*)?")
+    @Pattern(regexp = "^(?:http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$")
     private String linkedin;
     private String profilePicture; //if we need URI then change it later
 
+    public String getRole() {
+        return role;
+    }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
 
+    public int getCountry() {
+        return country;
+    }
 
+    public void setCountry(int country) {
+        this.country = country;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public int getCity() {
+        return city;
+    }
+
+    public void setCity(int city) {
+        this.city = city;
+    }
 
     public Integer getDay() { return day; }
 

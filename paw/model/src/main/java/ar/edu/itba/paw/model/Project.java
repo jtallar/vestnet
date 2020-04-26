@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Project {
     private final long id;
     private final String name;
 
     private final String summary;
-    private final Date publishDate;
-    private final Date updateDate;
+    private final LocalDate publishDate;
+    private final LocalDate updateDate;
     private final long cost;
     private final long hits;
     private final boolean hasImages;
@@ -25,7 +24,7 @@ public class Project {
 
     // TODO: CREAR CONSTRUCTOR PRIVADO PARA SALVAR LA REPE
     // TODO: VER SI HACEN FALTA ESTOS DOS SIGUIENTES (CON LISTA DE STAGES O SOLO IDs, NO PUEDO PONER solo el primero)
-    public Project(long id, String name, String summary, Date publishDate, Date updateDate, long cost, long hits, boolean hasImages, User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
+    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits, boolean hasImages, User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -41,7 +40,7 @@ public class Project {
         this.stageIds = stageIds;
     }
 
-    public Project(long id, String name, String summary, Date publishDate, Date updateDate, long cost, long hits, boolean hasImages, User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds, List<Stage> stages) {
+    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits, boolean hasImages, User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds, List<Stage> stages) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -58,7 +57,7 @@ public class Project {
         this.stages = stages;
     }
 
-    public Project(long id, String name, String summary, Date publishDate, Date updateDate, long cost, long hits, boolean hasImages, long ownerUserId, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
+    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits, boolean hasImages, long ownerUserId, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -85,11 +84,11 @@ public class Project {
         return summary;
     }
 
-    public Date getPublishDate() {
+    public LocalDate getPublishDate() {
         return publishDate;
     }
 
-    public Date getUpdateDate() {
+    public LocalDate getUpdateDate() {
         return updateDate;
     }
 

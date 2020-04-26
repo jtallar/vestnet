@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -30,7 +32,9 @@ public class UserJdbcDao implements UserDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(JdbcQueries.USER_TABLE)
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("role_id", "first_name", "last_name", "real_id", "country_id", "state_id", "city_id",
+                        "aux_date", "email", "password", "phone", "linkedin", "profile_pic");
         passJdbcInsert = new SimpleJdbcInsert(dataSource)
                         .withTableName(JdbcQueries.PASSWORDS_TABLE);
     }
@@ -52,12 +56,13 @@ public class UserJdbcDao implements UserDao {
 //                                  --> PROFILE PIC ES UN STRING??
 //                                  --> id es el role_id?
     @Override
-    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
+    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password) {
         Map<String, Object> values = new HashMap<String, Object>();
+        values.put("role_id", User.UserRole.valueOf(role.toUpperCase()).getId());
         values.put("first_name",firstName);
         values.put("last_name", lastName);
         values.put("real_id", realId);
-        values.put("aux_date", birthDate);
+        values.put("aux_date", Date.valueOf(birthDate));
         values.put("country_id", location.getCountry().getId());
         values.put("state_id", location.getState().getId());
         values.put("city_id", location.getCity().getId());
@@ -65,15 +70,9 @@ public class UserJdbcDao implements UserDao {
         values.put("phone", phone);
         values.put("linkedin", linkedin);
         values.put("profile_pic", profilePicture);
-        values.put("join_date", joinDate);
-        values.put("trust_index", trustIndex);
+        values.put("password", password);
 
-
-        Number keyNumber = jdbcInsert.executeAndReturnKey(values);
-
-
-
-        return new User(keyNumber.longValue(),firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+        return jdbcInsert.executeAndReturnKey(values).longValue();
     }
 
     @Override
@@ -91,9 +90,9 @@ public class UserJdbcDao implements UserDao {
     public Optional<User> findByUsername(String username) {
 
         Optional<User> user =jdbcTemplate.query(JdbcQueries.USER_FIND_BY_USERNAME , RESULT_SET_EXTRACTOR, username).stream().findFirst();
-        if(user.isPresent()){
+        /*if(user.isPresent()){
             user.get().setPassword(findPassword(user.get().getId()));
-        }
+        }*/
 
         return user;
     }
