@@ -17,23 +17,30 @@ import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
 public class HelloWorldController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HelloWorldController.class);
+
     @Autowired
     private UserService userService;
 
@@ -46,7 +53,7 @@ public class HelloWorldController {
     @Autowired
     private CategoriesService categoriesService;
 
-
+    // TODO: Check if there is another way to persist user for the controller
     private User sessionUser;
 
 
@@ -97,8 +104,11 @@ public class HelloWorldController {
     @RequestMapping("/")
     public ModelAndView index(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> user= userService.findByUsername(authentication.getName());
-        if(user.isPresent()) this.sessionUser = user.get();
+        // TODO: CHANGE EXCEPTION TO SERVER ERROR?
+        this.sessionUser = userService.findByUsername(authentication.getName()).orElseThrow(UserNotFoundException::new);
+        if (this.sessionUser.getRole() == User.UserRole.ENTREPRENEUR.getId())
+            return new ModelAndView("redirect:/myProfile");
+        // Investor logged in
         return new ModelAndView("redirect:/projects");
     }
 
@@ -228,14 +238,22 @@ public class HelloWorldController {
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields, final BindingResult errors){
         if(errors.hasErrors()){
+            LOGGER.debug("\n\nSign Up failed. There are {} errors\n", errors.getErrorCount());
+            for (ObjectError error : errors.getAllErrors())
+                LOGGER.debug("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
+            LOGGER.debug("\n\n");
             return signUp(userFields);
         }
 
-        //TODO transaction here 
-        User user = userService.create( userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),new Date(userFields.getYear(),userFields.getMonth(),userFields.getDay()), new Location(new Location.Country(1,"","","",""), new Location.State(1, "", ""), new Location.City(1, "")), userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),"HOLA",new Date(),0);
-        userService.createPassword(user.getId(), userFields.getPassword());
-        final ModelAndView mav = new ModelAndView("redirect:/login");
-        return mav;
+        //TODO add location when working
+        userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
+                LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
+//                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
+                new Location(new Location.Country(userFields.getCountry(),"","","",""),
+                        new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
+                userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),null, userFields.getPassword());
+//        userService.createPassword(user.getId(), userFields.getPassword());
+        return new ModelAndView("redirect:/login");
     }
 
 
@@ -245,7 +263,6 @@ public class HelloWorldController {
         User user = userService.findById(id).orElseThrow(NoClassDefFoundError::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
-        System.out.println(userService.findById(id));
         return mav;
     }
 
@@ -254,5 +271,24 @@ public class HelloWorldController {
     public ModelAndView myProfile(){
         final ModelAndView mav = new ModelAndView("redirect:/users/" + sessionUser.getId());
         return mav;
+    }
+
+    // TODO: CHECK IF ITS THE RIGHT WAY TO DO THIS
+    @RequestMapping(value = "/location/countries")
+    public List<Location.Country> countryList() {
+        return Arrays.asList(new Location.Country(1, "Nombre1", "ds", "ads", "dsa"), new Location.Country(2, "Nombre2", "ds", "ads", "dsa"),
+                new Location.Country(3, "Nombre3", "ds", "ads", "dsa"), new Location.Country(4, "Nombre1", "ds", "ads", "dsa"));
+    }
+
+    @RequestMapping(value = "/location/states/{country_id}")
+    public List<Location.State> stateList(@PathVariable("country_id") long countryId) {
+        if (countryId == 0) return null;
+        return Arrays.asList(new Location.State(1, "State1", "11"), new Location.State(2, "State2", "11"), new Location.State(3, "State3", "11"));
+    }
+
+    @RequestMapping(value = "/location/cities/{state_id}")
+    public List<Location.City> cityList(@PathVariable("state_id") long stateId) {
+        if (stateId == 0) return null;
+        return Arrays.asList(new Location.City(1, "City1"), new Location.City(2, "City2"), new Location.City(3, "City3"));
     }
 }

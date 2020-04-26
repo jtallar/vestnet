@@ -91,11 +91,53 @@
             <div class="col-">
                 <label><spring:message code="year"></spring:message> </label>
             </div>
+<%--            TODO: CAMBIAR PARA QUE NO SEA DESDE 2010--%>
             <div class="col-md">
                 <form:select path="year" class="custom-select mr-sm-2">
                     <c:forEach begin="0" end="70" varStatus="loop">
                         <c:set var="currentYear" value="${2010 - loop.index}" />
                         <option value="${currentYear}">${currentYear}</option>
+                    </c:forEach>
+                </form:select>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="form-group">
+        <label><spring:message code="location"></spring:message> </label>
+        <div class="row">
+            <div class="col-">
+                <label><spring:message code="country"/></label>
+            </div>
+            <div class="col-md">
+<%--                TODO: COMO HAGO PARA QUE SE EJECUTE ESE URL tipo SRC, no que sea ese el valor? --%>
+                <c:url var="countryUrl" value='/location/countries'/>
+                <form:select class="custom-select mr-sm-2" path="country">
+                    <c:forEach  var="country" items="${countryUrl}">
+                        <form:option value="1" label="${country}"/>
+                    </c:forEach>
+                </form:select>
+            </div>
+            <div class="col-">
+                <label><spring:message code="state"/> </label>
+            </div>
+            <div class="col-md">
+                <c:url var="stateUrl" value='/location/states/${userForm.country}'/>
+                <form:select path="state" class="custom-select mr-sm-2">
+                    <c:forEach  var="state" items="${stateUrl}">
+                        <form:option value="1" label="${state}"/>
+                    </c:forEach>
+                </form:select>
+            </div>
+            <div class="col-">
+                <label><spring:message code="city"/> </label>
+            </div>
+            <div class="col-md">
+                <c:url var="cityUrl" value='/location/cities/${userForm.state}'/>
+                <form:select path="city" class="custom-select mr-sm-2">
+                    <c:forEach  var="city" items="${cityUrl}">
+                        <form:option value="1" label="${city}"/>
                     </c:forEach>
                 </form:select>
             </div>
@@ -115,21 +157,27 @@
 
     </div>
     <div class="form-group">
-        <label><spring:message code="linkedin"></spring:message> </label>
+        <label><spring:message code="linkedin"/> </label>
         <form:input type="text" class="form-control" path="linkedin" placeholder="${enter_linkedin}"/>
-        <form:errors path="linkedin" cssClass="formError" element="p"></form:errors>
+        <form:errors path="linkedin" cssClass="formError" element="p"/>
     </div>
     <div class="form-group">
-        <label><spring:message code="picture"></spring:message> </label>
+        <label><spring:message code="picture"/> </label>
     </div>
 
+    <div class="form-group">
+        <label><spring:message code="role"/> </label>
+        <form:select path="role" class="custom-select mr-sm-2">
+            <form:option value="Investor"><spring:message code="investor"/></form:option>
+            <form:option value="Entrepreneur"><spring:message code="entrepreneur"/></form:option>
+        </form:select>
+    </div>
     <input type="submit" class="btn btn-dark" value="<spring:message code="sign_up"></spring:message> "/>
 
 </form:form>
 
 
 </div>
-
 
 
 

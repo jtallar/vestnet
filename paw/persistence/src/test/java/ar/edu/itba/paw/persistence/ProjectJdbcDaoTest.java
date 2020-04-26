@@ -16,6 +16,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -343,6 +344,7 @@ public class ProjectJdbcDaoTest {
 
         Map<String, Object> user = new HashMap<>();
         user.put("role_id", 1);
+        user.put("password", "hola");
         user.put("first_name", "Jorge");
         user.put("last_name", "SUMMRAy");
         user.put("real_id", "SUMMRAy");

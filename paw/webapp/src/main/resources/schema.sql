@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS users (
 
     -- CONTACT INFO
     email           VARCHAR(25) NOT NULL,
+    password        VARCHAR(76),
     phone           VARCHAR(25),
     linkedin        VARCHAR(100),
 

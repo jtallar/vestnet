@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public interface UserService {
      * @param username The name of the user.
      * @return The created user.
      */
-    User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+    long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password);
 
     long createPassword(long id, String password);
 }
