@@ -291,4 +291,17 @@ public class HelloWorldController {
         if (stateId == 0) return null;
         return Arrays.asList(new Location.City(1, "City1"), new Location.City(2, "City2"), new Location.City(3, "City3"));
     }
+
+
+    @RequestMapping(value = "/search")
+    public ModelAndView searchAux(@RequestParam("searching") String search){
+        final ModelAndView mav = new ModelAndView("search");
+        String aux = search.toLowerCase();
+
+        mav.addObject("projectsList", projectService.findCoincidence(aux));
+        mav.addObject("usersList", userService.findCoincidence(aux));
+        mav.addObject("string", search);
+
+        return mav;
+    }
 }

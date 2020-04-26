@@ -30,6 +30,8 @@ public interface ProjectService {
      */
     List<Project> findByCategories(List<Category> categories);
 
+    public List<Project> findCoincidence(String name);
+
     /**
      * Create a project given all thes parameters
      * @return The created project

@@ -8,7 +8,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="<c:url value='/css/userprofile.css'/>"/>
-    <title>userProfile</title>
+    <title>VestNet | <spring:message code="my_profile"></spring:message></title>
 </head>
 <body>
 <div class="container emp-profile">
@@ -40,15 +40,13 @@
                         </c:forEach>
                     </div>
 
-
-
-                    <p class="proile-rating">RANKINGS : <span>8/10</span></p>
+                    
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><spring:message code="information"/></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><spring:message code="myprojects"/></a>
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><spring:message code="projects"/></a>
                         </li>
                     </ul>
                 </div>

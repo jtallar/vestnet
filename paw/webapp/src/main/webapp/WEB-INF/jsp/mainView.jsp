@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<c:url value = 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' />" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Projects</title>
+    <title>VestNet | Projects</title>
 </head>
 <body>
     <c:url var="order" value="/images/order.png"></c:url>
@@ -85,7 +85,7 @@
     <c:if test="${empty list}">
     <div class="card m-2">
         <div class="card-header">
-            <h5 class="card-title centered"><spring:message code="noProjFound"></spring:message> </h5>
+            <h5 class="card-title centered"><spring:message code="noProjFound" arguments=""></spring:message> </h5>
         </div>
     </div>
     </c:if>

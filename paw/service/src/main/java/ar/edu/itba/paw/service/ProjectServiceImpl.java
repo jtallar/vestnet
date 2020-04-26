@@ -41,5 +41,10 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> findByOwner(long userId) {
         return projectDao.findByOwner(userId);
     }
+
+    @Override
+    public List<Project> findCoincidence(String name) {
+        return projectDao.findCoincidence(name);
+    }
 }
 
