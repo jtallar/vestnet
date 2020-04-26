@@ -66,7 +66,7 @@
 <%--            </li>--%>
         </ul>
         <c:url var="searchURL" value="/search"></c:url>
-        <form class="form-inline mx-auto my-auto" action="${searchURL}" method="post">
+        <form class="form-inline mx-auto my-auto" action="${searchURL}" method="get">
             <input class="form-control mx-auto mx-auto" id="searching" type="text" placeholder="<spring:message code='search'></spring:message>" aria-label="Search" name="searching" />
             <button type="submit" class="searchButt btn btn-purple mx-1"><spring:message code="search"></spring:message></button>
         </form>
