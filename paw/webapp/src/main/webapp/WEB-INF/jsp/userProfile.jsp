@@ -8,7 +8,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="<c:url value='/css/userprofile.css'/>"/>
-    <title>userProfile</title>
+    <title>VestNet | <spring:message code="my_profile"></spring:message></title>
 </head>
 <body>
 <div class="container emp-profile">

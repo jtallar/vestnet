@@ -6,7 +6,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="<c:url value = 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' />" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title><spring:message code="contact"></spring:message> ${owner.firstName} ${owner.lastName}</title>
+    <title>VestNet | <spring:message code="contact"></spring:message> ${owner.firstName} ${owner.lastName}</title>
 </head>
 <body>
 <div class="container" style="margin-top: 20px">

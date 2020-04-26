@@ -16,7 +16,7 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Error 404</title>
+    <title>VestNet | Error 404</title>
 </head>
 <body>
 <div class="container" style="margin-top: 20px">
@@ -26,5 +26,6 @@
             <h5 class="card-title centered"><spring:message code="project404"/></h5>
         </div>
     </div>
+</div>
 </body>
 </html>
