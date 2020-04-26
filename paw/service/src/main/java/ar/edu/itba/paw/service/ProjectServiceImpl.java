@@ -37,5 +37,14 @@ public class ProjectServiceImpl implements ProjectService {
     public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages) {
         return projectDao.create(name, summary, cost, ownerId, categoriesIds, stages);
     }
+    @Override
+    public List<Project> findByOwner(long userId) {
+        return projectDao.findByOwner(userId);
+    }
+
+    @Override
+    public List<Project> findCoincidence(String name) {
+        return projectDao.findCoincidence(name);
+    }
 }
 

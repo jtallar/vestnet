@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
@@ -58,7 +57,7 @@ public class CategoriesJdbcDaoTest {
         // TABLE EMPTY
 
         // 2: Ejercitacion: Hacemos la unica llamada al metodo que queremos testear
-        List<Category> categories = categoriesJdbcDao.findAllCats();
+        List<Category> categories = categoriesJdbcDao.findAll();
 
         // 3: Postcondiciones: Hacemos los pocos assertes que permiten validar correctitud
         assertTrue(categories.isEmpty());
@@ -72,7 +71,7 @@ public class CategoriesJdbcDaoTest {
         jdbcInsertCategory.executeAndReturnKey(values);
 
         // 2
-        List<Category> categories = categoriesJdbcDao.findAllCats();
+        List<Category> categories = categoriesJdbcDao.findAll();
 
         // 3
         assertEquals(1, categories.size());

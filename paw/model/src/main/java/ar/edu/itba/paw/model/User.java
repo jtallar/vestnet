@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class User {
 
+    private String password; //TODO> add password to DAO
+
     private final long id;
     // TODO> VER SI SON FINAL O EDITABLES. POR AHORA MANDO FINAL, CUALQUIER  COSA SACARLO
     private final String firstName;
@@ -87,5 +89,31 @@ public class User {
 
     public void setTrustIndex(int trustIndex) {
         this.trustIndex = trustIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", realId='" + realId + '\'' +
+                ", birthDate=" + birthDate +
+                ", location=" + location +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", linkedin='" + linkedin + '\'' +
+                ", joinDate=" + joinDate +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", trustIndex=" + trustIndex +
+                '}';
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password){
+        this.password = password;
     }
 }

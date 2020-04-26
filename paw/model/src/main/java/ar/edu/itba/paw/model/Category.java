@@ -23,4 +23,13 @@ public class Category {
     public long getParent() {
         return parentId;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parentId=" + parentId +
+                '}';
+    }
 }

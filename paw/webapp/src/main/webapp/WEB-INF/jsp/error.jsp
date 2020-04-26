@@ -16,16 +16,22 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="<c:url value="//css/404.css"/>"/>
     <title>VestNet | Error 404</title>
 </head>
 <body>
-<div class="container" style="margin-top: 20px">
-    <div class="card m-2">
-        <div class="card-header">
-            <h1>404</h1>
-            <h5 class="card-title centered"><spring:message code="project404"/></h5>
+    <div id="notfound">
+        <div class="notfound">
+            <div class="notfound-404">
+                <h1> <spring:message code="error${error}Code"/> </h1>
+            </div>
+            <h2> <spring:message code="errorTitle"/> <spring:message code="error${error}"/> </h2>
+            <div><a href="#" onclick="history.back()"><span class="arrow"></span><spring:message code="goBack"/></a></div>
+            <div><a href="<c:url value='//projects'/>"><span class="arrow"></span><spring:message code="goHome"/></a></div>
         </div>
     </div>
-</div>
+
 </body>
 </html>

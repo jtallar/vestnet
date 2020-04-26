@@ -92,7 +92,7 @@ public class UserJdbcDaoTest {
         // 2
         Location location = new Location(new Location.Country(1, null, null, null, null),
                 new Location.State(1, null, null), new Location.City(1, null));
-        User user = userJdbcDao.create(1, FN, LN, RID, new Date(), location, EM, null, null,
+        User user = userJdbcDao.create(FN, LN, RID, new Date(), location, EM, null, null,
                 null, null, 0);
 
         // 3

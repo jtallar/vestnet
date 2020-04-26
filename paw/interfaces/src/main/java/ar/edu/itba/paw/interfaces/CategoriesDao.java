@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CategoriesDao {
 
-    List<Category> findAllCats();
+    List<Category> findAll();
 
     List<Category> findProjectCategories(long projectId);
 }

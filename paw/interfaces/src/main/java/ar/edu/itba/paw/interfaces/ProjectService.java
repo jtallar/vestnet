@@ -21,12 +21,16 @@ public interface ProjectService {
      */
     List<Project> findAll();
 
+    List<Project> findByOwner(long userId);
+
     /**
      * Finds a list of projects that matches one or more categories
      * @param categories The list of categories to find
      * @return List of available projects that fit those categories
      */
     List<Project> findByCategories(List<Category> categories);
+
+    public List<Project> findCoincidence(String name);
 
     /**
      * Create a project given all thes parameters
