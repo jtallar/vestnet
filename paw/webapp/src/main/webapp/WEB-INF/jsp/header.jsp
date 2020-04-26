@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="<c:url value="/images/apple-touch-icon.png"/>">
     <link rel="icon" type="image/png" sizes="32x32" href="<c:url value="/images/favicon-32x32.png"/>">
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
-    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">
+<%--    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">--%>
 
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
