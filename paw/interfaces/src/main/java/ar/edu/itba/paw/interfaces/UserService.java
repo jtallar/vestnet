@@ -3,6 +3,7 @@ import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -20,6 +21,9 @@ public interface UserService {
      * @param username The name of the user.
      * @return The created user.
      */
+
+    public List<User> findCoincidence(String name);
+
     public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
 
     public long createPassword(long id, String password);

@@ -27,3 +27,8 @@
 .dropdown-item{
     font-family: 'Lato', sans-serif
 }
+
+.searchButt{
+    background-color: #53006d;
+    color: #ffffff;
+}
