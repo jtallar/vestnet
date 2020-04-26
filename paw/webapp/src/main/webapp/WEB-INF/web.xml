@@ -60,6 +60,24 @@
     </param-value>
   </context-param>
 
+  <error-page>
+    <error-code>400</error-code>
+    <location>/errors</location>
+  </error-page>
+  <error-page>
+    <error-code>403</error-code>
+    <location>/errors</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/errors</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/errors</location>
+  </error-page>
+
+
   <listener>
     <listener-class>
       org.springframework.web.context.ContextLoaderListener

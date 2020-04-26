@@ -60,30 +60,18 @@ public class HelloWorldController {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {
-        return new ModelAndView("404");
+        return new ModelAndView("error");
     }
 
     @ExceptionHandler(ProjectNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchProject() {
-        return new ModelAndView("404");
+        return new ModelAndView("error");
     }
 
     @ExceptionHandler(MessagingException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-        public ModelAndView failedEmail() { return errorPage(0); }
-
-    @RequestMapping("/error/{err_type}")
-    public ModelAndView errorPage(@PathVariable("err_type") int err_type){
-        final ModelAndView mav = new ModelAndView("error");
-        mav.addObject("error", err_type);
-        return mav;
-    }
-    @RequestMapping("/error")
-    public ModelAndView error404(){
-        final ModelAndView mav = new ModelAndView("error");
-        return mav;
-    }
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView failedEmail() { return new ModelAndView("error"); }
 
     @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
     public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
