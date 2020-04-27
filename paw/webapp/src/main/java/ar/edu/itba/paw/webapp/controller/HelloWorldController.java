@@ -187,6 +187,13 @@ public class HelloWorldController {
         return auxList;
     }
 
+
+
+
+
+
+    // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
+    // TODO: HACE FALTA EL REQUIRED = FALSE?
     @RequestMapping(value = "/projects/{id}")
     public ModelAndView singleProjectView(@PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
