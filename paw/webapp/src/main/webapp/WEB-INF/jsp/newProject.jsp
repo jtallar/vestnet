@@ -29,7 +29,7 @@
     </div>
     <div class="dropdown-divider"></div>
     <c:url value="/newProject" var="postPath"/>
-    <form:form modelAttribute="newProjectForm" action="${postPath}" method="post">
+    <form:form modelAttribute="newProjectForm" action="${postPath}" method="post" enctype="multipart/form-data">
         <h3><spring:message code="projectOverviewTitle"/></h3>
         <h6><spring:message code="projectOverviewSubtitle"/></h6>
         <div class="dropdown-divider"></div>
@@ -63,6 +63,9 @@
         <form:checkboxes items="${categories}" path="categories" element="span class='custom-checkbox'"
                          itemLabel="name" itemValue="id"/>
         <form:errors path="categories" cssClass="formError" element="p"/>
+        <h5><spring:message code="projectImage"/></h5>
+        <form:input path="image" type="file" class="form-control" cssClass="custom-form-input"/>
+        <form:errors path="image" cssClass="formError" element="p"/>
         <div class="text-right">
             <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark"/>
         </div

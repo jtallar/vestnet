@@ -40,5 +40,11 @@ public interface ProjectService {
 //                   List<Category> categories, List<Stage> stages);
 
     // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID
-    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages);
+    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
+
+    /**
+     * @param projectId The id of the project we want to get a portrait image
+     * @return Image as a byte array
+     */
+    byte[] findImageForProject(long projectId);
 }

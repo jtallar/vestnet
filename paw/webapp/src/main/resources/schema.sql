@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS users (
 
     -- EXTRA INFO
     -- Profile picture URN. Optional. Max 100 characters.
-    profile_pic     VARCHAR(100),
+    profile_pic     bytea,
     join_date       TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 
     -- BACK OFFICE INFO
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS projects (
     -- EXTRA INFO
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    images          BOOLEAN NOT NULL DEFAULT false,
+    images          bytea,
     hits            INT NOT NULL DEFAULT 0,
 
     -- BACK OFFICE INFO

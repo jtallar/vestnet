@@ -100,7 +100,7 @@ public class ProjectJdbcDaoTest {
         // 2
 //        public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages)
 
-        long projectId = projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, 0, userId.longValue(), new ArrayList<>(), new ArrayList<>());
+        long projectId = projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, 0, userId.longValue(), new ArrayList<>(), new ArrayList<>(), new byte[0]);
 
         // 3
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, PROJECTS_TABLE));

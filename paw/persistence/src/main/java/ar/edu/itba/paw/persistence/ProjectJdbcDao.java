@@ -41,7 +41,7 @@ public class ProjectJdbcDao implements ProjectDao {
         jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(JdbcQueries.PROJECT_TABLE)
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("owner_id", "project_name", "summary", "cost");
+                .usingColumns("owner_id", "project_name", "summary", "cost", "images");
         jdbcInsertCategoryLink = new SimpleJdbcInsert(dataSource)
                 .withTableName(JdbcQueries.PROJECT_CATEGORIES_TABLE);
 
@@ -93,7 +93,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID, TOTAL DE ACA DESEMBOCO EN BUSCARLO, NO?
     @Override
-    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages) {
+    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes) {
         Map<String, Object> values = new HashMap<>();
         values.put("owner_id", ownerId);
         values.put("project_name", name);
@@ -101,8 +101,10 @@ public class ProjectJdbcDao implements ProjectDao {
         // TODO: SACAR ESTE COST, LUEGO CALCULARLO CON LOS STAGES
         values.put("cost", cost);
         // DATE SET TO DEFAULT --> CURRENT_TIMESTAMP
-        // TODO: AGREGAR IMAGENES
-        // IMAGES SET TO DEFAULT --> false
+        // TODO: AGREGAR IMAGENES de slideshow
+        if (imageBytes.length != 0) {
+            values.put("images", imageBytes);
+        }
         // HITS SET TO DEFAULT --> 0
         // TODO: AGREGAR BACKOFFICE
         // BACKOFFICE SET TO DEFAULT
@@ -141,6 +143,11 @@ public class ProjectJdbcDao implements ProjectDao {
 
 
         return projects;
+    }
+
+    @Override
+    public byte[] findImageForProject(long projectId) {
+        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
     }
 }
 

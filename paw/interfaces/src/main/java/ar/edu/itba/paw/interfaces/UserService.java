@@ -23,7 +23,14 @@ public interface UserService {
      * @return The created user.
      */
     public List<User> findCoincidence(String name);
-    long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password);
+    long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
+                String email, String phone, String linkedin, String password, byte[] imageBytes);
+
+    /**
+     * @param userId The id of the user we want to get a profile image
+     * @return Image as a byte array
+     */
+    byte[] findImageForUser(long userId);
 
     long createPassword(long id, String password);
 }
