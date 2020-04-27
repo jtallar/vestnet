@@ -17,9 +17,13 @@ import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,9 +36,13 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -179,6 +187,8 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
+        mav.addObject("back", "/projects");
+        mav.addObject("owner", false);
         return mav;
     }
 
@@ -201,10 +211,51 @@ public class HelloWorldController {
         if (errors.hasErrors()) {
             return createProject(projectFields);
         }
+        byte[] imageBytes = new byte[0];
+        try {
+            if (!projectFields.getImage().isEmpty())
+                imageBytes = projectFields.getImage().getBytes();
+        } catch (IOException e) {
+            return createProject(projectFields);
+        }
         // TODO: AGREGAR STAGES
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null);
+                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null, imageBytes);
         return new ModelAndView("redirect:/projects/" + projectId);
+    }
+
+    @RequestMapping(value = "/imageController/project/{p_id}")
+    @ResponseBody
+    public byte[] imageControllerProject(@PathVariable("p_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = projectService.findImageForProject(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("noImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image");
+            }
+        }
+        return image;
+    }
+
+    @RequestMapping(value = "/imageController/user/{u_id}")
+    @ResponseBody
+    public byte[] imageControllerUser(@PathVariable("u_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = userService.findImageForUser(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("noImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image");
+            }
+        }
+        return image;
     }
 
 
@@ -236,6 +287,13 @@ public class HelloWorldController {
             LOGGER.debug("\n\n");
             return signUp(userFields);
         }
+        byte[] imageBytes = new byte[0];
+        try {
+            if (!userFields.getProfilePicture().isEmpty())
+                imageBytes = userFields.getProfilePicture().getBytes();
+        } catch (IOException e) {
+            return signUp(userFields);
+        }
 
         //TODO add location when working
         userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
@@ -243,7 +301,7 @@ public class HelloWorldController {
 //                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
                 new Location(new Location.Country(userFields.getCountry(),"","","",""),
                         new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
-                userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),null, userFields.getPassword());
+                userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(), userFields.getPassword(), imageBytes);
 //        userService.createPassword(user.getId(), userFields.getPassword());
 
         // Auto Log In
@@ -272,6 +330,15 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(value = "/users/{u_id}/{p_id}")
+    public ModelAndView userProjectView(@PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
+        final ModelAndView mav = new ModelAndView("singleProjectView");
+        mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("back", "/users/" + userId);
+        mav.addObject("owner", true);
+//        mav.addObject("mailSent", mailSent);
+        return mav;
+    }
 
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(){

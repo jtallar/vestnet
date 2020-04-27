@@ -34,9 +34,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages) {
-        return projectDao.create(name, summary, cost, ownerId, categoriesIds, stages);
+    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes) {
+        return projectDao.create(name, summary, cost, ownerId, categoriesIds, stages, imageBytes);
     }
+
     @Override
     public List<Project> findByOwner(long userId) {
         return projectDao.findByOwner(userId);
@@ -45,6 +46,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Project> findCoincidence(String name) {
         return projectDao.findCoincidence(name);
+    }
+
+    @Override
+    public byte[] findImageForProject(long projectId) {
+        return projectDao.findImageForProject(projectId);
     }
 }
 

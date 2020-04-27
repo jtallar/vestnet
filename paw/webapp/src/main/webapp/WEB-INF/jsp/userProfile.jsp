@@ -17,7 +17,8 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src="<c:url value="/images/profile.png"/>" alt=""/>
+                    <img src="<c:url value="/imageController/user/${user.id}"/>" alt="<spring:message code="userPicture"/>"
+                         aria-placeholder="<spring:message code="userPicture"/>"/>
 <%--                    <div class="file btn btn-lg btn-primary">--%>
 <%--                        Change Photo--%>
 <%--                        <input type="file" name="file"/>--%>
@@ -170,7 +171,7 @@
                                         <p><c:out value="${project.owner.firstName}"/> <c:out value="${project.owner.lastName}"/></p>
                                         <strong><spring:message code="price"/></strong>
                                         <p><c:out value="${project.cost}"/></p>
-                                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
+                                        <a href="<c:url value='/users/${user.id}/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
                                     </div>
                                 </div>
                             </c:forEach>

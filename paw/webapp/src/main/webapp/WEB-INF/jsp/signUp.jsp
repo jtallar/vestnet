@@ -41,7 +41,7 @@
     <div class="row h-100">
         <div class="col-sm-12 my-auto">
             <div class="card rounded-lg px-4 py-3">
-                <form:form modelAttribute="userForm" method="POST" action="${createUrl}">
+                <form:form modelAttribute="userForm" method="POST" action="${createUrl}" enctype="multipart/form-data">
                     <div class="text-left">
                         <h2 class="bold"><spring:message code="sign_up_title"></spring:message></h2>
                     </div>
@@ -208,10 +208,11 @@
                                 </div>
                             </div>
                             <div class="col-md">
-                                <div class="form-group">
-                                    <label><spring:message code="picture"></spring:message> </label><br>
-                                    <input type="button" class="btn btn-outline-dark disabled"
-                                           value="<spring:message code="chooseFile"></spring:message>"/>
+                                <label><spring:message code="userPicture"/> </label>
+                                <div class="custom-file">
+                                    <form:input path="profilePicture" type="file" class="custom-file-input" id="customFileProfilePic"/>
+                                    <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel"><spring:message code="chooseFile"/></label><br>
+                                    <form:errors path="profilePicture" cssClass="formError" element="p"/>
                                 </div>
                             </div>
                         </div>
@@ -248,5 +249,12 @@
         </div>
     </div>
 </div>
+<script>
+    var fileBox = document.getElementById('customFileProfilePic');
+    fileBox.addEventListener("change", function () {
+        var label = document.getElementById('customFileProfilePicLabel');
+        label.innerText = fileBox.files[0].name;
+    });
+</script>
 </body>
 </html>

@@ -80,12 +80,9 @@
             </div>
         </div>
 
-<%--        &lt;%&ndash; STAGES &ndash;%&gt;--%>
-<%--        <h4 class="mt-3"><spring:message code="stages"/></h4>--%>
-<%--        <h7><spring:message code="projectStagesSubtitle"/></h7>--%>
-<%--        <div class="dropdown-divider"></div>--%>
-
-
+        <h5><spring:message code="projectImage"/></h5>
+        <form:input path="image" type="file" class="form-control" cssClass="custom-form-input"/>
+        <form:errors path="image" cssClass="formError" element="p"/>
         <div class="text-right">
             <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark" onclick="addCategories()"/>
         </div
