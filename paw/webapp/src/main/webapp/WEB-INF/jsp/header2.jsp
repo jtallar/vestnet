@@ -25,9 +25,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
-<c:url var="logo" value="/images/logo_bp.png"/>
+<c:url var="logo" value="/images/logo_wp.png"/>
 <c:url var="lupa" value="/images/lupa_v.png"/>
-<nav class="navbar navbar-dark navbar-expand-sm navbar-custom">
+<nav class="navbar navbar-light navbar-expand-sm navbar-custom2">
     <a class="navbar-brand" href="<c:url value='/'/>">
         <img src=${logo} width="60" class="logo-img">
     </a>
@@ -68,7 +68,7 @@
     <c:url var="searchURL" value="/search"/>
     <form class="form-inline mx-auto my-2 my-lg-0" action="${searchURL}" method="get">
         <input class="form-control mx-auto mx-auto" id="searching" type="text" placeholder="<spring:message code='search'></spring:message>" aria-label="Search" name="searching" />
-        <button type="submit" class="btn btn-purple">
+        <button type="submit" class="btn btn-black">
             <img src=${lupa} height="29">
         </button>
     </form>

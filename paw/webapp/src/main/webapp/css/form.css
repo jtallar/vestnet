@@ -19,3 +19,20 @@
     border-radius: 10px;
     width: 100%;
 }
+
+.card{
+    margin-top: auto;
+    background-color: #fefefe;
+}
+
+h2 {
+    line-height: 1.66;
+    margin-: 30px;
+    padding: 0;
+    font-weight: 900;
+    color: #222;
+    font-family: Arial;
+    font-size: 24px;
+    text-transform: uppercase;
+    text-align: center;
+}

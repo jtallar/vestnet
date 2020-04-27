@@ -42,9 +42,9 @@ public class WebConfig {
         dataSource.setDriverClass(org.postgresql.Driver.class);
         // TODO: VER SI CON localhost funciona (asi podemos dejarlo asi en nuestras PCs) o hay que poner 10.6.1.110
         //        dataSource.setUrl("jdbc:postgresql://10.16.1.110/paw-2020a-5");
-        dataSource.setUrl("jdbc:postgresql://localhost/paw");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setUrl(env.getProperty("postgres.url"));
+        dataSource.setUsername(env.getProperty("postgres.username"));
+        dataSource.setPassword(env.getProperty("postgres.password"));
         return dataSource;
     }
 
@@ -60,8 +60,6 @@ public class WebConfig {
         dbp.addScript(schemaSql);
         return dbp;
     }
-
-
 
     @Bean
     public MessageSource messageSource() {

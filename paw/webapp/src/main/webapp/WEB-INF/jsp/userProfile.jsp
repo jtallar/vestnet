@@ -8,6 +8,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="<c:url value='/css/userprofile.css'/>"/>
+
     <title>VestNet | <spring:message code="my_profile"></spring:message></title>
 </head>
 <body>
@@ -16,11 +17,11 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt=""/>
-                    <div class="file btn btn-lg btn-primary">
-                        Change Photo
-                        <input type="file" name="file"/>
-                    </div>
+                    <img src="<c:url value="/images/profile.png"/>" alt=""/>
+<%--                    <div class="file btn btn-lg btn-primary">--%>
+<%--                        Change Photo--%>
+<%--                        <input type="file" name="file"/>--%>
+<%--                    </div>--%>
                 </div>
             </div>
             <div class="col-md-6">
@@ -39,8 +40,6 @@
                             <span class="fa fa-star"></span>
                         </c:forEach>
                     </div>
-
-                    
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><spring:message code="information"/></a>
@@ -59,9 +58,7 @@
         </div>
 
         <div class="row">
-
             <div class="col-md-4">
-
                 <div class="profile-work">
                     <!--
                     <p>WORK LINK</p>
