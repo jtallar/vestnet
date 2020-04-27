@@ -183,12 +183,12 @@
         <version>${org.hsqldb.version}</version>
         <scope>test</scope>
       </dependency>
-      <dependency>
+      <!--<dependency>
         <groupId>org.jetbrains</groupId>
         <artifactId>annotations</artifactId>
         <version>16.0.1</version>
         <scope>compile</scope>
-      </dependency>
+      </dependency>-->
 
 
       <dependency>
