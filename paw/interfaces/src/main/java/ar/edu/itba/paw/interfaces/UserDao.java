@@ -3,7 +3,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +24,7 @@ public interface UserDao {
      */
     public List<User> findCoincidence(String name);
 
-    public long createPass(long id, String password);
+    long createPass(long id, String password);
 
-    //TODO add location
-    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+    long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password);
 }

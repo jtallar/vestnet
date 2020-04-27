@@ -55,7 +55,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers("/login","/signUp").anonymous()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/projects").hasRole("INVESTOR")
+                .antMatchers("/projects/**").hasRole("INVESTOR")
+                .antMatchers("/newProject").hasRole("ENTREPRENEUR")
                 .antMatchers("/**").authenticated()
                 .and().formLogin()
                 .loginPage("/login")
@@ -85,7 +86,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/css/**", "/images/**");
+                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico");
 
     }
 

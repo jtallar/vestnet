@@ -23,12 +23,14 @@ public class JdbcQueries {
 
     static final String USER_FIND_ALL = "SELECT " +
             "u.id, " +
+            "u.role_id AS role, " +
             "u.first_name, " +
             "u.last_name, " +
             "u.real_id, " +
 
             "u.aux_date AS birth_date, " +
             "u.email, " +
+            "u.password, " +
             "u.phone, " +
             "u.linkedin, " +
             "u.profile_pic AS profile_picture, " +

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex) {
-        return userDao.create(firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture,joinDate,trustIndex);
+    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password) {
+        return userDao.create(role, firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture, encoder.encode(password));
     }
 
     @Override
