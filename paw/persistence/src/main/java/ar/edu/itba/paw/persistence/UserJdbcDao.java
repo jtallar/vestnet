@@ -53,7 +53,8 @@ public class UserJdbcDao implements UserDao {
 
     // TODO: REVISAR LOS PARAMETROS --> PROFILE PIC ES UN STRING??
     @Override
-    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password) {
+    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
+                       String email, String phone, String linkedin, String password, byte[] imageBytes) {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put("role_id", User.UserRole.valueOf(role.toUpperCase()).getId());
         values.put("first_name",firstName);
@@ -66,7 +67,9 @@ public class UserJdbcDao implements UserDao {
         values.put("email", email);
         values.put("phone", phone);
         values.put("linkedin", linkedin);
-        values.put("profile_pic", profilePicture);
+        if (imageBytes.length != 0) {
+            values.put("profile_pic", imageBytes);
+        }
         values.put("password", password);
 
         return jdbcInsert.executeAndReturnKey(values).longValue();
@@ -107,6 +110,11 @@ public class UserJdbcDao implements UserDao {
 
 
         return users;
+    }
+
+    @Override
+    public byte[] findImageForUser(long userId) {
+        return jdbcTemplate.queryForObject(JdbcQueries.USER_IMAGE, new Object[] {userId}, byte[].class);
     }
 }
 

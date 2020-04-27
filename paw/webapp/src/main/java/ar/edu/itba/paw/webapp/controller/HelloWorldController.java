@@ -222,12 +222,29 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/projects/" + projectId);
     }
 
-    @RequestMapping(value = "/imageController/{p_id}")
+    @RequestMapping(value = "/imageController/project/{p_id}")
     @ResponseBody
-    public byte[] imageController(@PathVariable("p_id") long id) {
+    public byte[] imageControllerProject(@PathVariable("p_id") long id) {
         // Si no tiene pic --> Devuelve null
         // TODO: CHANGE NO IMAGE PIC
         byte[] image = projectService.findImageForProject(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("noImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image");
+            }
+        }
+        return image;
+    }
+
+    @RequestMapping(value = "/imageController/user/{u_id}")
+    @ResponseBody
+    public byte[] imageControllerUser(@PathVariable("u_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = userService.findImageForUser(id);
         if (image == null) {
             try {
                 Resource stockImage = new ClassPathResource("noImage.png");
@@ -268,6 +285,13 @@ public class HelloWorldController {
             LOGGER.debug("\n\n");
             return signUp(userFields);
         }
+        byte[] imageBytes = new byte[0];
+        try {
+            if (!userFields.getProfilePicture().isEmpty())
+                imageBytes = userFields.getProfilePicture().getBytes();
+        } catch (IOException e) {
+            return signUp(userFields);
+        }
 
         //TODO add location when working
         userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
@@ -275,7 +299,7 @@ public class HelloWorldController {
 //                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
                 new Location(new Location.Country(userFields.getCountry(),"","","",""),
                         new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
-                userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),null, userFields.getPassword());
+                userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(), userFields.getPassword(), imageBytes);
 //        userService.createPassword(user.getId(), userFields.getPassword());
 
         // Auto Log In

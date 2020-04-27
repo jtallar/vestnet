@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.forms;
 
+import ar.edu.itba.paw.webapp.config.WebConfig;
 import cz.jirutka.validator.spring.SpELAssert;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -42,7 +44,10 @@ public class NewUserFields {
     private String phone;
     @Pattern(regexp = "^(?:http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$")
     private String linkedin;
-    private String profilePicture; //if we need URI then change it later
+
+    // TODO: SEGUN COMO CAPTURE LA EXCEPCION, VER SI HACE FALTA EL PARAM
+    @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE)
+    private MultipartFile profilePicture;
 
     public String getRole() {
         return role;
@@ -111,7 +116,7 @@ public class NewUserFields {
     public void setLinkedin(String linkedin) { this.linkedin = linkedin; }
 
 
-    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
+    public void setProfilePicture(MultipartFile profilePicture) { this.profilePicture = profilePicture; }
 
     public String getPassword() { return password;}
 
@@ -133,5 +138,5 @@ public class NewUserFields {
     public String getLinkedin() { return linkedin; }
 
 
-    public String getProfilePicture() { return profilePicture; }
+    public MultipartFile getProfilePicture() { return profilePicture; }
 }

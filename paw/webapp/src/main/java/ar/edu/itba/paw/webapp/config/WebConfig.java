@@ -77,7 +77,8 @@ public class WebConfig {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        // TODO: COMO CAPTURA ESTA EXCEPCION?
+        // TODO: COMO CAPTURA MaxUploadSizeExceededException Y TIRAR UN ERROR DE FORM? --> SINO VER @ControllerAdvice Class
+        //  (https://www.baeldung.com/spring-maxuploadsizeexceeded)
         commonsMultipartResolver.setMaxUploadSize(MAX_UPLOAD_SIZE);
         return commonsMultipartResolver;
     }

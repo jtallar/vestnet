@@ -33,7 +33,6 @@ public class JdbcQueries {
             "u.password, " +
             "u.phone, " +
             "u.linkedin, " +
-            "u.profile_pic AS profile_picture, " +
             "u.join_date, " +
             "u.trust_index, " +
 
@@ -87,7 +86,6 @@ public class JdbcQueries {
             "u.email AS owner_email, " +
             "u.phone AS owner_phone, " +
             "u.linkedin AS owner_linkedin, " +
-            "u.profile_pic AS owner_profile_picture, " +
             "u.join_date AS owner_join_date, " +
             "u.trust_index AS owner_trust_index, " +
 
@@ -125,4 +123,6 @@ public class JdbcQueries {
     static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + "WHERE pcat.category_id IN (:categories)";
 
     static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
+
+    static final String USER_IMAGE = "SELECT u.profile_pic FROM " + USER_TABLE + " u WHERE u.id = ?";
 }
