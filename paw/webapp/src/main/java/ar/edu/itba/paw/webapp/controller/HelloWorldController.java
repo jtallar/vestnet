@@ -310,9 +310,8 @@ public class HelloWorldController {
                 userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
 //        userService.createPassword(user.getId(), userFields.getPassword());
         if (userId <= 0) {
-            // TODO: VER COMO TIRAR UNA EXCEPCION CON UN CODIGO DE ERROR NUESTRO
-//            throw new UserAlreadyExistsException();
-            return signUp(userFields);
+            // TODO: VER SI MOSTRAMOS LA MISMA PAG DE ERROR --> EL header tiene cosaas
+            throw new UserAlreadyExistsException();
         }
 
         // Auto Log In
