@@ -77,6 +77,9 @@ public class HelloWorldController {
     public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
         final ModelAndView mav = new ModelAndView("contact");
         mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
+        mav.addObject("p_id", p_id);
+        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
+        mav.addObject("sessionUser", sessionUser);
         return mav;
     }
 
