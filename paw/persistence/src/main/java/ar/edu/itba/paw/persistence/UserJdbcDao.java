@@ -49,14 +49,29 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.query(JdbcQueries.USER_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
     }
 
-
-
-    // TODO: REVISAR LOS PARAMETROS --> PROFILE PIC ES UN STRING??
     @Override
     public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
                        String email, String phone, String linkedin, String password, byte[] imageBytes) {
-        Map<String, Object> values = new HashMap<String, Object>();
-        values.put("role_id", User.UserRole.valueOf(role.toUpperCase()).getId());
+
+        final int roleId = User.UserRole.valueOf(role.toUpperCase()).getId();
+        // Check if email already registered
+        Optional<User> maybeUser = findByUsername(email);
+        if (maybeUser.isPresent()) {
+            if (maybeUser.get().getPassword() == null) {
+                // Actualizo los valores del user
+                long userId = maybeUser.get().getId();
+                jdbcTemplate.update(JdbcQueries.USER_UPDATE, roleId, firstName, lastName, realId, Date.valueOf(birthDate),
+                        location.getCountry().getId(), location.getState().getId(), location.getCity().getId(),
+                        phone, linkedin, (imageBytes.length != 0) ? imageBytes : null, password, userId);
+                return userId;
+            } else {
+                // TODO: VER COMO TIRAR UNA EXCEPCION PROPIA Y COMPARTIRLA CON WEBAPP
+                return 0;
+            }
+        }
+        // Email not registered
+        Map<String, Object> values = new HashMap<>();
+        values.put("role_id", roleId);
         values.put("first_name",firstName);
         values.put("last_name", lastName);
         values.put("real_id", realId);

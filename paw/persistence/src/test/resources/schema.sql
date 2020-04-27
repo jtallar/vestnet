@@ -1,3 +1,4 @@
+-- TODO: NO ME DEJA PONER bytea porque ROMPE TODO
 -- HSQL WONT ACCEPT NOT NULL AND DEFAULT TOGETHER
 -- HSQL WONT ACCEPT LOCAL DATE AS DATE, USE DATE
 /****************************************
