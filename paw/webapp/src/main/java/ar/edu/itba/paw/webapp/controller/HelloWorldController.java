@@ -173,11 +173,6 @@ public class HelloWorldController {
         return auxList;
     }
 
-
-
-
-    // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
-    // TODO: HACE FALTA EL REQUIRED = FALSE?
     @RequestMapping(value = "/projects/{id}")
     public ModelAndView singleProjectView(@PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
@@ -206,10 +201,9 @@ public class HelloWorldController {
         if (errors.hasErrors()) {
             return createProject(projectFields);
         }
-        // TODO: GUARDAR UNA SESION PARA TENER EL OWNER ID, POR AHORA HARDCODEO 1
         // TODO: AGREGAR STAGES
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), 1, projectFields.getCategories(), null);
+                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null);
         return new ModelAndView("redirect:/projects/" + projectId);
     }
 

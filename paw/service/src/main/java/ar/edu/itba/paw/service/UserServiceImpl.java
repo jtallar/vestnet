@@ -17,11 +17,6 @@ import java.util.Optional;
 @Primary
 @Service
 public class UserServiceImpl implements UserService {
-
-    //@Autowired passwordEncoder encoder
-
-    //TODO< encode password
-
     @Autowired
     private UserDao userDao;
 

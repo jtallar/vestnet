@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class User {
 
-    private String password; //TODO> add password to DAO
+    private String password;
 
     private final long id;
     // TODO: VER SI PUEDO GUARDAR UN USERROLE --> NO PUEDO MAPEAR 2 a INVESTOR(2)

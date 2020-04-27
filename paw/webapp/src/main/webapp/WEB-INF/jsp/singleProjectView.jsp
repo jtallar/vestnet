@@ -23,7 +23,6 @@
 <body>
 <div class="container" style="margin-top: 20px">
     <div>
-<%--        TODO: FIX BACK WHEN COMING FROM A CONTACT--%>
 <%--        <div class="row">--%>
             <div class="d-flex justify-content-between align-self-center">
                 <div class="p-2">

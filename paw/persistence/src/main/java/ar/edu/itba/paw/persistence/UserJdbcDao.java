@@ -51,10 +51,7 @@ public class UserJdbcDao implements UserDao {
 
 
 
-    // TODO: REVISAR LOS PARAMETROS --> SEPARAR EN ENTREPENEUR Y INVESTOR
-    //                              --> SACAR trust index, joinDate
-//                                  --> PROFILE PIC ES UN STRING??
-//                                  --> id es el role_id?
+    // TODO: REVISAR LOS PARAMETROS --> PROFILE PIC ES UN STRING??
     @Override
     public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password) {
         Map<String, Object> values = new HashMap<String, Object>();
