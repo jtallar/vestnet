@@ -21,8 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -52,6 +56,9 @@ public class HelloWorldController {
 
     @Autowired
     private CategoriesService categoriesService;
+
+    @Autowired
+    protected AuthenticationManager authenticationManager;
 
     // TODO: Check if there is another way to persist user for the controller
     private User sessionUser;
@@ -227,7 +234,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
-    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields, final BindingResult errors){
+    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields, final BindingResult errors, HttpServletRequest request){
         if(errors.hasErrors()){
             LOGGER.debug("\n\nSign Up failed. There are {} errors\n", errors.getErrorCount());
             for (ObjectError error : errors.getAllErrors())
@@ -244,9 +251,23 @@ public class HelloWorldController {
                         new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
                 userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),null, userFields.getPassword());
 //        userService.createPassword(user.getId(), userFields.getPassword());
-        return new ModelAndView("redirect:/login");
+
+        // Auto Log In
+        authenticateUserAndSetSession(userFields.getEmail(), userFields.getPassword(), request);
+        return new ModelAndView("redirect:/");
     }
 
+    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+
+        // generate session if one doesn't exist
+        request.getSession();
+
+        token.setDetails(new WebAuthenticationDetails(request));
+        Authentication authenticatedUser = authenticationManager.authenticate(token);
+
+        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+    }
 
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id){
