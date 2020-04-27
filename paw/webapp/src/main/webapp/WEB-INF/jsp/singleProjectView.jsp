@@ -45,8 +45,11 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <c:url var="first_pic" value="/images/purple.png"/>
-                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
+                            <%--<c:url var="first_pic" value="/images/purple.png"/>
+                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
+<%--                            TODO: AGREGARA ALTERNATIVA SI NO TIENE PIC--%>
+                            <img src="<c:url value="/imageController/${project.id}"/>" class="d-block w-100" alt="Project image"
+                                 style="width: 100%; height:100% " aria-placeholder="Imagen del proyecto"/>
                             <div class="carousel-caption d-none d-md-block">
                                 <p>This is a first view of the web prototype</p>
                             </div>

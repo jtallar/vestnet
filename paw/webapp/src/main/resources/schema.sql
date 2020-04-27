@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS projects (
     -- EXTRA INFO
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    images          BOOLEAN NOT NULL DEFAULT false,
+    images          bytea,
     hits            INT NOT NULL DEFAULT 0,
 
     -- BACK OFFICE INFO

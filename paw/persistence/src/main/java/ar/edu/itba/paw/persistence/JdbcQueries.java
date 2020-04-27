@@ -73,7 +73,6 @@ public class JdbcQueries {
             "p.hits, " +
             "p.publish_date, " +
             "p.update_date, " +
-            "p.images AS has_images, " +
 
             "p.aproved AS back_office_approved, " +
             "p.profit_index AS back_office_profit_index, " +
@@ -124,4 +123,6 @@ public class JdbcQueries {
     static final String PROJECT_FIND_BY_ID = PROJECT_FIND_ALL + "WHERE p.id = ?";
 
     static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + "WHERE pcat.category_id IN (:categories)";
+
+    static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
 }

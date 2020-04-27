@@ -32,9 +32,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -201,10 +203,25 @@ public class HelloWorldController {
         if (errors.hasErrors()) {
             return createProject(projectFields);
         }
+        byte[] imageBytes = new byte[0];
+        try {
+            if (!projectFields.getImage().isEmpty())
+                imageBytes = projectFields.getImage().getBytes();
+        } catch (IOException e) {
+            return createProject(projectFields);
+        }
         // TODO: AGREGAR STAGES
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null);
+                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null, imageBytes);
         return new ModelAndView("redirect:/projects/" + projectId);
+    }
+
+    @RequestMapping(value = "/imageController/{p_id}")
+    @ResponseBody
+    public byte[] imageController(@PathVariable("p_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: VER QUE HACER SI NO TIENE PIC
+        return projectService.findImageForProject(id);
     }
 
 
