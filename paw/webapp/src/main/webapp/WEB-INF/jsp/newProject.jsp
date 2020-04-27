@@ -29,7 +29,7 @@
     </div>
     <div class="dropdown-divider"></div>
     <c:url value="/newProject" var="postPath"/>
-    <form:form modelAttribute="newProjectForm" action="${postPath}" method="post">
+    <form:form modelAttribute="newProjectForm" action="${postPath}" method="post" enctype="multipart/form-data">
         <div class="d-flex justify-content-between flex-row mt-1">
             <div class="d-flex flex-column">
                 <h4><spring:message code="projectOverviewTitle"/></h4>
