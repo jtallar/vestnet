@@ -12,6 +12,7 @@ import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
+import ar.edu.itba.paw.webapp.exception.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
@@ -72,7 +73,7 @@ public class HelloWorldController {
     private User sessionUser;
 
 
-    @ExceptionHandler(UserNotFoundException.class)
+    /*@ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {
         return new ModelAndView("error");
@@ -82,11 +83,16 @@ public class HelloWorldController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchProject() {
         return new ModelAndView("error");
-    }
+    }*/
 
+    // TODO: QUE HACEMOS ACA??
     @ExceptionHandler(MessagingException.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView failedEmail() { return new ModelAndView("error"); }
+
+    /*@ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    public ModelAndView failedRegistration() { return new ModelAndView("error"); }*/
 
     @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
     public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
@@ -221,7 +227,7 @@ public class HelloWorldController {
         // TODO: AGREGAR STAGES
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
                 projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null, imageBytes);
-        return new ModelAndView("redirect:/projects/" + projectId);
+        return new ModelAndView("redirect:/users/" + sessionUser.getId() + "/" + projectId);
     }
 
     @RequestMapping(value = "/imageController/project/{p_id}")
@@ -296,13 +302,18 @@ public class HelloWorldController {
         }
 
         //TODO add location when working
-        userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
+        final long userId = userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
                 LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
 //                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
-                new Location(new Location.Country(userFields.getCountry(),"","","",""),
+                new Location(new Location.Country(userFields.getCountry(), "", "", "", ""),
                         new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
-                userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(), userFields.getPassword(), imageBytes);
+                userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
 //        userService.createPassword(user.getId(), userFields.getPassword());
+        if (userId <= 0) {
+            // TODO: VER COMO TIRAR UNA EXCEPCION CON UN CODIGO DE ERROR NUESTRO
+//            throw new UserAlreadyExistsException();
+            return signUp(userFields);
+        }
 
         // Auto Log In
         authenticateUserAndSetSession(userFields.getEmail(), userFields.getPassword(), request);
