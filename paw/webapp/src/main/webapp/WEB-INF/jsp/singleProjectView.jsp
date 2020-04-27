@@ -26,7 +26,7 @@
 <%--        <div class="row">--%>
             <div class="d-flex justify-content-between align-self-center">
                 <div class="p-2">
-                    <a href="<c:url value='/projects'/>" class="btn btn-dark"><spring:message code="back"/></a>
+                    <a href="<c:url value="${back}"/>" class="btn btn-dark"><spring:message code="back"/></a>
                 </div>
                 <c:if test="${mailSent}">
                 <div class="p-2 ml-8">
@@ -105,7 +105,15 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"></spring:message></a>
+                    <c:choose>
+                        <c:when test="${owner}">
+<%--                            TODO: ADD EDIT PROJECT--%>
+<%--                            <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>--%>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>

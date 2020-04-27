@@ -171,7 +171,7 @@
                                         <p><c:out value="${project.owner.firstName}"/> <c:out value="${project.owner.lastName}"/></p>
                                         <strong><spring:message code="price"/></strong>
                                         <p><c:out value="${project.cost}"/></p>
-                                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
+                                        <a href="<c:url value='/users/${user.id}/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
                                     </div>
                                 </div>
                             </c:forEach>

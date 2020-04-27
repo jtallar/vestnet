@@ -187,6 +187,8 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
+        mav.addObject("back", "/projects");
+        mav.addObject("owner", false);
         return mav;
     }
 
@@ -328,6 +330,15 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(value = "/users/{u_id}/{p_id}")
+    public ModelAndView userProjectView(@PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
+        final ModelAndView mav = new ModelAndView("singleProjectView");
+        mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("back", "/users/" + userId);
+        mav.addObject("owner", true);
+//        mav.addObject("mailSent", mailSent);
+        return mav;
+    }
 
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(){
