@@ -238,7 +238,7 @@ public class HelloWorldController {
         byte[] image = projectService.findImageForProject(id);
         if (image == null) {
             try {
-                Resource stockImage = new ClassPathResource("noImage.png");
+                Resource stockImage = new ClassPathResource("projectNoImage.png");
                 image = IOUtils.toByteArray(stockImage.getInputStream());
             } catch (IOException e) {
                 LOGGER.debug("Could not load stock image");
@@ -255,10 +255,10 @@ public class HelloWorldController {
         byte[] image = userService.findImageForUser(id);
         if (image == null) {
             try {
-                Resource stockImage = new ClassPathResource("noImage.png");
+                Resource stockImage = new ClassPathResource("userNoImage.png");
                 image = IOUtils.toByteArray(stockImage.getInputStream());
             } catch (IOException e) {
-                LOGGER.debug("Could not load stock image");
+                LOGGER.debug("Could not load stock image. Error {}", e.getMessage());
             }
         }
         return image;
