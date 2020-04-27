@@ -20,6 +20,13 @@
     width: 100%;
 }
 
+.custom-form-select {
+    padding: 6px;
+    border: 2px solid #750096;
+    border-radius: 5px;
+    width: 30ch;
+}
+
 .card{
     margin-top: auto;
     background-color: #fefefe;

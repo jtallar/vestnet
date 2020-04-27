@@ -25,51 +25,85 @@
 <div class="container" style="margin-top: 20px">
     <div class="text-center">
         <h1><spring:message code="createProjectTitle"/></h1>
-        <h5><spring:message code="createProjectSubtitle"/></h5>
+        <h6><spring:message code="createProjectSubtitle"/></h6>
     </div>
     <div class="dropdown-divider"></div>
     <c:url value="/newProject" var="postPath"/>
     <form:form modelAttribute="newProjectForm" action="${postPath}" method="post" enctype="multipart/form-data">
-        <h3><spring:message code="projectOverviewTitle"/></h3>
-        <h6><spring:message code="projectOverviewSubtitle"/></h6>
+        <div class="d-flex justify-content-between flex-row mt-1">
+            <div class="d-flex flex-column">
+                <h4><spring:message code="projectOverviewTitle"/></h4>
+                <h7><spring:message code="projectOverviewSubtitle"/></h7>
+                <div class="dropdown-divider"></div>
+
+                <h6><spring:message code="title"/></h6>
+                <spring:message code="ProjectTitlePlaceholder" var="titlePlaceholder"/>
+                <form:input path="title" type="text" class="form-control" placeholder="${titlePlaceholder}" cssClass="custom-form-input"/>
+                <form:errors path="title" cssClass="formError" element="p"/>
+
+                <h6><spring:message code="summary"/></h6>
+                <spring:message code="ProjectSummaryPlaceholder" var="summaryPlaceholder"/>
+                <form:textarea path="summary" type="text" class="form-control" placeholder="${summaryPlaceholder}" cssClass="custom-form-textarea"/>
+                <form:errors path="summary" cssClass="formError" element="p"/>
+
+                <h6><spring:message code="cost"/></h6>
+                <form:input path="cost" type="number" class="form-control" cssClass="custom-form-input"/>
+                <form:errors path="cost" cssClass="formError" element="p"/>
+            </div>
+            <div class="d-flex flex-column">
+                <%--TODO Project Showcase (images and videos)--%>
+            </div>
+
+        </div>
+
+        <%-- CATEGORIES --%>
+        <h4 class="mt-3"><spring:message code="categories"/></h4>
+        <h7><spring:message code="projectCategoriesSubtitle"/></h7>
         <div class="dropdown-divider"></div>
-        <h5><spring:message code="title"/></h5>
-        <spring:message code="ProjectTitlePlaceholder" var="titlePlaceholder"/>
-        <form:input path="title" type="text" class="form-control" placeholder="${titlePlaceholder}" cssClass="custom-form-input"/>
-        <form:errors path="title" cssClass="formError" element="p"/>
+        <div class="d-flex justify-content-around flex-row">
+            <div class="d-flex flex-column form-group">
+                <label><spring:message code="all-categories"/></label>
+                <select id="all-categories" class="custom-form-select mr-sm-2" size="10">
+                    <c:forEach items="${categories}" var="category">
+                        <option value="${category.id}" selected="selected">${category.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="d-flex justify-content-around flex-column ">
+                <button type="button" class="btn btn-dark" onclick="addCategory()">>></button>
+                <button type="button" class="btn btn-dark" onclick="delCategory()"><<</button>
+            </div>
+            <div class="d-flex flex-column form-group">
+                <label><spring:message code="my-categories"/> </label>
+                <form:select path="categories" id="final-categories" class="custom-form-select mr-sm-2" size="10"/>
+                <form:errors path="categories" cssClass="formError" element="p"/>
+            </div>
+        </div>
 
-        <h5><spring:message code="summary"/></h5>
-        <spring:message code="ProjectSummaryPlaceholder" var="summaryPlaceholder"/>
-        <form:textarea path="summary" type="text" class="form-control" placeholder="${summaryPlaceholder}" cssClass="custom-form-textarea"/>
-        <form:errors path="summary" cssClass="formError" element="p"/>
-
-        <h5><spring:message code="cost"/></h5>
-        <form:input path="cost" type="number" class="form-control" cssClass="custom-form-input"/>
-        <form:errors path="cost" cssClass="formError" element="p"/>
-
-<%--        <div id="dl_list_0">--%>
-<%--            <c:forEach varStatus="vs" items="${newProjectForm.categories}">--%>
-<%--                <div class="dl_item_<c:out value='${vs.index}' />"></div>--%>
-<%--                <c:forEach items="${categories}" var="category">--%>
-<%--                    <form:option value="${category.name}">${category.name}</form:option>--%>
-<%--                </c:forEach>--%>
-<%--            </c:forEach>--%>
-<%--            <div class="row">--%>
-<%--                <div class="label"><a class="add_item icon plus" href="#">Add</a></div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        TODO: VER COMO MOSTRAR UN DESPLEGABLE CON ADD Y REMOVE --%>
-        <h5><spring:message code="categories"/></h5>
-        <form:checkboxes items="${categories}" path="categories" element="span class='custom-checkbox'"
-                         itemLabel="name" itemValue="id"/>
-        <form:errors path="categories" cssClass="formError" element="p"/>
         <h5><spring:message code="projectImage"/></h5>
         <form:input path="image" type="file" class="form-control" cssClass="custom-form-input"/>
         <form:errors path="image" cssClass="formError" element="p"/>
         <div class="text-right">
-            <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark"/>
+            <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark" onclick="addCategories()"/>
         </div
     </form:form>
 </div>
 </body>
+<script>
+    function addCategory() {
+        const cat = document.getElementById("all-categories");
+        if (cat.selectedIndex !== -1)
+            document.getElementById("final-categories").appendChild(cat.options[cat.selectedIndex]);
+    }
+    function delCategory() {
+        const cat = document.getElementById("final-categories");
+        if (cat.selectedIndex !== -1)
+            document.getElementById("all-categories").appendChild(cat.options[cat.selectedIndex]);
+    }
+    function addCategories() {
+        const cat = document.getElementById("final-categories");
+        for (let i = 0; i < cat.options.length; i++)
+            cat[i].selected = true;
+    }
+</script>
 </html>
