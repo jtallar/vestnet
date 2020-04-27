@@ -75,8 +75,8 @@
             </div>
             <div class="d-flex flex-column form-group">
                 <label><spring:message code="my-categories"/> </label>
-                <form:select path="categories" id="final-categories" class="custom-form-select mr-sm-2" size="10">
-                </form:select>
+                <form:select path="categories" id="final-categories" class="custom-form-select mr-sm-2" size="10"/>
+                <form:errors path="categories" cssClass="formError" element="p"/>
             </div>
         </div>
 
