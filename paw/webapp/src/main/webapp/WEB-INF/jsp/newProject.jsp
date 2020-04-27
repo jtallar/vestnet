@@ -47,26 +47,53 @@
         <form:input path="cost" type="number" class="form-control" cssClass="custom-form-input"/>
         <form:errors path="cost" cssClass="formError" element="p"/>
 
-<%--        <div id="dl_list_0">--%>
-<%--            <c:forEach varStatus="vs" items="${newProjectForm.categories}">--%>
-<%--                <div class="dl_item_<c:out value='${vs.index}' />"></div>--%>
-<%--                <c:forEach items="${categories}" var="category">--%>
-<%--                    <form:option value="${category.name}">${category.name}</form:option>--%>
-<%--                </c:forEach>--%>
-<%--            </c:forEach>--%>
-<%--            <div class="row">--%>
-<%--                <div class="label"><a class="add_item icon plus" href="#">Add</a></div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        TODO: VER COMO MOSTRAR UN DESPLEGABLE CON ADD Y REMOVE --%>
         <h5><spring:message code="categories"/></h5>
-        <form:checkboxes items="${categories}" path="categories" element="span class='custom-checkbox'"
-                         itemLabel="name" itemValue="id"/>
-        <form:errors path="categories" cssClass="formError" element="p"/>
+
+        <div class="d-flex justify-content-around flex-row">
+            <div class="d-flex flex-column form-group">
+                <label><spring:message code="all-categories"/></label>
+                <select id="all-categories" class="custom-form-select mr-sm-2" size="10">
+                    <c:forEach items="${categories}" var="category">
+                        <option value="${category.id}" selected="selected">${category.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="d-flex justify-content-around flex-column ">
+                <button type="button" class="btn btn-dark" onclick="addCategory()">>></button>
+                <button type="button" class="btn btn-dark" onclick="delCategory()"><<</button>
+            </div>
+            <div class="d-flex flex-column form-group">
+                <label><spring:message code="my-categories"/> </label>
+                <form:select path="categories" id="final-categories" class="custom-form-select mr-sm-2" size="10">
+                </form:select>
+            </div>
+        </div>
+
+
+<%--        <form:checkboxes items="${categories}" path="categories" element="span class='custom-checkbox'"--%>
+<%--                         itemLabel="name" itemValue="id"/>--%>
+<%--        <form:errors path="categories" cssClass="formError" element="p"/>--%>
         <div class="text-right">
-            <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark"/>
+            <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark" onclick="addCategories()"/>
         </div
     </form:form>
 </div>
 </body>
+<script>
+    function addCategory() {
+        const cat = document.getElementById("all-categories");
+        if (cat.selectedIndex !== -1)
+            document.getElementById("final-categories").appendChild(cat.options[cat.selectedIndex]);
+    }
+    function delCategory() {
+        const cat = document.getElementById("final-categories");
+        if (cat.selectedIndex !== -1)
+            document.getElementById("all-categories").appendChild(cat.options[cat.selectedIndex]);
+    }
+    function addCategories() {
+        const cat = document.getElementById("final-categories");
+        for (var i = 0; i < cat.options.length; i++)
+            cat[i].selected = true;
+    }
+</script>
 </html>
