@@ -17,9 +17,13 @@ import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +40,8 @@ import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -220,8 +226,17 @@ public class HelloWorldController {
     @ResponseBody
     public byte[] imageController(@PathVariable("p_id") long id) {
         // Si no tiene pic --> Devuelve null
-        // TODO: VER QUE HACER SI NO TIENE PIC
-        return projectService.findImageForProject(id);
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = projectService.findImageForProject(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("noImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image");
+            }
+        }
+        return image;
     }
 
 
