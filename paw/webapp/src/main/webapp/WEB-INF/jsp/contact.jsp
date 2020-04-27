@@ -10,12 +10,13 @@
 </head>
 <body>
 <div class="container" style="margin-top: 20px">
-    <div class="d-flex justify-content-start">
-        <h5 class="card-title"><b> <spring:message code="contact"></spring:message> ${owner.firstName} ${owner.lastName}</b></h5>
+    <div class="d-flex justify-content-between align-self-center">
+            <a href="<c:url value='/projects/${p_id}'/>" class="btn btn-dark"><spring:message code="back"/></a>
     </div>
+
+    <h5 class="card-title" style="margin-top: 40px"><b> <spring:message code="contact"></spring:message> ${owner.firstName} ${owner.lastName}</b></h5>
     <c:url value="/projects/${p_id}/contact" var="postPath"/>
         <form:form modelAttribute="mailForm" action="${postPath}" method="post">
-
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">@</span>

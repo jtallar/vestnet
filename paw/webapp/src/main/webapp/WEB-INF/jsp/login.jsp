@@ -18,7 +18,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="<c:url value="/images/apple-touch-icon.png"/>">
     <link rel="icon" type="image/png" sizes="32x32" href="<c:url value="/images/favicon-32x32.png"/>">
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
-    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">
     <title>VestNet | Sign in</title>
 </head>
 <body>
@@ -26,13 +25,12 @@
 <div class="sidenav">
     <c:url var="logo" value="/images/logo_bp.png"/>
     <div class="text-center mt-5">
-        <img src=${logo} class="rounded">
+        <img class="logo-img" src=${logo} >
     </div>
-
-
 </div>
+
 <div class="main">
-    <div class="col-md-6 col-sm-12">
+    <div class="col-md-8">
         <div class="login-form">
             <c:url value="/login" var="loginUrl"></c:url>
             <form method="post" action="${loginUrl}" >
@@ -50,12 +48,12 @@
                         <spring:message code = "rememberMe"></spring:message>
                     </label>
                 </div>
-                <input type="submit"   class="btn btn-black" value="<spring:message code = "submit"></spring:message>">
+                <input type="submit"   class="btn btn-dark" value="<spring:message code = "submit"></spring:message>">
                 <c:url var="register" value="/signUp"></c:url>
             </form>
-
             <form action="${register}">
-                <input type="submit" class="btn btn-black" value="<spring:message code='sign_up'></spring:message>" />
+                <label><spring:message code = "noReg"></spring:message></label>
+                <input type="submit" class="btn btn-outline-dark" value="<spring:message code='sign_up'></spring:message>" />
             </form>
         </div>
     </div>

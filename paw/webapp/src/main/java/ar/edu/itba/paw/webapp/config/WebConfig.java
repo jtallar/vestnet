@@ -61,8 +61,6 @@ public class WebConfig {
         return dbp;
     }
 
-
-
     @Bean
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();

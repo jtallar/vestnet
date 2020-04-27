@@ -1,4 +1,3 @@
-/***********************************************************************************************************/
 
 /* The container must be positioned relative: */
 .custom-select {
@@ -8,84 +7,20 @@
 }
 
 .card-deck{
-    margin-top: 20px;
+    margin: 20px;
 }
 
 .card {
     border-color: #750096;
     margin: 8px;
-    min-width: 23%;
-    max-width: 100px;
+    min-width: 400px;
+    /*max-width: 100px;*/
 }
 
 .card-header{
     background-color: #222222
-
 }
 
 .checked {
     color: orange;
 }
-
-/* Reset Select */
-/*select {*/
-/*    -webkit-appearance: none;*/
-/*    -moz-appearance: none;*/
-/*    -ms-appearance: none;*/
-/*    appearance: none;*/
-/*    outline: 0;*/
-/*    box-shadow: none;*/
-/*    border: #750096;*/
-/*    background: #FFFFFF;*/
-/*    background-image: none;*/
-/*}*/
-/*!* Remove IE arrow *!*/
-/*select::-ms-expand {*/
-/*    display: none;*/
-/*}*/
-/*!* Custom Select *!*/
-/*.select {*/
-/*    position: relative;*/
-/*    display: flex;*/
-/*    width: 20em;*/
-/*    height: 3em;*/
-/*    line-height: 3;*/
-/*    background: #000000;*/
-/*    overflow: hidden;*/
-/*    border-radius: .25em;*/
-/*}*/
-/*select {*/
-/*    flex: 1;*/
-/*    padding: 0 .5em;*/
-/*    color: #ffffff;*/
-/*    background-color: #750096;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*!* Arrow *!*/
-/*.select::after {*/
-/*    content: '\25BC';*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    right: 0;*/
-/*    padding: 0 1em;*/
-/*    background: #000000;*/
-/*    cursor: pointer;*/
-/*    pointer-events: none;*/
-/*    -webkit-transition: .25s all ease;*/
-/*    -o-transition: .25s all ease;*/
-/*    transition: .25s all ease;*/
-/*}*/
-/*!* Transition *!*/
-/*.select:hover::after {*/
-/*    color: #750096;*/
-/*}*/
-
-/*.select-items {*/
-/*    position: absolute;*/
-/*    background-color: #750096;*/
-/*    top: 100%;*/
-/*    left: 0;*/
-/*    right: 0;*/
-/*    z-index: 99;*/
-/*}*/

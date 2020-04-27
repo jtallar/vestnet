@@ -3,6 +3,11 @@
     background-color: #222222;
 }
 
+.navbar-custom2 {
+    color: #000000;
+    background-color: #b1b1b1;
+}
+
 .navbar-brand
 {
     position: relative;
@@ -31,4 +36,7 @@
 .searchButt{
     background-color: #53006d;
     color: #ffffff;
+}
+.topnav-right {
+    float: right;
 }
