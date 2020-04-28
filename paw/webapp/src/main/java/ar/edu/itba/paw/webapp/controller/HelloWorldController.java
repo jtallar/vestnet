@@ -203,7 +203,7 @@ public class HelloWorldController {
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
         mav.addObject("back", "/projects");
-        mav.addObject("owner", false);
+        mav.addObject("investor", true);
         return mav;
     }
 
@@ -298,7 +298,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("back", "/users/" + userId);
-        mav.addObject("owner", true);
+        mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
 //        mav.addObject("mailSent", mailSent);
         return mav;
     }

@@ -104,15 +104,12 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <c:choose>
-                        <c:when test="${owner}">
-<%--                            TODO: ADD EDIT PROJECT--%>
-<%--                            <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>--%>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:if test="${sessionUser.id == project.owner.id}">
+<%--                        TODO: ADD EDIT PROJECT--%>
+                    </c:if>
+                    <c:if test="${investor}">
+                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>
+                    </c:if>
                 </div>
             </div>
         </div>
