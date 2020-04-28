@@ -228,8 +228,7 @@
                                     <label><spring:message code="password"></spring:message> </label>
                                     <form:input type="password" class="form-control" path="password"
                                                 placeholder="${enter_password}"/>
-                                    <form:errors path="password" cssClass="formError" element="p"/>
-                                        <%--                                    <form:errors cssClass="formError" element="p"></form:errors>--%>
+                                    <form:errors cssClass="formError" element="p"></form:errors>
                                 </div>
                             </div>
                             <div class="col-md">
@@ -266,7 +265,9 @@
         var label = document.getElementById('customFileProfilePicLabel');
         if (fileBox.files[0].size >= ${maxSize}) {
             fileBox.value = null;
-            errorTag.hidden = true;
+            if (errorTag != null) {
+                errorTag.hidden = true;
+            }
             maxSizeMsg.hidden = false;
         } else {
             label.innerText = fileBox.files[0].name;
