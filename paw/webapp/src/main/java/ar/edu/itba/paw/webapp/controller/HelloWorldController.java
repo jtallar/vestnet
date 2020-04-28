@@ -69,8 +69,6 @@ public class HelloWorldController {
     @Autowired
     protected AuthenticationManager authenticationManager;
 
-    // TODO: Check if there is another way to persist user for the controller
-    private User sessionUser;
 
 
     /*@ExceptionHandler(UserNotFoundException.class)
@@ -84,6 +82,17 @@ public class HelloWorldController {
     public ModelAndView noSuchProject() {
         return new ModelAndView("error");
     }*/
+
+    @ModelAttribute("sessionUser")
+    public User loggedUser() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // auth.getPrincipal();
+        // auth.getCredentials();
+        // auth.getAuthorities();
+        // auth.getDetails();
+        final User user = userService.findByUsername(auth.getName()).get();
+        return user;
+    }
 
     // TODO: QUE HACEMOS ACA??
     @ExceptionHandler(MessagingException.class)
@@ -100,7 +109,6 @@ public class HelloWorldController {
         mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
         mav.addObject("p_id", p_id);
         // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
-        mav.addObject("sessionUser", sessionUser);
         return mav;
     }
 
@@ -115,10 +123,8 @@ public class HelloWorldController {
 
     @RequestMapping("/")
     public ModelAndView index(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // TODO: CHANGE EXCEPTION TO SERVER ERROR?
-        this.sessionUser = userService.findByUsername(authentication.getName()).orElseThrow(UserNotFoundException::new);
-        if (this.sessionUser.getRole() == User.UserRole.ENTREPRENEUR.getId())
+        if (this.loggedUser().getRole() == User.UserRole.ENTREPRENEUR.getId())
             return new ModelAndView("redirect:/myProfile");
         // Investor logged in
         return new ModelAndView("redirect:/projects");
@@ -233,8 +239,8 @@ public class HelloWorldController {
         }
         // TODO: AGREGAR STAGES
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null, imageBytes);
-        return new ModelAndView("redirect:/users/" + sessionUser.getId() + "/" + projectId);
+                projectFields.getCost(), loggedUser().getId(), projectFields.getCategories(), null, imageBytes);
+        return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
     }
 
     @RequestMapping(value = "/imageController/project/{p_id}")
@@ -272,11 +278,7 @@ public class HelloWorldController {
     }
 
 
-    @RequestMapping(value = "/login")
-    public ModelAndView login(){
-        final ModelAndView mav = new ModelAndView("login");
-        return mav;
-    }
+
 
     @RequestMapping(value = "/admin")
     public ModelAndView admin(){
@@ -285,58 +287,10 @@ public class HelloWorldController {
     }
 
 
-    @RequestMapping(value = "/signUp")
-    public ModelAndView signUp( @ModelAttribute("userForm") final NewUserFields userFields){
-        final ModelAndView mav = new ModelAndView("signUp");
-        return mav;
-    }
 
-    @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
-    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields, final BindingResult errors, HttpServletRequest request){
-        if(errors.hasErrors()){
-            LOGGER.debug("\n\nSign Up failed. There are {} errors\n", errors.getErrorCount());
-            for (ObjectError error : errors.getAllErrors())
-                LOGGER.debug("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
-            LOGGER.debug("\n\n");
-            return signUp(userFields);
-        }
-        byte[] imageBytes = new byte[0];
-        try {
-            if (!userFields.getProfilePicture().isEmpty())
-                imageBytes = userFields.getProfilePicture().getBytes();
-        } catch (IOException e) {
-            return signUp(userFields);
-        }
 
-        //TODO add location when working
-        final long userId = userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
-                LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
-//                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
-                new Location(new Location.Country(userFields.getCountry(), "", "", "", ""),
-                        new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
-                userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
-//        userService.createPassword(user.getId(), userFields.getPassword());
-        if (userId <= 0) {
-            // TODO: VER SI MOSTRAMOS LA MISMA PAG DE ERROR --> EL header tiene cosaas
-            throw new UserAlreadyExistsException();
-        }
 
-        // Auto Log In
-        authenticateUserAndSetSession(userFields.getEmail(), userFields.getPassword(), request);
-        return new ModelAndView("redirect:/");
-    }
 
-    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
-        // generate session if one doesn't exist
-        request.getSession();
-
-        token.setDetails(new WebAuthenticationDetails(request));
-        Authentication authenticatedUser = authenticationManager.authenticate(token);
-
-        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-    }
 
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id){
@@ -359,7 +313,7 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(){
-        final ModelAndView mav = new ModelAndView("redirect:/users/" + sessionUser.getId());
+        final ModelAndView mav = new ModelAndView("redirect:/users/" + loggedUser().getId());
         return mav;
     }
 
@@ -387,11 +341,22 @@ public class HelloWorldController {
     public ModelAndView searchAux(@RequestParam("searching") String search){
         final ModelAndView mav = new ModelAndView("search");
         String aux = search.toLowerCase();
-
-        mav.addObject("projectsList", projectService.findCoincidence(aux));
+        if(loggedUser().getRole() == 2) {
+            mav.addObject("projectsList", projectService.findCoincidence(aux));
+        } //only want to show users projects if is an investor
         mav.addObject("usersList", userService.findCoincidence(aux));
         mav.addObject("string", search);
 
         return mav;
     }
+
+    @RequestMapping(value = "/myProjects")
+    public ModelAndView myProjects(){
+        final ModelAndView mav = new ModelAndView("myProjects");
+        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
+        return mav;
+    }
+
+
+
 }
