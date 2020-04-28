@@ -342,6 +342,16 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(value = "/headerFirstOption")
+    public ModelAndView getHeaderFirstOption() {
+        if (loggedUser().getRole() == 1) {
+            // Entrepreneur
+            return new ModelAndView("redirect:/newProject");
+        }
+        // Investor
+        return new ModelAndView("redirect:/projects");
+    }
+
     // TODO: Terminar y descomentar
     /*@RequestMapping(value = "/myProjects")
     public ModelAndView myProjects(){
