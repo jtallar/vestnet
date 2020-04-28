@@ -43,11 +43,11 @@
             <div class="card rounded-lg px-4 py-3">
                 <form:form modelAttribute="userForm" method="POST" action="${createUrl}" enctype="multipart/form-data">
                     <div class="row justify-content-center">
-                        <div class="col-1 text-left">
+                        <div class="col-2 text-left">
                             <a href="<c:url value="/login"/>" class="btn btn-dark pull-left"><spring:message code="back"/></a>
                         </div>
                         <div class="col-md text-left">
-                            <h2 class="bold"><spring:message code="sign_up_title"></spring:message></h2>
+                            <h2 class="bold" style="margin-right: 20%"><spring:message code="sign_up_title"></spring:message></h2>
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
