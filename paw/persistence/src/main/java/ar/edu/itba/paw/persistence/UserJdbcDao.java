@@ -121,7 +121,8 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public List<User> findCoincidence(String name) {
-        List<User> users = jdbcTemplate.query(JdbcQueries.USER_FIND_COINCIDENCE, new Object[] {"%" + name + "%","%" + name + "%","%" + name + "%"}, RESULT_SET_EXTRACTOR);
+        String aux = "%" + name + "%";
+        List<User> users = jdbcTemplate.query(JdbcQueries.USER_FIND_COINCIDENCE, new Object[] {aux, aux, aux, aux}, RESULT_SET_EXTRACTOR);
 
 
         return users;
