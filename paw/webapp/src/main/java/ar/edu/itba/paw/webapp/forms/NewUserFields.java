@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 //TODO cannot print this message
-@SpELAssert(value = "password.equals(repeatPassword)")
+@SpELAssert(value = "password.equals(repeatPassword)", message = "Passwords do not match")
 public class NewUserFields {
 
     @Size(max = 50)
@@ -42,7 +42,7 @@ public class NewUserFields {
     private String email;
     @Pattern(regexp = "[0-9]*")
     private String phone;
-    @Pattern(regexp = "^(?:http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$")
+    @Pattern(regexp = "^((http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$)?")
     private String linkedin;
 
     // TODO: SEGUN COMO CAPTURE LA EXCEPCION, VER SI HACE FALTA EL PARAM

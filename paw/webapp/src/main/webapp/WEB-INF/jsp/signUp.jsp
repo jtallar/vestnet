@@ -227,7 +227,7 @@
                                     <label><spring:message code="password"></spring:message> </label>
                                     <form:input type="password" class="form-control" path="password"
                                                 placeholder="${enter_password}"/>
-                                    <form:errors path="password" cssClass="formError" element="p"></form:errors>
+                                    <form:errors cssClass="formError" element="p"></form:errors>
                                 </div>
                             </div>
                             <div class="col-md">
