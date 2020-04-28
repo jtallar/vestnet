@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
-                       String email, String phone, String linkedin, String password, byte[] imageBytes) {
+                       String email, String phone, String linkedin, String password, byte[] imageBytes) throws UserAlreadyExistsException {
         return userDao.create(role, firstName,lastName,realId,birthDate,location,email,phone,linkedin, encoder.encode(password), imageBytes);
     }
 

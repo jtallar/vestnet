@@ -42,8 +42,13 @@
         <div class="col-sm-12 my-auto">
             <div class="card rounded-lg px-4 py-3">
                 <form:form modelAttribute="userForm" method="POST" action="${createUrl}" enctype="multipart/form-data">
-                    <div class="text-left">
-                        <h2 class="bold"><spring:message code="sign_up_title"></spring:message></h2>
+                    <div class="row justify-content-center">
+                        <div class="col-1 text-left">
+                            <a href="<c:url value="/login"/>" class="btn btn-dark pull-left"><spring:message code="back"/></a>
+                        </div>
+                        <div class="col-md text-left">
+                            <h2 class="bold"><spring:message code="sign_up_title"></spring:message></h2>
+                        </div>
                     </div>
                     <div class="dropdown-divider"></div>
 
@@ -139,11 +144,11 @@
                                     <label><spring:message code="country"/></label>
                                 </div>
                                 <div class="col-md">
-                                        <%--                TODO: COMO HAGO PARA QUE SE EJECUTE ESE URL tipo SRC, no que sea ese el valor? --%>
-                                    <c:url var="countryUrl" value='/location/countries'/>
+<%--                                    TODO: COMO HAGO PARA QUE SE EJECUTE ESE URL tipo SRC, no que sea ese el valor? --%>
+<%--                                    <c:url var="countryUrl" value='/location/countries'/>--%>
                                     <form:select class="custom-select mr-sm-2" path="country">
-                                        <c:forEach var="country" items="${countryUrl}">
-                                            <form:option value="1" label="${country}"/>
+                                        <c:forEach var="country" items="Argentina">
+                                            <form:option value="11" label="${country}"/>
                                         </c:forEach>
                                     </form:select>
                                 </div>
@@ -151,10 +156,10 @@
                                     <label><spring:message code="state"/> </label>
                                 </div>
                                 <div class="col-md">
-                                    <c:url var="stateUrl" value='/location/states/${userForm.country}'/>
+<%--                                    <c:url var="stateUrl" value='/location/states/${userForm.country}'/>--%>
                                     <form:select path="state" class="custom-select mr-sm-2">
-                                        <c:forEach var="state" items="${stateUrl}">
-                                            <form:option value="1" label="${state}"/>
+                                        <c:forEach var="state" items="Buenos Aires">
+                                            <form:option value="3656" label="${state}"/>
                                         </c:forEach>
                                     </form:select>
                                 </div>
@@ -162,10 +167,10 @@
                                     <label><spring:message code="city"/> </label>
                                 </div>
                                 <div class="col-md">
-                                    <c:url var="cityUrl" value='/location/cities/${userForm.state}'/>
+<%--                                    <c:url var="cityUrl" value='/location/cities/${userForm.state}'/>--%>
                                     <form:select path="city" class="custom-select mr-sm-2">
-                                        <c:forEach var="city" items="${cityUrl}">
-                                            <form:option value="1" label="${city}"/>
+                                        <c:forEach var="city" items="Buenos Aires">
+                                            <form:option value="704" label="${city}"/>
                                         </c:forEach>
                                     </form:select>
                                 </div>
@@ -212,8 +217,9 @@
                                 <div class="custom-file">
                                     <form:input path="profilePicture" type="file" class="custom-file-input" id="customFileProfilePic"/>
                                     <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel"><spring:message code="chooseFile"/></label><br>
-                                    <form:errors path="profilePicture" cssClass="formError" element="p"/>
+                                    <form:errors path="profilePicture" cssClass="formError" element="p" id="fileErrorFormTag"/>
                                 </div>
+                                <label class="formError" id="maxSizeErrorMsg" hidden><spring:message code="imageMaxSize"/></label>
                             </div>
                         </div>
                     </div>
@@ -240,10 +246,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <input type="submit" class="btn btn-dark pull-right"
-                               value="<spring:message code="sign_up"></spring:message> "/>
-                    </div>
+
+
+                        <div class="text-right">
+                            <c:if test="${invalidUser}">
+                                <h4 class="big-error"><spring:message code="userAlreadyExists"/></h4>
+                            </c:if>
+                            <input type="submit" class="btn btn-dark pull-right"
+                                   value="<spring:message code="sign_up"></spring:message> "/>
+                        </div>
+
+
                 </form:form>
             </div>
         </div>
@@ -251,9 +264,20 @@
 </div>
 <script>
     var fileBox = document.getElementById('customFileProfilePic');
+    var maxSizeMsg = document.getElementById('maxSizeErrorMsg');
+    var errorTag = document.getElementById('fileErrorFormTag');
     fileBox.addEventListener("change", function () {
         var label = document.getElementById('customFileProfilePicLabel');
-        label.innerText = fileBox.files[0].name;
+        if (fileBox.files[0].size >= ${maxSize}) {
+            fileBox.value = null;
+            if (errorTag != null) {
+                errorTag.hidden = true;
+            }
+            maxSizeMsg.hidden = false;
+        } else {
+            label.innerText = fileBox.files[0].name;
+            maxSizeMsg.hidden = true;
+        }
     });
 </script>
 </body>

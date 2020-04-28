@@ -73,10 +73,6 @@
     <location>/errors</location>
   </error-page>
   <error-page>
-    <error-code>409</error-code>
-    <location>/errors</location>
-  </error-page>
-  <error-page>
     <error-code>500</error-code>
     <location>/errors</location>
   </error-page>

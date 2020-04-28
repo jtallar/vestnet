@@ -11,8 +11,9 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
+import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
-import ar.edu.itba.paw.webapp.exception.UserAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
@@ -24,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,14 +37,10 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.*;
@@ -90,8 +86,7 @@ public class HelloWorldController {
         // auth.getCredentials();
         // auth.getAuthorities();
         // auth.getDetails();
-        final User user = userService.findByUsername(auth.getName()).get();
-        return user;
+        return userService.findByUsername(auth.getName()).orElse(null);
     }
 
     // TODO: QUE HACEMOS ACA??
@@ -286,12 +281,6 @@ public class HelloWorldController {
         return mav;
     }
 
-
-
-
-
-
-
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id){
         final ModelAndView mav= new ModelAndView("userProfile");
@@ -356,7 +345,5 @@ public class HelloWorldController {
         mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
         return mav;
     }
-
-
 
 }
