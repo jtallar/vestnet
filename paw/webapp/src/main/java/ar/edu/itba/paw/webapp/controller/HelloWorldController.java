@@ -187,6 +187,13 @@ public class HelloWorldController {
         return auxList;
     }
 
+
+
+
+
+
+    // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
+    // TODO: HACE FALTA EL REQUIRED = FALSE?
     @RequestMapping(value = "/projects/{id}")
     public ModelAndView singleProjectView(@PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
@@ -238,7 +245,7 @@ public class HelloWorldController {
         byte[] image = projectService.findImageForProject(id);
         if (image == null) {
             try {
-                Resource stockImage = new ClassPathResource("noImage.png");
+                Resource stockImage = new ClassPathResource("projectNoImage.png");
                 image = IOUtils.toByteArray(stockImage.getInputStream());
             } catch (IOException e) {
                 LOGGER.debug("Could not load stock image");
@@ -255,10 +262,10 @@ public class HelloWorldController {
         byte[] image = userService.findImageForUser(id);
         if (image == null) {
             try {
-                Resource stockImage = new ClassPathResource("noImage.png");
+                Resource stockImage = new ClassPathResource("userNoImage.png");
                 image = IOUtils.toByteArray(stockImage.getInputStream());
             } catch (IOException e) {
-                LOGGER.debug("Could not load stock image");
+                LOGGER.debug("Could not load stock image. Error {}", e.getMessage());
             }
         }
         return image;
@@ -310,9 +317,8 @@ public class HelloWorldController {
                 userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
 //        userService.createPassword(user.getId(), userFields.getPassword());
         if (userId <= 0) {
-            // TODO: VER COMO TIRAR UNA EXCEPCION CON UN CODIGO DE ERROR NUESTRO
-//            throw new UserAlreadyExistsException();
-            return signUp(userFields);
+            // TODO: VER SI MOSTRAMOS LA MISMA PAG DE ERROR --> EL header tiene cosaas
+            throw new UserAlreadyExistsException();
         }
 
         // Auto Log In
