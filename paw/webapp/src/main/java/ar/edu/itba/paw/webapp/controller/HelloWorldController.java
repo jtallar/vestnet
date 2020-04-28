@@ -11,6 +11,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
+import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
@@ -288,6 +289,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp( @ModelAttribute("userForm") final NewUserFields userFields){
         final ModelAndView mav = new ModelAndView("signUp");
+        mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         return mav;
     }
 

@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 public class WebConfig {
     // TODO: COMO EXTRAIGO ESTE VALOR A OTRO LADO?
-    public static final long MAX_UPLOAD_SIZE = 100000;
+    public static final long MAX_UPLOAD_SIZE = 2097152; // 2 MB
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
