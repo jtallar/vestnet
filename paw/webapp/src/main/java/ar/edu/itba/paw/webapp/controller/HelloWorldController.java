@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -239,7 +240,8 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
     }
 
-    @RequestMapping(value = "/imageController/project/{p_id}")
+    @RequestMapping(value = "/imageController/project/{p_id}",
+            produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     public byte[] imageControllerProject(@PathVariable("p_id") long id) {
         // Si no tiene pic --> Devuelve null
