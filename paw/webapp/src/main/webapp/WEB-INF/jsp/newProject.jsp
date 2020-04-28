@@ -81,8 +81,9 @@
         </div>
 
         <h5><spring:message code="projectImage"/></h5>
-        <form:input path="image" type="file" class="form-control" cssClass="custom-form-input"/>
-        <form:errors path="image" cssClass="formError" element="p"/>
+        <form:input path="image" type="file" class="form-control" cssClass="custom-form-input" id="customFileProjectPic"/>
+        <form:errors path="image" cssClass="formError" element="p" id="fileErrorFormTag"/>
+        <label class="formError" id="maxSizeErrorMsg" hidden><spring:message code="imageMaxSize"/></label>
         <div class="text-right">
             <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark" onclick="addCategories()"/>
         </div
@@ -90,19 +91,33 @@
 </div>
 </body>
 <script>
+    var fileBox = document.getElementById('customFileProjectPic');
+    var maxSizeMsg = document.getElementById('maxSizeErrorMsg');
+    var errorTag = document.getElementById('fileErrorFormTag');
+    fileBox.addEventListener("change", function () {
+        if (fileBox.files[0].size >= ${maxSize}) {
+            fileBox.value = null;
+            if (errorTag != null) {
+                errorTag.hidden = true;
+            }
+            maxSizeMsg.hidden = false;
+        } else {
+            maxSizeMsg.hidden = true;
+        }
+    });
     function addCategory() {
-        const cat = document.getElementById("all-categories");
+        var cat = document.getElementById("all-categories");
         if (cat.selectedIndex !== -1)
             document.getElementById("final-categories").appendChild(cat.options[cat.selectedIndex]);
     }
     function delCategory() {
-        const cat = document.getElementById("final-categories");
+        var cat = document.getElementById("final-categories");
         if (cat.selectedIndex !== -1)
             document.getElementById("all-categories").appendChild(cat.options[cat.selectedIndex]);
     }
     function addCategories() {
-        const cat = document.getElementById("final-categories");
-        for (let i = 0; i < cat.options.length; i++)
+        var cat = document.getElementById("final-categories");
+        for (var i = 0; i < cat.options.length; i++)
             cat[i].selected = true;
     }
 </script>

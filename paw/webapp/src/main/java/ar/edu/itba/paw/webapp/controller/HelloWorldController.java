@@ -217,6 +217,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("newProject");
         List<Category> catList = categoriesService.findAllCats();
         mav.addObject("categories", catList);
+        mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         return mav;
     }
 
