@@ -241,10 +241,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <input type="submit" class="btn btn-dark pull-right"
-                               value="<spring:message code="sign_up"></spring:message> "/>
-                    </div>
+
+
+                        <div class="text-right">
+                            <c:if test="${invalidUser}">
+                                <h4 class="big-error"><spring:message code="userAlreadyExists"/></h4>
+                            </c:if>
+                            <input type="submit" class="btn btn-dark pull-right"
+                                   value="<spring:message code="sign_up"></spring:message> "/>
+                        </div>
+
+
                 </form:form>
             </div>
         </div>

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
@@ -51,7 +52,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
-                       String email, String phone, String linkedin, String password, byte[] imageBytes) {
+                       String email, String phone, String linkedin, String password, byte[] imageBytes) throws UserAlreadyExistsException {
 
         final int roleId = User.UserRole.valueOf(role.toUpperCase()).getId();
         // Check if email already registered
@@ -65,8 +66,7 @@ public class UserJdbcDao implements UserDao {
                         phone, linkedin, (imageBytes.length != 0) ? imageBytes : null, password, userId);
                 return userId;
             } else {
-                // TODO: VER COMO TIRAR UNA EXCEPCION PROPIA Y COMPARTIRLA CON WEBAPP
-                return 0;
+                throw new UserAlreadyExistsException();
             }
         }
         // Email not registered
