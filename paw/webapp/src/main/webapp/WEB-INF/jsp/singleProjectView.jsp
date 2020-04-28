@@ -40,21 +40,20 @@
                      style="width: 450px; height:500px; margin: 0 auto">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                        <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                        <%--<li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>--%>
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <%--<c:url var="first_pic" value="/images/purple.png"/>
                             <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
-<%--                            TODO: AGREGARA ALTERNATIVA SI NO TIENE PIC--%>
                             <img src="<c:url value="/imageController/project/${project.id}"/>" class="d-block w-100" alt="<spring:message code="projectImage"/>"
                                  style="width: 100%; height:100% " aria-placeholder="<spring:message code="projectImage"/>"/>
-                            <div class="carousel-caption d-none d-md-block">
+<%--                            <div class="carousel-caption d-none d-md-block">
                                 <p>This is a first view of the web prototype</p>
-                            </div>
+                            </div>--%>
                         </div>
-                        <div class="carousel-item">
+                        <%--<div class="carousel-item">
                             <c:url var="second_pic" value="/images/orange.png"/>
                             <img src="${second_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
                             <div class="carousel-caption d-none d-md-block">
@@ -67,7 +66,7 @@
                             <div class="carousel-caption d-none d-md-block">
                                 <p>This is how we design de database</p>
                             </div>
-                        </div>
+                        </div>--%>
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

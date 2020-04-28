@@ -285,7 +285,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id){
         final ModelAndView mav= new ModelAndView("userProfile");
-        User user = userService.findById(id).orElseThrow(NoClassDefFoundError::new);
+        User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
         return mav;
@@ -340,11 +340,12 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(value = "/myProjects")
+    // TODO: Terminar y descomentar
+    /*@RequestMapping(value = "/myProjects")
     public ModelAndView myProjects(){
         final ModelAndView mav = new ModelAndView("myProjects");
         mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
         return mav;
-    }
+    }*/
 
 }

@@ -44,7 +44,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value='/myProjects'/>"><spring:message code="my_projects"></spring:message></a>
+                    <a class="nav-link" href="<c:url value='/newProject'/>"><spring:message code="new_project"></spring:message></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value='/myProfile'/>"><spring:message code="my_profile"></spring:message></a>
