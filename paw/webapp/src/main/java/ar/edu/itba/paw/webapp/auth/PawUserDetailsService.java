@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
-import netscape.security.Privilege;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
