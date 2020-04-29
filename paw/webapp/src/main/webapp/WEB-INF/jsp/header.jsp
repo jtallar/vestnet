@@ -30,11 +30,11 @@
 <c:choose>
     <c:when test="${sessionUser == null}">
 <%--        TODO: SETEAR CUSTOM ERROR HEADER COLORS--%>
-        <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom2"/>
-        <c:set var="searchButtonClass" value="btn btn-black"/>
+        <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom3"/>
+        <c:set var="searchButtonClass" value="btn logopurple"/>
 <%--        TODO: COMO DETERMINO ESTE MENSAJE?--%>
         <spring:message var="firstOption" code="new_project"/>
-        <c:url var="logo" value="/images/logo_wp.png"/>
+        <c:url var="logo" value="/images/logo_bw.png"/>
         <c:url var="lupa" value="/images/lupa_v.png"/>
     </c:when>
     <c:when test="${sessionUser.role eq 1}">
