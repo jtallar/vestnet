@@ -5,29 +5,52 @@ import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
+import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
+import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
+import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
+import ar.edu.itba.paw.webapp.forms.NewProjectFields;
+import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Arrays;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
 public class HelloWorldController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HelloWorldController.class);
+
     @Autowired
     private UserService userService;
 
@@ -40,30 +63,53 @@ public class HelloWorldController {
     @Autowired
     private CategoriesService categoriesService;
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @Autowired
+    protected AuthenticationManager authenticationManager;
+
+
+
+    /*@ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {
-        return new ModelAndView("404");
+        return new ModelAndView("error");
     }
 
     @ExceptionHandler(ProjectNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchProject() {
-        return new ModelAndView("404");
+        return new ModelAndView("error");
+    }*/
+
+    @ModelAttribute("sessionUser")
+    public User loggedUser() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // auth.getPrincipal();
+        // auth.getCredentials();
+        // auth.getAuthorities();
+        // auth.getDetails();
+        return userService.findByUsername(auth.getName()).orElse(null);
     }
+
+    // TODO: QUE HACEMOS ACA??
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView failedEmail() { return new ModelAndView("error"); }
+
+    /*@ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    public ModelAndView failedRegistration() { return new ModelAndView("error"); }*/
 
     @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
     public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
-           // return new ModelAndView("contact");
         final ModelAndView mav = new ModelAndView("contact");
         mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
-//       mailFields.setTo(userService.findById(owner_id).get().getEmail());
- //       mailFields.setTo("julianmvuoso@gmail.com");
+        mav.addObject("p_id", p_id);
+        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
         return mav;
     }
 
     @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.POST})
-    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors){
+    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors) throws MessagingException {
             if (errors.hasErrors()) {
                 return contact(mailFields, p_id);
             }
@@ -73,6 +119,10 @@ public class HelloWorldController {
 
     @RequestMapping("/")
     public ModelAndView index(){
+        // TODO: CHANGE EXCEPTION TO SERVER ERROR?
+        if (this.loggedUser().getRole() == User.UserRole.ENTREPRENEUR.getId())
+            return new ModelAndView("redirect:/myProfile");
+        // Investor logged in
         return new ModelAndView("redirect:/projects");
     }
 
@@ -94,6 +144,8 @@ public class HelloWorldController {
 
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
+
+
 
         return mav;
     }
@@ -140,6 +192,8 @@ public class HelloWorldController {
 
 
 
+
+
     // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
     // TODO: HACE FALTA EL REQUIRED = FALSE?
     @RequestMapping(value = "/projects/{id}")
@@ -148,6 +202,8 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
+        mav.addObject("back", "/projects");
+        mav.addObject("investor", true);
         return mav;
     }
 
@@ -155,6 +211,153 @@ public class HelloWorldController {
     public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
         final User user = userService.create(username);
         return new ModelAndView("redirect:/" + user.getId());
+    }*/
+
+    @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
+    public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
+        final ModelAndView mav = new ModelAndView("newProject");
+        List<Category> catList = categoriesService.findAllCats();
+        mav.addObject("categories", catList);
+        mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
+        return mav;
+    }
+
+    @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
+    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, BindingResult errors){
+        if (errors.hasErrors()) {
+            return createProject(projectFields);
+        }
+        byte[] imageBytes = new byte[0];
+        try {
+            if (!projectFields.getImage().isEmpty())
+                imageBytes = projectFields.getImage().getBytes();
+        } catch (IOException e) {
+            return createProject(projectFields);
+        }
+        // TODO: AGREGAR STAGES
+        long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
+                projectFields.getCost(), loggedUser().getId(), projectFields.getCategories(), null, imageBytes);
+        return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
+    }
+
+    @RequestMapping(value = "/imageController/project/{p_id}",
+            produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @ResponseBody
+    public byte[] imageControllerProject(@PathVariable("p_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = projectService.findImageForProject(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("projectNoImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image");
+            }
+        }
+        return image;
+    }
+
+    @RequestMapping(value = "/imageController/user/{u_id}")
+    @ResponseBody
+    public byte[] imageControllerUser(@PathVariable("u_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = userService.findImageForUser(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("userNoImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image. Error {}", e.getMessage());
+            }
+        }
+        return image;
+    }
+
+
+
+
+    @RequestMapping(value = "/admin")
+    public ModelAndView admin(){
+        final ModelAndView mav = new ModelAndView("admin");
+        return mav;
+    }
+
+    @RequestMapping(value = "/users/{u_id}")
+    public ModelAndView userProfile(@PathVariable("u_id") long id){
+        final ModelAndView mav= new ModelAndView("userProfile");
+        User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
+        mav.addObject("user", user);
+        mav.addObject("list", projectService.findByOwner(id));
+        return mav;
+    }
+
+    @RequestMapping(value = "/users/{u_id}/{p_id}")
+    public ModelAndView userProjectView(@PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
+        final ModelAndView mav = new ModelAndView("singleProjectView");
+        mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("back", "/users/" + userId);
+        mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
+//        mav.addObject("mailSent", mailSent);
+        return mav;
+    }
+
+    @RequestMapping(value = "/myProfile")
+    public ModelAndView myProfile(){
+        final ModelAndView mav = new ModelAndView("redirect:/users/" + loggedUser().getId());
+        return mav;
+    }
+
+    // TODO: CHECK IF ITS THE RIGHT WAY TO DO THIS
+    @RequestMapping(value = "/location/countries")
+    public List<Location.Country> countryList() {
+        return Arrays.asList(new Location.Country(1, "Nombre1", "ds", "ads", "dsa"), new Location.Country(2, "Nombre2", "ds", "ads", "dsa"),
+                new Location.Country(3, "Nombre3", "ds", "ads", "dsa"), new Location.Country(4, "Nombre1", "ds", "ads", "dsa"));
+    }
+
+    @RequestMapping(value = "/location/states/{country_id}")
+    public List<Location.State> stateList(@PathVariable("country_id") long countryId) {
+        if (countryId == 0) return null;
+        return Arrays.asList(new Location.State(1, "State1", "11"), new Location.State(2, "State2", "11"), new Location.State(3, "State3", "11"));
+    }
+
+    @RequestMapping(value = "/location/cities/{state_id}")
+    public List<Location.City> cityList(@PathVariable("state_id") long stateId) {
+        if (stateId == 0) return null;
+        return Arrays.asList(new Location.City(1, "City1"), new Location.City(2, "City2"), new Location.City(3, "City3"));
+    }
+
+
+    @RequestMapping(value = "/search")
+    public ModelAndView searchAux(@RequestParam("searching") String search){
+        final ModelAndView mav = new ModelAndView("search");
+        String aux = search.toLowerCase();
+        if(loggedUser().getRole() == 2) {
+            mav.addObject("projectsList", projectService.findCoincidence(aux));
+        } //only want to show users projects if is an investor
+        mav.addObject("usersList", userService.findCoincidence(aux));
+        mav.addObject("string", search);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/headerFirstOption")
+    public ModelAndView getHeaderFirstOption() {
+        if (loggedUser().getRole() == 1) {
+            // Entrepreneur
+            return new ModelAndView("redirect:/newProject");
+        }
+        // Investor
+        return new ModelAndView("redirect:/projects");
+    }
+
+    // TODO: Terminar y descomentar
+    /*@RequestMapping(value = "/myProjects")
+    public ModelAndView myProjects(){
+        final ModelAndView mav = new ModelAndView("myProjects");
+        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
+        return mav;
     }*/
 
 }

@@ -16,17 +16,17 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="<c:url value="/css/detail.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>${project.name}</title>
+    <title>VestNet | ${project.name}</title>
 </head>
 <body>
 <div class="container" style="margin-top: 20px">
     <div>
-<%--        TODO: FIX BACK WHEN COMING FROM A CONTACT--%>
 <%--        <div class="row">--%>
             <div class="d-flex justify-content-between align-self-center">
                 <div class="p-2">
-                    <a href="<c:url value='/projects'/>" class="btn btn-dark"><spring:message code="back"/></a>
+                    <a href="<c:url value="${back}"/>" class="btn btn-dark"><spring:message code="back"/></a>
                 </div>
                 <c:if test="${mailSent}">
                 <div class="p-2 ml-8">
@@ -40,31 +40,33 @@
                      style="width: 450px; height:500px; margin: 0 auto">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                        <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                        <%--<li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>--%>
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="https://i.pinimg.com/originals/03/6d/a0/036da04d634aadb37d3226f849770712.jpg"
-                                 class="d-block w-100" alt="" style="width: 100%; height:100% ">
-                            <div class="carousel-caption d-none d-md-block">
+                            <%--<c:url var="first_pic" value="/images/purple.png"/>
+                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
+                            <img src="<c:url value="/imageController/project/${project.id}"/>" class="d-block w-100" alt="<spring:message code="projectImage"/>"
+                                 style="width: 100%; height:100% " aria-placeholder="<spring:message code="projectImage"/>"/>
+<%--                            <div class="carousel-caption d-none d-md-block">
                                 <p>This is a first view of the web prototype</p>
-                            </div>
+                            </div>--%>
                         </div>
-                        <div class="carousel-item">
-                            <img src="https://nesa.com.au/wp-content/uploads/2016/11/Orange-gradient-1.jpg"
-                                 class="d-block w-100" alt="" style="width: 100%; height:100% ">
+                        <%--<div class="carousel-item">
+                            <c:url var="second_pic" value="/images/orange.png"/>
+                            <img src="${second_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
                             <div class="carousel-caption d-none d-md-block">
                                 <p>Another view of the web prototype</p>
                             </div>
                         </div>
                         <div class="carousel-item">
-                            <img src="https://www.creativefabrica.com/wp-content/uploads/2020/02/13/Green-Gradient-Background-Graphics-1-1-580x387.jpg"
-                                 class="d-block w-100" alt="" style="width: 100%; height:100% ">
+                            <c:url var="third_pic" value="/images/green.png"/>
+                            <img src="${third_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
                             <div class="carousel-caption d-none d-md-block">
                                 <p>This is how we design de database</p>
                             </div>
-                        </div>
+                        </div>--%>
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -101,12 +103,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="d-flex justify-content-end">
+                    <c:if test="${sessionUser.id == project.owner.id}">
+<%--                        TODO: ADD EDIT PROJECT--%>
+                    </c:if>
+                    <c:if test="${investor}">
+                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>
+                    </c:if>
+                </div>
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-end">
-        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark"><spring:message code="contactowner"></spring:message></a>
-    </div>
+
     <%--        <h6>ID: ${project.id}</h6>--%>
     <%--        <h6>OWNER ID: ${project.ownerId}</h6>--%>
     <%--        <p class="m-3 text-justify">${project.summary}</p>--%>

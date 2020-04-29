@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailSenderService implements EmailService {
 
-    public void sendNewEmail(String from, String body, String to) {
+    public void sendNewEmail(String from, String body, String to) throws MessagingException {
 
         Properties props = new Properties();
 
@@ -24,7 +24,7 @@ public class EmailSenderService implements EmailService {
         // Puerto de gmail para envio de correos
         props.setProperty("mail.smtp.port", "587");
         // Nombre del usuario
-        props.setProperty("mail.smtp.user", "julianmvuoso@gmail.com");
+        props.setProperty("mail.smtp.user", "noreply.vestnet@gmail.com");
         // Si requiere o no usuario y password para conectarse.
         props.setProperty("mail.smtp.auth", "true");
 
@@ -34,47 +34,31 @@ public class EmailSenderService implements EmailService {
         MimeMessage message = new MimeMessage(session);
 
         StringBuilder fullBodySB = new StringBuilder();
-        fullBodySB.append("VestNet informa:\n" + "El usuario " + from + " desea comunicarse contigo.\nEl mensaje es el siguiente:\n\n" + body + "\n\nNo conteste a este mail. Puede responderle a: " + from);
+        // fullBodySB.append("VestNet informa:\n" + "El usuario " + from + " desea comunicarse contigo.\nEl mensaje es el siguiente:\n\n" + body + "\n\nRecuerde que este es un ");
+        fullBodySB.append("VestNet reports:\n" + "User " + from + " wants to contact you.\nThe message is as follows:\n\n" + body + "\n\nTo contact him, reply this email normally.");
         String fullBody = fullBodySB.toString();
 
         try {
             // Quien envia el correo
-            message.setFrom(new InternetAddress("noreply@google.com"));
+            message.setFrom(new InternetAddress("noreply.vestnet@gmail.com"));
             // A quien va dirigido
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject("VestNet - Potential Investor");
             message.setText(fullBody);
+            message.setReplyTo(new javax.mail.Address[]
+                    {
+                            new javax.mail.internet.InternetAddress(from)
+                    });
 
             Transport t = session.getTransport("smtp");
-            t.connect("julianmvuoso@gmail.com","40675148.");        // TODO : Ver como hacer para que no haga falta iniciar sesion en un mail (no-reply)
+            t.connect("noreply.vestnet@gmail.com","VN123456");
             t.sendMessage(message,message.getAllRecipients());
             t.close();
 
         } catch (MessagingException me) {
             me.printStackTrace();   //Si se produce un error
             System.out.println("ERROR AL ENVIAR EMAIL");
-            return;
+            throw new MessagingException();
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

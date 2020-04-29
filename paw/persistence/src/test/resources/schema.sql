@@ -1,3 +1,6 @@
+-- TODO: NO ME DEJA PONER bytea porque ROMPE TODO
+-- HSQL WONT ACCEPT NOT NULL AND DEFAULT TOGETHER
+-- HSQL WONT ACCEPT LOCAL DATE AS DATE, USE DATE
 /****************************************
 **     CREATE ALL NECESSARY TABLES     **
 *****************************************/
@@ -65,13 +68,14 @@ CREATE TABLE IF NOT EXISTS users (
     aux_date        DATE NOT NULL,
 
     -- CONTACT INFO
-    email           VARCHAR(25) NOT NULL,
+    email           VARCHAR(255) NOT NULL,
+    password        VARCHAR(76),
     phone           VARCHAR(25),
     linkedin        VARCHAR(100),
 
     -- EXTRA INFO
     -- Profile picture URN. Optional. Max 100 characters.
-    profile_pic     VARCHAR(100),
+    profile_pic     VARCHAR(50),
     join_date       TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 
     -- BACK OFFICE INFO
@@ -89,14 +93,14 @@ CREATE TABLE IF NOT EXISTS projects (
     owner_id        INT REFERENCES users ON DELETE CASCADE,
 
     -- TOP INFO
-    project_name    VARCHAR(25) NOT NULL,
+    project_name    VARCHAR(50) NOT NULL,
     summary         VARCHAR(250) NOT NULL,
     cost            INT DEFAULT 0,
 
     -- EXTRA INFO
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    images          BOOLEAN DEFAULT false,
+    images          VARCHAR(50),
     hits            INT DEFAULT 0,
 
     -- BACK OFFICE INFO

@@ -1,0 +1,26 @@
+
+/* The container must be positioned relative: */
+.custom-select {
+    position: relative;
+    font-family: Arial;
+
+}
+
+.card-deck{
+    margin: 20px;
+}
+
+.card {
+    border-color: #750096;
+    margin: 8px;
+    min-width: 400px;
+    /*max-width: 100px;*/
+}
+
+.card-header{
+    background-color: #222222
+}
+
+.checked {
+    color: orange;
+}

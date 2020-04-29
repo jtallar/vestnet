@@ -65,13 +65,14 @@ CREATE TABLE IF NOT EXISTS users (
     aux_date        DATE NOT NULL,
 
     -- CONTACT INFO
-    email           VARCHAR(25) NOT NULL,
+    email           VARCHAR(255) NOT NULL,
+    password        VARCHAR(76),
     phone           VARCHAR(25),
     linkedin        VARCHAR(100),
 
     -- EXTRA INFO
     -- Profile picture URN. Optional. Max 100 characters.
-    profile_pic     VARCHAR(100),
+    profile_pic     bytea,
     join_date       TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 
     -- BACK OFFICE INFO
@@ -89,14 +90,14 @@ CREATE TABLE IF NOT EXISTS projects (
     owner_id        INT REFERENCES users ON DELETE CASCADE,
 
     -- TOP INFO
-    project_name    VARCHAR(25) NOT NULL,
+    project_name    VARCHAR(50) NOT NULL,
     summary         VARCHAR(250) NOT NULL,
     cost            INT NOT NULL DEFAULT 0,
 
     -- EXTRA INFO
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    images          BOOLEAN NOT NULL DEFAULT false,
+    images          bytea,
     hits            INT NOT NULL DEFAULT 0,
 
     -- BACK OFFICE INFO
@@ -178,3 +179,10 @@ CREATE TABLE IF NOT EXISTS resources (
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
 );
+
+CREATE TABLE IF NOT EXISTS passwords (
+    id              INT REFERENCES users ON DELETE SET NULL,
+    password       VARCHAR(250) NOT NULL,
+    PRIMARY KEY (id)
+);
+

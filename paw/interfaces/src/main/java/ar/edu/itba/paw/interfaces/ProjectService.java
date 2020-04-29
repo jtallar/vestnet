@@ -21,6 +21,8 @@ public interface ProjectService {
      */
     List<Project> findAll();
 
+    List<Project> findByOwner(long userId);
+
     /**
      * Finds a list of projects that matches one or more categories
      * @param categories The list of categories to find
@@ -28,10 +30,21 @@ public interface ProjectService {
      */
     List<Project> findByCategories(List<Category> categories);
 
+    public List<Project> findCoincidence(String name);
+
     /**
      * Create a project given all thes parameters
      * @return The created project
      */
-    Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
-                   List<Category> categories, List<Stage> stages);
+//    Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
+//                   List<Category> categories, List<Stage> stages);
+
+    // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID
+    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
+
+    /**
+     * @param projectId The id of the project we want to get a portrait image
+     * @return Image as a byte array
+     */
+    byte[] findImageForProject(long projectId);
 }

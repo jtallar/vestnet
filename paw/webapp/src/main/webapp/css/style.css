@@ -3,6 +3,17 @@
     background-color: #222222;
 }
 
+.navbar-custom2 {
+    color: #000000;
+    background-color: #b1b1b1;
+}
+
+.navbar-custom3 {
+    color: #000000;
+    background-color: white;
+}
+
+
 .navbar-brand
 {
     position: relative;
@@ -18,6 +29,11 @@
 
 }
 
+.logopurple{
+    color: #750096;
+    background-color: #750096 !important;
+}
+
 .logo-text:active, .logo-text:hover
 {
     color: #53006d;
@@ -26,4 +42,12 @@
 
 .dropdown-item{
     font-family: 'Lato', sans-serif
+}
+
+.searchButt{
+    background-color: #53006d;
+    color: #ffffff;
+}
+.topnav-right {
+    float: right;
 }
