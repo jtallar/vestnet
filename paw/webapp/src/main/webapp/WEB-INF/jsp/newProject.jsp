@@ -36,12 +36,12 @@
                 <h7><spring:message code="projectOverviewSubtitle"/></h7>
                 <div class="dropdown-divider"></div>
 
-                <h6><spring:message code="title"/></h6>
+                <h6><spring:message code="title_required"/></h6>
                 <spring:message code="ProjectTitlePlaceholder" var="titlePlaceholder"/>
                 <form:input path="title" type="text" class="form-control" placeholder="${titlePlaceholder}" cssClass="custom-form-input"/>
                 <form:errors path="title" cssClass="formError" element="p"/>
 
-                <h6><spring:message code="summary"/></h6>
+                <h6><spring:message code="summary_required"/></h6>
                 <spring:message code="ProjectSummaryPlaceholder" var="summaryPlaceholder"/>
                 <form:textarea path="summary" type="text" class="form-control" placeholder="${summaryPlaceholder}" cssClass="custom-form-textarea"/>
                 <form:errors path="summary" cssClass="formError" element="p"/>

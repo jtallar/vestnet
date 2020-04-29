@@ -56,7 +56,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="first_name"></spring:message> </label>
+                                    <label><spring:message code="first_name_required"></spring:message> </label>
                                     <form:input type="text" class="form-control" path="firstName"
                                                 placeholder="${enter_first_name}"/>
                                     <form:errors path="firstName" element="p" cssClass="formError"></form:errors>
@@ -64,7 +64,7 @@
                             </div>
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="last_name"></spring:message> </label>
+                                    <label><spring:message code="last_name_required"></spring:message> </label>
                                     <form:input type="text" class="form-control" path="lastName"
                                                 placeholder="${enter_last_name}"/>
                                     <form:errors path="lastName" cssClass="formError" element="p"></form:errors>
@@ -77,7 +77,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="real_id"></spring:message> </label>
+                                    <label><spring:message code="real_id_required"></spring:message> </label>
                                     <form:input type="text" class="form-control" path="realId"
                                                 placeholder="${enter_real_id}"/>
                                     <form:errors path="realId" cssClass="formError" element="p"></form:errors>
@@ -238,7 +238,7 @@
                             </div>
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="repeat_password"></spring:message> </label>
+                                    <label><spring:message code="repeat_password_required"></spring:message> </label>
                                     <form:input type="password" class="form-control" path="repeatPassword"
                                                 placeholder="${enter_repeat_password}"/>
                                     <form:errors path="repeatPassword" element="p" cssClass="formError"></form:errors>
