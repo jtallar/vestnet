@@ -26,13 +26,11 @@
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
-
+<%--        TODO: COMO PERSISTO ROL PARA ESTE--%>
 <c:choose>
     <c:when test="${sessionUser == null}">
-<%--        TODO: SETEAR CUSTOM ERROR HEADER COLORS--%>
         <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom3"/>
         <c:set var="searchButtonClass" value="btn logopurple"/>
-<%--        TODO: COMO DETERMINO ESTE MENSAJE?--%>
         <spring:message var="firstOption" code="new_project"/>
         <c:url var="logo" value="/images/logo_bw.png"/>
         <c:url var="lupa" value="/images/lupa_v.png"/>
@@ -66,9 +64,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
+                <c:if test="${sessionUser != null}">
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value='/headerFirstOption'/>"><c:out value="${firstOption}"/></a>
                 </li>
+                </c:if>
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value='/myProfile'/>"><spring:message code="my_profile"/></a>
                 </li>
