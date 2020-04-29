@@ -127,7 +127,7 @@
                                         <form:select path="year" class="custom-select mr-sm-2">
                                             <c:forEach begin="0" end="70" varStatus="loop">
                                                 <c:set var="currentYear" value="${2010 - loop.index}"/>
-                                                <option value="${currentYear}">${currentYear}</option>
+                                                <form:option value="${currentYear}">${currentYear}</form:option>
                                             </c:forEach>
                                         </form:select>
                                     </div>
