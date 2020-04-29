@@ -183,7 +183,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="email"></spring:message> </label>
+                                    <label><spring:message code="email_required"></spring:message> </label>
                                     <form:input type="text" class="form-control" path="email"
                                                 placeholder="${enter_email}"/>
                                     <form:errors path="email" cssClass="formError" element="p"></form:errors>
@@ -230,7 +230,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="password"></spring:message> </label>
+                                    <label><spring:message code="password_required"></spring:message> </label>
                                     <form:input type="password" class="form-control" path="password"
                                                 placeholder="${enter_password}"/>
                                     <form:errors cssClass="formError" element="p"></form:errors>

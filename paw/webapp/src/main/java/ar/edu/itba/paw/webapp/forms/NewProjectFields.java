@@ -19,10 +19,10 @@ import java.util.List;
 
 public class NewProjectFields {
 
-    @Size(min = 0, max = 25)
+    @Size(min = 1, max = 50)
     private String title;
 
-    @Size(min = 0, max = 250)
+    @Size(min = 1, max = 250)
     private String summary;
 
     // TODO: Delete when stages are ready

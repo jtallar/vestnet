@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS users (
     aux_date        DATE NOT NULL,
 
     -- CONTACT INFO
-    email           VARCHAR(25) NOT NULL,
+    email           VARCHAR(255) NOT NULL,
     password        VARCHAR(76),
     phone           VARCHAR(25),
     linkedin        VARCHAR(100),
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS projects (
     owner_id        INT REFERENCES users ON DELETE CASCADE,
 
     -- TOP INFO
-    project_name    VARCHAR(25) NOT NULL,
+    project_name    VARCHAR(50) NOT NULL,
     summary         VARCHAR(250) NOT NULL,
     cost            INT NOT NULL DEFAULT 0,
 

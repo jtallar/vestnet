@@ -13,13 +13,13 @@ import javax.validation.constraints.Size;
 @SpELAssert(value = "password.equals(repeatPassword)", message = "Passwords do not match")
 public class NewUserFields {
 
-    @Size(max = 50)
+    @Size(min = 1, max = 50)
     private String password;
     private String repeatPassword;
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 25)
     @NotEmpty
     private String firstName;
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 25)
     @NotEmpty
     private String lastName;
 

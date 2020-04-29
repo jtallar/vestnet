@@ -35,12 +35,12 @@
             <c:url value="/login" var="loginUrl"></c:url>
             <form method="post" action="${loginUrl}" >
                 <div class="form-group">
-                    <label><spring:message code = "username"></spring:message></label>
-                    <input name="username" class="form-control" placeholder="<spring:message code = "username"/>"/>
+                    <label><spring:message code = "email"></spring:message></label>
+                    <input name="username" class="form-control" placeholder="<spring:message code = "enter_email"/>"/>
                 </div>
                 <div class="form-group">
                     <label><spring:message code = "password"></spring:message></label>
-                    <input name="password" class="form-control" type="password" placeholder="<spring:message code = "password"/>"/>
+                    <input name="password" class="form-control" type="password" placeholder="<spring:message code = "enter_password"/>"/>
                 </div>
                 <div class="form-group">
                     <label>
