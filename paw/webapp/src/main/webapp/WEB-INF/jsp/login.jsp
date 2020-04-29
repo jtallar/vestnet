@@ -48,9 +48,18 @@
                         <spring:message code = "rememberMe"></spring:message>
                     </label>
                 </div>
-                <input type="submit"   class="btn btn-dark" value="<spring:message code = "submit"></spring:message>">
-                <c:url var="register" value="/signUp"></c:url>
+                <div class="row justify-content-center">
+                    <div class="col-2 text-left">
+                        <input type="submit"   class="btn btn-dark" value="<spring:message code = "submit"></spring:message>">
+                    </div>
+                    <div class="col">
+                        <c:if test="${param.error != null}">
+                        <p style="color: red;"><spring:message code="loginError"/></p>
+                        </c:if>
+                    </div>
+                </div>
             </form>
+            <c:url var="register" value="/signUp"></c:url>
             <form action="${register}">
                 <label><spring:message code = "noReg"></spring:message></label>
                 <input type="submit" class="btn btn-outline-dark" value="<spring:message code='sign_up'></spring:message>" />
