@@ -35,23 +35,25 @@
 <%--        TODO: COMO DETERMINO ESTE MENSAJE?--%>
         <spring:message var="firstOption" code="new_project"/>
         <c:url var="logo" value="/images/logo_wp.png"/>
+        <c:url var="lupa" value="/images/lupa_v.png"/>
     </c:when>
     <c:when test="${sessionUser.role eq 1}">
         <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom2"/>
         <c:set var="searchButtonClass" value="btn btn-black"/>
         <spring:message var="firstOption" code="new_project"/>
         <c:url var="logo" value="/images/logo_wp.png"/>
+        <c:url var="lupa" value="/images/lupa_bw.png"/>
     </c:when>
     <c:when test="${sessionUser.role eq 2}">
         <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-        <c:set var="searchButtonClass" value="btn btn-purple"/>
+        <c:set var="searchButtonClass" value="btn logopurple"/>
         <spring:message var="firstOption" code="feed"/>
         <c:url var="logo" value="/images/logo_bp.png"/>
+        <c:url var="lupa" value="/images/lupa_v.png"/>
     </c:when>
 </c:choose>
 
 <body>
-    <c:url var="lupa" value="/images/lupa_v.png"/>
     <nav class="${navbarClass}">
         <a class="navbar-brand" href="<c:url value='/'/>">
             <img src=${logo} width="60" class="logo-img">

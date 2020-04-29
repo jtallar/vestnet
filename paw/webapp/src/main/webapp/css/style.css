@@ -23,6 +23,11 @@
 
 }
 
+.logopurple{
+    color: #750096;
+    background-color: #750096 !important;
+}
+
 .logo-text:active, .logo-text:hover
 {
     color: #53006d;
