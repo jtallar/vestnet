@@ -54,7 +54,14 @@ body {
     }
 }
 
+.mailError{
+    margin-top: auto;
+    margin-bottom: auto;
+}
 
+.mailError p{
+    color: red;
+}
 
 .login-main-text{
     margin-top: 20%;
