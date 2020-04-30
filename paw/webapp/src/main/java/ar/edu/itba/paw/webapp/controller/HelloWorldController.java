@@ -148,7 +148,7 @@ public class HelloWorldController {
         List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
 
 
-        Boolean hasNext = (projects > ((intPage)*9) ) ? true : false;
+        Boolean hasNext = (projects > ((intPage)* PAGE_SIZE) ) ? true : false;
 
         mav.addObject("hasNext",hasNext);
 
@@ -169,14 +169,12 @@ public class HelloWorldController {
     }
 
     private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList, Integer page, Integer projects){
+        System.out.println("page" + page);
+        int from = (page == 1) ? 0 : ((page -1) * PAGE_SIZE);
+        int size = ((projects - from) < PAGE_SIZE) ? (projects - from) : PAGE_SIZE;
 
-        int from = (page == 1) ? 0 : ((page -1) * 9 -1);
-        int left = projects - from;
-        int to = (projects > ((page) * 9)) ? ((page) * 9) : projects;
-
-        System.out.println(to);
-        System.out.println(from);
-
+        System.out.println("from" + from);
+        System.out.println("size" + size);
 
         List<Project> auxList = new ArrayList<>();
         if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
@@ -187,7 +185,8 @@ public class HelloWorldController {
                 auxList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
             }
         } else {
-            auxList = projectService.findPage(from, to);
+
+            auxList = projectService.findPage(from, PAGE_SIZE);
         }
 
         if(catFilter.getOrderBy() != null) {

@@ -160,7 +160,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findPage(int from, int to) {
-        List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, new Object[] {from, to}, RESULT_SET_EXTRACTOR);
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, new Object[]{from, to}, RESULT_SET_EXTRACTOR);
         System.out.println(projects.size());
         return projects;
     }
