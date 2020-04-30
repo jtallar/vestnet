@@ -66,6 +66,8 @@ public class HelloWorldController {
     @Autowired
     protected AuthenticationManager authenticationManager;
 
+    private final int PAGE_SIZE = 12;
+
 
 
     /*@ExceptionHandler(UserNotFoundException.class)
@@ -136,12 +138,22 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter) {
+    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter, @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
 
-        List<Category> catList = categoriesService.findAllCats();
-        List<Project> projectList = filterOrder(catFilter,catList);
+        Integer intPage = Integer.parseInt(page);
 
+        Integer projects = projectService.projectsCount();
+        List<Category> catList = categoriesService.findAllCats();
+        List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
+
+
+        Boolean hasNext = (projects > ((intPage)*9) ) ? true : false;
+
+        mav.addObject("hasNext",hasNext);
+
+
+        mav.addObject("page", page);
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
 
@@ -156,7 +168,16 @@ public class HelloWorldController {
         return mav;
     }
 
-    private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList){
+    private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList, Integer page, Integer projects){
+
+        int from = (page == 1) ? 0 : ((page -1) * 9 -1);
+        int left = projects - from;
+        int to = (projects > ((page) * 9)) ? ((page) * 9) : projects;
+
+        System.out.println(to);
+        System.out.println(from);
+
+
         List<Project> auxList = new ArrayList<>();
         if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
             Optional<Category> selectedCategory = catList.stream()
@@ -166,7 +187,7 @@ public class HelloWorldController {
                 auxList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
             }
         } else {
-            auxList = projectService.findAll();
+            auxList = projectService.findPage(from, to);
         }
 
         if(catFilter.getOrderBy() != null) {
@@ -199,6 +220,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/projects/{id}")
     public ModelAndView singleProjectView(@PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
+
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);

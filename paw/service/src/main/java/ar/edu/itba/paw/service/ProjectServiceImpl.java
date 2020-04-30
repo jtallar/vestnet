@@ -49,6 +49,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<Project> findPage(int from, int to) {
+        return projectDao.findPage(from,to);
+    }
+
+    @Override
+    public Integer projectsCount() {
+        return projectDao.projectsCount();
+    }
+
+    @Override
     public byte[] findImageForProject(long projectId) {
         return projectDao.findImageForProject(projectId);
     }

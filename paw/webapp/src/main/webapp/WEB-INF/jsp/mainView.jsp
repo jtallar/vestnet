@@ -54,8 +54,9 @@
     <p id="test"></p>
 
 <%--    <div class="row grid">--%>
-    <div class="card-deck">
+
         <c:if test="${!empty list}">
+         <div class="card-deck">
         <c:forEach items="${list}" var="project">
 <%--                <div class="col-sm-3 my-card">--%>
             <div class="card mb-3">
@@ -78,9 +79,38 @@
                     <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark pull-right"><spring:message code="moreinfo"></spring:message></a>
                 </div>
             </div>
+
         </c:forEach>
+         </div>
+            <div class="grid">
+                    <div class="row">
+                        <div class="col-4  d-flex justify-content-center">
+                        <c:url value="/projects" var="projectPage"></c:url>
+                        <form action="${projectPage}" method="get">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end">
+                                    <c:if test="${page != 1}">
+                                        <li class="page-item">
+                                            <button  type="submit" class="page-link" name="page" value="${page - 1}">Previous</button>
+                                        </li>
+                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page - 1}">${page - 1}</button></li>
+                                    </c:if>
+                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page}">${page}</button></li>
+                                    <c:if test="${hasNext eq true}">
+                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page + 1}">${page + 1}</button></li>
+                                    <li class="page-item">
+                                        <button type="submit" class="page-link" name="page" value="${page + 1}" >Next</button>
+                                    </li>
+                                    </c:if>
+                                </ul>
+                            </nav>
+                        </form>
+                        </div>
+                     </div>
+            </div>
+
     </c:if>
-    </div>
+
 
     <c:if test="${empty list}">
     <div class="card m-2">

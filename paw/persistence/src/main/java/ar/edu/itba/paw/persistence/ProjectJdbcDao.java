@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.Stage;
 import ar.edu.itba.paw.model.User;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,6 +17,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,6 +60,12 @@ public class ProjectJdbcDao implements ProjectDao {
         Optional<Project> project = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
         // TODO add stages
         return project;
+    }
+
+    @Override
+    public Integer projectsCount() {
+        Integer count = jdbcTemplate.queryForObject(JdbcQueries.COUNT_PROJECTS, Integer.class);
+        return count;
     }
 
     /**
@@ -147,6 +156,13 @@ public class ProjectJdbcDao implements ProjectDao {
     @Override
     public byte[] findImageForProject(long projectId) {
         return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
+    }
+
+    @Override
+    public List<Project> findPage(int from, int to) {
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, new Object[] {from, to}, RESULT_SET_EXTRACTOR);
+        System.out.println(projects.size());
+        return projects;
     }
 }
 

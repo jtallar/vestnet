@@ -47,4 +47,9 @@ public interface ProjectService {
      * @return Image as a byte array
      */
     byte[] findImageForProject(long projectId);
+
+    Integer projectsCount();
+
+    List<Project> findPage(int from, int to);
+
 }
