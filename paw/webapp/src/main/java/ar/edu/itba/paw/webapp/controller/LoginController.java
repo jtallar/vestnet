@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,16 +17,15 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class LoginController {
@@ -99,5 +99,26 @@ public class LoginController {
 
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
     }
+
+
+    @RequestMapping(value = "/location/countries",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Location.Country> countryList() {
+        return Arrays.asList(new Location.Country(1, "Nombre1", "ds", "ads", "dsa"), new Location.Country(2, "Nombre2", "ds", "ads", "dsa"),
+                new Location.Country(3, "Nombre3", "ds", "ads", "dsa"), new Location.Country(4, "Nombre1", "ds", "ads", "dsa"));
+    }
+
+    @RequestMapping(value = "/location/states/{country_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Location.State> stateList(@PathVariable("country_id") long countryId) {
+        return null;
+    }
+
+    @RequestMapping(value = "/location/cities/{state_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Location.City> cityList(@PathVariable("state_id") long stateId) {
+        return null;
+    }
+
 
 }
