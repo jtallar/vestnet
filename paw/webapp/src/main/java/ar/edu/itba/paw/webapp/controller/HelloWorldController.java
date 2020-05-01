@@ -333,13 +333,13 @@ public class HelloWorldController {
     @RequestMapping(value = "/search")
     public ModelAndView searchAux(@RequestParam("searching") String search){
         final ModelAndView mav = new ModelAndView("search");
-        String aux = search.toLowerCase();
+        String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
         if(loggedUser().getRole() == 2) {
-            mav.addObject("projectsList", projectService.findCoincidence(StringEscapeUtils.escapeHtml4(aux)));
+            mav.addObject("projectsList", projectService.findCoincidence(aux));
         } //only want to show users projects if is an investor
-        mav.addObject("usersList", userService.findCoincidence(StringEscapeUtils.escapeHtml4(aux)));
-        mav.addObject("string", search);
-
+        mav.addObject("usersList", userService.findCoincidence(aux));
+        mav.addObject("string", aux);
+        System.out.println(aux);
         return mav;
     }
 
