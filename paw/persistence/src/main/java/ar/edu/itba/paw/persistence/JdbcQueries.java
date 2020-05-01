@@ -159,7 +159,7 @@ public class JdbcQueries {
             "FROM " + STATE_TABLE + " ";
 
     static final String STATE_FIND_BY_COUNTRY_ID = STATE_FIND_ALL +
-            "WHERE id = ? ";
+            "WHERE country_id = ? ";
 
     static final String CITY_FIND_ALL =
             "SELECT " +
@@ -168,5 +168,5 @@ public class JdbcQueries {
             "FROM " + CITY_TABLE + " ";
 
     static final String CITY_FIND_BY_STATE_ID = CITY_FIND_ALL +
-            "WHERE id = ?";
+            "WHERE state_id = ?";
 }
