@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -29,9 +31,9 @@ public class NewUserFields {
     private Integer month;
     private Integer year;
 
-    private int country;
-    private int state;
-    private int city;
+    private Integer country;
+    private Integer state;
+    private Integer city;
 
     private String role;
 
@@ -57,27 +59,27 @@ public class NewUserFields {
         this.role = role;
     }
 
-    public int getCountry() {
+    public Integer getCountry() {
         return country;
     }
 
-    public void setCountry(int country) {
+    public void setCountry(Integer country) {
         this.country = country;
     }
 
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 
-    public int getCity() {
+    public Integer getCity() {
         return city;
     }
 
-    public void setCity(int city) {
+    public void setCity(Integer city) {
         this.city = city;
     }
 

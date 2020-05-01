@@ -25,6 +25,14 @@
 </head>
 
 <body background="<c:url value ="/images/signupBack.png"/>">
+<c:set var="val"><spring:message code="select_country"/></c:set>
+<input id="select_country_msg" type="hidden" value="${val}"/>
+<c:set var="val"><spring:message code="select_state"/></c:set>
+<input id="select_state_msg" type="hidden" value="${val}"/>
+<c:set var="val"><spring:message code="select_city"/></c:set>
+<input id="select_city_msg" type="hidden" value="${val}"/>
+
+
 <spring:message code="enter_first_name" var="enter_first_name"></spring:message>
 <spring:message code="enter_password" var="enter_password"></spring:message>
 <spring:message code="enter_repeat_password" var="enter_repeat_password"></spring:message>
@@ -158,6 +166,7 @@
                                 <div class="col-md">
                                     <form:select id="city-select" path="city" class="custom-select mr-sm-2"/>
                                 </div>
+
                             </div>
                             </div>
                         </div>
@@ -167,10 +176,10 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="email_required"></spring:message> </label>
+                                    <label><spring:message code="email_required"/> </label>
                                     <form:input type="text" class="form-control" path="email"
                                                 placeholder="${enter_email}"/>
-                                    <form:errors path="email" cssClass="formError" element="p"></form:errors>
+                                    <form:errors path="email" cssClass="formError" element="p"/>
                                 </div>
                             </div>
                             <div class="col-md">
@@ -278,9 +287,14 @@
                 select.options.length = 0;
                 for (let i = 0; i < data.length; i++)
                     select.appendChild(new Option(data[i]["name"], data[i]["id"]));
+
+                if (receiver === 'country') fetchData('country', 'state');
+                else if (receiver === 'state') fetchData('state', 'city');
             })
     }
-    window.onload = fetchData('', 'country');
+    window.onload = function () {
+        setTimeout(fetchData('', 'country'), 1000);
+    }
 </script>
 </body>
 </html>
