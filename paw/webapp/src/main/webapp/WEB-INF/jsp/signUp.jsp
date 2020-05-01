@@ -291,8 +291,8 @@
                     select.appendChild(new Option(data[i]["name"], data[i]["id"]));
 
                 // If there are no options
-                if (data.length === 0)
-                    select.appendChild(new Option("-", "0"));
+                // if (data.length === 0)
+                //     select.appendChild(new Option("-", "0"));
 
                 // Recursive update
                 if (receiver === 'country') fetchData('country', 'state');
@@ -300,7 +300,7 @@
             })
     }
     window.onload = function () {
-        setTimeout(fetchData('', 'country'), 1000);
+        fetchData('', 'country');
     }
 </script>
 </body>
