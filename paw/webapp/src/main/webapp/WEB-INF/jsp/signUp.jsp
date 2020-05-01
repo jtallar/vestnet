@@ -280,5 +280,13 @@
         }
     });
 </script>
+<script>
+    window.onload = function () {
+        fetch("http://localhost:8080/webapp_war/location/countries")
+        .then(response => response.json())
+        .then(data => console.log(data))
+
+    }
+</script>
 </body>
 </html>
