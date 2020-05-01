@@ -144,35 +144,19 @@
                                     <label><spring:message code="country"/></label>
                                 </div>
                                 <div class="col-md">
-<%--                                    TODO: COMO HAGO PARA QUE SE EJECUTE ESE URL tipo SRC, no que sea ese el valor? --%>
-<%--                                    <c:url var="countryUrl" value='/location/countries'/>--%>
-                                    <form:select class="custom-select mr-sm-2" path="country">
-                                        <c:forEach var="country" items="Argentina">
-                                            <form:option value="11" label="${country}"/>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:select id="country-select" path="country" class="custom-select mr-sm-2" onchange="fetchData('country', 'state')"/>
                                 </div>
                                 <div class="col-">
                                     <label><spring:message code="state"/> </label>
                                 </div>
                                 <div class="col-md">
-<%--                                    <c:url var="stateUrl" value='/location/states/${userForm.country}'/>--%>
-                                    <form:select path="state" class="custom-select mr-sm-2">
-                                        <c:forEach var="state" items="Buenos Aires">
-                                            <form:option value="3656" label="${state}"/>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:select id="state-select" path="state" class="custom-select mr-sm-2" onchange="fetchData('state', 'city')"/>
                                 </div>
                                 <div class="col-">
                                     <label><spring:message code="city"/> </label>
                                 </div>
                                 <div class="col-md">
-<%--                                    <c:url var="cityUrl" value='/location/cities/${userForm.state}'/>--%>
-                                    <form:select path="city" class="custom-select mr-sm-2">
-                                        <c:forEach var="city" items="Buenos Aires">
-                                            <form:option value="704" label="${city}"/>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:select id="city-select" path="city" class="custom-select mr-sm-2"/>
                                 </div>
                             </div>
                             </div>
@@ -281,12 +265,22 @@
     });
 </script>
 <script>
-    window.onload = function () {
-        fetch("http://localhost:8080/webapp_war/location/countries")
-        .then(response => response.json())
-        .then(data => console.log(data))
-
+    function fetchData(source, receiver) {
+        let id = "";
+        if (source !== '') {
+            let aux = document.getElementById(source + "-select");
+            id = "/" + aux.options[aux.selectedIndex].value;
+        }
+        fetch("http://localhost:8080/webapp_war/location/" + receiver + id)
+            .then(response => response.json())
+            .then(data => {
+                let select = document.getElementById(receiver + "-select");
+                select.options.length = 0;
+                for (let i = 0; i < data.length; i++)
+                    select.appendChild(new Option(data[i]["name"], data[i]["id"]));
+            })
     }
+    window.onload = fetchData('', 'country');
 </script>
 </body>
 </html>
