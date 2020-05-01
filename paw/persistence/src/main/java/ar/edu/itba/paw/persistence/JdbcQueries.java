@@ -141,4 +141,32 @@ public class JdbcQueries {
             "profile_pic = ?, " +
             "password = ? " +
             "WHERE users.id = ?";
+
+    static final String COUNTRY_FIND_ALL =
+            "SELECT " +
+            "id, " +
+            "country AS name, " +
+            "iso2 AS iso_code, " +
+            "phonecode AS phone_code, " +
+            "currency " +
+            "FROM " + COUNTRY_TABLE + " ";
+
+    static final String STATE_FIND_ALL =
+            "SELECT " +
+            "id, " +
+            "state AS name, " +
+            "iso2 AS iso_code " +
+            "FROM " + STATE_TABLE + " ";
+
+    static final String STATE_FIND_BY_COUNTRY_ID = STATE_FIND_ALL +
+            "WHERE id = ? ";
+
+    static final String CITY_FIND_ALL =
+            "SELECT " +
+            "id, " +
+            "city AS name " +
+            "FROM " + CITY_TABLE + " ";
+
+    static final String CITY_FIND_BY_STATE_ID = CITY_FIND_ALL +
+            "WHERE id = ?";
 }
