@@ -20,6 +20,7 @@ import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -332,13 +333,13 @@ public class HelloWorldController {
     @RequestMapping(value = "/search")
     public ModelAndView searchAux(@RequestParam("searching") String search){
         final ModelAndView mav = new ModelAndView("search");
-        String aux = search.toLowerCase();
+        String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
         if(loggedUser().getRole() == 2) {
             mav.addObject("projectsList", projectService.findCoincidence(aux));
         } //only want to show users projects if is an investor
         mav.addObject("usersList", userService.findCoincidence(aux));
-        mav.addObject("string", search);
-
+        mav.addObject("string", aux);
+        System.out.println(aux);
         return mav;
     }
 
