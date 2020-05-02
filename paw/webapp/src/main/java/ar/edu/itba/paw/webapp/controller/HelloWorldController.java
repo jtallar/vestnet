@@ -303,6 +303,11 @@ public class HelloWorldController {
         User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
+        List<Project> favs_projects = new ArrayList<>();
+        for (Long fid : projectService.findFavorites(id)){
+            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
+        }
+        mav.addObject("favs", favs_projects);
         return mav;
     }
 
@@ -312,6 +317,8 @@ public class HelloWorldController {
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("back", "/users/" + userId);
         mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
+        boolean isFav = projectService.isFavorite(projectId, userId);
+        mav.addObject("isFav", isFav);
 //        mav.addObject("mailSent", mailSent);
         return mav;
     }
