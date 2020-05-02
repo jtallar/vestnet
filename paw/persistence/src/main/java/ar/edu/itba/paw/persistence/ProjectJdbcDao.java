@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ProjectJdbcDao implements ProjectDao {
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink;
+    private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink, jdbcInsertFavorite;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private UserJdbcDao userJdbcDao;
     private CategoriesJdbcDao categoriesJdbcDao;
@@ -43,6 +43,8 @@ public class ProjectJdbcDao implements ProjectDao {
                 .usingColumns("owner_id", "project_name", "summary", "cost", "images");
         jdbcInsertCategoryLink = new SimpleJdbcInsert(dataSource)
                 .withTableName(JdbcQueries.PROJECT_CATEGORIES_TABLE);
+        jdbcInsertFavorite = new SimpleJdbcInsert(dataSource)
+                .withTableName(JdbcQueries.FAVORITES_TABLE);
 
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
@@ -147,6 +149,26 @@ public class ProjectJdbcDao implements ProjectDao {
     @Override
     public byte[] findImageForProject(long projectId) {
         return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
+    }
+
+    @Override
+    public List<Project> findFavorites(long id) {
+        return jdbcTemplate.query(JdbcQueries.FAVORITES_PROJ_ID, new Object[] {id}, RESULT_SET_EXTRACTOR);
+    }
+
+    @Override
+    public void addFavorite(long projectId, long userId) {
+        Map<String, Object> values = new HashMap<>();
+
+        values.put("project_id", projectId);
+        values.put("user_id", userId);
+        jdbcInsertFavorite.execute(values);
+    }
+
+    @Override
+    public void deleteFavorite(long projectId, long userId) {
+        Object[] args = new Object[]{projectId,userId};
+        jdbcTemplate.update(JdbcQueries.DELETE_FAV, args);
     }
 }
 

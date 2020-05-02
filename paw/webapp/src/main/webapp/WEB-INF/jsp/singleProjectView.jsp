@@ -82,6 +82,10 @@
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>
+                        <div class="card-header">
+                            <a onclick="addFav()">Fav</a>
+                            <a onclick="delFav()">UnFav</a>
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title"><b><c:out value="${project.name}"/></b></h5>
                             <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/>
@@ -119,5 +123,16 @@
     <%--        <h6>OWNER ID: ${project.ownerId}</h6>--%>
     <%--        <p class="m-3 text-justify">${project.summary}</p>--%>
 </div>
+
+        <script type="text/javascript">
+            function addFav() {
+                let path = 'http://localhost:8080/webapp_war/addFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
+                fetch(path);
+            }
+            function delFav() {
+                let path = 'http://localhost:8080/webapp_war/deleteFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
+                fetch(path);
+            }
+        </script>
 </body>
 </html>
