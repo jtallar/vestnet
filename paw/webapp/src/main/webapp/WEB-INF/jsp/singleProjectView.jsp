@@ -88,7 +88,7 @@
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>
                         <div class="card-header header-white">
-                            <button onclick="favTap()" class="btn-transp pull-right" style="    outline: none !important;">
+                            <button onclick="favTap()" class="btn-transp pull-right">
                                 <c:set var="fav" value="${isFav}"/>
                                 <c:choose>
                                     <c:when test="${fav==true}" >
