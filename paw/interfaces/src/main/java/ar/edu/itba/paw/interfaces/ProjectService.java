@@ -52,8 +52,9 @@ public interface ProjectService {
      * Find all projects matching with user id
      * @return list of Projects
      */
-    List<Project> findFavorites(long id);
+    List<Long>  findFavorites(long id);
 
     void addFavorite(long projectId, long userId);
     void deleteFavorite(long projectId, long userId);
+    boolean isFavorite(long projectId, long userId);
 }

@@ -53,12 +53,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findFavorites(long id) { return projectDao.findFavorites(id); }
+    public  List<Long>  findFavorites(long id) { return projectDao.findFavorites(id); }
 
     @Override
     public void addFavorite(long projectId, long userId) { projectDao.addFavorite(projectId, userId); }
 
     @Override
     public void deleteFavorite(long projectId, long userId) { projectDao.deleteFavorite(projectId, userId); }
+
+    @Override
+    public boolean isFavorite(long projectId, long userId) { return projectDao.isFavorite(projectId,userId); }
 }
 

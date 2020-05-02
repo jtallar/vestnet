@@ -205,31 +205,13 @@ public class HelloWorldController {
         mav.addObject("mailSent", mailSent);
         mav.addObject("back", "/projects");
         mav.addObject("investor", true);
+       // mav.addObject("isFav", true);
+        boolean isFav = projectService.isFavorite(id, loggedUser().getId());
+        mav.addObject("isFav", isFav);
+
         return mav;
     }
 
-    /*************/
-
-   /* @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.POST})
-    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors) throws MessagingException {
-        if (errors.hasErrors()) {
-            return contact(mailFields, p_id);
-        }
-        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
-        return new ModelAndView("redirect:/projects/{p_id}?mailSent=yes");
-    }
-
-    @RequestMapping(value = "/projects/{id}")
-    public ModelAndView singleProjectViewPost(@PathVariable("id") long id, @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
-        final ModelAndView mav = new ModelAndView("singleProjectView");
-        mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
-        mav.addObject("mailSent", mailSent);
-        mav.addObject("back", "/projects");
-        mav.addObject("investor", true);
-
-        projectService.addFavorite();
-        return mav;
-    }*/
 
    @RequestMapping(value = "/addFavorite")
     public void addFavorite(@RequestParam("p_id") int p_id, @RequestParam("u_id") int u_id) {
@@ -241,13 +223,8 @@ public class HelloWorldController {
         projectService.deleteFavorite(p_id, u_id);
     }
 
-    /**************************/
 
-    /*@RequestMapping(value = "/create", method = {RequestMethod.POST})
-    public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
-        final User user = userService.create(username);
-        return new ModelAndView("redirect:/" + user.getId());
-    }*/
+
 
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {

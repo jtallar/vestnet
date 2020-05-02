@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.Stage;
 import ar.edu.itba.paw.model.User;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
+import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -16,6 +17,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,11 @@ public class ProjectJdbcDao implements ProjectDao {
             .newInstance()
             .addKeys("id")
             .newResultSetExtractor(Project.class);
+
+    private final static ResultSetExtractor<List<Long>> RESULT_SET_EXTRACTOR_PID = JdbcTemplateMapperFactory
+            .newInstance()
+            .addKeys("id")
+            .newResultSetExtractor(Long.class);
 
     @Autowired
     public ProjectJdbcDao(final DataSource dataSource) {
@@ -152,14 +159,13 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findFavorites(long id) {
-        return jdbcTemplate.query(JdbcQueries.FAVORITES_PROJ_ID, new Object[] {id}, RESULT_SET_EXTRACTOR);
+    public List<Long> findFavorites(long user_id) {
+        return jdbcTemplate.query(JdbcQueries.FAVORITES_PROJ, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
     }
 
     @Override
     public void addFavorite(long projectId, long userId) {
         Map<String, Object> values = new HashMap<>();
-
         values.put("project_id", projectId);
         values.put("user_id", userId);
         jdbcInsertFavorite.execute(values);
@@ -169,6 +175,11 @@ public class ProjectJdbcDao implements ProjectDao {
     public void deleteFavorite(long projectId, long userId) {
         Object[] args = new Object[]{projectId,userId};
         jdbcTemplate.update(JdbcQueries.DELETE_FAV, args);
+    }
+
+    @Override
+    public boolean isFavorite(long projectId, long userId) {
+        return findFavorites(userId).contains(projectId);
     }
 }
 

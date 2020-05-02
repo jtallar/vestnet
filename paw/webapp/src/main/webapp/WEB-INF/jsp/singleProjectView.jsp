@@ -21,6 +21,11 @@
     <title>VestNet | ${project.name}</title>
 </head>
 <body>
+<c:url var="favOff" value="/images/bookmarkOff.png"/>
+<c:url var="favOn" value="/images/bookmarkOn.png"/>
+<script>
+            init();
+</script>
 <div class="container" style="margin-top: 20px">
     <div>
 <%--        <div class="row">--%>
@@ -82,9 +87,20 @@
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>
-                        <div class="card-header">
-                            <a onclick="addFav()">Fav</a>
-                            <a onclick="delFav()">UnFav</a>
+                        <div class="card-header header-white">
+                            <button onclick="favTap()" class="btn-transp pull-right" style="    outline: none !important;">
+                                <c:set var="fav" value="${isFav}"/>
+                                <c:choose>
+                                    <c:when test="${fav==true}" >
+                                        <c:set var="favSrc" value="${favOn}"/>
+                                    </c:when>
+                                    <c:when test="${fav==false}">
+                                        <c:set var="favSrc" value="${favOff}"/>
+                                    </c:when>
+                                </c:choose>
+                                <img id="favImg" src=${favSrc} height="40">
+
+                            </button>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title"><b><c:out value="${project.name}"/></b></h5>
@@ -119,7 +135,8 @@
         </div>
     </div>
 
-    <%--        <h6>ID: ${project.id}</h6>--%>
+
+<%--        <h6>ID: ${project.id}</h6>--%>
     <%--        <h6>OWNER ID: ${project.ownerId}</h6>--%>
     <%--        <p class="m-3 text-justify">${project.summary}</p>--%>
 </div>
@@ -132,6 +149,32 @@
             function delFav() {
                 let path = 'http://localhost:8080/webapp_war/deleteFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
                 fetch(path);
+            }
+
+            // TODO La primera vez que desfaveo un faveado pide DOBLE CLICKEO hay un tema en inicializacion de isFavorite
+            let isFavorite;
+            let first;
+            function init(){
+                isFavorite = !${fav};
+                first = true;
+                favTap();
+            }
+            function favTap() {
+                if(first){
+                    first = false;
+                    isFavorite = ${fav};
+                }
+                if(isFavorite){
+                    isFavorite = false;
+                    document.getElementById('favImg').setAttribute("src","${favOff}");
+                    delFav();
+                }
+                else{
+                    isFavorite = true;
+                    document.getElementById('favImg').setAttribute("src","${favOn}");
+                    addFav();
+                }
+
             }
         </script>
 </body>
