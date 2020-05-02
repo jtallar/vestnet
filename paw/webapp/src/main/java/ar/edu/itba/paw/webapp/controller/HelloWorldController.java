@@ -146,7 +146,7 @@ public class HelloWorldController {
         Integer projects = projectService.projectsCount();
         List<Category> catList = categoriesService.findAllCats();
         List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
-
+        System.out.println(projectList.size() + "projListsize");
 
         Boolean hasNext = (projects > ((intPage)* PAGE_SIZE) ) ? true : false;
 
@@ -173,8 +173,6 @@ public class HelloWorldController {
         int from = (page == 1) ? 0 : ((page -1) * PAGE_SIZE);
         int size = ((projects - from) < PAGE_SIZE) ? (projects - from) : PAGE_SIZE;
 
-        System.out.println("from" + from);
-        System.out.println("size" + size);
 
         List<Project> auxList = new ArrayList<>();
         if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
@@ -186,7 +184,7 @@ public class HelloWorldController {
             }
         } else {
 
-            auxList = projectService.findPage(from, PAGE_SIZE);
+            auxList = projectService.findPage(from, size);
         }
 
         if(catFilter.getOrderBy() != null) {

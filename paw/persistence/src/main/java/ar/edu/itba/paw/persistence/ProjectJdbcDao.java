@@ -2,15 +2,13 @@ package ar.edu.itba.paw.persistence;
 
 
 import ar.edu.itba.paw.interfaces.ProjectDao;
-import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.Stage;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,8 +26,25 @@ public class ProjectJdbcDao implements ProjectDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
     private UserJdbcDao userJdbcDao;
     private CategoriesJdbcDao categoriesJdbcDao;
+
+    private final static RowMapper<Project> ROW_MAPPER = new RowMapper<Project>() {
+        @Override
+        public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
+            //List <Category> categories = new ArrayList<>();
+            //List <Long> stageIds = new ArrayList<>();
+            return new Project(rs.getLong("id"), rs.getString("name"),rs.getString("summary"),
+                    rs.getTimestamp("publish_date").toLocalDateTime().toLocalDate(),rs.getTimestamp("update_date").toLocalDateTime().toLocalDate(),rs.getLong("cost"),
+                    rs.getLong("hits"),
+                    new User(rs.getLong("owner_id"), 1, rs.getString("owner_first_name"), rs.getString("owner_last_name"),rs.getString("owner_real_id"),  rs.getTimestamp("owner_birth_date").toLocalDateTime().toLocalDate(),
+                            new Location(new Location.Country(rs.getInt("owner_location_country_id"), rs.getString("owner_location_country_name"), rs.getString("owner_location_country_iso_code"), rs.getString("owner_location_country_phone_code"), rs.getString("owner_location_country_currency")),
+                                    new Location.State(rs.getInt("owner_location_state_id"), rs.getString("owner_location_state_name"),rs.getString("owner_location_state_iso_code")),new Location.City(rs.getInt("owner_location_city_id"), rs.getString("owner_location_city_name"))),
+                            rs.getString("owner_email"), rs.getString("owner_phone"), rs.getString("owner_linkedin"), rs.getTimestamp("owner_join_date").toLocalDateTime().toLocalDate(), rs.getInt("owner_trust_index")),
+                    new Project.ProjectBackOffice(rs.getBoolean("back_office_approved"), rs.getInt("back_office_profit_index"), rs.getInt("back_office_risk_index")), null, null);
+        }
+    };
 
     private final static ResultSetExtractor<List<Project>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -160,8 +176,8 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findPage(int from, int to) {
-        List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, new Object[]{from, to}, RESULT_SET_EXTRACTOR);
-        System.out.println(projects.size());
+
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, ROW_MAPPER, from, to);
         return projects;
     }
 }

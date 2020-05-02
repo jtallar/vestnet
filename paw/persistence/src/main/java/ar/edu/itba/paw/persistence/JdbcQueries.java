@@ -124,13 +124,14 @@ public class JdbcQueries {
 
     static final String COUNT_PROJECTS = "SELECT COUNT(*) FROM " + PROJECT_TABLE;
 
-    static final String FIND_PROJECT_BY_PAGE = PROJECT_FIND_ALL + "OFFSET ? FETCH FIRST ? ROWS ONLY";
+    static final String FIND_PROJECT_BY_PAGE = PROJECT_FIND_ALL + "OFFSET ? LIMIT ?";
 
     static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + "WHERE pcat.category_id IN (:categories)";
 
     static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
 
     static final String USER_IMAGE = "SELECT u.profile_pic FROM " + USER_TABLE + " u WHERE u.id = ?";
+
 
 
 
