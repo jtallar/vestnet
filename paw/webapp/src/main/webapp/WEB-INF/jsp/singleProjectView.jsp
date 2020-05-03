@@ -23,9 +23,6 @@
 <body>
 <c:url var="favOff" value="/images/bookmarkOff.png"/>
 <c:url var="favOn" value="/images/bookmarkOn.png"/>
-<script>
-            init();
-</script>
 <div class="container" style="margin-top: 20px">
     <div>
 <%--        <div class="row">--%>
@@ -91,10 +88,10 @@
                             <button onclick="favTap()" class="btn-transp pull-right">
                                 <c:set var="fav" value="${isFav}"/>
                                 <c:choose>
-                                    <c:when test="${fav==true}" >
+                                    <c:when test="${isFav==true}" >
                                         <c:set var="favSrc" value="${favOn}"/>
                                     </c:when>
-                                    <c:when test="${fav==false}">
+                                    <c:when test="${isFav==false}">
                                         <c:set var="favSrc" value="${favOff}"/>
                                     </c:when>
                                 </c:choose>
@@ -141,40 +138,38 @@
     <%--        <p class="m-3 text-justify">${project.summary}</p>--%>
 </div>
 
-        <script type="text/javascript">
+        <script>
             function addFav() {
-                let path = 'http://localhost:8080/webapp_war/addFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
-                fetch(path);
+                var path = 'http://localhost:8080/addFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
+                fetch(path).catch((function (reason) { console.error(reason) }));
+
+                // TODO: VER COMO ARREGLAR ESTO DE ACA ABAJO, SACAR LO DE ARRIBA.
+                // TODO: VER SI CON ESTO DESAPARECE EL ROJITO DEL INSPECTOR
+                /*fetch(window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?p_id=" + ${project.id} + "&u_id=" + ${sessionUser.id})
+                    .then(response => response.json())
+                    .then(data => {
+
+                    });*/
             }
             function delFav() {
-                let path = 'http://localhost:8080/webapp_war/deleteFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
-                fetch(path);
+                var path = 'http://localhost:8080/deleteFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
+                fetch(path).catch((function (reason) { console.error(reason) }));
             }
 
-            // TODO La primera vez que desfaveo un faveado pide DOBLE CLICKEO hay un tema en inicializacion de isFavorite
-            let isFavorite;
-            let first;
-            function init(){
-                isFavorite = !${fav};
-                first = true;
-                favTap();
-            }
+            var favImage = document.getElementById('favImg');
+            var fav = ${isFav};
+
             function favTap() {
-                if(first){
-                    first = false;
-                    isFavorite = ${fav};
-                }
-                if(isFavorite){
-                    isFavorite = false;
-                    document.getElementById('favImg').setAttribute("src","${favOff}");
+                console.log("Entro al onlclick");
+                if (fav) {
+                    favImage.setAttribute("src","${favOff}");
+                    fav = false;
                     delFav();
-                }
-                else{
-                    isFavorite = true;
-                    document.getElementById('favImg').setAttribute("src","${favOn}");
+                } else {
+                    favImage.setAttribute("src","${favOn}");
+                    fav = true;
                     addFav();
                 }
-
             }
         </script>
 </body>
