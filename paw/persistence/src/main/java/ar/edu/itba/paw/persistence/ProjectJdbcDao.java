@@ -31,27 +31,7 @@ public class ProjectJdbcDao implements ProjectDao {
     private UserJdbcDao userJdbcDao;
     private CategoriesJdbcDao categoriesJdbcDao;
 
-    private final static RowMapper<Project> ROW_MAPPER = new RowMapper<Project>() {
-        @Override
-        public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
-            List <Category> categories = new ArrayList<>();
 
-            Project project = new Project(rs.getLong("id"), rs.getString("name"),rs.getString("summary"),
-                    rs.getTimestamp("publish_date").toLocalDateTime().toLocalDate(),rs.getTimestamp("update_date").toLocalDateTime().toLocalDate(),rs.getLong("cost"),
-                    rs.getLong("hits"),
-                    new User(rs.getLong("owner_id"), 1, rs.getString("owner_first_name"), rs.getString("owner_last_name"),rs.getString("owner_real_id"),  rs.getTimestamp("owner_birth_date").toLocalDateTime().toLocalDate(),
-                            new Location(new Location.Country(rs.getInt("owner_location_country_id"), rs.getString("owner_location_country_name"), rs.getString("owner_location_country_iso_code"), rs.getString("owner_location_country_phone_code"), rs.getString("owner_location_country_currency")),
-                                    new Location.State(rs.getInt("owner_location_state_id"), rs.getString("owner_location_state_name"),rs.getString("owner_location_state_iso_code")),new Location.City(rs.getInt("owner_location_city_id"), rs.getString("owner_location_city_name"))),
-                            rs.getString("owner_email"), rs.getString("owner_phone"), rs.getString("owner_linkedin"), rs.getTimestamp("owner_join_date").toLocalDateTime().toLocalDate(), rs.getInt("owner_trust_index")),
-                    new Project.ProjectBackOffice(rs.getBoolean("back_office_approved"), rs.getInt("back_office_profit_index"), rs.getInt("back_office_risk_index")), categories, null);
-
-
-            return project;
-        }
-
-
-
-    };
 
     private final static ResultSetExtractor<List<Project>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -130,11 +110,16 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findCatForPage(List<Category> categories, int from, int to) {
+        List<Project> projects = new ArrayList<>();
+        if(to != 0){
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("from", from)
                 .addValue("to", to)
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
-        List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_CAT_PAGE, parameters, ROW_MAPPER);
+        List<Integer> ids = namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE_CATEGORY, parameters, Integer.class);
+        MapSqlParameterSource id_par = new MapSqlParameterSource().addValue("ids", ids);
+         projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, id_par, RESULT_SET_EXTRACTOR);
+        }
         return projects;
     }
 
@@ -233,7 +218,10 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findPage(int from, int to) {
-        List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, ROW_MAPPER, from, to);
+        List<Integer>  ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{from, to}, Integer.class);
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("ids", ids);
+        List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parameters, RESULT_SET_EXTRACTOR);
         return projects;
     }
 
