@@ -45,7 +45,6 @@
                         <div class="col-">
                             <input type = "submit" class="btn btn-dark" value="<spring:message code='apply'/>">
                         </div>
-                        <div class="col-5"></div>
                         <div class="col">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-end">
