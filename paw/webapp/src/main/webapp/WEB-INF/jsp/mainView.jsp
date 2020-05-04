@@ -38,9 +38,26 @@
                             <form:select path="orderBy" class="custom-select mr-sm-2">
                                 <form:option value="date"><spring:message code="date"/> </form:option>
                                 <form:option value="cost-low-high"><spring:message code="cost_l_h"/></form:option>
+
                                 <form:option value="cost-high-low"><spring:message code="cost_h_l"/></form:option>
                                 <form:option value="alf"><spring:message code="alf"/></form:option>
+
                             </form:select>
+                        </div>
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="col-2 text-center text-justify">
+                                    <label class="font-weight-bold"><spring:message code="range"></spring:message> </label>
+                                </div>
+                                <div class="col-7">
+                                    <spring:message var="min" code="min"></spring:message>
+                                    <form:input path="min" class="form-control mx-auto mx-auto" placeholder="${min}"></form:input>
+                                    <form:errors path="min"></form:errors>
+                                    <spring:message var="max" code="max"></spring:message>
+                                    <form:input path="min" class="form-control mx-auto mx-auto"  placeholder="${min}"></form:input>
+                                    <form:errors path="max"></form:errors>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-">
                             <input type = "submit" class="btn btn-dark" value="<spring:message code='apply'/>">

@@ -140,14 +140,19 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter, @RequestParam(name = "page", defaultValue ="1") String page, @RequestParam(name= "categorySelector", required = false) String catSel, @RequestParam(name = "orderBy", required = false) String orderBy) {
+    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter, @RequestParam(name = "page", defaultValue ="1") String page, @RequestParam(name= "categorySelector", required = false) String catSel, @RequestParam(name = "orderBy", required = false) String orderBy,@RequestParam(name = "min", required = false) String min,@RequestParam(name = "max", required = false) String max) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAllCats();
 
 
 
-
+        if(max != null){
+            catFilter.setMax(Integer.parseInt(max));
+        }
+        if (min != null){
+            catFilter.setMin(Integer.parseInt(min));
+        }
         if(catSel != null){
             catFilter.setCategorySelector(catSel);
         }
