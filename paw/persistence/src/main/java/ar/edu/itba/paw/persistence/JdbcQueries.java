@@ -55,6 +55,7 @@ public class JdbcQueries {
             "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
             "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id)";
 
+
     static final String USER_FIND_COINCIDENCE = USER_FIND_ALL + "WHERE lower(u.first_name) LIKE ? " +
                                                                 "OR lower(u.last_name) LIKE ? " +
                                                                 "OR lower(u.email) LIKE ?" +
@@ -116,17 +117,40 @@ public class JdbcQueries {
             "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
             "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) ";
 
+
+
+
     static final String PROJECT_FIND_COINCIDENCE = PROJECT_FIND_ALL + "WHERE lower(p.project_name) LIKE ?";
 
     static final String PROJECT_FIND_BY_OWNER = PROJECT_FIND_ALL + "WHERE p.owner_id = ?";
 
     static final String PROJECT_FIND_BY_ID = PROJECT_FIND_ALL + "WHERE p.id = ?";
 
+    static final String COUNT_PROJECTS = "SELECT COUNT(*) FROM " + PROJECT_TABLE;
+
+    static final String FIND_PROJECT_BY_PAGE = PROJECT_FIND_ALL + " OFFSET ? LIMIT ?";
+
     static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + "WHERE pcat.category_id IN (:categories)";
+
+    static final String PROJECT_FIND_BY_CAT_PAGE = PROJECT_FIND_BY_CAT + "OFFSET (:from) LIMIT (:to)";
+
+    static final String PROJECT_COUNT_CAT = "SELECT COUNT(*)" +
+            "FROM " + PROJECT_TABLE + " p " +
+            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
+            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
+            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
+            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
+            "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
+            "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) " +
+            "WHERE pcat.category_id IN (:categories)";
 
     static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
 
     static final String USER_IMAGE = "SELECT u.profile_pic FROM " + USER_TABLE + " u WHERE u.id = ?";
+
+
+
+
 
     static final String USER_UPDATE = "UPDATE users SET " +
             "role_id = ?, " +

@@ -2,21 +2,24 @@ package ar.edu.itba.paw.persistence;
 
 
 import ar.edu.itba.paw.interfaces.ProjectDao;
-import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.Stage;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,8 +29,31 @@ public class ProjectJdbcDao implements ProjectDao {
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink, jdbcInsertFavorite;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
     private UserJdbcDao userJdbcDao;
     private CategoriesJdbcDao categoriesJdbcDao;
+
+    private final static RowMapper<Project> ROW_MAPPER = new RowMapper<Project>() {
+        @Override
+        public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
+            List <Category> categories = new ArrayList<>();
+
+            Project project = new Project(rs.getLong("id"), rs.getString("name"),rs.getString("summary"),
+                    rs.getTimestamp("publish_date").toLocalDateTime().toLocalDate(),rs.getTimestamp("update_date").toLocalDateTime().toLocalDate(),rs.getLong("cost"),
+                    rs.getLong("hits"),
+                    new User(rs.getLong("owner_id"), 1, rs.getString("owner_first_name"), rs.getString("owner_last_name"),rs.getString("owner_real_id"),  rs.getTimestamp("owner_birth_date").toLocalDateTime().toLocalDate(),
+                            new Location(new Location.Country(rs.getInt("owner_location_country_id"), rs.getString("owner_location_country_name"), rs.getString("owner_location_country_iso_code"), rs.getString("owner_location_country_phone_code"), rs.getString("owner_location_country_currency")),
+                                    new Location.State(rs.getInt("owner_location_state_id"), rs.getString("owner_location_state_name"),rs.getString("owner_location_state_iso_code")),new Location.City(rs.getInt("owner_location_city_id"), rs.getString("owner_location_city_name"))),
+                            rs.getString("owner_email"), rs.getString("owner_phone"), rs.getString("owner_linkedin"), rs.getTimestamp("owner_join_date").toLocalDateTime().toLocalDate(), rs.getInt("owner_trust_index")),
+                    new Project.ProjectBackOffice(rs.getBoolean("back_office_approved"), rs.getInt("back_office_profit_index"), rs.getInt("back_office_risk_index")), categories, null);
+
+
+            return project;
+        }
+
+
+
+    };
 
     private final static ResultSetExtractor<List<Project>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -68,6 +94,12 @@ public class ProjectJdbcDao implements ProjectDao {
         return project;
     }
 
+    @Override
+    public Integer projectsCount() {
+        Integer count = jdbcTemplate.queryForObject(JdbcQueries.COUNT_PROJECTS, Integer.class);
+        return count;
+    }
+
     /**
      * Search for every available project in the DB
      * @return  A list of every single project with its owner and categories set (NO STAGES).
@@ -98,6 +130,25 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    @Override
+    public List<Project> findCatForPage(List<Category> categories, int from, int to) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("from", from)
+                .addValue("to", to)
+                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
+        List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_CAT_PAGE, parameters, ROW_MAPPER);
+        return projects;
+    }
+
+    @Override
+    public Integer catProjCount(List<Category> categories) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
+
+        Integer count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_CAT, parameters, Integer.class);
+        // TODO add stages?
+        return count;
+    }
 
     // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID, TOTAL DE ACA DESEMBOCO EN BUSCARLO, NO?
     @Override
@@ -157,12 +208,9 @@ public class ProjectJdbcDao implements ProjectDao {
     public byte[] findImageForProject(long projectId) {
         return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
     }
-
-    @Override
     public List<Long> findFavorites(long user_id) {
         return jdbcTemplate.query(JdbcQueries.FAVORITES_PROJ, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
     }
-
     @Override
     public void addFavorite(long projectId, long userId) {
         Map<String, Object> values = new HashMap<>();
@@ -170,16 +218,11 @@ public class ProjectJdbcDao implements ProjectDao {
         values.put("user_id", userId);
         jdbcInsertFavorite.execute(values);
     }
-
     @Override
-    public void deleteFavorite(long projectId, long userId) {
-        Object[] args = new Object[]{projectId,userId};
-        jdbcTemplate.update(JdbcQueries.DELETE_FAV, args);
-    }
+    public List<Project> findPage(int from, int to) {
 
-    @Override
-    public boolean isFavorite(long projectId, long userId) {
-        return findFavorites(userId).contains(projectId);
+        List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, ROW_MAPPER, from, to);
+        return projects;
     }
 }
 

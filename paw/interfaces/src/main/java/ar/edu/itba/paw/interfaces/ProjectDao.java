@@ -48,6 +48,16 @@ public interface ProjectDao {
      * @param projectId The id of the project we want to get a portrait image
      * @return Image as a byte array
      */
+
+    List<Project> findPage(int from, int to);
+
+    Integer projectsCount();
+
+    List<Project> findCatForPage(List<Category> categories, int from, int to);
+
+    Integer catProjCount(List<Category> categories);
+
+
     byte[] findImageForProject(long projectId);
 
     /**

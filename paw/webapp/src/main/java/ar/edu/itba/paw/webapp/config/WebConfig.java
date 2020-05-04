@@ -46,7 +46,7 @@ public class WebConfig {
         dataSource.setDriverClass(org.postgresql.Driver.class);
         dataSource.setUrl(env.getProperty("postgres.url"));
         dataSource.setUsername(env.getProperty("postgres.username"));
-        dataSource.setPassword(env.getProperty("postgres.password"));
+            dataSource.setPassword(env.getProperty("postgres.password"));
         return dataSource;
     }
 
