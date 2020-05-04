@@ -47,4 +47,14 @@ public interface ProjectService {
      * @return Image as a byte array
      */
     byte[] findImageForProject(long projectId);
+
+    /**
+     * Find all projects matching with user id
+     * @return list of Projects
+     */
+    List<Long>  findFavorites(long id);
+
+    void addFavorite(long projectId, long userId);
+    void deleteFavorite(long projectId, long userId);
+    boolean isFavorite(long projectId, long userId);
 }

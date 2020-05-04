@@ -10,6 +10,7 @@ public class JdbcQueries {
     static final String PROJECT_CATEGORIES_TABLE = "project_categories";
     private static final String CATEGORIES_TABLE = "categories";
     public static final String PASSWORDS_TABLE = "passwords";
+    public static final String FAVORITES_TABLE = "favorites";
 
     static final String CATEGORY_FIND_ALL = "SELECT " +
             "cat.id, " +
@@ -169,4 +170,8 @@ public class JdbcQueries {
 
     static final String CITY_FIND_BY_STATE_ID = CITY_FIND_ALL +
             "WHERE state_id = ?";
+
+    static final String FAVORITES_PROJ = "SELECT project_id FROM " + FAVORITES_TABLE + " WHERE user_id = ?";
+
+    static final String DELETE_FAV = "DELETE FROM " + FAVORITES_TABLE + " WHERE project_id = ? AND user_id = ?";
 }

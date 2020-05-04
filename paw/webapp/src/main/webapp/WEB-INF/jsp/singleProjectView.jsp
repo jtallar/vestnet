@@ -21,6 +21,8 @@
     <title>VestNet | ${project.name}</title>
 </head>
 <body>
+<c:url var="favOff" value="/images/bookmarkOff.png"/>
+<c:url var="favOn" value="/images/bookmarkOn.png"/>
 <div class="container" style="margin-top: 20px">
     <div>
 <%--        <div class="row">--%>
@@ -82,6 +84,21 @@
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>
+                        <div class="card-header header-white">
+                            <button onclick="favTap()" class="btn-transp pull-right">
+                                <c:set var="fav" value="${isFav}"/>
+                                <c:choose>
+                                    <c:when test="${isFav==true}" >
+                                        <c:set var="favSrc" value="${favOn}"/>
+                                    </c:when>
+                                    <c:when test="${isFav==false}">
+                                        <c:set var="favSrc" value="${favOff}"/>
+                                    </c:when>
+                                </c:choose>
+                                <img id="favImg" src=${favSrc} height="40">
+
+                            </button>
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title"><b><c:out value="${project.name}"/></b></h5>
                             <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/>
@@ -115,9 +132,40 @@
         </div>
     </div>
 
-    <%--        <h6>ID: ${project.id}</h6>--%>
-    <%--        <h6>OWNER ID: ${project.ownerId}</h6>--%>
-    <%--        <p class="m-3 text-justify">${project.summary}</p>--%>
+    
 </div>
+
+        <script>
+            var options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            function addFav() {
+                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/addFavorite?u_id=" + ${sessionUser.id};
+                fetch(path, options).catch((function (reason) { console.error(reason) }));
+            }
+            function delFav() {
+                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/deleteFavorite?u_id=" + ${sessionUser.id};
+                fetch(path, options).catch((function (reason) { console.error(reason) }));
+            }
+
+            var favImage = document.getElementById('favImg');
+            var fav = ${isFav};
+
+            function favTap() {
+                if (fav) {
+                    favImage.setAttribute("src","${favOff}");
+                    fav = false;
+                    delFav();
+                } else {
+                    favImage.setAttribute("src","${favOn}");
+                    fav = true;
+                    addFav();
+                }
+            }
+        </script>
 </body>
 </html>

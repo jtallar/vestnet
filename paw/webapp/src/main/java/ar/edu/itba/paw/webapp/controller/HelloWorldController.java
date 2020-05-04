@@ -28,6 +28,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -205,14 +206,30 @@ public class HelloWorldController {
         mav.addObject("mailSent", mailSent);
         mav.addObject("back", "/projects");
         mav.addObject("investor", true);
+       // mav.addObject("isFav", true);
+        boolean isFav = projectService.isFavorite(id, loggedUser().getId());
+        mav.addObject("isFav", isFav);
+
         return mav;
     }
 
-    /*@RequestMapping(value = "/create", method = {RequestMethod.POST})
-    public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
-        final User user = userService.create(username);
-        return new ModelAndView("redirect:/" + user.getId());
-    }*/
+
+   @RequestMapping(value = "/projects/{p_id}/addFavorite", method = RequestMethod.PUT)
+   @ResponseBody
+    public ResponseEntity<Boolean> addFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+        projectService.addFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/projects/{p_id}//deleteFavorite", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Boolean> deleteFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+        projectService.deleteFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
@@ -291,6 +308,11 @@ public class HelloWorldController {
         User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
+        List<Project> favs_projects = new ArrayList<>();
+        for (Long fid : projectService.findFavorites(id)){
+            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
+        }
+        mav.addObject("favs", favs_projects);
         return mav;
     }
 
@@ -300,6 +322,8 @@ public class HelloWorldController {
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("back", "/users/" + userId);
         mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
+        boolean isFav = projectService.isFavorite(projectId, userId);
+        mav.addObject("isFav", isFav);
 //        mav.addObject("mailSent", mailSent);
         return mav;
     }
