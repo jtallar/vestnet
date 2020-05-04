@@ -44,10 +44,7 @@ public interface ProjectDao {
     long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
 
 
-    /**
-     * @param projectId The id of the project we want to get a portrait image
-     * @return Image as a byte array
-     */
+
 
     List<Project> findPage(int from, int to);
 
@@ -57,7 +54,10 @@ public interface ProjectDao {
 
     Integer catProjCount(List<Category> categories);
 
-
+    /**
+     * @param projectId The id of the project we want to get a portrait image
+     * @return Image as a byte array
+     */
     byte[] findImageForProject(long projectId);
 
     /**

@@ -16,11 +16,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -208,9 +206,12 @@ public class ProjectJdbcDao implements ProjectDao {
     public byte[] findImageForProject(long projectId) {
         return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
     }
+
+    @Override
     public List<Long> findFavorites(long user_id) {
         return jdbcTemplate.query(JdbcQueries.FAVORITES_PROJ, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
     }
+
     @Override
     public void addFavorite(long projectId, long userId) {
         Map<String, Object> values = new HashMap<>();
@@ -218,12 +219,24 @@ public class ProjectJdbcDao implements ProjectDao {
         values.put("user_id", userId);
         jdbcInsertFavorite.execute(values);
     }
+
+    @Override
+    public void deleteFavorite(long projectId, long userId) {
+        Object[] args = new Object[]{projectId,userId};
+        jdbcTemplate.update(JdbcQueries.DELETE_FAV, args);
+    }
+
+    @Override
+    public boolean isFavorite(long projectId, long userId) {
+        return findFavorites(userId).contains(projectId);
+    }
+
     @Override
     public List<Project> findPage(int from, int to) {
-
         List<Project> projects = jdbcTemplate.query(JdbcQueries.FIND_PROJECT_BY_PAGE, ROW_MAPPER, from, to);
         return projects;
     }
+
 }
 
 

@@ -47,12 +47,22 @@ public interface ProjectService {
      * @return Image as a byte array
      */
     byte[] findImageForProject(long projectId);
-    List<Long>  findFavorites(long id);
-    Integer projectsCount();
-    List<Project> findCatForPage(List<Category> categories, int from, int to);
-    Integer catProjCount(List<Category> categories);
-     */
-     * @return list of Projects
+
     /**
      * Find all projects matching with user id
+     * @return list of Projects
+     */
+    List<Long>  findFavorites(long id);
+
+    List<Project> findPage(int from, int to);
+
+    Integer projectsCount();
+
+    List<Project> findCatForPage(List<Category> categories, int from, int to);
+
+    Integer catProjCount(List<Category> categories);
+
+    void addFavorite(long projectId, long userId);
+    void deleteFavorite(long projectId, long userId);
+    boolean isFavorite(long projectId, long userId);
 }
