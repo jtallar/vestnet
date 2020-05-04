@@ -28,6 +28,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -213,14 +214,18 @@ public class HelloWorldController {
     }
 
 
-   @RequestMapping(value = "/addFavorite")
-    public void addFavorite(@RequestParam("p_id") int p_id, @RequestParam("u_id") int u_id) {
+   @RequestMapping(value = "/projects/{p_id}/addFavorite", method = RequestMethod.PUT)
+   @ResponseBody
+    public ResponseEntity<Boolean> addFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
         projectService.addFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/deleteFavorite")
-    public void deleteFavorite(@RequestParam("p_id") int p_id, @RequestParam("u_id") int u_id) {
+    @RequestMapping(value = "/projects/{p_id}//deleteFavorite", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Boolean> deleteFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
         projectService.deleteFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

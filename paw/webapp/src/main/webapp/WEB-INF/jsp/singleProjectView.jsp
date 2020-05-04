@@ -132,35 +132,30 @@
         </div>
     </div>
 
-
-<%--        <h6>ID: ${project.id}</h6>--%>
-    <%--        <h6>OWNER ID: ${project.ownerId}</h6>--%>
-    <%--        <p class="m-3 text-justify">${project.summary}</p>--%>
+    
 </div>
 
         <script>
+            var options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
             function addFav() {
-                var path = 'http://localhost:8080/addFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
-                fetch(path).catch((function (reason) { console.error(reason) }));
-
-                // TODO: VER COMO ARREGLAR ESTO DE ACA ABAJO, SACAR LO DE ARRIBA.
-                // TODO: VER SI CON ESTO DESAPARECE EL ROJITO DEL INSPECTOR
-                /*fetch(window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?p_id=" + ${project.id} + "&u_id=" + ${sessionUser.id})
-                    .then(response => response.json())
-                    .then(data => {
-
-                    });*/
+                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/addFavorite?u_id=" + ${sessionUser.id};
+                fetch(path, options).catch((function (reason) { console.error(reason) }));
             }
             function delFav() {
-                var path = 'http://localhost:8080/deleteFavorite?p_id=' + ${project.id} + '&u_id=' + ${sessionUser.id};
-                fetch(path).catch((function (reason) { console.error(reason) }));
+                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/deleteFavorite?u_id=" + ${sessionUser.id};
+                fetch(path, options).catch((function (reason) { console.error(reason) }));
             }
 
             var favImage = document.getElementById('favImg');
             var fav = ${isFav};
 
             function favTap() {
-                console.log("Entro al onlclick");
                 if (fav) {
                     favImage.setAttribute("src","${favOff}");
                     fav = false;
