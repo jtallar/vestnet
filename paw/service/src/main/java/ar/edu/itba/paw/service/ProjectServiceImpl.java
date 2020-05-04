@@ -59,6 +59,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<Project> findCatForPage(List<Category> categories, int from, int to) {
+        return projectDao.findCatForPage(categories,from,to);
+    }
+
+    @Override
+    public Integer catProjCount(List<Category> categories) {
+        return projectDao.catProjCount(categories);
+    }
+
+    @Override
     public byte[] findImageForProject(long projectId) {
         return projectDao.findImageForProject(projectId);
     }

@@ -50,6 +50,11 @@ public interface ProjectService {
 
     Integer projectsCount();
 
+    List<Project> findCatForPage(List<Category> categories, int from, int to);
+
+    Integer catProjCount(List<Category> categories);
+
+
     List<Project> findPage(int from, int to);
 
 }

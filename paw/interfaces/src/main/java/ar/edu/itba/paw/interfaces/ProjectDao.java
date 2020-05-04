@@ -53,5 +53,10 @@ public interface ProjectDao {
 
     Integer projectsCount();
 
+    List<Project> findCatForPage(List<Category> categories, int from, int to);
+
+    Integer catProjCount(List<Category> categories);
+
+
     byte[] findImageForProject(long projectId);
 }

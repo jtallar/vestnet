@@ -138,18 +138,40 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter, @RequestParam(name = "page", defaultValue ="1") String page) {
+    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter, @RequestParam(name = "page", defaultValue ="1") String page, @RequestParam(name= "categorySelector", required = false) String catSel, @RequestParam(name = "orderBy", required = false) String orderBy) {
         final ModelAndView mav = new ModelAndView("mainView");
-
         Integer intPage = Integer.parseInt(page);
-
-        Integer projects = projectService.projectsCount();
         List<Category> catList = categoriesService.findAllCats();
+
+
+
+
+        if(catSel != null){
+            catFilter.setCategorySelector(catSel);
+        }
+        if (orderBy != null){
+            catFilter.setOrderBy(orderBy);
+        }
+
+        System.out.println(catFilter.getCategorySelector());
+
+
+
+        Integer projects;
+        if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats")){ //calculate total projects to render to check limit and offset
+            projects = projectService.projectsCount();
+        }
+        else {
+            Optional<Category> selectedCategory = catList.stream()
+                    .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
+                    .findFirst();
+            projects = projectService.catProjCount(Collections.singletonList(selectedCategory.get()));
+        }
+
+
         List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
-        System.out.println(projectList.size() + "projListsize");
 
         Boolean hasNext = (projects > ((intPage)* PAGE_SIZE) ) ? true : false;
-
         mav.addObject("hasNext",hasNext);
 
 
@@ -162,14 +184,10 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(value = "/header")
-    public ModelAndView headerComponent() {
-        final ModelAndView mav = new ModelAndView("header");
-        return mav;
-    }
+
 
     private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList, Integer page, Integer projects){
-        System.out.println("page" + page);
+        System.out.println(catFilter.getCategorySelector());
         int from = (page == 1) ? 0 : ((page -1) * PAGE_SIZE);
         int size = ((projects - from) < PAGE_SIZE) ? (projects - from) : PAGE_SIZE;
 
@@ -180,7 +198,9 @@ public class HelloWorldController {
                     .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
                     .findFirst();
             if (selectedCategory.isPresent()) {
-                auxList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
+                auxList = projectService.findCatForPage(Collections.singletonList(selectedCategory.get()), from, size);
+                //auxList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
+
             }
         } else {
 
@@ -205,6 +225,13 @@ public class HelloWorldController {
         }
 
         return auxList;
+    }
+
+
+    @RequestMapping(value = "/header")
+    public ModelAndView headerComponent() {
+        final ModelAndView mav = new ModelAndView("header");
+        return mav;
     }
 
 

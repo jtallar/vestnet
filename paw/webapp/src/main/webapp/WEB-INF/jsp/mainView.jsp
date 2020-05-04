@@ -45,6 +45,27 @@
                         <div class="col-">
                             <input type = "submit" class="btn btn-dark" value="<spring:message code='apply'/>">
                         </div>
+                        <div class="col-5"></div>
+                        <div class="col">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end">
+                                    <c:if test="${page != 1}">
+                                        <li class="page-item">
+                                            <button  type="submit" class="page-link" name="page" value="${page - 1}">Previous</button>
+                                        </li>
+                                        <li class="page-item"><button type="submit" class="page-link" name="page" value="${page - 1}">${page - 1}</button></li>
+                                    </c:if>
+                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page}">${page}</button></li>
+                                    <c:if test="${hasNext eq true}">
+                                        <li class="page-item"><button type="submit" class="page-link" name="page" value="${page + 1}">${page + 1}</button></li>
+                                        <li class="page-item">
+                                            <button type="submit" class="page-link" name="page" value="${page + 1}" >Next</button>
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </nav>
+                        </div>
+
                     </div>
                 </div>
             </form:form>
@@ -87,23 +108,8 @@
                         <div class="col-4  d-flex justify-content-center">
                         <c:url value="/projects" var="projectPage"></c:url>
                         <form action="${projectPage}" method="get">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-end">
-                                    <c:if test="${page != 1}">
-                                        <li class="page-item">
-                                            <button  type="submit" class="page-link" name="page" value="${page - 1}">Previous</button>
-                                        </li>
-                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page - 1}">${page - 1}</button></li>
-                                    </c:if>
-                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page}">${page}</button></li>
-                                    <c:if test="${hasNext eq true}">
-                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page + 1}">${page + 1}</button></li>
-                                    <li class="page-item">
-                                        <button type="submit" class="page-link" name="page" value="${page + 1}" >Next</button>
-                                    </li>
-                                    </c:if>
-                                </ul>
-                            </nav>
+
+
                         </form>
                         </div>
                      </div>
