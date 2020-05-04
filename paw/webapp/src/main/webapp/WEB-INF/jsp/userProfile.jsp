@@ -45,9 +45,16 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><spring:message code="information"/></a>
                         </li>
+                        <c:if test="${user.role eq 1}">
                         <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><spring:message code="projects"/></a>
                         </li>
+                        </c:if>
+                        <c:if test="${user.role eq 2}">
+                        <li class="nav-item">
+                            <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false"><spring:message code="favorites"/></a>
+                        </li>
+                        </c:if>
                     </ul>
                 </div>
             </div>
@@ -185,6 +192,34 @@
                             </div>
                         </c:if>
                     </div>
+
+                    <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="profile-tab">
+                        <c:if test="${!empty favs}">
+                            <c:forEach items="${favs}" var="project">
+                                <div class="card m-2">
+                                    <div class="card-header">
+                                        <h5 class="card-title"><c:out value="${project.name}"></c:out></h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text"><c:out value="${project.summary}"></c:out></p>
+                                        <strong><spring:message code="owner"/></strong>
+                                        <p><c:out value="${project.owner.firstName}"/> <c:out value="${project.owner.lastName}"/></p>
+                                        <strong><spring:message code="price"/></strong>
+                                        <p><c:out value="${project.cost}"/></p>
+                                        <a href="<c:url value='/users/${user.id}/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"></spring:message></a>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${empty favs}">
+                            <div class="card m-2">
+                                <div class="card-header">
+                                    <h5 class="card-title centered"><spring:message code="noProjFound"></spring:message> </h5>
+                                </div>
+                            </div>
+                        </c:if>
+                    </div>
+
                 </div>
             </div>
         </div>

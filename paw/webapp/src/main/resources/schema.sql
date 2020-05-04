@@ -186,3 +186,12 @@ CREATE TABLE IF NOT EXISTS passwords (
     PRIMARY KEY (id)
 );
 
+/*
+** Favourites of each user
+*/
+CREATE TABLE IF NOT EXISTS favorites (
+	user_id		INT REFERENCES users ON DELETE CASCADE,
+	project_id 	INT REFERENCES projects ON DELETE CASCADE,
+
+	PRIMARY KEY (user_id, project_id)
+);

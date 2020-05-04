@@ -47,14 +47,12 @@ public interface ProjectService {
      * @return Image as a byte array
      */
     byte[] findImageForProject(long projectId);
-
+    List<Long>  findFavorites(long id);
     Integer projectsCount();
-
     List<Project> findCatForPage(List<Category> categories, int from, int to);
-
     Integer catProjCount(List<Category> categories);
-
-
-    List<Project> findPage(int from, int to);
-
+     */
+     * @return list of Projects
+    /**
+     * Find all projects matching with user id
 }

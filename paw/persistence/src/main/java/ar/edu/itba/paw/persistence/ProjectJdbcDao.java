@@ -4,6 +4,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.*;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
+import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,13 +20,14 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
 public class ProjectJdbcDao implements ProjectDao {
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink;
+    private SimpleJdbcInsert jdbcInsert, jdbcInsertCategoryLink, jdbcInsertFavorite;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
     private UserJdbcDao userJdbcDao;
@@ -58,6 +60,11 @@ public class ProjectJdbcDao implements ProjectDao {
             .addKeys("id")
             .newResultSetExtractor(Project.class);
 
+    private final static ResultSetExtractor<List<Long>> RESULT_SET_EXTRACTOR_PID = JdbcTemplateMapperFactory
+            .newInstance()
+            .addKeys("id")
+            .newResultSetExtractor(Long.class);
+
     @Autowired
     public ProjectJdbcDao(final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -69,6 +76,8 @@ public class ProjectJdbcDao implements ProjectDao {
                 .usingColumns("owner_id", "project_name", "summary", "cost", "images");
         jdbcInsertCategoryLink = new SimpleJdbcInsert(dataSource)
                 .withTableName(JdbcQueries.PROJECT_CATEGORIES_TABLE);
+        jdbcInsertFavorite = new SimpleJdbcInsert(dataSource)
+                .withTableName(JdbcQueries.FAVORITES_TABLE);
 
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
@@ -199,7 +208,16 @@ public class ProjectJdbcDao implements ProjectDao {
     public byte[] findImageForProject(long projectId) {
         return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
     }
-
+    public List<Long> findFavorites(long user_id) {
+        return jdbcTemplate.query(JdbcQueries.FAVORITES_PROJ, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
+    }
+    @Override
+    public void addFavorite(long projectId, long userId) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("project_id", projectId);
+        values.put("user_id", userId);
+        jdbcInsertFavorite.execute(values);
+    }
     @Override
     public List<Project> findPage(int from, int to) {
 

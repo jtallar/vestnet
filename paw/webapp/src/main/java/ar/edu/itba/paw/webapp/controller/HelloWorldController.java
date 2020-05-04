@@ -20,6 +20,7 @@ import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -250,14 +252,30 @@ public class HelloWorldController {
         mav.addObject("mailSent", mailSent);
         mav.addObject("back", "/projects");
         mav.addObject("investor", true);
+       // mav.addObject("isFav", true);
+        boolean isFav = projectService.isFavorite(id, loggedUser().getId());
+        mav.addObject("isFav", isFav);
+
         return mav;
     }
 
-    /*@RequestMapping(value = "/create", method = {RequestMethod.POST})
-    public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
-        final User user = userService.create(username);
-        return new ModelAndView("redirect:/" + user.getId());
-    }*/
+
+   @RequestMapping(value = "/projects/{p_id}/addFavorite", method = RequestMethod.PUT)
+   @ResponseBody
+    public ResponseEntity<Boolean> addFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+        projectService.addFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/projects/{p_id}//deleteFavorite", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Boolean> deleteFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+        projectService.deleteFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
@@ -336,6 +354,11 @@ public class HelloWorldController {
         User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
+        List<Project> favs_projects = new ArrayList<>();
+        for (Long fid : projectService.findFavorites(id)){
+            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
+        }
+        mav.addObject("favs", favs_projects);
         return mav;
     }
 
@@ -345,6 +368,8 @@ public class HelloWorldController {
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("back", "/users/" + userId);
         mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
+        boolean isFav = projectService.isFavorite(projectId, userId);
+        mav.addObject("isFav", isFav);
 //        mav.addObject("mailSent", mailSent);
         return mav;
     }
@@ -355,36 +380,16 @@ public class HelloWorldController {
         return mav;
     }
 
-    // TODO: CHECK IF ITS THE RIGHT WAY TO DO THIS
-    @RequestMapping(value = "/location/countries")
-    public List<Location.Country> countryList() {
-        return Arrays.asList(new Location.Country(1, "Nombre1", "ds", "ads", "dsa"), new Location.Country(2, "Nombre2", "ds", "ads", "dsa"),
-                new Location.Country(3, "Nombre3", "ds", "ads", "dsa"), new Location.Country(4, "Nombre1", "ds", "ads", "dsa"));
-    }
-
-    @RequestMapping(value = "/location/states/{country_id}")
-    public List<Location.State> stateList(@PathVariable("country_id") long countryId) {
-        if (countryId == 0) return null;
-        return Arrays.asList(new Location.State(1, "State1", "11"), new Location.State(2, "State2", "11"), new Location.State(3, "State3", "11"));
-    }
-
-    @RequestMapping(value = "/location/cities/{state_id}")
-    public List<Location.City> cityList(@PathVariable("state_id") long stateId) {
-        if (stateId == 0) return null;
-        return Arrays.asList(new Location.City(1, "City1"), new Location.City(2, "City2"), new Location.City(3, "City3"));
-    }
-
-
     @RequestMapping(value = "/search")
     public ModelAndView searchAux(@RequestParam("searching") String search){
         final ModelAndView mav = new ModelAndView("search");
-        String aux = search.toLowerCase();
+        String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
         if(loggedUser().getRole() == 2) {
             mav.addObject("projectsList", projectService.findCoincidence(aux));
         } //only want to show users projects if is an investor
         mav.addObject("usersList", userService.findCoincidence(aux));
-        mav.addObject("string", search);
-
+        mav.addObject("string", aux);
+        System.out.println(aux);
         return mav;
     }
 
