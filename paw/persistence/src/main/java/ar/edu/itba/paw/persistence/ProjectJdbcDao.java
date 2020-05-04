@@ -218,10 +218,16 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findPage(int from, int to) {
-        List<Integer>  ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{from, to}, Integer.class);
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("ids", ids);
-        List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parameters, RESULT_SET_EXTRACTOR);
+        List<Project> projects;
+        if(to != 0) {
+            List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{from, to}, Integer.class);
+            MapSqlParameterSource parameters = new MapSqlParameterSource()
+                    .addValue("ids", ids);
+            projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parameters, RESULT_SET_EXTRACTOR);
+        }
+        else {
+            projects = new ArrayList<>(); 
+        }
         return projects;
     }
 
