@@ -25,6 +25,14 @@
 </head>
 
 <body background="<c:url value ="/images/signupBack.png"/>">
+<c:set var="val"><spring:message code="select_country"/></c:set>
+<input id="select_country_msg" type="hidden" value="${val}"/>
+<c:set var="val"><spring:message code="select_state"/></c:set>
+<input id="select_state_msg" type="hidden" value="${val}"/>
+<c:set var="val"><spring:message code="select_city"/></c:set>
+<input id="select_city_msg" type="hidden" value="${val}"/>
+
+
 <spring:message code="enter_first_name" var="enter_first_name"></spring:message>
 <spring:message code="enter_password" var="enter_password"></spring:message>
 <spring:message code="enter_repeat_password" var="enter_repeat_password"></spring:message>
@@ -144,36 +152,21 @@
                                     <label><spring:message code="country"/></label>
                                 </div>
                                 <div class="col-md">
-<%--                                    TODO: COMO HAGO PARA QUE SE EJECUTE ESE URL tipo SRC, no que sea ese el valor? --%>
-<%--                                    <c:url var="countryUrl" value='/location/countries'/>--%>
-                                    <form:select class="custom-select mr-sm-2" path="country">
-                                        <c:forEach var="country" items="Argentina">
-                                            <form:option value="11" label="${country}"/>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:select id="country-select" path="country" class="custom-select mr-sm-2" onchange="fetchData('country', 'state')"/>
                                 </div>
                                 <div class="col-">
                                     <label><spring:message code="state"/> </label>
                                 </div>
                                 <div class="col-md">
-<%--                                    <c:url var="stateUrl" value='/location/states/${userForm.country}'/>--%>
-                                    <form:select path="state" class="custom-select mr-sm-2">
-                                        <c:forEach var="state" items="Buenos Aires">
-                                            <form:option value="3656" label="${state}"/>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:select id="state-select" path="state" class="custom-select mr-sm-2" onchange="fetchData('state', 'city')"/>
                                 </div>
                                 <div class="col-">
                                     <label><spring:message code="city"/> </label>
                                 </div>
                                 <div class="col-md">
-<%--                                    <c:url var="cityUrl" value='/location/cities/${userForm.state}'/>--%>
-                                    <form:select path="city" class="custom-select mr-sm-2">
-                                        <c:forEach var="city" items="Buenos Aires">
-                                            <form:option value="704" label="${city}"/>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:select id="city-select" path="city" class="custom-select mr-sm-2"/>
                                 </div>
+
                             </div>
                             </div>
                         </div>
@@ -183,10 +176,10 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="email_required"></spring:message> </label>
+                                    <label><spring:message code="email_required"/> </label>
                                     <form:input type="text" class="form-control" path="email"
                                                 placeholder="${enter_email}"/>
-                                    <form:errors path="email" cssClass="formError" element="p"></form:errors>
+                                    <form:errors path="email" cssClass="formError" element="p"/>
                                 </div>
                             </div>
                             <div class="col-md">
@@ -279,6 +272,36 @@
             maxSizeMsg.hidden = true;
         }
     });
+</script>
+<script>
+    function fetchData(source, receiver) {
+        let id = "";
+        if (source !== '') {
+            let aux = document.getElementById(source + "-select");
+            id = "/" + aux.options[aux.selectedIndex].value;
+        }
+
+        // Fetch data depending on arguments
+        fetch(window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/location/" + receiver + id)
+            .then(response => response.json())
+            .then(data => {
+                let select = document.getElementById(receiver + "-select");
+                select.options.length = 0;
+                for (let i = 0; i < data.length; i++)
+                    select.appendChild(new Option(data[i]["name"], data[i]["id"]));
+
+                //If there are no options
+                if (data.length === 0)
+                    select.appendChild(new Option("-", "0"));
+
+                // Recursive update
+                if (receiver === 'country') fetchData('country', 'state');
+                else if (receiver === 'state') fetchData('state', 'city');
+            })
+    }
+    window.onload = function () {
+        fetchData('', 'country');
+    }
 </script>
 </body>
 </html>
