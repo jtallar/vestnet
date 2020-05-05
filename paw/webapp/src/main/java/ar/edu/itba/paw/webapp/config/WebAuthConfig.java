@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -53,10 +54,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .invalidSessionUrl("/login")
                 .and().authorizeRequests()
-                .antMatchers("/login","/signUp").anonymous()
+                .antMatchers("/login","/signUp", "/location/**").anonymous()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/projects/**").hasRole("INVESTOR")
-                .antMatchers("/newProject").hasRole("ENTREPRENEUR")
+                .antMatchers("/newProject", "/myProjects").hasRole("ENTREPRENEUR")
                 .antMatchers("/**").authenticated()
                 .and().formLogin()
                 .loginPage("/login")
@@ -90,7 +91,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-
-
-
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }

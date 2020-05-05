@@ -1,3 +1,4 @@
+<%--TODO: ORDENAR ESTO, NO DOS GRANDES IF--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
@@ -25,54 +26,64 @@
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
-<body>
-<c:url var="logo" value="/images/logo_bp.png"/>
-<c:url var="lupa" value="/images/lupa_v.png"/>
-<nav class="navbar navbar-dark navbar-expand-sm navbar-custom">
-    <a class="navbar-brand" href="<c:url value='/'/>">
-        <img src=${logo} width="60" class="logo-img">
-    </a>
-    <a class="logo-text" href="<c:url value='/'/>">
-        VestNet
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="<c:url value='/projects'/>"><spring:message code="feed"></spring:message></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<c:url value='/myProfile'/>"><spring:message code="my_profile"></spring:message></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<c:url value='/logout'/>"><spring:message code="logout"></spring:message></a>
-            </li>
+<%--        TODO: COMO PERSISTO ROL PARA ESTE--%>
+<c:choose>
+    <c:when test="${sessionUser == null}">
+        <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom3"/>
+        <c:set var="searchButtonClass" value="btn logopurple"/>
+        <spring:message var="firstOption" code="new_project"/>
+        <c:url var="logo" value="/images/logo_bw.png"/>
+        <c:url var="lupa" value="/images/lupa_v.png"/>
+    </c:when>
+    <c:when test="${sessionUser.role eq 1}">
+        <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom2"/>
+        <c:set var="searchButtonClass" value="btn btn-black"/>
+        <spring:message var="firstOption" code="new_project"/>
+        <c:url var="logo" value="/images/logo_wp.png"/>
+        <c:url var="lupa" value="/images/lupa_bw.png"/>
+    </c:when>
+    <c:when test="${sessionUser.role eq 2}">
+        <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
+        <c:set var="searchButtonClass" value="btn logopurple"/>
+        <spring:message var="firstOption" code="feed"/>
+        <c:url var="logo" value="/images/logo_bp.png"/>
+        <c:url var="lupa" value="/images/lupa_v.png"/>
+    </c:when>
+</c:choose>
 
-<%--            <li class="nav-item">--%>
-<%--                <a class="nav-link" href="#"><spring:message code="myprojects"></spring:message></a>--%>
-<%--            </li>--%>
-<%--            <li class="nav-item dropdown">--%>
-<%--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--%>
-<%--                    <spring:message code="more"></spring:message>--%>
-<%--                </a>--%>
-<%--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">--%>
-<%--                    <a class="dropdown-item" href="#"><spring:message code="editprofile"></spring:message></a>--%>
-<%--                    <a class="dropdown-item" href="#"><spring:message code="help"></spring:message></a>--%>
-<%--                    <div class="dropdown-divider"></div>--%>
-<%--                    <a class="dropdown-item" href="#"><spring:message code="logout"></spring:message></a>--%>
-<%--                </div>--%>
-<%--            </li>--%>
-        </ul>
-    </div>
-    <c:url var="searchURL" value="/search"/>
-    <form class="form-inline mx-auto my-2 my-lg-0" action="${searchURL}" method="get">
-        <input class="form-control mx-auto mx-auto" id="searching" type="text" placeholder="<spring:message code='search'></spring:message>" aria-label="Search" name="searching" />
-        <button type="submit" class="btn btn-purple">
-            <img src=${lupa} height="29">
+<body>
+    <nav class="${navbarClass}">
+        <a class="navbar-brand" href="<c:url value='/'/>">
+            <img src=${logo} width="60" class="logo-img">
+        </a>
+        <a class="logo-text" href="<c:url value='/'/>">
+            VestNet
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-    </form>
-</nav>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <c:if test="${sessionUser != null}">
+                <li class="nav-item">
+                    <a class="nav-link" href="<c:url value='/headerFirstOption'/>"><c:out value="${firstOption}"/></a>
+                </li>
+                </c:if>
+                <li class="nav-item">
+                    <a class="nav-link" href="<c:url value='/myProfile'/>"><spring:message code="my_profile"/></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<c:url value='/logout'/>"><spring:message code="logout"/></a>
+                </li>
+            </ul>
+        </div>
+        <c:url var="searchURL" value="/search"/>
+        <form class="form-inline mx-auto my-2 my-lg-0" action="${searchURL}" method="get">
+            <input class="form-control mx-auto mx-auto" id="searching" type="text" placeholder="<spring:message code='search'/>" aria-label="Search" name="searching" />
+            <button type="submit" class="${searchButtonClass}">
+                <img src=${lupa} height="29">
+            </button>
+        </form>
+    </nav>
 </body>
 </html>

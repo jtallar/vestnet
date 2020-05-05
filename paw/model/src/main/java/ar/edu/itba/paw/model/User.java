@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class User {
 
-    private String password; //TODO> add password to DAO
+    private String password;
 
     private final long id;
     // TODO: VER SI PUEDO GUARDAR UN USERROLE --> NO PUEDO MAPEAR 2 a INVESTOR(2)
@@ -22,10 +22,9 @@ public class User {
     private final String linkedin;
 
     private final LocalDate joinDate;
-    private final String profilePicture; //if we need URI then change it later
     private int trustIndex;
 
-    public User(long id, int role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, LocalDate joinDate, int trustIndex) {
+    public User(long id, int role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, LocalDate joinDate, int trustIndex) {
         this.id = id;
         this.role = role;
         this.firstName = firstName;
@@ -36,7 +35,6 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.linkedin = linkedin;
-        this.profilePicture = profilePicture;
         this.joinDate = joinDate;
         this.trustIndex = trustIndex;
     }
@@ -77,10 +75,6 @@ public class User {
         return linkedin;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
     public LocalDate getJoinDate() {
         return joinDate;
     }
@@ -110,7 +104,6 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", linkedin='" + linkedin + '\'' +
                 ", joinDate=" + joinDate +
-                ", profilePicture='" + profilePicture + '\'' +
                 ", trustIndex=" + trustIndex +
                 '}';
     }

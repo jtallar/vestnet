@@ -11,18 +11,29 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
+import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
+import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -30,8 +41,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.*;
@@ -53,11 +65,14 @@ public class HelloWorldController {
     @Autowired
     private CategoriesService categoriesService;
 
-    // TODO: Check if there is another way to persist user for the controller
-    private User sessionUser;
+    @Autowired
+    protected AuthenticationManager authenticationManager;
+
+    private final int PAGE_SIZE = 12;
 
 
-    @ExceptionHandler(UserNotFoundException.class)
+
+    /*@ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchUser() {
         return new ModelAndView("error");
@@ -67,16 +82,33 @@ public class HelloWorldController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView noSuchProject() {
         return new ModelAndView("error");
+    }*/
+
+    @ModelAttribute("sessionUser")
+    public User loggedUser() {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // auth.getPrincipal();
+        // auth.getCredentials();
+        // auth.getAuthorities();
+        // auth.getDetails();
+        return userService.findByUsername(auth.getName()).orElse(null);
     }
 
+    // TODO: QUE HACEMOS ACA??
     @ExceptionHandler(MessagingException.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView failedEmail() { return new ModelAndView("error"); }
+
+    /*@ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    public ModelAndView failedRegistration() { return new ModelAndView("error"); }*/
 
     @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
     public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
         final ModelAndView mav = new ModelAndView("contact");
         mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
+        mav.addObject("p_id", p_id);
+        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
         return mav;
     }
 
@@ -91,10 +123,8 @@ public class HelloWorldController {
 
     @RequestMapping("/")
     public ModelAndView index(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // TODO: CHANGE EXCEPTION TO SERVER ERROR?
-        this.sessionUser = userService.findByUsername(authentication.getName()).orElseThrow(UserNotFoundException::new);
-        if (this.sessionUser.getRole() == User.UserRole.ENTREPRENEUR.getId())
+        if (this.loggedUser().getRole() == User.UserRole.ENTREPRENEUR.getId())
             return new ModelAndView("redirect:/myProfile");
         // Investor logged in
         return new ModelAndView("redirect:/projects");
@@ -110,12 +140,51 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter) {
+    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, BindingResult errors, @RequestParam(name = "page", defaultValue ="1") String page, @RequestParam(name= "categorySelector", required = false) String catSel, @RequestParam(name = "orderBy", required = false) String orderBy,@RequestParam(name = "min", required = false) String min,@RequestParam(name = "max", required = false) String max) {
         final ModelAndView mav = new ModelAndView("mainView");
-
+        Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAllCats();
-        List<Project> projectList = filterOrder(catFilter,catList);
 
+
+        if(errors.hasErrors()){
+            System.out.println("ACA HUBO UN ERROR");
+            Integer projects = 0;
+            Boolean hasNext = false;
+            page = "1";
+            List<Project> projectList = new ArrayList<>();
+            mav.addObject("hasNext",hasNext);
+            mav.addObject("page", page);
+            mav.addObject("cats", catList);
+            mav.addObject("list", projectList);
+
+            return mav;
+        }
+
+
+        if(max != null){
+            catFilter.setMax(max);
+        }
+        if (min != null){
+            catFilter.setMin(min);
+        }
+        if(catSel != null){
+            catFilter.setCategorySelector(catSel);
+        }
+        if (orderBy != null){
+            catFilter.setOrderBy(orderBy);
+        }
+
+
+
+
+        Integer projects = countProjects(catFilter, catList, false);
+        List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
+
+        Boolean hasNext = (projects > ((intPage)* PAGE_SIZE) ) ? true : false;
+        mav.addObject("hasNext",hasNext);
+
+
+        mav.addObject("page", page);
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
 
@@ -124,23 +193,50 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(value = "/header")
-    public ModelAndView headerComponent() {
-        final ModelAndView mav = new ModelAndView("header");
-        return mav;
+    private Integer countProjects(CategoryFilter catFilter, List<Category> catList, Boolean hasErrors){
+        long minAux, maxAux;
+        minAux = (catFilter.getMin() == null || catFilter.getMin().matches("")) ? 0 : Long.parseLong(catFilter.getMin());
+        maxAux = (catFilter.getMax() == null || catFilter.getMax().matches("")) ? Long.MAX_VALUE : Long.parseLong(catFilter.getMax());
+
+        Integer projects;
+        if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats") || hasErrors){ //calculate total projects to render to check limit and offset
+            projects = projectService.projectsCount(minAux, maxAux);
+        }
+        else {
+            Optional<Category> selectedCategory = catList.stream()
+                    .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
+                    .findFirst();
+            projects = projectService.catProjCount(Collections.singletonList(selectedCategory.get()), minAux, maxAux);
+        }
+        return projects;
     }
 
-    private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList){
+
+    private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList, Integer page, Integer projects){
+        long minAux, maxAux;
+        minAux = (catFilter.getMin() == null || catFilter.getMin().matches("")) ? 0 : Long.parseLong(catFilter.getMin());
+        maxAux = (catFilter.getMax() == null || catFilter.getMax().matches("")) ? Long.MAX_VALUE : Long.parseLong(catFilter.getMax());
+
+
+
+
+        int from = (page == 1) ? 0 : ((page -1) * PAGE_SIZE);
+        int size = ((projects - from) < PAGE_SIZE) ? (projects - from) : PAGE_SIZE;
+
+
         List<Project> auxList = new ArrayList<>();
         if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
             Optional<Category> selectedCategory = catList.stream()
                     .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
                     .findFirst();
             if (selectedCategory.isPresent()) {
-                auxList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
+
+                auxList = projectService.findCatForPage(Collections.singletonList(selectedCategory.get()), from, size, minAux, maxAux);
+
             }
         } else {
-            auxList = projectService.findAll();
+
+            auxList = projectService.findPage(from, size, minAux, maxAux);
         }
 
         if(catFilter.getOrderBy() != null) {
@@ -164,6 +260,15 @@ public class HelloWorldController {
     }
 
 
+    @RequestMapping(value = "/header")
+    public ModelAndView headerComponent() {
+        final ModelAndView mav = new ModelAndView("header");
+        return mav;
+    }
+
+
+
+
 
 
     // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
@@ -171,23 +276,43 @@ public class HelloWorldController {
     @RequestMapping(value = "/projects/{id}")
     public ModelAndView singleProjectView(@PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
+
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
+        mav.addObject("back", "/projects");
+        mav.addObject("investor", true);
+       // mav.addObject("isFav", true);
+        boolean isFav = projectService.isFavorite(id, loggedUser().getId());
+        mav.addObject("isFav", isFav);
+
         return mav;
     }
 
-    /*@RequestMapping(value = "/create", method = {RequestMethod.POST})
-    public ModelAndView register(@RequestParam(name = "username", required = true) String username) {
-        final User user = userService.create(username);
-        return new ModelAndView("redirect:/" + user.getId());
-    }*/
+
+   @RequestMapping(value = "/projects/{p_id}/addFavorite", method = RequestMethod.PUT)
+   @ResponseBody
+    public ResponseEntity<Boolean> addFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+        projectService.addFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/projects/{p_id}//deleteFavorite", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Boolean> deleteFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+        projectService.deleteFavorite(p_id, u_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
         final ModelAndView mav = new ModelAndView("newProject");
         List<Category> catList = categoriesService.findAllCats();
         mav.addObject("categories", catList);
+        mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         return mav;
     }
 
@@ -196,19 +321,56 @@ public class HelloWorldController {
         if (errors.hasErrors()) {
             return createProject(projectFields);
         }
-        // TODO: GUARDAR UNA SESION PARA TENER EL OWNER ID, POR AHORA HARDCODEO 1
+        byte[] imageBytes = new byte[0];
+        try {
+            if (!projectFields.getImage().isEmpty())
+                imageBytes = projectFields.getImage().getBytes();
+        } catch (IOException e) {
+            return createProject(projectFields);
+        }
         // TODO: AGREGAR STAGES
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), 1, projectFields.getCategories(), null);
-        return new ModelAndView("redirect:/projects/" + projectId);
+                projectFields.getCost(), loggedUser().getId(), projectFields.getCategories(), null, imageBytes);
+        return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
+    }
+
+    @RequestMapping(value = "/imageController/project/{p_id}",
+            produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @ResponseBody
+    public byte[] imageControllerProject(@PathVariable("p_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = projectService.findImageForProject(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("projectNoImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image");
+            }
+        }
+        return image;
+    }
+
+    @RequestMapping(value = "/imageController/user/{u_id}")
+    @ResponseBody
+    public byte[] imageControllerUser(@PathVariable("u_id") long id) {
+        // Si no tiene pic --> Devuelve null
+        // TODO: CHANGE NO IMAGE PIC
+        byte[] image = userService.findImageForUser(id);
+        if (image == null) {
+            try {
+                Resource stockImage = new ClassPathResource("userNoImage.png");
+                image = IOUtils.toByteArray(stockImage.getInputStream());
+            } catch (IOException e) {
+                LOGGER.debug("Could not load stock image. Error {}", e.getMessage());
+            }
+        }
+        return image;
     }
 
 
-    @RequestMapping(value = "/login")
-    public ModelAndView login(){
-        final ModelAndView mav = new ModelAndView("login");
-        return mav;
-    }
+
 
     @RequestMapping(value = "/admin")
     public ModelAndView admin(){
@@ -216,80 +378,66 @@ public class HelloWorldController {
         return mav;
     }
 
-
-    @RequestMapping(value = "/signUp")
-    public ModelAndView signUp( @ModelAttribute("userForm") final NewUserFields userFields){
-        final ModelAndView mav = new ModelAndView("signUp");
-        return mav;
-    }
-
-    @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
-    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields, final BindingResult errors){
-        if(errors.hasErrors()){
-            LOGGER.debug("\n\nSign Up failed. There are {} errors\n", errors.getErrorCount());
-            for (ObjectError error : errors.getAllErrors())
-                LOGGER.debug("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
-            LOGGER.debug("\n\n");
-            return signUp(userFields);
-        }
-
-        //TODO add location when working
-        userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
-                LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
-//                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
-                new Location(new Location.Country(userFields.getCountry(),"","","",""),
-                        new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
-                userFields.getEmail(),userFields.getPhone(),userFields.getLinkedin(),null, userFields.getPassword());
-//        userService.createPassword(user.getId(), userFields.getPassword());
-        return new ModelAndView("redirect:/login");
-    }
-
-
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id){
         final ModelAndView mav= new ModelAndView("userProfile");
-        User user = userService.findById(id).orElseThrow(NoClassDefFoundError::new);
+        User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
+        List<Project> favs_projects = new ArrayList<>();
+        for (Long fid : projectService.findFavorites(id)){
+            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
+        }
+        mav.addObject("favs", favs_projects);
         return mav;
     }
 
+    @RequestMapping(value = "/users/{u_id}/{p_id}")
+    public ModelAndView userProjectView(@PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
+        final ModelAndView mav = new ModelAndView("singleProjectView");
+        mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("back", "/users/" + userId);
+        mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
+        boolean isFav = projectService.isFavorite(projectId, userId);
+        mav.addObject("isFav", isFav);
+//        mav.addObject("mailSent", mailSent);
+        return mav;
+    }
 
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(){
-        final ModelAndView mav = new ModelAndView("redirect:/users/" + sessionUser.getId());
+        final ModelAndView mav = new ModelAndView("redirect:/users/" + loggedUser().getId());
         return mav;
     }
-
-    // TODO: CHECK IF ITS THE RIGHT WAY TO DO THIS
-    @RequestMapping(value = "/location/countries")
-    public List<Location.Country> countryList() {
-        return Arrays.asList(new Location.Country(1, "Nombre1", "ds", "ads", "dsa"), new Location.Country(2, "Nombre2", "ds", "ads", "dsa"),
-                new Location.Country(3, "Nombre3", "ds", "ads", "dsa"), new Location.Country(4, "Nombre1", "ds", "ads", "dsa"));
-    }
-
-    @RequestMapping(value = "/location/states/{country_id}")
-    public List<Location.State> stateList(@PathVariable("country_id") long countryId) {
-        if (countryId == 0) return null;
-        return Arrays.asList(new Location.State(1, "State1", "11"), new Location.State(2, "State2", "11"), new Location.State(3, "State3", "11"));
-    }
-
-    @RequestMapping(value = "/location/cities/{state_id}")
-    public List<Location.City> cityList(@PathVariable("state_id") long stateId) {
-        if (stateId == 0) return null;
-        return Arrays.asList(new Location.City(1, "City1"), new Location.City(2, "City2"), new Location.City(3, "City3"));
-    }
-
 
     @RequestMapping(value = "/search")
     public ModelAndView searchAux(@RequestParam("searching") String search){
         final ModelAndView mav = new ModelAndView("search");
-        String aux = search.toLowerCase();
-
-        mav.addObject("projectsList", projectService.findCoincidence(aux));
+        String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
+        if(loggedUser().getRole() == 2) {
+            mav.addObject("projectsList", projectService.findCoincidence(aux));
+        } //only want to show users projects if is an investor
         mav.addObject("usersList", userService.findCoincidence(aux));
-        mav.addObject("string", search);
-
+        mav.addObject("string", aux);
         return mav;
     }
+
+    @RequestMapping(value = "/headerFirstOption")
+    public ModelAndView getHeaderFirstOption() {
+        if (loggedUser().getRole() == 1) {
+            // Entrepreneur
+            return new ModelAndView("redirect:/newProject");
+        }
+        // Investor
+        return new ModelAndView("redirect:/projects");
+    }
+
+    // TODO: Terminar y descomentar
+    /*@RequestMapping(value = "/myProjects")
+    public ModelAndView myProjects(){
+        final ModelAndView mav = new ModelAndView("myProjects");
+        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
+        return mav;
+    }*/
+
 }

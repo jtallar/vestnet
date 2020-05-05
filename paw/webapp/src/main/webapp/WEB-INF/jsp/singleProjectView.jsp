@@ -21,13 +21,14 @@
     <title>VestNet | ${project.name}</title>
 </head>
 <body>
+<c:url var="favOff" value="/images/bookmarkOff.png"/>
+<c:url var="favOn" value="/images/bookmarkOn.png"/>
 <div class="container" style="margin-top: 20px">
     <div>
-<%--        TODO: FIX BACK WHEN COMING FROM A CONTACT--%>
 <%--        <div class="row">--%>
             <div class="d-flex justify-content-between align-self-center">
                 <div class="p-2">
-                    <a href="<c:url value='/projects'/>" class="btn btn-dark"><spring:message code="back"/></a>
+                    <a href="<c:url value="${back}"/>" class="btn btn-dark"><spring:message code="back"/></a>
                 </div>
                 <c:if test="${mailSent}">
                 <div class="p-2 ml-8">
@@ -41,18 +42,20 @@
                      style="width: 450px; height:500px; margin: 0 auto">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                        <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                        <%--<li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>--%>
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <c:url var="first_pic" value="/images/purple.png"/>
-                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
-                            <div class="carousel-caption d-none d-md-block">
+                            <%--<c:url var="first_pic" value="/images/purple.png"/>
+                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
+                            <img src="<c:url value="/imageController/project/${project.id}"/>" class="d-block w-100" alt="<spring:message code="projectImage"/>"
+                                 style="width: 100%; height:100% " aria-placeholder="<spring:message code="projectImage"/>"/>
+<%--                            <div class="carousel-caption d-none d-md-block">
                                 <p>This is a first view of the web prototype</p>
-                            </div>
+                            </div>--%>
                         </div>
-                        <div class="carousel-item">
+                        <%--<div class="carousel-item">
                             <c:url var="second_pic" value="/images/orange.png"/>
                             <img src="${second_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
                             <div class="carousel-caption d-none d-md-block">
@@ -65,7 +68,7 @@
                             <div class="carousel-caption d-none d-md-block">
                                 <p>This is how we design de database</p>
                             </div>
-                        </div>
+                        </div>--%>
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -81,6 +84,21 @@
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>
+                        <div class="card-header header-white">
+                            <button onclick="favTap()" class="btn-transp pull-right">
+                                <c:set var="fav" value="${isFav}"/>
+                                <c:choose>
+                                    <c:when test="${isFav==true}" >
+                                        <c:set var="favSrc" value="${favOn}"/>
+                                    </c:when>
+                                    <c:when test="${isFav==false}">
+                                        <c:set var="favSrc" value="${favOff}"/>
+                                    </c:when>
+                                </c:choose>
+                                <img id="favImg" src=${favSrc} height="40">
+
+                            </button>
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title"><b><c:out value="${project.name}"/></b></h5>
                             <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/>
@@ -103,15 +121,51 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"></spring:message></a>
+                    <c:if test="${sessionUser.id == project.owner.id}">
+<%--                        TODO: ADD EDIT PROJECT--%>
+                    </c:if>
+                    <c:if test="${investor}">
+                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>
+                    </c:if>
                 </div>
             </div>
         </div>
     </div>
 
-    <%--        <h6>ID: ${project.id}</h6>--%>
-    <%--        <h6>OWNER ID: ${project.ownerId}</h6>--%>
-    <%--        <p class="m-3 text-justify">${project.summary}</p>--%>
+    
 </div>
+
+        <script>
+            var options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            function addFav() {
+                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/addFavorite?u_id=" + ${sessionUser.id};
+                fetch(path, options).catch((function (reason) { console.error(reason) }));
+            }
+            function delFav() {
+                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/deleteFavorite?u_id=" + ${sessionUser.id};
+                fetch(path, options).catch((function (reason) { console.error(reason) }));
+            }
+
+            var favImage = document.getElementById('favImg');
+            var fav = ${isFav};
+
+            function favTap() {
+                if (fav) {
+                    favImage.setAttribute("src","${favOff}");
+                    fav = false;
+                    delFav();
+                } else {
+                    favImage.setAttribute("src","${favOn}");
+                    fav = true;
+                    addFav();
+                }
+            }
+        </script>
 </body>
 </html>

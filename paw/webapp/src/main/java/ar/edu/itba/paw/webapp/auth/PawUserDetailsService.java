@@ -13,8 +13,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.management.relation.Role;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 
 @Component
@@ -51,4 +54,7 @@ public class PawUserDetailsService implements UserDetailsService{
         }
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
     }
+
+
+
 }

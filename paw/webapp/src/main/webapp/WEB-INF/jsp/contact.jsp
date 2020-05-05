@@ -17,19 +17,20 @@
     <h5 class="card-title" style="margin-top: 40px"><b> <spring:message code="contact"></spring:message> ${owner.firstName} ${owner.lastName}</b></h5>
     <c:url value="/projects/${p_id}/contact" var="postPath"/>
         <form:form modelAttribute="mailForm" action="${postPath}" method="post">
-            <div class="input-group mb-3">
+            <%--<div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">@</span>
                 </div>
                 <spring:message code="enteremail" var="placeholderemail" />
                 <form:input path="from" type="text" class="form-control" placeholder="${placeholderemail}" aria-describedby="basic-addon1"/>
-            </div>
+            </div>--%>
 
             <div class="input-group mb-3">
                 <spring:message code="writemessage" var="placeholdermessage" />
                 <form:textarea path="body" type="text" class="form-control" placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
             </div>
 
+            <form:input path="from" value="${sessionUser.email}" type="hidden"/>
             <form:input path="to" value="${owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
 
             <div class="text-right">

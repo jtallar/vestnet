@@ -8,6 +8,12 @@
     background-color: #b1b1b1;
 }
 
+.navbar-custom3 {
+    color: #000000;
+    background-color: white;
+}
+
+
 .navbar-brand
 {
     position: relative;
@@ -21,6 +27,11 @@
     color: #750096; font-family: 'Lato', sans-serif; font-size: 30px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center; margin-right: 30px;
     vertical-align: middle;
 
+}
+
+.logopurple{
+    color: #750096;
+    background-color: #750096 !important;
 }
 
 .logo-text:active, .logo-text:hover

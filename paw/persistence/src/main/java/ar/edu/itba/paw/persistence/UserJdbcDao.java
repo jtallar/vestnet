@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
@@ -49,16 +50,28 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.query(JdbcQueries.USER_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
     }
 
-
-
-    // TODO: REVISAR LOS PARAMETROS --> SEPARAR EN ENTREPENEUR Y INVESTOR
-    //                              --> SACAR trust index, joinDate
-//                                  --> PROFILE PIC ES UN STRING??
-//                                  --> id es el role_id?
     @Override
-    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password) {
-        Map<String, Object> values = new HashMap<String, Object>();
-        values.put("role_id", User.UserRole.valueOf(role.toUpperCase()).getId());
+    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
+                       String email, String phone, String linkedin, String password, byte[] imageBytes) throws UserAlreadyExistsException {
+
+        final int roleId = User.UserRole.valueOf(role.toUpperCase()).getId();
+        // Check if email already registered
+        Optional<User> maybeUser = findByUsername(email);
+        if (maybeUser.isPresent()) {
+            if (maybeUser.get().getPassword() == null) {
+                // Actualizo los valores del user
+                long userId = maybeUser.get().getId();
+                jdbcTemplate.update(JdbcQueries.USER_UPDATE, roleId, firstName, lastName, realId, Date.valueOf(birthDate),
+                        location.getCountry().getId(), location.getState().getId(), location.getCity().getId(),
+                        phone, linkedin, (imageBytes.length != 0) ? imageBytes : null, password, userId);
+                return userId;
+            } else {
+                throw new UserAlreadyExistsException();
+            }
+        }
+        // Email not registered
+        Map<String, Object> values = new HashMap<>();
+        values.put("role_id", roleId);
         values.put("first_name",firstName);
         values.put("last_name", lastName);
         values.put("real_id", realId);
@@ -69,7 +82,9 @@ public class UserJdbcDao implements UserDao {
         values.put("email", email);
         values.put("phone", phone);
         values.put("linkedin", linkedin);
-        values.put("profile_pic", profilePicture);
+        if (imageBytes.length != 0) {
+            values.put("profile_pic", imageBytes);
+        }
         values.put("password", password);
 
         return jdbcInsert.executeAndReturnKey(values).longValue();
@@ -106,10 +121,16 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public List<User> findCoincidence(String name) {
-        List<User> users = jdbcTemplate.query(JdbcQueries.USER_FIND_COINCIDENCE, new Object[] {"%" + name + "%","%" + name + "%","%" + name + "%"}, RESULT_SET_EXTRACTOR);
+        String aux = "%" + name + "%";
+        List<User> users = jdbcTemplate.query(JdbcQueries.USER_FIND_COINCIDENCE, new Object[] {aux, aux, aux, aux}, RESULT_SET_EXTRACTOR);
 
 
         return users;
+    }
+
+    @Override
+    public byte[] findImageForUser(long userId) {
+        return jdbcTemplate.queryForObject(JdbcQueries.USER_IMAGE, new Object[] {userId}, byte[].class);
     }
 }
 

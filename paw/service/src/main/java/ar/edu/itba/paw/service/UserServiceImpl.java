@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
@@ -17,11 +18,6 @@ import java.util.Optional;
 @Primary
 @Service
 public class UserServiceImpl implements UserService {
-
-    //@Autowired passwordEncoder encoder
-
-    //TODO< encode password
-
     @Autowired
     private UserDao userDao;
 
@@ -34,8 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, String profilePicture, String password) {
-        return userDao.create(role, firstName,lastName,realId,birthDate,location,email,phone,linkedin,profilePicture, encoder.encode(password));
+    public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
+                       String email, String phone, String linkedin, String password, byte[] imageBytes) throws UserAlreadyExistsException {
+        return userDao.create(role, firstName,lastName,realId,birthDate,location,email,phone,linkedin, encoder.encode(password), imageBytes);
     }
 
     @Override
@@ -51,5 +48,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findCoincidence(String name) {
         return userDao.findCoincidence(name);
+    }
+
+    @Override
+    public byte[] findImageForUser(long userId) {
+        return userDao.findImageForUser(userId);
     }
 }
