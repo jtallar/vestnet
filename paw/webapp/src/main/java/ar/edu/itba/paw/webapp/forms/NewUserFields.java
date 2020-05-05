@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 //TODO cannot print this message
-@SpELAssert(value = "password.equals(repeatPassword)", message = "Passwords do not match")
+@SpELAssert(value = "password.equals(repeatPassword)", message = "{ar.edu.itba.paw.webapp.forms.SpELAssert}")
 public class NewUserFields {
 
     @Size(min = 1, max = 50)
