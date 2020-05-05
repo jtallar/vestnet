@@ -52,10 +52,10 @@
                                 <div class="col-7">
                                     <spring:message var="min" code="min"></spring:message>
                                     <form:input path="min" class="form-control mx-auto mx-auto" placeholder="${min}"></form:input>
-                                    <form:errors path="min"></form:errors>
+                                    <form:errors path="min" cssClass="formError"></form:errors>
                                     <spring:message var="max" code="max"></spring:message>
-                                    <form:input path="min" class="form-control mx-auto mx-auto"  placeholder="${min}"></form:input>
-                                    <form:errors path="max"></form:errors>
+                                    <form:input path="max" class="form-control mx-auto mx-auto"  placeholder="${max}"></form:input>
+                                    <form:errors path="max" cssClass="formError"></form:errors>
                                 </div>
                             </div>
                         </div>

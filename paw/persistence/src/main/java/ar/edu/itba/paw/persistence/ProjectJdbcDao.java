@@ -129,11 +129,16 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findCatForPage(List<Category> categories, int from, int to) {
+    public List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("from", from)
                 .addValue("to", to)
-                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
+                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
+                .addValue("min", min)
+                .addValue("max", max);
+
+
+
         List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_CAT_PAGE, parameters, ROW_MAPPER);
         return projects;
     }

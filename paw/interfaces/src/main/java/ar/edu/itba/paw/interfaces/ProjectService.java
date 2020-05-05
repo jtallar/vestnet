@@ -58,7 +58,7 @@ public interface ProjectService {
 
     Integer projectsCount();
 
-    List<Project> findCatForPage(List<Category> categories, int from, int to);
+    List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max);
 
     Integer catProjCount(List<Category> categories);
     void addFavorite(long projectId, long userId);

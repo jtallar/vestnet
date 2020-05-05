@@ -50,7 +50,7 @@ public interface ProjectDao {
 
     Integer projectsCount();
 
-    List<Project> findCatForPage(List<Category> categories, int from, int to);
+    List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max);
 
     Integer catProjCount(List<Category> categories);
 
@@ -65,6 +65,8 @@ public interface ProjectDao {
      * @return list of Projects
      */
     List<Long>  findFavorites(long id);
+
+
 
     void addFavorite(long projectId, long userId);
     void deleteFavorite(long projectId, long userId);
