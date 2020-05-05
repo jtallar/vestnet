@@ -140,17 +140,18 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView(@ModelAttribute("categoryForm")CategoryFilter catFilter, @RequestParam(name = "page", defaultValue ="1") String page, @RequestParam(name= "categorySelector", required = false) String catSel, @RequestParam(name = "orderBy", required = false) String orderBy,@RequestParam(name = "min", required = false) String min,@RequestParam(name = "max", required = false) String max, BindingResult errors) {
+    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, BindingResult errors, @RequestParam(name = "page", defaultValue ="1") String page, @RequestParam(name= "categorySelector", required = false) String catSel, @RequestParam(name = "orderBy", required = false) String orderBy,@RequestParam(name = "min", required = false) String min,@RequestParam(name = "max", required = false) String max) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAllCats();
 
 
         if(errors.hasErrors()){
-            Integer projects = countProjects(catFilter,catList, true);
-            Boolean hasNext = (projects > ((intPage)* PAGE_SIZE) ) ? true : false;
+            System.out.println("ACA HUBO UN ERROR");
+            Integer projects = 0;
+            Boolean hasNext = false;
             page = "1";
-            List<Project> projectList = projectService.findPage(Integer.parseInt(page), PAGE_SIZE);
+            List<Project> projectList = new ArrayList<>();
             mav.addObject("hasNext",hasNext);
             mav.addObject("page", page);
             mav.addObject("cats", catList);
@@ -193,22 +194,32 @@ public class HelloWorldController {
     }
 
     private Integer countProjects(CategoryFilter catFilter, List<Category> catList, Boolean hasErrors){
+        long minAux, maxAux;
+        minAux = (catFilter.getMin() == null || catFilter.getMin().matches("")) ? 0 : Long.parseLong(catFilter.getMin());
+        maxAux = (catFilter.getMax() == null || catFilter.getMax().matches("")) ? Long.MAX_VALUE : Long.parseLong(catFilter.getMax());
+
         Integer projects;
         if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats") || hasErrors){ //calculate total projects to render to check limit and offset
-            projects = projectService.projectsCount();
+            projects = projectService.projectsCount(minAux, maxAux);
         }
         else {
             Optional<Category> selectedCategory = catList.stream()
                     .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
                     .findFirst();
-            projects = projectService.catProjCount(Collections.singletonList(selectedCategory.get()));
+            projects = projectService.catProjCount(Collections.singletonList(selectedCategory.get()), minAux, maxAux);
         }
         return projects;
     }
 
 
     private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList, Integer page, Integer projects){
-        System.out.println(catFilter.getCategorySelector());
+        long minAux, maxAux;
+        minAux = (catFilter.getMin() == null || catFilter.getMin().matches("")) ? 0 : Long.parseLong(catFilter.getMin());
+        maxAux = (catFilter.getMax() == null || catFilter.getMax().matches("")) ? Long.MAX_VALUE : Long.parseLong(catFilter.getMax());
+
+
+
+
         int from = (page == 1) ? 0 : ((page -1) * PAGE_SIZE);
         int size = ((projects - from) < PAGE_SIZE) ? (projects - from) : PAGE_SIZE;
 
@@ -219,19 +230,13 @@ public class HelloWorldController {
                     .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
                     .findFirst();
             if (selectedCategory.isPresent()) {
-                long minAux, maxAux;
-
-                minAux = (catFilter.getMin() == null) ? 0 : Long.getLong(catFilter.getMin());
-                maxAux = (catFilter.getMax() == null) ? Long.MAX_VALUE : Long.getLong(catFilter.getMax());
-
 
                 auxList = projectService.findCatForPage(Collections.singletonList(selectedCategory.get()), from, size, minAux, maxAux);
-                //auxList = projectService.findByCategories(Collections.singletonList(selectedCategory.get()));
 
             }
         } else {
 
-            auxList = projectService.findPage(from, size);
+            auxList = projectService.findPage(from, size, minAux, maxAux);
         }
 
         if(catFilter.getOrderBy() != null) {
@@ -414,7 +419,6 @@ public class HelloWorldController {
         } //only want to show users projects if is an investor
         mav.addObject("usersList", userService.findCoincidence(aux));
         mav.addObject("string", aux);
-        System.out.println(aux);
         return mav;
     }
 

@@ -48,23 +48,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findPage(int from, int to) {
-        return projectDao.findPage(from,to);
+    public List<Project> findPage(int from, int to, long min, long max) {
+        return projectDao.findPage(from,to, min, max);
     }
 
     @Override
-    public Integer projectsCount() {
-        return projectDao.projectsCount();
+    public Integer projectsCount(long min, long max) {
+        return projectDao.projectsCount(min, max);
     }
 
     @Override
-    public List<Project> findCatForPage(List<Category> categories, int from, int to) {
-        return projectDao.findCatForPage(categories,from,to);
+    public List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max) {
+        return projectDao.findCatForPage(categories,from,to, min, max);
     }
 
     @Override
-    public Integer catProjCount(List<Category> categories) {
-        return projectDao.catProjCount(categories);
+    public Integer catProjCount(List<Category> categories, long min, long max) {
+        return projectDao.catProjCount(categories, min, max);
     }
 
     @Override

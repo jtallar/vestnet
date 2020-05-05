@@ -119,6 +119,16 @@ public class JdbcQueries {
 
 
 
+    static final String PROJECT_ID_FROM_PAGE_CATEGORY = "SELECT p.id FROM " + PROJECT_TABLE + " p "+
+            " JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
+            "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) "+
+            " WHERE pcat.category_id IN (:categories) " +
+            " AND "+ " p.cost >= (:min) " + " AND " + " p.cost <= (:max) " +  " OFFSET (:from) LIMIT (:to)";
+
+
+    static final String PROJECT_ID_FROM_PAGE = "SELECT id FROM " + PROJECT_TABLE + " WHERE cost >= ? AND cost <= ? " + " OFFSET ? LIMIT ?";
+
+    static final String PROJECT_FIND_WITH_ID_LIST = PROJECT_FIND_ALL + " WHERE p.id IN (:ids) ";
 
     static final String PROJECT_FIND_COINCIDENCE = PROJECT_FIND_ALL + "WHERE lower(p.project_name) LIKE ?";
 
@@ -126,15 +136,15 @@ public class JdbcQueries {
 
     static final String PROJECT_FIND_BY_ID = PROJECT_FIND_ALL + "WHERE p.id = ?";
 
-    static final String COUNT_PROJECTS = "SELECT COUNT(*) FROM " + PROJECT_TABLE;
+    static final String COUNT_PROJECTS = "SELECT COUNT(*) FROM " + PROJECT_TABLE + " WHERE cost >= ? AND cost <= ?";
 
     static final String FIND_PROJECT_BY_PAGE = PROJECT_FIND_ALL + " OFFSET ? LIMIT ?";
 
-    static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + "WHERE pcat.category_id IN (:categories)";
+    static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + " WHERE pcat.category_id IN (:categories)";
 
     static final String PROJECT_FIND_BY_CAT_PAGE = PROJECT_FIND_BY_CAT + "OFFSET (:from) LIMIT (:to)";
 
-    static final String PROJECT_COUNT_CAT = "SELECT COUNT(*)" +
+    static final String PROJECT_COUNT_CAT = "SELECT COUNT(*) " +
             "FROM " + PROJECT_TABLE + " p " +
             "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
             "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
@@ -142,7 +152,7 @@ public class JdbcQueries {
             "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
             "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
             "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) " +
-            "WHERE pcat.category_id IN (:categories)";
+            "WHERE pcat.category_id IN (:categories) " + "AND p.cost >= (:min) " + " AND p.cost <= (:max)";
 
     static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
 

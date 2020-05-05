@@ -54,13 +54,13 @@ public interface ProjectService {
      */
     List<Long>  findFavorites(long id);
 
-    List<Project> findPage(int from, int to);
+    List<Project> findPage(int from, int to, long min, long max);
 
-    Integer projectsCount();
+    Integer projectsCount(long min, long max);
 
     List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max);
 
-    Integer catProjCount(List<Category> categories);
+    Integer catProjCount(List<Category> categories, long min, long max);
     void addFavorite(long projectId, long userId);
     void deleteFavorite(long projectId, long userId);
     boolean isFavorite(long projectId, long userId);

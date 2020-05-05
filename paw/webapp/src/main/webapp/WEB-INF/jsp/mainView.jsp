@@ -7,6 +7,8 @@
 <head>
     <link rel="stylesheet" href="<c:url value = 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' />" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
+    <link rel="stylesheet" href="<c:url value="/css/form.css"/>"/>
+
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>VestNet | Projects</title>
 </head>
@@ -56,6 +58,7 @@
                                     <spring:message var="max" code="max"></spring:message>
                                     <form:input path="max" class="form-control mx-auto mx-auto"  placeholder="${max}"></form:input>
                                     <form:errors path="max" cssClass="formError"></form:errors>
+                                    <form:errors cssClass="formError"></form:errors>
                                 </div>
                             </div>
                         </div>
