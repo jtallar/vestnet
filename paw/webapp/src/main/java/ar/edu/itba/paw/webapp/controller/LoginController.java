@@ -47,6 +47,12 @@ public class LoginController {
         return mav;
     }
 
+    @RequestMapping(value = "/welcome")
+    public ModelAndView welcome(){
+        final ModelAndView mav = new ModelAndView("welcome");
+        return mav;
+    }
+
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
                                @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser){
