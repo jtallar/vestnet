@@ -91,7 +91,9 @@ public class HelloWorldController {
         // auth.getCredentials();
         // auth.getAuthorities();
         // auth.getDetails();
-        return userService.findByUsername(auth.getName()).orElse(null);
+        if(auth != null)
+            return userService.findByUsername(auth.getName()).orElse(null);
+        return null;
     }
 
     // TODO: QUE HACEMOS ACA??
@@ -414,7 +416,7 @@ public class HelloWorldController {
     public ModelAndView searchAux(@RequestParam("searching") String search){
         final ModelAndView mav = new ModelAndView("search");
         String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
-        if(loggedUser().getRole() == 2) {
+        if(loggedUser()==null || loggedUser().getRole() == 2) {
             mav.addObject("projectsList", projectService.findCoincidence(aux));
         } //only want to show users projects if is an investor
         mav.addObject("usersList", userService.findCoincidence(aux));
