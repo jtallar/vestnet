@@ -73,8 +73,8 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public Integer projectsCount() {
-        Integer count = jdbcTemplate.queryForObject(JdbcQueries.COUNT_PROJECTS, Integer.class);
+    public Integer projectsCount(long min, long max) {
+        Integer count = jdbcTemplate.queryForObject(JdbcQueries.COUNT_PROJECTS,new Object[] {min, max}, Integer.class);
         return count;
     }
 
@@ -109,24 +109,29 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findCatForPage(List<Category> categories, int from, int to) {
+    public List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max) {
         List<Project> projects = new ArrayList<>();
         if(to != 0){
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("from", from)
                 .addValue("to", to)
-                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
+                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
+                .addValue("min", min)
+                .addValue("max", max);
+
         List<Integer> ids = namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE_CATEGORY, parameters, Integer.class);
-        MapSqlParameterSource id_par = new MapSqlParameterSource().addValue("ids", ids);
-         projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, id_par, RESULT_SET_EXTRACTOR);
+            MapSqlParameterSource id_par = new MapSqlParameterSource().addValue("ids", ids);
+        projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, id_par, RESULT_SET_EXTRACTOR);
         }
         return projects;
     }
 
     @Override
-    public Integer catProjCount(List<Category> categories) {
+    public Integer catProjCount(List<Category> categories, long min, long max) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
+                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
+                .addValue("min", min)
+                .addValue("max", max);
 
         Integer count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_CAT, parameters, Integer.class);
         // TODO add stages?
@@ -217,11 +222,17 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findPage(int from, int to) {
-        List<Integer>  ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{from, to}, Integer.class);
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("ids", ids);
-        List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parameters, RESULT_SET_EXTRACTOR);
+    public List<Project> findPage(int from, int to, long min, long max) {
+        List<Project> projects;
+        if(to != 0) {
+            List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{min, max, from, to}, Integer.class);
+            MapSqlParameterSource parameters = new MapSqlParameterSource()
+                    .addValue("ids", ids);
+            projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parameters, RESULT_SET_EXTRACTOR);
+        }
+        else {
+            projects = new ArrayList<>(); 
+        }
         return projects;
     }
 

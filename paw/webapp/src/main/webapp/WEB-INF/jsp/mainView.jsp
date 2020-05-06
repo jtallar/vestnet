@@ -7,6 +7,8 @@
 <head>
     <link rel="stylesheet" href="<c:url value = 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' />" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
+    <link rel="stylesheet" href="<c:url value="/css/form.css"/>"/>
+
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>VestNet | Projects</title>
 </head>
@@ -38,9 +40,27 @@
                             <form:select path="orderBy" class="custom-select mr-sm-2">
                                 <form:option value="date"><spring:message code="date"/> </form:option>
                                 <form:option value="cost-low-high"><spring:message code="cost_l_h"/></form:option>
+
                                 <form:option value="cost-high-low"><spring:message code="cost_h_l"/></form:option>
                                 <form:option value="alf"><spring:message code="alf"/></form:option>
+
                             </form:select>
+                        </div>
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="col-2 text-center text-justify">
+                                    <label class="font-weight-bold"><spring:message code="range"></spring:message> </label>
+                                </div>
+                                <div class="col-7">
+                                    <spring:message var="min" code="min"></spring:message>
+                                    <form:input path="min" class="form-control mx-auto mx-auto" placeholder="${min}"></form:input>
+                                    <form:errors path="min" cssClass="formError"></form:errors>
+                                    <spring:message var="max" code="max"></spring:message>
+                                    <form:input path="max" class="form-control mx-auto mx-auto"  placeholder="${max}"></form:input>
+                                    <form:errors path="max" cssClass="formError"></form:errors>
+                                    <form:errors cssClass="formError"></form:errors>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-">
                             <input type = "submit" class="btn btn-dark" value="<spring:message code='apply'/>">
