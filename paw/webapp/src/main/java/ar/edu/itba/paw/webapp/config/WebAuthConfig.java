@@ -32,7 +32,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @EnableWebSecurity
 @ComponentScan({"ar.edu.itba.paw.webapp.auth"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
-
+    static final int TOKEN_DAYS = 365;
 
     @Autowired
     private PawUserDetailsService userDetails;
@@ -65,13 +65,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", false)
+                .successHandler(new RoleCookieSuccessHandler())
                 .and().rememberMe()
                 .rememberMeParameter("remember_me")
                 .key(asString(resource))
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(365))
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
+                .deleteCookies(RoleCookieSuccessHandler.ROLE_COOKIE_NAME)
                 .and().csrf().disable();
     }
 
