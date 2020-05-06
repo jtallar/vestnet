@@ -55,6 +55,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/login")
                 .and().authorizeRequests()
                 .antMatchers("/login","/signUp", "/location/**").anonymous()
+                .antMatchers("/projects", "/search*").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/projects/**").hasRole("INVESTOR")
                 .antMatchers("/newProject", "/myProjects").hasRole("ENTREPRENEUR")
@@ -86,8 +87,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        // TODO: VER QUE HACER CON EL WELCOME
         web.ignoring()
-                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico", "/welcome", "/projects", "/search*");
+                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico", "/welcome");
 
     }
 
