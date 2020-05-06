@@ -99,7 +99,7 @@
                     <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"></c:set>
                     <c:if test="${page != 1}">
                     <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" class="page-link">Previous</a>
+                        <a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" class="page-link"><spring:message code="previous"></a>
                     </li>
                     <li class="page-item"><a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" >${previous}</a></li>
                     </c:if>
@@ -107,7 +107,7 @@
                 <c:if test="${hasNext eq true}">
                     <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li
                     <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link">Next</a>
+                        <a href="<c:url value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link"><spring:message code="next"></spring:message> </a>
                     </li>
                 </c:if>
                 </c:if>
