@@ -13,6 +13,7 @@ import java.util.List;
 
 @ControllerAdvice
 public class RoleCookieControllerAdvice {
+    // TODO: VER QUE PASA SI TOCO STOP Y PLAY --> LE QUEDA LA COOKIE (SOLO MUESTRA UN HEADER DISTINTO, NADA MAS)
     @ModelAttribute("roleNumber")
     public int roleNumber(HttpServletRequest request) {
         final Cookie cookie = WebUtils.getCookie(request, RoleCookieSuccessHandler.ROLE_COOKIE_NAME);
