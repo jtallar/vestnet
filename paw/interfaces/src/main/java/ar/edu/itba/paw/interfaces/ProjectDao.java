@@ -19,7 +19,9 @@ public interface ProjectDao {
 
     List<Project> findByOwner(long userId);
 
-    public List<Project> findCoincidence(String name);
+    public List<Project> findCoincidence(String name, int page, int from);
+
+    public Integer searchProjCount(String name);
 
     /**
      * Find all available projects

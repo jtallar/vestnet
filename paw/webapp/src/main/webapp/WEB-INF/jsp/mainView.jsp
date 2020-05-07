@@ -95,21 +95,22 @@
                         </li>
                     </c:if>
                 </c:if>
+
                 <c:if test="${not empty param.categorySelector and not empty param.orderBy}">
                     <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"></c:set>
                     <c:if test="${page != 1}">
                     <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" class="page-link"><spring:message code="previous"></a>
+                        <a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" class="page-link"><spring:message code="previous"></spring:message></a>
                     </li>
                     <li class="page-item"><a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" >${previous}</a></li>
                     </c:if>
-                <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${page}'></c:url>" class="page-link">${page}</a></li>
-                <c:if test="${hasNext eq true}">
-                    <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link"><spring:message code="next"></spring:message> </a>
-                    </li>
-                </c:if>
+                     <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${page}'></c:url>" class="page-link">${page}</a></li>
+                    <c:if test="${hasNext eq true}">
+                        <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li>
+                        <li class="page-item">
+                            <a href="<c:url value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link"><spring:message code="next"></spring:message> </a>
+                        </li>
+                    </c:if>
                 </c:if>
             </ul>
         </nav>

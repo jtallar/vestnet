@@ -127,6 +127,16 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
+    public Integer searchProjCount(String name) {
+        String search = "%" + name + "%";
+        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", name);
+        Integer count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT, parameters, Integer.class);
+
+        return count;
+
+    }
+
+    @Override
     public Integer catProjCount(List<Category> categories, long min, long max) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
@@ -185,12 +195,29 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findCoincidence(String name) {
-        List<Project> projects = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_COINCIDENCE, new Object[] {"%"+ name +"%"}, RESULT_SET_EXTRACTOR);
+    public List<Project> findCoincidence(String name, int from, int to) {
+
+        String search = "%" + name + "%";
+        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", search)
+                                             .addValue("from", from).addValue("to", to);
+
+        List<Integer> ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID, parameters, Integer.class);
+
+        if(ids.isEmpty()){
+            List<Project> projects = new ArrayList<>();
+            return projects;
+        }
+        else {
+            MapSqlParameterSource parAux = new MapSqlParameterSource("ids", ids);
+
+            List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parAux, RESULT_SET_EXTRACTOR);
 
 
-        return projects;
+            return projects;
+        }
     }
+
+
 
     @Override
     public byte[] findImageForProject(long projectId) {
