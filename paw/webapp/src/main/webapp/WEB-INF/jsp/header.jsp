@@ -28,21 +28,21 @@
 </head>
 <%--        TODO: COMO PERSISTO ROL PARA ESTE--%>
 <c:choose>
-    <c:when test="${sessionUser == null}">
+    <c:when test="${roleNumber eq 0}">
         <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom3"/>
         <c:set var="searchButtonClass" value="btn logopurple"/>
         <spring:message var="firstOption" code="new_project"/>
         <c:url var="logo" value="/images/logo_bw.png"/>
         <c:url var="lupa" value="/images/lupa_v.png"/>
     </c:when>
-    <c:when test="${sessionUser.role eq 1}">
+    <c:when test="${roleNumber eq 1}">
         <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom2"/>
         <c:set var="searchButtonClass" value="btn btn-black"/>
         <spring:message var="firstOption" code="new_project"/>
         <c:url var="logo" value="/images/logo_wp.png"/>
         <c:url var="lupa" value="/images/lupa_bw.png"/>
     </c:when>
-    <c:when test="${sessionUser.role eq 2}">
+    <c:when test="${roleNumber eq 2}">
         <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
         <c:set var="searchButtonClass" value="btn logopurple"/>
         <spring:message var="firstOption" code="feed"/>
@@ -54,7 +54,7 @@
 <body>
     <nav class="${navbarClass}">
         <a class="navbar-brand" href="<c:url value='/'/>">
-            <img src=${logo} width="60" class="logo-img">
+            <img src="${logo}" width="60" class="logo-img" alt="<spring:message code="logo"/>">
         </a>
         <a class="logo-text" href="<c:url value='/'/>">
             VestNet
@@ -64,7 +64,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                <c:if test="${sessionUser != null}">
+                <c:if test="${roleNumber != 0}">
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value='/headerFirstOption'/>"><c:out value="${firstOption}"/></a>
                 </li>
@@ -81,7 +81,7 @@
         <form class="form-inline mx-auto my-2 my-lg-0" action="${searchURL}" method="get">
             <input class="form-control mx-auto mx-auto" id="searching" type="text" placeholder="<spring:message code='search'/>" aria-label="Search" name="searching" />
             <button type="submit" class="${searchButtonClass}">
-                <img src=${lupa} height="29">
+                <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
             </button>
         </form>
     </nav>
