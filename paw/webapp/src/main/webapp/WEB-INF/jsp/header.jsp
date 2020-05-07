@@ -1,6 +1,7 @@
 <%--TODO: ORDENAR ESTO, NO DOS GRANDES IF--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -31,23 +32,23 @@
     <c:when test="${roleNumber eq 0}">
         <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom3"/>
         <c:set var="searchButtonClass" value="btn logopurple"/>
-        <spring:message var="firstOption" code="new_project"/>
         <c:url var="logo" value="/images/logo_bw.png"/>
         <c:url var="lupa" value="/images/lupa_v.png"/>
+        <c:set var="options" value="${fn:split('/welcome,/login,/signUp', ',')}"/>
     </c:when>
     <c:when test="${roleNumber eq 1}">
         <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom2"/>
         <c:set var="searchButtonClass" value="btn btn-black"/>
-        <spring:message var="firstOption" code="new_project"/>
         <c:url var="logo" value="/images/logo_wp.png"/>
         <c:url var="lupa" value="/images/lupa_bw.png"/>
+        <c:set var="options" value="${fn:split('/projects,/newProject,/myProfile,/messages,/logout', ',')}"/>
     </c:when>
     <c:when test="${roleNumber eq 2}">
         <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
         <c:set var="searchButtonClass" value="btn logopurple"/>
-        <spring:message var="firstOption" code="feed"/>
         <c:url var="logo" value="/images/logo_bp.png"/>
         <c:url var="lupa" value="/images/lupa_v.png"/>
+        <c:set var="options" value="${fn:split('/projects,/myProfile,/messages,/logout', ',')}"/>
     </c:when>
 </c:choose>
 
@@ -64,17 +65,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                <c:if test="${roleNumber != 0}">
-                <li class="nav-item">
-                    <a class="nav-link" href="<c:url value='/headerFirstOption'/>"><c:out value="${firstOption}"/></a>
-                </li>
-                </c:if>
-                <li class="nav-item">
-                    <a class="nav-link" href="<c:url value='/myProfile'/>"><spring:message code="my_profile"/></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<c:url value='/logout'/>"><spring:message code="logout"/></a>
-                </li>
+                <c:forEach var="option" items="${options}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="<c:url value="${option}"/>"><spring:message code="header.${option}"/></a>
+                    </li>
+                </c:forEach>
             </ul>
         </div>
         <c:url var="searchURL" value="/search"/>
