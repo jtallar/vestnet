@@ -13,6 +13,8 @@
     <title>Projects | VestNet</title>
 </head>
 <body>
+    <c:url var="favOff" value="/images/bookmarkOff.png"/>
+    <c:url var="favOn" value="/images/bookmarkOn.png"/>
     <c:url var="order" value="/images/order.png"/>
     <c:url var="filter" value="/images/filter.png"/>
     <div>
@@ -126,7 +128,20 @@
 <%--                <div class="col-sm-3 my-card">--%>
             <div class="card mb-3">
                 <div class="card-header text-white">
-                    <h5 class="card-title"><c:out value="${project.name}"></c:out></h5>
+                    <div class="card-title"><h5><c:out value="${project.name}"></c:out></h5>
+                    <button onclick="favTap()" class="btn-transp pull-right">
+                        <c:set var="fav" value="${isFav}"/>
+                        <c:choose>
+                            <c:when test="${isFav==true}" >
+                                <c:set var="favSrc" value="${favOn}"/>
+                            </c:when>
+                            <c:when test="${isFav==false}">
+                                <c:set var="favSrc" value="${favOff}"/>
+                            </c:when>
+                        </c:choose>
+                        <img id="favImg" src=${favSrc} height="40">
+                    </button>
+                    </div>
                 </div>
                 <div class="card-body">
 <%--                        <c:out value="${project.publishDate}"></c:out>--%>
@@ -172,7 +187,7 @@
 </div>
 
 
-    <script type="text/javascript">
+    <script>
         function filterList(clickedId)
         {
             var sel = document.getElementById("category")
@@ -183,6 +198,42 @@
             //console.log(list.get(0).getName());
             //
             //list.filter(project => "${project.cat}" != cat);
+        }
+
+        let options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        function addFav() {
+            <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+            <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+            let path_aux = "${pageContext.request.contextPath}";
+            let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+            fetch(path, options).catch((function (reason) { console.error(reason) }));
+        }
+        function delFav() {
+            // let path_aux = window.location.pathname.split('/')[1];
+            let path_aux = "${pageContext.request.contextPath}";
+            let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+            fetch(path, options).catch((function (reason) { console.error(reason) }));
+        }
+
+        var favImage = document.getElementById('favImg');
+        var fav = ${isFav};
+
+        function favTap() {
+            if (fav) {
+                favImage.setAttribute("src","${favOff}");
+                fav = false;
+                delFav();
+            } else {
+                favImage.setAttribute("src","${favOn}");
+                fav = true;
+                addFav();
+            }
         }
 
     </script>

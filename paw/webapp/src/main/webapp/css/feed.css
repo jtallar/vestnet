@@ -24,3 +24,8 @@
 .checked {
     color: orange;
 }
+
+.btn-transp{
+    background-color: Transparent;
+    border: none !important;
+}

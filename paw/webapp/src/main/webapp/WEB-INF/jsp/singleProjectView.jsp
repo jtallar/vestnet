@@ -154,11 +154,16 @@
             };
 
             function addFav() {
-                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/addFavorite?u_id=" + ${sessionUser.id};
+                <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+                <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+                let path_aux = "${pageContext.request.contextPath}";
+                let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
                 fetch(path, options).catch((function (reason) { console.error(reason) }));
             }
             function delFav() {
-                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/deleteFavorite?u_id=" + ${sessionUser.id};
+                // let path_aux = window.location.pathname.split('/')[1];
+                let path_aux = "${pageContext.request.contextPath}";
+                let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
                 fetch(path, options).catch((function (reason) { console.error(reason) }));
             }
 
