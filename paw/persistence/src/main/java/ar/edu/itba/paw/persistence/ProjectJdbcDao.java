@@ -131,7 +131,6 @@ public class ProjectJdbcDao implements ProjectDao {
         String search = "%" + name + "%";
         MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", name);
         Integer count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT, parameters, Integer.class);
-
         return count;
 
     }

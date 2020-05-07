@@ -23,6 +23,8 @@
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-end">
         <c:if test="${!empty projectsList}">
+            <c:set value="${page + 1}" var="nextOne"></c:set>
+            <c:set value="${page - 1}" var="previous"></c:set>
             <c:set var="parameters" value="searching=${param.searching}"></c:set>
             <c:if test="${page != 1}">
                 <li class="page-item">

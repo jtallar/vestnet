@@ -133,6 +133,7 @@ public class JdbcQueries {
             " WHERE lower(p.project_name) LIKE (:name) " +
             " OR lower(u.first_name) LIKE (:name) " + " OR lower(u.last_name) LIKE (:name)" +
             " OR lower(st.state) LIKE (:name) " + " OR lower(co.country) LIKE (:name)" +
+            " OR lower(u.email) LIKE (:name)" +
             " OR lower(ci.city) LIKE (:name) " + " OR lower(p.summary) LIKE (:name) ";
 
     static final String PROJECT_ID_FROM_PAGE = "SELECT id FROM " + PROJECT_TABLE + " WHERE cost >= ? AND cost <= ? " + " OFFSET ? LIMIT ?";
@@ -148,6 +149,7 @@ public class JdbcQueries {
             " OR lower(u.first_name) LIKE (:name) " + " OR lower(u.last_name) LIKE (:name)" +
             " OR lower(st.state) LIKE (:name) " + " OR lower(co.country) LIKE (:name)" +
             " OR lower(ci.city) LIKE (:name) " + " OR lower(p.summary) LIKE (:name) " +
+            " OR lower(u.email) LIKE (:name)" +
             " OFFSET (:from) LIMIT (:to)";
 
     static final String PROJECT_FIND_BY_OWNER = PROJECT_FIND_ALL + "WHERE p.owner_id = ?";

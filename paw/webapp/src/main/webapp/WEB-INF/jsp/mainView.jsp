@@ -89,7 +89,7 @@
                     </c:if>
                     <li class="page-item"><a href="<c:url  value='/projects?page=${page}'></c:url>" class="page-link">${page}</a></li>
                     <c:if test="${hasNext eq true}">
-                        <li class="page-item"><a href="<c:url  value='/projects?page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li
+                        <li class="page-item"><a href="<c:url  value='/projects?page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li>
                         <li class="page-item">
                             <a href="<c:url value='/projects?page=${nextOne}'></c:url>" class="page-link">Next</a>
                         </li>

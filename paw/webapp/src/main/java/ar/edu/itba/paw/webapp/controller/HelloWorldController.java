@@ -418,7 +418,9 @@ public class HelloWorldController {
         int mypage = Integer.parseInt(page);
         int from = (mypage == 1) ? 0 : ((mypage -1) * PAGE_SIZE);
         Integer projects = projectService.searchProjCount(search);
+        System.out.println(projects);
         Boolean hasNext = (projects > ((mypage)* PAGE_SIZE) ) ? true : false;
+        System.out.println(hasNext);
 
         String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
 
