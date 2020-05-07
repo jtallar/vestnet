@@ -65,30 +65,55 @@
                         <div class="col-">
                             <input type = "submit" class="btn btn-dark" value="<spring:message code='apply'/>">
                         </div>
-                        <div class="col">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-end">
-                                    <c:if test="${page != 1}">
-                                        <li class="page-item">
-                                            <button  type="submit" class="page-link" name="page" value="${page - 1}">Previous</button>
-                                        </li>
-                                        <li class="page-item"><button type="submit" class="page-link" name="page" value="${page - 1}">${page - 1}</button></li>
-                                    </c:if>
-                                    <li class="page-item"><button type="submit" class="page-link" name="page" value="${page}">${page}</button></li>
-                                    <c:if test="${hasNext eq true}">
-                                        <li class="page-item"><button type="submit" class="page-link" name="page" value="${page + 1}">${page + 1}</button></li>
-                                        <li class="page-item">
-                                            <button type="submit" class="page-link" name="page" value="${page + 1}" >Next</button>
-                                        </li>
-                                    </c:if>
-                                </ul>
-                            </nav>
-                        </div>
+
 
                     </div>
                 </div>
             </form:form>
         </div>
+    </div>
+    <div class="col">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+
+
+                <c:set value="${page + 1}" var="nextOne"></c:set>
+                <c:set value="${page - 1}" var="previous"></c:set>
+
+                <c:if test="${empty param.categorySelector and empty param.orderBy}">
+                    <c:if test="${page != 1}">
+                        <li class="page-item">
+                            <a href="<c:url value='/projects?page=${previous}'></c:url>" class="page-link">Previous</a>
+                        </li>
+                        <li class="page-item"><a href="<c:url value='/projects?page=${previous}'></c:url>" >${previous}</a></li>
+                    </c:if>
+                    <li class="page-item"><a href="<c:url  value='/projects?page=${page}'></c:url>" class="page-link">${page}</a></li>
+                    <c:if test="${hasNext eq true}">
+                        <li class="page-item"><a href="<c:url  value='/projects?page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li>
+                        <li class="page-item">
+                            <a href="<c:url value='/projects?page=${nextOne}'></c:url>" class="page-link">Next</a>
+                        </li>
+                    </c:if>
+                </c:if>
+
+                <c:if test="${not empty param.categorySelector and not empty param.orderBy}">
+                    <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"></c:set>
+                    <c:if test="${page != 1}">
+                    <li class="page-item">
+                        <a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" class="page-link"><spring:message code="previous"></spring:message></a>
+                    </li>
+                    <li class="page-item"><a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" >${previous}</a></li>
+                    </c:if>
+                     <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${page}'></c:url>" class="page-link">${page}</a></li>
+                    <c:if test="${hasNext eq true}">
+                        <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li>
+                        <li class="page-item">
+                            <a href="<c:url value='/projects?${parameters}&page=${nextOne}'></c:url>" class="page-link"><spring:message code="next"></spring:message> </a>
+                        </li>
+                    </c:if>
+                </c:if>
+            </ul>
+        </nav>
     </div>
 
     <p id="test"></p>

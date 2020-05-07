@@ -43,8 +43,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findCoincidence(String name) {
-        return projectDao.findCoincidence(name);
+    public List<Project> findCoincidence(String name, int from, int to) {
+        return projectDao.findCoincidence(name, from, to);
+    }
+
+    @Override
+    public Integer searchProjCount(String name) {
+        return projectDao.searchProjCount(name);
     }
 
     @Override

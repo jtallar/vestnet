@@ -7,7 +7,8 @@
 
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="<c:url value = 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' />" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <title>Search</title>
 </head>
@@ -18,8 +19,29 @@
 <div class="container">
 
     <%--    <div class="row grid">--%>
-
+    <div class="flex-row-reverse mt-4">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
         <c:if test="${!empty projectsList}">
+            <c:set value="${page + 1}" var="nextOne"></c:set>
+            <c:set value="${page - 1}" var="previous"></c:set>
+            <c:set var="parameters" value="searching=${param.searching}"></c:set>
+            <c:if test="${page != 1}">
+                <li class="page-item">
+                    <a href="<c:url value='/search?${parameters}&page=${previous}'></c:url>" class="page-link"><spring:message code="previous"></spring:message></a>
+                </li>
+                <li class="page-item"><a href="<c:url value='/search?${parameters}&page=${previous}'></c:url>" >${previous}</a></li>
+            </c:if>
+            <li class="page-item"><a href="<c:url  value='/search?${parameters}&page=${page}'></c:url>" class="page-link">${page}</a></li>
+            <c:if test="${hasNext eq true}">
+                <li class="page-item"><a href="<c:url  value='/search?${parameters}&page=${nextOne}'></c:url>" class="page-link">${nextOne}</a></li>
+                <li class="page-item">
+                    <a href="<c:url value='/search?${parameters}&page=${nextOne}'></c:url>" class="page-link"><spring:message code="next"></spring:message> </a>
+                </li>
+            </c:if>
+            </ul>
+        </nav>
+    </div>
             <div class="row my-2">
                 <div class="col-md">
                     <h1><spring:message code="projects"></spring:message> </h1>
@@ -55,40 +77,11 @@
         </c:if>
 
 
-            <c:if test="${!empty usersList}">
-                <div class="row">
-                    <h1><spring:message code="users"></spring:message> </h1>
-                </div>
-            <div class="card-deck">
-                <c:forEach items="${usersList}" var="user">
-                    <div class="card w-75">
-                        <div class="card-body">
-                            <h3 class="card-title">${user.firstName} ${user.lastName}</h3>
-                            <h5><spring:message code="email"></spring:message> </h5>
-                            <p class="card-text">${user.email}</p>
-                            <h5><spring:message code="phone"></spring:message> </h5>
-                            <p class="card-text">${user.phone}</p>
-                            <h5><spring:message code="trust_index"></spring:message> </h5>
-                            <c:forEach var = "i" begin = "1" end = "${user.trustIndex}">
-                                <span class="fa fa-star checked"></span>
-                            </c:forEach>
-                            <c:forEach var = "i" begin = "${user.trustIndex}" end = "4">
-                                <span class="fa fa-star"></span>
-                            </c:forEach>
-
-                            <c:url value="/users/${user.id}" var="profile"></c:url>
-                            <a href="${profile}" class="btn btn-primary"><spring:message code="goProfile"></spring:message> </a>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-
-            </c:if>
 
 
 
 
-    <c:if test="${empty projectsList && empty usersList}">
+    <c:if test="${empty projectsList}">
         <div class="card m-2">
             <div class="card-header">
                 <h5 class="card-title centered text-light"><spring:message code="no_search_found" arguments="${string}"></spring:message> </h5>

@@ -125,12 +125,32 @@ public class JdbcQueries {
             " WHERE pcat.category_id IN (:categories) " +
             " AND "+ " p.cost >= (:min) " + " AND " + " p.cost <= (:max) " +  " OFFSET (:from) LIMIT (:to)";
 
+    static final String SEARCH_PROJ_COUNT = " SELECT COUNT(*) FROM " + PROJECT_TABLE + " p " +
+            " JOIN " + USER_TABLE + " u " + " ON (p.owner_id = u.id) " +
+            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
+            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
+            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
+            " WHERE lower(p.project_name) LIKE (:name) " +
+            " OR lower(u.first_name) LIKE (:name) " + " OR lower(u.last_name) LIKE (:name)" +
+            " OR lower(st.state) LIKE (:name) " + " OR lower(co.country) LIKE (:name)" +
+            " OR lower(u.email) LIKE (:name)" +
+            " OR lower(ci.city) LIKE (:name) " + " OR lower(p.summary) LIKE (:name) ";
 
     static final String PROJECT_ID_FROM_PAGE = "SELECT id FROM " + PROJECT_TABLE + " WHERE cost >= ? AND cost <= ? " + " OFFSET ? LIMIT ?";
 
     static final String PROJECT_FIND_WITH_ID_LIST = PROJECT_FIND_ALL + " WHERE p.id IN (:ids) ";
 
-    static final String PROJECT_FIND_COINCIDENCE = PROJECT_FIND_ALL + "WHERE lower(p.project_name) LIKE ?";
+    static final String PROJECT_FIND_COINCIDENCE_ID = "SELECT p.id FROM "+ PROJECT_TABLE + " p " +
+            " JOIN " + USER_TABLE + " u " + " ON (p.owner_id = u.id) " +
+            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
+            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
+            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
+            " WHERE lower(p.project_name) LIKE (:name) " +
+            " OR lower(u.first_name) LIKE (:name) " + " OR lower(u.last_name) LIKE (:name)" +
+            " OR lower(st.state) LIKE (:name) " + " OR lower(co.country) LIKE (:name)" +
+            " OR lower(ci.city) LIKE (:name) " + " OR lower(p.summary) LIKE (:name) " +
+            " OR lower(u.email) LIKE (:name)" +
+            " OFFSET (:from) LIMIT (:to)";
 
     static final String PROJECT_FIND_BY_OWNER = PROJECT_FIND_ALL + "WHERE p.owner_id = ?";
 

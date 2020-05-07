@@ -30,7 +30,9 @@ public interface ProjectService {
      */
     List<Project> findByCategories(List<Category> categories);
 
-    public List<Project> findCoincidence(String name);
+    public List<Project> findCoincidence(String name, int page, int from);
+
+    public Integer searchProjCount(String name);
 
     /**
      * Create a project given all thes parameters

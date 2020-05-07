@@ -179,7 +179,7 @@ public class HelloWorldController {
 
 
 
-        Integer projects = countProjects(catFilter, catList, false);
+        Integer projects = countProjects(catFilter, catList);
         List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
 
         Boolean hasNext = (projects > ((intPage)* PAGE_SIZE) ) ? true : false;
@@ -195,13 +195,13 @@ public class HelloWorldController {
         return mav;
     }
 
-    private Integer countProjects(CategoryFilter catFilter, List<Category> catList, Boolean hasErrors){
+    private Integer countProjects(CategoryFilter catFilter, List<Category> catList){
         long minAux, maxAux;
         minAux = (catFilter.getMin() == null || catFilter.getMin().matches("")) ? 0 : Long.parseLong(catFilter.getMin());
         maxAux = (catFilter.getMax() == null || catFilter.getMax().matches("")) ? Long.MAX_VALUE : Long.parseLong(catFilter.getMax());
 
         Integer projects;
-        if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats") || hasErrors){ //calculate total projects to render to check limit and offset
+        if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats")){ //calculate total projects to render to check limit and offset
             projects = projectService.projectsCount(minAux, maxAux);
         }
         else {
@@ -413,13 +413,20 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/search")
-    public ModelAndView searchAux(@RequestParam("searching") String search){
+    public ModelAndView searchAux(@RequestParam("searching") String search, @RequestParam(name="page", defaultValue = "1") String page){
         final ModelAndView mav = new ModelAndView("search");
+        int mypage = Integer.parseInt(page);
+        int from = (mypage == 1) ? 0 : ((mypage -1) * PAGE_SIZE);
+        Integer projects = projectService.searchProjCount(search);
+        System.out.println(projects);
+        Boolean hasNext = (projects > ((mypage)* PAGE_SIZE) ) ? true : false;
+        System.out.println(hasNext);
+
         String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
-        if(loggedUser()==null || loggedUser().getRole() == 2) {
-            mav.addObject("projectsList", projectService.findCoincidence(aux));
-        } //only want to show users projects if is an investor
-        mav.addObject("usersList", userService.findCoincidence(aux));
+
+        mav.addObject("projectsList", projectService.findCoincidence(aux, from, PAGE_SIZE));
+        mav.addObject("page", page);
+        mav.addObject("hasNext", hasNext);
         mav.addObject("string", aux);
         return mav;
     }
