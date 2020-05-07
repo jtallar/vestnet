@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<c:url value="/css/form.css"/>"/>
 
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>VestNet | Projects</title>
+    <title>Projects | VestNet</title>
 </head>
 <body>
     <c:url var="order" value="/images/order.png"/>
