@@ -10,7 +10,7 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
 
-    <title>myProjects</title>
+    <title>My Projects | Vestnet</title>
 </head>
 <body>
 <c:forEach var="project" items="${projects}">

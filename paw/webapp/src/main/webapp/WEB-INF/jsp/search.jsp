@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
-    <title>Search</title>
+    <title>Search | VestNet</title>
 </head>
 
 
@@ -25,7 +25,7 @@
         <c:if test="${!empty projectsList}">
             <c:set value="${page + 1}" var="nextOne"></c:set>
             <c:set value="${page - 1}" var="previous"></c:set>
-            <c:set var="parameters" value="searching=${param.searching}"></c:set>
+            <c:set var="parameters" value="searching=${param.searching}&selection=${param.selection}"></c:set>
             <c:if test="${page != 1}">
                 <li class="page-item">
                     <a href="<c:url value='/search?${parameters}&page=${previous}'></c:url>" class="page-link"><spring:message code="previous"></spring:message></a>
