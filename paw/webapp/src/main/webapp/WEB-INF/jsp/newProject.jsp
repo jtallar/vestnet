@@ -36,18 +36,29 @@
                 <h7><spring:message code="projectOverviewSubtitle"/></h7>
                 <div class="dropdown-divider"></div>
 
-                <h6><spring:message code="title_required"/></h6>
+                <h6 class="form-label"><spring:message code="title_required"/></h6>
+                <p class="form-requirement"><spring:message code="titleRequirement"/></p>
                 <spring:message code="ProjectTitlePlaceholder" var="titlePlaceholder"/>
-                <form:input path="title" type="text" class="form-control" placeholder="${titlePlaceholder}" cssClass="custom-form-input"/>
+                <form:input path="title" type="text" class="form-control" placeholder="${titlePlaceholder}" cssClass="custom-form-input" id="new-project-title"/>
                 <form:errors path="title" cssClass="formError" element="p"/>
 
-                <h6><spring:message code="summary_required"/></h6>
+                <h6 class="form-label"><spring:message code="summary_required"/></h6>
+                <p class="form-requirement"><spring:message code="descriptionRequirement"/></p>
                 <spring:message code="ProjectSummaryPlaceholder" var="summaryPlaceholder"/>
-                <form:textarea path="summary" type="text" class="form-control" placeholder="${summaryPlaceholder}" cssClass="custom-form-textarea"/>
+                <form:textarea path="summary" type="text" class="form-control" placeholder="${summaryPlaceholder}" cssClass="custom-form-input" rows="4" id="new-project-summary"/>
                 <form:errors path="summary" cssClass="formError" element="p"/>
 
-                <h6><spring:message code="cost"/></h6>
-                <form:input path="cost" type="number" class="form-control" cssClass="custom-form-input"/>
+                <h6 class="form-label"><spring:message code="cost_required"/></h6>
+                <p class="form-requirement"><spring:message code="costRequirement"/></p>
+<%--                TODO: ALIGN $USD WITH INPUT--%>
+                <div class="row justify-content-center">
+                    <div class="col-1">
+                        <label>$USD</label>
+                    </div>
+                    <div class="col">
+                        <form:input path="cost" type="number" class="form-control" cssClass="custom-form-number" id="new-project-cost"/>
+                    </div>
+                </div>
                 <form:errors path="cost" cssClass="formError" element="p"/>
             </div>
             <div class="d-flex flex-column">
@@ -81,11 +92,11 @@
         </div>
 
         <h5><spring:message code="projectImage"/></h5>
-        <form:input path="image" type="file" class="form-control" cssClass="custom-form-input" id="customFileProjectPic"/>
+        <form:input path="image" type="file" class="form-control" cssClass="custom-form-file" id="customFileProjectPic"/>
         <form:errors path="image" cssClass="formError" element="p" id="fileErrorFormTag"/>
         <label class="formError" id="maxSizeErrorMsg" hidden><spring:message code="imageMaxSize"/></label>
         <div class="text-right">
-            <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark" onclick="addCategories()"/>
+            <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark" onclick="adjustInputs()"/>
         </div
     </form:form>
 </div>
@@ -105,6 +116,13 @@
             maxSizeMsg.hidden = true;
         }
     });
+
+    var costTag = document.getElementById('new-project-cost');
+    costTag.addEventListener("keypress", function () {
+        if (costTag.value > 6) {
+            costTag.value = costTag.value.slice(0, 6);
+        }
+    });
     function addCategory() {
         var cat = document.getElementById("all-categories");
         if (cat.selectedIndex !== -1)
@@ -119,6 +137,16 @@
         var cat = document.getElementById("final-categories");
         for (var i = 0; i < cat.options.length; i++)
             cat[i].selected = true;
+    }
+    function adjustInputs() {
+        addCategories();
+        var titleTag = document.getElementById('new-project-title');
+        titleTag.value = titleTag.value.trim();
+        var summaryTag = document.getElementById('new-project-summary');
+        summaryTag.value = summaryTag.value.trim();
+        if (costTag.value.length === 0) {
+            costTag.value = 0;
+        }
     }
 </script>
 </html>

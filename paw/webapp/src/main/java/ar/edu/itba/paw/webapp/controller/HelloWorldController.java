@@ -313,6 +313,7 @@ public class HelloWorldController {
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
         final ModelAndView mav = new ModelAndView("newProject");
         List<Category> catList = categoriesService.findAllCats();
+        catList.sort(Comparator.comparing(Category::getName));
         mav.addObject("categories", catList);
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         return mav;
