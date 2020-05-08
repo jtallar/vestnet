@@ -289,6 +289,7 @@ public class HelloWorldController {
        // mav.addObject("isFav", true);
         boolean isFav = projectService.isFavorite(id, loggedUser().getId());
         mav.addObject("isFav", isFav);
+        mav.addObject("favCount", projectService.getFavoritesCount(id));
 
         return mav;
     }
@@ -308,6 +309,12 @@ public class HelloWorldController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/addHit/{p_id}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Boolean> addHit(@PathVariable("p_id") long id) {
+        projectService.addHit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 
@@ -410,6 +417,7 @@ public class HelloWorldController {
         mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
         boolean isFav = projectService.isFavorite(projectId, userId);
         mav.addObject("isFav", isFav);
+        mav.addObject("favCount", projectService.getFavoritesCount(projectId));
 //        mav.addObject("mailSent", mailSent);
         return mav;
     }
