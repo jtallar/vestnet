@@ -10,14 +10,21 @@
     padding: 6px;
     border: 2px solid #750096;
     border-radius: 10px;
-    width: 30ch;
+    width: 100%;
 }
 
-.custom-form-textarea {
+.custom-form-number {
     padding: 6px;
     border: 2px solid #750096;
     border-radius: 10px;
-    width: 100%;
+    width: 16ch;
+}
+
+.custom-form-file {
+    padding: 6px;
+    border: 2px solid #750096;
+    border-radius: 10px;
+    width: 30ch;
 }
 
 .custom-form-select {
@@ -49,4 +56,17 @@ h2 {
     font-weight: bold;
     font-style: italic;
     text-underline: red;
+}
+
+.form-requirement {
+    font-size: small;
+    color: gray;
+    font-style: italic;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.form-label {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
