@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -37,6 +39,8 @@ public class ProjectJdbcDaoTest {
     private static final String CATEGORY_NAME_2 = "Software";
     private static final String PROJECT_CATEGORY_TABLE = "project_categories";
 
+    private long userId;
+
     @Autowired
     private DataSource ds;
 
@@ -44,6 +48,7 @@ public class ProjectJdbcDaoTest {
     private ProjectJdbcDao projectJdbcDao;
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertProject, jdbcInsertUser, jdbcInsertCategory, jdbcInsertProjectCategory;
+    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole;
 
     @Before
     public void setUp() {
@@ -59,6 +64,14 @@ public class ProjectJdbcDaoTest {
                 .usingGeneratedKeyColumns("id");
         jdbcInsertProjectCategory = new SimpleJdbcInsert(ds)
                 .withTableName(PROJECT_CATEGORY_TABLE);
+        jdbcInsertCountry = new SimpleJdbcInsert(ds)
+                .withTableName(COUNTRIES_TABLE);
+        jdbcInsertState = new SimpleJdbcInsert(ds)
+                .withTableName(STATES_TABLE);
+        jdbcInsertCity = new SimpleJdbcInsert(ds)
+                .withTableName(CITIES_TABLE);
+        jdbcInsertRole = new SimpleJdbcInsert(ds)
+                .withTableName(ROLES_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
@@ -68,11 +81,14 @@ public class ProjectJdbcDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CATEGORIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_CATEGORY_TABLE);
+
+        userId = createUser();
     }
 
     @Test
     public void testCreate() {
         // 1
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
         Map<String, Object> user = new HashMap<>();
         user.put("first_name", "Jorge");
         user.put("last_name", "SUMMRAy");
@@ -84,7 +100,7 @@ public class ProjectJdbcDaoTest {
         // 2
 //        public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages)
 
-        long projectId = projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, 0, userId.longValue(), new ArrayList<>(), new ArrayList<>());
+        long projectId = projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, 0, userId.longValue(), new ArrayList<>(), new ArrayList<>(), new byte[0]);
 
         // 3
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, PROJECTS_TABLE));
@@ -93,7 +109,7 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindByIdDoesntExists() {
         // 1
-        // TABLE EMPTY
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
 
         // 2
         Optional<Project> maybeProject = projectJdbcDao.findById(1);
@@ -105,10 +121,22 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindByIdProjectExists() {
         // 1
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+
+        Map<String, String> category = new HashMap<String, String>();
+        category.put("category", CATEGORY_NAME);
+        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+
         Map<String, Object> project = new HashMap<>();
+        project.put("owner_id", userId);
         project.put("project_name", PROJECT_NAME);
         project.put("summary", PROJECT_SUMMARY);
         Number projectId = jdbcInsertProject.executeAndReturnKey(project);
+
+        Map<String, Long> values2 = new HashMap<String, Long>();
+        values2.put("category_id", categoryId.longValue());
+        values2.put("project_id", projectId.longValue());
+        jdbcInsertProjectCategory.execute(values2);
 
         // 2
         Optional<Project> maybeProject = projectJdbcDao.findById(projectId.longValue());
@@ -122,7 +150,7 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindAllIfTableEmpty() {
         // 1
-        // TABLE EMPTY
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
 
         // 2
         List<Project> projects = projectJdbcDao.findAll();
@@ -134,10 +162,22 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindAllIfTableNotEmpty() {
         // 1
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+
+        Map<String, String> category = new HashMap<String, String>();
+        category.put("category", CATEGORY_NAME);
+        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+
         Map<String, Object> values = new HashMap<>();
+        values.put("owner_id", userId);
         values.put("project_name", PROJECT_NAME);
         values.put("summary", PROJECT_SUMMARY);
-        jdbcInsertProject.executeAndReturnKey(values);
+        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
+
+        Map<String, Long> values2 = new HashMap<String, Long>();
+        values2.put("category_id", categoryId.longValue());
+        values2.put("project_id", projectId.longValue());
+        jdbcInsertProjectCategory.execute(values2);
 
         // 2
         List<Project> projects = projectJdbcDao.findAll();
@@ -151,10 +191,22 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindByCategoriesNull() {
         // 1
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+
+        Map<String, String> category = new HashMap<String, String>();
+        category.put("category", CATEGORY_NAME);
+        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+
         Map<String, Object> values = new HashMap<>();
+        values.put("owner_id", userId);
         values.put("project_name", PROJECT_NAME);
         values.put("summary", PROJECT_SUMMARY);
-        jdbcInsertProject.executeAndReturnKey(values);
+        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
+
+        Map<String, Long> values2 = new HashMap<String, Long>();
+        values2.put("category_id", categoryId.longValue());
+        values2.put("project_id", projectId.longValue());
+        jdbcInsertProjectCategory.execute(values2);
 
         // 2
         List<Project> projects = projectJdbcDao.findByCategories(null);
@@ -168,10 +220,23 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindByCategoriesEmpty() {
         // 1
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+
+        Map<String, String> category = new HashMap<String, String>();
+        category.put("category", CATEGORY_NAME);
+        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
         Map<String, Object> values = new HashMap<>();
+        values.put("owner_id", userId);
         values.put("project_name", PROJECT_NAME);
         values.put("summary", PROJECT_SUMMARY);
-        jdbcInsertProject.executeAndReturnKey(values);
+        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
+
+        Map<String, Long> values2 = new HashMap<String, Long>();
+        values2.put("category_id", categoryId.longValue());
+        values2.put("project_id", projectId.longValue());
+        jdbcInsertProjectCategory.execute(values2);
 
         // 2
         List<Project> projects = projectJdbcDao.findByCategories(new ArrayList<>());
@@ -185,11 +250,14 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindByCategoriesValid() {
         // 1
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+
         Map<String, String> category = new HashMap<String, String>();
         category.put("category", CATEGORY_NAME);
         Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
 
         Map<String, Object> project = new HashMap<>();
+        project.put("owner_id", userId);
         project.put("project_name", PROJECT_NAME);
         project.put("summary", PROJECT_SUMMARY);
         Number projectId = jdbcInsertProject.executeAndReturnKey(project);
@@ -212,6 +280,8 @@ public class ProjectJdbcDaoTest {
     @Test
     public void testFindByCategoriesValidMultiple() {
         // 1
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+
         Map<String, String> category = new HashMap<String, String>();
         category.put("category", CATEGORY_NAME);
         Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
@@ -220,10 +290,12 @@ public class ProjectJdbcDaoTest {
         Number categoryId2 = jdbcInsertCategory.executeAndReturnKey(category2);
 
         Map<String, Object> project = new HashMap<>();
+        project.put("owner_id", userId);
         project.put("project_name", PROJECT_NAME);
         project.put("summary", PROJECT_SUMMARY);
         Number projectId = jdbcInsertProject.executeAndReturnKey(project);
         Map<String, Object> project2 = new HashMap<>();
+        project2.put("owner_id", userId);
         project2.put("project_name", PROJECT_NAME_2);
         project2.put("summary", PROJECT_SUMMARY_2);
         Number projectId2 = jdbcInsertProject.executeAndReturnKey(project2);
@@ -245,5 +317,44 @@ public class ProjectJdbcDaoTest {
         assertEquals(1, projects.size());
         assertEquals(PROJECT_NAME, projects.get(0).getName());
         assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
+    }
+
+    private long createUser() {
+        Map<String, Object> country = new HashMap<>();
+        country.put("id", 1);
+        country.put("country", "C");
+        jdbcInsertCountry.execute(country);
+
+        Map<String, Object> state = new HashMap<>();
+        state.put("id", 1);
+        state.put("state", "S");
+        state.put("country_id", 1);
+        jdbcInsertState.execute(state);
+
+        Map<String, Object> city = new HashMap<>();
+        city.put("id", 1);
+        city.put("city", "C");
+        city.put("state_id", 1);
+        jdbcInsertCity.execute(city);
+
+        Map<String, Object> role = new HashMap<>();
+        role.put("id", 1);
+        role.put("user_role", "Entrepreneur");
+        jdbcInsertRole.execute(role);
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("role_id", 1);
+        user.put("password", "hola");
+        user.put("first_name", "Jorge");
+        user.put("last_name", "SUMMRAy");
+        user.put("real_id", "SUMMRAy");
+        user.put("country_id", 1);
+        user.put("state_id", 1);
+        user.put("city_id", 1);
+        user.put("aux_date", new Date());
+        user.put("email", "SUMMRAy@dsada.com");
+        user.put("phone", "SUMMRAy@dsada.com");
+        user.put("linkedin", "SUMMRAy@dsada.com");
+        return jdbcInsertUser.executeAndReturnKey(user).longValue();
     }
 }

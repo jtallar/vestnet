@@ -30,7 +30,9 @@ public interface ProjectService {
      */
     List<Project> findByCategories(List<Category> categories);
 
-    public List<Project> findCoincidence(String name);
+    public List<Project> findCoincidence(String name, int page, int from);
+
+    public Integer searchProjCount(String name);
 
     /**
      * Create a project given all thes parameters
@@ -40,5 +42,28 @@ public interface ProjectService {
 //                   List<Category> categories, List<Stage> stages);
 
     // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID
-    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages);
+    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
+
+    /**
+     * @param projectId The id of the project we want to get a portrait image
+     * @return Image as a byte array
+     */
+    byte[] findImageForProject(long projectId);
+
+    /**
+     * Find all projects matching with user id
+     * @return list of Projects
+     */
+    List<Long>  findFavorites(long id);
+
+    List<Project> findPage(int from, int to, long min, long max);
+
+    Integer projectsCount(long min, long max);
+
+    List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max);
+
+    Integer catProjCount(List<Category> categories, long min, long max);
+    void addFavorite(long projectId, long userId);
+    void deleteFavorite(long projectId, long userId);
+    boolean isFavorite(long projectId, long userId);
 }

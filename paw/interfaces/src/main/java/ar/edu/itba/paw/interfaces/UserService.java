@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +22,15 @@ public interface UserService {
      * @param username The name of the user.
      * @return The created user.
      */
-
     public List<User> findCoincidence(String name);
+    long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
+                String email, String phone, String linkedin, String password, byte[] imageBytes) throws UserAlreadyExistsException;
 
-    public User create(String firstName, String lastName, String realId, Date birthDate, Location location, String email, String phone, String linkedin, String profilePicture, Date joinDate, int trustIndex);
+    /**
+     * @param userId The id of the user we want to get a profile image
+     * @return Image as a byte array
+     */
+    byte[] findImageForUser(long userId);
 
-    public long createPassword(long id, String password);
+    long createPassword(long id, String password);
 }

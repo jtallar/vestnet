@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -31,7 +32,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @EnableWebSecurity
 @ComponentScan({"ar.edu.itba.paw.webapp.auth"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
-
+    static final int TOKEN_DAYS = 365;
 
     @Autowired
     private PawUserDetailsService userDetails;
@@ -53,22 +54,26 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .invalidSessionUrl("/login")
                 .and().authorizeRequests()
-                .antMatchers("/login","/signUp").anonymous()
+//                .antMatchers("/login","/signUp", "/location/**").anonymous()
+                .antMatchers("/login", "/signUp", "/location/**", "/projects", "/search*").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/projects").hasRole("INVESTOR")
+                .antMatchers("/projects/**").hasRole("INVESTOR")
+                .antMatchers("/newProject", "/myProjects").hasRole("ENTREPRENEUR")
                 .antMatchers("/**").authenticated()
                 .and().formLogin()
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", false)
+                .successHandler(new RoleCookieSuccessHandler())
                 .and().rememberMe()
                 .rememberMeParameter("remember_me")
                 .key(asString(resource))
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(365))
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
+                .deleteCookies(RoleCookieSuccessHandler.ROLE_COOKIE_NAME)
                 .and().csrf().disable();
     }
 
@@ -84,12 +89,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        // TODO: VER QUE HACER CON EL WELCOME
         web.ignoring()
-                .antMatchers("/css/**", "/images/**");
+                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico", "/welcome");
 
     }
 
-
-
-
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }

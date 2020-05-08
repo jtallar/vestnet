@@ -10,3 +10,12 @@
 /*    color: #ffffff;*/
 /*    border: #53006d;*/
 /*}*/
+
+.btn-transp{
+    background-color: Transparent;
+    border: none !important;
+}
+
+.header-white{
+    background-color: white;
+}

@@ -2,39 +2,31 @@ body {
     font-family: "Lato", sans-serif;
 }
 
-
-
 .main-head{
     height: 150px;
     background: #FFF;
-
 }
 
 .sidenav {
     height: 100%;
-    background-color: #000;
+    background-color: #222222;
     overflow-x: hidden;
-    padding-top: 20px;
 }
-
 
 .main {
     padding: 0px 10px;
 }
 
 @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
+    .sidenav {margin-top: 50%;}
 }
 
 @media screen and (max-width: 450px) {
-    .login-form{
-        margin-top: 10%;
-    }
-
     .register-form{
         margin-top: 10%;
     }
 }
+
 
 @media screen and (min-width: 768px){
     .main{
@@ -47,17 +39,33 @@ body {
         z-index: 1;
         top: 0;
         left: 0;
+        margin-top:0%;
+    }
+    .logo-img{
+        margin-top: 20%;
     }
 
     .login-form{
-        margin-top: 80%;
+        margin-top: 40%;
+    }
+
+    .welcome{
+        margin-top: 20%;
     }
 
     .register-form{
-        margin-top: 20%;
+        margin-top: 50%;
     }
 }
 
+.mailError{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.mailError p{
+    color: red;
+}
 
 .login-main-text{
     margin-top: 20%;
@@ -72,4 +80,42 @@ body {
 .btn-black{
     background-color: #000 !important;
     color: #fff;
+}
+
+.nav-tabs{
+    margin-bottom:5%;
+}
+.nav-tabs .nav-link{
+    color: #4b4b4b;
+    /*font-weight:600;*/
+}
+
+.nav-tabs .nav-link.active{
+    color: #750096;
+    border-bottom:2px solid #750096;
+    font-weight: 600;
+}
+
+.inv-tab label{
+    font-weight: 600;
+}
+.inv-tab p{
+    font-weight: 600;
+    color: #750096;
+}
+
+.welcome b{
+    color: #750096;
+}
+
+.distance-btn{
+    margin-left: 20px;
+}
+
+.welcome h4{
+    margin-top: 20px;
+}
+
+#welcome-login {
+    margin-top: 10px;
 }

@@ -19,3 +19,34 @@
     border-radius: 10px;
     width: 100%;
 }
+
+.custom-form-select {
+    padding: 6px;
+    border: 2px solid #750096;
+    border-radius: 5px;
+    width: 30ch;
+}
+
+.card{
+    margin-top: auto;
+    background-color: #fefefe;
+}
+
+h2 {
+    line-height: 1.66;
+    margin-: 30px;
+    padding: 0;
+    font-weight: 900;
+    color: #222;
+    font-family: Arial;
+    font-size: 24px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.big-error {
+    color: red;
+    font-weight: bold;
+    font-style: italic;
+    text-underline: red;
+}
