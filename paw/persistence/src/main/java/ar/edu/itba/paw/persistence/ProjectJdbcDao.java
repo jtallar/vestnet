@@ -108,9 +108,23 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    /**
+     * Add a hit to the given project. Updates hits column.
+     * @param projectId The unique project id.
+     */
     @Override
-    public void addHit(long project_id) {
-        jdbcTemplate.update(JdbcQueries.PROJECT_ADD_HIT, project_id);
+    public void addHit(long projectId) {
+        jdbcTemplate.update(JdbcQueries.PROJECT_ADD_HIT, projectId);
+    }
+
+    /**
+     * Counts how many times this project is favorite.
+     * @param projectId The unique project id.
+     * @return Favorite count.
+     */
+    @Override
+    public long getFavoritesCount(long projectId) {
+        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_FAVORITE_COUNT, new Object[] {projectId}, Long.class);
     }
 
     @Override

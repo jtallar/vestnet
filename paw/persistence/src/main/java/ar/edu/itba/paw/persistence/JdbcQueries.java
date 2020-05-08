@@ -223,6 +223,8 @@ public class JdbcQueries {
             "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) " +
             "WHERE pcat.category_id IN (:categories) " + "AND p.cost >= (:min) " + " AND p.cost <= (:max)";
 
+    static final String PROJECT_FAVORITE_COUNT = "SELECT COUNT(*) FROM " + FAVORITES_TABLE + " WHERE project_id = ?";
+
     static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
 
     static final String PROJECT_ADD_HIT =

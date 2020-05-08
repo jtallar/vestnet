@@ -69,7 +69,14 @@ public interface ProjectService {
 
     /**
      * Adds a hit to the given project.
-     * @param project_id The unique project id.
+     * @param projectId The unique project id.
      */
-    void addHit(long project_id);
+    void addHit(long projectId);
+
+    /**
+     * Gets the count of how many times the given project is favorite.
+     * @param projectId The unique project id.
+     * @return Count of favorites
+     */
+    long getFavoritesCount(long projectId);
 }

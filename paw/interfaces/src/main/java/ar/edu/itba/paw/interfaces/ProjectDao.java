@@ -79,4 +79,11 @@ public interface ProjectDao {
      * @param project_id The unique project id.
      */
     void addHit(long project_id);
+
+    /**
+     * Gets the count of how many times the given project is favorite.
+     * @param project_id The unique project id.
+     * @return Count of favorites
+     */
+    long getFavoritesCount(long project_id);
 }
