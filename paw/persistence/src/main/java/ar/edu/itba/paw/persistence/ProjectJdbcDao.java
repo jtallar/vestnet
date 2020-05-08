@@ -126,14 +126,7 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
-    @Override
-    public Integer searchProjCount(String name) {
-        String search = "%" + name + "%";
-        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", name);
-        Integer count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT, parameters, Integer.class);
-        return count;
 
-    }
 
     @Override
     public Integer catProjCount(List<Category> categories, long min, long max) {
@@ -192,24 +185,73 @@ public class ProjectJdbcDao implements ProjectDao {
         }
         return projects;
     }
+    @Override
+    public Integer searchProjCount(String name, String selection) {
+        String search = "%" + name + "%";
+        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", name);
+        Integer count;
+
+        switch (selection){
+            case "all":
+                count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_ALL, parameters, Integer.class);
+                break;
+            case "project_info":
+                count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_PROJECT_INFO, parameters, Integer.class);
+                break;
+            case "owner_name":
+                count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_OWNER_NAME, parameters, Integer.class);
+                break;
+            case "owner_email":
+                count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_EMAIL, parameters, Integer.class);
+                break;
+            case "loc":
+                count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_LOC, parameters, Integer.class);
+                break;
+            default:
+                count = 0;
+        }
+
+        return count;
+
+    }
 
     @Override
-    public List<Project> findCoincidence(String name, int from, int to) {
-
+    public List<Project> findCoincidence(String name,String selection, int from, int to) {
+        List<Project> projects;
+        List<Integer> ids;
         String search = "%" + name + "%";
         MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", search)
                                              .addValue("from", from).addValue("to", to);
+        switch (selection){
+            case "all":
+                ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_ALL, parameters, Integer.class);
+                break;
 
-        List<Integer> ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID, parameters, Integer.class);
+            case "project_info":
+                ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_PROJECT_INFO, parameters, Integer.class);
+                break;
+            case "owner_name":
+                ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_OWNER_NAME, parameters, Integer.class);
+                break;
+            case "owner_email":
+                ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_EMAIL, parameters, Integer.class);
+                break;
+            case "loc":
+                ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_LOC, parameters, Integer.class);
+                break;
+            default:
+                ids = new ArrayList<>();
+        }
+
 
         if(ids.isEmpty()){
-            List<Project> projects = new ArrayList<>();
+            projects = new ArrayList<>();
             return projects;
         }
         else {
             MapSqlParameterSource parAux = new MapSqlParameterSource("ids", ids);
 
-            List<Project> projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parAux, RESULT_SET_EXTRACTOR);
+                projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parAux, RESULT_SET_EXTRACTOR);
 
 
             return projects;

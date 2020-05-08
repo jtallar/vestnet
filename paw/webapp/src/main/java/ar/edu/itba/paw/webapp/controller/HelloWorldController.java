@@ -17,6 +17,7 @@ import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
+import ar.edu.itba.paw.webapp.forms.SearchFilter;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.apache.commons.io.IOUtils;
@@ -142,7 +143,7 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, BindingResult errors, @RequestParam(name = "page", defaultValue ="1") String page, @RequestParam(name= "categorySelector", required = false) String catSel, @RequestParam(name = "orderBy", required = false) String orderBy,@RequestParam(name = "min", required = false) String min,@RequestParam(name = "max", required = false) String max) {
+    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, BindingResult errors, @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAllCats();
@@ -162,7 +163,7 @@ public class HelloWorldController {
             return mav;
         }
 
-
+        /*
         if(max != null){
             catFilter.setMax(max);
         }
@@ -175,6 +176,8 @@ public class HelloWorldController {
         if (orderBy != null){
             catFilter.setOrderBy(orderBy);
         }
+
+         */
 
 
 
@@ -413,18 +416,20 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/search")
-    public ModelAndView searchAux(@RequestParam("searching") String search, @RequestParam(name="page", defaultValue = "1") String page){
+    public ModelAndView searchAux(@RequestParam("searching") String search,@RequestParam("selection") String selection, @RequestParam(name="page", defaultValue = "1") String page){
         final ModelAndView mav = new ModelAndView("search");
         int mypage = Integer.parseInt(page);
         int from = (mypage == 1) ? 0 : ((mypage -1) * PAGE_SIZE);
-        Integer projects = projectService.searchProjCount(search);
+        Integer projects = projectService.searchProjCount(search, selection);
         System.out.println(projects);
         Boolean hasNext = (projects > ((mypage)* PAGE_SIZE) ) ? true : false;
         System.out.println(hasNext);
 
         String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
 
-        mav.addObject("projectsList", projectService.findCoincidence(aux, from, PAGE_SIZE));
+        mav.addObject("searchVal", search);
+        mav.addObject("selectionVal", selection);
+        mav.addObject("projectsList", projectService.findCoincidence(aux,selection, from, PAGE_SIZE));
         mav.addObject("page", page);
         mav.addObject("hasNext", hasNext);
         mav.addObject("string", aux);

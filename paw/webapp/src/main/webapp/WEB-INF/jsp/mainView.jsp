@@ -97,7 +97,25 @@
                 </c:if>
 
                 <c:if test="${not empty param.categorySelector and not empty param.orderBy}">
-                    <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"></c:set>
+                    <c:choose>
+                        <c:when test="${empty param.max and empty param.min}">
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"></c:set>
+                        </c:when>
+                        <c:when test="${not empty param.max and not empty param.min}">
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}&min=${param.min}"></c:set>
+                        </c:when>
+                        <c:when test="${not empty param.min}">
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&min=${param.min}"></c:set>
+
+                        </c:when>
+                        <c:when test="${not empty param.max}">
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}"></c:set>
+                        </c:when>
+                    </c:choose>
+                    <c:if test="">
+
+                    </c:if>
+
                     <c:if test="${page != 1}">
                     <li class="page-item">
                         <a href="<c:url value='/projects?${parameters}&page=${previous}'></c:url>" class="page-link"><spring:message code="previous"></spring:message></a>
