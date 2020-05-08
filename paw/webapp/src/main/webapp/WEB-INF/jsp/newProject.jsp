@@ -19,7 +19,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="<c:url value="/css/form.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>VestNet | New Project</title>
+    <title>New Project | VestNet</title>
 </head>
 <body>
 <div class="container" style="margin-top: 20px">

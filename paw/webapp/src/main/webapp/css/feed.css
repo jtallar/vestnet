@@ -8,12 +8,14 @@
 
 .card-deck{
     margin: 20px;
+    margin-left:25%;
 }
 
 .card {
     border-color: #750096;
-    margin: 8px;
-    min-width: 400px;
+    margin: 8px !important;
+    min-width: 450px;
+    max-width: 650px;
     /*max-width: 100px;*/
 }
 
@@ -23,4 +25,74 @@
 
 .checked {
     color: orange;
+}
+
+.btn-transp{
+    background-color: Transparent;
+    border: none !important;
+}
+
+.fav-img{
+    height: 55px;
+}
+
+.proj-img{
+    width: 200px;
+    height: auto;
+}
+
+.container-img {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.card-title h5{
+    margin-left: 20px;
+}
+
+.navbar-fixed-bottom, .navbar-fixed-top{
+    left:auto;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {margin-top: 50%;}
+}
+
+@media screen and (min-width: 768px){
+    .sidenav{
+        height: 70%; /* Full-height: remove this if you want "auto" height */
+        width: 23%; /* Set the width of the sidebar */
+        position: absolute; /* Fixed Sidebar (stay in place on scroll) */
+        top: 185px; /* Stay at the top */
+        background-color: #f6f6f6;
+        border: solid 3px #000000;
+        overflow-x: hidden; /* Disable horizontal scroll */
+        left:0;
+        margin-left:5px;
+    }
+}
+
+.field{
+    margin-top: 20px;
+}
+
+.pagination{
+    margin-top:20px;
+}
+
+.page-link{
+    color: #750096 !important;
+    font-size: 30px !important;
+    font-family:Impact, sans-serif;
+    font-variant: all-petite-caps;
+    font-weight: bold;
+}
+
+.no-proj{
+    margin-left:25% !important;
+}
+
+.card-secondary{
+    text-align: right;
 }

@@ -19,7 +19,7 @@
     <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,700" rel="stylesheet">
     <link rel="stylesheet" href="<c:url value="/css/404.css"/>"/>
-    <title>VestNet | Error <c:out value="${errorCode}"/></title>
+    <title>Error <c:out value="${errorCode}"/> | VestNet</title>
 </head>
 <body>
     <div id="notfound">

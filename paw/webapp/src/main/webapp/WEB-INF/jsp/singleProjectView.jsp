@@ -18,7 +18,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="<c:url value="/css/detail.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>VestNet | ${project.name}</title>
+    <title>${project.name} | VestNet</title>
 </head>
 <body>
 <c:url var="favOff" value="/images/bookmarkOff.png"/>
@@ -38,47 +38,53 @@
             </div>
         <div class="row" style="margin: 20px">
             <div class="col">
-                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel"
-                     style="width: 450px; height:500px; margin: 0 auto">
-                    <ol class="carousel-indicators">
-                        <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-                        <%--<li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>--%>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <%--<c:url var="first_pic" value="/images/purple.png"/>
-                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
-                            <img src="<c:url value="/imageController/project/${project.id}"/>" class="d-block w-100" alt="<spring:message code="projectImage"/>"
-                                 style="width: 100%; height:100% " aria-placeholder="<spring:message code="projectImage"/>"/>
-<%--                            <div class="carousel-caption d-none d-md-block">
-                                <p>This is a first view of the web prototype</p>
-                            </div>--%>
-                        </div>
-                        <%--<div class="carousel-item">
-                            <c:url var="second_pic" value="/images/orange.png"/>
-                            <img src="${second_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
-                            <div class="carousel-caption d-none d-md-block">
-                                <p>Another view of the web prototype</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <c:url var="third_pic" value="/images/green.png"/>
-                            <img src="${third_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">
-                            <div class="carousel-caption d-none d-md-block">
-                                <p>This is how we design de database</p>
-                            </div>
-                        </div>--%>
-                    </div>
-                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+                <div class="container-img">
+                <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img" alt="<spring:message code="projectImage"/>"
+                     aria-placeholder="<spring:message code="projectImage"/>"/>
+<%--                        <div class="centered-txt">${project.name}</div>--%>
+<%--                        <div class="bottom-txt"><spring:message code="noImage"/></div>--%>
                 </div>
+<%--                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel"--%>
+<%--                     style="width: 450px; height:500px; margin: 0 auto">--%>
+<%--                    <ol class="carousel-indicators">--%>
+<%--                        <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>--%>
+<%--                        &lt;%&ndash;<li data-target="#carouselExampleCaptions" data-slide-to="1"></li>--%>
+<%--                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>&ndash;%&gt;--%>
+<%--                    </ol>--%>
+<%--                    <div class="carousel-inner">--%>
+<%--                        <div class="carousel-item active">--%>
+<%--                            &lt;%&ndash;<c:url var="first_pic" value="/images/purple.png"/>--%>
+<%--                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">&ndash;%&gt;--%>
+<%--                            <img src="<c:url value="/imageController/project/${project.id}"/>" class="d-block w-100" alt="<spring:message code="projectImage"/>"--%>
+<%--                                 style="width: 100%; height:100% " aria-placeholder="<spring:message code="projectImage"/>"/>--%>
+<%--&lt;%&ndash;                            <div class="carousel-caption d-none d-md-block">--%>
+<%--                                <p>This is a first view of the web prototype</p>--%>
+<%--                            </div>&ndash;%&gt;--%>
+<%--                        </div>--%>
+<%--                        &lt;%&ndash;<div class="carousel-item">--%>
+<%--                            <c:url var="second_pic" value="/images/orange.png"/>--%>
+<%--                            <img src="${second_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
+<%--                            <div class="carousel-caption d-none d-md-block">--%>
+<%--                                <p>Another view of the web prototype</p>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                        <div class="carousel-item">--%>
+<%--                            <c:url var="third_pic" value="/images/green.png"/>--%>
+<%--                            <img src="${third_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
+<%--                            <div class="carousel-caption d-none d-md-block">--%>
+<%--                                <p>This is how we design de database</p>--%>
+<%--                            </div>--%>
+<%--                        </div>&ndash;%&gt;--%>
+<%--                    </div>--%>
+<%--                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">--%>
+<%--                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>--%>
+<%--                        <span class="sr-only">Previous</span>--%>
+<%--                    </a>--%>
+<%--                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">--%>
+<%--                        <span class="carousel-control-next-icon" aria-hidden="true"></span>--%>
+<%--                        <span class="sr-only">Next</span>--%>
+<%--                    </a>--%>
+<%--                </div>--%>
             </div>
             <div class="col">
                 <div class="d-flex justify-content-center">
@@ -95,7 +101,7 @@
                                         <c:set var="favSrc" value="${favOff}"/>
                                     </c:when>
                                 </c:choose>
-                                <img id="favImg" src=${favSrc} height="40">
+                                <img id="favImg" src="${favSrc}" height="40">
 
                             </button>
                         </div>
@@ -115,6 +121,10 @@
 
                             <h5 class="card-title"><b><spring:message code="contactMail"/></b></h5>
                             <p><c:out value="${project.owner.email}"/></p>
+
+                            <c:if test="${sessionUser.id != project.owner.id}">
+                                <h5><a href="<c:url value='/users/${project.owner.id}'/>" class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
+                            </c:if>
 
                             <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out value="${project.updateDate}"/></small></p>
                         </div>
@@ -144,11 +154,16 @@
             };
 
             function addFav() {
-                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/addFavorite?u_id=" + ${sessionUser.id};
+                <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+                <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+                let path_aux = "${pageContext.request.contextPath}";
+                let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
                 fetch(path, options).catch((function (reason) { console.error(reason) }));
             }
             function delFav() {
-                var path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + '/' + ${project.id} + "/deleteFavorite?u_id=" + ${sessionUser.id};
+                // let path_aux = window.location.pathname.split('/')[1];
+                let path_aux = "${pageContext.request.contextPath}";
+                let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
                 fetch(path, options).catch((function (reason) { console.error(reason) }));
             }
 

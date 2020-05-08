@@ -9,7 +9,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="<c:url value='/css/userprofile.css'/>"/>
 
-    <title>VestNet | <spring:message code="my_profile"></spring:message></title>
+    <title><spring:message code="my_profile"></spring:message> | VestNet</title>
 </head>
 <body>
 <div class="container emp-profile">
@@ -30,17 +30,17 @@
                     <h2 class="bold">
                         <c:out value="${user.firstName}"></c:out><c:out value=" "></c:out><c:out value="${user.lastName}"></c:out>
                     </h2>
-                    <div>
-                        <h6>
-                            <spring:message code="trust_index"></spring:message>
-                        </h6>
-                        <c:forEach var = "i" begin = "1" end = "${user.trustIndex}">
-                            <span class="fa fa-star checked"></span>
-                        </c:forEach>
-                        <c:forEach var = "i" begin = "${user.trustIndex}" end = "4">
-                            <span class="fa fa-star"></span>
-                        </c:forEach>
-                    </div>
+<%--                    <div>--%>
+<%--                        <h6>--%>
+<%--                            <spring:message code="trust_index"></spring:message>--%>
+<%--                        </h6>--%>
+<%--                        <c:forEach var = "i" begin = "1" end = "${user.trustIndex}">--%>
+<%--                            <span class="fa fa-star checked"></span>--%>
+<%--                        </c:forEach>--%>
+<%--                        <c:forEach var = "i" begin = "${user.trustIndex}" end = "4">--%>
+<%--                            <span class="fa fa-star"></span>--%>
+<%--                        </c:forEach>--%>
+<%--                    </div>--%>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><spring:message code="information"/></a>
@@ -57,17 +57,17 @@
                         </c:if>
                     </ul>
                 </div>
-            </div>
+<%--            </div>--%>
             <!--
             <div class="col-md-2">
                 <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
             </div>
             -->
-        </div>
+<%--        </div>--%>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="profile-work">
+<%--        <div class="row">--%>
+<%--            <div class="col-md-4">--%>
+<%--                <div class="profile-work">--%>
                     <!--
                     <p>WORK LINK</p>
                     <a href="">Website Link</a><br/>
@@ -80,10 +80,10 @@
                     <a href="">WooCommerce</a><br/>
                     <a href="">PHP, .Net</a><br/>
                     -->
-                </div>
-            </div>
+<%--                </div>--%>
+<%--            </div>--%>
 
-            <div class="col-md-8">
+<%--            <div class="col-md-8">--%>
                 <div class="tab-content profile-tab" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
