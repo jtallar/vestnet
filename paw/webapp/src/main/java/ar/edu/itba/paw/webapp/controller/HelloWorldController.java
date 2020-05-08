@@ -384,7 +384,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/users/{u_id}")
-    public ModelAndView userProfile(@PathVariable("u_id") long id){
+    public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
         final ModelAndView mav= new ModelAndView("userProfile");
         User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
@@ -394,6 +394,7 @@ public class HelloWorldController {
             favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
         }
         mav.addObject("favs", favs_projects);
+        mav.addObject("back", back);
         return mav;
     }
 
@@ -410,8 +411,9 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/myProfile")
-    public ModelAndView myProfile(){
+    public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){
         final ModelAndView mav = new ModelAndView("redirect:/users/" + loggedUser().getId());
+        mav.addObject("back", back);
         return mav;
     }
 

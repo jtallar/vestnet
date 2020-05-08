@@ -9,9 +9,14 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="<c:url value='/css/userprofile.css'/>"/>
 
-    <title><spring:message code="my_profile"></spring:message> | VestNet</title>
+    <title><spring:message code="my_profile"/> | VestNet</title>
 </head>
 <body>
+<c:if test="${back}">
+    <div class="back">
+        <a onclick="history.back()" class="btn btn-dark"><spring:message code="back"/></a>
+    </div>
+</c:if>
 <div class="container emp-profile">
     <form method="post">
         <div class="row">
@@ -28,7 +33,7 @@
             <div class="col-md-6">
                 <div class="profile-head">
                     <h2 class="bold">
-                        <c:out value="${user.firstName}"></c:out><c:out value=" "></c:out><c:out value="${user.lastName}"></c:out>
+                        <c:out value="${user.firstName}"/><c:out value=" "/><c:out value="${user.lastName}"/>
                     </h2>
 <%--                    <div>--%>
 <%--                        <h6>--%>

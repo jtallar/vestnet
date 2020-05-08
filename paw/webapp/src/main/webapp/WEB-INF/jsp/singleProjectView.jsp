@@ -123,7 +123,7 @@
                             <p><c:out value="${project.owner.email}"/></p>
 
                             <c:if test="${sessionUser.id != project.owner.id}">
-                                <h5><a href="<c:url value='/users/${project.owner.id}'/>" class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
+                                <h5><a href="<c:url value='/users/${project.owner.id}?back=yes'/>" class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
                             </c:if>
 
                             <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out value="${project.updateDate}"/></small></p>

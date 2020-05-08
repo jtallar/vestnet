@@ -6,7 +6,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="<c:url value = 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' />" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title><spring:message code="contact"></spring:message> ${owner.firstName} ${owner.lastName} | VestNet</title>
+    <title><spring:message code="contact"/> ${owner.firstName} ${owner.lastName} | VestNet</title>
 </head>
 <body>
 <div class="container" style="margin-top: 20px">
@@ -14,7 +14,7 @@
             <a href="<c:url value='/projects/${p_id}'/>" class="btn btn-dark"><spring:message code="back"/></a>
     </div>
 
-    <h5 class="card-title" style="margin-top: 40px"><b> <spring:message code="contact"></spring:message> ${owner.firstName} ${owner.lastName}</b></h5>
+    <h5 class="card-title" style="margin-top: 40px"><b> <spring:message code="contact"/> ${owner.firstName} ${owner.lastName}</b></h5>
     <c:url value="/projects/${p_id}/contact" var="postPath"/>
         <form:form modelAttribute="mailForm" action="${postPath}" method="post">
             <%--<div class="input-group mb-3">
@@ -34,7 +34,7 @@
             <form:input path="to" value="${owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
 
             <div class="text-right">
-                <input type="submit" value="<spring:message code="send"></spring:message>" class="btn btn-dark"/>
+                <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark"/>
             </div
         </form:form>
 </div>
