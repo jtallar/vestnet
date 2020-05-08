@@ -23,7 +23,7 @@ public class RoleCookieSuccessHandler extends SavedRequestAwareAuthenticationSuc
         authentication.getAuthorities().forEach((role) ->cookieText.append(role.getAuthority().hashCode()).append(" "));
         LOGGER.debug("\n\nuser_roles set to {}\n\n", cookieText.toString());
         Cookie roleCookie = new Cookie(ROLE_COOKIE_NAME, cookieText.toString());
-        roleCookie.setMaxAge(WebAuthConfig.TOKEN_DAYS);
+//        roleCookie.setMaxAge(WebAuthConfig.TOKEN_DAYS);
 //        roleCookie.setDomain("/");
 //        roleCookie.setPath("/");
         response.addCookie(roleCookie);

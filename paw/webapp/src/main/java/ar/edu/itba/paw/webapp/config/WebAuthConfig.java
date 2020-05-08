@@ -55,7 +55,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/login")
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                .antMatchers("/login", "/signUp", "/location/**", "/projects", "/search*").permitAll()
+                .antMatchers("/login", "/signUp", "/projects", "/search*", "/welcome").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/projects/**").hasRole("INVESTOR")
                 .antMatchers("/newProject", "/myProjects").hasRole("ENTREPRENEUR")
@@ -70,6 +70,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .rememberMeParameter("remember_me")
                 .key(asString(resource))
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
+                .authenticationSuccessHandler(new RoleCookieSuccessHandler())
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
@@ -91,7 +92,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // TODO: VER QUE HACER CON EL WELCOME
         web.ignoring()
-                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico", "/welcome");
+                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico",
+                        "/location/**", "/imageController/**");
 
     }
 
