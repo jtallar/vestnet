@@ -188,7 +188,8 @@ public class ProjectJdbcDao implements ProjectDao {
     @Override
     public Integer searchProjCount(String name, String selection) {
         String search = "%" + name + "%";
-        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", name);
+        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", search);
+        System.out.println(parameters.getValue("name") + "Param");
         Integer count;
 
         switch (selection){
