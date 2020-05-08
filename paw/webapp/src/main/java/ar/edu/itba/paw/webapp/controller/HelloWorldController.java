@@ -333,8 +333,12 @@ public class HelloWorldController {
         } catch (IOException e) {
             return createProject(projectFields);
         }
+
+        String title = StringEscapeUtils.escapeHtml4(projectFields.getTitle());
+        String summary = StringEscapeUtils.escapeHtml4(projectFields.getSummary());
+
         // TODO: AGREGAR STAGES
-        long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
+        long projectId = projectService.create(title, summary,
                 projectFields.getCost(), loggedUser().getId(), projectFields.getCategories(), null, imageBytes);
         return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
     }
