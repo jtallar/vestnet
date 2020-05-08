@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,18 +93,23 @@ public class LoginController {
         //TODO add location when working
         final long userId;
         try {
-            userId = userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
+            // Escaping from potential XSS code insertions
+            String firstName = StringEscapeUtils.escapeHtml4(userFields.getFirstName()), lastName = StringEscapeUtils.escapeHtml4(userFields.getLastName()),
+                    id = StringEscapeUtils.escapeHtml4(userFields.getRealId()), email =  StringEscapeUtils.escapeHtml4(userFields.getEmail()),
+                    phone = StringEscapeUtils.escapeHtml4(userFields.getPhone()), linkedin = StringEscapeUtils.escapeHtml4(userFields.getLinkedin());
+
+            userId = userService.create(userFields.getRole(), firstName, lastName, id,
                     LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
                     //                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
                     new Location(new Location.Country(userFields.getCountry(), "", "", "", ""),
                             new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
-                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
+                   email, phone, linkedin, userFields.getPassword(), imageBytes);
         } catch (UserAlreadyExistsException e) {
             return signUp(userFields, true);
         }
 
         // Auto Log In
-        authenticateUserAndSetSession(userFields.getEmail(), userFields.getPassword(), request);
+        authenticateUserAndSetSession(StringEscapeUtils.escapeHtml4(userFields.getEmail()), userFields.getPassword(), request);
         return new ModelAndView("redirect:/");
     }
 
