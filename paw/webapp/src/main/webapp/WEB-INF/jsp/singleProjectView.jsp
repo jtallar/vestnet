@@ -184,7 +184,7 @@
                     <div class="container-contact">
                         <div class="row">
                             <div class="col-2">
-                                <label>In Exchange:  </label>
+                                <label>In Exchange: </label>
                             </div>
                             <div class="col-md-5">
                                 <spring:message code="writemessage" var="placeholderexchange" />
