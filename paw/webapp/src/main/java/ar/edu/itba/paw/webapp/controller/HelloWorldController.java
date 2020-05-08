@@ -292,16 +292,16 @@ public class HelloWorldController {
     }
 
 
-   @RequestMapping(value = "/projects/{p_id}/addFavorite", method = RequestMethod.PUT)
+   @RequestMapping(value = "/addFavorite", method = RequestMethod.PUT)
    @ResponseBody
-    public ResponseEntity<Boolean> addFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+    public ResponseEntity<Boolean> addFavorite(@RequestParam("p_id") int p_id, @RequestParam("u_id") int u_id) {
         projectService.addFavorite(p_id, u_id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/projects/{p_id}//deleteFavorite", method = RequestMethod.PUT)
+    @RequestMapping(value = "/deleteFavorite", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Boolean> deleteFavorite(@PathVariable("p_id") int p_id, @RequestParam("u_id") int u_id) {
+    public ResponseEntity<Boolean> deleteFavorite(@RequestParam("p_id") int p_id, @RequestParam("u_id") int u_id) {
         projectService.deleteFavorite(p_id, u_id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

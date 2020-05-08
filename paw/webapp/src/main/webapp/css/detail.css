@@ -11,6 +11,11 @@
 /*    border: #53006d;*/
 /*}*/
 
+.proj-img{
+    width: 100%;
+    height: auto;
+}
+
 .btn-transp{
     background-color: Transparent;
     border: none !important;
@@ -18,4 +23,31 @@
 
 .header-white{
     background-color: white;
+}
+
+/* Container holding the image and the text */
+.container-img {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+/* Centered text */
+.centered-txt {
+    position: absolute;
+    top: 73%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color:white;
+    text-shadow: 2px 2px black;
+    font-size: 30px;
+}
+.bottom-txt{
+    position: absolute;
+    top: 88%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color:white;
+    text-shadow: 2px 2px black;
+    font-size: 18px;
 }
