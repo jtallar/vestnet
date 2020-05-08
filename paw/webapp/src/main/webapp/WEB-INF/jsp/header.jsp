@@ -1,6 +1,8 @@
 <%--TODO: ORDENAR ESTO, NO DOS GRANDES IF--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
@@ -9,6 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="./libs/jquery/1.10.1/jquery.min.js"></script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
@@ -74,7 +77,25 @@
         </div>
         <c:url var="searchURL" value="/search"/>
         <form class="form-inline mx-auto my-2 my-lg-0" action="${searchURL}" method="get">
-            <input class="form-control mx-auto mx-auto" id="searching" type="text" placeholder="<spring:message code='search'/>" aria-label="Search" name="searching" />
+            <spring:message var="search" code="search"></spring:message>
+            <c:choose>
+                <c:when test="${not empty searchVal}">
+                    <input class="form-control mx-auto mx-auto" name="searching" value="${searchVal}" type="text" placeholder="${search}" aria-label="Search"/>
+                </c:when>
+                <c:when test="${empty searchVal}">
+                    <input class="form-control mx-auto mx-auto" name="searching" type="text" placeholder="${search}" aria-label="Search"/>
+                </c:when>
+            </c:choose>
+            <c:if test="${not empty searchVal}">
+            </c:if>
+
+            <select id="selection" name="selection" class="custom-select mr-sm-2 mx-1">
+                <option value="all" <c:if test="${selectionVal == null or selectionVal eq 'all' }"> selected </c:if>  ><spring:message code="all"></spring:message> </option>
+                <option value="project_info"<c:if test="${selectionVal eq 'project_info'}"> selected </c:if> ><spring:message code="project_info"></spring:message> </option>
+                <option value="owner_name"<c:if test="${selectionVal eq 'owner_name'}"> selected </c:if>><spring:message code="owner_name"></spring:message> </option>
+                <option value="owner_email"<c:if test="${selectionVal eq 'owner_email'}"> selected </c:if>><spring:message code="owner_email"></spring:message> </option>
+                <option value="loc"<c:if test="${selectionVal eq 'loc'}"> selected </c:if> > <spring:message code="loc"></spring:message> </option>
+            </select>
             <button type="submit" class="${searchButtonClass}">
                 <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
             </button>
