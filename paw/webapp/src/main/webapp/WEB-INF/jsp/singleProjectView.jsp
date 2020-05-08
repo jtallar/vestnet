@@ -101,7 +101,7 @@
                                         <c:set var="favSrc" value="${favOff}"/>
                                     </c:when>
                                 </c:choose>
-                                <img id="favImg" src=${favSrc} height="40">
+                                <img id="favImg" src="${favSrc}" height="40">
 
                             </button>
                         </div>
