@@ -308,6 +308,12 @@ public class HelloWorldController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/addHit/{p_id}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Boolean> addHit(@PathVariable("p_id") long id) {
+        projectService.addHit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 

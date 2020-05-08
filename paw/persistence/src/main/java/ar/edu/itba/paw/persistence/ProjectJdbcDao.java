@@ -109,6 +109,11 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
+    public void addHit(long project_id) {
+        jdbcTemplate.update(JdbcQueries.PROJECT_ADD_HIT, project_id);
+    }
+
+    @Override
     public List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max) {
         List<Project> projects = new ArrayList<>();
         if(to != 0){

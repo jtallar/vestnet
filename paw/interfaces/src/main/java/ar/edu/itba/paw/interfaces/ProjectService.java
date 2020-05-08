@@ -66,4 +66,10 @@ public interface ProjectService {
     void addFavorite(long projectId, long userId);
     void deleteFavorite(long projectId, long userId);
     boolean isFavorite(long projectId, long userId);
+
+    /**
+     * Adds a hit to the given project.
+     * @param project_id The unique project id.
+     */
+    void addHit(long project_id);
 }

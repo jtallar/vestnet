@@ -225,11 +225,14 @@ public class JdbcQueries {
 
     static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
 
+    static final String PROJECT_ADD_HIT =
+            "UPDATE " + PROJECT_TABLE + " SET " +
+            "hits = hits + 1" +
+            "WHERE id = ?";
+
+
+    /* USER QUERIES */
     static final String USER_IMAGE = "SELECT u.profile_pic FROM " + USER_TABLE + " u WHERE u.id = ?";
-
-
-
-
 
     static final String USER_UPDATE = "UPDATE users SET " +
             "role_id = ?, " +
