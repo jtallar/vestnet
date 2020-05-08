@@ -8,14 +8,14 @@
 
 .card-deck{
     margin: 20px;
-    width:70% !important;
+    margin-left:25%;
 }
 
 .card {
     border-color: #750096;
-    margin: 8px;
+    margin: 8px !important;
     min-width: 450px;
-    max-width: 800px;
+    max-width: 650px;
     /*max-width: 100px;*/
 }
 
@@ -33,7 +33,7 @@
 }
 
 .fav-img{
-    height: 40px;
+    height: 55px;
 }
 
 .proj-img{
@@ -62,13 +62,14 @@
 @media screen and (min-width: 768px){
     .sidenav{
         height: 70%; /* Full-height: remove this if you want "auto" height */
-        width: 20%; /* Set the width of the sidebar */
-        position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-        top: 150px; /* Stay at the top */
-        background-color: white;
-        border: solid 2px #750096;
+        width: 23%; /* Set the width of the sidebar */
+        position: absolute; /* Fixed Sidebar (stay in place on scroll) */
+        top: 185px; /* Stay at the top */
+        background-color: #f6f6f6;
+        border: solid 3px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
-        right:0;
+        left:0;
+        margin-left:5px;
     }
 }
 
@@ -86,4 +87,12 @@
     font-family:Impact, sans-serif;
     font-variant: all-petite-caps;
     font-weight: bold;
+}
+
+.no-proj{
+    margin-left:25% !important;
+}
+
+.card-secondary{
+    text-align: right;
 }

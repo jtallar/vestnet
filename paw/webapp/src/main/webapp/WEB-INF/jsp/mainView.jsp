@@ -85,7 +85,7 @@
         <c:url var="createUrl" value='/projects'/>
         <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
             <div class="container">
-                <h3><spring:message code="filter"/></h3>
+                <div class="row"><h5><spring:message code="filter"/></h5></div>
                 <div class="row">
                     <div class="col-">
                         <img src="${filter}" width="40" class="logo-img">
@@ -186,11 +186,13 @@
                                     <%--                        <c:forEach items="${project.categories}" var="category">--%>
                                     <%--                             <p class="card-text" id="category">-${category.name}</p>--%>
                                     <%--                        </c:forEach>--%>
-                                <strong><spring:message code="owner"/></strong>
-                                <p><c:out value="${project.owner.firstName}"/> <c:out
-                                        value="${project.owner.lastName}"/></p>
-                                <strong><spring:message code="price"/></strong>
-                                <p><c:out value="${project.cost}"/></p>
+                                <div class="card-secondary">
+                                    <strong><spring:message code="owner"/></strong>
+                                    <p><c:out value="${project.owner.firstName}"/> <c:out
+                                            value="${project.owner.lastName}"/></p>
+                                    <strong><spring:message code="price"/></strong>
+                                    <p><c:out value="${project.cost}"/></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -218,7 +220,7 @@
 
 
 <c:if test="${empty list}">
-    <div class="card m-2">
+    <div class="card m-2 no-proj">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="noProjFound"
                                                                        arguments=""></spring:message></h5>
