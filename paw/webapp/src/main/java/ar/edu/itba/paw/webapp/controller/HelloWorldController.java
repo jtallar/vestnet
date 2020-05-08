@@ -106,24 +106,6 @@ public class HelloWorldController {
     @ResponseStatus(code = HttpStatus.CONFLICT)
     public ModelAndView failedRegistration() { return new ModelAndView("error"); }*/
 
-    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
-    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
-        final ModelAndView mav = new ModelAndView("contact");
-        mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
-        mav.addObject("p_id", p_id);
-        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
-        return mav;
-    }
-
-    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.POST})
-    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors) throws MessagingException {
-            if (errors.hasErrors()) {
-                return contact(mailFields, p_id);
-            }
-           emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
-           return new ModelAndView("redirect:/projects/{p_id}?mailSent=yes");
-    }
-
     @RequestMapping("/")
     public ModelAndView index(){
         // TODO: CHANGE EXCEPTION TO SERVER ERROR?
@@ -272,13 +254,38 @@ public class HelloWorldController {
 
 
 
+//    @RequestMapping(value = "/projects/{p_id}", method = {RequestMethod.GET})
+//    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
+//        final ModelAndView mav = new ModelAndView("contact");
+//        mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
+//        mav.addObject("p_id", p_id);
+//        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
+//        return mav;
+//    }
+//
+//    @RequestMapping(value = "/projects/{p_id}", method = {RequestMethod.POST})
+//    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors) throws MessagingException {
+//        if (errors.hasErrors()) {
+//            return contact(mailFields, p_id);
+//        }
+//        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
+//        return new ModelAndView("redirect:/projects/{p_id}?mailSent=yes");
+//    }
 
-
+    @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
+                                          BindingResult errors, @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
+        if (errors.hasErrors()) {
+            return singleProjectView(mailFields, id, false);
+        }
+        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
+        return new ModelAndView("singleProjectView");
+    }
 
     // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
     // TODO: HACE FALTA EL REQUIRED = FALSE?
-    @RequestMapping(value = "/projects/{id}")
-    public ModelAndView singleProjectView(@PathVariable("id") long id,
+    @RequestMapping(value = "/projects/{id}", method = {RequestMethod.GET})
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
 
         final ModelAndView mav = new ModelAndView("singleProjectView");
@@ -403,7 +410,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/users/{u_id}/{p_id}")
-    public ModelAndView userProjectView(@PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
+    public ModelAndView userProjectView(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("back", "/users/" + userId);
@@ -412,6 +419,16 @@ public class HelloWorldController {
         mav.addObject("isFav", isFav);
 //        mav.addObject("mailSent", mailSent);
         return mav;
+    }
+
+    @RequestMapping(value = "/users/{u_id}/{p_id}", method = {RequestMethod.POST})
+    public ModelAndView userProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId,
+                                        @PathVariable("p_id") long projectId, BindingResult errors) throws MessagingException {
+        if (errors.hasErrors()) {
+            return userProjectView(mailFields, userId, projectId);
+        }
+        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
+        return new ModelAndView("singleProjectView");
     }
 
     @RequestMapping(value = "/myProfile")
