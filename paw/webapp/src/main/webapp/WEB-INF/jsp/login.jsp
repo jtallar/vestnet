@@ -66,10 +66,10 @@
                 </div>
             </form>
             <c:url var="register" value="/signUp"></c:url>
-            <form action="${register}">
+            <div>
                 <label><spring:message code = "noReg"></spring:message></label>
-                <input type="submit" class="btn btn-outline-dark" value="<spring:message code='sign_up'></spring:message>" />
-            </form>
+                <a href="<c:url value='/signUp'/>" class="btn btn-outline-dark"><spring:message code='sign_up'/></a>
+            </div>
         </div>
     </div>
 </div>

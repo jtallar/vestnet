@@ -61,6 +61,10 @@
                         <a href="<c:url value='/signUp'/>" class="btn btn-dark"><spring:message code='sign_up'/></a>
                     </div>
                 </div>
+                <div id="welcome-login">
+                    <label><spring:message code = "welcome.registered"/></label>
+                    <a href="<c:url value='/login'/>" class="btn btn-dark"><spring:message code='submit'/></a>
+                </div>
         </div>
     </div>
 </div>

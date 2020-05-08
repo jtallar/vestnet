@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class LoginController {
@@ -43,6 +46,9 @@ public class LoginController {
 
     @RequestMapping(value = "/login")
     public ModelAndView login(){
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
+            return new ModelAndView("redirect:/");
         final ModelAndView mav = new ModelAndView("login");
         return mav;
     }
@@ -56,6 +62,9 @@ public class LoginController {
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
                                @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser){
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
+            return new ModelAndView("redirect:/");
         final ModelAndView mav = new ModelAndView("signUp");
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         mav.addObject("invalidUser", invalidUser);
