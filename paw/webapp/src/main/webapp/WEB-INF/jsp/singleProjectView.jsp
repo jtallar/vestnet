@@ -144,43 +144,51 @@
 
     
 </div>
+<script>
+    let options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
 
-        <script>
-            var options = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
+    // Every time window loads its a hit
+    window.onload = function () {
+        fetch(window.location.origin + "${pageContext.request.contextPath}" + "/addHit/" + "${project.id}", options)
+        .catch((function (reason) { console.error(reason) }))
+    };
+</script>
+<script>
 
-            function addFav() {
-                <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
-                <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
-                let path_aux = "${pageContext.request.contextPath}";
-                let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
-                fetch(path, options).catch((function (reason) { console.error(reason) }));
-            }
-            function delFav() {
-                // let path_aux = window.location.pathname.split('/')[1];
-                let path_aux = "${pageContext.request.contextPath}";
-                let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
-                fetch(path, options).catch((function (reason) { console.error(reason) }));
-            }
 
-            var favImage = document.getElementById('favImg');
-            var fav = ${isFav};
+    function addFav() {
+        <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+        <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+        let path_aux = "${pageContext.request.contextPath}";
+        let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+        fetch(path, options).catch((function (reason) { console.error(reason) }));
+    }
+    function delFav() {
+        // let path_aux = window.location.pathname.split('/')[1];
+        let path_aux = "${pageContext.request.contextPath}";
+        let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+        fetch(path, options).catch((function (reason) { console.error(reason) }));
+    }
 
-            function favTap() {
-                if (fav) {
-                    favImage.setAttribute("src","${favOff}");
-                    fav = false;
-                    delFav();
-                } else {
-                    favImage.setAttribute("src","${favOn}");
-                    fav = true;
-                    addFav();
-                }
-            }
-        </script>
+    var favImage = document.getElementById('favImg');
+    var fav = ${isFav};
+
+    function favTap() {
+        if (fav) {
+            favImage.setAttribute("src","${favOff}");
+            fav = false;
+            delFav();
+        } else {
+            favImage.setAttribute("src","${favOn}");
+            fav = true;
+            addFav();
+        }
+    }
+</script>
 </body>
 </html>
