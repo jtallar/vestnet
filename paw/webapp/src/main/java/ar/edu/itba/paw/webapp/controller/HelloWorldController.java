@@ -128,7 +128,7 @@ public class HelloWorldController {
     public ModelAndView index(){
         // TODO: CHANGE EXCEPTION TO SERVER ERROR?
         if (this.loggedUser().getRole() == User.UserRole.ENTREPRENEUR.getId())
-            return new ModelAndView("redirect:/myProfile");
+            return new ModelAndView("redirect:/messages");
         // Investor logged in
         return new ModelAndView("redirect:/projects");
     }
@@ -459,7 +459,12 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
-        return new ModelAndView("redirect:/projects");
+        ModelAndView mav = new ModelAndView("myProjects");
+
+
+        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
+
+        return mav;
     }
 
 }
