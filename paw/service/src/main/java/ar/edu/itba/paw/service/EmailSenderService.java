@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailSenderService implements EmailService {
 
+    @Override
     public void sendNewEmail(String from, String body, String to) throws MessagingException {
 
         Properties props = new Properties();
