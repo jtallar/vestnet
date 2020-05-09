@@ -295,9 +295,6 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
-        mav.addObject("back", "/projects");
-        mav.addObject("investor", true);
-       // mav.addObject("isFav", true);
         boolean isFav = projectService.isFavorite(id, loggedUser().getId());
         mav.addObject("isFav", isFav);
         mav.addObject("favCount", projectService.getFavoritesCount(id));
@@ -385,19 +382,17 @@ public class HelloWorldController {
         return mav;
     }
 
-    // TODO: UNIR CON EL /projects/{id} cuando terminemos de borrar contacto
-    @RequestMapping(value = "/users/{u_id}/{p_id}")
+    /*@RequestMapping(value = "/users/{u_id}/{p_id}")
     public ModelAndView userProjectView(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
                                         @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
         mav.addObject("back", "/users/" + userId);
-        mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
-        boolean isFav = projectService.isFavorite(projectId, userId);
+        boolean isFav = projectService.isFavorite(projectId, loggedUser().getId());
         mav.addObject("isFav", isFav);
         mav.addObject("favCount", projectService.getFavoritesCount(projectId));
-//        mav.addObject("mailSent", mailSent);
+
         return mav;
     }
 
@@ -410,7 +405,7 @@ public class HelloWorldController {
         }
         emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
         return new ModelAndView("redirect:/users/{u_id}/{p_id}?mailSent=yes");
-    }
+    }*/
 
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){

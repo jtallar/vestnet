@@ -1,4 +1,3 @@
-<%--TODO: CHANGE BACK TO HISTORY BACK --> NO MORE CONTACT APARTE--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -36,7 +35,8 @@
 <%--        <div class="row">--%>
             <div class="d-flex justify-content-between align-self-center">
                 <div class="p-2">
-                    <a href="<c:url value="${back}"/>" class="btn btn-dark"><spring:message code="back"/></a>
+<%--                    <a href="<c:url value="${back}"/>" class="btn btn-dark"><spring:message code="back"/></a>--%>
+                    <a onclick="getBackAction()" class="btn btn-dark"><spring:message code="back"/></a>
                 </div>
                 <c:if test="${mailSent}">
                 <div class="p-2 ml-8">
@@ -98,6 +98,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>
+                        <c:if test="${sessionUser.role eq 2}">
                         <div class="card-header header-white">
                             <button onclick="favTap()" class="btn-transp pull-right">
                                 <c:set var="fav" value="${isFav}"/>
@@ -113,6 +114,7 @@
 
                             </button>
                         </div>
+                        </c:if>
                         <div class="card-body">
                             <h5 class="card-title"><b><c:out value="${project.name}"/></b></h5>
                             <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/>
@@ -159,7 +161,7 @@
                 <button class="btn btn-dark pull-right" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">X</button>
             </div>
             <div class="card-body">
-                <c:url value="${back}/${project.id}" var="postPath"/>
+                <c:url value="/projects/${project.id}" var="postPath"/>
                 <form:form modelAttribute="mailForm" action="${postPath}" method="post">
 
                     <div class="form-group">
@@ -250,6 +252,16 @@
             favImage.setAttribute("src","${favOn}");
             fav = true;
             addFav();
+        }
+    }
+
+    // TODO: VER SI SE PUEDE HACER DE OTRA FORMA
+    function getBackAction() {
+        if (${mailSent}) {
+            history.back();
+            history.back();
+        } else {
+            history.back();
         }
     }
 </script>
