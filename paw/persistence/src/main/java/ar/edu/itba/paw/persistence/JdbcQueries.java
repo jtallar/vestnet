@@ -289,7 +289,7 @@ public class JdbcQueries {
     /* MESSAGING QUERIES */
 
     static final String MESSAGE_UPDATE_STATUS =
-            "UPDATE " + MESSAGE_TABLE + " SET" +
+            "UPDATE " + MESSAGE_TABLE + " SET " +
             "accepted = ? " +
             "WHERE sender_id = ? AND receiver_id = ? AND project_id = ?";
 

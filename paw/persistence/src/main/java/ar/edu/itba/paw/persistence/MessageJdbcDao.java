@@ -31,7 +31,7 @@ public class MessageJdbcDao implements MessageDao {
     public MessageJdbcDao (final DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(JdbcQueries.USER_TABLE)
+                .withTableName(JdbcQueries.MESSAGE_TABLE)
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("content_message", "content_offer", "content_interest", "sender_id", "receiver_id", "project_id");
     }
