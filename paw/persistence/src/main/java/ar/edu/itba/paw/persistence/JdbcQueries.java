@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import org.springframework.context.support.MessageSourceAccessor;
-
+/**
+ * Contains all the postgre sql queries
+ */
 public class JdbcQueries {
 
     static final String PROJECT_TABLE = "projects";
@@ -67,8 +68,6 @@ public class JdbcQueries {
     static final String USER_FIND_BY_ID = USER_FIND_ALL + "WHERE u.id = ?";
 
     static final String USER_FIND_BY_USERNAME = USER_FIND_ALL + "WHERE u.email = ?";
-
-    static final String USER_FIND_PASSWORD = "SELECT password FROM " + PASSWORDS_TABLE + " p " + "WHERE p.id = ?";
 
     static final String PROJECT_FIND_ALL = "SELECT " +
             "p.id, " +
@@ -210,11 +209,7 @@ public class JdbcQueries {
 
     static final String COUNT_PROJECTS = "SELECT COUNT(*) FROM " + PROJECT_TABLE + " WHERE cost >= ? AND cost <= ?";
 
-    static final String FIND_PROJECT_BY_PAGE = PROJECT_FIND_ALL + " OFFSET ? LIMIT ?";
-
     static final String PROJECT_FIND_BY_CAT = PROJECT_FIND_ALL + " WHERE pcat.category_id IN (:categories)";
-
-    static final String PROJECT_FIND_BY_CAT_PAGE = PROJECT_FIND_BY_CAT + "OFFSET (:from) LIMIT (:to)";
 
     static final String PROJECT_COUNT_CAT = "SELECT COUNT(*) " +
             "FROM " + PROJECT_TABLE + " p " +
