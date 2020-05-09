@@ -103,6 +103,9 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.queryForObject(JdbcQueries.USER_IMAGE, new Object[] {userId}, byte[].class);
     }
 
+
+    /* Auxiliary functions */
+
     /**
      * Updates the existing user in database.
      * @return Operation return.
