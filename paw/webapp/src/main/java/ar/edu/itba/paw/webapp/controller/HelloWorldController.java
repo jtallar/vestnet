@@ -117,7 +117,7 @@ public class HelloWorldController {
                                   @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
-        List<Category> catList = categoriesService.findAllCats();
+        List<Category> catList = categoriesService.findAll();
 
 
         if(errors.hasErrors()){
@@ -316,7 +316,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
         final ModelAndView mav = new ModelAndView("newProject");
-        List<Category> catList = categoriesService.findAllCats();
+        List<Category> catList = categoriesService.findAll();
         catList.sort(Comparator.comparing(Category::getName));
         mav.addObject("categories", catList);
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);

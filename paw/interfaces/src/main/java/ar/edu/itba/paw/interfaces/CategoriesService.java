@@ -10,7 +10,7 @@ public interface CategoriesService {
      * Finds all the possible categories from the database.
      * @return List of all the categories.
      */
-    List<Category> findAllCats();
+    List<Category> findAll();
 
     /**
      * Finds all categories for a given project.
