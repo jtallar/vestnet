@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.MessageDao;
 import ar.edu.itba.paw.model.Message;
-import ar.edu.itba.paw.model.User;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,10 +11,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class MessageJdbcDao implements MessageDao {
@@ -39,8 +38,10 @@ public class MessageJdbcDao implements MessageDao {
 
     @Override
     public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException {
-        Message lastMessage = findMessage(senderId, receiverId, projectId);
-        if (lastMessage != null && lastMessage.isAccepted() == null) throw new MessageAlreadySentException();
+        // Check if last message was answered
+        Optional<Message> lastMessage = findLastSentMessage(senderId, receiverId, projectId);
+        if (lastMessage.isPresent() && lastMessage.get().isAccepted() == null) throw new MessageAlreadySentException();
+
         Map<String, Object> values = new HashMap<>();
         if (message.length() > 0) values.put("content_message", message);
         values.put("content_offer",offer);
@@ -66,9 +67,15 @@ public class MessageJdbcDao implements MessageDao {
         return jdbcTemplate.update(JdbcQueries.MESSAGE_UPDATE_STATUS, accepted, senderId, receiverId, projectId);
     }
 
-    private Message findMessage(long senderId, long receiverId, long projectId) {
+    /**
+     * Finds the last message sent within a project.
+     * @param senderId Unique user sender id.
+     * @param receiverId Unique user receiver id.
+     * @param projectId Unique project id.
+     * @return The last message or null if none
+     */
+    private Optional<Message> findLastSentMessage(long senderId, long receiverId, long projectId) {
         List<Message> messages= jdbcTemplate.query(JdbcQueries.MESSAGE_GET_SENT_TO, RESULT_SET_EXTRACTOR, projectId, senderId, receiverId);
-        if (messages.size() == 0) return null;
-        return messages.get(messages.size() - 1);
+        return messages.stream().reduce((first, second) -> second);
     }
 }

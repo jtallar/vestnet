@@ -17,6 +17,7 @@ import java.util.List;
 
 @Repository
 public class LocationJdbcDao implements LocationDao {
+
     private JdbcTemplate jdbcTemplate;
 
     private final static ResultSetExtractor<List<Country>> RESULT_SET_EXTRACTOR_COUNTRY = JdbcTemplateMapperFactory
