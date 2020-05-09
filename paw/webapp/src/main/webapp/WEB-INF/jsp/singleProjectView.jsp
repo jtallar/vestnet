@@ -1,6 +1,7 @@
 <%--TODO: CHANGE BACK TO HISTORY BACK --> NO MORE CONTACT APARTE--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file = "header.jsp" %>
 
 <html>
@@ -8,15 +9,21 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <%--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>--%>
+
+<%--    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"--%>
+<%--            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"--%>
+<%--            crossorigin="anonymous"></script>--%>
+<%--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"--%>
+<%--            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"--%>
+<%--            crossorigin="anonymous"></script>--%>
+<%--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"--%>
+<%--            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"--%>
+<%--            crossorigin="anonymous"></script>--%>
+
+<%--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>--%>
+
+    <%--<script src="/js/bootstrap.min.js"></script>--%>
+
     <link rel="stylesheet" href="<c:url value="/css/detail.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>${project.name} | VestNet</title>
@@ -136,11 +143,68 @@
 <%--                        TODO: ADD EDIT PROJECT--%>
                     </c:if>
                     <c:if test="${sessionUser.role == 2}">
-                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>
+<%--                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>--%>
+                            <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">
+                                <spring:message code="contactowner"/>
+                            </button>
                     </c:if>
                 </div>
             </div>
         </div>
+
+    <div class="collapse" id="contact">
+        <div class="card contact">
+            <div class="card-header">
+                <label> New Message to ${project.owner.firstName} ${project.owner.lastName}</label>
+                <button class="btn btn-dark pull-right" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">X</button>
+            </div>
+            <div class="card-body">
+                <c:url value="${back}/${project.id}" var="postPath"/>
+                <form:form modelAttribute="mailForm" action="${postPath}" method="post">
+
+                    <div class="form-group">
+                        <label>Greeting: </label>
+                        <div class="input-group mb-3">
+                            <spring:message code="writemessage" var="placeholdermessage" />
+                            <form:textarea path="body" type="text" class="form-control" placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
+                        </div>
+                    </div>
+
+                    <div class="container-contact">
+                        <div class="row">
+                            <div class="col-2">
+                                <label>Offers:  </label>
+                            </div>
+                            <div class="col-md-5">
+                                <spring:message code="writemessage" var="placeholderoffers" />
+                                <form:textarea path="offers" type="text" class="form-control" placeholder="${placeholderoffers}" aria-describedby="basic-addon2"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-contact">
+                        <div class="row">
+                            <div class="col-2">
+                                <label>In Exchange: </label>
+                            </div>
+                            <div class="col-md-5">
+                                <spring:message code="writemessage" var="placeholderexchange" />
+                                <form:textarea path="exchange" type="text" class="form-control" placeholder="${placeholderexchange}" aria-describedby="basic-addon2"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form:input path="from" value="${sessionUser.email}" type="hidden"/>
+                    <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+
+                    <div class="text-right">
+                        <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark"/>
+                    </div
+                </form:form>
+            </div>
+        </div>
+    </div>
+
     </div>
 
     
