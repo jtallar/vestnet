@@ -3,6 +3,9 @@ package ar.edu.itba.paw.model;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Models a project with all its properties.
+ */
 public class Project {
     private final long id;
     private final String name;
@@ -132,6 +135,14 @@ public class Project {
         this.stages = stages;
     }
 
+    public boolean hasCategory(String cat){
+        boolean[] hasIt = {false};
+        this.getCategories().forEach(category -> {
+            if(category.getName().equals(cat)) hasIt[0] = true;
+        });
+        return hasIt[0];
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -151,6 +162,10 @@ public class Project {
                 '}';
     }
 
+    /**
+     * Model for back office control.
+     * Saved for later implementation.
+     */
     public static class ProjectBackOffice {
         private final boolean approved;
         private final int profitIndex;
@@ -183,12 +198,4 @@ public class Project {
                     '}';
         }
     }
-
-        public boolean hasCategory(String cat){
-            boolean[] hasIt = {false};
-            this.getCategories().forEach(category -> {
-                if(category.getName().equals(cat)) hasIt[0] = true;
-            });
-            return hasIt[0];
-        }
 }

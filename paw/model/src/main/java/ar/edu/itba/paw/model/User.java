@@ -2,19 +2,20 @@ package ar.edu.itba.paw.model;
 
 import java.time.LocalDate;
 
+/**
+ * Model of the registered user on the web app.
+ */
 public class User {
 
     private String password;
 
     private final long id;
-    // TODO: VER SI PUEDO GUARDAR UN USERROLE --> NO PUEDO MAPEAR 2 a INVESTOR(2)
     private final int role;
-    // TODO> VER SI SON FINAL O EDITABLES. POR AHORA MANDO FINAL, CUALQUIER  COSA SACARLO
     private final String firstName;
     private final String lastName;
-    private final String realId; // CUIT/CUIL/DNI
+    private final String realId; // Specific to country
     private final LocalDate birthDate;
-    // Aca si quiero que se complete despues, debiera poner un locationId que sea final y un Location que no lo sea
+
     private final Location location;
 
     private final String email;
@@ -91,6 +92,14 @@ public class User {
         return role;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password){
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -108,14 +117,9 @@ public class User {
                 '}';
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password){
-        this.password = password;
-    }
-
+    /**
+     * User possible roles.
+     */
     public enum UserRole {
         ENTREPRENEUR("Entrepreneur", 1), INVESTOR("Investor", 2),
         NOTFOUND("Not found", 0);
