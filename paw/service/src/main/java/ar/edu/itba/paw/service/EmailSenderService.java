@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailSenderService implements EmailService {
 
-    public void sendNewEmail(String from, String body, String offers, String exchange, String to) throws MessagingException {
+    public void sendNewEmail(String from, String body, int offers, String exchange, String to) throws MessagingException {
 
         Properties props = new Properties();
 
@@ -35,8 +35,7 @@ public class EmailSenderService implements EmailService {
 
         StringBuilder fullBodySB = new StringBuilder();
         // fullBodySB.append("VestNet informa:\n" + "El usuario " + from + " desea comunicarse contigo.\nEl mensaje es el siguiente:\n\n" + body + "\n\nRecuerde que este es un ");
-        fullBodySB.append("VestNet reports:\n" + "User " + from + " wants to contact you.\nThe message is as follows:\n\n" + "Offer: " + offers + "\nExchange: " + exchange +
-                "\n\n"+ body + "\n\nTo contact him, reply this email normally.");
+        fullBodySB.append("VestNet reports:\n" + "User ").append(from).append(" wants to contact you.\nThe message is as follows:\n\n").append("Offer: ").append(offers).append("\nExchange: ").append(exchange).append("\n\n").append(body).append("\n\nTo contact him, reply this email normally.");
         String fullBody = fullBodySB.toString();
 
         try {

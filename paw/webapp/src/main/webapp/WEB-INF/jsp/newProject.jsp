@@ -53,7 +53,7 @@
 <%--                TODO: ALIGN $USD WITH INPUT--%>
                 <div class="row justify-content-center">
                     <div class="col-1">
-                        <label>$USD</label>
+                        <label><spring:message code="currency"/></label>
                     </div>
                     <div class="col">
                         <form:input path="cost" type="number" class="form-control" cssClass="custom-form-number" id="new-project-cost"/>
