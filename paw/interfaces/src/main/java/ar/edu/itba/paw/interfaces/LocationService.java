@@ -13,15 +13,15 @@ public interface LocationService {
 
     /**
      * Gets all the states for a given country.
-     * @param country_id The unique id of the country.
+     * @param countryId The unique id of the country.
      * @return The list of the country's respective states.
      */
-    List<Location.State> findStates(long country_id);
+    List<Location.State> findStates(long countryId);
 
     /**
      * Gets all the cities for a given state.
-     * @param state_id The unique id of the state.
+     * @param stateId The unique id of the state.
      * @return The list of the state's respective cities.
      */
-    List<Location.City> findCities(long state_id);
+    List<Location.City> findCities(long stateId);
 }

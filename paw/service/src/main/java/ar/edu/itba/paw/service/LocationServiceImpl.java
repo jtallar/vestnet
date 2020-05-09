@@ -23,12 +23,12 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<Location.State> findStates(long country_id) {
-        return locationDao.findStates(country_id);
+    public List<Location.State> findStates(long countryId) {
+        return locationDao.findStates(countryId);
     }
 
     @Override
-    public List<Location.City> findCities(long state_id) {
-        return locationDao.findCities(state_id);
+    public List<Location.City> findCities(long stateId) {
+        return locationDao.findCities(stateId);
     }
 }

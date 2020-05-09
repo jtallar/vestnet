@@ -16,8 +16,9 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Autowired
     CategoriesDao categoriesDao;
+
     @Override
-    public List<Category> findAllCats() {
+    public List<Category> findAll() {
         return categoriesDao.findAll();
     }
 

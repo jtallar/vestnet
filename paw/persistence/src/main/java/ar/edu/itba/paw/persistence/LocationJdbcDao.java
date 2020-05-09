@@ -46,12 +46,12 @@ public class LocationJdbcDao implements LocationDao {
     }
 
     @Override
-    public List<State> findStates(long country_id) {
-        return jdbcTemplate.query(JdbcQueries.STATE_FIND_BY_COUNTRY_ID, RESULT_SET_EXTRACTOR_STATE, country_id);
+    public List<State> findStates(long countryId) {
+        return jdbcTemplate.query(JdbcQueries.STATE_FIND_BY_COUNTRY_ID, RESULT_SET_EXTRACTOR_STATE, countryId);
     }
 
     @Override
-    public List<City> findCities(long state_id) {
-        return jdbcTemplate.query(JdbcQueries.CITY_FIND_BY_STATE_ID, RESULT_SET_EXTRACTOR_CITY, state_id);
+    public List<City> findCities(long stateId) {
+        return jdbcTemplate.query(JdbcQueries.CITY_FIND_BY_STATE_ID, RESULT_SET_EXTRACTOR_CITY, stateId);
     }
 }

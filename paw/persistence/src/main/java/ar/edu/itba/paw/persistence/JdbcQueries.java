@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import org.springframework.context.support.MessageSourceAccessor;
+
 public class JdbcQueries {
 
     static final String PROJECT_TABLE = "projects";
@@ -11,6 +13,7 @@ public class JdbcQueries {
     private static final String CATEGORIES_TABLE = "categories";
     public static final String PASSWORDS_TABLE = "passwords";
     public static final String FAVORITES_TABLE = "favorites";
+    public static final String MESSAGE_TABLE = "messages";
 
     static final String CATEGORY_FIND_ALL = "SELECT " +
             "cat.id, " +
@@ -282,4 +285,28 @@ public class JdbcQueries {
     static final String FAVORITES_PROJ = "SELECT project_id FROM " + FAVORITES_TABLE + " WHERE user_id = ?";
 
     static final String DELETE_FAV = "DELETE FROM " + FAVORITES_TABLE + " WHERE project_id = ? AND user_id = ?";
+
+    static final String ARE_PROJECTS_FAV =
+            "SELECT CASE WHEN f.user_id isnull THEN 0 ELSE 1 END AS isFav " +
+            "FROM (VALUES (%s)) v(p_id) LEFT OUTER JOIN " +
+                    "(SELECT * FROM favorites WHERE user_id = ?) AS f ON v.p_id = f.project_id";
+
+    /* MESSAGING QUERIES */
+
+    static final String MESSAGE_UPDATE_STATUS =
+            "UPDATE " + MESSAGE_TABLE + " SET " +
+            "accepted = ? " +
+            "WHERE sender_id = ? AND receiver_id = ? AND project_id = ?";
+
+    static final String MESSAGE_GET_CONVERSATION =
+            "SELECT * FROM " + MESSAGE_TABLE + " " +
+            "WHERE project_id = ? AND (( sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?))";
+
+    static final String MESSAGE_GET_PROJECT_UNREAD =
+            "SELECT * FROM " + MESSAGE_TABLE + " " +
+            "WHERE project_id = ? AND receiver_id = ? AND accepted IS NULL";
+
+    static final String MESSAGE_GET_SENT_TO =
+            "SELECT * FROM " + MESSAGE_TABLE + " " +
+            "WHERE project_id = ? AND sender_id = ? AND receiver_id = ?";
 }
