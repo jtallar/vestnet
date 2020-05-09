@@ -21,7 +21,7 @@
 
 <%--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>--%>
 
-    <script src="/js/bootstrap.min.js"></script>
+    <%--<script src="/js/bootstrap.min.js"></script>--%>
 
     <link rel="stylesheet" href="<c:url value="/css/detail.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -158,7 +158,7 @@
                 <button class="btn btn-dark pull-right" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">X</button>
             </div>
             <div class="card-body">
-                <c:url value="/projects/${project.id}" var="postPath"/>
+                <c:url value="${back}/${project.id}" var="postPath"/>
                 <form:form modelAttribute="mailForm" action="${postPath}" method="post">
 
                     <div class="form-group">
@@ -194,7 +194,7 @@
                     </div>
 
                     <form:input path="from" value="${sessionUser.email}" type="hidden"/>
-                    <form:input path="to" value="${owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+                    <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
 
                     <div class="text-right">
                         <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark"/>

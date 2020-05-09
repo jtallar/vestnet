@@ -125,7 +125,8 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, BindingResult errors, @RequestParam(name = "page", defaultValue ="1") String page) {
+    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, final BindingResult errors,
+                                  @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAllCats();
@@ -273,17 +274,15 @@ public class HelloWorldController {
 //    }
 
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
-    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
-                                          BindingResult errors, @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id,
+                                          @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
         if (errors.hasErrors()) {
             return singleProjectView(mailFields, id, false);
         }
         emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
-        return new ModelAndView("singleProjectView");
+        return new ModelAndView("redirect:/projects/{id}?mailSent=yes");
     }
 
-    // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
-    // TODO: HACE FALTA EL REQUIRED = FALSE?
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.GET})
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
@@ -329,7 +328,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
-    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, BindingResult errors){
+    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, final BindingResult errors){
         if (errors.hasErrors()) {
             return createProject(projectFields);
         }
@@ -410,9 +409,11 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/users/{u_id}/{p_id}")
-    public ModelAndView userProjectView(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
+    public ModelAndView userProjectView(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
+                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("mailSent", mailSent);
         mav.addObject("back", "/users/" + userId);
         mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
         boolean isFav = projectService.isFavorite(projectId, userId);
@@ -422,13 +423,14 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/users/{u_id}/{p_id}", method = {RequestMethod.POST})
-    public ModelAndView userProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId,
-                                        @PathVariable("p_id") long projectId, BindingResult errors) throws MessagingException {
+    public ModelAndView userProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors,
+                                        @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
+                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
         if (errors.hasErrors()) {
-            return userProjectView(mailFields, userId, projectId);
+            return userProjectView(mailFields, userId, projectId, false);
         }
         emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
-        return new ModelAndView("singleProjectView");
+        return new ModelAndView("redirect:/users/{u_id}/{p_id}?mailSent=yes");
     }
 
     @RequestMapping(value = "/myProfile")
