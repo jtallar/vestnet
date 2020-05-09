@@ -1,24 +1,21 @@
-package ar.edu.itba.paw.webapp.mail;
-
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+package ar.edu.itba.paw.webapp.forms;
 
 public class MailFields {
 
     private String body;
 
-    private String from;
+    private String from; // Inyected
 
-    private String to;
+    private String to; // Inyected
 
-    private String offers;
+    private int offers;
     private String exchange;
 
-    public String getOffers() {
+    public int getOffers() {
         return offers;
     }
 
-    public void setOffers(String offers) {
+    public void setOffers(int offers) {
         this.offers = offers;
     }
 
