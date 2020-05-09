@@ -91,7 +91,7 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
-    public long createPass(long id, String password) {
+    public long createPassword(long id, String password) {
         Map<String, Object> values = new HashMap<>();
         values.put("id", id);
         values.put("password", password);

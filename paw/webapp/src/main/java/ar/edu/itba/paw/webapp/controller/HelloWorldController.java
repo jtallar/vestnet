@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.CategoriesService;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
@@ -13,39 +12,27 @@ import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
-import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
-import ar.edu.itba.paw.webapp.forms.NewUserFields;
-import ar.edu.itba.paw.webapp.forms.SearchFilter;
 import ar.edu.itba.paw.webapp.mail.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -192,13 +179,13 @@ public class HelloWorldController {
 
         Integer projects;
         if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats")){ //calculate total projects to render to check limit and offset
-            projects = projectService.projectsCount(minAux, maxAux);
+            projects = projectService.countByCost(minAux, maxAux);
         }
         else {
             Optional<Category> selectedCategory = catList.stream()
                     .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
                     .findFirst();
-            projects = projectService.catProjCount(Collections.singletonList(selectedCategory.get()), minAux, maxAux);
+            projects = projectService.countByCategory(Collections.singletonList(selectedCategory.get()), minAux, maxAux);
         }
         return projects;
     }
@@ -223,12 +210,12 @@ public class HelloWorldController {
                     .findFirst();
             if (selectedCategory.isPresent()) {
 
-                auxList = projectService.findCatForPage(Collections.singletonList(selectedCategory.get()), from, size, minAux, maxAux);
+                auxList = projectService.findByCategoryPage(Collections.singletonList(selectedCategory.get()), from, size, minAux, maxAux);
 
             }
         } else {
 
-            auxList = projectService.findPage(from, size, minAux, maxAux);
+            auxList = projectService.findByCostPage(from, size, minAux, maxAux);
         }
 
         if(catFilter.getOrderBy() != null) {
@@ -419,7 +406,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("search");
         int mypage = Integer.parseInt(page);
         int from = (mypage == 1) ? 0 : ((mypage -1) * PAGE_SIZE);
-        Integer projects = projectService.searchProjCount(search, selection);
+        Integer projects = projectService.countByCoincidence(search, selection);
         Boolean hasNext = (projects > ((mypage)* PAGE_SIZE) ) ? true : false;
 
 
@@ -427,7 +414,7 @@ public class HelloWorldController {
 
         mav.addObject("searchVal", search);
         mav.addObject("selectionVal", selection);
-        mav.addObject("projectsList", projectService.findCoincidence(aux,selection, from, PAGE_SIZE));
+        mav.addObject("projectsList", projectService.findByCoincidencePage(aux,selection, from, PAGE_SIZE));
         mav.addObject("page", page);
         mav.addObject("hasNext", hasNext);
         mav.addObject("string", aux);

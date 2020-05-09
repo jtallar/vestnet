@@ -55,7 +55,7 @@ public interface UserDao {
      * @param password The password.
      * @return Operation return.
      */
-    long createPass(long id, String password);
+    long createPassword(long id, String password);
 
     /**
      * Finds the image fot the given user.

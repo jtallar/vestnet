@@ -16,8 +16,8 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectDao projectDao;
 
     @Override
-    public Optional<Project> findById(long id) {
-        return projectDao.findById(id);
+    public Optional<Project> findById(long projectId) {
+        return projectDao.findById(projectId);
     }
 
     @Override
@@ -41,33 +41,33 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findCoincidence(String name,String selection, int from, int to) {
-        return projectDao.findCoincidence(name,selection, from, to);
+    public List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset) {
+        return projectDao.findByCoincidencePage(name,selection, pageStart, pageOffset);
     }
 
     @Override
-    public Integer searchProjectCount(String name, String selection) {
-        return projectDao.searchProjectCount(name, selection);
+    public Integer countByCoincidence(String name, String selection) {
+        return projectDao.countByCoincidence(name, selection);
     }
 
     @Override
-    public List<Project> findPage(int from, int to, long min, long max) {
-        return projectDao.findPage(from,to, min, max);
+    public List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost) {
+        return projectDao.findByCostPage(pageStart, pageOffset, minCost, maxCost);
     }
 
     @Override
-    public Integer projectsCount(long min, long max) {
-        return projectDao.projectsCount(min, max);
+    public Integer countByCost(long minCost, long maxCost) {
+        return projectDao.countByCost(minCost, maxCost);
     }
 
     @Override
-    public List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max) {
-        return projectDao.findCatForPage(categories,from,to, min, max);
+    public List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost) {
+        return projectDao.findByCategoryPage(categories, pageStart, pageOffset, minCost, maxCost);
     }
 
     @Override
-    public Integer catProjectCount(List<Category> categories, long min, long max) {
-        return projectDao.catProjectCount(categories, min, max);
+    public Integer countByCategory(List<Category> categories, long minCost, long maxCost) {
+        return projectDao.countByCategory(categories, minCost, maxCost);
     }
 
     @Override

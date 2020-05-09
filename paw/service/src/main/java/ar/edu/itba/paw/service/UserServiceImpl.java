@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long createPassword(long id, String password) {
-        return userDao.createPass(id, encoder.encode(password));
+        return userDao.createPassword(id, encoder.encode(password));
     }
 
     @Override

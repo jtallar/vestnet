@@ -30,10 +30,10 @@ public interface ProjectDao {
 
     /**
      * Finds a project given its id
-     * @param id The unique id for the project
+     * @param projectId The unique id for the project
      * @return The matched project or null otherwise
      */
-    Optional<Project> findById(long id);
+    Optional<Project> findById(long projectId);
 
     /**
      * Finds the projects owned by the same user.
@@ -51,21 +51,21 @@ public interface ProjectDao {
 
     /**
      * Gets the count of all the published projects within a cost range.
-     * @param min The minimum cost for the project.
-     * @param max The maximum cost for the project.
+     * @param minCost The minimum cost for the project.
+     * @param maxCost The maximum cost for the project.
      * @return The count of projects that match criteria.
      */
-    Integer projectsCount(long min, long max);
+    Integer countByCost(long minCost, long maxCost);
 
     /**
      * Finds all the matches for a name given its selection.
      * @param name String to search matches for.
      * @param selection Specific field searched for a match.
-     * @param page Starting page.
-     * @param from Page offset.
+     * @param pageStart Starting page.
+     * @param pageOffset Page offset.
      * @return List of projects that meet the criteria.
      */
-    List<Project> findCoincidence(String name, String selection, int page, int from);
+    List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset);
 
     /**
      * Finds how many projects match with the criteria.
@@ -73,37 +73,37 @@ public interface ProjectDao {
      * @param selection Specific field searched for a match.
      * @return Project count.
      */
-    Integer searchProjectCount(String name, String selection);
+    Integer countByCoincidence(String name, String selection);
 
     /**
      * Finds all projects with any of the given categories within the cost range.
      * @param categories The list of possible categories.
-     * @param from Starting page.
-     * @param to Page offset.
-     * @param min Minimum cost.
-     * @param max Maximum cost.
+     * @param pageStart Starting page.
+     * @param pageOffset Page offset.
+     * @param minCost Minimum cost.
+     * @param maxCost Maximum cost.
      * @return List of projects.
      */
-    List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max);
+    List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost);
 
     /**
      * Finds how many projects with any of the given categories within the cost range.
      * @param categories The list of possible categories.
-     * @param min Minimum cost.
-     * @param max Maximum cost.
+     * @param minCost Minimum cost.
+     * @param maxCost Maximum cost.
      * @return Count of the projects that meet the given criteria.
      */
-    Integer catProjectCount(List<Category> categories, long min, long max);
+    Integer countByCategory(List<Category> categories, long minCost, long maxCost);
 
     /**
      * Finds all the projects within a cost range.
-     * @param from Starting page.
-     * @param to Page offset.
-     * @param min Minimum cost.
-     * @param max Maximum cost.
+     * @param pageStart Starting page.
+     * @param pageOffset Page offset.
+     * @param minCost Minimum cost.
+     * @param maxCost Maximum cost.
      * @return List of found projects.
      */
-    List<Project> findPage(int from, int to, long min, long max);
+    List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost);
 
     /**
      * @param projectId The id of the project we want to get a portrait image
@@ -151,7 +151,6 @@ public interface ProjectDao {
      * @return Count of favorites.
      */
     long getFavoritesCount(long projectId);
-
 
     /**
      * @param projectIds projects to check if where faved by user
