@@ -108,6 +108,25 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    /**
+     * Add a hit to the given project. Updates hits column.
+     * @param projectId The unique project id.
+     */
+    @Override
+    public void addHit(long projectId) {
+        jdbcTemplate.update(JdbcQueries.PROJECT_ADD_HIT, projectId);
+    }
+
+    /**
+     * Counts how many times this project is favorite.
+     * @param projectId The unique project id.
+     * @return Favorite count.
+     */
+    @Override
+    public long getFavoritesCount(long projectId) {
+        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_FAVORITE_COUNT, new Object[] {projectId}, Long.class);
+    }
+
     @Override
     public List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max) {
         List<Project> projects = new ArrayList<>();
@@ -305,6 +324,13 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    @Override
+    public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
+        String inSql = String.join("),(", Collections.nCopies(projectIds.size(), "?"));
+        projectIds.add(userId);
+        return jdbcTemplate.queryForList(String.format(JdbcQueries.ARE_PROJECTS_FAV, inSql),
+                projectIds.toArray(), boolean.class);
+    }
 }
 
 

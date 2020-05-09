@@ -1,3 +1,4 @@
+<%--TODO: CHANGE BACK TO HISTORY BACK --> NO MORE CONTACT APARTE--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -141,7 +142,7 @@
                     <c:if test="${sessionUser.id == project.owner.id}">
 <%--                        TODO: ADD EDIT PROJECT--%>
                     </c:if>
-                    <c:if test="${investor}">
+                    <c:if test="${sessionUser.role == 2}">
 <%--                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>--%>
                             <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">
                                 <spring:message code="contactowner"/>
@@ -208,44 +209,49 @@
 
     
 </div>
+<script>
+    let options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
 
-        <script>
+    // Every time window loads its a hit
+    window.onload = function () {
+        fetch(window.location.origin + "${pageContext.request.contextPath}" + "/addHit/" + "${project.id}", options)
+        .catch((function (reason) { console.error(reason) }))
+    };
+</script>
+<script>
+    function addFav() {
+        <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+        <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
+        let path_aux = "${pageContext.request.contextPath}";
+        let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+        fetch(path, options).catch((function (reason) { console.error(reason) }));
+    }
+    function delFav() {
+        // let path_aux = window.location.pathname.split('/')[1];
+        let path_aux = "${pageContext.request.contextPath}";
+        let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+        fetch(path, options).catch((function (reason) { console.error(reason) }));
+    }
 
-            var options = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
+    var favImage = document.getElementById('favImg');
+    var fav = ${isFav};
 
-            function addFav() {
-                <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
-                <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
-                let path_aux = "${pageContext.request.contextPath}";
-                let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
-                fetch(path, options).catch((function (reason) { console.error(reason) }));
-            }
-            function delFav() {
-                // let path_aux = window.location.pathname.split('/')[1];
-                let path_aux = "${pageContext.request.contextPath}";
-                let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
-                fetch(path, options).catch((function (reason) { console.error(reason) }));
-            }
-
-            var favImage = document.getElementById('favImg');
-            var fav = ${isFav};
-
-            function favTap() {
-                if (fav) {
-                    favImage.setAttribute("src","${favOff}");
-                    fav = false;
-                    delFav();
-                } else {
-                    favImage.setAttribute("src","${favOn}");
-                    fav = true;
-                    addFav();
-                }
-            }
-        </script>
+    function favTap() {
+        if (fav) {
+            favImage.setAttribute("src","${favOff}");
+            fav = false;
+            delFav();
+        } else {
+            favImage.setAttribute("src","${favOn}");
+            fav = true;
+            addFav();
+        }
+    }
+</script>
 </body>
 </html>

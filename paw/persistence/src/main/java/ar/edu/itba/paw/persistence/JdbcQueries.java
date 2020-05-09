@@ -223,13 +223,18 @@ public class JdbcQueries {
             "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) " +
             "WHERE pcat.category_id IN (:categories) " + "AND p.cost >= (:min) " + " AND p.cost <= (:max)";
 
+    static final String PROJECT_FAVORITE_COUNT = "SELECT COUNT(*) FROM " + FAVORITES_TABLE + " WHERE project_id = ?";
+
     static final String PROJECT_IMAGE = "SELECT p.images FROM " + PROJECT_TABLE + " p WHERE p.id = ?";
 
+    static final String PROJECT_ADD_HIT =
+            "UPDATE " + PROJECT_TABLE + " SET " +
+            "hits = hits + 1" +
+            "WHERE id = ?";
+
+
+    /* USER QUERIES */
     static final String USER_IMAGE = "SELECT u.profile_pic FROM " + USER_TABLE + " u WHERE u.id = ?";
-
-
-
-
 
     static final String USER_UPDATE = "UPDATE users SET " +
             "role_id = ?, " +
@@ -277,4 +282,9 @@ public class JdbcQueries {
     static final String FAVORITES_PROJ = "SELECT project_id FROM " + FAVORITES_TABLE + " WHERE user_id = ?";
 
     static final String DELETE_FAV = "DELETE FROM " + FAVORITES_TABLE + " WHERE project_id = ? AND user_id = ?";
+
+    static final String ARE_PROJECTS_FAV =
+            "SELECT CASE WHEN f.user_id isnull THEN 0 ELSE 1 END AS isFav " +
+            "FROM (VALUES (%s)) v(p_id) LEFT OUTER JOIN " +
+                    "(SELECT * FROM favorites WHERE user_id = ?) AS f ON v.p_id = f.project_id";
 }

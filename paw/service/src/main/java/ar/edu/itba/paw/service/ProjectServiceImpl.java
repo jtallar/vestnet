@@ -88,5 +88,20 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public boolean isFavorite(long projectId, long userId) { return projectDao.isFavorite(projectId,userId); }
+
+    @Override
+    public void addHit(long projectId) {
+        projectDao.addHit(projectId);
+    }
+
+    @Override
+    public long getFavoritesCount(long projectId) {
+        return projectDao.getFavoritesCount(projectId);
+    }
+
+    @Override
+    public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
+        return projectDao.isFavorite(projectIds, userId);
+    }
 }
 

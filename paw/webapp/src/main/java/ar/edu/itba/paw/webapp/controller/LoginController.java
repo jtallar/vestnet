@@ -4,7 +4,9 @@ import ar.edu.itba.paw.interfaces.LocationService;
 import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
+import ar.edu.itba.paw.webapp.config.RoleCookieSuccessHandler;
 import ar.edu.itba.paw.webapp.config.WebConfig;
+import ar.edu.itba.paw.webapp.cookie.CookieUtil;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -22,8 +24,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -74,7 +78,8 @@ public class LoginController {
 
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields,
-                               final BindingResult errors, @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser, HttpServletRequest request){
+                               final BindingResult errors, @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
+                               HttpServletRequest request, HttpServletResponse response){
         if(errors.hasErrors()){
             LOGGER.debug("\n\nSign Up failed. There are {} errors\n", errors.getErrorCount());
             for (ObjectError error : errors.getAllErrors())
@@ -109,11 +114,11 @@ public class LoginController {
         }
 
         // Auto Log In
-        authenticateUserAndSetSession(StringEscapeUtils.escapeHtml4(userFields.getEmail()), userFields.getPassword(), request);
+        authenticateUserAndSetSession(StringEscapeUtils.escapeHtml4(userFields.getEmail()), userFields.getPassword(), request, response);
         return new ModelAndView("redirect:/");
     }
 
-    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request) {
+    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 
         // generate session if one doesn't exist
@@ -122,6 +127,7 @@ public class LoginController {
         token.setDetails(new WebAuthenticationDetails(request));
         Authentication authenticatedUser = authenticationManager.authenticate(token);
 
+        CookieUtil.generateRoleCookie(response, authenticatedUser);
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
     }
 

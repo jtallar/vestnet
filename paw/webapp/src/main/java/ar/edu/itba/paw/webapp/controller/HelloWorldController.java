@@ -92,6 +92,7 @@ public class HelloWorldController {
         // auth.getCredentials();
         // auth.getAuthorities();
         // auth.getDetails();
+        LOGGER.debug("\n\n loggedUser() called\n\n");
         if(auth != null)
             return userService.findByUsername(auth.getName()).orElse(null);
         return null;
@@ -174,7 +175,11 @@ public class HelloWorldController {
         mav.addObject("page", page);
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
-
+        User loggedUser = loggedUser();
+        if (loggedUser != null && loggedUser.getRole() == User.UserRole.INVESTOR.getId())
+            mav.addObject("isFav", projectService.isFavorite(projectList.stream().map(Project::getId).collect(Collectors.toList()), loggedUser.getId()));
+        else
+            mav.addObject("isFav", new ArrayList<>());
 
 
         return mav;
@@ -295,6 +300,7 @@ public class HelloWorldController {
        // mav.addObject("isFav", true);
         boolean isFav = projectService.isFavorite(id, loggedUser().getId());
         mav.addObject("isFav", isFav);
+        mav.addObject("favCount", projectService.getFavoritesCount(id));
 
         return mav;
     }
@@ -314,6 +320,12 @@ public class HelloWorldController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/addHit/{p_id}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Boolean> addHit(@PathVariable("p_id") long id) {
+        projectService.addHit(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 
@@ -349,41 +361,6 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
     }
 
-    @RequestMapping(value = "/imageController/project/{p_id}",
-            produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    @ResponseBody
-    public byte[] imageControllerProject(@PathVariable("p_id") long id) {
-        // Si no tiene pic --> Devuelve null
-        // TODO: CHANGE NO IMAGE PIC
-        byte[] image = projectService.findImageForProject(id);
-        if (image == null) {
-            try {
-                Resource stockImage = new ClassPathResource("projectNoImage.png");
-                image = IOUtils.toByteArray(stockImage.getInputStream());
-            } catch (IOException e) {
-                LOGGER.debug("Could not load stock image");
-            }
-        }
-        return image;
-    }
-
-    @RequestMapping(value = "/imageController/user/{u_id}")
-    @ResponseBody
-    public byte[] imageControllerUser(@PathVariable("u_id") long id) {
-        // Si no tiene pic --> Devuelve null
-        // TODO: CHANGE NO IMAGE PIC
-        byte[] image = userService.findImageForUser(id);
-        if (image == null) {
-            try {
-                Resource stockImage = new ClassPathResource("userNoImage.png");
-                image = IOUtils.toByteArray(stockImage.getInputStream());
-            } catch (IOException e) {
-                LOGGER.debug("Could not load stock image. Error {}", e.getMessage());
-            }
-        }
-        return image;
-    }
-
 
 
 
@@ -408,6 +385,7 @@ public class HelloWorldController {
         return mav;
     }
 
+    // TODO: UNIR CON EL /projects/{id} cuando terminemos de borrar contacto
     @RequestMapping(value = "/users/{u_id}/{p_id}")
     public ModelAndView userProjectView(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
                                         @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
@@ -418,6 +396,7 @@ public class HelloWorldController {
         mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
         boolean isFav = projectService.isFavorite(projectId, userId);
         mav.addObject("isFav", isFav);
+        mav.addObject("favCount", projectService.getFavoritesCount(projectId));
 //        mav.addObject("mailSent", mailSent);
         return mav;
     }
