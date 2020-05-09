@@ -175,6 +175,7 @@
                                 </div>
                             </div>
                             <div class="col-md">
+                                <c:if test="${sessionUser.role eq 2}">
                                 <button onclick="favTap(${project.id}, ${projectIndex.index})" class="btn-transp pull-right">
 <%--                                    <c:set var="fav" value="${isFav[projectIndex]}"/>--%>
                                     <c:choose>
@@ -187,6 +188,7 @@
                                     </c:choose>
                                     <img id="favImg_${project.id}" src="${favSrc}" class="fav-img" alt="${favSrc}"/>
                                 </button>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -213,10 +215,12 @@
                             </div>
                         </div>
                     </div>
+                    <c:if test="${sessionUser.role != 1}">
                     <div class="card-footer">
                         <a href="<c:url value='/projects/${project.id}'/>"
                            class="btn btn-dark pull-right"><spring:message code="moreinfo"></spring:message></a>
                     </div>
+                    </c:if>
                 </div>
 
             </c:forEach>

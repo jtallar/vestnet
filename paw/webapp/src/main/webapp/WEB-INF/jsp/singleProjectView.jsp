@@ -135,7 +135,7 @@
                     <c:if test="${sessionUser.id == project.owner.id}">
 <%--                        TODO: ADD EDIT PROJECT--%>
                     </c:if>
-                    <c:if test="${investor}">
+                    <c:if test="${sessionUser.role == 2}">
                         <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>
                     </c:if>
                 </div>
