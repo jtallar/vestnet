@@ -148,7 +148,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
 
     @Override
-    public Integer catProjCount(List<Category> categories, long min, long max) {
+    public Integer catProjectCount(List<Category> categories, long min, long max) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
                 .addValue("min", min)
@@ -205,7 +205,7 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
     @Override
-    public Integer searchProjCount(String name, String selection) {
+    public Integer searchProjectCount(String name, String selection) {
         String search = "%" + name + "%";
         MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", search);
         System.out.println(parameters.getValue("name") + "Param");

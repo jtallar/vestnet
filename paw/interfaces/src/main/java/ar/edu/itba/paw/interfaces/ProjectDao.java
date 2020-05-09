@@ -58,38 +58,58 @@ public interface ProjectDao {
     Integer projectsCount(long min, long max);
 
     /**
-     * Finds all the matches for
-     * @param name
-     * @param selection
-     * @param page
-     * @param from
-     * @return
+     * Finds all the matches for a name given its selection.
+     * @param name String to search matches for.
+     * @param selection Specific field searched for a match.
+     * @param page Starting page.
+     * @param from Page offset.
+     * @return List of projects that meet the criteria.
      */
     List<Project> findCoincidence(String name, String selection, int page, int from);
 
+    /**
+     * Finds how many projects match with the criteria.
+     * @param name The string to search matches for.
+     * @param selection Specific field searched for a match.
+     * @return Project count.
+     */
+    Integer searchProjectCount(String name, String selection);
 
-    Integer searchProjCount(String name, String selection);
-
-
-
-
-
-
-
-    List<Project> findPage(int from, int to, long min, long max);
-
-
+    /**
+     * Finds all projects with any of the given categories within the cost range.
+     * @param categories The list of possible categories.
+     * @param from Starting page.
+     * @param to Page offset.
+     * @param min Minimum cost.
+     * @param max Maximum cost.
+     * @return List of projects.
+     */
     List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max);
 
-    Integer catProjCount(List<Category> categories, long min, long max);
+    /**
+     * Finds how many projects with any of the given categories within the cost range.
+     * @param categories The list of possible categories.
+     * @param min Minimum cost.
+     * @param max Maximum cost.
+     * @return Count of the projects that meet the given criteria.
+     */
+    Integer catProjectCount(List<Category> categories, long min, long max);
+
+    /**
+     * Finds all the projects within a cost range.
+     * @param from Starting page.
+     * @param to Page offset.
+     * @param min Minimum cost.
+     * @param max Maximum cost.
+     * @return List of found projects.
+     */
+    List<Project> findPage(int from, int to, long min, long max);
 
     /**
      * @param projectId The id of the project we want to get a portrait image
      * @return Image as a byte array
      */
     byte[] findImageForProject(long projectId);
-
-
 
     /**
      * Adds a hit to the given project.

@@ -4,10 +4,8 @@ import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,8 +46,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Integer searchProjCount(String name, String selection) {
-        return projectDao.searchProjCount(name, selection);
+    public Integer searchProjectCount(String name, String selection) {
+        return projectDao.searchProjectCount(name, selection);
     }
 
     @Override
@@ -68,8 +66,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Integer catProjCount(List<Category> categories, long min, long max) {
-        return projectDao.catProjCount(categories, min, max);
+    public Integer catProjectCount(List<Category> categories, long min, long max) {
+        return projectDao.catProjectCount(categories, min, max);
     }
 
     @Override
