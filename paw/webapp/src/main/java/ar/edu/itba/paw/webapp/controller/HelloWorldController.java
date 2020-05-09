@@ -191,7 +191,7 @@ public class HelloWorldController {
         mav.addObject("page", page);
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
-
+        mav.addObject("isFav", projectService.isFavorite(projectList.stream().map(Project::getId).collect(Collectors.toList()), loggedUser().getId()));
 
 
         return mav;

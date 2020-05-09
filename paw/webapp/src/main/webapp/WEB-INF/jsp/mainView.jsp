@@ -164,7 +164,7 @@
 <c:if test="${!empty list}">
     <div class="body">
         <div class="card-deck">
-            <c:forEach items="${list}" var="project">
+            <c:forEach items="${list}" var="project" varStatus="projectIndex">
                 <%--                <div class="col-sm-3 my-card">--%>
                 <div class="card mb-3">
                     <div class="card-header text-white">
@@ -175,17 +175,17 @@
                                 </div>
                             </div>
                             <div class="col-md">
-                                <button onclick="favTap(${project.id})" class="btn-transp pull-right">
-                                        <%--                        <c:set var="fav" value="true"/>--%>
-                                        <%--                        <c:choose>--%>
-                                        <%--                            <c:when test="${true}" >--%>
-                                        <%--                                <c:set var="favSrc" value="${favOn}"/>--%>
-                                        <%--                            </c:when>--%>
-                                        <%--                            <c:when test="${false}">--%>
-                                        <%--                                <c:set var="favSrc" value="${favOff}"/>--%>
-                                        <%--                            </c:when>--%>
-                                        <%--                        </c:choose>--%>
-                                    <img id="favImg_${project.id}" src="${favOff}" class="fav-img">
+                                <button onclick="favTap(${project.id}, ${projectIndex.index})" class="btn-transp pull-right">
+<%--                                    <c:set var="fav" value="${isFav[projectIndex]}"/>--%>
+                                    <c:choose>
+                                        <c:when test="${isFav[projectIndex.index]}" >
+                                            <c:set var="favSrc" value="${favOn}"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="favSrc" value="${favOff}"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <img id="favImg_${project.id}" src="${favSrc}" class="fav-img" alt="${favSrc}"/>
                                 </button>
                             </div>
                         </div>
@@ -249,26 +249,13 @@
 
 <script>
 
-    let fav = true;
+    var fav = ${isFav};
+    // let fav = true;
     <%--            ${isFav};--%>
 
-    function favTap(p_id) {
-        let pid = "favImg_" + p_id;
-        let favImage = document.getElementById(pid);
-        if (fav) {
-            favImage.setAttribute("src", "${favOff}");
-            fav = false;
-            delFav(p_id);
-        } else {
-            favImage.setAttribute("src", "${favOn}");
-            fav = true;
-            addFav(p_id);
-        }
-    }
-
     function filterList(clickedId) {
-        var sel = document.getElementById("category")
-        var cat = sel.options[sel.selectedIndex].value
+        var sel = document.getElementById("category");
+        var cat = sel.options[sel.selectedIndex].value;
         console.log(sel.options[sel.selectedIndex].value);
         document.getElementById("test").innerText = $("category");
 
@@ -302,6 +289,19 @@
         }));
     }
 
+    function favTap(p_id, index) {
+        let pid = "favImg_" + p_id;
+        let favImage = document.getElementById(pid);
+        if (fav[index]) {
+            favImage.setAttribute("src", "${favOff}");
+            fav[index] = false;
+            delFav(p_id);
+        } else {
+            favImage.setAttribute("src", "${favOn}");
+            fav[index] = true;
+            addFav(p_id);
+        }
+    }
 
 </script>
 </body>
