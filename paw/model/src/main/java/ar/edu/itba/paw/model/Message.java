@@ -5,31 +5,31 @@ import java.time.LocalDate;
 public class Message {
     private final long id;
 
-    private final MessageContent messageContent;
+    private final MessageContent content;
 
     private final LocalDate publishDate;
     private Boolean accepted;
 
     private final long senderId;
     private final long receiverId;
-    private final long conversationId;
+    private final long projectId;
 
-    public Message(long id, MessageContent messageContent, LocalDate publishDate, Boolean accepted, long senderId, long receiverId, long conversationId) {
+    public Message(long id, MessageContent content, LocalDate publishDate, Boolean accepted, long senderId, long receiverId, long projectId) {
         this.id = id;
-        this.messageContent = messageContent;
+        this.content = content;
         this.publishDate = publishDate;
         this.accepted = accepted;
         this.senderId = senderId;
         this.receiverId = receiverId;
-        this.conversationId = conversationId;
+        this.projectId = projectId;
     }
 
     public long getId() {
         return id;
     }
 
-    public MessageContent getMessageContent() {
-        return messageContent;
+    public MessageContent getContent() {
+        return content;
     }
 
     public LocalDate getPublishDate() {
@@ -48,8 +48,8 @@ public class Message {
         return receiverId;
     }
 
-    public long getConversationId() {
-        return conversationId;
+    public long getProjectId() {
+        return projectId;
     }
 
     public class MessageContent {
@@ -89,12 +89,11 @@ public class Message {
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", messageContent=" + messageContent +
+                ", messageContent=" + content +
                 ", publishDate=" + publishDate +
                 ", accepted=" + accepted +
                 ", senderId=" + senderId +
                 ", receiverId=" + receiverId +
-                ", conversationId=" + conversationId +
                 '}';
     }
 }
