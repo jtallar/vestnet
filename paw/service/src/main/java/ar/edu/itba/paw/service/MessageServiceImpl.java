@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.MessageDao;
 import ar.edu.itba.paw.interfaces.MessageService;
 import ar.edu.itba.paw.model.Message;
@@ -17,7 +18,7 @@ public class MessageServiceImpl implements MessageService {
     private MessageDao messageDao;
 
     @Override
-    public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) {
+    public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException {
         return messageDao.create(message, offer, interest, senderId, receiverId, projectId);
     }
 

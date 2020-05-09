@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.MessageDao;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.User;
@@ -37,7 +38,9 @@ public class MessageJdbcDao implements MessageDao {
     }
 
     @Override
-    public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) {
+    public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException {
+        Message lastMessage = findMessage(senderId, receiverId, projectId);
+        if (lastMessage != null && lastMessage.isAccepted() == null) throw new MessageAlreadySentException();
         Map<String, Object> values = new HashMap<>();
         if (message.length() > 0) values.put("content_message", message);
         values.put("content_offer",offer);
@@ -61,5 +64,11 @@ public class MessageJdbcDao implements MessageDao {
     @Override
     public long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted) {
         return jdbcTemplate.update(JdbcQueries.MESSAGE_UPDATE_STATUS, accepted, senderId, receiverId, projectId);
+    }
+
+    private Message findMessage(long senderId, long receiverId, long projectId) {
+        List<Message> messages= jdbcTemplate.query(JdbcQueries.MESSAGE_GET_SENT_TO, RESULT_SET_EXTRACTOR, projectId, senderId, receiverId);
+        if (messages.size() == 0) return null;
+        return messages.get(messages.size() - 1);
     }
 }

@@ -36,7 +36,7 @@ public class Message {
         return publishDate;
     }
 
-    public Boolean getAccepted() {
+    public Boolean isAccepted() {
         return accepted;
     }
 

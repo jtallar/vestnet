@@ -301,4 +301,7 @@ public class JdbcQueries {
             "SELECT * FROM " + MESSAGE_TABLE + " " +
             "WHERE project_id = ? AND receiver_id = ? AND accepted IS NULL";
 
+    static final String MESSAGE_GET_SENT_TO =
+            "SELECT * FROM " + MESSAGE_TABLE + " " +
+            "WHERE project_id = ? AND sender_id = ? AND receiver_id = ?";
 }
