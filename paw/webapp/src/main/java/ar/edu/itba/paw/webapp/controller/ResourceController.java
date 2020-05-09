@@ -18,6 +18,7 @@ import java.io.IOException;
 
 @Controller
 public class ResourceController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
     @Autowired
@@ -26,12 +27,9 @@ public class ResourceController {
     @Autowired
     private ProjectService projectService;
 
-    @RequestMapping(value = "/imageController/project/{p_id}",
-            produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @RequestMapping(value = "/imageController/project/{p_id}", produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     public byte[] imageControllerProject(@PathVariable("p_id") long id) {
-        // Si no tiene pic --> Devuelve null
-        // TODO: CHANGE NO IMAGE PIC
         byte[] image = projectService.findImageForProject(id);
         if (image == null) {
             try {
@@ -47,8 +45,6 @@ public class ResourceController {
     @RequestMapping(value = "/imageController/user/{u_id}")
     @ResponseBody
     public byte[] imageControllerUser(@PathVariable("u_id") long id) {
-        // Si no tiene pic --> Devuelve null
-        // TODO: CHANGE NO IMAGE PIC
         byte[] image = userService.findImageForUser(id);
         if (image == null) {
             try {

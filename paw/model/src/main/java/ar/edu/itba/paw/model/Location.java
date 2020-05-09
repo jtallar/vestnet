@@ -14,6 +14,12 @@ public class Location {
         this.city = city;
     }
 
+    public Location(int countryId, int stateId, int cityId) {
+        this.country = new Country(countryId);
+        this.state = new State(stateId);
+        this.city = new City(cityId);
+    }
+
     public Country getCountry() {
         return country;
     }
@@ -51,6 +57,14 @@ public class Location {
             this.isoCode = isoCode;
             this.phoneCode = phoneCode;
             this.currency = currency;
+        }
+
+        public Country(int id) {
+            this.id = id;
+            this.name = "";
+            this.isoCode = "";
+            this.phoneCode = "";
+            this.currency = "";
         }
 
         public int getId() {
@@ -99,6 +113,12 @@ public class Location {
             this.isoCode = isoCode;
         }
 
+        public State(int id) {
+            this.id = id;
+            this.name = "";
+            this.isoCode = "";
+        }
+
         public int getId() {
             return id;
         }
@@ -131,6 +151,11 @@ public class Location {
         public City(int id, String name) {
             this.id = id;
             this.name = name;
+        }
+
+        public City(int id) {
+            this.id = id;
+            this.name = "";
         }
 
         public int getId() {

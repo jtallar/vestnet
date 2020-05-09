@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.cookie.CookieUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.util.WebUtils;
@@ -15,6 +13,7 @@ import java.util.List;
 
 @ControllerAdvice
 public class RoleCookieControllerAdvice {
+
     @ModelAttribute("roleNumber")
     public int roleNumber(HttpServletRequest request) {
         final Cookie cookie = WebUtils.getCookie(request, CookieUtil.ROLE_COOKIE_NAME);
