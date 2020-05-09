@@ -62,19 +62,19 @@ public class ProjectJdbcDao implements ProjectDao {
 
     /**
      * Search for a specific project given its id.
-     * @param id The unique id for the project
+     * @param projectId The unique id for the project
      * @return The entire project if found, otherwise null.
      */
     @Override
-    public Optional<Project> findById(long id) {
-        Optional<Project> project = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, id).stream().findFirst();
+    public Optional<Project> findById(long projectId) {
+        Optional<Project> project = jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, projectId).stream().findFirst();
         // TODO add stages
         return project;
     }
 
     @Override
-    public Integer projectsCount(long min, long max) {
-        Integer count = jdbcTemplate.queryForObject(JdbcQueries.COUNT_PROJECTS,new Object[] {min, max}, Integer.class);
+    public Integer countByCost(long minCost, long maxCost) {
+        Integer count = jdbcTemplate.queryForObject(JdbcQueries.COUNT_PROJECTS,new Object[] {minCost, maxCost}, Integer.class);
         return count;
     }
 
@@ -128,15 +128,15 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findCatForPage(List<Category> categories, int from, int to, long min, long max) {
+    public List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost) {
         List<Project> projects = new ArrayList<>();
-        if(to != 0){
+        if(pageOffset != 0){
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("from", from)
-                .addValue("to", to)
+                .addValue("from", pageStart)
+                .addValue("to", pageOffset)
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
-                .addValue("min", min)
-                .addValue("max", max);
+                .addValue("min", minCost)
+                .addValue("max", maxCost);
 
         List<Integer> ids = namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE_CATEGORY, parameters, Integer.class);
             MapSqlParameterSource id_par = new MapSqlParameterSource().addValue("ids", ids);
@@ -148,11 +148,11 @@ public class ProjectJdbcDao implements ProjectDao {
 
 
     @Override
-    public Integer catProjCount(List<Category> categories, long min, long max) {
+    public Integer countByCategory(List<Category> categories, long minCost, long maxCost) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
-                .addValue("min", min)
-                .addValue("max", max);
+                .addValue("min", minCost)
+                .addValue("max", maxCost);
 
         Integer count = namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_CAT, parameters, Integer.class);
         // TODO add stages?
@@ -205,7 +205,7 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
     @Override
-    public Integer searchProjCount(String name, String selection) {
+    public Integer countByCoincidence(String name, String selection) {
         String search = "%" + name + "%";
         MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", search);
         System.out.println(parameters.getValue("name") + "Param");
@@ -236,12 +236,12 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findCoincidence(String name,String selection, int from, int to) {
+    public List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset) {
         List<Project> projects;
         List<Integer> ids;
         String search = "%" + name + "%";
         MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("name", search)
-                                             .addValue("from", from).addValue("to", to);
+                                             .addValue("from", pageStart).addValue("to", pageOffset);
         switch (selection){
             case "all":
                 ids =  namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_ALL, parameters, Integer.class);
@@ -310,10 +310,10 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findPage(int from, int to, long min, long max) {
+    public List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost) {
         List<Project> projects;
-        if(to != 0) {
-            List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{min, max, from, to}, Integer.class);
+        if(pageOffset != 0) {
+            List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{minCost, maxCost, pageStart, pageOffset}, Integer.class);
             MapSqlParameterSource parameters = new MapSqlParameterSource()
                     .addValue("ids", ids);
             projects = namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parameters, RESULT_SET_EXTRACTOR);

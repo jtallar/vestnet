@@ -117,7 +117,7 @@ public class HelloWorldController {
                                   @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
-        List<Category> catList = categoriesService.findAllCats();
+        List<Category> catList = categoriesService.findAll();
 
 
         if(errors.hasErrors()){
@@ -179,13 +179,13 @@ public class HelloWorldController {
 
         Integer projects;
         if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats")){ //calculate total projects to render to check limit and offset
-            projects = projectService.projectsCount(minAux, maxAux);
+            projects = projectService.countByCost(minAux, maxAux);
         }
         else {
             Optional<Category> selectedCategory = catList.stream()
                     .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
                     .findFirst();
-            projects = projectService.catProjCount(Collections.singletonList(selectedCategory.get()), minAux, maxAux);
+            projects = projectService.countByCategory(Collections.singletonList(selectedCategory.get()), minAux, maxAux);
         }
         return projects;
     }
@@ -210,12 +210,12 @@ public class HelloWorldController {
                     .findFirst();
             if (selectedCategory.isPresent()) {
 
-                auxList = projectService.findCatForPage(Collections.singletonList(selectedCategory.get()), from, size, minAux, maxAux);
+                auxList = projectService.findByCategoryPage(Collections.singletonList(selectedCategory.get()), from, size, minAux, maxAux);
 
             }
         } else {
 
-            auxList = projectService.findPage(from, size, minAux, maxAux);
+            auxList = projectService.findByCostPage(from, size, minAux, maxAux);
         }
 
         if(catFilter.getOrderBy() != null) {
@@ -316,7 +316,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
         final ModelAndView mav = new ModelAndView("newProject");
-        List<Category> catList = categoriesService.findAllCats();
+        List<Category> catList = categoriesService.findAll();
         catList.sort(Comparator.comparing(Category::getName));
         mav.addObject("categories", catList);
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
@@ -406,7 +406,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("search");
         int mypage = Integer.parseInt(page);
         int from = (mypage == 1) ? 0 : ((mypage -1) * PAGE_SIZE);
-        Integer projects = projectService.searchProjCount(search, selection);
+        Integer projects = projectService.countByCoincidence(search, selection);
         Boolean hasNext = (projects > ((mypage)* PAGE_SIZE) ) ? true : false;
 
 
@@ -414,7 +414,7 @@ public class HelloWorldController {
 
         mav.addObject("searchVal", search);
         mav.addObject("selectionVal", selection);
-        mav.addObject("projectsList", projectService.findCoincidence(aux,selection, from, PAGE_SIZE));
+        mav.addObject("projectsList", projectService.findByCoincidencePage(aux,selection, from, PAGE_SIZE));
         mav.addObject("page", page);
         mav.addObject("hasNext", hasNext);
         mav.addObject("string", aux);
