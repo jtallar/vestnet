@@ -92,6 +92,7 @@ public class HelloWorldController {
         // auth.getCredentials();
         // auth.getAuthorities();
         // auth.getDetails();
+        LOGGER.debug("\n\n loggedUser() called\n\n");
         if(auth != null)
             return userService.findByUsername(auth.getName()).orElse(null);
         return null;
@@ -105,24 +106,6 @@ public class HelloWorldController {
     /*@ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(code = HttpStatus.CONFLICT)
     public ModelAndView failedRegistration() { return new ModelAndView("error"); }*/
-
-    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.GET})
-    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
-        final ModelAndView mav = new ModelAndView("contact");
-        mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
-        mav.addObject("p_id", p_id);
-        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
-        return mav;
-    }
-
-    @RequestMapping(value = "/projects/{p_id}/contact", method = {RequestMethod.POST})
-    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors) throws MessagingException {
-            if (errors.hasErrors()) {
-                return contact(mailFields, p_id);
-            }
-           emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
-           return new ModelAndView("redirect:/projects/{p_id}?mailSent=yes");
-    }
 
     @RequestMapping("/")
     public ModelAndView index(){
@@ -143,7 +126,8 @@ public class HelloWorldController {
     }*/
 
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, BindingResult errors, @RequestParam(name = "page", defaultValue ="1") String page) {
+    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, final BindingResult errors,
+                                  @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAllCats();
@@ -191,7 +175,11 @@ public class HelloWorldController {
         mav.addObject("page", page);
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
-
+        User loggedUser = loggedUser();
+        if (loggedUser != null && loggedUser.getRole() == User.UserRole.INVESTOR.getId())
+            mav.addObject("isFav", projectService.isFavorite(projectList.stream().map(Project::getId).collect(Collectors.toList()), loggedUser.getId()));
+        else
+            mav.addObject("isFav", new ArrayList<>());
 
 
         return mav;
@@ -272,21 +260,41 @@ public class HelloWorldController {
 
 
 
+//    @RequestMapping(value = "/projects/{p_id}", method = {RequestMethod.GET})
+//    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
+//        final ModelAndView mav = new ModelAndView("contact");
+//        mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
+//        mav.addObject("p_id", p_id);
+//        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
+//        return mav;
+//    }
+//
+//    @RequestMapping(value = "/projects/{p_id}", method = {RequestMethod.POST})
+//    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors) throws MessagingException {
+//        if (errors.hasErrors()) {
+//            return contact(mailFields, p_id);
+//        }
+//        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
+//        return new ModelAndView("redirect:/projects/{p_id}?mailSent=yes");
+//    }
 
+    @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id,
+                                          @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
+        if (errors.hasErrors()) {
+            return singleProjectView(mailFields, id, false);
+        }
+        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
+        return new ModelAndView("redirect:/projects/{id}?mailSent=yes");
+    }
 
-
-    // TODO> COMO LE PASO EL PROJECT CLICKEADO POR PARAMS A ESTE? ASI TENGO QUE IR DE NUEVO A LA BD
-    // TODO: HACE FALTA EL REQUIRED = FALSE?
-    @RequestMapping(value = "/projects/{id}")
-    public ModelAndView singleProjectView(@PathVariable("id") long id,
+    @RequestMapping(value = "/projects/{id}", method = {RequestMethod.GET})
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
 
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
-        mav.addObject("back", "/projects");
-        mav.addObject("investor", true);
-       // mav.addObject("isFav", true);
         boolean isFav = projectService.isFavorite(id, loggedUser().getId());
         mav.addObject("isFav", isFav);
         mav.addObject("favCount", projectService.getFavoritesCount(id));
@@ -329,7 +337,7 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
-    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, BindingResult errors){
+    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, final BindingResult errors){
         if (errors.hasErrors()) {
             return createProject(projectFields);
         }
@@ -348,41 +356,6 @@ public class HelloWorldController {
         long projectId = projectService.create(title, summary,
                 projectFields.getCost(), loggedUser().getId(), projectFields.getCategories(), null, imageBytes);
         return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
-    }
-
-    @RequestMapping(value = "/imageController/project/{p_id}",
-            produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    @ResponseBody
-    public byte[] imageControllerProject(@PathVariable("p_id") long id) {
-        // Si no tiene pic --> Devuelve null
-        // TODO: CHANGE NO IMAGE PIC
-        byte[] image = projectService.findImageForProject(id);
-        if (image == null) {
-            try {
-                Resource stockImage = new ClassPathResource("projectNoImage.png");
-                image = IOUtils.toByteArray(stockImage.getInputStream());
-            } catch (IOException e) {
-                LOGGER.debug("Could not load stock image");
-            }
-        }
-        return image;
-    }
-
-    @RequestMapping(value = "/imageController/user/{u_id}")
-    @ResponseBody
-    public byte[] imageControllerUser(@PathVariable("u_id") long id) {
-        // Si no tiene pic --> Devuelve null
-        // TODO: CHANGE NO IMAGE PIC
-        byte[] image = userService.findImageForUser(id);
-        if (image == null) {
-            try {
-                Resource stockImage = new ClassPathResource("userNoImage.png");
-                image = IOUtils.toByteArray(stockImage.getInputStream());
-            } catch (IOException e) {
-                LOGGER.debug("Could not load stock image. Error {}", e.getMessage());
-            }
-        }
-        return image;
     }
 
 
@@ -409,18 +382,30 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(value = "/users/{u_id}/{p_id}")
-    public ModelAndView userProjectView(@PathVariable("u_id") long userId, @PathVariable("p_id") long projectId) {
+    /*@RequestMapping(value = "/users/{u_id}/{p_id}")
+    public ModelAndView userProjectView(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
+                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
         final ModelAndView mav = new ModelAndView("singleProjectView");
         mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("mailSent", mailSent);
         mav.addObject("back", "/users/" + userId);
-        mav.addObject("investor", loggedUser().getRole() == User.UserRole.INVESTOR.getId());
-        boolean isFav = projectService.isFavorite(projectId, userId);
+        boolean isFav = projectService.isFavorite(projectId, loggedUser().getId());
         mav.addObject("isFav", isFav);
         mav.addObject("favCount", projectService.getFavoritesCount(projectId));
-//        mav.addObject("mailSent", mailSent);
+
         return mav;
     }
+
+    @RequestMapping(value = "/users/{u_id}/{p_id}", method = {RequestMethod.POST})
+    public ModelAndView userProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors,
+                                        @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
+                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
+        if (errors.hasErrors()) {
+            return userProjectView(mailFields, userId, projectId, false);
+        }
+        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
+        return new ModelAndView("redirect:/users/{u_id}/{p_id}?mailSent=yes");
+    }*/
 
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){

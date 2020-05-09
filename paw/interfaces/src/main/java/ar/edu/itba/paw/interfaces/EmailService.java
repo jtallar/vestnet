@@ -5,11 +5,13 @@ import javax.mail.MessagingException;
 public interface EmailService {
 
     /**
-     * Sends a email with the right formatting.
-     * @param from Mail of the sender.
+     * Sends a formatted email.
+     * @param from User mail sender.
      * @param body Content of the mail.
-     * @param to Mail of the recipient
-     * @throws MessagingException When the email cannot be sent.
+     * @param offers Offer of the mail.
+     * @param exchange Exchange of the mail.
+     * @param to User recipient mail.
+     * @throws MessagingException When mail cannot be sent.
      */
-    void sendNewEmail(String from, String body, String to) throws MessagingException;
+    void sendNewEmail(String from, String body, String offers, String exchange, String to) throws MessagingException;
 }

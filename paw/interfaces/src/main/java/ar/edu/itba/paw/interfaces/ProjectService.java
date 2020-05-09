@@ -79,4 +79,11 @@ public interface ProjectService {
      * @return Count of favorites
      */
     long getFavoritesCount(long projectId);
+
+    /**
+     * @param projectIds projects to check if where faved by user
+     * @param userId user who could have faved ids
+     * @return boolean list whether project id was faved or not
+     */
+    List<Boolean> isFavorite(List<Long> projectIds, long userId);
 }

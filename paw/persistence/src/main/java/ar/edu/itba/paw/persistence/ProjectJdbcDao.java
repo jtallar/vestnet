@@ -324,6 +324,13 @@ public class ProjectJdbcDao implements ProjectDao {
         return projects;
     }
 
+    @Override
+    public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
+        String inSql = String.join("),(", Collections.nCopies(projectIds.size(), "?"));
+        projectIds.add(userId);
+        return jdbcTemplate.queryForList(String.format(JdbcQueries.ARE_PROJECTS_FAV, inSql),
+                projectIds.toArray(), boolean.class);
+    }
 }
 
 
