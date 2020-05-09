@@ -11,7 +11,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class MessageJdbcDao implements MessageDao {
@@ -35,21 +38,28 @@ public class MessageJdbcDao implements MessageDao {
 
     @Override
     public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) {
-        return 0;
+        Map<String, Object> values = new HashMap<>();
+        if (message.length() > 0) values.put("content_message", message);
+        values.put("content_offer",offer);
+        if (interest.length() > 0) values.put("content_interest", interest);
+        values.put("sender_id", senderId);
+        values.put("receiver_id", receiverId);
+        values.put("project_id", projectId);
+        return jdbcInsert.executeAndReturnKey(values).longValue();
     }
 
     @Override
     public List<Message> getConversation(long entrepreneurId, long investorId, long projectId) {
-        return null;
+        return jdbcTemplate.query(JdbcQueries.MESSAGE_GET_CONVERSATION, RESULT_SET_EXTRACTOR, projectId, entrepreneurId, investorId, investorId, entrepreneurId);
     }
 
     @Override
     public List<Message> getProjectUnread(long userId, long projectId) {
-        return null;
+        return jdbcTemplate.query(JdbcQueries.MESSAGE_GET_PROJECT_UNREAD, RESULT_SET_EXTRACTOR, projectId, userId);
     }
 
     @Override
     public long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted) {
-        return 0;
+        return jdbcTemplate.update(JdbcQueries.MESSAGE_UPDATE_STATUS, accepted, senderId, receiverId, projectId);
     }
 }
