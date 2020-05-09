@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces;
 
-import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Location.City;
 import ar.edu.itba.paw.model.Location.Country;
 import ar.edu.itba.paw.model.Location.State;

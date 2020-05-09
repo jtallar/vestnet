@@ -4,21 +4,15 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.*;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
-import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 

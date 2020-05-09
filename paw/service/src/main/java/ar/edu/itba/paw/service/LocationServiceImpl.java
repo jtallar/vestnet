@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.CategoriesDao;
 import ar.edu.itba.paw.interfaces.LocationDao;
 import ar.edu.itba.paw.interfaces.LocationService;
 import ar.edu.itba.paw.model.Location;
