@@ -295,7 +295,8 @@ public class JdbcQueries {
 
     static final String MESSAGE_GET_CONVERSATION =
             "SELECT * FROM " + MESSAGE_TABLE + " " +
-            "WHERE project_id = ? AND (( sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?))";
+            "WHERE project_id = ? AND (( sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)) " +
+            "ORDER BY publish_date";
 
     static final String MESSAGE_GET_PROJECT_UNREAD =
             "SELECT * FROM " + MESSAGE_TABLE + " " +
@@ -303,5 +304,6 @@ public class JdbcQueries {
 
     static final String MESSAGE_GET_SENT_TO =
             "SELECT * FROM " + MESSAGE_TABLE + " " +
-            "WHERE project_id = ? AND sender_id = ? AND receiver_id = ?";
+            "WHERE project_id = ? AND sender_id = ? AND receiver_id = ? " +
+            "ORDER BY publish_date DESC";
 }

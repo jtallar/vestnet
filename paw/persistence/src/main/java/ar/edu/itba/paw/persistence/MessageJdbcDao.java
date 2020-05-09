@@ -75,7 +75,7 @@ public class MessageJdbcDao implements MessageDao {
      * @return The last message or null if none
      */
     private Optional<Message> findLastSentMessage(long senderId, long receiverId, long projectId) {
-        List<Message> messages= jdbcTemplate.query(JdbcQueries.MESSAGE_GET_SENT_TO, RESULT_SET_EXTRACTOR, projectId, senderId, receiverId);
-        return messages.stream().reduce((first, second) -> second);
+        return jdbcTemplate.query(JdbcQueries.MESSAGE_GET_SENT_TO, RESULT_SET_EXTRACTOR, projectId, senderId, receiverId)
+                .stream().findFirst();
     }
 }
