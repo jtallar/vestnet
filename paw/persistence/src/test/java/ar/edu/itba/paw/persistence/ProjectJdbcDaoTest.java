@@ -322,6 +322,15 @@ public class ProjectJdbcDaoTest {
 //        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
 //    }
 
+
+    /**
+     * Auxiliary functions
+     */
+
+    /**
+     * Creates a user and inserts it on database
+     * @return The user id.
+     */
     private long createUser() {
         Map<String, Object> country = new HashMap<>();
         country.put("id", 1);

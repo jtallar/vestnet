@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Location.Country;
 import ar.edu.itba.paw.model.Location.State;
 import org.junit.Before;
@@ -150,9 +149,6 @@ public class LocationJdbcDaoTest {
         Map<String, Object> values = new HashMap<>();
         values.put("id", COUNTRY_ID);
         values.put("country", COUNTRY_NAME);
-        values.put("iso2", "");
-        values.put("phonecode", "");
-        values.put("currency", "");
         jdbcInsertCountry.execute(values);
     }
 
@@ -164,7 +160,6 @@ public class LocationJdbcDaoTest {
         values.put("id", STATE_ID);
         values.put("state", STATE_NAME);
         values.put("country_id", COUNTRY_ID);
-        values.put("iso2", "");
         jdbcInsertState.execute(values);
     }
 
