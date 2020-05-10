@@ -64,11 +64,6 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findAll() {
-        return jdbcTemplate.query(JdbcQueries.PROJECT_FIND_ALL_SORTED, RESULT_SET_EXTRACTOR);
-    }
-
-    @Override
     public Optional<Project> findById(long projectId) {
         return jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, projectId).stream().findFirst();
     }
@@ -79,17 +74,8 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findByCategories(List<Category> categories) {
-        if (categories == null || categories.isEmpty()) return findAll();
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()));
-
-        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_CAT, parameters, RESULT_SET_EXTRACTOR);
-    }
-
-    @Override
     public Integer countByCost(long minCost, long maxCost) {
-        return jdbcTemplate.queryForObject(JdbcQueries.COUNT_PROJECTS,new Object[] {minCost, maxCost}, Integer.class);
+        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_COST_MATCH,new Object[] {minCost, maxCost}, Integer.class);
     }
 
     @Override
@@ -97,7 +83,7 @@ public class ProjectJdbcDao implements ProjectDao {
         List<Integer> ids = findIdsByCoincidencePaged("%" + name + "%", selection, pageStart, pageOffset);
 
         MapSqlParameterSource parAux = new MapSqlParameterSource("ids", ids);
-        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parAux, RESULT_SET_EXTRACTOR);
+        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_IDS, parAux, RESULT_SET_EXTRACTOR);
     }
 
     @Override
@@ -106,11 +92,11 @@ public class ProjectJdbcDao implements ProjectDao {
                 .addValue("name", "%" + name + "%");
 
         switch (selection) {
-            case "all": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_ALL, parameters, Integer.class);
-            case "project_info": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_PROJECT_INFO, parameters, Integer.class);
-            case "owner_name": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_OWNER_NAME, parameters, Integer.class);
-            case "owner_email": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_EMAIL, parameters, Integer.class);
-            case "loc": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.SEARCH_PROJ_COUNT_LOC, parameters, Integer.class);
+            case "all": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_ALL_NAME_MATCH, parameters, Integer.class);
+            case "project_info": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_NAME_SUMMARY_MATCH, parameters, Integer.class);
+            case "owner_name": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_FULL_NAME_MATCH, parameters, Integer.class);
+            case "owner_email": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_EMAIL_MATCH, parameters, Integer.class);
+            case "loc": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_LOCATION_MATCH, parameters, Integer.class);
             default: return 0;
         }
     }
@@ -126,10 +112,10 @@ public class ProjectJdbcDao implements ProjectDao {
                 .addValue("min", minCost)
                 .addValue("max", maxCost);
 
-        List<Integer> ids = namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE_CATEGORY, parameters, Integer.class);
+        List<Integer> ids = namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_CATEGORY_COST_MATCH, parameters, Integer.class);
 
         MapSqlParameterSource id_par = new MapSqlParameterSource().addValue("ids", ids);
-        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, id_par, RESULT_SET_EXTRACTOR);
+        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_IDS, id_par, RESULT_SET_EXTRACTOR);
     }
 
     @Override
@@ -139,17 +125,17 @@ public class ProjectJdbcDao implements ProjectDao {
                 .addValue("min", minCost)
                 .addValue("max", maxCost);
 
-        return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_CAT, parameters, Integer.class);
+        return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_CATEGORY_COST_MATCH, parameters, Integer.class);
     }
 
     @Override
     public List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost) {
         if(pageOffset == 0) return new ArrayList<>();
 
-        List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_ID_FROM_PAGE, new Object[]{minCost, maxCost, pageStart, pageOffset}, Integer.class);
+        List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_COST_MATCH, new Object[]{minCost, maxCost, pageStart, pageOffset}, Integer.class);
 
         MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("ids", ids);
-        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_WITH_ID_LIST, parameters, RESULT_SET_EXTRACTOR);
+        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_IDS, parameters, RESULT_SET_EXTRACTOR);
     }
 
     @Override
@@ -172,7 +158,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public void deleteFavorite(long projectId, long userId) {
-        jdbcTemplate.update(JdbcQueries.DELETE_FAV, new Object[]{projectId,userId});
+        jdbcTemplate.update(JdbcQueries.USER_DELETE_FAVORITE, new Object[]{projectId,userId});
     }
 
     @Override
@@ -182,19 +168,19 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Long> findFavorites(long user_id) {
-        return jdbcTemplate.query(JdbcQueries.FAVORITES_PROJ, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
+        return jdbcTemplate.query(JdbcQueries.USER_FIND_FAVORITES, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
     }
 
     @Override
     public long getFavoritesCount(long projectId) {
-        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_FAVORITE_COUNT, new Object[] {projectId}, Long.class);
+        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_FAVORITE, new Object[] {projectId}, Long.class);
     }
 
     @Override
     public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
         String inSql = String.join("),(", Collections.nCopies(projectIds.size(), "?"));
         projectIds.add(userId);
-        return jdbcTemplate.queryForList(String.format(JdbcQueries.ARE_PROJECTS_FAV, inSql), projectIds.toArray(), boolean.class);
+        return jdbcTemplate.queryForList(String.format(JdbcQueries.PROJECT_IS_FAVORITE_BY_ID_USER, inSql), projectIds.toArray(), boolean.class);
     }
 
 
@@ -223,11 +209,11 @@ public class ProjectJdbcDao implements ProjectDao {
                 .addValue("to", pageOffset);
 
         switch (selection) {
-            case "all": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_ALL, parameters, Integer.class);
-            case "project_info": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_PROJECT_INFO, parameters, Integer.class);
-            case "owner_name": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_OWNER_NAME, parameters, Integer.class);
-            case "owner_email": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_EMAIL, parameters, Integer.class);
-            case "loc": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_FIND_COINCIDENCE_ID_LOC, parameters, Integer.class);
+            case "all": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_ALL_NAME_MATCH, parameters, Integer.class);
+            case "project_info": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_NAME_SUMMARY_MATCH, parameters, Integer.class);
+            case "owner_name": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_FULL_NAME_MATCH, parameters, Integer.class);
+            case "owner_email": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_EMAIL_MATCH, parameters, Integer.class);
+            case "loc": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_LOCATION_MATCH, parameters, Integer.class);
             default: return new ArrayList<>();
         }
     }
