@@ -227,7 +227,7 @@ public class ProjectController {
 
         long projectId = projectService.create(title, summary,
                 projectFields.getCost(), userId, projectFields.getCategories(), null, imageBytes);
-        return new ModelAndView("redirect:/users/" + userId + "/" + projectId);
+        return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
     }
 
 

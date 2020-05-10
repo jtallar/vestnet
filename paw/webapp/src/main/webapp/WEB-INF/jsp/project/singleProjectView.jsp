@@ -151,7 +151,8 @@
                     </c:if>
                     <c:if test="${sessionUser.role == 2}">
 <%--                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>--%>
-                            <button onclick="scroll()" class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">
+                            <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact"
+                                    aria-expanded="false" aria-controls="contact" id="contact-expand-button">
                                 <spring:message code="contactowner"/>
                             </button>
                     </c:if>
@@ -159,6 +160,7 @@
             </div>
         </div>
 
+    <c:if test="${sessionUser.role == 2}">
     <div class="collapse" id="contact">
         <div class="card contact">
             <div class="card-header">
@@ -219,6 +221,7 @@
             </div>
         </div>
     </div>
+    </c:if>
     </div>
 </div>
 <script>
@@ -237,10 +240,13 @@
 </script>
 
 <script>
-    function scroll(){
-        window.scrollTo(0,document.body.scrollHeight);
-        window.scrollTo(0,100);
-    }
+    $('.collapse').on('shown.bs.collapse', function () {
+        var element = document.getElementById('contact');
+        element.scrollIntoView({
+            block: 'start',
+            behavior: 'smooth'
+        });
+    });
     function addFav() {
         <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
         <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
@@ -272,20 +278,22 @@
 
     // TODO: VER SI SE PUEDE HACER DE OTRA FORMA
     function getBackAction() {
-        if (${mailSent}) {
-            history.back();
+        if (${contactStatus == 0}) {
             history.back();
         } else {
+            history.back();
             history.back();
         }
     }
 
     var offerTag = document.getElementById('contact-offer');
-    offerTag.addEventListener("keypress", function () {
-        if (offerTag.value > 6) {
-            offerTag.value = offerTag.value.slice(0, 6);
-        }
-    });
+    if (offerTag != null) {
+        offerTag.addEventListener("keypress", function () {
+            if (offerTag.value > 6) {
+                offerTag.value = offerTag.value.slice(0, 6);
+            }
+        });
+    }
     function adjustInputs() {
         if (offerTag.value.length === 0) {
             offerTag.value = 0;
