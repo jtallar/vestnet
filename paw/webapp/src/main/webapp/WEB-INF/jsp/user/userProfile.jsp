@@ -19,7 +19,7 @@
     </div>
 </c:if>
 <div class="container emp-profile">
-    <form method="post">
+<%--    <form method="post">--%>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
@@ -229,7 +229,7 @@
                 </div>
             </div>
         </div>
-    </form>
+<%--    </form>--%>
 </div>
 
 </body>
