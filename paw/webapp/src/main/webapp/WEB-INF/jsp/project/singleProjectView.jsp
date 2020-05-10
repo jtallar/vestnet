@@ -38,10 +38,15 @@
 <%--                    <a href="<c:url value="${back}"/>" class="btn btn-dark"><spring:message code="back"/></a>--%>
                     <a onclick="getBackAction()" class="btn btn-dark"><spring:message code="back"/></a>
                 </div>
-                <c:if test="${mailSent}">
+                <c:if test="${contactStatus == 1}">
                 <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="mailSent"/> <c:out value="${project.owner.email}"/></h5>
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="successfulContact"/> <c:out value="${project.owner.firstName}"/></h5>
                 </div>
+                </c:if>
+                <c:if test="${contactStatus == 2}">
+                    <div class="p-2 ml-8">
+                        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="waitReply"/></h5>
+                    </div>
                 </c:if>
             </div>
         <div class="row" style="margin: 20px">
@@ -204,6 +209,7 @@
                     </div>
 
                     <form:input path="from" value="${sessionUser.email}" type="hidden"/>
+                    <form:input path="toId" value="${project.owner.id}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
                     <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
 
                     <div class="text-right">

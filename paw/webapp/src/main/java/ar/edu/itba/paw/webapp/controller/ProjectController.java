@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.CategoriesService;
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.ProjectService;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
@@ -50,6 +47,9 @@ public class ProjectController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private MessageService messageService;
 
     /**
      * Session user data.
@@ -138,16 +138,16 @@ public class ProjectController {
      * Single project view page.
      * @param mailFields Fields for mail contact
      * @param id The unique project id.
-     * @param mailSent Boolean if mail was sent.
+     * @param contactStatus Boolean if mail was sent.
      * @return Model and view.
      */
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.GET})
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
-                                          @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
+                                          @RequestParam(name = "contactStatus", defaultValue = "0") int contactStatus ) {
 
         final ModelAndView mav = new ModelAndView("project/singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
-        mav.addObject("mailSent", mailSent);
+        mav.addObject("contactStatus", contactStatus);
         boolean isFav = projectService.isFavorite(id, loggedUser().getId());
         mav.addObject("isFav", isFav);
         mav.addObject("favCount", projectService.getFavoritesCount(id));
@@ -168,18 +168,22 @@ public class ProjectController {
      * @param mailFields Fields for mail contact
      * @param errors Errors on form.
      * @param id The unique project id.
-     * @param mailSent Boolean if mail was sent.
      * @return Model and view.
      * @throws MessagingException When mail cannot be sent.
      */
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
-    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id,
-                                          @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id) throws MessagingException {
         if (errors.hasErrors()) {
-            return singleProjectView(mailFields, id, false);
+            return singleProjectView(mailFields, id, 0);
+        }
+
+        try {
+            messageService.create(mailFields.getBody(), String.valueOf(mailFields.getOffers()), mailFields.getExchange(), loggedUser().getId(), mailFields.getToId(), id);
+        } catch (MessageAlreadySentException e) {
+            return singleProjectView(mailFields, id, 2);
         }
         emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
-        return new ModelAndView("redirect:/projects/{id}?mailSent=yes");
+        return new ModelAndView("redirect:/projects/{id}?contactStatus=1");
     }
 
     /**

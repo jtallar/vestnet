@@ -8,6 +8,8 @@ public class MailFields {
 
     private String to; // Inyected
 
+    private long toId; // Inyected
+
     private int offers;
     private String exchange;
 
@@ -51,7 +53,15 @@ public class MailFields {
         this.from = from;
     }
 
-//    public String getSubject() {
+    public long getToId() {
+        return toId;
+    }
+
+    public void setToId(long toId) {
+        this.toId = toId;
+    }
+
+    //    public String getSubject() {
 //        return subject;
 //    }
 //
