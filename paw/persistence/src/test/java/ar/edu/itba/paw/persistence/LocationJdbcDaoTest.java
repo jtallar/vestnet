@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Location.Country;
+import ar.edu.itba.paw.model.Location.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,22 +14,35 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static ar.edu.itba.paw.model.Location.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class LocationJdbcDaoTest {
+
     private static final String COUNTRY_TABLE = "countries";
     private static final String STATE_TABLE = "states";
     private static final String CITY_TABLE = "cities";
+
+    private static final String COUNTRY_NAME = "Peronlandia";
+    private static final int COUNTRY_ID = 1;
+    private static final String STATE_NAME = "Buenos Aires";
+    private static final int STATE_ID = 2;
+    private static final String CITY_NAME = "La Matanza";
+    private static final int CITY_ID = 3;
 
     @Autowired
     private DataSource dataSource;
 
     @Autowired
     private LocationJdbcDao locationJdbcDao;
+
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity;
 
@@ -35,11 +50,9 @@ public class LocationJdbcDaoTest {
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsertCountry = new SimpleJdbcInsert(dataSource)
-                .withTableName(COUNTRY_TABLE)
-                .usingGeneratedKeyColumns("id");
+                .withTableName(COUNTRY_TABLE);
         jdbcInsertState = new SimpleJdbcInsert(dataSource)
-                .withTableName(STATE_TABLE)
-                .usingGeneratedKeyColumns("id");
+                .withTableName(STATE_TABLE);
         jdbcInsertCity = new SimpleJdbcInsert(dataSource)
                 .withTableName(CITY_TABLE);
 
@@ -49,15 +62,115 @@ public class LocationJdbcDaoTest {
     }
 
     @Test
-    public void testFindAllIfTableEmpty() {
-        // 1: Precondiciones: Setup del escenario para que nuestro test corra
-        // TABLE EMPTY
+    public void testFindAllCountriesIfTableEmpty() {
+        // 1 - Setup - Empty country table
 
-        // 2: Ejercitacion: Hacemos la unica llamada al metodo que queremos testear
+        // 2 - Execute
         List<Country> countries = locationJdbcDao.findAllCountries();
 
-        // 3: Postcondiciones: Hacemos los pocos assertes que permiten validar correctitud
+        // 3 - Assert
         assertTrue(countries.isEmpty());
     }
 
+    @Test
+    public void testFindAllCountriesIfTableNotEmpty() {
+        // 1 - Setup - Insert 1 country
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", COUNTRY_ID);
+        values.put("country", COUNTRY_NAME);
+        values.put("iso2", "");
+        values.put("phonecode", "");
+        values.put("currency", "");
+        jdbcInsertCountry.execute(values);
+
+        // 2 - Execute
+        List<Country> countries = locationJdbcDao.findAllCountries();
+
+        // 3 - Assert - Quantity, Name, ID
+        assertEquals(1, countries.size());
+        assertEquals(COUNTRY_NAME, countries.get(0).getName());
+        assertEquals(COUNTRY_ID, countries.get(0).getId());
+    }
+
+    @Test
+    public void testFindStateIfTableEmpty() {
+        // 1 - Setup - Empty tables
+
+        // 2 - Execute
+        List<State> states = locationJdbcDao.findStates(COUNTRY_ID);
+
+        // 3 - Assert
+        assertTrue(states.isEmpty());
+    }
+
+    @Test
+    public void testFindStateIfTableNotEmpty() {
+        // 1 - Setup - Add 1 country and 1 state
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", COUNTRY_ID);
+        values.put("country", COUNTRY_NAME);
+        values.put("iso2", "");
+        values.put("phonecode", "");
+        values.put("currency", "");
+        jdbcInsertCountry.execute(values);
+
+        values.clear();
+        values.put("id", STATE_ID);
+        values.put("state", STATE_NAME);
+        values.put("country_id", COUNTRY_ID);
+        values.put("iso2", "");
+        jdbcInsertState.execute(values);
+
+        // 2 - Execute
+        List<State> states = locationJdbcDao.findStates(COUNTRY_ID);
+
+        // 3 - Assert - Quantity, Name, ID
+        assertEquals(1, states.size());
+        assertEquals(STATE_NAME, states.get(0).getName());
+        assertEquals(STATE_ID, states.get(0).getId());
+    }
+
+    @Test
+    public void testFindCityIfTableEmpty() {
+        // 1 - Setup - Empty tables
+
+        // 2 - Execute
+        List<City> city = locationJdbcDao.findCities(STATE_ID);
+
+        // 3 - Assert
+        assertTrue(city.isEmpty());
+    }
+
+    @Test
+    public void testFindCityIfTableNotEmpty() {
+        // 1 - Setup - Add 1 country, 1 state and 1 city
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", COUNTRY_ID);
+        values.put("country", COUNTRY_NAME);
+        values.put("iso2", "");
+        values.put("phonecode", "");
+        values.put("currency", "");
+        jdbcInsertCountry.execute(values);
+
+        values.clear();
+        values.put("id", STATE_ID);
+        values.put("state", STATE_NAME);
+        values.put("country_id", COUNTRY_ID);
+        values.put("iso2", "");
+        jdbcInsertState.execute(values);
+
+        values.clear();
+        values.put("id", CITY_ID);
+        values.put("city", CITY_NAME);
+        values.put("state_id", STATE_ID);
+        jdbcInsertCity.execute(values);
+
+        // 2 - Execute
+        List<City> city = locationJdbcDao.findCities(STATE_ID);
+
+        // 3 - Assert - Quantity, Name, ID
+        assertEquals(1, city.size());
+        assertEquals(CITY_NAME, city.get(0).getName());
+        assertEquals(CITY_ID, city.get(0).getId());
+    }
 }

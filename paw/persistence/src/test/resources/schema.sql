@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS favorites (
 ** Messages table
 */
 CREATE TABLE IF NOT EXISTS messages (
-    id                  SERIAL PRIMARY KEY,
+    id                  INTEGER IDENTITY PRIMARY KEY,
 
     content_message     VARCHAR(250),
     content_offer       VARCHAR(100) NOT NULL,
