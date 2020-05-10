@@ -43,13 +43,6 @@ public interface UserDao {
     Optional<User> findById(long id);
 
     /**
-     * Finds all users with a name coincidence.
-     * @param name The string search coincidence.
-     * @return List of users that match criteria.
-     */
-    List<User> findCoincidence(String name);
-
-    /**
      * Finds the image fot the given user.
      * @param userId The unique user id.
      * @return Image as a byte array.

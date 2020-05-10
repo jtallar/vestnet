@@ -180,12 +180,6 @@ CREATE TABLE IF NOT EXISTS resources (
     PRIMARY KEY (project_id, stage_number, item_number)
 );
 
-CREATE TABLE IF NOT EXISTS passwords (
-    id              INT REFERENCES users ON DELETE SET NULL,
-    password       VARCHAR(250) NOT NULL,
-    PRIMARY KEY (id)
-);
-
 /*
 ** Favourites of each user
 */

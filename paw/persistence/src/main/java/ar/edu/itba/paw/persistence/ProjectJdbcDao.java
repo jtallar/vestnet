@@ -103,7 +103,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost) {
-        if(pageOffset == 0) return new ArrayList<>();
+        if(pageOffset == 0 || categories == null) return new ArrayList<>();
 
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("from", pageStart)
