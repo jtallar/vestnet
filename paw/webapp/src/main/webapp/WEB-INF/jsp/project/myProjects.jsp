@@ -75,7 +75,7 @@
     function fetchMsgs(project_id, index){
         console.log('')
         if(state[index] === 0) {
-            fetch(window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/message/" + project_id)
+            fetch(window.location.origin + '${pageContext.request.contextPath}' + "/message/" + project_id)
                 .then(response => response.json())
                 .then(data => {
                     let div = document.getElementById("collapse" + project_id);

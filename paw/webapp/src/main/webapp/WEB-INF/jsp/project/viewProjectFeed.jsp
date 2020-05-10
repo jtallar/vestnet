@@ -227,17 +227,6 @@
             </c:forEach>
         </div>
     </div>
-    <div class="grid">
-        <div class="row">
-            <div class="col-4  d-flex justify-content-center">
-                <c:url value="/projects" var="projectPage"/>
-                <form action="${projectPage}" method="get">
-
-
-                </form>
-            </div>
-        </div>
-    </div>
 </c:if>
 
 

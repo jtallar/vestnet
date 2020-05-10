@@ -16,10 +16,14 @@ import javax.sql.DataSource;
 @ComponentScan({ "ar.edu.itba.paw.persistence" })
 @Configuration
 public class TestConfig {
+
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
-    // OJO: en hsql, los IDENTITY (SERIAL) arrancan en 0!
+    /**
+     * Data source creator.
+     * @return The created data source.
+     */
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -30,6 +34,11 @@ public class TestConfig {
         return ds;
     }
 
+    /**
+     * Data source initializer for test.
+     * @param ds The data source to initialize.
+     * @return The data source initializer.
+     */
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
@@ -37,6 +46,15 @@ public class TestConfig {
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
+
+    /**
+     * Auxiliary functions.
+     */
+
+    /**
+     * Data base populator function.
+     * @return The data base populator linked to schema.sql;
+     */
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);

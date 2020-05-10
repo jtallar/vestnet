@@ -40,11 +40,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findCoincidence(String name) {
-        return userDao.findCoincidence(name);
-    }
-
-    @Override
     public byte[] findImageForUser(long userId) {
         return userDao.findImageForUser(userId);
     }
