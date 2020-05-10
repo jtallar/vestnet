@@ -60,17 +60,17 @@
                 <c:if test="${not empty param.categorySelector and not empty param.orderBy}">
                     <c:choose>
                         <c:when test="${empty param.max and empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"></c:set>
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"/>
                         </c:when>
                         <c:when test="${not empty param.max and not empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}&min=${param.min}"></c:set>
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}&min=${param.min}"/>
                         </c:when>
                         <c:when test="${not empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&min=${param.min}"></c:set>
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&min=${param.min}"/>
 
                         </c:when>
                         <c:when test="${not empty param.max}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}"></c:set>
+                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}"/>
                         </c:when>
                     </c:choose>
                     <c:if test="">
@@ -171,7 +171,7 @@
                         <div class="row">
                             <div class="col-">
                                 <div class="card-title">
-                                    <h5><c:out value="${project.name}"></c:out></h5>
+                                    <h5><c:out value="${project.name}"/></h5>
                                 </div>
                             </div>
                             <div class="col-md">
@@ -200,7 +200,7 @@
                                      aria-placeholder="<spring:message code="projectImage"/>"/>
                             </div>
                             <div class="col-md">
-                                <p class="card-text"><c:out value="${project.summary}"></c:out></p>
+                                <p class="card-text"><c:out value="${project.summary}"/></p>
                                     <%--                        <strong><spring:message code="categories"/></strong>--%>
                                     <%--                        <c:forEach items="${project.categories}" var="category">--%>
                                     <%--                             <p class="card-text" id="category">-${category.name}</p>--%>
@@ -218,7 +218,7 @@
                     <c:if test="${sessionUser.role != 1}">
                     <div class="card-footer">
                         <a href="<c:url value='/projects/${project.id}'/>"
-                           class="btn btn-dark pull-right"><spring:message code="moreinfo"></spring:message></a>
+                           class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
                     </div>
                     </c:if>
                 </div>
@@ -229,7 +229,7 @@
     <div class="grid">
         <div class="row">
             <div class="col-4  d-flex justify-content-center">
-                <c:url value="/projects" var="projectPage"></c:url>
+                <c:url value="/projects" var="projectPage"/>
                 <form action="${projectPage}" method="get">
 
 
@@ -243,8 +243,7 @@
 <c:if test="${empty list}">
     <div class="card m-2 no-proj">
         <div class="card-header">
-            <h5 class="card-title text-white centered"><spring:message code="noProjFound"
-                                                                       arguments=""></spring:message></h5>
+            <h5 class="card-title text-white centered"><spring:message code="noProjFound" arguments=""/></h5>
         </div>
     </div>
 </c:if>

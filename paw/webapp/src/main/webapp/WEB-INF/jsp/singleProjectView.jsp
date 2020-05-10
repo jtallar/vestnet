@@ -40,7 +40,7 @@
                 </div>
                 <c:if test="${mailSent}">
                 <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="color: blueviolet"><spring:message code="mailSent"/> <c:out value="${project.owner.email}"/></h5>
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="mailSent"/> <c:out value="${project.owner.email}"/></h5>
                 </div>
                 </c:if>
             </div>
@@ -213,10 +213,7 @@
             </div>
         </div>
     </div>
-
     </div>
-
-    
 </div>
 <script>
     let options = {

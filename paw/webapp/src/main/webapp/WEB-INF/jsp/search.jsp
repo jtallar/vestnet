@@ -87,11 +87,6 @@
         </div>
         </c:if>
 
-
-
-
-
-
     <c:if test="${empty projectsList}">
         <div class="card m-2">
             <div class="card-header">
