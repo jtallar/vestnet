@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.LocationService;
 import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
@@ -11,7 +10,6 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,34 +31,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class LoginController {
+public class SignUpController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SignUpController.class);
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private LocationService locationService;
-
-    @Autowired
     protected AuthenticationManager authenticationManager;
 
-    @RequestMapping(value = "/login")
-    public ModelAndView login(){
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
-            return new ModelAndView("redirect:/");
-        final ModelAndView mav = new ModelAndView("login");
-        return mav;
-    }
-
-    @RequestMapping(value = "/welcome")
-    public ModelAndView welcome(){
-        final ModelAndView mav = new ModelAndView("welcome");
-        return mav;
-    }
-
+    /**
+     * Sign up view page mapping.
+     * @param userFields The for fields to be filled.
+     * @param invalidUser If there is an invalid user error.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
                                @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser){
@@ -74,6 +60,15 @@ public class LoginController {
         return mav;
     }
 
+    /**
+     * Maps the submitted form for new user.
+     * @param userFields The completed user fields.
+     * @param errors Errors.
+     * @param invalidUser If there is an invalid user error.
+     * @param request Used for auto login after sign up.
+     * @param response Used for auto login after sign up.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields,
                                final BindingResult errors, @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
@@ -116,25 +111,11 @@ public class LoginController {
         return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping(value = "/location/country",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<Location.Country> countryList() {
-        return locationService.findAllCountries();
-    }
 
-    @RequestMapping(value = "/location/state/{country_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<Location.State> stateList(@PathVariable("country_id") long countryId) {
-        return locationService.findStates(countryId);
-    }
 
-    @RequestMapping(value = "/location/city/{state_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<Location.City> cityList(@PathVariable("state_id") long stateId) {
-        return locationService.findCities(stateId);
-    }
-
-    /* Auxiliary functions */
+    /**
+     *  Auxiliary functions
+     */
 
     /**
      * Authenticates user and set its session for automatic login.

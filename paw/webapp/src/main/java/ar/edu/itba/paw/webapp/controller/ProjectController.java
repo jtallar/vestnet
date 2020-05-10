@@ -1,24 +1,25 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.interfaces.CategoriesService;
+import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.ProjectService;
+import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.Category;
+import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
-import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.MailFields;
+import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.ProjectFilter;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -29,13 +30,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-public class HelloWorldController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HelloWorldController.class);
+public class ProjectController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+    private final int PAGE_SIZE = 12;
 
     @Autowired
     private UserService userService;
@@ -44,50 +46,33 @@ public class HelloWorldController {
     private ProjectService projectService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private MessageService messageService;
-
-    @Autowired
     private CategoriesService categoriesService;
 
     @Autowired
-    protected AuthenticationManager authenticationManager;
+    private EmailService emailService;
 
-    private final int PAGE_SIZE = 12;
-
-
-
+    /**
+     * Session user data.
+     * @return The logged in user.
+     */
     @ModelAttribute("sessionUser")
     public User loggedUser() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // auth.getPrincipal();
-        // auth.getCredentials();
-        // auth.getAuthorities();
-        // auth.getDetails();
         LOGGER.debug("\n\n loggedUser() called\n\n");
         if(auth != null)
             return userService.findByUsername(auth.getName()).orElse(null);
         return null;
     }
 
-    // TODO: QUE HACEMOS ACA??
-    @ExceptionHandler(MessagingException.class)
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView failedEmail() { return new ModelAndView("error"); }
-
-    @RequestMapping("/")
-    public ModelAndView index(){
-        // TODO: CHANGE EXCEPTION TO SERVER ERROR?
-        if (this.loggedUser().getRole() == User.UserRole.ENTREPRENEUR.getId())
-            return new ModelAndView("redirect:/messages");
-        // Investor logged in
-        return new ModelAndView("redirect:/projects");
-    }
-
+    /**
+     * Maps main view with all projects. It filters and sorts them.
+     * @param projectFilter Filter for all the projects.
+     * @param errors Errors.
+     * @param page Current page.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView(@ModelAttribute("categoryForm") @Valid ProjectFilter catFilter, final BindingResult errors,
+    public ModelAndView mainView(@ModelAttribute("categoryForm") @Valid ProjectFilter projectFilter, final BindingResult errors,
                                  @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
@@ -102,9 +87,9 @@ public class HelloWorldController {
             return mav;
         }
 
-        Integer projects = countProjects(catFilter, catList);
+        Integer projects = countProjects(projectFilter, catList);
         Boolean hasNext = projects > ((intPage)* PAGE_SIZE);
-        List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
+        List<Project> projectList = filterOrder(projectFilter,catList, intPage, projects);
 
         mav.addObject("hasNext",hasNext);
         mav.addObject("page", page);
@@ -121,24 +106,41 @@ public class HelloWorldController {
     }
 
 
+    /**
+     * Search a text in all projects for matches in the selected field.
+     * @param search Text to search for matches
+     * @param selection Selection of what to search.
+     * @param page Current page.
+     * @return Model and view.
+     */
+    @RequestMapping(value = "/search")
+    public ModelAndView searchAux(@RequestParam("searching") String search,@RequestParam("selection") String selection, @RequestParam(name="page", defaultValue = "1") String page){
+        final ModelAndView mav = new ModelAndView("search");
+        int myPage = Integer.parseInt(page);
+        int from = (myPage - 1) * PAGE_SIZE;
+        Integer projects = projectService.countByCoincidence(search, selection);
+        Boolean hasNext = projects > ((myPage) * PAGE_SIZE);
 
-    @RequestMapping(value = "/header")
-    public ModelAndView headerComponent() {
-        final ModelAndView mav = new ModelAndView("header");
+
+        String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
+
+        mav.addObject("searchVal", search);
+        mav.addObject("selectionVal", selection);
+        mav.addObject("projectsList", projectService.findByCoincidencePage(aux,selection, from, PAGE_SIZE));
+        mav.addObject("page", page);
+        mav.addObject("hasNext", hasNext);
+        mav.addObject("string", aux);
         return mav;
     }
 
 
-    @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
-    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id,
-                                          @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
-        if (errors.hasErrors()) {
-            return singleProjectView(mailFields, id, false);
-        }
-        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
-        return new ModelAndView("redirect:/projects/{id}?mailSent=yes");
-    }
-
+    /**
+     * Single project view page.
+     * @param mailFields Fields for mail contact
+     * @param id The unique project id.
+     * @param mailSent Boolean if mail was sent.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.GET})
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
@@ -153,30 +155,38 @@ public class HelloWorldController {
         return mav;
     }
 
+    /**
+     * Message not set exception handler
+     * @return Model and view.
+     */
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView failedEmail() { return new ModelAndView("error"); }
 
-   @RequestMapping(value = "/addFavorite", method = RequestMethod.PUT)
-   @ResponseBody
-    public ResponseEntity<Boolean> addFavorite(@RequestParam("p_id") int p_id, @RequestParam("u_id") int u_id) {
-        projectService.addFavorite(p_id, u_id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    /**
+     * Post method. Used when contacted project owner.
+     * @param mailFields Fields for mail contact
+     * @param errors Errors on form.
+     * @param id The unique project id.
+     * @param mailSent Boolean if mail was sent.
+     * @return Model and view.
+     * @throws MessagingException When mail cannot be sent.
+     */
+    @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id,
+                                          @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
+        if (errors.hasErrors()) {
+            return singleProjectView(mailFields, id, false);
+        }
+        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
+        return new ModelAndView("redirect:/projects/{id}?mailSent=yes");
     }
 
-    @RequestMapping(value = "/deleteFavorite", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity<Boolean> deleteFavorite(@RequestParam("p_id") int p_id, @RequestParam("u_id") int u_id) {
-        projectService.deleteFavorite(p_id, u_id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/addHit/{p_id}", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity<Boolean> addHit(@PathVariable("p_id") long id) {
-        projectService.addHit(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-
+    /**
+     * Shows the new project form.
+     * @param newProjectFields Form fields to be filled for a new project.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
         final ModelAndView mav = new ModelAndView("newProject");
@@ -187,6 +197,13 @@ public class HelloWorldController {
         return mav;
     }
 
+
+    /**
+     * New project post mapping. On submit.
+     * @param projectFields The filled form fields for new project.
+     * @param errors Errors on the form fields.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
     public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, final BindingResult errors){
         if (errors.hasErrors()) {
@@ -210,90 +227,6 @@ public class HelloWorldController {
 
 
 
-
-    @RequestMapping(value = "/admin")
-    public ModelAndView admin(){
-        final ModelAndView mav = new ModelAndView("admin");
-        return mav;
-    }
-
-    @RequestMapping(value = "/users/{u_id}")
-    public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav= new ModelAndView("userProfile");
-        User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
-        mav.addObject("user", user);
-        mav.addObject("list", projectService.findByOwner(id));
-        List<Project> favs_projects = new ArrayList<>();
-        for (Long fid : projectService.findFavorites(id)){
-            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
-        }
-        mav.addObject("favs", favs_projects);
-        mav.addObject("back", back);
-        return mav;
-    }
-
-
-    @RequestMapping(value = "/myProfile")
-    public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav = new ModelAndView("redirect:/users/" + loggedUser().getId());
-        mav.addObject("back", back);
-        return mav;
-    }
-
-    @RequestMapping(value = "/search")
-    public ModelAndView searchAux(@RequestParam("searching") String search,@RequestParam("selection") String selection, @RequestParam(name="page", defaultValue = "1") String page){
-        final ModelAndView mav = new ModelAndView("search");
-        int mypage = Integer.parseInt(page);
-        int from = (mypage == 1) ? 0 : ((mypage -1) * PAGE_SIZE);
-        Integer projects = projectService.countByCoincidence(search, selection);
-        Boolean hasNext = (projects > ((mypage)* PAGE_SIZE) ) ? true : false;
-
-
-        String aux = StringEscapeUtils.escapeHtml4(search.toLowerCase());
-
-        mav.addObject("searchVal", search);
-        mav.addObject("selectionVal", selection);
-        mav.addObject("projectsList", projectService.findByCoincidencePage(aux,selection, from, PAGE_SIZE));
-        mav.addObject("page", page);
-        mav.addObject("hasNext", hasNext);
-        mav.addObject("string", aux);
-        return mav;
-    }
-
-    // TODO: Terminar y descomentar
-    /*@RequestMapping(value = "/myProjects")
-    public ModelAndView myProjects(){
-        final ModelAndView mav = new ModelAndView("myProjects");
-        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
-        return mav;
-    }*/
-
-    @RequestMapping(value = "/messages")
-    public ModelAndView myMessages() {
-        ModelAndView mav = new ModelAndView("myProjects");
-
-
-        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
-
-        return mav;
-    }
-
-    @RequestMapping(value = "/message/{project_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<Message> cityList(@PathVariable("project_id") long project_id) {
-        return messageService.getProjectUnread(loggedUser().getId(), project_id);
-    }
-
-    @RequestMapping(value = "/message/accept/{project_id}/{sender_id}")
-    public ModelAndView accept(@PathVariable("project_id") long p_id,@PathVariable("sender_id") long s_id ){
-        messageService.updateMessageStatus(s_id, loggedUser().getId(), p_id, true);
-        return new ModelAndView("redirect:/messages");
-    }
-    @RequestMapping(value = "/message/refuse/{project_id}/{sender_id}")
-    public ModelAndView refuse(@PathVariable("project_id") long p_id,@PathVariable("sender_id") long s_id ){
-        messageService.updateMessageStatus(s_id, loggedUser().getId(), p_id, false);
-        return new ModelAndView("redirect:/messages");
-    }
 
     /**
      * Auxiliary functions
@@ -355,5 +288,4 @@ public class HelloWorldController {
             default: return auxList;
         }
     }
-
 }
