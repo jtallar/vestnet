@@ -273,6 +273,7 @@
         }
     });
 </script>
+
 <script>
     function fetchData(source, receiver) {
         let id = "";
