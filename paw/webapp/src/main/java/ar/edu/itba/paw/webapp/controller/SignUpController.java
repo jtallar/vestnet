@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -53,7 +52,7 @@ public class SignUpController {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
             return new ModelAndView("redirect:/");
-        final ModelAndView mav = new ModelAndView("signUp");
+        final ModelAndView mav = new ModelAndView("index/signUp");
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         mav.addObject("maxYear", LocalDate.now().getYear() - 18);
         mav.addObject("invalidUser", invalidUser);

@@ -11,7 +11,7 @@ public class ErrorController {
 
     @RequestMapping(value = "/errors")
     public ModelAndView errorPage(HttpServletRequest httpServletRequest) {
-        ModelAndView mv = new ModelAndView("error");
+        ModelAndView mv = new ModelAndView("error/error");
         mv.addObject("errorCode", getErrorCode(httpServletRequest));
         return mv;
     }

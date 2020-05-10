@@ -74,7 +74,7 @@ public class ProjectController {
     @RequestMapping(value = "/projects")
     public ModelAndView mainView(@ModelAttribute("categoryForm") @Valid ProjectFilter projectFilter, final BindingResult errors,
                                  @RequestParam(name = "page", defaultValue ="1") String page) {
-        final ModelAndView mav = new ModelAndView("mainView");
+        final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAll();
 
@@ -115,7 +115,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/search")
     public ModelAndView searchAux(@RequestParam("searching") String search,@RequestParam("selection") String selection, @RequestParam(name="page", defaultValue = "1") String page){
-        final ModelAndView mav = new ModelAndView("search");
+        final ModelAndView mav = new ModelAndView("searchProjects");
         int myPage = Integer.parseInt(page);
         int from = (myPage - 1) * PAGE_SIZE;
         Integer projects = projectService.countByCoincidence(search, selection);
@@ -145,7 +145,7 @@ public class ProjectController {
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("id") long id,
                                           @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
 
-        final ModelAndView mav = new ModelAndView("singleProjectView");
+        final ModelAndView mav = new ModelAndView("project/singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("mailSent", mailSent);
         boolean isFav = projectService.isFavorite(id, loggedUser().getId());
@@ -161,7 +161,7 @@ public class ProjectController {
      */
     @ExceptionHandler(MessagingException.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView failedEmail() { return new ModelAndView("error"); }
+    public ModelAndView failedEmail() { return new ModelAndView("error/error"); }
 
     /**
      * Post method. Used when contacted project owner.
@@ -189,7 +189,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
-        final ModelAndView mav = new ModelAndView("newProject");
+        final ModelAndView mav = new ModelAndView("project/newProject");
         List<Category> catList = categoriesService.findAll();
         catList.sort(Comparator.comparing(Category::getName));
         mav.addObject("categories", catList);

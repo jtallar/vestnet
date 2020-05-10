@@ -59,7 +59,7 @@ public class MainController {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
             return new ModelAndView("redirect:/");
-        return new ModelAndView("login");
+        return new ModelAndView("index/login");
     }
 
     /**
@@ -68,16 +68,7 @@ public class MainController {
      */
     @RequestMapping(value = "/welcome")
     public ModelAndView welcome(){
-        return new ModelAndView("welcome");
-    }
-
-    /**
-     * Admin page view. Not currently in use.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/admin")
-    public ModelAndView admin(){
-        return new ModelAndView("admin");
+        return new ModelAndView("index/welcome");
     }
 
     /**
@@ -86,6 +77,6 @@ public class MainController {
      */
     @RequestMapping(value = "/header")
     public ModelAndView headerComponent() {
-        return new ModelAndView("header");
+        return new ModelAndView("components/header");
     }
 }

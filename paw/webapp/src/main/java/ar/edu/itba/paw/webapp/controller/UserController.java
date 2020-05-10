@@ -53,7 +53,7 @@ public class UserController {
      */
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav= new ModelAndView("userProfile");
+        final ModelAndView mav= new ModelAndView("user/userProfile");
         User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
         mav.addObject("list", projectService.findByOwner(id));
@@ -96,7 +96,7 @@ public class UserController {
      */
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
-        ModelAndView mav = new ModelAndView("myProjects");
+        ModelAndView mav = new ModelAndView("project/myProjects");
         mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
         return mav;
     }
