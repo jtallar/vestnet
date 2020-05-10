@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-md">
                         <form:select class="custom-select mr-sm-2" path="categorySelector">
-                            <form:option value="allCats"><spring:message code="nofilter"/> </form:option>
+                            <form:option value="allCats"><spring:message code="noFilter"/> </form:option>
                             <c:forEach items="${cats}" var="category">
                                 <%-- TODO: VER COMO MOSTRAMOS CATEGORIAS INTERNACIONALIZADAS --%>
                                 <form:option value="${category.name}">${category.name}</form:option>
