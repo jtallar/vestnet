@@ -275,6 +275,7 @@
         }
     });
 </script>
+
 <script>
     function fetchData(source, receiver) {
         let id = "";
@@ -293,6 +294,7 @@
                     select.appendChild(new Option(data[i]["name"], data[i]["id"]));
 
                 //If there are no options
+
                 if (data.length === 0)
                     select.appendChild(new Option("-", "0"));
 
