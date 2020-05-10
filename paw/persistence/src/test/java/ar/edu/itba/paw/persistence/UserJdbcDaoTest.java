@@ -17,7 +17,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -192,8 +191,13 @@ public class UserJdbcDaoTest {
                 new Location.City(CITY_ID, null));
     }
 
+    /**
+     * Creates a user and inserts it to the database.
+     * @return The unique generated user id.
+     */
     private Number createUser() {
         Map<String, Object> user = new HashMap<>();
+        user.put("role_id", User.UserRole.INVESTOR.getId());
         user.put("first_name", FIRST_NAME);
         user.put("last_name", LAST_NAME);
         user.put("real_id", REAL_ID);
