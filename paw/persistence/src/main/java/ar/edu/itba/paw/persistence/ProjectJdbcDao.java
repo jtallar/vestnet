@@ -178,6 +178,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
+        if (projectIds == null || projectIds.size() == 0) return new ArrayList<>();
         String inSql = String.join("),(", Collections.nCopies(projectIds.size(), "?"));
         projectIds.add(userId);
         return jdbcTemplate.queryForList(String.format(JdbcQueries.PROJECT_IS_FAVORITE_BY_ID_USER, inSql), projectIds.toArray(), boolean.class);
