@@ -19,6 +19,12 @@
     /*max-width: 100px;*/
 }
 
+.msg{
+    padding:20px;
+    margin-left:auto !important;
+    margin-right:auto !important;
+}
+
 .card-header{
     background-color: #222222
 }
@@ -103,6 +109,21 @@
     margin-top: -92px;
     visibility: hidden;
 }
+
 html {
     scroll-behavior: smooth;
+}
+
+.btn-secondary{
+    background-color: #750096 !important;
+    margin-bottom: 50px
+}
+
+.btn-md{
+    padding:10px !important;
+    font-size: 18px !important;
+}
+
+.msg-collapse{
+    background-color:#dcdcdc
 }
