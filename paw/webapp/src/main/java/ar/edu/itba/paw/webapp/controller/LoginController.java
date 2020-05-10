@@ -102,7 +102,9 @@ public class LoginController {
 
             userId = userService.create(userFields.getRole(), firstName, lastName, id,
                     LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
-                    new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
+                    new Location(new Location.Country(userFields.getCountry(), "", "", "", ""),
+                            new Location.State(userFields.getState(), "", ""),
+                            new Location.City(userFields.getCity(), "")),
                     email, phone, linkedin, userFields.getPassword(), imageBytes);
         } catch (UserAlreadyExistsException e) {
             return signUp(userFields, true);
