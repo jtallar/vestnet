@@ -75,13 +75,7 @@ public class LocationJdbcDaoTest {
     @Test
     public void testFindAllCountriesIfTableNotEmpty() {
         // 1 - Setup - Insert 1 country
-        Map<String, Object> values = new HashMap<>();
-        values.put("id", COUNTRY_ID);
-        values.put("country", COUNTRY_NAME);
-        values.put("iso2", "");
-        values.put("phonecode", "");
-        values.put("currency", "");
-        jdbcInsertCountry.execute(values);
+        createCountry();
 
         // 2 - Execute
         List<Country> countries = locationJdbcDao.findAllCountries();
@@ -106,20 +100,8 @@ public class LocationJdbcDaoTest {
     @Test
     public void testFindStateIfTableNotEmpty() {
         // 1 - Setup - Add 1 country and 1 state
-        Map<String, Object> values = new HashMap<>();
-        values.put("id", COUNTRY_ID);
-        values.put("country", COUNTRY_NAME);
-        values.put("iso2", "");
-        values.put("phonecode", "");
-        values.put("currency", "");
-        jdbcInsertCountry.execute(values);
-
-        values.clear();
-        values.put("id", STATE_ID);
-        values.put("state", STATE_NAME);
-        values.put("country_id", COUNTRY_ID);
-        values.put("iso2", "");
-        jdbcInsertState.execute(values);
+        createCountry();
+        createState();
 
         // 2 - Execute
         List<State> states = locationJdbcDao.findStates(COUNTRY_ID);
@@ -144,26 +126,9 @@ public class LocationJdbcDaoTest {
     @Test
     public void testFindCityIfTableNotEmpty() {
         // 1 - Setup - Add 1 country, 1 state and 1 city
-        Map<String, Object> values = new HashMap<>();
-        values.put("id", COUNTRY_ID);
-        values.put("country", COUNTRY_NAME);
-        values.put("iso2", "");
-        values.put("phonecode", "");
-        values.put("currency", "");
-        jdbcInsertCountry.execute(values);
-
-        values.clear();
-        values.put("id", STATE_ID);
-        values.put("state", STATE_NAME);
-        values.put("country_id", COUNTRY_ID);
-        values.put("iso2", "");
-        jdbcInsertState.execute(values);
-
-        values.clear();
-        values.put("id", CITY_ID);
-        values.put("city", CITY_NAME);
-        values.put("state_id", STATE_ID);
-        jdbcInsertCity.execute(values);
+        createCountry();
+        createState();
+        createCity();
 
         // 2 - Execute
         List<City> city = locationJdbcDao.findCities(STATE_ID);
@@ -173,4 +138,45 @@ public class LocationJdbcDaoTest {
         assertEquals(CITY_NAME, city.get(0).getName());
         assertEquals(CITY_ID, city.get(0).getId());
     }
+
+    /**
+     * Auxiliary functions
+     */
+
+    /**
+     * Creates a country.
+     */
+    public void createCountry() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", COUNTRY_ID);
+        values.put("country", COUNTRY_NAME);
+        values.put("iso2", "");
+        values.put("phonecode", "");
+        values.put("currency", "");
+        jdbcInsertCountry.execute(values);
+    }
+
+    /**
+     * Creates a state.
+     */
+    public void createState() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", STATE_ID);
+        values.put("state", STATE_NAME);
+        values.put("country_id", COUNTRY_ID);
+        values.put("iso2", "");
+        jdbcInsertState.execute(values);
+    }
+
+    /**
+     * Creates a city.
+     */
+    public void createCity() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", CITY_ID);
+        values.put("city", CITY_NAME);
+        values.put("state_id", STATE_ID);
+        jdbcInsertCity.execute(values);
+    }
+
 }
