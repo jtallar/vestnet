@@ -50,14 +50,6 @@ public interface UserService {
     List<User> findCoincidence(String name);
 
     /**
-     * Adds an encrypted password for a user.
-     * @param id The user unique id.
-     * @param password The password.
-     * @return Operation return.
-     */
-    long createPassword(long id, String password);
-
-    /**
      * Finds the image fot the given user.
      * @param userId The unique user id.
      * @return Image as a byte array.

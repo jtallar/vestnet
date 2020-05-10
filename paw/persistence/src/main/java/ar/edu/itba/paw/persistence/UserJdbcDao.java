@@ -22,7 +22,6 @@ public class UserJdbcDao implements UserDao {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
-    private SimpleJdbcInsert passJdbcInsert;
 
     private final static ResultSetExtractor<List<User>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -37,8 +36,6 @@ public class UserJdbcDao implements UserDao {
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("role_id", "first_name", "last_name", "real_id", "country_id", "state_id", "city_id",
                         "aux_date", "email", "password", "phone", "linkedin", "profile_pic");
-        passJdbcInsert = new SimpleJdbcInsert(dataSource)
-                        .withTableName(JdbcQueries.PASSWORDS_TABLE);
     }
 
     @Override
@@ -88,14 +85,6 @@ public class UserJdbcDao implements UserDao {
     public List<User> findCoincidence(String name) {
         String aux = "%" + name + "%";
         return jdbcTemplate.query(JdbcQueries.USER_FIND_COINCIDENCE, new Object[] {aux, aux, aux, aux}, RESULT_SET_EXTRACTOR);
-    }
-
-    @Override
-    public long createPassword(long id, String password) {
-        Map<String, Object> values = new HashMap<>();
-        values.put("id", id);
-        values.put("password", password);
-        return passJdbcInsert.executeAndReturnKey(values).longValue();
     }
 
     @Override
