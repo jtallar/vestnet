@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.Entrepreneur;
 import ar.edu.itba.paw.model.Project;
 import org.junit.Before;
 import org.junit.Test;
