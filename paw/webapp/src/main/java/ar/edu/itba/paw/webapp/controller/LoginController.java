@@ -69,6 +69,7 @@ public class LoginController {
             return new ModelAndView("redirect:/");
         final ModelAndView mav = new ModelAndView("signUp");
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
+        mav.addObject("maxYear", LocalDate.now().getYear() - 18);
         mav.addObject("invalidUser", invalidUser);
         return mav;
     }

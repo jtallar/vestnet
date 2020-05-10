@@ -7,16 +7,13 @@ import javax.validation.constraints.Pattern;
 
 @RangeCheck()
 public class CategoryFilter {
-    String categorySelector;
-    String orderBy;
-
-
-
+    private String categorySelector;
+    private String orderBy;
 
     @Pattern(regexp = "[0-9]*")
-    String min;
+    private String min;
     @Pattern(regexp = "[0-9]*")
-    String max;
+    private String max;
 
     public String getMin() {
         return min;

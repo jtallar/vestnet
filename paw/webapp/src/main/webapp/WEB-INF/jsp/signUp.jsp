@@ -33,17 +33,17 @@
 <input id="select_city_msg" type="hidden" value="${val}"/>
 
 
-<spring:message code="enter_first_name" var="enter_first_name"></spring:message>
-<spring:message code="enter_password" var="enter_password"></spring:message>
-<spring:message code="enter_repeat_password" var="enter_repeat_password"></spring:message>
-<spring:message code="enter_real_id" var="enter_real_id"></spring:message>
-<spring:message code="enter_birthdate" var="enter_birthdate"></spring:message>
-<spring:message code="enter_phone" var="enter_phone"></spring:message>
-<spring:message code="enter_linkedin" var="enter_linkedin"></spring:message>
-<spring:message code="enter_email" var="enter_email"></spring:message>
-<spring:message code="enter_last_name" var="enter_last_name"></spring:message>
+<spring:message code="enter_first_name" var="enter_first_name"/>
+<spring:message code="enter_password" var="enter_password"/>
+<spring:message code="enter_repeat_password" var="enter_repeat_password"/>
+<spring:message code="enter_real_id" var="enter_real_id"/>
+<spring:message code="enter_birthdate" var="enter_birthdate"/>
+<spring:message code="enter_phone" var="enter_phone"/>
+<spring:message code="enter_linkedin" var="enter_linkedin"/>
+<spring:message code="enter_email" var="enter_email"/>
+<spring:message code="enter_last_name" var="enter_last_name"/>
 
-<c:url var="createUrl" value='/signUp'></c:url>
+<c:url var="createUrl" value='/signUp'/>
 
 <div class="container">
     <div class="row h-100">
@@ -55,7 +55,7 @@
                             <a href="<c:url value="/login"/>" class="btn btn-dark pull-left"><spring:message code="back"/></a>
                         </div>
                         <div class="col-md text-left">
-                            <h2 class="bold" style="margin-right: 20%"><spring:message code="sign_up_title"></spring:message></h2>
+                            <h2 class="bold" style="margin-right: 20%"><spring:message code="sign_up_title"/></h2>
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
@@ -64,18 +64,18 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="first_name_required"></spring:message> </label>
+                                    <label><spring:message code="first_name_required"/> </label>
                                     <form:input type="text" class="form-control" path="firstName"
-                                                placeholder="${enter_first_name}"/>
-                                    <form:errors path="firstName" element="p" cssClass="formError"></form:errors>
+                                                placeholder="${enter_first_name}" id="sign-up-first-name"/>
+                                    <form:errors path="firstName" element="p" cssClass="formError"/>
                                 </div>
                             </div>
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="last_name_required"></spring:message> </label>
+                                    <label><spring:message code="last_name_required"/> </label>
                                     <form:input type="text" class="form-control" path="lastName"
-                                                placeholder="${enter_last_name}"/>
-                                    <form:errors path="lastName" cssClass="formError" element="p"></form:errors>
+                                                placeholder="${enter_last_name}" id="sign-up-last-name"/>
+                                    <form:errors path="lastName" cssClass="formError" element="p"/>
                                 </div>
                             </div>
                         </div>
@@ -85,92 +85,24 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="real_id_required"></spring:message> </label>
+                                    <label><spring:message code="real_id_required"/> </label>
                                     <form:input type="text" class="form-control" path="realId"
-                                                placeholder="${enter_real_id}"/>
-                                    <form:errors path="realId" cssClass="formError" element="p"></form:errors>
+                                                placeholder="${enter_real_id}" id="sign-up-real-id"/>
+                                    <form:errors path="realId" cssClass="formError" element="p"/>
                                 </div>
                             </div>
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="phone"></spring:message> </label>
+                                    <label><spring:message code="phone"/> </label>
                                     <form:input type="text" class="form-control" path="phone"
                                                 placeholder="${enter_phone}"/>
-                                    <form:errors path="phone" cssClass="formError" element="p"></form:errors>
+                                    <form:errors path="phone" cssClass="formError" element="p"/>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="container">
-                        <div class="form-group">
-                            <label><spring:message code="birthdate"></spring:message> </label>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-">
-                                        <label><spring:message code="day"></spring:message></label>
-                                    </div>
-                                    <div class="col-md">
-                                        <form:select class="custom-select mr-sm-2" path="day">
-                                            <c:forEach var="i" begin="1" end="31">
-                                                <form:option value="${i}">${i}</form:option>
-                                            </c:forEach>
-                                        </form:select>
-                                    </div>
-                                    <div class="col-">
-                                        <label><spring:message code="month"></spring:message> </label>
-                                    </div>
-                                    <div class="col-md">
-                                        <form:select path="month" class="custom-select mr-sm-2">
-                                            <c:forEach var="i" begin="1" end="12">
-                                                <form:option value="${i}">${i}</form:option>
-                                            </c:forEach>
-                                        </form:select>
-                                    </div>
-                                        <%--            TODO: CAMBIAR PARA QUE NO SEA DESDE 2010--%>
-                                    <div class="col-">
-                                        <label><spring:message code="year"></spring:message> </label>
-                                    </div>
-                                    <div class="col-md">
-                                        <form:select path="year" class="custom-select mr-sm-2">
-                                            <c:forEach begin="0" end="70" varStatus="loop">
-                                                <c:set var="currentYear" value="${2010 - loop.index}"/>
-                                                <form:option value="${currentYear}">${currentYear}</form:option>
-                                            </c:forEach>
-                                        </form:select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container">
-                        <div class="form-group">
-                            <div class="container">
-                            <div class="row">
-                                <div class="col-">
-                                    <label><spring:message code="country"/></label>
-                                </div>
-                                <div class="col-md">
-                                    <form:select id="country-select" path="country" class="custom-select mr-sm-2" onchange="fetchData('country', 'state')"/>
-                                </div>
-                                <div class="col-">
-                                    <label><spring:message code="state"/> </label>
-                                </div>
-                                <div class="col-md">
-                                    <form:select id="state-select" path="state" class="custom-select mr-sm-2" onchange="fetchData('state', 'city')"/>
-                                </div>
-                                <div class="col-">
-                                    <label><spring:message code="city"/> </label>
-                                </div>
-                                <div class="col-md">
-                                    <form:select id="city-select" path="city" class="custom-select mr-sm-2"/>
-                                </div>
-
-                            </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="dropdown-divider"></div>
 
                     <div class="container">
                         <div class="row">
@@ -184,20 +116,6 @@
                             </div>
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="linkedin"></spring:message> </label>
-                                    <form:input type="text" class="form-control" path="linkedin"
-                                                placeholder="${enter_linkedin}"/>
-                                    <form:errors path="linkedin" cssClass="formError" element="p"></form:errors>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md">
-                                <div class="form-group">
                                     <label><spring:message code="role"/> </label>
                                     <form:select path="role" class="custom-select mr-sm-2">
                                         <form:option value="Investor"><spring:message code="investor"/></form:option>
@@ -205,14 +123,26 @@
                                     </form:select>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="row">
                             <div class="col-md">
-                                <label><spring:message code="userPicture"/> </label>
-                                <div class="custom-file">
-                                    <form:input path="profilePicture" type="file" class="custom-file-input" id="customFileProfilePic"/>
-                                    <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel"><spring:message code="chooseFile"/></label><br>
-                                    <form:errors path="profilePicture" cssClass="formError" element="p" id="fileErrorFormTag"/>
+                                <div class="form-group">
+                                    <label><spring:message code="password_required"/> </label>
+                                    <form:input type="password" class="form-control" path="password"
+                                                placeholder="${enter_password}" id="sign-up-password"/>
+                                    <form:errors path="password" element="p" cssClass="formError"/>
                                 </div>
-                                <label class="formError" id="maxSizeErrorMsg" hidden><spring:message code="imageMaxSize"/></label>
+                            </div>
+                            <div class="col-md">
+                                <div class="form-group">
+                                    <label><spring:message code="repeat_password_required"/> </label>
+                                    <form:input type="password" class="form-control" path="repeatPassword"
+                                                placeholder="${enter_repeat_password}" id="sign-up-repeat-password"/>
+                                    <form:errors cssClass="formError" element="p"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -223,18 +153,90 @@
                         <div class="row">
                             <div class="col-md">
                                 <div class="form-group">
-                                    <label><spring:message code="password_required"></spring:message> </label>
-                                    <form:input type="password" class="form-control" path="password"
-                                                placeholder="${enter_password}"/>
-                                    <form:errors cssClass="formError" element="p"></form:errors>
+                                    <label><spring:message code="linkedin"/> </label>
+                                    <p class="form-requirement"><spring:message code="linkedinRequirement"/></p>
+                                    <form:input type="text" class="form-control" path="linkedin"
+                                                placeholder="${enter_linkedin}"/>
+                                    <form:errors path="linkedin" cssClass="formError" element="p"/>
                                 </div>
                             </div>
                             <div class="col-md">
-                                <div class="form-group">
-                                    <label><spring:message code="repeat_password_required"></spring:message> </label>
-                                    <form:input type="password" class="form-control" path="repeatPassword"
-                                                placeholder="${enter_repeat_password}"/>
-                                    <form:errors path="repeatPassword" element="p" cssClass="formError"></form:errors>
+                                <label><spring:message code="userPicture"/> </label>
+                                <p class="form-requirement"><spring:message code="userPictureRequirement"/></p>
+                                <div class="custom-file">
+                                    <form:input path="profilePicture" type="file" class="custom-file-input" id="customFileProfilePic"/>
+                                    <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel"><spring:message code="chooseFile"/></label><br>
+                                    <form:errors path="profilePicture" cssClass="formError" element="p" id="fileErrorFormTag"/>
+                                </div>
+                                <label class="formError" id="maxSizeErrorMsg" hidden><spring:message code="imageMaxSize"/></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="form-group">
+                            <label><spring:message code="birthdate"/> </label>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <label><spring:message code="day"/></label>
+                                    </div>
+                                    <div class="col-md">
+                                        <form:select class="custom-select mr-sm-2" path="day">
+                                            <c:forEach var="i" begin="1" end="31">
+                                                <form:option value="${i}">${i}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                    <div class="col-1">
+                                        <label><spring:message code="month"/> </label>
+                                    </div>
+                                    <div class="col-md">
+                                        <form:select path="month" class="custom-select mr-sm-2">
+                                            <c:forEach var="i" begin="1" end="12">
+                                                <form:option value="${i}">${i}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                    <div class="col-1">
+                                        <label><spring:message code="year"/> </label>
+                                    </div>
+                                    <div class="col-md">
+                                        <form:select path="year" class="custom-select mr-sm-2">
+                                            <c:forEach begin="0" end="70" varStatus="loop">
+                                                <c:set var="currentYear" value="${maxYear - loop.index}"/>
+                                                <form:option value="${currentYear}">${currentYear}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <label><spring:message code="country"/></label>
+                                    </div>
+                                    <div class="col-md">
+                                        <form:select id="country-select" path="country" class="custom-select mr-sm-2" onchange="fetchData('country', 'state')"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <label><spring:message code="state"/> </label>
+                                    </div>
+                                    <div class="col-md">
+                                        <form:select id="state-select" path="state" class="custom-select mr-sm-2" onchange="fetchData('state', 'city')"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <label><spring:message code="city"/> </label>
+                                    </div>
+                                    <div class="col-md">
+                                        <form:select id="city-select" path="city" class="custom-select mr-sm-2"/>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -246,7 +248,7 @@
                                 <h4 class="big-error"><spring:message code="userAlreadyExists"/></h4>
                             </c:if>
                             <input type="submit" class="btn btn-dark pull-right"
-                                   value="<spring:message code="sign_up"></spring:message> "/>
+                                   value="<spring:message code="sign_up"/>" onclick="adjustInputs()"/>
                         </div>
 
 
@@ -295,12 +297,27 @@
                     select.appendChild(new Option("-", "0"));
 
                 // Recursive update
-                if (receiver === 'country') fetchData('country', 'state');
-                else if (receiver === 'state') fetchData('state', 'city');
+                if (receiver === 'country') {
+                    fetchData('country', 'state');
+                } else if (receiver === 'state') {
+                    fetchData('state', 'city');
+                }
             })
     }
     window.onload = function () {
         fetchData('', 'country');
+    };
+    function adjustInputs() {
+        var firstNameTag = document.getElementById('sign-up-first-name');
+        firstNameTag .value = firstNameTag .value.trim();
+        var lastNameTag = document.getElementById('sign-up-last-name');
+        lastNameTag .value = lastNameTag .value.trim();
+        var realIdTag = document.getElementById('sign-up-real-id');
+        realIdTag .value = realIdTag .value.trim();
+        var passwordTag = document.getElementById('sign-up-password');
+        passwordTag .value = passwordTag .value.trim();
+        var repeatPasswordTag = document.getElementById('sign-up-repeat-password');
+        repeatPasswordTag .value = repeatPasswordTag .value.trim();
     }
 </script>
 </body>
