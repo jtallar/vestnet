@@ -38,35 +38,33 @@
 
 <c:forEach var="message" items="${messages}" varStatus="theCount">
     <span class="anchor-header" id="dashboard-project-${project.id}"></span>
-    <div class="container py-3">
+    <div class="container-deal py-3">
         <div class="card">
-            <div class="row ">
-                <div class="col-4">
-                    <strong><spring:message code="msg"></spring:message> </strong>
-                    <p>${message.content.message}</p>
+            <div class="card-deal">
+                <div class="row ">
+                    <div class="col-5">
+                        <strong><spring:message code="msg"/> </strong>
+                        <p>${message.content.message}</p>
+                    </div>
+                    <div class="col-6">
+                        <strong><spring:message code="published_date"/> </strong>
+                        <p>${message.publishDate}</p>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <strong><spring:message code="published_date"></spring:message> </strong>
-                    <p>${message.publishDate}</p>
+                <div class="row ">
+                    <div class="col-5">
+                        <strong><spring:message code="offer"/> </strong>
+                        <p>${message.content.offer}</p>
+                    </div>
+                    <div class="col-6">
+                        <strong><spring:message code="request"/> </strong>
+                        <p>${message.content.interest}</p>
+                    </div>
                 </div>
-
             </div>
-            <div class="row ">
-                <div class="col-4">
-                    <strong><spring:message code="offer"></spring:message> </strong>
-                    <p>${message.content.offer}</p>
-                </div>
-                <div class="col-4">
-                    <strong><spring:message code="request"></spring:message> </strong>
-                    <p>${message.content.interest}</p>
-
-                </div>
-            </div>
-            <div class="row ">
-                <div class="col-5">
-                    <c:url value="/users/${message.senderId}?back=yes" var="profileURL"></c:url>
-                    <a href="${profileURL}" class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a>
-                </div>
+            <div class="card-footer">
+                <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
+                <button href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></button>
             </div>
         </div>
     </div>

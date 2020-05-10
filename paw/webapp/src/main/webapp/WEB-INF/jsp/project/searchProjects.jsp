@@ -80,9 +80,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
-                    </div>
+                    <c:if test="${sessionUser.role != 1}">
+                        <div class="card-footer">
+                            <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
+                        </div>
+                    </c:if>
                 </div>
 
             </c:forEach>

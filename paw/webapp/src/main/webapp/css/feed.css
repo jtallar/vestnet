@@ -127,3 +127,12 @@ html {
 .msg-collapse{
     background-color:#dcdcdc
 }
+
+.card-deal{
+    padding:40px;
+}
+
+.container-deal{
+    margin-left:30% !important;
+    margin-right:30% !important
+}
