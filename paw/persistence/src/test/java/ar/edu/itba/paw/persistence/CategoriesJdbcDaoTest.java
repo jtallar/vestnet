@@ -67,9 +67,7 @@ public class CategoriesJdbcDaoTest {
     @Test
     public void testFindAllIfTableNotEmpty() {
         // 1 - Setup - Add 1 category
-        Map<String, String> values = new HashMap<String, String>();
-        values.put("category", CATEGORY_NAME);
-        jdbcInsertCategory.executeAndReturnKey(values);
+        createCategory();
 
         // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findAll();
@@ -93,20 +91,10 @@ public class CategoriesJdbcDaoTest {
 
     @Test
     public void testFindProjectCategoriesWithProject() {
-        // 1 - Setup - Add category and project
-        Map<String, String> category = new HashMap<String, String>();
-        category.put("category", CATEGORY_NAME);
-        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
-
-        Map<String, Object> project = new HashMap<>();
-        project.put("project_name", "Jorge");
-        project.put("summary", "SUMMRAy");
-        Number projectId = jdbcInsertProject.executeAndReturnKey(project);
-
-        Map<String, Long> values = new HashMap<String, Long>();
-        values.put("category_id", categoryId.longValue());
-        values.put("project_id", projectId.longValue());
-        jdbcInsertProjectCategory.execute(values);
+        // 1 - Setup - Add category, project, and link them
+        Number categoryId = createCategory();
+        Number projectId = createProject();
+        createProjectCategory(categoryId, projectId);
 
         // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findProjectCategories(projectId.longValue());
@@ -115,4 +103,43 @@ public class CategoriesJdbcDaoTest {
         assertEquals(1, categories.size());
         assertEquals(CATEGORY_NAME, categories.get(0).getName());
     }
+
+
+    /**
+     * Auxiliary functions
+     */
+
+    /**
+     * Creates a category.
+     * @return The category auto generated id.
+     */
+    public Number createCategory() {
+        Map<String, String> category = new HashMap<>();
+        category.put("category", CATEGORY_NAME);
+        return jdbcInsertCategory.executeAndReturnKey(category);
+    }
+
+    /**
+     * Creates a project.
+     * @return The category auto generated id.
+     */
+    public Number createProject() {
+        Map<String, Object> project = new HashMap<>();
+        project.put("project_name", "Project name here.");
+        project.put("summary", "Summary here.");
+        return jdbcInsertProject.executeAndReturnKey(project);
+    }
+
+    /**
+     * Creates a project category link.
+     * @param categoryId The category id.
+     * @param projectId The project id.
+     */
+    public void createProjectCategory(Number categoryId, Number projectId) {
+        Map<String, Long> values = new HashMap<>();
+        values.put("category_id", categoryId.longValue());
+        values.put("project_id", projectId.longValue());
+        jdbcInsertProjectCategory.execute(values);
+    }
+
 }
