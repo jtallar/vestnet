@@ -8,12 +8,13 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <%--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>--%>
-
-    <title>My Projects | Vestnet</title>
+    <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
+    <title><spring:message code="my_projects"/> | VestNet</title>
 </head>
 <body>
 
 <c:forEach var="project" items="${projects}" varStatus="theCount">
+    <span class="anchor-header" id="dashboard-project-${project.id}"></span>
     <div class="container py-3">
         <div class="card">
             <div class="row ">
@@ -26,6 +27,7 @@
                         <p class="card-text">${project.summary} </p>
                         <h5><spring:message code="cost"></spring:message> </h5>
                         <p class="card-text"> ${project.cost}</p>
+                        <a href="<c:url value="/messages/${project.id}"/>" class="btn btn-dark pull-right"> <spring:message code="preview_project"/> </a>
                         <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}"><spring:message code="see_msgs"></spring:message> </button>
 
                     </div>

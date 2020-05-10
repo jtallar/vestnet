@@ -100,4 +100,17 @@ public class UserController {
         mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
         return mav;
     }
+
+    @RequestMapping(value = "/messages/{id}")
+    public ModelAndView singleProjectView(@PathVariable("id") long id) {
+        final Project project = projectService.findById(id).orElseThrow(ProjectNotFoundException::new);
+        // Prevent entrepreneurs from accessing other projects that are not theirs
+        if (project.getOwnerUserId() != loggedUser().getId())
+            return new ModelAndView("redirect:/messages");
+        final ModelAndView mav = new ModelAndView("project/singleProjectView");
+        mav.addObject("project", project);
+        mav.addObject("isFav", false);
+        mav.addObject("contactStatus", 0);
+        return mav;
+    }
 }

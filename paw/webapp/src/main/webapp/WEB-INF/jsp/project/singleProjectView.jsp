@@ -159,6 +159,7 @@
             </div>
         </div>
 
+    <c:if test="${sessionUser.role == 2}">
     <div class="collapse" id="contact">
         <div class="card contact">
             <div class="card-header">
@@ -219,6 +220,7 @@
             </div>
         </div>
     </div>
+    </c:if>
     </div>
 </div>
 <script>
@@ -272,10 +274,10 @@
 
     // TODO: VER SI SE PUEDE HACER DE OTRA FORMA
     function getBackAction() {
-        if (${mailSent}) {
-            history.back();
+        if (${contactStatus == 0}) {
             history.back();
         } else {
+            history.back();
             history.back();
         }
     }
