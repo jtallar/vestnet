@@ -9,7 +9,7 @@ import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
-import ar.edu.itba.paw.webapp.mail.MailFields;
+import ar.edu.itba.paw.webapp.forms.MailFields;
 import ar.edu.itba.paw.webapp.forms.CategoryFilter;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;

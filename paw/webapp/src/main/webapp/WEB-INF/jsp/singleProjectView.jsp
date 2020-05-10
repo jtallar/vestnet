@@ -165,7 +165,7 @@
                 <form:form modelAttribute="mailForm" action="${postPath}" method="post">
 
                     <div class="form-group">
-                        <label>Greeting: </label>
+                        <label><spring:message code="contact.bodyMessage"/></label>
                         <div class="input-group mb-3">
                             <spring:message code="writemessage" var="placeholdermessage" />
                             <form:textarea path="body" type="text" class="form-control" placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
@@ -175,11 +175,18 @@
                     <div class="container-contact">
                         <div class="row">
                             <div class="col-2">
-                                <label>Offers:  </label>
+                                <label><spring:message code="contact.offerMessage"/></label>
                             </div>
                             <div class="col-md-5">
-                                <spring:message code="writemessage" var="placeholderoffers" />
-                                <form:textarea path="offers" type="text" class="form-control" placeholder="${placeholderoffers}" aria-describedby="basic-addon2"/>
+                                <div class="row justify-content-center">
+                                    <div class="col-2">
+                                        <label><spring:message code="currency"/></label>
+                                    </div>
+                                    <div class="col">
+                                        <spring:message code="writemessage" var="placeholderoffers" />
+                                        <form:input path="offers" type="number" class="form-control" placeholder="${placeholderoffers}" aria-describedby="basic-addon2" id="contact-offer"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -187,7 +194,7 @@
                     <div class="container-contact">
                         <div class="row">
                             <div class="col-2">
-                                <label>In Exchange: </label>
+                                <label><spring:message code="contact.exchangeMessage"/></label>
                             </div>
                             <div class="col-md-5">
                                 <spring:message code="writemessage" var="placeholderexchange" />
@@ -200,7 +207,7 @@
                     <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
 
                     <div class="text-right">
-                        <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark"/>
+                        <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark" onclick="adjustInputs()" id="contact-send"/>
                     </div
                 </form:form>
             </div>
@@ -262,6 +269,18 @@
             history.back();
         } else {
             history.back();
+        }
+    }
+
+    var offerTag = document.getElementById('contact-offer');
+    offerTag.addEventListener("keypress", function () {
+        if (offerTag.value > 6) {
+            offerTag.value = offerTag.value.slice(0, 6);
+        }
+    });
+    function adjustInputs() {
+        if (offerTag.value.length === 0) {
+            offerTag.value = 0;
         }
     }
 </script>

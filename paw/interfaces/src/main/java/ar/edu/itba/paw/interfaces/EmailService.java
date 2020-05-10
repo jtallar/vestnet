@@ -13,5 +13,5 @@ public interface EmailService {
      * @param to User recipient mail.
      * @throws MessagingException When mail cannot be sent.
      */
-    void sendNewEmail(String from, String body, String offers, String exchange, String to) throws MessagingException;
+    void sendNewEmail(String from, String body, int offers, String exchange, String to) throws MessagingException;
 }

@@ -15,13 +15,14 @@ import javax.validation.constraints.Size;
 @SpELAssert(value = "password.equals(repeatPassword)", message = "{ar.edu.itba.paw.webapp.forms.SpELAssert}")
 public class NewUserFields {
 
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
+    @NotEmpty
     private String password;
     private String repeatPassword;
-    @Size(min = 1, max = 25)
+    @Size(max = 25)
     @NotEmpty
     private String firstName;
-    @Size(min = 1, max = 25)
+    @Size(max = 25)
     @NotEmpty
     private String lastName;
 
@@ -38,16 +39,14 @@ public class NewUserFields {
     private String role;
 
 // Aca si quiero que se complete despues, debiera poner un locationId que sea final y un Location que no lo sea
-    @Email
     @NotEmpty
-    @Pattern(regexp="^[^@]+@[^@]+\\.[a-zA-Z]{2,}$")
+    @Pattern(regexp="^([^@]+@[^@]+\\.[a-zA-Z]{2,}$)?")
     private String email;
     @Pattern(regexp = "[0-9]*")
     private String phone;
     @Pattern(regexp = "^((http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$)?")
     private String linkedin;
 
-    // TODO: SEGUN COMO CAPTURE LA EXCEPCION, VER SI HACE FALTA EL PARAM
     @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE)
     private MultipartFile profilePicture;
 

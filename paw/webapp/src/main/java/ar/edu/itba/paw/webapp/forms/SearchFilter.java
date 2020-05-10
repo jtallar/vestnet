@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.forms;
 
 public class SearchFilter {
-    String searching;
-    String selection;
+    private String searching;
+    private String selection;
 
     public String getSearching() {
         return searching;

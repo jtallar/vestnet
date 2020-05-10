@@ -2,6 +2,9 @@ package ar.edu.itba.paw.model;
 
 import java.time.LocalDate;
 
+/**
+ * Models a message. Used for communication between users.
+ */
 public class Message {
     private final long id;
 
@@ -52,6 +55,22 @@ public class Message {
         return projectId;
     }
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", messageContent=" + content +
+                ", publishDate=" + publishDate +
+                ", accepted=" + accepted +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                '}';
+    }
+
+    /**
+     * Model of the message content.
+     * It suits for the negotiation between investors and entrepreneurs.
+     */
     public class MessageContent {
         private final String message;
         private final String offer;
@@ -83,17 +102,5 @@ public class Message {
                     ", interest='" + interest + '\'' +
                     '}';
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", messageContent=" + content +
-                ", publishDate=" + publishDate +
-                ", accepted=" + accepted +
-                ", senderId=" + senderId +
-                ", receiverId=" + receiverId +
-                '}';
     }
 }

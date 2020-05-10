@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.LocationDao;
-import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.Location.City;
 import ar.edu.itba.paw.model.Location.Country;
 import ar.edu.itba.paw.model.Location.State;
@@ -17,6 +15,7 @@ import java.util.List;
 
 @Repository
 public class LocationJdbcDao implements LocationDao {
+
     private JdbcTemplate jdbcTemplate;
 
     private final static ResultSetExtractor<List<Country>> RESULT_SET_EXTRACTOR_COUNTRY = JdbcTemplateMapperFactory

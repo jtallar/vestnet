@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.interfaces;
+
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
