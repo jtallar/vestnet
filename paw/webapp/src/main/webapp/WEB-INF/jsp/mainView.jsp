@@ -123,6 +123,7 @@
                     </div>
                     <div class="col-md">
                         <form:select path="orderBy" class="custom-select mr-sm-2">
+                            <form:option value="default"><spring:message code="noOrder"/> </form:option>
                             <form:option value="date"><spring:message code="date"/> </form:option>
                             <form:option value="cost-low-high"><spring:message code="cost_l_h"/></form:option>
 

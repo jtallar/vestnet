@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.LocationService;
 import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
-import ar.edu.itba.paw.webapp.config.RoleCookieSuccessHandler;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.cookie.CookieUtil;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
@@ -24,22 +23,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
 public class LoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+
     @Autowired
     private UserService userService;
 
@@ -88,6 +85,7 @@ public class LoginController {
             LOGGER.debug("\n\n");
             return signUp(userFields, false);
         }
+
         byte[] imageBytes = new byte[0];
         try {
             if (!userFields.getProfilePicture().isEmpty())
@@ -96,7 +94,6 @@ public class LoginController {
             return signUp(userFields, false);
         }
 
-        //TODO add location when working
         final long userId;
         try {
             // Escaping from potential XSS code insertions
@@ -106,10 +103,10 @@ public class LoginController {
 
             userId = userService.create(userFields.getRole(), firstName, lastName, id,
                     LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
-                    //                new Location(userFields.getCountry(), userFields.getState(), userFields.getCity()),
                     new Location(new Location.Country(userFields.getCountry(), "", "", "", ""),
-                            new Location.State(userFields.getState(), "", ""), new Location.City(userFields.getCity(), "")),
-                   email, phone, linkedin, userFields.getPassword(), imageBytes);
+                            new Location.State(userFields.getState(), "", ""),
+                            new Location.City(userFields.getCity(), "")),
+                    email, phone, linkedin, userFields.getPassword(), imageBytes);
         } catch (UserAlreadyExistsException e) {
             return signUp(userFields, true);
         }
@@ -118,20 +115,6 @@ public class LoginController {
         authenticateUserAndSetSession(StringEscapeUtils.escapeHtml4(userFields.getEmail()), userFields.getPassword(), request, response);
         return new ModelAndView("redirect:/");
     }
-
-    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request, HttpServletResponse response) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
-        // generate session if one doesn't exist
-        request.getSession();
-
-        token.setDetails(new WebAuthenticationDetails(request));
-        Authentication authenticatedUser = authenticationManager.authenticate(token);
-
-        CookieUtil.generateRoleCookie(response, authenticatedUser);
-        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-    }
-
 
     @RequestMapping(value = "/location/country",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -151,5 +134,26 @@ public class LoginController {
         return locationService.findCities(stateId);
     }
 
+    /* Auxiliary functions */
+
+    /**
+     * Authenticates user and set its session for automatic login.
+     * @param username The user's name.
+     * @param password The user's password.
+     * @param request The http request.
+     * @param response The http response.
+     */
+    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request, HttpServletResponse response) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+
+        // generate session if one doesn't exist
+        request.getSession();
+
+        token.setDetails(new WebAuthenticationDetails(request));
+        Authentication authenticatedUser = authenticationManager.authenticate(token);
+
+        CookieUtil.generateRoleCookie(response, authenticatedUser);
+        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+    }
 
 }

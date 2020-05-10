@@ -2,7 +2,6 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.Message;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface MessageDao {
