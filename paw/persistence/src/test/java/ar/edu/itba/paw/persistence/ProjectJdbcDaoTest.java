@@ -21,6 +21,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class ProjectJdbcDaoTest {
+
+    /*
     private static final String PROJECTS_TABLE = "projects";
     private static final String PROJECT_NAME = "Project", PROJECT_SUMMARY = "Summary";
     private static final String PROJECT_NAME_2 = "Project 2", PROJECT_SUMMARY_2 = "Summary 2";
@@ -156,6 +158,8 @@ public class ProjectJdbcDaoTest {
         assertTrue(projects.isEmpty());
     }
 
+
+
     @Test
     public void testFindAllIfTableNotEmpty() {
         // 1
@@ -184,6 +188,8 @@ public class ProjectJdbcDaoTest {
         assertEquals(PROJECT_NAME, projects.get(0).getName());
         assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
     }
+
+
 
     @Test
     public void testFindByCategoriesNull() {
@@ -354,4 +360,6 @@ public class ProjectJdbcDaoTest {
         user.put("linkedin", "SUMMRAy@dsada.com");
         return jdbcInsertUser.executeAndReturnKey(user).longValue();
     }
+
+     */
 }

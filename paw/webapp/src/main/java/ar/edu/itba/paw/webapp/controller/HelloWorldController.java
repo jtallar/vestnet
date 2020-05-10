@@ -1,12 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.EmailService;
-import ar.edu.itba.paw.interfaces.CategoriesService;
-import ar.edu.itba.paw.interfaces.ProjectService;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
@@ -21,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -49,6 +45,9 @@ public class HelloWorldController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private CategoriesService categoriesService;
@@ -98,7 +97,7 @@ public class HelloWorldController {
     public ModelAndView index(){
         // TODO: CHANGE EXCEPTION TO SERVER ERROR?
         if (this.loggedUser().getRole() == User.UserRole.ENTREPRENEUR.getId())
-            return new ModelAndView("redirect:/myProfile");
+            return new ModelAndView("redirect:/messages");
         // Investor logged in
         return new ModelAndView("redirect:/projects");
     }
@@ -431,7 +430,31 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
-        return new ModelAndView("redirect:/projects");
+        ModelAndView mav = new ModelAndView("myProjects");
+
+
+        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
+
+        return mav;
     }
+
+    @RequestMapping(value = "/message/{project_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Message> cityList(@PathVariable("project_id") long project_id) {
+        return messageService.getProjectUnread(loggedUser().getId(), project_id);
+    }
+
+    @RequestMapping(value = "/message/accept/{project_id}/{sender_id}")
+    public ModelAndView accept(@PathVariable("project_id") long p_id,@PathVariable("sender_id") long s_id ){
+        messageService.updateMessageStatus(s_id, loggedUser().getId(), p_id, true);
+        return new ModelAndView("redirect:/messages");
+    }
+    @RequestMapping(value = "/message/refuse/{project_id}/{sender_id}")
+    public ModelAndView refuse(@PathVariable("project_id") long p_id,@PathVariable("sender_id") long s_id ){
+        messageService.updateMessageStatus(s_id, loggedUser().getId(), p_id, false);
+        return new ModelAndView("redirect:/messages");
+    }
+
+
 
 }

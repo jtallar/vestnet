@@ -123,6 +123,7 @@
                     </div>
                     <div class="col-md">
                         <form:select path="orderBy" class="custom-select mr-sm-2">
+                            <form:option value="default"><spring:message code="noOrder"/> </form:option>
                             <form:option value="date"><spring:message code="date"/> </form:option>
                             <form:option value="cost-low-high"><spring:message code="cost_l_h"/></form:option>
 
@@ -137,14 +138,14 @@
                     <div class="row">
                         <div class="col-sm">
                             <spring:message var="min" code="min"/>
-                            <form:input path="min" class="form-control mx-auto mx-auto"
+                            <form:input path="min" type="number" class="form-control mx-auto mx-auto"
                                         placeholder="${min}"/>
                             <form:errors path="min" cssClass="formError"/>
                         </div>
                         <p>-</p>
                         <div class="col-sm">
                             <spring:message var="max" code="max"/>
-                            <form:input path="max" class="form-control mx-auto mx-auto"
+                            <form:input path="max" type="number" class="form-control mx-auto mx-auto"
                                         placeholder="${max}"/>
                             <form:errors path="max" cssClass="formError"/>
                             <form:errors cssClass="formError"/>

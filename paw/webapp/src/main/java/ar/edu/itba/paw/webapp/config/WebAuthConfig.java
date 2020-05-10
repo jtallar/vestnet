@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
 
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.cookie.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +78,26 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico",
+                        "/location/**", "/imageController/**");
+    }
 
-    //used to convert the key resource into string
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    /* Auxiliary functions */
+
+    /**
+     * Converts key resource to a string.
+     * @param resource The resource to convert.
+     * @return The resource converted to string.
+     */
     private static String asString(Resource resource) {
         try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
             return FileCopyUtils.copyToString(reader);
@@ -89,18 +106,4 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        // TODO: VER QUE HACER CON EL WELCOME
-        web.ignoring()
-                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico",
-                        "/location/**", "/imageController/**");
-
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
 }

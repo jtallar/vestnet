@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ErrorController {
+
     @RequestMapping(value = "/errors")
     public ModelAndView errorPage(HttpServletRequest httpServletRequest) {
         ModelAndView mv = new ModelAndView("error");

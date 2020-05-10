@@ -100,7 +100,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public byte[] findImageForUser(long userId) {
-        return jdbcTemplate.queryForObject(JdbcQueries.USER_IMAGE, new Object[] {userId}, byte[].class);
+        return jdbcTemplate.queryForObject(JdbcQueries.USER_FIND_IMAGE_BY_ID, new Object[] {userId}, byte[].class);
     }
 
 

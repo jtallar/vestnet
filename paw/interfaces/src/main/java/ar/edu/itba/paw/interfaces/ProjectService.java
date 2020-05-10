@@ -21,12 +21,6 @@ public interface ProjectService {
     long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
 
     /**
-     * Find all available projects
-     * @return List of available projects
-     */
-    List<Project> findAll();
-
-    /**
      * Finds a project given its id
      * @param projectId The unique id for the project
      * @return The matched project or null otherwise
@@ -39,13 +33,6 @@ public interface ProjectService {
      * @return List of all the project for the given user.
      */
     List<Project> findByOwner(long userId);
-
-    /**
-     * Finds a list of projects that matches one or more categories
-     * @param categories The list of categories to find
-     * @return List of available projects that fit those categories
-     */
-    List<Project> findByCategories(List<Category> categories);
 
     /**
      * Gets the count of all the published projects within a cost range.

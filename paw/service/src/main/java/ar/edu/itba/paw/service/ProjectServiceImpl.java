@@ -21,11 +21,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findAll() {
-        return projectDao.findAll();
-    }
-
-    @Override
     public Optional<Project> findById(long projectId) {
         return projectDao.findById(projectId);
     }
@@ -33,11 +28,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Project> findByOwner(long userId) {
         return projectDao.findByOwner(userId);
-    }
-
-    @Override
-    public List<Project> findByCategories(List<Category> categories) {
-        return projectDao.findByCategories(categories);
     }
 
     @Override
