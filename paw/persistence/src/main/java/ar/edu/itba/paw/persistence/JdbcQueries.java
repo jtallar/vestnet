@@ -180,6 +180,15 @@ public class JdbcQueries {
     static final String MESSAGE_ACCEPTED_COUNT =
             "SELECT COUNT(*) FROM " + MESSAGE_TABLE + " WHERE receiver_id = ? AND accepted = true ";
 
+    static final String MESSAGE_OFFER_ID =
+
+            "SELECT ID FROM " + MESSAGE_TABLE + " WHERE  sender_id = ?  "
+                    + " ORDER BY publish_date DESC " + " OFFSET ? LIMIT ?";
+
+    static final String MESSAGE_OFFER_COUNT =
+            "SELECT COUNT(*) FROM " + MESSAGE_TABLE + " WHERE  sender_id = ? ";
+
+
 
     /**
      * Project queries.
