@@ -97,7 +97,11 @@ public class UserController {
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
         ModelAndView mav = new ModelAndView("project/myProjects");
-        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
+        List<Project> projects = projectService.findByOwner(loggedUser().getId());
+        mav.addObject("projects", projects);
+        projects.forEach(project -> {
+            mav.addObject(project.getName().concat("favs"), projectService.getFavoritesCount(project.getId()));
+        });
         return mav;
     }
 

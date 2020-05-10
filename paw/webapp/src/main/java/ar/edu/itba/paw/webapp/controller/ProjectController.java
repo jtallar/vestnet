@@ -223,10 +223,10 @@ public class ProjectController {
 
         String title = StringEscapeUtils.escapeHtml4(projectFields.getTitle());
         String summary = StringEscapeUtils.escapeHtml4(projectFields.getSummary());
+        long userId = loggedUser().getId();
 
         long projectId = projectService.create(title, summary,
-                projectFields.getCost(), loggedUser().getId(), projectFields.getCategories(), null, imageBytes);
-//        return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
+                projectFields.getCost(), userId, projectFields.getCategories(), null, imageBytes);
         return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
     }
 
