@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class CategoriesJdbcDaoTest {
+
     private static final String CATEGORIES_TABLE = "categories";
     private static final String CATEGORY_NAME = "Technology";
     private static final String PROJECTS_TABLE = "projects";
@@ -31,6 +32,7 @@ public class CategoriesJdbcDaoTest {
 
     @Autowired
     private CategoriesJdbcDao categoriesJdbcDao;
+
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertCategory, jdbcInsertProject, jdbcInsertProjectCategory;
 
@@ -53,48 +55,45 @@ public class CategoriesJdbcDaoTest {
 
     @Test
     public void testFindAllIfTableEmpty() {
-        // 1: Precondiciones: Setup del escenario para que nuestro test corra
-        // TABLE EMPTY
+        // 1 - Setup - Empty table
 
-        // 2: Ejercitacion: Hacemos la unica llamada al metodo que queremos testear
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findAll();
 
-        // 3: Postcondiciones: Hacemos los pocos assertes que permiten validar correctitud
+        // 3 - Assert
         assertTrue(categories.isEmpty());
     }
 
     @Test
     public void testFindAllIfTableNotEmpty() {
-        // 1
+        // 1 - Setup - Add 1 category
         Map<String, String> values = new HashMap<String, String>();
         values.put("category", CATEGORY_NAME);
         jdbcInsertCategory.executeAndReturnKey(values);
 
-        // 2
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findAll();
 
-        // 3
+        // 3 - Assert - Quantity, Name, Parent
         assertEquals(1, categories.size());
         assertEquals(CATEGORY_NAME, categories.get(0).getName());
-        // OJO: si no completo un campo, me pone 0, no null en el long/Long
         assertEquals(0, categories.get(0).getParent());
     }
 
     @Test
     public void testFindProjectCategoriesWithNoProject() {
-        // 1
-        // TABLES EMPTY
+        // 1 - Setup - Empty tables
 
-        // 2
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findProjectCategories(1);
 
-        // 3
+        // 3 - Assert
         assertTrue(categories.isEmpty());
     }
 
     @Test
     public void testFindProjectCategoriesWithProject() {
-        // 1
+        // 1 - Setup - Add category and project
         Map<String, String> category = new HashMap<String, String>();
         category.put("category", CATEGORY_NAME);
         Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
@@ -109,10 +108,10 @@ public class CategoriesJdbcDaoTest {
         values.put("project_id", projectId.longValue());
         jdbcInsertProjectCategory.execute(values);
 
-        // 2
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findProjectCategories(projectId.longValue());
 
-        // 3
+        // 3 - Assert - Quantity, Category
         assertEquals(1, categories.size());
         assertEquals(CATEGORY_NAME, categories.get(0).getName());
     }
