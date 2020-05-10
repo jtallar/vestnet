@@ -287,11 +287,13 @@
     }
 
     var offerTag = document.getElementById('contact-offer');
-    offerTag.addEventListener("keypress", function () {
-        if (offerTag.value > 6) {
-            offerTag.value = offerTag.value.slice(0, 6);
-        }
-    });
+    if (offerTag != null) {
+        offerTag.addEventListener("keypress", function () {
+            if (offerTag.value > 6) {
+                offerTag.value = offerTag.value.slice(0, 6);
+            }
+        });
+    }
     function adjustInputs() {
         if (offerTag.value.length === 0) {
             offerTag.value = 0;
