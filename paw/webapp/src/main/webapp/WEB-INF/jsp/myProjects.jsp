@@ -12,7 +12,8 @@
     <title>My Projects | Vestnet</title>
 </head>
 <body>
-<c:forEach var="project" items="${projects}">
+
+<c:forEach var="project" items="${projects}" varStatus="theCount">
     <div class="container py-3">
         <div class="card">
             <div class="row ">
@@ -25,7 +26,7 @@
                         <p class="card-text">${project.summary} </p>
                         <h5><spring:message code="cost"></spring:message> </h5>
                         <p class="card-text"> ${project.cost}</p>
-                        <button onclick="fetchMsgs(${project.id})" class="btn btn-dark pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}"><spring:message code="see_msgs"></spring:message> </button>
+                        <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}"><spring:message code="see_msgs"></spring:message> </button>
 
                     </div>
                 </div>
@@ -55,15 +56,13 @@
 
 
 <script>
-    var state = new Array();
-    for (let i = 0; i < ${projects.size()}; i++){
-        state[${projects.get(i).id}] = 0;
-    }
+    var state = new Array(${projects.size() + 1}).fill(0);
 </script>
 
 <script>
-    function fetchMsgs(project_id){
-        if(state[project_id] === 0) {
+    function fetchMsgs(project_id, index){
+        console.log('')
+        if(state[index] === 0) {
             fetch(window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/message/" + project_id)
                 .then(response => response.json())
                 .then(data => {
