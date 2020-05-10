@@ -50,7 +50,7 @@
                 </c:if>
             </div>
         <div class="row" style="margin: 20px">
-            <div class="col">
+            <div class="col-5">
                 <div class="container-img">
                 <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img" alt="<spring:message code="projectImage"/>"
                      aria-placeholder="<spring:message code="projectImage"/>"/>
@@ -99,7 +99,7 @@
 <%--                    </a>--%>
 <%--                </div>--%>
             </div>
-            <div class="col">
+            <div class="col-5">
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
                         <%--                    <img src="" class="card-img-top" alt="..." >--%>

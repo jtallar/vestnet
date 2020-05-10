@@ -182,7 +182,7 @@ public class ProjectController {
         } catch (MessageAlreadySentException e) {
             return singleProjectView(mailFields, id, 2);
         }
-        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
+        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo(), "google.com.ar");
         return new ModelAndView("redirect:/projects/{id}?contactStatus=1");
     }
 
