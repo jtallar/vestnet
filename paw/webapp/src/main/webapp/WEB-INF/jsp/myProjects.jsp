@@ -146,7 +146,7 @@
                     }
 
 
-                    state[project_id] = 1;
+                    state[index] = 1;
 
                 })
         }
