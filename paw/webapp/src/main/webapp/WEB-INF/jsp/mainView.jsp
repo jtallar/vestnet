@@ -138,16 +138,16 @@
                     <div class="row">
                         <div class="col-sm">
                             <spring:message var="min" code="min"/>
-                            <form:input path="min" type="number" class="form-control mx-auto mx-auto"
+                            <form:input path="minCost" type="number" class="form-control mx-auto mx-auto"
                                         placeholder="${min}"/>
-                            <form:errors path="min" cssClass="formError"/>
+                            <form:errors path="minCost" cssClass="formError"/>
                         </div>
                         <p>-</p>
                         <div class="col-sm">
                             <spring:message var="max" code="max"/>
-                            <form:input path="max" type="number" class="form-control mx-auto mx-auto"
+                            <form:input path="maxCost" type="number" class="form-control mx-auto mx-auto"
                                         placeholder="${max}"/>
-                            <form:errors path="max" cssClass="formError"/>
+                            <form:errors path="maxCost" cssClass="formError"/>
                             <form:errors cssClass="formError"/>
                         </div>
                     </div>

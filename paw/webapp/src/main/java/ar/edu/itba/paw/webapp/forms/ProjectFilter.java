@@ -1,34 +1,31 @@
 package ar.edu.itba.paw.webapp.forms;
 
-import cz.jirutka.validator.spring.SpELAssert;
-
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Pattern;
 
 @RangeCheck()
-public class CategoryFilter {
+public class ProjectFilter {
     private String categorySelector;
     private String orderBy;
 
     @Pattern(regexp = "[0-9]*")
-    private String min;
+    private String minCost;
     @Pattern(regexp = "[0-9]*")
-    private String max;
+    private String maxCost;
 
-    public String getMin() {
-        return min;
+    public String getMinCost() {
+        return minCost;
     }
 
-    public void setMin(String min) {
-        this.min = min;
+    public void setMinCost(String minCost) {
+        this.minCost = minCost;
     }
 
-    public String getMax() {
-        return max;
+    public String getMaxCost() {
+        return maxCost;
     }
 
-    public void setMax(String max) {
-        this.max = max;
+    public void setMaxCost(String maxCost) {
+        this.maxCost = maxCost;
     }
 
     public String getOrderBy() {

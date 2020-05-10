@@ -10,7 +10,7 @@ import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.MailFields;
-import ar.edu.itba.paw.webapp.forms.CategoryFilter;
+import ar.edu.itba.paw.webapp.forms.ProjectFilter;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,18 +59,6 @@ public class HelloWorldController {
 
 
 
-    /*@ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ModelAndView noSuchUser() {
-        return new ModelAndView("error");
-    }
-
-    @ExceptionHandler(ProjectNotFoundException.class)
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ModelAndView noSuchProject() {
-        return new ModelAndView("error");
-    }*/
-
     @ModelAttribute("sessionUser")
     public User loggedUser() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -89,10 +77,6 @@ public class HelloWorldController {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView failedEmail() { return new ModelAndView("error"); }
 
-    /*@ExceptionHandler(UserAlreadyExistsException.class)
-    @ResponseStatus(code = HttpStatus.CONFLICT)
-    public ModelAndView failedRegistration() { return new ModelAndView("error"); }*/
-
     @RequestMapping("/")
     public ModelAndView index(){
         // TODO: CHANGE EXCEPTION TO SERVER ERROR?
@@ -102,140 +86,40 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/projects");
     }
 
-    /*@RequestMapping("/{id}")
-    public ModelAndView helloWorld(@PathVariable("id") long id) {
-        final ModelAndView mav = new ModelAndView("index");
-        mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        List<Category> catList = categoriesService.findAllCats();
-        mav.addObject("cats", catList);
-        return mav;
-    }*/
-
     @RequestMapping(value = "/projects")
-    public ModelAndView mainView( @ModelAttribute("categoryForm") @Valid CategoryFilter catFilter, final BindingResult errors,
-                                  @RequestParam(name = "page", defaultValue ="1") String page) {
+    public ModelAndView mainView(@ModelAttribute("categoryForm") @Valid ProjectFilter catFilter, final BindingResult errors,
+                                 @RequestParam(name = "page", defaultValue ="1") String page) {
         final ModelAndView mav = new ModelAndView("mainView");
         Integer intPage = Integer.parseInt(page);
         List<Category> catList = categoriesService.findAll();
 
-
         if(errors.hasErrors()){
-            Integer projects = 0;
-            Boolean hasNext = false;
-            page = "1";
             List<Project> projectList = new ArrayList<>();
-            mav.addObject("hasNext",hasNext);
-            mav.addObject("page", page);
+            mav.addObject("hasNext", false);
+            mav.addObject("page", "1");
             mav.addObject("cats", catList);
             mav.addObject("list", projectList);
-
             return mav;
         }
 
-        /*
-        if(max != null){
-            catFilter.setMax(max);
-        }
-        if (min != null){
-            catFilter.setMin(min);
-        }
-        if(catSel != null){
-            catFilter.setCategorySelector(catSel);
-        }
-        if (orderBy != null){
-            catFilter.setOrderBy(orderBy);
-        }
-
-         */
-
-
-
-
         Integer projects = countProjects(catFilter, catList);
+        Boolean hasNext = projects > ((intPage)* PAGE_SIZE);
         List<Project> projectList = filterOrder(catFilter,catList, intPage, projects);
 
-        Boolean hasNext = (projects > ((intPage)* PAGE_SIZE) ) ? true : false;
         mav.addObject("hasNext",hasNext);
-
-
         mav.addObject("page", page);
         mav.addObject("cats", catList);
         mav.addObject("list", projectList);
+
         User loggedUser = loggedUser();
         if (loggedUser != null && loggedUser.getRole() == User.UserRole.INVESTOR.getId())
             mav.addObject("isFav", projectService.isFavorite(projectList.stream().map(Project::getId).collect(Collectors.toList()), loggedUser.getId()));
         else
             mav.addObject("isFav", new ArrayList<>());
 
-
         return mav;
     }
 
-    private Integer countProjects(CategoryFilter catFilter, List<Category> catList){
-        long minAux, maxAux;
-        minAux = (catFilter.getMin() == null || catFilter.getMin().matches("")) ? 0 : Long.parseLong(catFilter.getMin());
-        maxAux = (catFilter.getMax() == null || catFilter.getMax().matches("")) ? Long.MAX_VALUE : Long.parseLong(catFilter.getMax());
-
-        Integer projects;
-        if(catFilter.getCategorySelector() == null || catFilter.getCategorySelector().matches("allCats")){ //calculate total projects to render to check limit and offset
-            projects = projectService.countByCost(minAux, maxAux);
-        }
-        else {
-            Optional<Category> selectedCategory = catList.stream()
-                    .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
-                    .findFirst();
-            projects = projectService.countByCategory(Collections.singletonList(selectedCategory.get()), minAux, maxAux);
-        }
-        return projects;
-    }
-
-
-    private List<Project> filterOrder(CategoryFilter catFilter, List<Category> catList, Integer page, Integer projects){
-        long minAux, maxAux;
-        minAux = (catFilter.getMin() == null || catFilter.getMin().matches("")) ? 0 : Long.parseLong(catFilter.getMin());
-        maxAux = (catFilter.getMax() == null || catFilter.getMax().matches("")) ? Long.MAX_VALUE : Long.parseLong(catFilter.getMax());
-
-
-
-
-        int from = (page == 1) ? 0 : ((page -1) * PAGE_SIZE);
-        int size = ((projects - from) < PAGE_SIZE) ? (projects - from) : PAGE_SIZE;
-
-
-        List<Project> auxList = new ArrayList<>();
-        if (catFilter.getCategorySelector() != null && !catFilter.getCategorySelector().matches("allCats")) {
-            Optional<Category> selectedCategory = catList.stream()
-                    .filter(category -> category.getName().equals(catFilter.getCategorySelector()))
-                    .findFirst();
-            if (selectedCategory.isPresent()) {
-
-                auxList = projectService.findByCategoryPage(Collections.singletonList(selectedCategory.get()), from, size, minAux, maxAux);
-
-            }
-        } else {
-
-            auxList = projectService.findByCostPage(from, size, minAux, maxAux);
-        }
-
-        if(catFilter.getOrderBy() != null) {
-            switch (catFilter.getOrderBy()) {
-                case "date":
-                    auxList = auxList.stream().sorted(new DateComparator()).collect(Collectors.toList());
-                    break;
-                case "cost-low-high":
-                    auxList = auxList.stream().sorted(new CostComparator()).collect(Collectors.toList());
-                    break;
-                case "cost-high-low":
-                    auxList = auxList.stream().sorted(new CostComparator().reversed()).collect(Collectors.toList());
-                    break;
-                case "alf":
-                    auxList = auxList.stream().sorted(new AlphComparator()).collect(Collectors.toList());
-                    break;
-            }
-        }
-
-        return auxList;
-    }
 
 
     @RequestMapping(value = "/header")
@@ -244,25 +128,6 @@ public class HelloWorldController {
         return mav;
     }
 
-
-
-//    @RequestMapping(value = "/projects/{p_id}", method = {RequestMethod.GET})
-//    public ModelAndView contact(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id) {
-//        final ModelAndView mav = new ModelAndView("contact");
-//        mav.addObject("owner", projectService.findById(p_id).orElseThrow(ProjectNotFoundException::new).getOwner());
-//        mav.addObject("p_id", p_id);
-//        // TODO: SACAR SI PERSISTIMOS CON @MODEL ATTRIBUTE
-//        return mav;
-//    }
-//
-//    @RequestMapping(value = "/projects/{p_id}", method = {RequestMethod.POST})
-//    public ModelAndView contact(@Valid @ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("p_id") int p_id, BindingResult errors) throws MessagingException {
-//        if (errors.hasErrors()) {
-//            return contact(mailFields, p_id);
-//        }
-//        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getTo());
-//        return new ModelAndView("redirect:/projects/{p_id}?mailSent=yes");
-//    }
 
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id,
@@ -338,7 +203,6 @@ public class HelloWorldController {
         String title = StringEscapeUtils.escapeHtml4(projectFields.getTitle());
         String summary = StringEscapeUtils.escapeHtml4(projectFields.getSummary());
 
-        // TODO: AGREGAR STAGES
         long projectId = projectService.create(title, summary,
                 projectFields.getCost(), loggedUser().getId(), projectFields.getCategories(), null, imageBytes);
         return new ModelAndView("redirect:/users/" + loggedUser().getId() + "/" + projectId);
@@ -368,30 +232,6 @@ public class HelloWorldController {
         return mav;
     }
 
-    /*@RequestMapping(value = "/users/{u_id}/{p_id}")
-    public ModelAndView userProjectView(@ModelAttribute("mailForm") final MailFields mailFields, @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
-                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
-        final ModelAndView mav = new ModelAndView("singleProjectView");
-        mav.addObject("project", projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new));
-        mav.addObject("mailSent", mailSent);
-        mav.addObject("back", "/users/" + userId);
-        boolean isFav = projectService.isFavorite(projectId, loggedUser().getId());
-        mav.addObject("isFav", isFav);
-        mav.addObject("favCount", projectService.getFavoritesCount(projectId));
-
-        return mav;
-    }
-
-    @RequestMapping(value = "/users/{u_id}/{p_id}", method = {RequestMethod.POST})
-    public ModelAndView userProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors,
-                                        @PathVariable("u_id") long userId, @PathVariable("p_id") long projectId,
-                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) throws MessagingException {
-        if (errors.hasErrors()) {
-            return userProjectView(mailFields, userId, projectId, false);
-        }
-        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo());
-        return new ModelAndView("redirect:/users/{u_id}/{p_id}?mailSent=yes");
-    }*/
 
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){
@@ -455,6 +295,65 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/messages");
     }
 
+    /**
+     * Auxiliary functions
+     */
 
+    /**
+     * Counts the quantity of projects that matches filter criteria.
+     * @param projectFilter The filter to be matched.
+     * @param categories All the categories.
+     * @return The count of projects.
+     */
+    private Integer countProjects(ProjectFilter projectFilter, List<Category> categories) {
+        long minCost, maxCost;
+        minCost = (projectFilter.getMinCost() == null || projectFilter.getMinCost().matches("")) ? 0 : Long.parseLong(projectFilter.getMinCost());
+        maxCost = (projectFilter.getMaxCost() == null || projectFilter.getMaxCost().matches("")) ? Long.MAX_VALUE : Long.parseLong(projectFilter.getMaxCost());
+
+        if(projectFilter.getCategorySelector() == null || projectFilter.getCategorySelector().matches("allCats")) //calculate total projects to render to check limit and offset
+            return projectService.countByCost(minCost, maxCost);
+
+        Optional<Category> selectedCategory = categories.stream()
+                .filter(category -> category.getName().equals(projectFilter.getCategorySelector()))
+                .findFirst();
+        return projectService.countByCategory(Collections.singletonList(selectedCategory.get()), minCost, maxCost);
+    }
+
+    /**
+     * Gets a filtered and ordered list of projects.
+     * @param projectFilter The criteria to match.
+     * @param categories All the categories.
+     * @param currentPage Current page of the project.
+     * @param projects The quantity of projects.
+     * @return List of all the project sorted, that match criteria.
+     */
+    private List<Project> filterOrder(ProjectFilter projectFilter, List<Category> categories, Integer currentPage, Integer projects) {
+        long minCost, maxCost;
+        minCost = (projectFilter.getMinCost() == null || projectFilter.getMinCost().matches("")) ? 0 : Long.parseLong(projectFilter.getMinCost());
+        maxCost = (projectFilter.getMaxCost() == null || projectFilter.getMaxCost().matches("")) ? Long.MAX_VALUE : Long.parseLong(projectFilter.getMaxCost());
+
+        int startPage = ((currentPage - 1) * PAGE_SIZE);
+        int pageOffset = Math.min((projects - startPage), PAGE_SIZE);
+
+        List<Project> auxList = new ArrayList<>();
+        if (projectFilter.getCategorySelector() != null && !projectFilter.getCategorySelector().matches("allCats")) {
+            Optional<Category> selectedCategory = categories.stream()
+                    .filter(category -> category.getName().equals(projectFilter.getCategorySelector()))
+                    .findFirst();
+            if (selectedCategory.isPresent()) {
+                auxList = projectService.findByCategoryPage(Collections.singletonList(selectedCategory.get()), startPage, pageOffset, minCost, maxCost);
+            }
+        } else {
+            auxList = projectService.findByCostPage(startPage, pageOffset, minCost, maxCost);
+        }
+
+        switch (projectFilter.getOrderBy()) {
+            case "date": return auxList.stream().sorted(new DateComparator()).collect(Collectors.toList());
+            case "cost-low-high": return auxList.stream().sorted(new CostComparator()).collect(Collectors.toList());
+            case "cost-high-low": return auxList.stream().sorted(new CostComparator().reversed()).collect(Collectors.toList());
+            case "alf": return auxList.stream().sorted(new AlphComparator()).collect(Collectors.toList());
+            default: return auxList;
+        }
+    }
 
 }

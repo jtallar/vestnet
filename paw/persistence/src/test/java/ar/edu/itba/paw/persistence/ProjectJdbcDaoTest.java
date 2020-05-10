@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = TestConfig.class)
 public class ProjectJdbcDaoTest {
 
-    /*
+
     private static final String PROJECTS_TABLE = "projects";
     private static final String PROJECT_NAME = "Project", PROJECT_SUMMARY = "Summary";
     private static final String PROJECT_NAME_2 = "Project 2", PROJECT_SUMMARY_2 = "Summary 2";
@@ -146,181 +146,181 @@ public class ProjectJdbcDaoTest {
         assertEquals(PROJECT_SUMMARY, maybeProject.get().getSummary());
     }
 
-    @Test
-    public void testFindAllIfTableEmpty() {
-        // 1
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
-
-        // 2
-        List<Project> projects = projectJdbcDao.findAll();
-
-        // 3
-        assertTrue(projects.isEmpty());
-    }
-
-
-
-    @Test
-    public void testFindAllIfTableNotEmpty() {
-        // 1
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
-
-        Map<String, String> category = new HashMap<String, String>();
-        category.put("category", CATEGORY_NAME);
-        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
-
-        Map<String, Object> values = new HashMap<>();
-        values.put("owner_id", userId);
-        values.put("project_name", PROJECT_NAME);
-        values.put("summary", PROJECT_SUMMARY);
-        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
-
-        Map<String, Long> values2 = new HashMap<String, Long>();
-        values2.put("category_id", categoryId.longValue());
-        values2.put("project_id", projectId.longValue());
-        jdbcInsertProjectCategory.execute(values2);
-
-        // 2
-        List<Project> projects = projectJdbcDao.findAll();
-
-        // 3
-        assertEquals(1, projects.size());
-        assertEquals(PROJECT_NAME, projects.get(0).getName());
-        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
-    }
+//    @Test
+//    public void testFindAllIfTableEmpty() {
+//        // 1
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//
+//        // 2
+//        List<Project> projects = projectJdbcDao.findAll();
+//
+//        // 3
+//        assertTrue(projects.isEmpty());
+//    }
 
 
 
-    @Test
-    public void testFindByCategoriesNull() {
-        // 1
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//    @Test
+//    public void testFindAllIfTableNotEmpty() {
+//        // 1
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//
+//        Map<String, String> category = new HashMap<String, String>();
+//        category.put("category", CATEGORY_NAME);
+//        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+//
+//        Map<String, Object> values = new HashMap<>();
+//        values.put("owner_id", userId);
+//        values.put("project_name", PROJECT_NAME);
+//        values.put("summary", PROJECT_SUMMARY);
+//        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
+//
+//        Map<String, Long> values2 = new HashMap<String, Long>();
+//        values2.put("category_id", categoryId.longValue());
+//        values2.put("project_id", projectId.longValue());
+//        jdbcInsertProjectCategory.execute(values2);
+//
+//        // 2
+//        List<Project> projects = projectJdbcDao.findAll();
+//
+//        // 3
+//        assertEquals(1, projects.size());
+//        assertEquals(PROJECT_NAME, projects.get(0).getName());
+//        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
+//    }
 
-        Map<String, String> category = new HashMap<String, String>();
-        category.put("category", CATEGORY_NAME);
-        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
 
-        Map<String, Object> values = new HashMap<>();
-        values.put("owner_id", userId);
-        values.put("project_name", PROJECT_NAME);
-        values.put("summary", PROJECT_SUMMARY);
-        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
 
-        Map<String, Long> values2 = new HashMap<String, Long>();
-        values2.put("category_id", categoryId.longValue());
-        values2.put("project_id", projectId.longValue());
-        jdbcInsertProjectCategory.execute(values2);
+//    @Test
+//    public void testFindByCategoriesNull() {
+//        // 1
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//
+//        Map<String, String> category = new HashMap<String, String>();
+//        category.put("category", CATEGORY_NAME);
+//        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+//
+//        Map<String, Object> values = new HashMap<>();
+//        values.put("owner_id", userId);
+//        values.put("project_name", PROJECT_NAME);
+//        values.put("summary", PROJECT_SUMMARY);
+//        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
+//
+//        Map<String, Long> values2 = new HashMap<String, Long>();
+//        values2.put("category_id", categoryId.longValue());
+//        values2.put("project_id", projectId.longValue());
+//        jdbcInsertProjectCategory.execute(values2);
+//
+//        // 2
+//        List<Project> projects = projectJdbcDao.findByCategories(null);
+//
+//        // 3
+//        assertEquals(1, projects.size());
+//        assertEquals(PROJECT_NAME, projects.get(0).getName());
+//        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
+//    }
 
-        // 2
-        List<Project> projects = projectJdbcDao.findByCategories(null);
+//    @Test
+//    public void testFindByCategoriesEmpty() {
+//        // 1
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//
+//        Map<String, String> category = new HashMap<String, String>();
+//        category.put("category", CATEGORY_NAME);
+//        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+//
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//        Map<String, Object> values = new HashMap<>();
+//        values.put("owner_id", userId);
+//        values.put("project_name", PROJECT_NAME);
+//        values.put("summary", PROJECT_SUMMARY);
+//        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
+//
+//        Map<String, Long> values2 = new HashMap<String, Long>();
+//        values2.put("category_id", categoryId.longValue());
+//        values2.put("project_id", projectId.longValue());
+//        jdbcInsertProjectCategory.execute(values2);
+//
+//        // 2
+//        List<Project> projects = projectJdbcDao.findByCategories(new ArrayList<>());
+//
+//        // 3
+//        assertEquals(1, projects.size());
+//        assertEquals(PROJECT_NAME, projects.get(0).getName());
+//        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
+//    }
 
-        // 3
-        assertEquals(1, projects.size());
-        assertEquals(PROJECT_NAME, projects.get(0).getName());
-        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
-    }
+//    @Test
+//    public void testFindByCategoriesValid() {
+//        // 1
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//
+//        Map<String, String> category = new HashMap<String, String>();
+//        category.put("category", CATEGORY_NAME);
+//        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+//
+//        Map<String, Object> project = new HashMap<>();
+//        project.put("owner_id", userId);
+//        project.put("project_name", PROJECT_NAME);
+//        project.put("summary", PROJECT_SUMMARY);
+//        Number projectId = jdbcInsertProject.executeAndReturnKey(project);
+//
+//        Map<String, Long> values = new HashMap<String, Long>();
+//        values.put("category_id", categoryId.longValue());
+//        values.put("project_id", projectId.longValue());
+//        jdbcInsertProjectCategory.execute(values);
+//
+//        // 2
+//        List<Project> projects = projectJdbcDao.findByCategories(Collections.singletonList
+//                (new Category(categoryId.longValue(), CATEGORY_NAME, 0)));
+//
+//        // 3
+//        assertEquals(1, projects.size());
+//        assertEquals(PROJECT_NAME, projects.get(0).getName());
+//        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
+//    }
 
-    @Test
-    public void testFindByCategoriesEmpty() {
-        // 1
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
-
-        Map<String, String> category = new HashMap<String, String>();
-        category.put("category", CATEGORY_NAME);
-        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
-
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
-        Map<String, Object> values = new HashMap<>();
-        values.put("owner_id", userId);
-        values.put("project_name", PROJECT_NAME);
-        values.put("summary", PROJECT_SUMMARY);
-        Number projectId = jdbcInsertProject.executeAndReturnKey(values);
-
-        Map<String, Long> values2 = new HashMap<String, Long>();
-        values2.put("category_id", categoryId.longValue());
-        values2.put("project_id", projectId.longValue());
-        jdbcInsertProjectCategory.execute(values2);
-
-        // 2
-        List<Project> projects = projectJdbcDao.findByCategories(new ArrayList<>());
-
-        // 3
-        assertEquals(1, projects.size());
-        assertEquals(PROJECT_NAME, projects.get(0).getName());
-        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
-    }
-
-    @Test
-    public void testFindByCategoriesValid() {
-        // 1
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
-
-        Map<String, String> category = new HashMap<String, String>();
-        category.put("category", CATEGORY_NAME);
-        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
-
-        Map<String, Object> project = new HashMap<>();
-        project.put("owner_id", userId);
-        project.put("project_name", PROJECT_NAME);
-        project.put("summary", PROJECT_SUMMARY);
-        Number projectId = jdbcInsertProject.executeAndReturnKey(project);
-
-        Map<String, Long> values = new HashMap<String, Long>();
-        values.put("category_id", categoryId.longValue());
-        values.put("project_id", projectId.longValue());
-        jdbcInsertProjectCategory.execute(values);
-
-        // 2
-        List<Project> projects = projectJdbcDao.findByCategories(Collections.singletonList
-                (new Category(categoryId.longValue(), CATEGORY_NAME, 0)));
-
-        // 3
-        assertEquals(1, projects.size());
-        assertEquals(PROJECT_NAME, projects.get(0).getName());
-        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
-    }
-
-    @Test
-    public void testFindByCategoriesValidMultiple() {
-        // 1
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
-
-        Map<String, String> category = new HashMap<String, String>();
-        category.put("category", CATEGORY_NAME);
-        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
-        Map<String, String> category2 = new HashMap<String, String>();
-        category2.put("category", CATEGORY_NAME_2);
-        Number categoryId2 = jdbcInsertCategory.executeAndReturnKey(category2);
-
-        Map<String, Object> project = new HashMap<>();
-        project.put("owner_id", userId);
-        project.put("project_name", PROJECT_NAME);
-        project.put("summary", PROJECT_SUMMARY);
-        Number projectId = jdbcInsertProject.executeAndReturnKey(project);
-        Map<String, Object> project2 = new HashMap<>();
-        project2.put("owner_id", userId);
-        project2.put("project_name", PROJECT_NAME_2);
-        project2.put("summary", PROJECT_SUMMARY_2);
-        Number projectId2 = jdbcInsertProject.executeAndReturnKey(project2);
-
-        Map<String, Long> values = new HashMap<String, Long>();
-        values.put("category_id", categoryId.longValue());
-        values.put("project_id", projectId.longValue());
-        jdbcInsertProjectCategory.execute(values);
-        Map<String, Long> values2 = new HashMap<String, Long>();
-        values2.put("category_id", categoryId2.longValue());
-        values2.put("project_id", projectId2.longValue());
-        jdbcInsertProjectCategory.execute(values2);
-
-        // 2
-        List<Project> projects = projectJdbcDao.findByCategories(Collections.singletonList
-                (new Category(categoryId.longValue(), CATEGORY_NAME, 0)));
-
-        // 3
-        assertEquals(1, projects.size());
-        assertEquals(PROJECT_NAME, projects.get(0).getName());
-        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
-    }
+//    @Test
+//    public void testFindByCategoriesValidMultiple() {
+//        // 1
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
+//
+//        Map<String, String> category = new HashMap<String, String>();
+//        category.put("category", CATEGORY_NAME);
+//        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+//        Map<String, String> category2 = new HashMap<String, String>();
+//        category2.put("category", CATEGORY_NAME_2);
+//        Number categoryId2 = jdbcInsertCategory.executeAndReturnKey(category2);
+//
+//        Map<String, Object> project = new HashMap<>();
+//        project.put("owner_id", userId);
+//        project.put("project_name", PROJECT_NAME);
+//        project.put("summary", PROJECT_SUMMARY);
+//        Number projectId = jdbcInsertProject.executeAndReturnKey(project);
+//        Map<String, Object> project2 = new HashMap<>();
+//        project2.put("owner_id", userId);
+//        project2.put("project_name", PROJECT_NAME_2);
+//        project2.put("summary", PROJECT_SUMMARY_2);
+//        Number projectId2 = jdbcInsertProject.executeAndReturnKey(project2);
+//
+//        Map<String, Long> values = new HashMap<String, Long>();
+//        values.put("category_id", categoryId.longValue());
+//        values.put("project_id", projectId.longValue());
+//        jdbcInsertProjectCategory.execute(values);
+//        Map<String, Long> values2 = new HashMap<String, Long>();
+//        values2.put("category_id", categoryId2.longValue());
+//        values2.put("project_id", projectId2.longValue());
+//        jdbcInsertProjectCategory.execute(values2);
+//
+//        // 2
+//        List<Project> projects = projectJdbcDao.findByCategories(Collections.singletonList
+//                (new Category(categoryId.longValue(), CATEGORY_NAME, 0)));
+//
+//        // 3
+//        assertEquals(1, projects.size());
+//        assertEquals(PROJECT_NAME, projects.get(0).getName());
+//        assertEquals(PROJECT_SUMMARY, projects.get(0).getSummary());
+//    }
 
     private long createUser() {
         Map<String, Object> country = new HashMap<>();
@@ -360,6 +360,4 @@ public class ProjectJdbcDaoTest {
         user.put("linkedin", "SUMMRAy@dsada.com");
         return jdbcInsertUser.executeAndReturnKey(user).longValue();
     }
-
-     */
 }

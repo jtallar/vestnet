@@ -4,7 +4,7 @@ package ar.edu.itba.paw.webapp.forms;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class RangeCheckValidtor implements ConstraintValidator<RangeCheck, CategoryFilter> {
+public class RangeCheckValidtor implements ConstraintValidator<RangeCheck, ProjectFilter> {
 
     @Override
     public void initialize(RangeCheck date) {
@@ -12,10 +12,10 @@ public class RangeCheckValidtor implements ConstraintValidator<RangeCheck, Categ
     }
 
     @Override
-    public boolean isValid(CategoryFilter dto, ConstraintValidatorContext constraintValidatorContext) {
-        if (dto.getMin() == null || dto.getMax() == null || dto.getMin().matches("") || dto.getMax().matches("")) {
+    public boolean isValid(ProjectFilter dto, ConstraintValidatorContext constraintValidatorContext) {
+        if (dto.getMinCost() == null || dto.getMaxCost() == null || dto.getMinCost().matches("") || dto.getMaxCost().matches("")) {
             return true;
         }
-        return Long.parseLong(dto.getMin()) <= Long.parseLong(dto.getMax());
+        return Long.parseLong(dto.getMinCost()) <= Long.parseLong(dto.getMaxCost());
     }
 }
