@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.forms;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class SearchFilter {
+
     private String searching;
     private String selection;
 

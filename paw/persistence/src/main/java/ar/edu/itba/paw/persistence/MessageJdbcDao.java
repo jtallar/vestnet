@@ -102,4 +102,23 @@ public class MessageJdbcDao implements MessageDao {
         Integer count = jdbcTemplate.queryForObject(JdbcQueries.MESSAGE_ACCEPTED_COUNT, new Object[] {receiver_id}, Integer.class);
         return count;
     }
+
+    @Override
+    public List<Message> getOffersDone(long sender_id, long from, long to) {
+        List ids = jdbcTemplate.queryForList(JdbcQueries.MESSAGE_OFFER_ID, new Object[]{sender_id, from, to}, Integer.class);
+        List<Message> messages;
+        if(!ids.isEmpty()) {
+            MapSqlParameterSource params = new MapSqlParameterSource().addValue("ids", ids);
+            messages = namedParameterJdbcTemplate.query(JdbcQueries.MESSAGE_GET_ID_LIST, params, RESULT_SET_EXTRACTOR);
+        }
+        else {
+            messages = new ArrayList<>();
+        }
+        return messages;
+    }
+
+    @Override
+    public Integer countOffers(long sender_id) {
+        return jdbcTemplate.queryForObject(JdbcQueries.MESSAGE_OFFER_COUNT, new Object[]{sender_id}, Integer.class);
+    }
 }

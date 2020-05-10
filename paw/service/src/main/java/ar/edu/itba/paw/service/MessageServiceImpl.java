@@ -46,4 +46,14 @@ public class MessageServiceImpl implements MessageService {
     public Integer countAccepted( long receiver_id) {
         return messageDao.countAccepted(receiver_id);
     }
+
+    @Override
+    public List<Message> getOffersDone(long sender_id, long from, long to) {
+        return messageDao.getOffersDone(sender_id,from,to);
+    }
+
+    @Override
+    public Integer countOffers(long sender_id) {
+        return messageDao.countOffers(sender_id);
+    }
 }

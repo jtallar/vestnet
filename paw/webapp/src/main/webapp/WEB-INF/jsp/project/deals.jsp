@@ -66,6 +66,12 @@
                 <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
                 <button href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></button>
             </div>
+            <div class="row">
+                <div class="col-5">
+                    <c:url value="/users/${message.senderId}?back=yes" var="profileURL"></c:url>
+                    <a href="${profileURL}" class="btn btn-dark btn-sm"><spring:message code="view_inv_profile"/></a>
+                </div>
+            </div>
         </div>
     </div>
     </div>

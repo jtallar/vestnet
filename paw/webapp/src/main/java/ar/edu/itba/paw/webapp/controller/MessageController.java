@@ -103,4 +103,24 @@ public class MessageController {
 
         return mav;
     }
+
+
+    @RequestMapping("/requests")
+    public ModelAndView requests(@RequestParam(name = "page", defaultValue = "1")String page){
+        final ModelAndView mav = new ModelAndView("/project/requests");
+        Integer intpage = Integer.parseInt(page);
+        long id = loggedUser().getId();
+        Integer count = messageService.countOffers(id);
+        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
+        int from = (intpage - 1) * PAGE_SIZE;
+        mav.addObject("hasNext", hasNext);
+
+        List<Message> messages = messageService.getOffersDone(id,from, PAGE_SIZE);
+
+        mav.addObject("page", page);
+        mav.addObject("messages", messages);
+
+        return mav;
+
+    }
 }
