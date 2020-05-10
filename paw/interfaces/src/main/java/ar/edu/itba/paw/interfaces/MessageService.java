@@ -49,4 +49,9 @@ public interface MessageService {
 
     Integer countAccepted( long receiver_id);
 
+
+    List<Message> getOffersDone(long sender_id, long from, long to);
+
+    Integer countOffers(long sender_id);
+
 }
