@@ -115,7 +115,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/search")
     public ModelAndView searchAux(@RequestParam("searching") String search,@RequestParam("selection") String selection, @RequestParam(name="page", defaultValue = "1") String page){
-        final ModelAndView mav = new ModelAndView("searchProjects");
+        final ModelAndView mav = new ModelAndView("project/searchProjects");
         int myPage = Integer.parseInt(page);
         int from = (myPage - 1) * PAGE_SIZE;
         Integer projects = projectService.countByCoincidence(search, selection);
@@ -227,7 +227,7 @@ public class ProjectController {
 
         long projectId = projectService.create(title, summary,
                 projectFields.getCost(), userId, projectFields.getCategories(), null, imageBytes);
-        return new ModelAndView("redirect:/users/" + userId + "/" + projectId);
+        return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
     }
 
 

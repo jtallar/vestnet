@@ -96,3 +96,13 @@
 .card-secondary{
     text-align: right;
 }
+
+.anchor-header {
+    display: block;
+    height: 92px;
+    margin-top: -92px;
+    visibility: hidden;
+}
+html {
+    scroll-behavior: smooth;
+}

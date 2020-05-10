@@ -97,7 +97,24 @@ public class UserController {
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
         ModelAndView mav = new ModelAndView("project/myProjects");
-        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
+        List<Project> projects = projectService.findByOwner(loggedUser().getId());
+        mav.addObject("projects", projects);
+        projects.forEach(project -> {
+            mav.addObject(project.getName().concat("favs"), projectService.getFavoritesCount(project.getId()));
+        });
+        return mav;
+    }
+
+    @RequestMapping(value = "/messages/{id}")
+    public ModelAndView singleProjectView(@PathVariable("id") long id) {
+        final Project project = projectService.findById(id).orElseThrow(ProjectNotFoundException::new);
+        // Prevent entrepreneurs from accessing other projects that are not theirs
+        if (project.getOwnerUserId() != loggedUser().getId())
+            return new ModelAndView("redirect:/messages");
+        final ModelAndView mav = new ModelAndView("project/singleProjectView");
+        mav.addObject("project", project);
+        mav.addObject("isFav", false);
+        mav.addObject("contactStatus", 0);
         return mav;
     }
 }

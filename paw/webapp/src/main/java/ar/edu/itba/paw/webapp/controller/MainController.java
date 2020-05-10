@@ -45,7 +45,10 @@ public class MainController {
      */
     @RequestMapping("/")
     public ModelAndView index(){
-        if (this.loggedUser().getRole() == User.UserRole.ENTREPRENEUR.getId())
+        User user = loggedUser();
+        if (user == null)
+            return new ModelAndView("redirect:/welcome");
+        if (user.getRole() == User.UserRole.ENTREPRENEUR.getId())
             return new ModelAndView("redirect:/messages");
         return new ModelAndView("redirect:/projects");
     }
