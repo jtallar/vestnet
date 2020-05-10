@@ -280,6 +280,8 @@ public class ProjectController {
             auxList = projectService.findByCostPage(startPage, pageOffset, minCost, maxCost);
         }
 
+        if (projectFilter.getOrderBy() == null) return auxList;
+
         switch (projectFilter.getOrderBy()) {
             case "date": return auxList.stream().sorted(new DateComparator()).collect(Collectors.toList());
             case "cost-low-high": return auxList.stream().sorted(new CostComparator()).collect(Collectors.toList());
