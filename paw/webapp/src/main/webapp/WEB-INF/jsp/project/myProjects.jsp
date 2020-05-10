@@ -12,7 +12,6 @@
     <title><spring:message code="my_projects"/> | VestNet</title>
 </head>
 <body>
-
 <c:forEach var="project" items="${projects}" varStatus="theCount">
     <span class="anchor-header" id="dashboard-project-${project.id}"></span>
     <div class="container py-3">
@@ -117,7 +116,7 @@
                         h.append(aux3);
 
 
-                        let profileUrl = '<c:url value="/users/"/>' + data[i]["senderId"]
+                        let profileUrl = '<c:url value="/users/"/>' + data[i]["senderId"] + "?back=yes"
                         let profile = document.createElement('a')
                         profile.setAttribute('href', profileUrl)
                         profile.innerText = '<spring:message code="view_inv_profile"></spring:message>'
