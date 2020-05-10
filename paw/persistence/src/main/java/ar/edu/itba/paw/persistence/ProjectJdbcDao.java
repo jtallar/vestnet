@@ -65,7 +65,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findAll() {
-        return jdbcTemplate.query(JdbcQueries.PROJECT_FIND_ALL, RESULT_SET_EXTRACTOR);
+        return jdbcTemplate.query(JdbcQueries.PROJECT_FIND_ALL_SORTED, RESULT_SET_EXTRACTOR);
     }
 
     @Override

@@ -10,7 +10,6 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.comparators.AlphComparator;
 import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
-import ar.edu.itba.paw.model.comparators.HitsComparator;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
@@ -232,9 +231,6 @@ public class HelloWorldController {
                     break;
                 case "alf":
                     auxList = auxList.stream().sorted(new AlphComparator()).collect(Collectors.toList());
-                    break;
-                default:
-                    auxList = auxList.stream().sorted(new HitsComparator()).collect(Collectors.toList());
                     break;
             }
         }
