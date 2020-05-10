@@ -72,13 +72,6 @@ public class JdbcQueries {
             "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
             "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) ";
 
-    static final String USER_FIND_COINCIDENCE =
-            USER_FIND_ALL +
-            "WHERE lower(u.first_name) LIKE ? " +
-            "OR lower(u.last_name) LIKE ? " +
-            "OR lower(u.email) LIKE ?" +
-            "OR lower(u.first_name || ' ' || u.last_name) LIKE ? ";
-
     static final String USER_FIND_BY_ID =
             USER_FIND_ALL +
             "WHERE u.id = ? ";

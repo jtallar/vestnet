@@ -82,12 +82,6 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
-    public List<User> findCoincidence(String name) {
-        String aux = "%" + name + "%";
-        return jdbcTemplate.query(JdbcQueries.USER_FIND_COINCIDENCE, new Object[] {aux, aux, aux, aux}, RESULT_SET_EXTRACTOR);
-    }
-
-    @Override
     public byte[] findImageForUser(long userId) {
         return jdbcTemplate.queryForObject(JdbcQueries.USER_FIND_IMAGE_BY_ID, new Object[] {userId}, byte[].class);
     }
