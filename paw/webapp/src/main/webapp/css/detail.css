@@ -59,3 +59,10 @@
 .contact{
     margin: 30px;
 }
+
+.label-header{
+    margin: 15px;
+    font-size:large;
+    text-shadow: 2px 2px #dee2e6;
+    font-weight:400;
+}

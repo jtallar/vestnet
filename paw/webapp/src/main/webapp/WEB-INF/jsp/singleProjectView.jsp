@@ -40,7 +40,7 @@
                 </div>
                 <c:if test="${mailSent}">
                 <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="color: blueviolet"><spring:message code="mailSent"/> <c:out value="${project.owner.email}"/></h5>
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="mailSent"/> <c:out value="${project.owner.email}"/></h5>
                 </div>
                 </c:if>
             </div>
@@ -146,7 +146,7 @@
                     </c:if>
                     <c:if test="${sessionUser.role == 2}">
 <%--                        <a href="<c:url value='/projects/${project.id}/contact'/>" class="btn btn-dark btn-lg btn-block"><spring:message code="contactowner"/></a>--%>
-                            <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">
+                            <button onclick="scroll()" class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">
                                 <spring:message code="contactowner"/>
                             </button>
                     </c:if>
@@ -157,7 +157,7 @@
     <div class="collapse" id="contact">
         <div class="card contact">
             <div class="card-header">
-                <label> New Message to ${project.owner.firstName} ${project.owner.lastName}</label>
+                <label class="label-header"> <spring:message code="contact.header"/> ${project.owner.firstName} ${project.owner.lastName}</label>
                 <button class="btn btn-dark pull-right" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">X</button>
             </div>
             <div class="card-body">
@@ -213,10 +213,7 @@
             </div>
         </div>
     </div>
-
     </div>
-
-    
 </div>
 <script>
     let options = {
@@ -232,7 +229,12 @@
         .catch((function (reason) { console.error(reason) }))
     };
 </script>
+
 <script>
+    function scroll(){
+        window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0,100);
+    }
     function addFav() {
         <%--let path = window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
         <%--let path2 = window.location.href.split('/')[0] + window.location.pathname.split('/')[0] + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};--%>
