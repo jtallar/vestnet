@@ -52,10 +52,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource("classpath:public.pem");
         http.sessionManagement()
-                .invalidSessionUrl("/login")
+                .invalidSessionUrl("/welcome")
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                .antMatchers("/login", "/signUp", "/projects", "/search*", "/welcome").permitAll()
+                .antMatchers("/login", "/signUp", "/projects", "/search*", "/welcome", "/").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/projects/**").hasRole("INVESTOR")
                 .antMatchers("/newProject", "/myProjects", "/messages/**").hasRole("ENTREPRENEUR")
@@ -74,6 +74,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
                 .deleteCookies(CookieUtil.ROLE_COOKIE_NAME)
                 .and().csrf().disable();
     }
