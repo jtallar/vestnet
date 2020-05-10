@@ -30,6 +30,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    private final Integer PAGE_SIZE = 10;
+
     @Autowired
     private EmailService emailService;
 
@@ -81,5 +83,24 @@ public class MessageController {
         messageService.updateMessageStatus(senderId, loggedUser().getId(), projectId, false);
         emailService.sendEmailAnswer(loggedUser().getEmail(), false, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), "google.com.ar");
         return new ModelAndView("redirect:/messages");
+    }
+
+
+    @RequestMapping(value = "/deals")
+    public ModelAndView deals(@RequestParam(name = "page", defaultValue = "1") String page){
+        final ModelAndView mav = new ModelAndView("/project/deals");
+        Integer intpage = Integer.parseInt(page);
+        long id = loggedUser().getId();
+        Integer count = messageService.countAccepted(id);
+        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
+        int from = (intpage - 1) * PAGE_SIZE;
+        mav.addObject("hasNext", hasNext);
+
+        List<Message> messages = messageService.getAccepted(id,from, PAGE_SIZE);
+
+        mav.addObject("page", page);
+        mav.addObject("messages", messages);
+
+        return mav;
     }
 }

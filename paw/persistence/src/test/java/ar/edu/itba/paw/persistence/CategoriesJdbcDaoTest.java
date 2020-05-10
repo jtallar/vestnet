@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class CategoriesJdbcDaoTest {
+
     private static final String CATEGORIES_TABLE = "categories";
     private static final String CATEGORY_NAME = "Technology";
     private static final String PROJECTS_TABLE = "projects";
@@ -31,6 +32,7 @@ public class CategoriesJdbcDaoTest {
 
     @Autowired
     private CategoriesJdbcDao categoriesJdbcDao;
+
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertCategory, jdbcInsertProject, jdbcInsertProjectCategory;
 
@@ -53,67 +55,91 @@ public class CategoriesJdbcDaoTest {
 
     @Test
     public void testFindAllIfTableEmpty() {
-        // 1: Precondiciones: Setup del escenario para que nuestro test corra
-        // TABLE EMPTY
+        // 1 - Setup - Empty table
 
-        // 2: Ejercitacion: Hacemos la unica llamada al metodo que queremos testear
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findAll();
 
-        // 3: Postcondiciones: Hacemos los pocos assertes que permiten validar correctitud
+        // 3 - Assert
         assertTrue(categories.isEmpty());
     }
 
     @Test
     public void testFindAllIfTableNotEmpty() {
-        // 1
-        Map<String, String> values = new HashMap<String, String>();
-        values.put("category", CATEGORY_NAME);
-        jdbcInsertCategory.executeAndReturnKey(values);
+        // 1 - Setup - Add 1 category
+        createCategory();
 
-        // 2
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findAll();
 
-        // 3
+        // 3 - Assert - Quantity, Name, Parent
         assertEquals(1, categories.size());
         assertEquals(CATEGORY_NAME, categories.get(0).getName());
-        // OJO: si no completo un campo, me pone 0, no null en el long/Long
         assertEquals(0, categories.get(0).getParent());
     }
 
     @Test
     public void testFindProjectCategoriesWithNoProject() {
-        // 1
-        // TABLES EMPTY
+        // 1 - Setup - Empty tables
 
-        // 2
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findProjectCategories(1);
 
-        // 3
+        // 3 - Assert
         assertTrue(categories.isEmpty());
     }
 
     @Test
     public void testFindProjectCategoriesWithProject() {
-        // 1
-        Map<String, String> category = new HashMap<String, String>();
-        category.put("category", CATEGORY_NAME);
-        Number categoryId = jdbcInsertCategory.executeAndReturnKey(category);
+        // 1 - Setup - Add category, project, and link them
+        Number categoryId = createCategory();
+        Number projectId = createProject();
+        createProjectCategory(categoryId, projectId);
 
-        Map<String, Object> project = new HashMap<>();
-        project.put("project_name", "Jorge");
-        project.put("summary", "SUMMRAy");
-        Number projectId = jdbcInsertProject.executeAndReturnKey(project);
-
-        Map<String, Long> values = new HashMap<String, Long>();
-        values.put("category_id", categoryId.longValue());
-        values.put("project_id", projectId.longValue());
-        jdbcInsertProjectCategory.execute(values);
-
-        // 2
+        // 2 - Execute
         List<Category> categories = categoriesJdbcDao.findProjectCategories(projectId.longValue());
 
-        // 3
+        // 3 - Assert - Quantity, Category
         assertEquals(1, categories.size());
         assertEquals(CATEGORY_NAME, categories.get(0).getName());
     }
+
+
+    /**
+     * Auxiliary functions
+     */
+
+    /**
+     * Creates a category.
+     * @return The category auto generated id.
+     */
+    public Number createCategory() {
+        Map<String, String> category = new HashMap<>();
+        category.put("category", CATEGORY_NAME);
+        return jdbcInsertCategory.executeAndReturnKey(category);
+    }
+
+    /**
+     * Creates a project.
+     * @return The category auto generated id.
+     */
+    public Number createProject() {
+        Map<String, Object> project = new HashMap<>();
+        project.put("project_name", "Project name here.");
+        project.put("summary", "Summary here.");
+        return jdbcInsertProject.executeAndReturnKey(project);
+    }
+
+    /**
+     * Creates a project category link.
+     * @param categoryId The category id.
+     * @param projectId The project id.
+     */
+    public void createProjectCategory(Number categoryId, Number projectId) {
+        Map<String, Long> values = new HashMap<>();
+        values.put("category_id", categoryId.longValue());
+        values.put("project_id", projectId.longValue());
+        jdbcInsertProjectCategory.execute(values);
+    }
+
 }

@@ -45,4 +45,8 @@ public interface MessageDao {
      */
     long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
 
+    List<Message> getAccepted( long receiver_id, long from, long to);
+
+    Integer countAccepted(long receiver_id);
+
 }

@@ -7,20 +7,21 @@ import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class MessageJdbcDao implements MessageDao {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsert;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 
     private final static ResultSetExtractor<List<Message>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
             .newInstance()
@@ -34,6 +35,7 @@ public class MessageJdbcDao implements MessageDao {
                 .withTableName(JdbcQueries.MESSAGE_TABLE)
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("content_message", "content_offer", "content_interest", "sender_id", "receiver_id", "project_id");
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -77,5 +79,27 @@ public class MessageJdbcDao implements MessageDao {
     private Optional<Message> findLastSentMessage(long senderId, long receiverId, long projectId) {
         return jdbcTemplate.query(JdbcQueries.MESSAGE_GET_SENT_TO, RESULT_SET_EXTRACTOR, projectId, senderId, receiverId)
                 .stream().findFirst();
+    }
+
+
+    @Override
+    public List<Message> getAccepted( long receiver_id, long from, long to) {
+        List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.MESSAGE_ACCEPTED_ID, new Object[] { receiver_id, from, to}, Integer.class);
+        List<Message> messages;
+        if(!ids.isEmpty()) {
+            MapSqlParameterSource params = new MapSqlParameterSource().addValue("ids", ids);
+            messages = namedParameterJdbcTemplate.query(JdbcQueries.MESSAGE_GET_ID_LIST, params, RESULT_SET_EXTRACTOR);
+        }
+        else {
+            messages = new ArrayList<>();
+        }
+        return messages;
+    }
+
+    @Override
+    public Integer countAccepted(long receiver_id) {
+
+        Integer count = jdbcTemplate.queryForObject(JdbcQueries.MESSAGE_ACCEPTED_COUNT, new Object[] {receiver_id}, Integer.class);
+        return count;
     }
 }

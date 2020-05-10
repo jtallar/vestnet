@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="<c:url value="/images/apple-touch-icon.png"/>">
     <link rel="icon" type="image/png" sizes="32x32" href="<c:url value="/images/favicon-32x32.png"/>">
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
-    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">
+<%--    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">--%>
     <title>Sign up | VestNet</title>
 </head>
 
@@ -285,7 +285,7 @@
         }
 
         // Fetch data depending on arguments
-        fetch(window.location.href.slice(0, window.location.href.lastIndexOf('/')) + "/location/" + receiver + id)
+        fetch(window.location.origin + '${pageContext.request.contextPath}' + "/location/" + receiver + id)
             .then(response => response.json())
             .then(data => {
                 let select = document.getElementById(receiver + "-select");
