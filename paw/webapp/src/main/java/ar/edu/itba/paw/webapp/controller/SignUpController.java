@@ -73,10 +73,9 @@ public class SignUpController {
                                final BindingResult errors, @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
                                HttpServletRequest request, HttpServletResponse response){
         if(errors.hasErrors()){
-            LOGGER.debug("\n\nSign Up failed. There are {} errors\n", errors.getErrorCount());
+            LOGGER.error("Sign Up failed. There are {} errors\n", errors.getErrorCount());
             for (ObjectError error : errors.getAllErrors())
-                LOGGER.debug("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
-            LOGGER.debug("\n\n");
+                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
             return signUp(userFields, false);
         }
 
