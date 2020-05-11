@@ -28,7 +28,8 @@ public class JdbcQueries {
             "cat.id, " +
             "cat.category AS name, " +
             "cat.parent AS parent_id " +
-            "FROM " + CATEGORIES_TABLE + " cat ";
+            "FROM " + CATEGORIES_TABLE + " cat " +
+            "ORDER BY cat.category, cat.id";
 
     static final String CATEGORY_FIND_BY_PROJECT_ID =
             CATEGORY_FIND_ALL +
@@ -126,28 +127,29 @@ public class JdbcQueries {
             "iso2 AS iso_code, " +
             "phonecode AS phone_code, " +
             "currency " +
-            "FROM " + COUNTRY_TABLE + " ";
+            "FROM " + COUNTRY_TABLE + " " +
+            "ORDER BY country, id OFFSET 1";
 
-    static final String STATE_FIND_ALL =
+
+
+
+
+    static final String STATE_FIND_BY_COUNTRY_ID =
             "SELECT " +
             "id, " +
             "state AS name, " +
             "iso2 AS iso_code " +
-            "FROM " + STATE_TABLE + " ";
+            "FROM " + STATE_TABLE + " " +
+            "WHERE country_id = ? " +
+            "ORDER BY state, id ";
 
-    static final String CITY_FIND_ALL =
+    static final String CITY_FIND_BY_STATE_ID =
             "SELECT " +
             "id, " +
             "city AS name " +
-            "FROM " + CITY_TABLE + " ";
-
-    static final String STATE_FIND_BY_COUNTRY_ID =
-            STATE_FIND_ALL +
-            "WHERE country_id = ? ";
-
-    static final String CITY_FIND_BY_STATE_ID =
-            CITY_FIND_ALL +
-            "WHERE state_id = ?";
+            "FROM " + CITY_TABLE + " " +
+            "WHERE state_id = ?" +
+            "ORDER BY city, id ";
 
 
     /**
