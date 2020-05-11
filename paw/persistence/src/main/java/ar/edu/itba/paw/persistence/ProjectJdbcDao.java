@@ -85,7 +85,7 @@ public class ProjectJdbcDao implements ProjectDao {
         System.out.println("FILTER " + filter);
         System.out.println("IDS " + ids + "\n\n");
         if (ids.isEmpty()) return new ArrayList<>();
-        return namedParameterJdbcTemplate.query(PROJECT_FIND_BY_IDS, new MapSqlParameterSource().addValue("ids", ids), RESULT_SET_EXTRACTOR);
+        return namedParameterJdbcTemplate.query(selectProjects(filter.getSort().getId()), new MapSqlParameterSource().addValue("ids", ids), RESULT_SET_EXTRACTOR);
     }
 
     @Override

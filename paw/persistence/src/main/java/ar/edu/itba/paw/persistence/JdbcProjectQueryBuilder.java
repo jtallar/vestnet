@@ -57,6 +57,12 @@ public class JdbcProjectQueryBuilder {
         return this.query.toString();
     }
 
+    public static String selectProjects(int queryId) {
+        return PROJECT_FIND_ALL +
+                "WHERE p.id IN (:ids) " +
+                "ORDER BY " + SortQuery.getEnum(queryId).getQuery() + ", p.id DESC ";
+    }
+
     public enum SortQuery {
         DEFAULT(0, "p.hits DESC"),
         DATE(1, "p.publish_date"),

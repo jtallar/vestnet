@@ -67,9 +67,9 @@
                         <form:select path="orderBy" class="custom-select mr-sm-2">
                             <form:option value="default"><spring:message code="noOrder"/> </form:option>
                             <form:option value="date"><spring:message code="date"/> </form:option>
-                            <form:option value="cost-a"><spring:message code="cost_l_h"/></form:option>
-                            <form:option value="cost-d"><spring:message code="cost_h_l"/></form:option>
-                            <form:option value="alpha"><spring:message code="alf"/></form:option>
+                            <form:option value="cost_ascending"><spring:message code="cost_l_h"/></form:option>
+                            <form:option value="cost_descending"><spring:message code="cost_h_l"/></form:option>
+                            <form:option value="alphabetical"><spring:message code="alf"/></form:option>
                         </form:select>
                     </div>
                 </div>
