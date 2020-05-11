@@ -8,33 +8,38 @@
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
     <title><spring:message code="deals"/> | VestNet</title>
-
-    <title>Title</title>
 </head>
 <body>
 <c:if test="${!empty messages}">
 <div class="flex-row-reverse mt-4">
 <nav aria-label="Page navigation example">
-    <label class="justify-content-left"> Acuerdos </label>
-<ul class="pagination justify-content-center">
-    <c:set value="${page + 1}" var="nextOne"/>
-    <c:set value="${page - 1}" var="previous"/>
-    <c:if test="${page != 1}">
-        <li class="page-item">
-            <a href="<c:url value='/deals?page=${previous}'/>" class="page-link2"><spring:message code="previous"/></a>
-        </li>
-        <li class="page-item"><a href="<c:url value='/deals?page=${previous}'/>" class="page-link2">${previous}</a></li>
-    </c:if>
-    <li class="page-item"><a href="<c:url  value='/deals?page=${page}'/>" class="page-link2">${page}</a></li>
-    <c:if test="${hasNext eq true}">
-        <li class="page-item"><a href="<c:url  value='/deals?page=${nextOne}'/>" class="page-link2">${nextOne}</a></li>
-        <li class="page-item">
-            <a href="<c:url value='/deals?page=${nextOne}'/>" class="page-link2"><spring:message code="next"/> </a>
-        </li>
-    </c:if>
-    </ul>
-    </nav>
+    <div class="row">
+        <div class="col-4 text-center tab-title">
+            <strong> <spring:message code="deals_title"/> </strong>
+        </div>
+        <div class="col-4">
+            <ul class="pagination justify-content-center">
+                <c:set value="${page + 1}" var="nextOne"/>
+                <c:set value="${page - 1}" var="previous"/>
+                <c:if test="${page != 1}">
+                    <li class="page-item">
+                        <a href="<c:url value='/deals?page=${previous}'/>" class="page-link2"><spring:message code="previous"/></a>
+                    </li>
+                    <li class="page-item"><a href="<c:url value='/deals?page=${previous}'/>" class="page-link2">${previous}</a></li>
+                </c:if>
+                <li class="page-item"><a href="<c:url  value='/deals?page=${page}'/>" class="page-link2">${page}</a></li>
+                <c:if test="${hasNext eq true}">
+                    <li class="page-item"><a href="<c:url  value='/deals?page=${nextOne}'/>" class="page-link2">${nextOne}</a></li>
+                    <li class="page-item">
+                        <a href="<c:url value='/deals?page=${nextOne}'/>" class="page-link2"><spring:message code="next"/> </a>
+                    </li>
+                </c:if>
+            </ul>
+        </div>
+        <div class="col-"></div>
     </div>
+</nav>
+</div>
 </c:if>
 
 
