@@ -95,16 +95,13 @@
             </div>
         </div>
     </div>
-    </div>
-
-
 
 </c:forEach>
 <c:if test="${empty messages}">
     <div class="col-4 text-center tab-title">
         <strong> <spring:message code="req_title"/> </strong>
     </div>
-    <div class="card card-deal">
+    <div class="card no-proj-mine">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="no_offers" arguments=""/> </h5>
         </div>

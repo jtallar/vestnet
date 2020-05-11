@@ -2,7 +2,7 @@
     top:0px;
     width:100%;
     position: fixed !important; /* Fixed Sidebar (stay in place on scroll) */
-    z-index:1;
+    z-index:500;
 }
 
 .navbar-custom {
