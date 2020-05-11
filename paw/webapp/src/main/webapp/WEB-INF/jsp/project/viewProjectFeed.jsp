@@ -35,7 +35,7 @@
 <div class="col">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
-                <a id="li-a-previous" class="page-link" href="#" aria-label="<spring:message code="previous"/>">
+                <a id="li-a-previous" class="page-link" onclick="" href="#" aria-label="<spring:message code="previous"/>">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
