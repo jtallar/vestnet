@@ -93,7 +93,7 @@
             </div>
             <div class="card-footer">
                 <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
-                <button href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></button>
+                <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></a>
             </div>
         </div>
     </div>
