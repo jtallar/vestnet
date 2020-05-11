@@ -1,5 +1,9 @@
 package ar.edu.itba.paw.model.components;
 
+/**
+ * Models a project filter.
+ * Sets getters and setters according need.
+ */
 public class ProjectFilter {
 
     // Category ids to filter
@@ -35,7 +39,6 @@ public class ProjectFilter {
     }
 
     public void setSearch(String keyword, String searchField) {
-
         this.keyword = keyword;
         this.searchField = SearchField.getEnum(searchField);
     }

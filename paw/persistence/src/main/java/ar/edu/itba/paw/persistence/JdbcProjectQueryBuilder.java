@@ -2,6 +2,10 @@ package ar.edu.itba.paw.persistence;
 
 import static ar.edu.itba.paw.persistence.JdbcQueries.*;
 
+/**
+ * Builds dynamically a query for project search.
+ * Was made to avoid making all combinations.
+ */
 public class JdbcProjectQueryBuilder {
     private StringBuilder query;
 
@@ -131,23 +135,37 @@ public class JdbcProjectQueryBuilder {
      * Auxiliary functions
      */
 
+    /**
+     * Adds WHERE on query if its not found
+     */
     private void addWhere() {
         if (this.query.indexOf("WHERE") == -1) this.query.append("WHERE ");
         else this.query.append("AND ");
     }
 
+    /**
+     * Adds all the joins for the category table.
+     * It places in the right place.
+     */
     private void joinCategoryTable() {
         String categoryJoin =   "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
                                 "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) ";
         makeJoin(categoryJoin);
     }
 
+    /**
+     * Adds all the joins for the user table.
+     * It places in the right place.
+     */
     private void joinUserTable() {
         String userJoin = "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) ";
         makeJoin(userJoin);
     }
 
-
+    /**
+     * Adds all the joins for the location tables and user table.
+     * It places in the right place.
+     */
     public void joinLocationsTable() {
         String userJoin = "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) ";
         String locationsJoin =  "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
@@ -156,6 +174,10 @@ public class JdbcProjectQueryBuilder {
         makeJoin(userJoin + locationsJoin);
     }
 
+    /**
+     * Appends before WHERE or at the end of the query.
+     * @param join String to append to query.
+     */
     private void makeJoin(String join) {
         int index = this.query.indexOf("WHERE");
         if (index == -1) this.query.append(join);

@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.model.components;
 
-import ar.edu.itba.paw.model.User;
-
+/**
+ * Enum for sort options
+ * Must match the string on jsp.
+ */
 public enum ProjectSort {
     DEFAULT("default", 0),
     DATE("date", 1),

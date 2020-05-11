@@ -1,5 +1,9 @@
 package ar.edu.itba.paw.model.components;
 
+/**
+ * Enum for search fields
+ * Must match the string on jsp.
+ */
 public enum SearchField {
     DEFAULT("default", 0),
     PROJECT_INFO("project_info", 1),
