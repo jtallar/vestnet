@@ -85,7 +85,6 @@ public class ProjectController {
 
         List<Project> projects = projectService.findFiltered(projectFilter);
         Integer projectCount = projectService.countFiltered(projectFilter);
-        if (projects.size() == 0) return new ModelAndView("redirect:/projects?page=1");
         Pair<Integer, Integer> paginationLimits = setPaginationLimits(projectCount, page);
 
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
