@@ -11,7 +11,7 @@ public class ProjectFilter {
 
     // Search filters
     private String keyword;
-    private String searchField;
+    private SearchField searchField;
 
     // Pagination page
     private Integer page;
@@ -19,7 +19,7 @@ public class ProjectFilter {
     // Sort method
     private ProjectSort sort;
 
-    public ProjectFilter(Integer categories, Integer minCost, Integer maxCost, String keyword, String searchField, Integer page) {
+    public ProjectFilter(Integer categories, Integer minCost, Integer maxCost, String keyword, SearchField searchField, Integer page) {
         this.categories = categories;
         this.minCost = minCost;
         this.maxCost = maxCost;
@@ -28,7 +28,7 @@ public class ProjectFilter {
         this.page = page;
     }
 
-    public ProjectFilter(Integer page, String keyword, String searchField) {
+    public ProjectFilter(Integer page, String keyword, SearchField searchField) {
         this.sort = ProjectSort.DEFAULT;
         this.page = page;
         this.keyword = keyword;
@@ -71,11 +71,11 @@ public class ProjectFilter {
         this.keyword = keyword;
     }
 
-    public String getSearchField() {
+    public SearchField getSearchField() {
         return searchField;
     }
 
-    public void setSearchField(String searchField) {
+    public void setSearchField(SearchField searchField) {
         this.searchField = searchField;
     }
 

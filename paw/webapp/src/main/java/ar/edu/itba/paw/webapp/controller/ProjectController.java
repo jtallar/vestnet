@@ -9,6 +9,7 @@ import ar.edu.itba.paw.model.comparators.CostComparator;
 import ar.edu.itba.paw.model.comparators.DateComparator;
 import ar.edu.itba.paw.model.components.ProjectFilter;
 import ar.edu.itba.paw.model.components.ProjectSort;
+import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.forms.MailFields;
@@ -80,10 +81,9 @@ public class ProjectController {
                                  @RequestParam(name = "searchField", required = false) String searchField,
                                  @RequestParam(name = "page", defaultValue = "1") String page) {
 
-        ProjectFilter projectFilter = new ProjectFilter(Integer.parseInt(page), keyword, searchField);
-        List<Project> projects = projectService.findFiltered(projectFilter);
 
-        System.out.println("TESTING THIS " + keyword + " " + searchField);
+        ProjectFilter projectFilter = new ProjectFilter(Integer.parseInt(page), keyword, SearchField.getEnum(searchField));
+        List<Project> projects = projectService.findFiltered(projectFilter);
 
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());

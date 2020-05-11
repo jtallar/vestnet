@@ -5,9 +5,9 @@ import ar.edu.itba.paw.model.User;
 public enum ProjectSort {
     DEFAULT("default", 0),
     DATE("date", 1),
-    COST_A("cost_asc", 2),
-    COST_D("cost_desc", 3),
-    ALPHA("alpha", 4);
+    COST_ASCENDING("cost_ascending", 2),
+    COST_DESCENDING("cost_descending", 3),
+    ALPHABETICAL("alphabetical", 4);
 
     private String method;
     private int id;

@@ -34,65 +34,6 @@
 </div>
 <div class="col">
         <ul class="pagination justify-content-center">
-            <c:set value="${page + 1}" var="nextOne"/>
-            <c:set value="${page - 1}" var="previous"/>
-
-            <c:if test="${empty param.categorySelector and empty param.orderBy}">
-                <c:if test="${page != 1}">
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?page=${previous}'/>" class="page-link"> << <spring:message code="previous"/></a>
-                    </li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?page=${previous}'/>" class="page-link">${previous}</a>
-                    </li>
-                </c:if>
-                <li class="page-item"><a href="<c:url  value='/projects?page=${page}'/>" class="page-link">${page}</a></li>
-                <c:if test="${hasNext eq true}">
-                    <li class="page-item">
-                        <a href="<c:url  value='/projects?page=${nextOne}'/>" class="page-link">${nextOne}</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?page=${nextOne}'/>" class="page-link"><spring:message code="next"/> >></a>
-                    </li>
-                </c:if>
-            </c:if>
-
-                <c:if test="${not empty param.categorySelector and not empty param.orderBy}">
-                    <c:choose>
-                        <c:when test="${empty param.max and empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"/>
-                        </c:when>
-                        <c:when test="${not empty param.max and not empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}&min=${param.min}"/>
-                        </c:when>
-                        <c:when test="${not empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&min=${param.min}"/>
-
-                        </c:when>
-                        <c:when test="${not empty param.max}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}"/>
-                        </c:when>
-                    </c:choose>
-                    <c:if test="">
-
-                    </c:if>
-
-                    <c:if test="${page != 1}">
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${previous}'/>" class="page-link"><< <spring:message code="previous"/></a>
-                    </li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${previous}'/>" class="page-link">${previous}</a>
-                    </li>
-                </c:if>
-                <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${page}'/>" class="page-link">${page}</a></li>
-                <c:if test="${hasNext eq true}">
-                    <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${nextOne}'/>" class="page-link">${nextOne}</a></li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${nextOne}'/>" class="page-link"><spring:message code="next"/> >></a>
-                    </li>
-                </c:if>
-            </c:if>
         </ul>
 </div>
 <%--    <div class="row grid">--%>
