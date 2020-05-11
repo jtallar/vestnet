@@ -33,7 +33,7 @@
                             <div class="col-5 msg-content"><p class="card-text"> ${project.cost}</p></div>
                         </div>
                         <div class="row msg-content">
-                            <div class="col-">
+                            <div class="col-3">
                                 <strong><spring:message code="hits"/> </strong>
                             </div>
                             <div class="col-7">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="row msg-content">
-                            <div class="col-">
+                            <div class="col-3">
                                 <strong><spring:message code="favs"/> </strong>
                             </div>
                             <div class="col-7">
