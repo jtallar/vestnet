@@ -35,15 +35,15 @@
 <div class="col">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
-                <a id="li-a-previous" class="page-link" onclick="" href="#" aria-label="<spring:message code="previous"/>">
+                <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" href="#" aria-label="<spring:message code="previous"/>">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">
-                <li class="page-item <c:if test="${pageNumber == page }"> active </c:if>"><a class="page-link" href="#">${pageNumber}</a></li>
+                <li class="page-item <c:if test="${pageNumber == page }"> active </c:if>"><a class="page-link" onclick="modHref(${pageNumber})" href="#">${pageNumber}</a></li>
             </c:forEach>
             <li id="li-next" class="page-item">
-                <a id="li-a-next" class="page-link" href="#" aria-label="<spring:message code="next"/>">
+                <a id="li-a-next" class="page-link" onclick="modHref(${page+1})" href="#" aria-label="<spring:message code="next"/>">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -273,6 +273,16 @@
             document.getElementById("li-a-next").setAttribute("tabindex", "-1");
             document.getElementById("li-a-next").setAttribute("aria-disabled", "true");
         }
+
+
+    }
+
+    function modHref(page) {
+        let hrefaux = window.location.origin + "${pageContext.request.contextPath}" + "/projects?";
+        console.log("${pageContext.request.queryString}");
+        if ("${pageContext.request.queryString}" === "") window.location.href =  hrefaux + "page=" + page;
+        else if ("${pageContext.request.queryString}".includes("page")) window.location.href = hrefaux + "${pageContext.request.queryString}".slice(0, "${pageContext.request.queryString}".indexOf("page") + 5) + page;
+        else window.location.href = hrefaux + "${pageContext.request.queryString}" + "&page=" + page;
     }
 </script>
 </body>

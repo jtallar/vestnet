@@ -84,6 +84,7 @@ public class ProjectController {
         List<Project> projects = projectService.findFiltered(projectFilter);
         Integer projectCount = projectService.countFiltered(projectFilter);
         Pair<Integer, Integer> paginationLimits = setPaginationLimits(projectCount, page);
+        System.out.println("\n\nTESTING " + paginationLimits.getKey() + " value "  + paginationLimits.getValue());
 
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());
@@ -212,7 +213,7 @@ public class ProjectController {
      * @return A pair set as <startPage, endPage>
      */
     private Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page) {
-        int maxPages = (projectCount / PAGE_SIZE) + FIRST_PAGE;
+        int maxPages = (projectCount + 1) / PAGE_SIZE;
         if (maxPages <= PAGINATION_ITEMS) return new Pair<>(FIRST_PAGE, maxPages);
         int firstPage = page - PAGINATION_ITEMS / 2;
         if (firstPage <= FIRST_PAGE ) return new Pair<>(FIRST_PAGE, PAGINATION_ITEMS);
