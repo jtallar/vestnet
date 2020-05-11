@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,20 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> findByOwner(long userId) {
         return projectDao.findByOwner(userId);
     }
+
+    @Override
+    public List<Project> findFiltered(ProjectFilter filter) {
+        return projectDao.findFiltered(filter);
+    }
+
+    @Override
+    public Integer countFiltered(ProjectFilter filter) {
+        return projectDao.countFiltered(filter);
+    }
+
+
+
+
 
     @Override
     public Integer countByCost(long minCost, long maxCost) {

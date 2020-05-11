@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -37,12 +38,31 @@ public interface ProjectService {
     List<Project> findByOwner(long userId);
 
     /**
+     * Finds all projects with the given filter.
+     * @param filter All the filters applied to the search.
+     * @return The list of matching projects.
+     */
+    List<Project> findFiltered(ProjectFilter filter);
+
+    /**
+     * Counts all projects with the given filter.
+     * @param filter All the filters applied to the search.
+     * @return The quantity of matching projects.
+     */
+    Integer countFiltered(ProjectFilter filter);
+
+
+
+
+    /**
      * Gets the count of all the published projects within a cost range.
      * @param minCost The minimum cost for the project.
      * @param maxCost The maximum cost for the project.
      * @return The count of projects that match criteria.
      */
     Integer countByCost(long minCost, long maxCost);
+
+
 
     /**
      * Finds all the matches for a name given its selection.

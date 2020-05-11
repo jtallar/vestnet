@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -72,6 +73,25 @@ public class ProjectJdbcDao implements ProjectDao {
     public List<Project> findByOwner(long userId) {
         return jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_OWNER, new Object[] {userId}, RESULT_SET_EXTRACTOR);
     }
+
+    @Override
+    public List<Project> findFiltered(ProjectFilter filter) {
+        return null;
+    }
+
+    @Override
+    public Integer countFiltered(ProjectFilter filter) {
+        return null;
+    }
+
+
+
+
+
+
+
+
+
 
     @Override
     public Integer countByCost(long minCost, long maxCost) {

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces;
 
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.ProjectFilter;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,21 @@ public interface ProjectDao {
      * @return List of all the project for the given user.
      */
     List<Project> findByOwner(long userId);
+
+    /**
+     * Finds all projects with the given filter.
+     * @param filter All the filters applied to the search.
+     * @return The list of matching projects.
+     */
+    List<Project> findFiltered(ProjectFilter filter);
+
+    /**
+     * Counts all projects with the given filter.
+     * @param filter All the filters applied to the search.
+     * @return The quantity of matching projects.
+     */
+    Integer countFiltered(ProjectFilter filter);
+
 
     /**
      * Gets the count of all the published projects within a cost range.

@@ -101,6 +101,8 @@
     <div class="form-row align-items-center" style="margin: 20px">
         <c:url var="createUrl" value='/projects'/>
         <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
+            <input type="hidden" name="keyword" value="${keyword}" />
+            <input type="hidden" name="searchField" value="${searchField}" />
             <div class="container">
                 <div class="row"><h5><spring:message code="filter"/></h5></div>
                 <div class="row">
@@ -108,11 +110,10 @@
                         <img src="${filter}" width="40" class="logo-img">
                     </div>
                     <div class="col-md">
-                        <form:select class="custom-select mr-sm-2" path="categorySelector">
-                            <form:option value="allCats"><spring:message code="noFilter"/> </form:option>
-                            <c:forEach items="${cats}" var="category">
-                                <%-- TODO: VER COMO MOSTRAMOS CATEGORIAS INTERNACIONALIZADAS --%>
-                                <form:option value="${category.name}">${category.name}</form:option>
+                        <form:select class="custom-select mr-sm-2" path="categoryId">
+                            <form:option value="0"><spring:message code="noFilter"/> </form:option>
+                            <c:forEach items="${categories}" var="category">
+                                <form:option value="${category.id}">${category.name}</form:option>
                             </c:forEach>
                         </form:select>
                     </div>
@@ -125,11 +126,9 @@
                         <form:select path="orderBy" class="custom-select mr-sm-2">
                             <form:option value="default"><spring:message code="noOrder"/> </form:option>
                             <form:option value="date"><spring:message code="date"/> </form:option>
-                            <form:option value="cost-low-high"><spring:message code="cost_l_h"/></form:option>
-
-                            <form:option value="cost-high-low"><spring:message code="cost_h_l"/></form:option>
-                            <form:option value="alf"><spring:message code="alf"/></form:option>
-
+                            <form:option value="cost-a"><spring:message code="cost_l_h"/></form:option>
+                            <form:option value="cost-d"><spring:message code="cost_h_l"/></form:option>
+                            <form:option value="alpha"><spring:message code="alf"/></form:option>
                         </form:select>
                     </div>
                 </div>
@@ -165,7 +164,7 @@
 <c:if test="${!empty list}">
     <div class="body">
         <div class="card-deck">
-            <c:forEach items="${list}" var="project" varStatus="projectIndex">
+            <c:forEach items="${projects}" var="project" varStatus="projectIndex">
                 <%--                <div class="col-sm-3 my-card">--%>
                 <div class="card mb-3">
                     <div class="card-header text-white">
