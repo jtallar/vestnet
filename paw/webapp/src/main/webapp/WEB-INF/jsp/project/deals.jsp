@@ -7,6 +7,7 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title><spring:message code="deals"/> | VestNet</title>
 </head>
 <body>
