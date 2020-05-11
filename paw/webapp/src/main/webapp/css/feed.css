@@ -196,6 +196,7 @@ html {
     max-width:200px
 }
 
-.active-page-deals {
-    color: blue !important;
+.active-item{
+    border:solid 2px #750096;
+    background-color: #f1f1f1;
 }
