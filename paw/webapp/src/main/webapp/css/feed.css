@@ -95,6 +95,14 @@
     font-weight: bold;
 }
 
+.page-link2{
+    color: #ffffff !important;
+    font-size: 30px !important;
+    font-family:Impact, sans-serif;
+    font-variant: all-petite-caps;
+    font-weight: bold;
+}
+
 .no-proj{
     margin-left:25% !important;
 }
@@ -126,4 +134,28 @@ html {
 
 .msg-collapse{
     background-color:#dcdcdc
+}
+
+.card-deal{
+    padding:40px;
+}
+
+.container-deal{
+    margin-left:30% !important;
+    margin-right:30% !important
+}
+
+.tab-title{
+    color:white;
+    font-family:sans-serif;
+    font-variant:all-petite-caps;
+    font-size:large
+}
+
+.tab-title2{
+    margin-left: 30px;
+    color:white;
+    font-family:sans-serif;
+    font-variant:all-petite-caps;
+    font-size:xx-large
 }

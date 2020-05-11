@@ -9,9 +9,13 @@
     <%--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>--%>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
+    <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
     <title><spring:message code="my_projects"/> | VestNet</title>
 </head>
 <body>
+
+<strong class="tab-title2"><spring:message code="my_projects"/></strong>
+
 <c:forEach var="project" items="${projects}" varStatus="theCount">
     <span class="anchor-header" id="dashboard-project-${project.id}"></span>
     <div class="container py-3">
