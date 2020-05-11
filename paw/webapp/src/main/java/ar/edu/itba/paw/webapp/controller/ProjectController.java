@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class ProjectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
-    private static final int PAGE_SIZE = 2;
+    private static final int PAGE_SIZE = 12;
     private static final Integer FIRST_PAGE = 1;
     private static final int PAGINATION_ITEMS = 5;
 
