@@ -76,7 +76,7 @@ public class ProjectController {
                                  @RequestParam(name = "searchField", required = false) String searchField,
                                  @RequestParam(name = "page", defaultValue = "1") Integer page) {
 
-        page = (page < 0) ? 1 : page;
+        page = (page < 1) ? 1 : page;
         ProjectFilter projectFilter = new ProjectFilter(page, PAGE_SIZE);
         projectFilter.setSearch(StringEscapeUtils.escapeHtml4(keyword), searchField);
         projectFilter.setCost(form.getMinCost(), form.getMaxCost());
@@ -85,7 +85,6 @@ public class ProjectController {
 
         List<Project> projects = projectService.findFiltered(projectFilter);
         Integer projectCount = projectService.countFiltered(projectFilter);
-        if (projects.size() == 0) return new ModelAndView("redirect:/projects?page=1");
         Pair<Integer, Integer> paginationLimits = setPaginationLimits(projectCount, page);
 
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
@@ -129,7 +128,6 @@ public class ProjectController {
 
     /**
      * Message not set exception handler
-     *
      * @return Model and view.
      */
     @ExceptionHandler(MessagingException.class)
@@ -221,7 +219,7 @@ public class ProjectController {
      */
     private Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page) {
         int maxPages = (projectCount + 1) / PAGE_SIZE;
-        if (maxPages <= PAGINATION_ITEMS) return new Pair<>(FIRST_PAGE, maxPages);
+        if (maxPages <= PAGINATION_ITEMS) return new Pair<>(FIRST_PAGE, maxPages == 0 ? 1: maxPages);
         int firstPage = page - PAGINATION_ITEMS / 2;
         if (firstPage <= FIRST_PAGE ) return new Pair<>(FIRST_PAGE, PAGINATION_ITEMS);
         int lastPage = page + PAGINATION_ITEMS / 2;
