@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessageRemovedException;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -66,10 +67,12 @@ public class MessageController {
      * @return Model and view.
      */
     @RequestMapping(value = "/message/accept/{project_id}/{sender_id}")
-    public ModelAndView acceptMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId ) throws MessagingException {
+    public ModelAndView acceptMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId,
+                                      HttpServletRequest request) throws MessagingException {
         User loggedUser = loggedUser();
         messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, true);
-        emailService.sendEmailAnswer(loggedUser.getEmail(), true, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), "google.com.ar");
+        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        emailService.sendEmailAnswer(loggedUser, true, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), projectId, baseUrl);
         return new ModelAndView("redirect:/messages");
     }
 
@@ -80,10 +83,12 @@ public class MessageController {
      * @return Model and view.
      */
     @RequestMapping(value = "/message/refuse/{project_id}/{sender_id}")
-    public ModelAndView refuseMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId ) throws MessagingException{
+    public ModelAndView refuseMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId,
+                                      HttpServletRequest request) throws MessagingException{
         User loggedUser = loggedUser();
         messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, false);
-        emailService.sendEmailAnswer(loggedUser.getEmail(), false, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), "google.com.ar");
+        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        emailService.sendEmailAnswer(loggedUser, false, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), projectId, baseUrl);
         return new ModelAndView("redirect:/messages");
     }
 

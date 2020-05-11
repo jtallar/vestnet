@@ -17,6 +17,5 @@ public interface EmailService {
      */
     void sendNewEmail(User user, String body, int offers, String exchange, String to, String project, long projectId, String baseUrl) throws MessagingException;
 
-    void sendEmailAnswer(String from, boolean answer, String to, String link) throws MessagingException;
-
-    }
+    void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl) throws MessagingException;
+}

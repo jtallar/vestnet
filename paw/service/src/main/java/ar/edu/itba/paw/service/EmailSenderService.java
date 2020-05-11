@@ -29,7 +29,7 @@ public class EmailSenderService implements EmailService {
         session.setDebug(true);
 
         // TODO: Cambiar locale al que le mande yo --> NO ES DEL sender, FALTA PARAM
-        Locale locale = Locale.US;
+        Locale locale = new Locale("es");
         ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", locale);
 
         String subject = bundle.getString("email.subject.request");
@@ -41,8 +41,10 @@ public class EmailSenderService implements EmailService {
                 .append(body).append("\n\n")
                 .append(MessageFormat.format(bundle.getString("email.body.offer"), offers)).append('\n')
                 .append(MessageFormat.format(bundle.getString("email.body.inExchange"), exchange)).append("\n\n")
-                .append(MessageFormat.format(bundle.getString("email.body.userProfile"), String.format("%s/users/%d", baseUrl, sender.getId()))).append("\n")
-                .append(MessageFormat.format(bundle.getString("email.body.contactInvestor"), String.format("%s/messages#dashboard-project-%d", baseUrl, projectId)));
+                .append(MessageFormat.format(bundle.getString("email.body.userProfile"),
+                        String.format("%s/users/%d", baseUrl, sender.getId()))).append("\n")
+                .append(MessageFormat.format(bundle.getString("email.body.contactInvestor"),
+                        String.format("%s/messages#dashboard-project-%d", baseUrl, projectId)));
 
         try {
             sendEmail(session, sender.getEmail(), to, subject, fullBodySB.toString());
@@ -53,26 +55,31 @@ public class EmailSenderService implements EmailService {
         }
     }
     @Override
-    public void sendEmailAnswer(String from, boolean answer, String to, String link) throws MessagingException {
+    public void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl) throws MessagingException {
 
         Properties props = getEmailProperties();
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
         // TODO: Cambiar locale al que le mande yo
-        Locale locale = Locale.forLanguageTag("es-ES");
+        Locale locale = new Locale("en-US");
         ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", locale);
 
         String subject = bundle.getString("email.subject.response");
         StringBuilder fullBodySB = new StringBuilder();
         fullBodySB.append(bundle.getString("email.body.vestnetReports")).append('\n')
-                .append((answer) ? MessageFormat.format(bundle.getString("email.body.acceptProposal"), from) :
-                        MessageFormat.format(bundle.getString("email.body.rejectProposal"), from)).append("\n\n")
-                .append(MessageFormat.format(bundle.getString("email.body.userProfile"), link)).append("\n\n")
+                .append((answer) ? MessageFormat.format(bundle.getString("email.body.acceptProposal"),
+                        String.format("%s %s", sender.getFirstName(), sender.getLastName()),
+                        String.format("%s/projects/%d", baseUrl, projectId)) :
+                        MessageFormat.format(bundle.getString("email.body.rejectProposal"),
+                                String.format("%s %s", sender.getFirstName(), sender.getLastName()),
+                                String.format("%s/projects/%d", baseUrl, projectId))).append("\n\n")
+                .append(MessageFormat.format(bundle.getString("email.body.userProfile"),
+                        String.format("%s/users/%d", baseUrl, sender.getId()))).append("\n\n")
                 .append(bundle.getString("email.body.contactEntrepreneur"));
 
         try {
-            sendEmail(session, from, to, subject, fullBodySB.toString());
+            sendEmail(session, sender.getEmail(), to, subject, fullBodySB.toString());
         } catch (MessagingException me) {
             me.printStackTrace();   //Si se produce un error
             System.out.println("ERROR AL ENVIAR EMAIL");
