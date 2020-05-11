@@ -196,6 +196,7 @@
                                 </div>
                             </div>
                         </div>
+                        <form:errors path="offers" cssClass="formError"/>
                     </div>
 
                     <div class="container-contact">
@@ -290,17 +291,17 @@
 
     var offerTag = document.getElementById('contact-offer');
     if (offerTag != null) {
-        offerTag.addEventListener("keypress", function () {
-            if (offerTag.value > 6) {
+        offerTag.addEventListener("keypress", function (key) {
+            if (offerTag.value.length > 6) {
                 offerTag.value = offerTag.value.slice(0, 6);
             }
         });
     }
     function adjustInputs() {
-        // TODO: AGREGAR VALIDACION PARA NEGATIVO
-        if (offerTag.value.length === 0) {
+        if (offerTag.value.length === 0 || offerTag.value < 0) {
             offerTag.value = 0;
         }
+        offerTag.value = Math.round(offerTag.value);
     }
 </script>
 </body>

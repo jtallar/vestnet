@@ -68,3 +68,7 @@
     text-shadow: 2px 2px #dee2e6;
     font-weight:400;
 }
+
+.formError {
+    color: red;
+}

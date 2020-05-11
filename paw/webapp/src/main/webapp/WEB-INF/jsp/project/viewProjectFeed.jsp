@@ -92,14 +92,14 @@
                         <div class="col-sm">
                             <spring:message var="min" code="min"/>
                             <form:input path="minCost" type="number" class="form-control mx-auto mx-auto"
-                                        placeholder="${min}"/>
+                                        placeholder="${min}" id="filter-form-min"/>
                             <form:errors path="minCost" cssClass="formError"/>
                         </div>
                         <p>-</p>
                         <div class="col-sm">
                             <spring:message var="max" code="max"/>
                             <form:input path="maxCost" type="number" class="form-control mx-auto mx-auto"
-                                        placeholder="${max}"/>
+                                        placeholder="${max}" id="filter-form-max"/>
                             <form:errors path="maxCost" cssClass="formError"/>
                             <form:errors cssClass="formError"/>
                         </div>
@@ -107,7 +107,7 @@
                 </div>
                 <div class="row field">
                     <div class="col-md">
-                        <input type="submit" class="btn btn-dark pull-right" value="<spring:message code='apply'/>">
+                        <input type="submit" class="btn btn-dark pull-right" value="<spring:message code='apply'/>" onclick="adjustInputs()">
                     </div>
                 </div>
             </div>
@@ -272,6 +272,18 @@
         if ("${pageContext.request.queryString}" === "") window.location.href =  hrefaux + "page=" + page;
         else if ("${pageContext.request.queryString}".includes("page")) window.location.href = hrefaux + "${pageContext.request.queryString}".slice(0, "${pageContext.request.queryString}".indexOf("page") + 5) + page;
         else window.location.href = hrefaux + "${pageContext.request.queryString}" + "&page=" + page;
+    }
+    function adjustInputs() {
+        var minTag = document.getElementById('filter-form-min');
+        if (minTag.value.length === 0 || minTag.value < 0) {
+            minTag.value = 0;
+        }
+        minTag.value = Math.round(minTag.value);
+        var maxTag = document.getElementById('filter-form-max');
+        if (maxTag.value.length === 0 || maxTag.value < 0) {
+            maxTag.value = 0;
+        }
+        maxTag.value = Math.round(maxTag.value);
     }
 </script>
 </body>
