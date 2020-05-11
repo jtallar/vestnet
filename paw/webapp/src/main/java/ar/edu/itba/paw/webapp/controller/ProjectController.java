@@ -4,12 +4,8 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.comparators.AlphComparator;
-import ar.edu.itba.paw.model.comparators.CostComparator;
-import ar.edu.itba.paw.model.comparators.DateComparator;
+import ar.edu.itba.paw.model.components.Pair;
 import ar.edu.itba.paw.model.components.ProjectFilter;
-import ar.edu.itba.paw.model.components.ProjectSort;
-import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.forms.MailFields;
@@ -37,7 +33,9 @@ import java.util.stream.Collectors;
 public class ProjectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-    private final int PAGE_SIZE = 12;
+    private static final int PAGE_SIZE = 2;
+    private static final Integer FIRST_PAGE = 1;
+    private static final int PAGINATION_ITEMS = 5;
 
     @Autowired
     private UserService userService;
@@ -75,23 +73,26 @@ public class ProjectController {
                                  final BindingResult error,
                                  @RequestParam(name = "keyword", required = false) String keyword,
                                  @RequestParam(name = "searchField", required = false) String searchField,
-                                 @RequestParam(name = "page", defaultValue = "1") String page) {
+                                 @RequestParam(name = "page", defaultValue = "1") Integer page) {
 
-
-        ProjectFilter projectFilter = new ProjectFilter(Integer.parseInt(page));
+        ProjectFilter projectFilter = new ProjectFilter(page, PAGE_SIZE);
         projectFilter.setSearch(keyword, searchField);
         projectFilter.setCost(form.getMinCost(), form.getMaxCost());
         projectFilter.setCategory(form.getCategoryId());
         projectFilter.setSort(form.getOrderBy());
 
-
         List<Project> projects = projectService.findFiltered(projectFilter);
-        System.out.println("LIST OF PROJECTS " + projects);
+        Integer projectCount = projectService.countFiltered(projectFilter);
+        Pair<Integer, Integer> paginationLimits = setPaginationLimits(projectCount, page);
+
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("projects", projects);
         mav.addObject("keyword", keyword);
         mav.addObject("searchField", searchField);
+        mav.addObject("startPage", paginationLimits.getKey());
+        mav.addObject("endPage", paginationLimits.getValue());
+        mav.addObject("page", page);
 
         User loggedUser = loggedUser();
         if (loggedUser != null && loggedUser.getRole() == User.UserRole.INVESTOR.getId())
@@ -202,5 +203,21 @@ public class ProjectController {
         long projectId = projectService.create(title, summary,
                 projectFields.getCost(), userId, projectFields.getCategories(), null, imageBytes);
         return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
+    }
+
+    /**
+     * Creates the pagination logic.
+     * @param projectCount The count of projects to paginate.
+     * @param page The current pagination page.
+     * @return A pair set as <startPage, endPage>
+     */
+    private Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page) {
+        int maxPages = (projectCount / PAGE_SIZE) + FIRST_PAGE;
+        if (maxPages <= PAGINATION_ITEMS) return new Pair<>(FIRST_PAGE, maxPages);
+        int firstPage = page - PAGINATION_ITEMS / 2;
+        if (firstPage <= FIRST_PAGE ) return new Pair<>(FIRST_PAGE, PAGINATION_ITEMS);
+        int lastPage = page + PAGINATION_ITEMS / 2;
+        if (lastPage <= maxPages) return new Pair<>(firstPage, lastPage);
+        return new Pair<>(maxPages - PAGINATION_ITEMS, maxPages);
     }
 }

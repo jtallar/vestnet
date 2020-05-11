@@ -34,6 +34,19 @@
 </div>
 <div class="col">
         <ul class="pagination justify-content-center">
+            <li id="li-previous" class="page-item">
+                <a id="li-a-previous" class="page-link" href="#" aria-label="<spring:message code="previous"/>">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">
+                <li class="page-item <c:if test="${pageNumber == page }"> active </c:if>"><a class="page-link" href="#">${pageNumber}</a></li>
+            </c:forEach>
+            <li id="li-next" class="page-item">
+                <a id="li-a-next" class="page-link" href="#" aria-label="<spring:message code="next"/>">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
         </ul>
 </div>
 <%--    <div class="row grid">--%>
@@ -248,6 +261,19 @@
     }
 
 </script>
-</body>
 
+<script>
+    window.onload = function () {
+        if (${page} === ${startPage}) {
+            document.getElementById("li-previous").className = "page-item disabled";
+            document.getElementById("li-a-previous").setAttribute("tabindex", "-1");
+            document.getElementById("li-a-previous").setAttribute("aria-disabled", "true");
+        } else if (${page} === ${endPage}) {
+            document.getElementById("li-next").className = "page-item disabled";
+            document.getElementById("li-a-next").setAttribute("tabindex", "-1");
+            document.getElementById("li-a-next").setAttribute("aria-disabled", "true");
+        }
+    }
+</script>
+</body>
 </html>

@@ -191,8 +191,11 @@ public class ProjectJdbcDao implements ProjectDao {
             queryBuilder.addSearch(SearchQuery.getEnum(filter.getSearchField().getId()));
         }
 
-        parameters .addValue("limit", filter.getPageLimit());
-        parameters.addValue("offset", (filter.getPage() - 1) * filter.getPageLimit());
+        // If ask for count query, limit, offset, and sort are not needed.
+        if (!getIds) return new Pair<>(queryBuilder.getQuery(), parameters);
+
+        parameters .addValue("limit", filter.getLimit());
+        parameters.addValue("offset", (filter.getPage() - 1) * filter.getLimit());
 
         queryBuilder.addSort(SortQuery.getEnum(filter.getSort().getId()));
         queryBuilder.addLimitOffset();

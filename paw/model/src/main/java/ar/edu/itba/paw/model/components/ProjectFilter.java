@@ -19,13 +19,14 @@ public class ProjectFilter {
 
     // Pagination page
     private Integer page;
-    private Integer pageLimit = 12;
+    private Integer limit;
 
     // Sort method
     private ProjectSort sort;
 
-    public ProjectFilter(Integer page) {
+    public ProjectFilter(Integer page, Integer limit) {
         this.page = page;
+        this.limit = limit;
     }
 
     public void setCost(String minCost, String maxCost) {
@@ -91,8 +92,8 @@ public class ProjectFilter {
         return page;
     }
 
-    public Integer getPageLimit() {
-        return pageLimit;
+    public Integer getLimit() {
+        return limit;
     }
 
     public ProjectSort getSort() {
@@ -108,7 +109,7 @@ public class ProjectFilter {
                 ", keyword='" + keyword + '\'' +
                 ", searchField=" + searchField +
                 ", page=" + page +
-                ", pageLimit=" + pageLimit +
+                ", pageLimit=" + limit +
                 ", sort=" + sort +
                 '}';
     }
