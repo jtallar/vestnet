@@ -195,3 +195,7 @@ html {
 .p-img{
     max-width:200px
 }
+
+.active-page-deals {
+    color: blue !important;
+}
