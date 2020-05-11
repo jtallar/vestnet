@@ -126,7 +126,7 @@
 
                             <h5 class="card-title"><b><spring:message code="categories"/></b></h5>
                             <c:forEach var="category" items="${project.categories}">
-                                <li><c:out value="${category.name}"/></li>
+                                <li><spring:message code="${category.name}"></spring:message> </li>
                             </c:forEach>
                             <br/>
                             <h5 class="card-title"><b><spring:message code="totalCost"/></b></h5>

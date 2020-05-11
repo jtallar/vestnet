@@ -26,24 +26,35 @@
                 </div>
                 <div class="col-md-8 px-3">
                     <div class="card-block px-3">
-                        <h4 class="card-title">${project.name}</h4>
-                        <p class="card-text">${project.summary} </p>
-                        <h5><spring:message code="cost"/> </h5>
-                        <p class="card-text"> ${project.cost}</p>
-                        <div class="row">
-                            <div class="col">
+                        <h4 class="card-title msg-title">${project.name}</h4>
+<%--                        <p class="card-text">${project.summary} </p>--%>
+                        <div class="row msg-content">
+                            <div class="col-"><h5><spring:message code="cost"/> </h5></div>
+                            <div class="col-5 msg-content"><p class="card-text"> ${project.cost}</p></div>
+                        </div>
+                        <div class="row msg-content">
+                            <div class="col-">
                                 <strong><spring:message code="hits"/> </strong>
+                            </div>
+                            <div class="col-5">
                                 <p>  ${project.hits}</p>
                             </div>
-                            <div class="col">
+                            <div class="col-">
+                                <a href="<c:url value="/messages/${project.id}"/>" class="btn btn-dark btn-project pull-right"> <spring:message code="preview_project"/> </a>
+                            </div>
+                        </div>
+                        <div class="row msg-content">
+                            <div class="col-">
                                 <strong><spring:message code="favs"/> </strong>
+                            </div>
+                            <div class="col-5">
                                 <c:set var="favorites" value="${project.name}favs"/>
                                 <p>  ${requestScope[favorites]}</p>
                             </div>
+                            <div class="col-">
+                                <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}"><spring:message code="see_msgs"></spring:message> </button>
+                            </div>
                         </div>
-                        <a href="<c:url value="/messages/${project.id}"/>" class="btn btn-dark pull-right"> <spring:message code="preview_project"/> </a>
-                        <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}"><spring:message code="see_msgs"></spring:message> </button>
-
                     </div>
                 </div>
 
@@ -55,7 +66,7 @@
 
 </c:forEach>
 <c:if test="${empty projects}">
-    <div class="card m-2">
+    <div class="card no-proj-mine">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="noProjOwned" arguments=""/> </h5>
         </div>
@@ -64,7 +75,7 @@
 <c:url var="addProject" value="/newProject"/>
 
 <div class="text-center mt-5">
-    <a href="${addProject}" class="btn btn-secondary btn-lg"> <spring:message code="add_project"/> </a>
+    <a href="${addProject}" class="btn btn-white btn-lg"> <spring:message code="add_project"/> </a>
 </div>
 
 <script>

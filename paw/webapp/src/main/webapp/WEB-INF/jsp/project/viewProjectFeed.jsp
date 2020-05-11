@@ -35,15 +35,15 @@
 <div class="col">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
-                <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" href="#" aria-label="<spring:message code="previous"/>">
+                <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" aria-label="<spring:message code="previous"/>">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">
-                <li class="page-item <c:if test="${pageNumber == page }"> active </c:if>"><a class="page-link" onclick="modHref(${pageNumber})" href="#">${pageNumber}</a></li>
+                <li class="page-item <c:if test="${pageNumber == page }"> active </c:if>"><a class="page-link" onclick="modHref(${pageNumber})">${pageNumber}</a></li>
             </c:forEach>
             <li id="li-next" class="page-item">
-                <a id="li-a-next" class="page-link" onclick="modHref(${page+1})" href="#" aria-label="<spring:message code="next"/>">
+                <a id="li-a-next" class="page-link" onclick="modHref(${page+1})" aria-label="<spring:message code="next"/>">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -67,7 +67,7 @@
                         <form:select class="custom-select mr-sm-2" path="categoryId">
                             <form:option value="0"><spring:message code="noFilter"/> </form:option>
                             <c:forEach items="${categories}" var="category">
-                                <form:option value="${category.id}">${category.name}</form:option>
+                                <form:option value="${category.id}"><spring:message code="${category.name}"></spring:message> </form:option>
                             </c:forEach>
                         </form:select>
                     </div>
@@ -253,25 +253,23 @@
 
 <script>
     window.onload = function () {
-        if (${page} === ${startPage}) {
-            document.getElementById("li-previous").className = "page-item disabled";
-            document.getElementById("li-a-previous").setAttribute("tabindex", "-1");
-            document.getElementById("li-a-previous").setAttribute("aria-disabled", "true");
-        } else if (${page} === ${endPage}) {
-            document.getElementById("li-next").className = "page-item disabled";
-            document.getElementById("li-a-next").setAttribute("tabindex", "-1");
-            document.getElementById("li-a-next").setAttribute("aria-disabled", "true");
+        disableArrows(${page}, ${startPage}, "previous");
+        disableArrows(${page}, ${endPage}, "next");
+    }
+
+    function disableArrows(page, limitPage, name) {
+        if (page === limitPage) {
+            document.getElementById("li-" + name).className = "page-item disabled";
+            document.getElementById("li-a-" + name).setAttribute("tabindex", "-1");
+            document.getElementById("li-a-" + name).setAttribute("aria-disabled", "true");
         }
-
-
     }
 
     function modHref(page) {
-        let hrefaux = window.location.origin + "${pageContext.request.contextPath}" + "/projects?";
-        console.log("${pageContext.request.queryString}");
-        if ("${pageContext.request.queryString}" === "") window.location.href =  hrefaux + "page=" + page;
-        else if ("${pageContext.request.queryString}".includes("page")) window.location.href = hrefaux + "${pageContext.request.queryString}".slice(0, "${pageContext.request.queryString}".indexOf("page") + 5) + page;
-        else window.location.href = hrefaux + "${pageContext.request.queryString}" + "&page=" + page;
+        let url = window.location.href;
+        if (!window.location.search.includes("?")) window.location.href = url + "?page=" + page;
+        else if (window.location.search.includes("page")) window.location.href = url.replace(/page=[0-9]*/, "page=" + page);
+        else window.location.href = url + "&page=" + page;
     }
     function adjustInputs() {
         var minTag = document.getElementById('filter-form-min');
