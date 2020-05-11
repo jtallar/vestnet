@@ -3,8 +3,8 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.Pair;
 import ar.edu.itba.paw.model.components.ProjectFilter;
-import javafx.util.Pair;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
