@@ -21,10 +21,10 @@
     <div class="container py-3">
         <div class="card msg">
             <div class="row ">
-                <div class="col-md-4">
-                    <img src="<c:url value="/imageController/project/${project.id}"/>" class="w-100">
+                <div class="col-2">
+                    <img src="<c:url value="/imageController/project/${project.id}"/>" class="p-img w-100">
                 </div>
-                <div class="col-md-8 px-3">
+                <div class="col-md-10 px-3">
                     <div class="card-block px-3">
                         <h4 class="card-title msg-title">${project.name}</h4>
 <%--                        <p class="card-text">${project.summary} </p>--%>
@@ -36,7 +36,7 @@
                             <div class="col-">
                                 <strong><spring:message code="hits"/> </strong>
                             </div>
-                            <div class="col-5">
+                            <div class="col-7">
                                 <p>  ${project.hits}</p>
                             </div>
                             <div class="col-">
@@ -47,7 +47,7 @@
                             <div class="col-">
                                 <strong><spring:message code="favs"/> </strong>
                             </div>
-                            <div class="col-5">
+                            <div class="col-7">
                                 <c:set var="favorites" value="${project.name}favs"/>
                                 <p>  ${requestScope[favorites]}</p>
                             </div>

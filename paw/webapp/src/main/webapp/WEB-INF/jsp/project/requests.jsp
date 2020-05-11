@@ -88,7 +88,7 @@
                         <p>${message.publishDate}</p>
                     </div>
                     <div class="col-4">
-                        <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
+                        <c:url value="/users/${message.receiverId}?back=yes" var="profileURL"/>
                         <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></a>
                     </div>
                 </div>
@@ -101,7 +101,10 @@
 
 </c:forEach>
 <c:if test="${empty messages}">
-    <div class="card m-2">
+    <div class="col-4 text-center tab-title">
+        <strong> <spring:message code="req_title"/> </strong>
+    </div>
+    <div class="card card-deal">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="no_offers" arguments=""/> </h5>
         </div>
