@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.interfaces.ProjectService;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,33 +32,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Integer countByCost(long minCost, long maxCost) {
-        return projectDao.countByCost(minCost, maxCost);
+    public List<Project> findFiltered(ProjectFilter filter) {
+        return projectDao.findFiltered(filter);
     }
 
     @Override
-    public List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset) {
-        return projectDao.findByCoincidencePage(name,selection, pageStart, pageOffset);
-    }
-
-    @Override
-    public Integer countByCoincidence(String name, String selection) {
-        return projectDao.countByCoincidence(name, selection);
-    }
-
-    @Override
-    public List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost) {
-        return projectDao.findByCategoryPage(categories, pageStart, pageOffset, minCost, maxCost);
-    }
-
-    @Override
-    public Integer countByCategory(List<Category> categories, long minCost, long maxCost) {
-        return projectDao.countByCategory(categories, minCost, maxCost);
-    }
-
-    @Override
-    public List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost) {
-        return projectDao.findByCostPage(pageStart, pageOffset, minCost, maxCost);
+    public Integer countFiltered(ProjectFilter filter) {
+        return projectDao.countFiltered(filter);
     }
 
     @Override

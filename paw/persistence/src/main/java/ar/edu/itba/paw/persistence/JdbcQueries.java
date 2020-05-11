@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.model.components.ProjectSort;
+
 /**
  * Contains all the postgre sql queries
  */
@@ -7,14 +9,14 @@ public class JdbcQueries {
 
     static final String PROJECT_TABLE = "projects";
     static final String USER_TABLE = "users";
-    private static final String COUNTRY_TABLE = "countries";
-    private static final String STATE_TABLE = "states";
-    private static final String CITY_TABLE = "cities";
+    static final String COUNTRY_TABLE = "countries";
+    static final String STATE_TABLE = "states";
+    static final String CITY_TABLE = "cities";
     static final String PROJECT_CATEGORIES_TABLE = "project_categories";
-    private static final String CATEGORIES_TABLE = "categories";
-    public static final String PASSWORDS_TABLE = "passwords";
-    public static final String FAVORITES_TABLE = "favorites";
-    public static final String MESSAGE_TABLE = "messages";
+    static final String CATEGORIES_TABLE = "categories";
+    static final String FAVORITES_TABLE = "favorites";
+    static final String MESSAGE_TABLE = "messages";
+
 
 
     /**
@@ -249,8 +251,7 @@ public class JdbcQueries {
 
     static final String PROJECT_FIND_BY_IDS =
             PROJECT_FIND_ALL +
-            "WHERE p.id IN (:ids) " +
-            PROJECT_DEFAULT_ORDER_BY;
+            "WHERE p.id IN (:ids) ";
 
     static final String PROJECT_FIND_BY_OWNER =
             PROJECT_FIND_ALL +
@@ -260,130 +261,6 @@ public class JdbcQueries {
     static final String PROJECT_FIND_BY_ID =
             PROJECT_FIND_ALL +
             "WHERE p.id = ? ";
-
-
-
-    static final String PROJECT_IDS_ALL_NAME_MATCH =
-            "SELECT p.id " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
-            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
-            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
-            "WHERE lower(p.project_name) LIKE (:name) " +
-            "OR lower(u.first_name) LIKE (:name) OR lower(u.last_name) LIKE (:name) " +
-            "OR lower(co.country) LIKE (:name) OR lower(st.state) LIKE (:name) OR lower(ci.city) LIKE (:name) " +
-            "OR lower(p.summary) LIKE (:name) OR lower(u.email) LIKE (:name) " +
-            PROJECT_DEFAULT_ORDER_BY +
-            "OFFSET (:from) LIMIT (:to) ";
-
-    static final String PROJECT_IDS_COST_MATCH =
-            "SELECT id " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "WHERE cost >= ? AND cost <= ? " +
-            PROJECT_DEFAULT_ORDER_BY +
-            "OFFSET ? LIMIT ? ";
-
-    static final String PROJECT_IDS_NAME_SUMMARY_MATCH =
-            "SELECT p.id " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "WHERE lower(p.project_name) LIKE (:name) OR lower(p.summary) LIKE (:name) " +
-            PROJECT_DEFAULT_ORDER_BY +
-            "OFFSET (:from) LIMIT (:to) ";
-
-    static final String PROJECT_IDS_LOCATION_MATCH =
-            "SELECT p.id " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
-            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
-            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
-            "WHERE lower(co.country) LIKE (:name) OR lower(st.state) LIKE (:name) OR lower(ci.city) LIKE (:name) " +
-            PROJECT_DEFAULT_ORDER_BY +
-            "OFFSET (:from) LIMIT (:to) ";
-
-    static final String PROJECT_IDS_CATEGORY_COST_MATCH =
-            "SELECT p.id " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
-            "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) "+
-            "WHERE pcat.category_id IN (:categories) AND p.cost >= (:min) AND p.cost <= (:max) " +
-            PROJECT_DEFAULT_ORDER_BY +
-            "OFFSET (:from) LIMIT (:to) ";
-
-    static final String PROJECT_IDS_FULL_NAME_MATCH =
-            "SELECT p.id " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "WHERE lower(u.first_name) LIKE (:name) OR lower(u.last_name) LIKE (:name) " +
-            PROJECT_DEFAULT_ORDER_BY +
-            "OFFSET (:from) LIMIT (:to) ";
-
-    static final String PROJECT_IDS_EMAIL_MATCH =
-            "SELECT p.id " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "WHERE lower(u.email) LIKE (:name) " +
-            PROJECT_DEFAULT_ORDER_BY +
-            "OFFSET (:from) LIMIT (:to) ";
-
-
-
-    static final String PROJECT_COUNT_ALL_NAME_MATCH =
-            "SELECT COUNT(*) " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
-            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
-            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
-            "WHERE lower(p.project_name) LIKE (:name) " +
-            "OR lower(u.first_name) LIKE (:name) OR lower(u.last_name) LIKE (:name) " +
-            "OR lower(co.country) LIKE (:name) OR lower(st.state) LIKE (:name) OR lower(ci.city) LIKE (:name) " +
-            "OR lower(u.email) LIKE (:name) " +
-            "OR lower(p.summary) LIKE (:name) ";
-
-    static final String PROJECT_COUNT_EMAIL_MATCH =
-            "SELECT COUNT(*) " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "WHERE lower(u.email) LIKE (:name) ";
-
-    static final String PROJECT_COUNT_NAME_SUMMARY_MATCH =
-            "SELECT COUNT(*) " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "WHERE lower(p.project_name) LIKE (:name) OR lower(p.summary) LIKE (:name) ";
-
-    static final String PROJECT_COUNT_FULL_NAME_MATCH =
-            "SELECT COUNT(*) " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "WHERE lower(u.first_name) LIKE (:name) OR lower(u.last_name) LIKE (:name) ";
-
-    static final String PROJECT_COUNT_LOCATION_MATCH =
-            "SELECT COUNT(*) " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
-            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
-            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
-            "WHERE  lower(co.country) LIKE (:name) OR lower(st.state) LIKE (:name) OR lower(ci.city) LIKE (:name) ";
-
-    static final String PROJECT_COUNT_COST_MATCH =
-            "SELECT COUNT(*) " +
-            "FROM " + PROJECT_TABLE + " " +
-            "WHERE cost >= ? AND cost <= ? ";
-
-    static final String PROJECT_COUNT_CATEGORY_COST_MATCH =
-            "SELECT COUNT(*) " +
-            "FROM " + PROJECT_TABLE + " p " +
-            "JOIN " + USER_TABLE + " u ON (p.owner_id = u.id) " +
-            "JOIN " + COUNTRY_TABLE + " co ON (u.country_id = co.id) " +
-            "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
-            "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) " +
-            "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (p.id = pcat.project_id) " +
-            "JOIN " + CATEGORIES_TABLE + " cat ON (pcat.category_id = cat.id) " +
-            "WHERE pcat.category_id IN (:categories) " +
-            "AND p.cost >= (:min)  AND p.cost <= (:max) ";
 
     static final String PROJECT_COUNT_FAVORITE =
             "SELECT COUNT(*) " +

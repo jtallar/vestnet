@@ -158,23 +158,6 @@ public class ProjectJdbcDaoTest {
         assertEquals(categoryId.longValue(), projects.get(0).getCategories().get(0).getId());
     }
 
-
-    @Test
-    public void testFindByCategoriesNull() {
-        // 1 - Setup - Create user, project, category, and link them
-        Number userId = createUser();
-        Number categoryId = createCategory();
-        Number projectId = createProject(userId);
-        createProjectCategory(projectId, categoryId);
-
-        // 2 - Execute
-        List<Project> projects = projectJdbcDao.findByCategoryPage(null, 0,1, 0, Integer.MAX_VALUE);
-
-        // 3 - Assert
-        assertEquals(0, projects.size());
-    }
-
-
     /**
      * Auxiliary functions
      */

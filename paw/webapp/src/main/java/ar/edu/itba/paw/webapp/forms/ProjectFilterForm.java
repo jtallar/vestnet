@@ -3,8 +3,10 @@ package ar.edu.itba.paw.webapp.forms;
 import javax.validation.constraints.Pattern;
 
 @RangeCheck()
-public class ProjectFilter {
-    private String categorySelector;
+public class ProjectFilterForm {
+
+    private Integer categoryId;
+
     private String orderBy;
 
     @Pattern(regexp = "[0-9]*")
@@ -36,11 +38,11 @@ public class ProjectFilter {
         this.orderBy = orderBy;
     }
 
-    public String getCategorySelector() {
-        return categorySelector;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategorySelector(String categorySelector) {
-        this.categorySelector = categorySelector;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 }

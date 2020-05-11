@@ -34,65 +34,19 @@
 </div>
 <div class="col">
         <ul class="pagination justify-content-center">
-            <c:set value="${page + 1}" var="nextOne"/>
-            <c:set value="${page - 1}" var="previous"/>
-
-            <c:if test="${empty param.categorySelector and empty param.orderBy}">
-                <c:if test="${page != 1}">
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?page=${previous}'/>" class="page-link"> << <spring:message code="previous"/></a>
-                    </li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?page=${previous}'/>" class="page-link">${previous}</a>
-                    </li>
-                </c:if>
-                <li class="page-item"><a href="<c:url  value='/projects?page=${page}'/>" class="page-link">${page}</a></li>
-                <c:if test="${hasNext eq true}">
-                    <li class="page-item">
-                        <a href="<c:url  value='/projects?page=${nextOne}'/>" class="page-link">${nextOne}</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?page=${nextOne}'/>" class="page-link"><spring:message code="next"/> >></a>
-                    </li>
-                </c:if>
-            </c:if>
-
-                <c:if test="${not empty param.categorySelector and not empty param.orderBy}">
-                    <c:choose>
-                        <c:when test="${empty param.max and empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}"/>
-                        </c:when>
-                        <c:when test="${not empty param.max and not empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}&min=${param.min}"/>
-                        </c:when>
-                        <c:when test="${not empty param.min}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&min=${param.min}"/>
-
-                        </c:when>
-                        <c:when test="${not empty param.max}">
-                            <c:set var="parameters" value="categorySelector=${param.categorySelector}&orderBy=${param.orderBy}&max=${param.max}"/>
-                        </c:when>
-                    </c:choose>
-                    <c:if test="">
-
-                    </c:if>
-
-                    <c:if test="${page != 1}">
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${previous}'/>" class="page-link"><< <spring:message code="previous"/></a>
-                    </li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${previous}'/>" class="page-link">${previous}</a>
-                    </li>
-                </c:if>
-                <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${page}'/>" class="page-link">${page}</a></li>
-                <c:if test="${hasNext eq true}">
-                    <li class="page-item"><a href="<c:url  value='/projects?${parameters}&page=${nextOne}'/>" class="page-link">${nextOne}</a></li>
-                    <li class="page-item">
-                        <a href="<c:url value='/projects?${parameters}&page=${nextOne}'/>" class="page-link"><spring:message code="next"/> >></a>
-                    </li>
-                </c:if>
-            </c:if>
+            <li id="li-previous" class="page-item">
+                <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" href="#" aria-label="<spring:message code="previous"/>">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">
+                <li class="page-item <c:if test="${pageNumber == page }"> active </c:if>"><a class="page-link" onclick="modHref(${pageNumber})" href="#">${pageNumber}</a></li>
+            </c:forEach>
+            <li id="li-next" class="page-item">
+                <a id="li-a-next" class="page-link" onclick="modHref(${page+1})" href="#" aria-label="<spring:message code="next"/>">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
         </ul>
 </div>
 <%--    <div class="row grid">--%>
@@ -101,6 +55,8 @@
     <div class="form-row align-items-center" style="margin: 20px">
         <c:url var="createUrl" value='/projects'/>
         <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
+            <input type="hidden" name="keyword" value="${keyword}" />
+            <input type="hidden" name="searchField" value="${searchField}" />
             <div class="container">
                 <div class="row"><h5><spring:message code="filter"/></h5></div>
                 <div class="row">
@@ -108,11 +64,10 @@
                         <img src="${filter}" width="40" class="logo-img">
                     </div>
                     <div class="col-md">
-                        <form:select class="custom-select mr-sm-2" path="categorySelector">
-                            <form:option value="allCats"><spring:message code="noFilter"/> </form:option>
-                            <c:forEach items="${cats}" var="category">
-                                <%-- TODO: VER COMO MOSTRAMOS CATEGORIAS INTERNACIONALIZADAS --%>
-                                <form:option value="${category.name}">${category.name}</form:option>
+                        <form:select class="custom-select mr-sm-2" path="categoryId">
+                            <form:option value="0"><spring:message code="noFilter"/> </form:option>
+                            <c:forEach items="${categories}" var="category">
+                                <form:option value="${category.id}">${category.name}</form:option>
                             </c:forEach>
                         </form:select>
                     </div>
@@ -125,11 +80,9 @@
                         <form:select path="orderBy" class="custom-select mr-sm-2">
                             <form:option value="default"><spring:message code="noOrder"/> </form:option>
                             <form:option value="date"><spring:message code="date"/> </form:option>
-                            <form:option value="cost-low-high"><spring:message code="cost_l_h"/></form:option>
-
-                            <form:option value="cost-high-low"><spring:message code="cost_h_l"/></form:option>
-                            <form:option value="alf"><spring:message code="alf"/></form:option>
-
+                            <form:option value="cost_ascending"><spring:message code="cost_l_h"/></form:option>
+                            <form:option value="cost_descending"><spring:message code="cost_h_l"/></form:option>
+                            <form:option value="alphabetical"><spring:message code="alf"/></form:option>
                         </form:select>
                     </div>
                 </div>
@@ -162,10 +115,10 @@
     </div>
 </div>
 
-<c:if test="${!empty list}">
+<c:if test="${!empty projects}">
     <div class="body">
         <div class="card-deck">
-            <c:forEach items="${list}" var="project" varStatus="projectIndex">
+            <c:forEach items="${projects}" var="project" varStatus="projectIndex">
                 <%--                <div class="col-sm-3 my-card">--%>
                 <div class="card mb-3">
                     <div class="card-header text-white">
@@ -230,7 +183,7 @@
 </c:if>
 
 
-<c:if test="${empty list}">
+<c:if test="${empty projects}">
     <div class="card m-2 no-proj">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="noProjFound" arguments=""/></h5>
@@ -297,6 +250,29 @@
     }
 
 </script>
-</body>
 
+<script>
+    window.onload = function () {
+        if (${page} === ${startPage}) {
+            document.getElementById("li-previous").className = "page-item disabled";
+            document.getElementById("li-a-previous").setAttribute("tabindex", "-1");
+            document.getElementById("li-a-previous").setAttribute("aria-disabled", "true");
+        } else if (${page} === ${endPage}) {
+            document.getElementById("li-next").className = "page-item disabled";
+            document.getElementById("li-a-next").setAttribute("tabindex", "-1");
+            document.getElementById("li-a-next").setAttribute("aria-disabled", "true");
+        }
+
+
+    }
+
+    function modHref(page) {
+        let hrefaux = window.location.origin + "${pageContext.request.contextPath}" + "/projects?";
+        console.log("${pageContext.request.queryString}");
+        if ("${pageContext.request.queryString}" === "") window.location.href =  hrefaux + "page=" + page;
+        else if ("${pageContext.request.queryString}".includes("page")) window.location.href = hrefaux + "${pageContext.request.queryString}".slice(0, "${pageContext.request.queryString}".indexOf("page") + 5) + page;
+        else window.location.href = hrefaux + "${pageContext.request.queryString}" + "&page=" + page;
+    }
+</script>
+</body>
 </html>

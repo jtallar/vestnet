@@ -3,6 +3,8 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.ProjectDao;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.Pair;
+import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static ar.edu.itba.paw.persistence.JdbcProjectQueryBuilder.*;
+import static ar.edu.itba.paw.persistence.JdbcQueries.*;
 
 @Repository
 public class ProjectJdbcDao implements ProjectDao {
@@ -39,13 +43,13 @@ public class ProjectJdbcDao implements ProjectDao {
 
         // NOTE: Use columns when adding fields in create otherwise defaults wont work
         jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(JdbcQueries.PROJECT_TABLE)
+                .withTableName(PROJECT_TABLE)
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("owner_id", "project_name", "summary", "cost", "images");
         jdbcInsertCategoryLink = new SimpleJdbcInsert(dataSource)
-                .withTableName(JdbcQueries.PROJECT_CATEGORIES_TABLE);
+                .withTableName(PROJECT_CATEGORIES_TABLE);
         jdbcInsertFavorite = new SimpleJdbcInsert(dataSource)
-                .withTableName(JdbcQueries.FAVORITES_TABLE);
+                .withTableName(FAVORITES_TABLE);
 
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
@@ -65,93 +69,36 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public Optional<Project> findById(long projectId) {
-        return jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, projectId).stream().findFirst();
+        return jdbcTemplate.query(PROJECT_FIND_BY_ID, RESULT_SET_EXTRACTOR, projectId).stream().findFirst();
     }
 
     @Override
     public List<Project> findByOwner(long userId) {
-        return jdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_OWNER, new Object[] {userId}, RESULT_SET_EXTRACTOR);
+        return jdbcTemplate.query(PROJECT_FIND_BY_OWNER, new Object[] {userId}, RESULT_SET_EXTRACTOR);
     }
 
     @Override
-    public Integer countByCost(long minCost, long maxCost) {
-        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_COST_MATCH,new Object[] {minCost, maxCost}, Integer.class);
+    public List<Project> findFiltered(ProjectFilter filter) {
+        Pair<String, MapSqlParameterSource> pair = buildQueryAndParams(filter, true);
+        List<Integer> ids = namedParameterJdbcTemplate.queryForList(pair.getKey(), pair.getValue(), Integer.class);
+        if (ids.isEmpty()) return new ArrayList<>();
+        return namedParameterJdbcTemplate.query(selectProjects(filter.getSort().getId()), new MapSqlParameterSource().addValue("ids", ids), RESULT_SET_EXTRACTOR);
     }
 
     @Override
-    public List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset) {
-        if(name.trim().matches("")){
-            return new ArrayList<>();
-        }
-        List<Integer> ids = findIdsByCoincidencePaged("%" + name + "%", selection, pageStart, pageOffset);
-
-        MapSqlParameterSource parAux = new MapSqlParameterSource("ids", ids);
-        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_IDS, parAux, RESULT_SET_EXTRACTOR);
-    }
-
-    @Override
-    public Integer countByCoincidence(String name, String selection) {
-        if(name.trim().matches("")){
-            return 0;
-        }
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", "%" + name + "%");
-
-        switch (selection) {
-            case "all": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_ALL_NAME_MATCH, parameters, Integer.class);
-            case "project_info": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_NAME_SUMMARY_MATCH, parameters, Integer.class);
-            case "owner_name": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_FULL_NAME_MATCH, parameters, Integer.class);
-            case "owner_email": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_EMAIL_MATCH, parameters, Integer.class);
-            case "loc": return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_LOCATION_MATCH, parameters, Integer.class);
-            default: return 0;
-        }
-    }
-
-    @Override
-    public List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost) {
-        if(pageOffset == 0 || categories == null) return new ArrayList<>();
-
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("from", pageStart)
-                .addValue("to", pageOffset)
-                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
-                .addValue("min", minCost)
-                .addValue("max", maxCost);
-
-        List<Integer> ids = namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_CATEGORY_COST_MATCH, parameters, Integer.class);
-
-        MapSqlParameterSource id_par = new MapSqlParameterSource().addValue("ids", ids);
-        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_IDS, id_par, RESULT_SET_EXTRACTOR);
-    }
-
-    @Override
-    public Integer countByCategory(List<Category> categories, long minCost, long maxCost) {
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("categories", categories.stream().map(Category::getId).collect(Collectors.toList()))
-                .addValue("min", minCost)
-                .addValue("max", maxCost);
-
-        return namedParameterJdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_CATEGORY_COST_MATCH, parameters, Integer.class);
-    }
-
-    @Override
-    public List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost) {
-        if(pageOffset == 0) return new ArrayList<>();
-
-        List<Integer> ids = jdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_COST_MATCH, new Object[]{minCost, maxCost, pageStart, pageOffset}, Integer.class);
-
-        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("ids", ids);
-        return namedParameterJdbcTemplate.query(JdbcQueries.PROJECT_FIND_BY_IDS, parameters, RESULT_SET_EXTRACTOR);
+    public Integer countFiltered(ProjectFilter filter) {
+        Pair<String, MapSqlParameterSource> pair = buildQueryAndParams(filter, false);
+        return namedParameterJdbcTemplate.queryForObject(pair.getKey(), pair.getValue(), Integer.class);
     }
 
     @Override
     public byte[] findImageForProject(long projectId) {
-        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
+        return jdbcTemplate.queryForObject(PROJECT_IMAGE, new Object[] {projectId}, byte[].class);
     }
 
     @Override
     public void addHit(long projectId) {
-        jdbcTemplate.update(JdbcQueries.PROJECT_ADD_HIT, projectId);
+        jdbcTemplate.update(PROJECT_ADD_HIT, projectId);
     }
 
     @Override
@@ -164,7 +111,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public void deleteFavorite(long projectId, long userId) {
-        jdbcTemplate.update(JdbcQueries.USER_DELETE_FAVORITE, new Object[]{projectId,userId});
+        jdbcTemplate.update(USER_DELETE_FAVORITE, new Object[]{projectId,userId});
     }
 
     @Override
@@ -174,12 +121,12 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Long> findFavorites(long user_id) {
-        return jdbcTemplate.query(JdbcQueries.USER_FIND_FAVORITES, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
+        return jdbcTemplate.query(USER_FIND_FAVORITES, new Object[] {user_id}, RESULT_SET_EXTRACTOR_PID);
     }
 
     @Override
     public long getFavoritesCount(long projectId) {
-        return jdbcTemplate.queryForObject(JdbcQueries.PROJECT_COUNT_FAVORITE, new Object[] {projectId}, Long.class);
+        return jdbcTemplate.queryForObject(PROJECT_COUNT_FAVORITE, new Object[] {projectId}, Long.class);
     }
 
     @Override
@@ -187,11 +134,13 @@ public class ProjectJdbcDao implements ProjectDao {
         if (projectIds == null || projectIds.size() == 0) return new ArrayList<>();
         String inSql = String.join("),(", Collections.nCopies(projectIds.size(), "?"));
         projectIds.add(userId);
-        return jdbcTemplate.queryForList(String.format(JdbcQueries.PROJECT_IS_FAVORITE_BY_ID_USER, inSql), projectIds.toArray(), boolean.class);
+        return jdbcTemplate.queryForList(String.format(PROJECT_IS_FAVORITE_BY_ID_USER, inSql), projectIds.toArray(), boolean.class);
     }
 
 
-    /* Auxiliary functions */
+    /**
+     * Auxiliary functions
+     */
 
     /**
      * Inserts all the categories for a given project.
@@ -209,20 +158,49 @@ public class ProjectJdbcDao implements ProjectDao {
         return projectId;
     }
 
-    private List<Integer> findIdsByCoincidencePaged(String name, String selection, int pageStart, int pageOffset) {
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", name)
-                .addValue("from", pageStart)
-                .addValue("to", pageOffset);
+    /**
+     * Creates the dynamic query to mbe executed and the parameter with it.
+     * @param filter The filters to be applied.
+     * @param getIds If true gets id list, else gets count.
+     * @return Pair with the formatted query, and the query params.
+     */
+    private Pair<String, MapSqlParameterSource> buildQueryAndParams(ProjectFilter filter, boolean getIds) {
+        JdbcProjectQueryBuilder queryBuilder = new JdbcProjectQueryBuilder();
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
 
-        switch (selection) {
-            case "all": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_ALL_NAME_MATCH, parameters, Integer.class);
-            case "project_info": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_NAME_SUMMARY_MATCH, parameters, Integer.class);
-            case "owner_name": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_FULL_NAME_MATCH, parameters, Integer.class);
-            case "owner_email": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_EMAIL_MATCH, parameters, Integer.class);
-            case "loc": return namedParameterJdbcTemplate.queryForList(JdbcQueries.PROJECT_IDS_LOCATION_MATCH, parameters, Integer.class);
-            default: return new ArrayList<>();
+        if (getIds) queryBuilder.selectProjectIds();
+        else queryBuilder.selectProjectCount();
+
+        if (filter.isMinCost()) {
+            parameters.addValue("minCost", filter.getMinCost());
+            queryBuilder.addMinCost();
         }
+
+        if (filter.isMaxCost()) {
+            parameters.addValue("maxCost", filter.getMaxCost());
+            queryBuilder.addMaxCost();
+        }
+
+        if (filter.isCategory()) {
+            parameters.addValue("category", filter.getCategory());
+            queryBuilder.addCategory();
+        }
+
+        if (filter.isSearch()) {
+            parameters.addValue("keyword", "%" + filter.getKeyword().toLowerCase() + "%");
+            queryBuilder.addSearch(SearchQuery.getEnum(filter.getSearchField().getId()));
+        }
+
+        // If ask for count query, limit, offset, and sort are not needed.
+        if (!getIds) return new Pair<>(queryBuilder.getQuery(), parameters);
+
+        parameters .addValue("limit", filter.getLimit());
+        parameters.addValue("offset", (filter.getPage() - 1) * filter.getLimit());
+
+        queryBuilder.addSort(SortQuery.getEnum(filter.getSort().getId()));
+        queryBuilder.addLimitOffset();
+
+        return new Pair<>(queryBuilder.getQuery(), parameters);
     }
 }
 

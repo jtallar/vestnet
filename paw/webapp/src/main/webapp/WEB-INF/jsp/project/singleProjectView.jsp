@@ -139,6 +139,8 @@
                                 <h5><a href="<c:url value='/users/${project.owner.id}?back=yes'/>" class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
                             </c:if>
 
+                            <div class="dropdown-divider"></div>
+
                             <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out value="${project.updateDate}"/></small></p>
                         </div>
                     </div>
