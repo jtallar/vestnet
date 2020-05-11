@@ -51,16 +51,8 @@
     <div class="container-deal py-3">
         <div class="card">
             <div class="card-deal">
-                <div class="row ">
-                    <div class="col-5">
-                        <strong><spring:message code="msg"/> </strong>
-                        <p>${message.content.message}</p>
-                    </div>
-                    <div class="col-6">
-                        <strong><spring:message code="published_date"/> </strong>
-                        <p>${message.publishDate}</p>
-                    </div>
-                </div>
+                <strong><spring:message code="msg"/> </strong>
+                <p>${message.content.message}</p>
                 <div class="row ">
                     <div class="col-5">
                         <strong><spring:message code="offer"/> </strong>
@@ -73,8 +65,16 @@
                 </div>
             </div>
             <div class="card-footer">
-                <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
-                <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></a>
+                <div class="row ">
+                    <div class="col-8">
+                        <strong><spring:message code="published_date"/> </strong>
+                        <p>${message.publishDate}</p>
+                    </div>
+                    <div class="col-4">
+                        <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
+                        <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -84,7 +84,10 @@
 
 </c:forEach>
 <c:if test="${empty messages}">
-    <div class="card m-2">
+    <div class="col-4 text-center tab-title">
+        <strong> <spring:message code="deals_title"/> </strong>
+    </div>
+    <div class="card no-proj-mine">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="no_msg" arguments=""></spring:message> </h5>
         </div>
