@@ -13,6 +13,25 @@ public class MailFields {
     private int offers;
     private String exchange;
 
+    private String project;
+    private String locale;
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
     public int getOffers() {
         return offers;
     }

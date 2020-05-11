@@ -28,6 +28,7 @@ public class LocationJdbcDaoTest {
     private static final String COUNTRY_TABLE = "countries";
     private static final String STATE_TABLE = "states";
     private static final String CITY_TABLE = "cities";
+    private static final String USERS_TABLE = "users";
 
     private static final String COUNTRY_NAME = "Peronlandia";
     private static final int COUNTRY_ID = 1;
@@ -55,6 +56,8 @@ public class LocationJdbcDaoTest {
         jdbcInsertCity = new SimpleJdbcInsert(dataSource)
                 .withTableName(CITY_TABLE);
 
+        // Prevent from triggering ON DELETE RESTRICT on COUNTRY DELETE
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRY_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATE_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CITY_TABLE);

@@ -97,7 +97,7 @@ public class SignUpController {
 
             userId = userService.create(userFields.getRole(), firstName, lastName, id,
                     LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
-                    new Location(new Location.Country(userFields.getCountry(), "", "", "", ""),
+                    new Location(new Location.Country(userFields.getCountry(), "", "", "", "", ""),
                             new Location.State(userFields.getState(), "", ""),
                             new Location.City(userFields.getCity(), "")),
                     email, phone, linkedin, userFields.getPassword(), imageBytes);

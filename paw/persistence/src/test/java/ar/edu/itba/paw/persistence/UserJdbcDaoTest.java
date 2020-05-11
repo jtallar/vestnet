@@ -186,7 +186,7 @@ public class UserJdbcDaoTest {
      * @return The Location.
      */
     private Location assignLocation() {
-        return new Location(new Location.Country(COUNTRY_ID, null, null, null, null),
+        return new Location(new Location.Country(COUNTRY_ID, null, null, null, null, null),
                 new Location.State(STATE_ID, null, null),
                 new Location.City(CITY_ID, null));
     }

@@ -196,6 +196,7 @@
                                 </div>
                             </div>
                         </div>
+                        <form:errors path="offers" cssClass="formError"/>
                     </div>
 
                     <div class="container-contact">
@@ -213,6 +214,8 @@
                     <form:input path="from" value="${sessionUser.email}" type="hidden"/>
                     <form:input path="toId" value="${project.owner.id}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
                     <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+                    <form:input path="project" value="${project.name}" type="hidden"/>
+                    <form:input path="locale" value="${project.owner.location.country.locale}" type="hidden"/>
 
                     <div class="text-right">
                         <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark" onclick="adjustInputs()" id="contact-send"/>
@@ -288,16 +291,17 @@
 
     var offerTag = document.getElementById('contact-offer');
     if (offerTag != null) {
-        offerTag.addEventListener("keypress", function () {
-            if (offerTag.value > 6) {
+        offerTag.addEventListener("keypress", function (key) {
+            if (offerTag.value.length > 6) {
                 offerTag.value = offerTag.value.slice(0, 6);
             }
         });
     }
     function adjustInputs() {
-        if (offerTag.value.length === 0) {
+        if (offerTag.value.length === 0 || offerTag.value < 0) {
             offerTag.value = 0;
         }
+        offerTag.value = Math.round(offerTag.value);
     }
 </script>
 </body>

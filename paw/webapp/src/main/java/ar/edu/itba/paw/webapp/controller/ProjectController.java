@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 @Controller
 public class ProjectController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
     private static final int PAGE_SIZE = 2;
     private static final Integer FIRST_PAGE = 1;
     private static final int PAGINATION_ITEMS = 5;
@@ -147,17 +148,22 @@ public class ProjectController {
      * @throws MessagingException When mail cannot be sent.
      */
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
-    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id) throws MessagingException {
+    public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id, HttpServletRequest request) throws MessagingException {
         if (errors.hasErrors()) {
             return singleProjectView(mailFields, id, 0);
         }
+        User loggedUser = loggedUser();
 
         try {
-            messageService.create(mailFields.getBody(), String.valueOf(mailFields.getOffers()), mailFields.getExchange(), loggedUser().getId(), mailFields.getToId(), id);
+            messageService.create(mailFields.getBody(), String.valueOf(mailFields.getOffers()), mailFields.getExchange(), loggedUser.getId(), mailFields.getToId(), id);
         } catch (MessageAlreadySentException e) {
             return singleProjectView(mailFields, id, 2);
         }
-        emailService.sendNewEmail(mailFields.getFrom(), mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo(), "google.com.ar");
+
+        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        LOGGER.debug("\n\nLocale: {}\n\n", mailFields.getLocale());
+        emailService.sendNewEmail(loggedUser, mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
+                mailFields.getTo(), mailFields.getProject(), id, baseUrl, mailFields.getLocale());
         return new ModelAndView("redirect:/projects/{id}?contactStatus=1");
     }
 

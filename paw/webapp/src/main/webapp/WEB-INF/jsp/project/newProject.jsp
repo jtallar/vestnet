@@ -119,7 +119,7 @@
 
     var costTag = document.getElementById('new-project-cost');
     costTag.addEventListener("keypress", function () {
-        if (costTag.value > 6) {
+        if (costTag.value.length > 6) {
             costTag.value = costTag.value.slice(0, 6);
         }
     });
@@ -144,9 +144,10 @@
         titleTag.value = titleTag.value.trim();
         var summaryTag = document.getElementById('new-project-summary');
         summaryTag.value = summaryTag.value.trim();
-        if (costTag.value.length === 0) {
+        if (costTag.value.length === 0 || costTag.value < 0) {
             costTag.value = 0;
         }
+        costTag.value = Math.round(costTag.value);
     }
 </script>
 </html>

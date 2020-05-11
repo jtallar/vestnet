@@ -44,13 +44,15 @@ public class Location {
         private final String isoCode;
         private final String phoneCode;
         private final String currency;
+        private final String locale;
 
-        public Country(int id, String name, String isoCode, String phoneCode, String currency) {
+        public Country(int id, String name, String isoCode, String phoneCode, String currency, String locale) {
             this.id = id;
             this.name = name;
             this.isoCode = isoCode;
             this.phoneCode = phoneCode;
             this.currency = currency;
+            this.locale = locale;
         }
 
         public int getId() {
@@ -73,6 +75,10 @@ public class Location {
             return currency;
         }
 
+        public String getLocale() {
+            return locale;
+        }
+
         @Override
         public String toString() {
             return "Country{" +
@@ -81,6 +87,7 @@ public class Location {
                     ", isoCode='" + isoCode + '\'' +
                     ", phoneCode='" + phoneCode + '\'' +
                     ", currency='" + currency + '\'' +
+                    ", locale='" + locale + '\'' +
                     '}';
         }
     }
