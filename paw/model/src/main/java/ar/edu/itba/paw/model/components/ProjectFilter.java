@@ -15,6 +15,7 @@ public class ProjectFilter {
 
     // Pagination page
     private Integer page;
+    private Integer pageLimit = 12;
 
     // Sort method
     private ProjectSort sort;
@@ -26,10 +27,11 @@ public class ProjectFilter {
     public void setCost(String minCost, String maxCost) {
         try {
             this.minCost = Integer.valueOf(minCost);
-            this.maxCost = Integer.valueOf(maxCost);
-        } catch(NumberFormatException e) {
+        } catch(NumberFormatException e) {}
 
-        }
+        try {
+            this.maxCost = Integer.valueOf(maxCost);
+        } catch(NumberFormatException e) {}
     }
 
     public void setSearch(String keyword, String searchField) {
@@ -45,5 +47,51 @@ public class ProjectFilter {
         this.sort = ProjectSort.getEnum(sort);
     }
 
+    public boolean isCategory() {
+        return category != null && category != 0;
+    }
 
+    public Integer getCategory() {
+        return category;
+    }
+
+    public boolean isMinCost() {
+        return minCost != null;
+    }
+
+    public Integer getMinCost() {
+        return minCost;
+    }
+
+    public boolean isMaxCost() {
+        return maxCost != null;
+    }
+
+    public Integer getMaxCost() {
+        return maxCost;
+    }
+
+    public boolean isSearch() {
+        return keyword != null && !keyword.isEmpty();
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public SearchField getSearchField() {
+        return searchField;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public Integer getPageLimit() {
+        return pageLimit;
+    }
+
+    public ProjectSort getSort() {
+        return sort;
+    }
 }

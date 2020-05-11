@@ -41,40 +41,6 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDao.countFiltered(filter);
     }
 
-
-
-
-
-    @Override
-    public Integer countByCost(long minCost, long maxCost) {
-        return projectDao.countByCost(minCost, maxCost);
-    }
-
-    @Override
-    public List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset) {
-        return projectDao.findByCoincidencePage(name,selection, pageStart, pageOffset);
-    }
-
-    @Override
-    public Integer countByCoincidence(String name, String selection) {
-        return projectDao.countByCoincidence(name, selection);
-    }
-
-    @Override
-    public List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost) {
-        return projectDao.findByCategoryPage(categories, pageStart, pageOffset, minCost, maxCost);
-    }
-
-    @Override
-    public Integer countByCategory(List<Category> categories, long minCost, long maxCost) {
-        return projectDao.countByCategory(categories, minCost, maxCost);
-    }
-
-    @Override
-    public List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost) {
-        return projectDao.findByCostPage(pageStart, pageOffset, minCost, maxCost);
-    }
-
     @Override
     public byte[] findImageForProject(long projectId) {
         return projectDao.findImageForProject(projectId);

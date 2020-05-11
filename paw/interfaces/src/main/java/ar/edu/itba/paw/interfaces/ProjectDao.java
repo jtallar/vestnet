@@ -50,63 +50,6 @@ public interface ProjectDao {
      */
     Integer countFiltered(ProjectFilter filter);
 
-
-    /**
-     * Gets the count of all the published projects within a cost range.
-     * @param minCost The minimum cost for the project.
-     * @param maxCost The maximum cost for the project.
-     * @return The count of projects that match criteria.
-     */
-    Integer countByCost(long minCost, long maxCost);
-
-    /**
-     * Finds all the matches for a name given its selection.
-     * @param name String to search matches for.
-     * @param selection Specific field searched for a match.
-     * @param pageStart Starting page.
-     * @param pageOffset Page offset.
-     * @return List of projects that meet the criteria.
-     */
-    List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset);
-
-    /**
-     * Finds how many projects match with the criteria.
-     * @param name The string to search matches for.
-     * @param selection Specific field searched for a match.
-     * @return Project count.
-     */
-    Integer countByCoincidence(String name, String selection);
-
-    /**
-     * Finds all projects with any of the given categories within the cost range.
-     * @param categories The list of possible categories.
-     * @param pageStart Starting page.
-     * @param pageOffset Page offset.
-     * @param minCost Minimum cost.
-     * @param maxCost Maximum cost.
-     * @return List of projects.
-     */
-    List<Project> findByCategoryPage(List<Category> categories, int pageStart, int pageOffset, long minCost, long maxCost);
-
-    /**
-     * Finds how many projects with any of the given categories within the cost range.
-     * @param categories The list of possible categories.
-     * @param minCost Minimum cost.
-     * @param maxCost Maximum cost.
-     * @return Count of the projects that meet the given criteria.
-     */
-    Integer countByCategory(List<Category> categories, long minCost, long maxCost);
-
-    /**
-     * Finds all the projects within a cost range.
-     * @param pageStart Starting page.
-     * @param pageOffset Page offset.
-     * @param minCost Minimum cost.
-     * @param maxCost Maximum cost.
-     * @return List of found projects.
-     */
-    List<Project> findByCostPage(int pageStart, int pageOffset, long minCost, long maxCost);
-
     /**
      * @param projectId The id of the project we want to get a portrait image
      * @return Image as a byte array
