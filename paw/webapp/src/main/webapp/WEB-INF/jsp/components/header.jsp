@@ -43,14 +43,14 @@
         <c:set var="searchButtonClass" value="btn btn-black"/>
         <c:url var="logo" value="/images/logo_wp.png"/>
         <c:url var="lupa" value="/images/lupa_bw.png"/>
-        <c:set var="options" value="${fn:split('/projects,/newProject,/myProfile,/messages,/logout', ',')}"/>
+        <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile,/logout', ',')}"/>
     </c:when>
     <c:when test="${roleNumber eq 2}">
         <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
         <c:set var="searchButtonClass" value="btn logopurple"/>
         <c:url var="logo" value="/images/logo_bp.png"/>
         <c:url var="lupa" value="/images/lupa_v.png"/>
-        <c:set var="options" value="${fn:split('/projects,/myProfile,/messages,/logout', ',')}"/>
+        <c:set var="options" value="${fn:split('/projects,/requests,/myProfile,/logout', ',')}"/>
     </c:when>
 </c:choose>
 

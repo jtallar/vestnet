@@ -148,12 +148,12 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-">
+                            <div class="col-4">
                                 <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img"
                                      alt="<spring:message code="projectImage"/>"
                                      aria-placeholder="<spring:message code="projectImage"/>"/>
                             </div>
-                            <div class="col-md">
+                            <div class="col-8">
                                 <p class="card-text"><c:out value="${project.summary}"/></p>
                                     <%--                        <strong><spring:message code="categories"/></strong>--%>
                                     <%--                        <c:forEach items="${project.categories}" var="category">--%>
@@ -178,17 +178,6 @@
                 </div>
 
             </c:forEach>
-        </div>
-    </div>
-    <div class="grid">
-        <div class="row">
-            <div class="col-4  d-flex justify-content-center">
-                <c:url value="/projects" var="projectPage"/>
-                <form action="${projectPage}" method="get">
-
-
-                </form>
-            </div>
         </div>
     </div>
 </c:if>
