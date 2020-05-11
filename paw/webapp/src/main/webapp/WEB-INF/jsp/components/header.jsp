@@ -77,17 +77,17 @@
         <c:url var="createUrl" value='/projects'/>
         <form class="form-inline mx-auto my-2 my-lg-0" action="${createUrl}" method="get">
             <spring:message var="search" code="search"></spring:message>
-<%--            <c:choose>--%>
-<%--                <c:when test="${not empty keyword}">--%>
+            <c:choose>
+                <c:when test="${not empty keyword}">
                     <input class="form-control mx-1 my-auto col-6" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
-<%--                </c:when>--%>
-<%--                <c:when test="${empty keyword}">--%>
-<%--                    <input class="form-control mx-1 my-auto col-6" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>--%>
-<%--                </c:when>--%>
-<%--            </c:choose>--%>
+                </c:when>
+                <c:when test="${empty keyword}">
+                    <input class="form-control mx-1 my-auto col-6" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
+                </c:when>
+            </c:choose>
 
             <select id="searchSelector" name="searchField" class="custom-select mx-1 col-4">
-                <option value="default" <c:if test="${searchField == null or searchField eq 'default' }"> selected </c:if>><spring:message code="all"></spring:message> </option>
+                <option value="default" <c:if test="${searchField == null or searchField eq 'default' }"> selected </c:if>><spring:message code="project_name"></spring:message> </option>
                 <option value="project_info" <c:if test="${searchField eq 'project_info'}"> selected </c:if>><spring:message code="project_info"></spring:message> </option>
                 <option value="owner_name" <c:if test="${searchField eq 'owner_name'}"> selected </c:if>><spring:message code="owner_name"></spring:message> </option>
                 <option value="owner_email" <c:if test="${searchField eq 'owner_email'}"> selected </c:if>><spring:message code="owner_email"></spring:message> </option>

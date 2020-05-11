@@ -35,6 +35,7 @@ public class ProjectFilter {
     }
 
     public void setSearch(String keyword, String searchField) {
+
         this.keyword = keyword;
         this.searchField = SearchField.getEnum(searchField);
     }
@@ -93,5 +94,19 @@ public class ProjectFilter {
 
     public ProjectSort getSort() {
         return sort;
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectFilter{" +
+                "category=" + category +
+                ", minCost=" + minCost +
+                ", maxCost=" + maxCost +
+                ", keyword='" + keyword + '\'' +
+                ", searchField=" + searchField +
+                ", page=" + page +
+                ", pageLimit=" + pageLimit +
+                ", sort=" + sort +
+                '}';
     }
 }

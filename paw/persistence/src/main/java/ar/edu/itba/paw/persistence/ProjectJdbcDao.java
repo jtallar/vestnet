@@ -81,6 +81,10 @@ public class ProjectJdbcDao implements ProjectDao {
     public List<Project> findFiltered(ProjectFilter filter) {
         Pair<String, MapSqlParameterSource> pair = buildQueryAndParams(filter, true);
         List<Integer> ids = namedParameterJdbcTemplate.queryForList(pair.getKey(), pair.getValue(), Integer.class);
+        System.out.println("\n\nFINAL QUERY " + pair.getKey());
+        System.out.println("FILTER " + filter);
+        System.out.println("IDS " + ids + "\n\n");
+        if (ids.isEmpty()) return new ArrayList<>();
         return namedParameterJdbcTemplate.query(PROJECT_FIND_BY_IDS, new MapSqlParameterSource().addValue("ids", ids), RESULT_SET_EXTRACTOR);
     }
 
@@ -186,7 +190,7 @@ public class ProjectJdbcDao implements ProjectDao {
         }
 
         if (filter.isSearch()) {
-            parameters.addValue("keyword", filter.getKeyword());
+            parameters.addValue("keyword", "%" + filter.getKeyword().toLowerCase() + "%");
             queryBuilder.addSearch(SearchQuery.getEnum(filter.getSearchField().getId()));
         }
 

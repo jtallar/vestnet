@@ -29,5 +29,10 @@ public enum SearchField {
         return DEFAULT;
     }
 
-
+    @Override
+    public String toString() {
+        return "SearchField{" +
+                "match='" + match + '\'' +
+                '}';
+    }
 }

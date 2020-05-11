@@ -102,7 +102,7 @@
     </div>
 </div>
 
-<c:if test="${!empty list}">
+<c:if test="${!empty projects}">
     <div class="body">
         <div class="card-deck">
             <c:forEach items="${projects}" var="project" varStatus="projectIndex">
@@ -181,7 +181,7 @@
 </c:if>
 
 
-<c:if test="${empty list}">
+<c:if test="${empty projects}">
     <div class="card m-2 no-proj">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="noProjFound" arguments=""/></h5>

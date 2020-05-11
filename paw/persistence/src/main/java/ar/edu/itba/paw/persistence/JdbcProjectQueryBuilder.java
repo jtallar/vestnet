@@ -23,7 +23,7 @@ public class JdbcProjectQueryBuilder {
     public void addSort(SortQuery query) {
         this.query.append("ORDER BY ");
         this.query.append(query.getQuery());
-        this.query.append("p.id DESC ");
+        this.query.append(", p.id DESC ");
     }
 
     public void addLimitOffset() {
@@ -58,11 +58,11 @@ public class JdbcProjectQueryBuilder {
     }
 
     public enum SortQuery {
-        DEFAULT(0, "p.hits DESC "),
-        DATE(1, "p.publish_date "),
-        COST_ASCENDING(2, "p.cost "),
-        COST_DESCENDING(3, "p.cost DESC "),
-        ALPHABETICAL(4, "p.project_name ");
+        DEFAULT(0, "p.hits DESC"),
+        DATE(1, "p.publish_date"),
+        COST_ASCENDING(2, "p.cost"),
+        COST_DESCENDING(3, "p.cost DESC"),
+        ALPHABETICAL(4, "p.project_name");
 
         private int id;
         private String query;
@@ -88,7 +88,7 @@ public class JdbcProjectQueryBuilder {
     }
 
     public enum SearchQuery {
-        DEFAULT(0, "lower(p.project_name) LIKE (:keyword)  ", false, false),
+        DEFAULT(0, "lower(p.project_name) LIKE (:keyword) ", false, false),
         PROJECT_INFO(1, "lower(p.summary) LIKE (:keyword) ", true, false),
         OWNER_NAME(2, "lower(u.first_name) LIKE (:keyword) OR lower(u.last_name) LIKE (:keyword) ", true, false),
         OWNER_MAIL(3, "lower(u.email) LIKE (:keyword) ", true, false),

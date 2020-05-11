@@ -86,7 +86,7 @@ public class ProjectController {
 
 
         List<Project> projects = projectService.findFiltered(projectFilter);
-
+        System.out.println("LIST OF PROJECTS " + projects);
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("projects", projects);

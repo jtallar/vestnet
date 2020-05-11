@@ -30,4 +30,11 @@ public enum ProjectSort {
             if (value.getMethod().equals(method)) return value;
         return DEFAULT;
     }
+
+    @Override
+    public String toString() {
+        return "ProjectSort{" +
+                "method='" + method + '\'' +
+                '}';
+    }
 }
