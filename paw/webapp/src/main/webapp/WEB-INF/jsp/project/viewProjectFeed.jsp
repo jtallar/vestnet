@@ -67,7 +67,7 @@
                         <form:select class="custom-select mr-sm-2" path="categoryId">
                             <form:option value="0"><spring:message code="noFilter"/> </form:option>
                             <c:forEach items="${categories}" var="category">
-                                <form:option value="${category.id}">${category.name}</form:option>
+                                <form:option value="${category.id}"><spring:message code="${category.name}"></spring:message> </form:option>
                             </c:forEach>
                         </form:select>
                     </div>

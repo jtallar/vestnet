@@ -75,21 +75,22 @@ public class ProjectController {
                                  @RequestParam(name = "searchField", required = false) String searchField,
                                  @RequestParam(name = "page", defaultValue = "1") Integer page) {
 
+        page = (page < 0) ? 1 : page;
         ProjectFilter projectFilter = new ProjectFilter(page, PAGE_SIZE);
-        projectFilter.setSearch(keyword, searchField);
+        projectFilter.setSearch(StringEscapeUtils.escapeHtml4(keyword), searchField);
         projectFilter.setCost(form.getMinCost(), form.getMaxCost());
         projectFilter.setCategory(form.getCategoryId());
         projectFilter.setSort(form.getOrderBy());
 
         List<Project> projects = projectService.findFiltered(projectFilter);
         Integer projectCount = projectService.countFiltered(projectFilter);
+        if (projects.size() == 0) return new ModelAndView("redirect:/projects?page=1");
         Pair<Integer, Integer> paginationLimits = setPaginationLimits(projectCount, page);
-        System.out.println("\n\nTESTING " + paginationLimits.getKey() + " value "  + paginationLimits.getValue());
 
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("projects", projects);
-        mav.addObject("keyword", keyword);
+        mav.addObject("keyword", StringEscapeUtils.escapeHtml4(keyword));
         mav.addObject("searchField", searchField);
         mav.addObject("startPage", paginationLimits.getKey());
         mav.addObject("endPage", paginationLimits.getValue());
