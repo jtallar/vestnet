@@ -69,6 +69,13 @@
 
 <script>
     var state = new Array(${projects.size() + 1}).fill(0);
+
+    let options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
 </script>
 
 <script>
@@ -121,15 +128,29 @@
                         profile.className = "btn btn-dark btn-md"
 
                         // TODO: VER SI ESTO TIENE QUE SER UN POST_
-                        let refuseUrl = '<c:url value="/message/refuse/"/>' + data[i]["projectId"] + "/" + data[i]["senderId"]
-                        let refuse = document.createElement('a')
-                        refuse.setAttribute('href', refuseUrl)
+                        let refuseUrl = window.location.origin + '<c:url value="/message/refuse/"/>' + data[i]["projectId"] + "/" + data[i]["senderId"]
+                        let refuse = document.createElement('button')
+                        refuse.setAttribute('id', 'refuse-message-' + data[i]["projectId"] + "-" + data[i]["senderId"]);
+                        // refuse.setAttribute('href', refuseUrl)
+                        refuse.addEventListener("click", function () {
+                            fetch(refuseUrl, options)
+                                .then(response => {
+                                div.removeChild(g);
+                            }).catch((function (reason) { console.error(reason) }));
+                        });
                         refuse.innerText = '<spring:message code="refuse"/>'
                         refuse.className = "btn btn-danger btn-md pull-right"
 
-                        let acceptUrl = '<c:url value="/message/accept/"/>' + data[i]["projectId"] + "/" + data[i]["senderId"]
-                        let accept = document.createElement('a')
-                        accept.setAttribute('href', acceptUrl)
+                        let acceptUrl = window.location.origin + '<c:url value="/message/accept/"/>' + data[i]["projectId"] + "/" + data[i]["senderId"]
+                        let accept = document.createElement('button')
+                        accept.setAttribute('id', 'refuse-message-' + data[i]["projectId"] + "-" + data[i]["senderId"]);
+                        // accept.setAttribute('href', acceptUrl)
+                        accept.addEventListener("click", function () {
+                            fetch(acceptUrl, options)
+                                .then(response => {
+                                div.removeChild(g);
+                            }).catch((function (reason) { console.error(reason) }));
+                        });
                         accept.innerText = '<spring:message code="accept"/>'
                         accept.className = "btn btn-success btn-md pull-right"
 
