@@ -69,20 +69,22 @@ public class ProjectController {
     }
 
     /**
-     * Maps main view with all projects. It filters and sorts them.
-     *
-     * @param projectFilterForm Filter for all the projects.
-     * @param page              Current page.
-     * @return Model and view.
      */
     @RequestMapping(value = "/projects", method = {RequestMethod.GET})
-    public ModelAndView mainView(@ModelAttribute("categoryForm") @Valid ProjectFilterForm projectFilterForm,
+    public ModelAndView mainView(@ModelAttribute("categoryForm") @Valid ProjectFilterForm form,
+                                 final BindingResult error,
                                  @RequestParam(name = "keyword", required = false) String keyword,
                                  @RequestParam(name = "searchField", required = false) String searchField,
                                  @RequestParam(name = "page", defaultValue = "1") String page) {
 
 
-        ProjectFilter projectFilter = new ProjectFilter(Integer.parseInt(page), keyword, SearchField.getEnum(searchField));
+        ProjectFilter projectFilter = new ProjectFilter(Integer.parseInt(page));
+        projectFilter.setSearch(keyword, searchField);
+        projectFilter.setCost(form.getMinCost(), form.getMaxCost());
+        projectFilter.setCategory(form.getCategoryId());
+        projectFilter.setSort(form.getOrderBy());
+
+
         List<Project> projects = projectService.findFiltered(projectFilter);
 
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");

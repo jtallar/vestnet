@@ -2,8 +2,8 @@ package ar.edu.itba.paw.model.components;
 
 public class ProjectFilter {
 
-    // Categories ids to filter
-    private Integer categories;
+    // Category ids to filter
+    private Integer category;
 
     // Cost filters
     private Integer minCost;
@@ -19,79 +19,31 @@ public class ProjectFilter {
     // Sort method
     private ProjectSort sort;
 
-    public ProjectFilter(Integer categories, Integer minCost, Integer maxCost, String keyword, SearchField searchField, Integer page) {
-        this.categories = categories;
-        this.minCost = minCost;
-        this.maxCost = maxCost;
-        this.keyword = keyword;
-        this.searchField = searchField;
+    public ProjectFilter(Integer page) {
         this.page = page;
     }
 
-    public ProjectFilter(Integer page, String keyword, SearchField searchField) {
-        this.sort = ProjectSort.DEFAULT;
-        this.page = page;
+    public void setCost(String minCost, String maxCost) {
+        try {
+            this.minCost = Integer.valueOf(minCost);
+            this.maxCost = Integer.valueOf(maxCost);
+        } catch(NumberFormatException e) {
+
+        }
+    }
+
+    public void setSearch(String keyword, String searchField) {
         this.keyword = keyword;
-        this.searchField = searchField;
+        this.searchField = SearchField.getEnum(searchField);
     }
 
-    public ProjectFilter() {
-
+    public void setCategory(Integer categories) {
+        this.category = categories;
     }
 
-    public Integer getCategories() {
-        return categories;
+    public void setSort(String sort) {
+        this.sort = ProjectSort.getEnum(sort);
     }
 
-    public void setCategories(Integer categories) {
-        this.categories = categories;
-    }
 
-    public Integer getMinCost() {
-        return minCost;
-    }
-
-    public void setMinCost(Integer minCost) {
-        this.minCost = minCost;
-    }
-
-    public Integer getMaxCost() {
-        return maxCost;
-    }
-
-    public void setMaxCost(Integer maxCost) {
-        this.maxCost = maxCost;
-    }
-
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    public SearchField getSearchField() {
-        return searchField;
-    }
-
-    public void setSearchField(SearchField searchField) {
-        this.searchField = searchField;
-    }
-
-    public ProjectSort getSort() {
-        return sort;
-    }
-
-    public void setSort(ProjectSort sort) {
-        this.sort = sort;
-    }
-
-    public Integer getPage() {
-        return page;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-    }
 }

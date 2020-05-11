@@ -24,4 +24,10 @@ public enum ProjectSort {
     public int getId() {
         return id;
     }
+
+    public static ProjectSort getEnum(String method) {
+        for (ProjectSort value : values())
+            if (value.getMethod().equals(method)) return value;
+        return DEFAULT;
+    }
 }
