@@ -146,7 +146,9 @@
                         refuse.addEventListener("click", function () {
                             fetch(refuseUrl, options)
                                 .then(response => {
-                                div.removeChild(g);
+                                    // div.removeChild(g);
+                                    // window.location.href = window.location.origin + window.location.pathname + '#dashboard-project-' + data[i]["projectId"];
+                                    window.location.reload();
                             }).catch((function (reason) { console.error(reason) }));
                         });
                         refuse.innerText = '<spring:message code="refuse"/>'
@@ -159,7 +161,9 @@
                         accept.addEventListener("click", function () {
                             fetch(acceptUrl, options)
                                 .then(response => {
-                                div.removeChild(g);
+                                    // div.removeChild(g);
+                                    // window.location.href = window.location.origin + window.location.pathname + '#dashboard-project-' + data[i]["projectId"];
+                                    window.location.reload();
                             }).catch((function (reason) { console.error(reason) }));
                         });
                         accept.innerText = '<spring:message code="accept"/>'
