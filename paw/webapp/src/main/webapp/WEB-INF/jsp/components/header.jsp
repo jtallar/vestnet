@@ -79,10 +79,10 @@
             <spring:message var="search" code="search"></spring:message>
             <c:choose>
                 <c:when test="${not empty keyword}">
-                    <input class="form-control mx-1 my-auto col-6" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
+                    <input class="form-control mx-1 my-auto col-5" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
                 </c:when>
                 <c:when test="${empty keyword}">
-                    <input class="form-control mx-1 my-auto col-6" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
+                    <input class="form-control mx-1 my-auto col-5" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
                 </c:when>
             </c:choose>
 
@@ -93,7 +93,7 @@
                 <option value="owner_email" <c:if test="${searchField eq 'owner_email'}"> selected </c:if>><spring:message code="owner_email"></spring:message> </option>
                 <option value="project_location" <c:if test="${searchField eq 'project_location'}"> selected </c:if>><spring:message code="loc"></spring:message> </option>
             </select>
-            <button type="submit" class="${searchButtonClass}">
+            <button type="submit" class="${searchButtonClass} col-1">
                 <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
             </button>
         </form>
