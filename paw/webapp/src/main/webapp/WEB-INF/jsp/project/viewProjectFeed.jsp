@@ -273,15 +273,15 @@
     }
     function adjustInputs() {
         var minTag = document.getElementById('filter-form-min');
-        if (minTag.value.length === 0 || minTag.value < 0) {
+        if (minTag.value < 0) {
             minTag.value = 0;
         }
-        minTag.value = Math.round(minTag.value);
+        if (minTag.value.length) minTag.value = Math.round(minTag.value);
         var maxTag = document.getElementById('filter-form-max');
-        if (maxTag.value.length === 0 || maxTag.value < 0) {
+        if (maxTag.value < 0) {
             maxTag.value = 0;
         }
-        maxTag.value = Math.round(maxTag.value);
+        if (maxTag.value.length) maxTag.value = Math.round(maxTag.value);
     }
 </script>
 </body>
