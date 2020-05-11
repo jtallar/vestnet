@@ -40,7 +40,7 @@
                 </a>
             </li>
             <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">
-                <li class="page-item <c:if test="${pageNumber == page }"> active </c:if>"><a class="page-link" onclick="modHref(${pageNumber})">${pageNumber}</a></li>
+                <li class="page-item <c:if test="${pageNumber == page }"> active-item </c:if>"><a class="page-link" onclick="modHref(${pageNumber})">${pageNumber}</a></li>
             </c:forEach>
             <li id="li-next" class="page-item">
                 <a id="li-a-next" class="page-link" onclick="modHref(${page+1})" aria-label="<spring:message code="next"/>">
