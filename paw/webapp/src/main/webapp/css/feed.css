@@ -95,6 +95,14 @@
     font-weight: bold;
 }
 
+.page-link2{
+    color: #ffffff !important;
+    font-size: 30px !important;
+    font-family:Impact, sans-serif;
+    font-variant: all-petite-caps;
+    font-weight: bold;
+}
+
 .no-proj{
     margin-left:25% !important;
 }

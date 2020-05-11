@@ -30,7 +30,7 @@
             <c:set var="parameters" value="searching=${param.searching}&selection=${param.selection}"/>
             <c:if test="${page != 1}">
                 <li class="page-item">
-                    <a href="<c:url value='/search?${parameters}&page=${previous}'/>" class="page-link"><spring:message code="previous"/></a>
+                    <a href="<c:url value='/search?${parameters}&page=${previous}'/>" class="page-link"><< <spring:message code="previous"/></a>
                 </li>
                 <li class="page-item"><a href="<c:url value='/search?${parameters}&page=${previous}'/>" class="page-link">${previous}</a></li>
             </c:if>
@@ -38,7 +38,7 @@
             <c:if test="${hasNext eq true}">
                 <li class="page-item"><a href="<c:url  value='/search?${parameters}&page=${nextOne}'/>" class="page-link">${nextOne}</a></li>
                 <li class="page-item">
-                    <a href="<c:url value='/search?${parameters}&page=${nextOne}'/>" class="page-link"><spring:message code="next"/> </a>
+                    <a href="<c:url value='/search?${parameters}&page=${nextOne}'/>" class="page-link"><spring:message code="next"/> >></a>
                 </li>
             </c:if>
             </ul>
@@ -59,12 +59,12 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-">
+                            <div class="col-4">
                                 <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img"
                                      alt="<spring:message code="projectImage"/>"
                                      aria-placeholder="<spring:message code="projectImage"/>"/>
                             </div>
-                            <div class="col-md">
+                            <div class="col-8">
                                 <p class="card-text"><c:out value="${project.summary}"></c:out></p>
                                     <%--                        <strong><spring:message code="categories"/></strong>--%>
                                     <%--                        <c:forEach items="${project.categories}" var="category">--%>

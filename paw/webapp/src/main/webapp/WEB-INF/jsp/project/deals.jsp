@@ -6,6 +6,7 @@
 <head>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
+    <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
     <title><spring:message code="deals"/> | VestNet</title>
 
     <title>Title</title>
@@ -14,20 +15,21 @@
 <c:if test="${!empty messages}">
 <div class="flex-row-reverse mt-4">
 <nav aria-label="Page navigation example">
-<ul class="pagination justify-content-end">
+    <label class="justify-content-left"> Acuerdos </label>
+<ul class="pagination justify-content-center">
     <c:set value="${page + 1}" var="nextOne"/>
     <c:set value="${page - 1}" var="previous"/>
     <c:if test="${page != 1}">
         <li class="page-item">
-            <a href="<c:url value='/deals?page=${previous}'/>" class="page-link"><spring:message code="previous"/></a>
+            <a href="<c:url value='/deals?page=${previous}'/>" class="page-link2"><spring:message code="previous"/></a>
         </li>
-        <li class="page-item"><a href="<c:url value='/deals?page=${previous}'/>" class="page-link">${previous}</a></li>
+        <li class="page-item"><a href="<c:url value='/deals?page=${previous}'/>" class="page-link2">${previous}</a></li>
     </c:if>
-    <li class="page-item"><a href="<c:url  value='/deals?page=${page}'/>" class="page-link">${page}</a></li>
+    <li class="page-item"><a href="<c:url  value='/deals?page=${page}'/>" class="page-link2">${page}</a></li>
     <c:if test="${hasNext eq true}">
-        <li class="page-item"><a href="<c:url  value='/deals?page=${nextOne}'/>" class="page-link">${nextOne}</a></li>
+        <li class="page-item"><a href="<c:url  value='/deals?page=${nextOne}'/>" class="page-link2">${nextOne}</a></li>
         <li class="page-item">
-            <a href="<c:url value='/deals?page=${nextOne}'/>" class="page-link"><spring:message code="next"/> </a>
+            <a href="<c:url value='/deals?page=${nextOne}'/>" class="page-link2"><spring:message code="next"/> </a>
         </li>
     </c:if>
     </ul>
@@ -65,12 +67,6 @@
             <div class="card-footer">
                 <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
                 <button href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></button>
-            </div>
-            <div class="row">
-                <div class="col-5">
-                    <c:url value="/users/${message.senderId}?back=yes" var="profileURL"></c:url>
-                    <a href="${profileURL}" class="btn btn-dark btn-sm"><spring:message code="view_inv_profile"/></a>
-                </div>
             </div>
         </div>
     </div>
