@@ -61,6 +61,7 @@ public class JdbcQueries {
             "co.iso2 AS location_country_iso_code, " +
             "co.phonecode AS location_country_phone_code, " +
             "co.currency AS location_country_currency, " +
+            "co.locale AS location_country_locale, " +
 
             "st.id AS location_state_id, " +
             "st.state AS location_state_name, " +
@@ -229,6 +230,7 @@ public class JdbcQueries {
             "co.iso2 AS owner_location_country_iso_code, " +
             "co.phonecode AS owner_location_country_phone_code, " +
             "co.currency AS owner_location_country_currency, " +
+            "co.locale AS owner_location_country_locale, " +
 
             "st.id AS owner_location_state_id, " +
             "st.state AS owner_location_state_name, " +

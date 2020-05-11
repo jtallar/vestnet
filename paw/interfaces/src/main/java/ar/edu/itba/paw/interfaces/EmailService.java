@@ -15,7 +15,7 @@ public interface EmailService {
      * @param to User recipient mail.
      * @throws MessagingException When mail cannot be sent.
      */
-    void sendNewEmail(User user, String body, int offers, String exchange, String to, String project, long projectId, String baseUrl) throws MessagingException;
+    void sendNewEmail(User user, String body, int offers, String exchange, String to, String project, long projectId, String baseUrl, String locale) throws MessagingException;
 
-    void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl) throws MessagingException;
+    void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl, String locale) throws MessagingException;
 }

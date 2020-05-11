@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.MessageService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.User;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.List;
 @Controller
 public class MessageController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageController.class);
 
     @Autowired
     private UserService userService;
@@ -72,7 +73,9 @@ public class MessageController {
         User loggedUser = loggedUser();
         messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, true);
         String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        emailService.sendEmailAnswer(loggedUser, true, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), projectId, baseUrl);
+        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
+        emailService.sendEmailAnswer(loggedUser, true, senderUser.getEmail(),
+                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
         return new ModelAndView("redirect:/messages");
     }
 
@@ -88,7 +91,9 @@ public class MessageController {
         User loggedUser = loggedUser();
         messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, false);
         String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        emailService.sendEmailAnswer(loggedUser, false, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), projectId, baseUrl);
+        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
+        emailService.sendEmailAnswer(loggedUser, false, senderUser.getEmail(),
+                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
         return new ModelAndView("redirect:/messages");
     }
 

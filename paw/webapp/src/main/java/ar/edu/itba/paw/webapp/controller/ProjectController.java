@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Controller
 public class ProjectController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
     private static final int PAGE_SIZE = 2;
     private static final Integer FIRST_PAGE = 1;
     private static final int PAGINATION_ITEMS = 5;
@@ -160,7 +160,9 @@ public class ProjectController {
         }
 
         String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        emailService.sendNewEmail(loggedUser, mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), mailFields.getTo(), mailFields.getProject(), id, baseUrl);
+        LOGGER.debug("\n\nLocale: {}\n\n", mailFields.getLocale());
+        emailService.sendNewEmail(loggedUser, mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
+                mailFields.getTo(), mailFields.getProject(), id, baseUrl, mailFields.getLocale());
         return new ModelAndView("redirect:/projects/{id}?contactStatus=1");
     }
 

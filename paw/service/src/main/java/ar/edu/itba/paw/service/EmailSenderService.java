@@ -22,15 +22,15 @@ public class EmailSenderService implements EmailService {
     private static final String VESTNET_EMAIL = "noreply.vestnet@gmail.com";
 
     @Override
-    public void sendNewEmail(User sender, String body, int offers, String exchange, String to, String project, long projectId, String baseUrl) throws MessagingException {
+    public void sendNewEmail(User sender, String body, int offers, String exchange, String to, String project,
+                             long projectId, String baseUrl, String locale) throws MessagingException {
 
         Properties props = getEmailProperties();
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
-        // TODO: Cambiar locale al que le mande yo --> NO ES DEL sender, FALTA PARAM
-        Locale locale = new Locale("es");
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", locale);
+        Locale localeInst = Locale.forLanguageTag(locale);
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", localeInst, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
         String subject = bundle.getString("email.subject.request");
         StringBuilder fullBodySB = new StringBuilder();
@@ -54,16 +54,16 @@ public class EmailSenderService implements EmailService {
             throw new MessagingException();
         }
     }
+
     @Override
-    public void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl) throws MessagingException {
+    public void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl, String locale) throws MessagingException {
 
         Properties props = getEmailProperties();
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
-        // TODO: Cambiar locale al que le mande yo
-        Locale locale = new Locale("en-US");
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", locale);
+        Locale localeInst = Locale.forLanguageTag(locale);
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", localeInst, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
         String subject = bundle.getString("email.subject.response");
         StringBuilder fullBodySB = new StringBuilder();

@@ -214,6 +214,7 @@
                     <form:input path="toId" value="${project.owner.id}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
                     <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
                     <form:input path="project" value="${project.name}" type="hidden"/>
+                    <form:input path="locale" value="${project.owner.location.country.locale}" type="hidden"/>
 
                     <div class="text-right">
                         <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark" onclick="adjustInputs()" id="contact-send"/>
