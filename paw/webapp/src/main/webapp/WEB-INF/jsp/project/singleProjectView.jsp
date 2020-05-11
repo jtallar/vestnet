@@ -237,8 +237,10 @@
 
     // Every time window loads its a hit
     window.onload = function () {
-        fetch(window.location.origin + "${pageContext.request.contextPath}" + "/addHit/" + "${project.id}", options)
-        .catch((function (reason) { console.error(reason) }))
+        if (${sessionUser.id != project.owner.id}) {
+            fetch(window.location.origin + "${pageContext.request.contextPath}" + "/addHit/" + "${project.id}", options)
+            .catch((function (reason) { console.error(reason) }))
+        }
     };
 </script>
 
