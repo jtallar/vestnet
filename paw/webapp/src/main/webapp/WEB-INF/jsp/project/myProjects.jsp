@@ -116,6 +116,7 @@
                         profile.innerText = '<spring:message code="view_inv_profile"/>'
                         profile.className = "btn btn-dark btn-md"
 
+                        // TODO: VER SI ESTO TIENE QUE SER UN POST_
                         let refuseUrl = '<c:url value="/message/refuse/"/>' + data[i]["projectId"] + "/" + data[i]["senderId"]
                         let refuse = document.createElement('a')
                         refuse.setAttribute('href', refuseUrl)

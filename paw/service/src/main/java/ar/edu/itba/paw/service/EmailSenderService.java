@@ -1,10 +1,16 @@
 package ar.edu.itba.paw.service;
 
 import  ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -13,52 +19,33 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailSenderService implements EmailService {
 
+    private static final String VESTNET_EMAIL = "noreply.vestnet@gmail.com";
+
     @Override
-    public void sendNewEmail(String from, String body, int offers, String exchange, String to, String link) throws MessagingException {
+    public void sendNewEmail(User sender, String body, int offers, String exchange, String to, String project, long projectId, String baseUrl) throws MessagingException {
 
-        Properties props = new Properties();
-
-        // Nombre del host de correo, es smtp.gmail.com
-        props.setProperty("mail.smtp.host", "smtp.gmail.com");
-        // TLS si está disponible
-        props.setProperty("mail.smtp.starttls.enable", "true");
-        // Puerto de gmail para envio de correos
-        props.setProperty("mail.smtp.port", "587");
-        // Nombre del usuario
-        props.setProperty("mail.smtp.user", "noreply.vestnet@gmail.com");
-        // Si requiere o no usuario y password para conectarse.
-        props.setProperty("mail.smtp.auth", "true");
-
+        Properties props = getEmailProperties();
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
-        MimeMessage message = new MimeMessage(session);
+        // TODO: Cambiar locale al que le mande yo --> NO ES DEL sender, FALTA PARAM
+        Locale locale = Locale.US;
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", locale);
 
+        String subject = bundle.getString("email.subject.request");
         StringBuilder fullBodySB = new StringBuilder();
-        // fullBodySB.append("VestNet informa:\n" + "El usuario " + from + " desea comunicarse contigo.\nEl mensaje es el siguiente:\n\n" + body + "\n\nRecuerde que este es un ");
-        fullBodySB.append("VestNet reports:\n" + "User ").append(from).append(" wants to contact you.\nThe message is as follows:\n\n").append("Offer: ")
-                .append(offers).append("\nExchange: ").append(exchange).append("\n\n").append(body).append("\n\nFor visiting user's VestNet Profile enter here: ")
-                .append(link).append("\n\nTo contact him, reply this email normally.");
-
-        String fullBody = fullBodySB.toString();
+        fullBodySB.append(bundle.getString("email.body.vestnetReports")).append('\n')
+                .append(MessageFormat.format(bundle.getString("email.body.reportContact"),
+                        String.format("%s %s", sender.getFirstName(), sender.getLastName()), project)).append('\n')
+                .append(bundle.getString("email.body.messageHeader")).append("\n\n")
+                .append(body).append("\n\n")
+                .append(MessageFormat.format(bundle.getString("email.body.offer"), offers)).append('\n')
+                .append(MessageFormat.format(bundle.getString("email.body.inExchange"), exchange)).append("\n\n")
+                .append(MessageFormat.format(bundle.getString("email.body.userProfile"), String.format("%s/users/%d", baseUrl, sender.getId()))).append("\n")
+                .append(MessageFormat.format(bundle.getString("email.body.contactInvestor"), String.format("%s/messages#dashboard-project-%d", baseUrl, projectId)));
 
         try {
-            // Quien envia el correo
-            message.setFrom(new InternetAddress("noreply.vestnet@gmail.com"));
-            // A quien va dirigido
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            message.setSubject("VestNet - Potential Investor");
-            message.setText(fullBody);
-            message.setReplyTo(new javax.mail.Address[]
-                    {
-                            new javax.mail.internet.InternetAddress(from)
-                    });
-
-            Transport t = session.getTransport("smtp");
-            t.connect("noreply.vestnet@gmail.com","VN123456");
-            t.sendMessage(message,message.getAllRecipients());
-            t.close();
-
+            sendEmail(session, sender.getEmail(), to, subject, fullBodySB.toString());
         } catch (MessagingException me) {
             me.printStackTrace();   //Si se produce un error
             System.out.println("ERROR AL ENVIAR EMAIL");
@@ -68,6 +55,32 @@ public class EmailSenderService implements EmailService {
     @Override
     public void sendEmailAnswer(String from, boolean answer, String to, String link) throws MessagingException {
 
+        Properties props = getEmailProperties();
+        Session session = Session.getDefaultInstance(props);
+        session.setDebug(true);
+
+        // TODO: Cambiar locale al que le mande yo
+        Locale locale = Locale.forLanguageTag("es-ES");
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", locale);
+
+        String subject = bundle.getString("email.subject.response");
+        StringBuilder fullBodySB = new StringBuilder();
+        fullBodySB.append(bundle.getString("email.body.vestnetReports")).append('\n')
+                .append((answer) ? MessageFormat.format(bundle.getString("email.body.acceptProposal"), from) :
+                        MessageFormat.format(bundle.getString("email.body.rejectProposal"), from)).append("\n\n")
+                .append(MessageFormat.format(bundle.getString("email.body.userProfile"), link)).append("\n\n")
+                .append(bundle.getString("email.body.contactEntrepreneur"));
+
+        try {
+            sendEmail(session, from, to, subject, fullBodySB.toString());
+        } catch (MessagingException me) {
+            me.printStackTrace();   //Si se produce un error
+            System.out.println("ERROR AL ENVIAR EMAIL");
+            throw new MessagingException();
+        }
+    }
+
+    private Properties getEmailProperties() {
         Properties props = new Properties();
 
         // Nombre del host de correo, es smtp.gmail.com
@@ -77,49 +90,29 @@ public class EmailSenderService implements EmailService {
         // Puerto de gmail para envio de correos
         props.setProperty("mail.smtp.port", "587");
         // Nombre del usuario
-        props.setProperty("mail.smtp.user", "noreply.vestnet@gmail.com");
+        props.setProperty("mail.smtp.user", VESTNET_EMAIL);
         // Si requiere o no usuario y password para conectarse.
         props.setProperty("mail.smtp.auth", "true");
 
-        Session session = Session.getDefaultInstance(props);
-        session.setDebug(true);
+        return props;
+    }
 
+    private void sendEmail(Session session, String from, String to, String subject, String body) throws MessagingException {
         MimeMessage message = new MimeMessage(session);
+        // Quien envia el correo
+        message.setFrom(new InternetAddress(VESTNET_EMAIL));
+        // A quien va dirigido
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+        message.setSubject(subject);
+        message.setText(body);
+        message.setReplyTo(new javax.mail.Address[]
+                {
+                        new javax.mail.internet.InternetAddress(from)
+                });
 
-        StringBuilder fullBodySB = new StringBuilder();
-        // fullBodySB.append("VestNet informa:\n" + "El usuario " + from + " desea comunicarse contigo.\nEl mensaje es el siguiente:\n\n" + body + "\n\nRecuerde que este es un ");
-
-        String body;
-        if(answer)
-            body = " has accepted your purpose!";
-        else
-            body = " has rejected your purpose.";
-
-        fullBodySB.append("VestNet reports:\n" + "User ").append(from).append(body)
-                .append("\n\nFor visiting User's VestNet Profile enter here: ").append(link).append("\n\nTo contact him, reply this email normally.");
-        String fullBody = fullBodySB.toString();
-
-        try {
-            // Quien envia el correo
-            message.setFrom(new InternetAddress("noreply.vestnet@gmail.com"));
-            // A quien va dirigido
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            message.setSubject("VestNet - Potential Investor");
-            message.setText(fullBody);
-            message.setReplyTo(new javax.mail.Address[]
-                    {
-                            new javax.mail.internet.InternetAddress(from)
-                    });
-
-            Transport t = session.getTransport("smtp");
-            t.connect("noreply.vestnet@gmail.com","VN123456");
-            t.sendMessage(message,message.getAllRecipients());
-            t.close();
-
-        } catch (MessagingException me) {
-            me.printStackTrace();   //Si se produce un error
-            System.out.println("ERROR AL ENVIAR EMAIL");
-            throw new MessagingException();
-        }
+        Transport t = session.getTransport("smtp");
+        t.connect(VESTNET_EMAIL,"VN123456");
+        t.sendMessage(message,message.getAllRecipients());
+        t.close();
     }
 }

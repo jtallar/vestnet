@@ -213,6 +213,7 @@
                     <form:input path="from" value="${sessionUser.email}" type="hidden"/>
                     <form:input path="toId" value="${project.owner.id}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
                     <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+                    <form:input path="project" value="${project.name}" type="hidden"/>
 
                     <div class="text-right">
                         <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark" onclick="adjustInputs()" id="contact-send"/>
@@ -295,6 +296,7 @@
         });
     }
     function adjustInputs() {
+        // TODO: AGREGAR VALIDACION PARA NEGATIVO
         if (offerTag.value.length === 0) {
             offerTag.value = 0;
         }

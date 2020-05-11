@@ -67,8 +67,9 @@ public class MessageController {
      */
     @RequestMapping(value = "/message/accept/{project_id}/{sender_id}")
     public ModelAndView acceptMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId ) throws MessagingException {
-        messageService.updateMessageStatus(senderId, loggedUser().getId(), projectId, true);
-        emailService.sendEmailAnswer(loggedUser().getEmail(), true, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), "google.com.ar");
+        User loggedUser = loggedUser();
+        messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, true);
+        emailService.sendEmailAnswer(loggedUser.getEmail(), true, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), "google.com.ar");
         return new ModelAndView("redirect:/messages");
     }
 
@@ -80,8 +81,9 @@ public class MessageController {
      */
     @RequestMapping(value = "/message/refuse/{project_id}/{sender_id}")
     public ModelAndView refuseMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId ) throws MessagingException{
-        messageService.updateMessageStatus(senderId, loggedUser().getId(), projectId, false);
-        emailService.sendEmailAnswer(loggedUser().getEmail(), false, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), "google.com.ar");
+        User loggedUser = loggedUser();
+        messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, false);
+        emailService.sendEmailAnswer(loggedUser.getEmail(), false, userService.findById(senderId).orElseThrow(MessagingException::new).getEmail(), "google.com.ar");
         return new ModelAndView("redirect:/messages");
     }
 
