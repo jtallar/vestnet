@@ -45,4 +45,13 @@ public interface MessageService {
      */
     long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
 
+    List<Message> getAccepted( long receiver_id, long from, long to);
+
+    Integer countAccepted( long receiver_id);
+
+
+    List<Message> getOffersDone(long sender_id, long from, long to);
+
+    Integer countOffers(long sender_id);
+
 }

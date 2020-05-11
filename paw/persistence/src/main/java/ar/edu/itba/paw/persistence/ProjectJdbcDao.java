@@ -80,6 +80,9 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findByCoincidencePage(String name, String selection, int pageStart, int pageOffset) {
+        if(name.trim().matches("")){
+            return new ArrayList<>();
+        }
         List<Integer> ids = findIdsByCoincidencePaged("%" + name + "%", selection, pageStart, pageOffset);
 
         MapSqlParameterSource parAux = new MapSqlParameterSource("ids", ids);
@@ -88,6 +91,9 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public Integer countByCoincidence(String name, String selection) {
+        if(name.trim().matches("")){
+            return 0;
+        }
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", "%" + name + "%");
 

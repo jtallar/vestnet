@@ -36,4 +36,24 @@ public class MessageServiceImpl implements MessageService {
     public long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted) {
         return messageDao.updateMessageStatus(senderId, receiverId, projectId, accepted);
     }
+
+    @Override
+    public List<Message> getAccepted( long receiver_id, long from, long to) {
+        return messageDao.getAccepted(receiver_id,from,to);
+    }
+
+    @Override
+    public Integer countAccepted( long receiver_id) {
+        return messageDao.countAccepted(receiver_id);
+    }
+
+    @Override
+    public List<Message> getOffersDone(long sender_id, long from, long to) {
+        return messageDao.getOffersDone(sender_id,from,to);
+    }
+
+    @Override
+    public Integer countOffers(long sender_id) {
+        return messageDao.countOffers(sender_id);
+    }
 }

@@ -170,6 +170,25 @@ public class JdbcQueries {
             "WHERE project_id = ? AND sender_id = ? AND receiver_id = ? " +
             "ORDER BY publish_date DESC ";
 
+    static final String MESSAGE_ACCEPTED_ID =
+            "SELECT ID FROM " + MESSAGE_TABLE + " WHERE  receiver_id = ? AND accepted = true "
+            + " ORDER BY publish_date DESC " + " OFFSET ? LIMIT ?";
+
+    static final String MESSAGE_GET_ID_LIST =
+            "SELECT * FROM " + MESSAGE_TABLE + " WHERE id IN (:ids)";
+
+    static final String MESSAGE_ACCEPTED_COUNT =
+            "SELECT COUNT(*) FROM " + MESSAGE_TABLE + " WHERE receiver_id = ? AND accepted = true ";
+
+    static final String MESSAGE_OFFER_ID =
+
+            "SELECT ID FROM " + MESSAGE_TABLE + " WHERE  sender_id = ?  "
+                    + " ORDER BY publish_date DESC " + " OFFSET ? LIMIT ?";
+
+    static final String MESSAGE_OFFER_COUNT =
+            "SELECT COUNT(*) FROM " + MESSAGE_TABLE + " WHERE  sender_id = ? ";
+
+
 
     /**
      * Project queries.
@@ -386,4 +405,6 @@ public class JdbcQueries {
             "CASE WHEN f.user_id isnull THEN 0 ELSE 1 END AS isFav " +
             "FROM (VALUES (%s)) v(p_id) LEFT OUTER JOIN " +
             "(SELECT * FROM favorites WHERE user_id = ?) AS f ON v.p_id = f.project_id ";
+
+
 }
