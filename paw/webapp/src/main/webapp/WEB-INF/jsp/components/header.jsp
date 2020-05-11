@@ -79,23 +79,23 @@
             <spring:message var="search" code="search"></spring:message>
             <c:choose>
                 <c:when test="${not empty searchVal}">
-                    <input class="form-control mx-1 my-auto col-6" name="searching" value="${searchVal}" type="text" placeholder="${search}" aria-label="Search"/>
+                    <input class="form-control mx-1 my-auto col-5" name="searching" value="${searchVal}" type="text" placeholder="${search}" aria-label="Search"/>
                 </c:when>
                 <c:when test="${empty searchVal}">
-                    <input class="form-control mx-1 my-auto col-6" name="searching" type="text" placeholder="${search}" aria-label="Search"/>
+                    <input class="form-control mx-1 my-auto col-5" name="searching" type="text" placeholder="${search}" aria-label="Search"/>
                 </c:when>
             </c:choose>
             <c:if test="${not empty searchVal}">
             </c:if>
 
-            <select id="selection" name="selection" class="custom-select mx-1 col-4">
+            <select id="selection" name="selection" class="custom-select mx-1 col-3">
                 <option value="all" <c:if test="${selectionVal == null or selectionVal eq 'all' }"> selected </c:if>  ><spring:message code="all"></spring:message> </option>
                 <option value="project_info"<c:if test="${selectionVal eq 'project_info'}"> selected </c:if> ><spring:message code="project_info"></spring:message> </option>
                 <option value="owner_name"<c:if test="${selectionVal eq 'owner_name'}"> selected </c:if>><spring:message code="owner_name"></spring:message> </option>
                 <option value="owner_email"<c:if test="${selectionVal eq 'owner_email'}"> selected </c:if>><spring:message code="owner_email"></spring:message> </option>
                 <option value="loc"<c:if test="${selectionVal eq 'loc'}"> selected </c:if> > <spring:message code="loc"></spring:message> </option>
             </select>
-            <button type="submit" class="${searchButtonClass}">
+            <button type="submit" class="${searchButtonClass} col-1">
                 <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
             </button>
         </form>
