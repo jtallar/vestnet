@@ -93,6 +93,7 @@
     function fetchMsgs(project_id, index){
         console.log('')
         if(state[index] === 0) {
+            state[index] = 1;
             fetch(window.location.origin + '${pageContext.request.contextPath}' + "/message/" + project_id)
                 .then(response => response.json())
                 .then(data => {
@@ -189,10 +190,10 @@
                         div.appendChild(g)
                     }
 
-
-                    state[index] = 1;
-
-                })
+                }).catch((function (reason) {
+                    state[index] = 0;
+                    console.error(reason)
+                }));
         }
 
     }
