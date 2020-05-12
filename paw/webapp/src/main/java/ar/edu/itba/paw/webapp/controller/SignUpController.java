@@ -73,7 +73,7 @@ public class SignUpController {
                                final BindingResult errors, @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
                                HttpServletRequest request, HttpServletResponse response){
         if(errors.hasErrors()){
-            LOGGER.error("Sign Up failed. There are {} errors\n", errors.getErrorCount());
+            LOGGER.error("Sign Up failed. There are {} errors in form\n", errors.getErrorCount());
             for (ObjectError error : errors.getAllErrors())
                 LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
             return signUp(userFields, false);
@@ -101,6 +101,7 @@ public class SignUpController {
                             new Location.City(userFields.getCity(), "")),
                     email, phone, linkedin, userFields.getPassword(), imageBytes);
         } catch (UserAlreadyExistsException e) {
+            LOGGER.error("User already exists with email {} in VestNet", StringEscapeUtils.escapeHtml4(userFields.getEmail()));
             return signUp(userFields, true);
         }
 

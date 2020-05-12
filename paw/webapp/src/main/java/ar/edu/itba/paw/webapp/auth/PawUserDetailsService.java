@@ -37,6 +37,7 @@ public class PawUserDetailsService implements UserDetailsService{
                 authorities.add(new SimpleGrantedAuthority("ROLE_INVESTOR"));
                 break;
             case NOTFOUND:
+                LOGGER.error("Username Role not found");
                 throw new UsernameNotFoundException(username + "not found");
             default:
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));

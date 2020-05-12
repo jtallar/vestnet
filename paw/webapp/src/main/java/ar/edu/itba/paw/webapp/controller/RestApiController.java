@@ -46,7 +46,7 @@ public class RestApiController {
         try {
             Resource stockImage = new ClassPathResource("projectNoImage.png");
             image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) { LOGGER.debug("Could not load stock image"); }
+        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
         return image;
     }
 
@@ -63,7 +63,7 @@ public class RestApiController {
         try {
             Resource stockImage = new ClassPathResource("userNoImage.png");
             image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) { LOGGER.debug("Could not load stock image. Error {}", e.getMessage()); }
+        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
         return image;
     }
 

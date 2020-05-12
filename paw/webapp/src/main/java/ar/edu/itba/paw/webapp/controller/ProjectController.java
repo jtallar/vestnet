@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -146,6 +147,9 @@ public class ProjectController {
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.POST})
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields, final BindingResult errors, @PathVariable("id") long id, HttpServletRequest request) throws MessagingException {
         if (errors.hasErrors()) {
+            LOGGER.error("Contact failed. There are {} errors in form\n", errors.getErrorCount());
+            for (ObjectError error : errors.getAllErrors())
+                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
             return singleProjectView(mailFields, id, 0);
         }
         User loggedUser = loggedUser();
@@ -153,6 +157,7 @@ public class ProjectController {
         try {
             messageService.create(mailFields.getBody(), String.valueOf(mailFields.getOffers()), mailFields.getExchange(), loggedUser.getId(), mailFields.getToId(), id);
         } catch (MessageAlreadySentException e) {
+            LOGGER.error("Message already sent to this user about this project.");
             return singleProjectView(mailFields, id, 2);
         }
 
@@ -190,6 +195,9 @@ public class ProjectController {
     @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
     public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields, final BindingResult errors) {
         if (errors.hasErrors()) {
+            LOGGER.error("Project creation failed. There are {} errors in form\n", errors.getErrorCount());
+            for (ObjectError error : errors.getAllErrors())
+                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
             return createProject(projectFields);
         }
         byte[] imageBytes = new byte[0];
@@ -197,6 +205,7 @@ public class ProjectController {
             if (!projectFields.getImage().isEmpty())
                 imageBytes = projectFields.getImage().getBytes();
         } catch (IOException e) {
+            LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
             return createProject(projectFields);
         }
 
