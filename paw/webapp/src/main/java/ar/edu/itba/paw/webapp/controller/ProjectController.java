@@ -218,7 +218,7 @@ public class ProjectController {
      * @return A pair set as <startPage, endPage>
      */
     private Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page) {
-        int maxPages = (projectCount + 1) / PAGE_SIZE;
+        int maxPages = (int) Math.ceil((double) projectCount / (double) PAGE_SIZE);
         if (maxPages <= PAGINATION_ITEMS) return new Pair<>(FIRST_PAGE, maxPages == 0 ? 1: maxPages);
         int firstPage = page - PAGINATION_ITEMS / 2;
         if (firstPage <= FIRST_PAGE ) return new Pair<>(FIRST_PAGE, PAGINATION_ITEMS);
