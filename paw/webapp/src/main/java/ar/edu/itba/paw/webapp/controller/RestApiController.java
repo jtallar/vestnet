@@ -42,14 +42,11 @@ public class RestApiController {
     @ResponseBody
     public byte[] imageControllerProject(@PathVariable("p_id") long projectId) {
         byte[] image = projectService.findImageForProject(projectId);
-        if (image == null) {
-            try {
-                Resource stockImage = new ClassPathResource("projectNoImage.png");
-                image = IOUtils.toByteArray(stockImage.getInputStream());
-            } catch (IOException e) {
-                LOGGER.debug("Could not load stock image");
-            }
-        }
+        if (image != null) return image;
+        try {
+            Resource stockImage = new ClassPathResource("projectNoImage.png");
+            image = IOUtils.toByteArray(stockImage.getInputStream());
+        } catch (IOException e) { LOGGER.debug("Could not load stock image"); }
         return image;
     }
 
@@ -62,14 +59,11 @@ public class RestApiController {
     @ResponseBody
     public byte[] imageControllerUser(@PathVariable("u_id") long userId) {
         byte[] image = userService.findImageForUser(userId);
-        if (image == null) {
-            try {
-                Resource stockImage = new ClassPathResource("userNoImage.png");
-                image = IOUtils.toByteArray(stockImage.getInputStream());
-            } catch (IOException e) {
-                LOGGER.debug("Could not load stock image. Error {}", e.getMessage());
-            }
-        }
+        if (image != null) return image;
+        try {
+            Resource stockImage = new ClassPathResource("userNoImage.png");
+            image = IOUtils.toByteArray(stockImage.getInputStream());
+        } catch (IOException e) { LOGGER.debug("Could not load stock image. Error {}", e.getMessage()); }
         return image;
     }
 
