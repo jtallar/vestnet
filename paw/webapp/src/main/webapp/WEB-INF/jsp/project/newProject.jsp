@@ -76,7 +76,7 @@
                 <label><spring:message code="all-categories"/></label>
                 <select id="all-categories" class="custom-form-select mr-sm-2" size="10">
                     <c:forEach items="${categories}" var="category">
-                        <option value="${category.id}" selected="selected">${category.name}</option>
+                        <option value="${category.id}" selected="selected"><spring:message code="${category.name}"/> </option>
                     </c:forEach>
                 </select>
             </div>
