@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.Pair;
 import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,4 +126,9 @@ public interface ProjectService {
      * @return The list of favorited projects.
      */
      List<Project> getUserFavorites(long userId);
+
+
+    Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page);
+
+    Integer getPageSize();
 }

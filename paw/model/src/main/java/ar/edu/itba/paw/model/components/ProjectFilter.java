@@ -25,7 +25,7 @@ public class ProjectFilter {
     private ProjectSort sort;
 
     public ProjectFilter(Integer page, Integer limit) {
-        this.page = page;
+        this.page = (page < 1) ? 1 : page;
         this.limit = limit;
     }
 

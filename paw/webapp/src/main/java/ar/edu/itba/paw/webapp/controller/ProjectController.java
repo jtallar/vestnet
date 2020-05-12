@@ -34,9 +34,7 @@ import java.util.stream.Collectors;
 public class ProjectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
-    private static final int PAGE_SIZE = 12;
-    private static final Integer FIRST_PAGE = 1;
-    private static final int PAGINATION_ITEMS = 5;
+
 
     @Autowired
     private UserService userService;
@@ -76,8 +74,8 @@ public class ProjectController {
                                  @RequestParam(name = "searchField", required = false) String searchField,
                                  @RequestParam(name = "page", defaultValue = "1") Integer page) {
 
-        page = (page < 1) ? 1 : page;
-        ProjectFilter projectFilter = new ProjectFilter(page, PAGE_SIZE);
+
+        ProjectFilter projectFilter = new ProjectFilter(page, projectService.getPageSize());
         projectFilter.setSearch(StringEscapeUtils.escapeHtml4(keyword), searchField);
         projectFilter.setCost(form.getMinCost(), form.getMaxCost());
         projectFilter.setCategory(form.getCategoryId());
@@ -85,7 +83,7 @@ public class ProjectController {
 
         List<Project> projects = projectService.findFiltered(projectFilter);
         Integer projectCount = projectService.countFiltered(projectFilter);
-        Pair<Integer, Integer> paginationLimits = setPaginationLimits(projectCount, page);
+        Pair<Integer, Integer> paginationLimits = projectService.setPaginationLimits(projectCount, page);
 
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());
@@ -211,19 +209,5 @@ public class ProjectController {
         return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
     }
 
-    /**
-     * Creates the pagination logic.
-     * @param projectCount The count of projects to paginate.
-     * @param page The current pagination page.
-     * @return A pair set as <startPage, endPage>
-     */
-    private Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page) {
-        int maxPages = (int) Math.ceil((double) projectCount / (double) PAGE_SIZE);
-        if (maxPages <= PAGINATION_ITEMS) return new Pair<>(FIRST_PAGE, maxPages == 0 ? 1: maxPages);
-        int firstPage = page - PAGINATION_ITEMS / 2;
-        if (firstPage <= FIRST_PAGE ) return new Pair<>(FIRST_PAGE, PAGINATION_ITEMS);
-        int lastPage = page + PAGINATION_ITEMS / 2;
-        if (lastPage <= maxPages) return new Pair<>(firstPage, lastPage);
-        return new Pair<>(maxPages - PAGINATION_ITEMS, maxPages);
-    }
+
 }

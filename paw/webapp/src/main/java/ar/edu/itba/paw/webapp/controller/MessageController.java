@@ -34,7 +34,7 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    private final Integer PAGE_SIZE = 10;
+
 
     @Autowired
     private EmailService emailService;
@@ -106,15 +106,10 @@ public class MessageController {
     @RequestMapping(value = "/deals")
     public ModelAndView deals(@RequestParam(name = "page", defaultValue = "1") String page){
         final ModelAndView mav = new ModelAndView("/project/deals");
-        Integer intpage = Integer.parseInt(page);
         long id = loggedUser().getId();
-        Integer count = messageService.countAccepted(id);
-        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
-        int from = (intpage - 1) * PAGE_SIZE;
+        boolean hasNext = messageService.hasNextDeal(page, id);
         mav.addObject("hasNext", hasNext);
-
-        List<Message> messages = messageService.getAccepted(id,from, PAGE_SIZE);
-
+        List<Message> messages = messageService.getAccepted(id,page, messageService.getPageSize());
         mav.addObject("page", page);
         mav.addObject("messages", messages);
 
@@ -125,15 +120,10 @@ public class MessageController {
     @RequestMapping("/requests")
     public ModelAndView requests(@RequestParam(name = "page", defaultValue = "1")String page){
         final ModelAndView mav = new ModelAndView("/project/requests");
-        Integer intpage = Integer.parseInt(page);
         long id = loggedUser().getId();
-        Integer count = messageService.countOffers(id);
-        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
-        int from = (intpage - 1) * PAGE_SIZE;
+        boolean hasNext = messageService.hasNextRequest(page, id);
+        List<Message> messages = messageService.getOffersDone(id,page, messageService.getPageSize());
         mav.addObject("hasNext", hasNext);
-
-        List<Message> messages = messageService.getOffersDone(id,from, PAGE_SIZE);
-
         mav.addObject("page", page);
         mav.addObject("messages", messages);
 

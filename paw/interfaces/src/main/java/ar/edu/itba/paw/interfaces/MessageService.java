@@ -45,13 +45,20 @@ public interface MessageService {
      */
     long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
 
-    List<Message> getAccepted( long receiver_id, long from, long to);
+    List<Message> getAccepted( long receiver_id, String page, long to);
 
     Integer countAccepted( long receiver_id);
 
 
-    List<Message> getOffersDone(long sender_id, long from, long to);
+    List<Message> getOffersDone(long sender_id, String page, long to);
 
     Integer countOffers(long sender_id);
+
+
+    Boolean hasNextRequest(String page, long id);
+
+    Boolean hasNextDeal(String page, long id);
+
+    Integer getPageSize();
 
 }

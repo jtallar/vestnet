@@ -25,15 +25,15 @@
                     <c:set value="${page + 1}" var="nextOne"/>
                     <c:set value="${page - 1}" var="previous"/>
                     <c:if test="${page != 1}">
-                        <li class="page-item">
+                        <li class="page-item mx-2">
                             <a href="<c:url value='/requests?page=${previous}'/>" class="page-link2"><spring:message code="previous"/></a>
                         </li>
-                        <li class="page-item"><a href="<c:url value='/requests?page=${previous}'/>" class="page-link2">${previous}</a></li>
+                        <li class="page-item mx-2"><a href="<c:url value='/requests?page=${previous}'/>" class="page-link2">${previous}</a></li>
                     </c:if>
-                    <li class="page-item"><a href="<c:url  value='/requests?page=${page}'/>" class="page-link2">${page}</a></li>
+                    <li class="page-item mx-2"><a href="<c:url  value='/requests?page=${page}'/>" class="page-link2">${page}</a></li>
                     <c:if test="${hasNext eq true}">
-                        <li class="page-item"><a href="<c:url  value='/requests?page=${nextOne}'/>" class="page-link2">${nextOne}</a></li>
-                        <li class="page-item">
+                        <li class="page-item mx-2"><a href="<c:url  value='/requests?page=${nextOne}'/>" class="page-link2">${nextOne}</a></li>
+                        <li class="page-item mx-2">
                             <a href="<c:url value='/requests?page=${nextOne}'/>" class="page-link2"><spring:message code="next"/> </a>
                         </li>
                     </c:if>

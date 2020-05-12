@@ -17,6 +17,8 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageDao messageDao;
 
+    private final Integer PAGE_SIZE = 10;
+
     @Override
     public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException {
         return messageDao.create(message, offer, interest, senderId, receiverId, projectId);
@@ -38,7 +40,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAccepted( long receiver_id, long from, long to) {
+    public List<Message> getAccepted( long receiver_id,String page, long to) {
+        int from = (Integer.parseInt(page) - 1) * PAGE_SIZE;
         return messageDao.getAccepted(receiver_id,from,to);
     }
 
@@ -48,12 +51,35 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getOffersDone(long sender_id, long from, long to) {
+    public List<Message> getOffersDone(long sender_id, String page, long to) {
+        Long intpage = Long.parseLong(page);
+        Long from = (intpage - 1) * PAGE_SIZE;
         return messageDao.getOffersDone(sender_id,from,to);
     }
 
     @Override
     public Integer countOffers(long sender_id) {
         return messageDao.countOffers(sender_id);
+    }
+
+    @Override
+    public Boolean hasNextRequest(String page, long id) {
+        Integer intpage = Integer.parseInt(page);
+        Integer count = countOffers(id);
+        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
+        return hasNext;
+    }
+
+    @Override
+    public Boolean hasNextDeal(String page, long id) {
+        Integer intpage = Integer.parseInt(page);
+        Integer count = countAccepted(id);
+        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
+        return hasNext;
+    }
+
+    @Override
+    public Integer getPageSize() {
+        return PAGE_SIZE;
     }
 }
