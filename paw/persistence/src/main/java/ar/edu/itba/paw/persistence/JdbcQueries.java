@@ -260,7 +260,7 @@ public class JdbcQueries {
     static final String PROJECT_FIND_BY_OWNER =
             PROJECT_FIND_ALL +
             "WHERE p.owner_id = ? " +
-            PROJECT_DEFAULT_ORDER_BY;
+            "ORDER BY p.id ";
 
     static final String PROJECT_FIND_BY_ID =
             PROJECT_FIND_ALL +
@@ -287,5 +287,9 @@ public class JdbcQueries {
             "FROM (VALUES (%s)) v(p_id) LEFT OUTER JOIN " +
             "(SELECT * FROM favorites WHERE user_id = ?) AS f ON v.p_id = f.project_id ";
 
+    static final String PROJECTS_FAVORITE_COUNT =
+            "SELECT COUNT(DISTINCT f.user_id) " +
+            "FROM (VALUES (%s)) v(p_id) LEFT OUTER JOIN favorites f " +
+            "ON v.p_id = f.project_id GROUP BY v.p_id ORDER BY v.p_id ";
 
 }

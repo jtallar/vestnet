@@ -106,6 +106,13 @@ public interface ProjectService {
     long getFavoritesCount(long projectId);
 
     /**
+     * Gets the count of how many times each given project is favorite.
+     * @param projectIds The list of project ids.
+     * @return Count of favorites for each id ordered by Id.
+     */
+    List<Long> getFavoritesCount(List<Long> projectIds);
+
+    /**
      * @param projectIds projects to check if where faved by user
      * @param userId user who could have faved ids
      * @return boolean list whether project id was faved or not
