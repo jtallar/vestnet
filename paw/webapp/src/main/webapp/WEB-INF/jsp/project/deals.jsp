@@ -72,7 +72,7 @@
                     </div>
                     <div class="col-4">
                         <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
-                        <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></a>
+                        <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_inv_profile"/></a>
                     </div>
                 </div>
             </div>
