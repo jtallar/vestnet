@@ -37,6 +37,8 @@ public class LocationJdbcDaoTest {
     private static final String CITY_NAME = "La Matanza";
     private static final int CITY_ID = 3;
 
+    private static final int BASE_COUNTRY_ID = 0;
+
     @Autowired
     private DataSource dataSource;
 
@@ -61,6 +63,8 @@ public class LocationJdbcDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRY_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATE_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CITY_TABLE);
+
+        createBaseCountry();
     }
 
     @Test
@@ -144,6 +148,16 @@ public class LocationJdbcDaoTest {
     /**
      * Auxiliary functions
      */
+
+    /**
+     * Creates a base country to use when no states/cities are found.
+     */
+    private void createBaseCountry() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("id", BASE_COUNTRY_ID);
+        values.put("country", "-");
+        jdbcInsertCountry.execute(values);
+    }
 
     /**
      * Creates a country.

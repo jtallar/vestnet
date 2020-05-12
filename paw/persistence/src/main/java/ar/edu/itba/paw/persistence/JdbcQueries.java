@@ -29,10 +29,14 @@ public class JdbcQueries {
             "cat.category AS name, " +
             "cat.parent AS parent_id " +
             "FROM " + CATEGORIES_TABLE + " cat " +
-            "ORDER BY cat.category, cat.id";
+            "ORDER BY cat.category, cat.id ";
 
     static final String CATEGORY_FIND_BY_PROJECT_ID =
-            CATEGORY_FIND_ALL +
+            "SELECT " +
+            "cat.id, " +
+            "cat.category AS name, " +
+            "cat.parent AS parent_id " +
+            "FROM " + CATEGORIES_TABLE + " cat " +
             "JOIN " + PROJECT_CATEGORIES_TABLE + " pcat ON (pcat.category_id = cat.id) " +
             "WHERE pcat.project_id = ? ";
 
