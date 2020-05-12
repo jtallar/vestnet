@@ -9,9 +9,9 @@ public class ProjectFilterForm {
 
     private String orderBy;
 
-    @Pattern(regexp = "[0-9]*")
+    @Pattern(regexp = "^[0-9]*")
     private String minCost;
-    @Pattern(regexp = "[0-9]*")
+    @Pattern(regexp = "^[0-9]*")
     private String maxCost;
 
     public String getMinCost() {
