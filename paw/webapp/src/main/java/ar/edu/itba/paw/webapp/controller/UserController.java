@@ -40,8 +40,7 @@ public class UserController {
     public User loggedUser() {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         LOGGER.debug("\n\n loggedUser() called\n\n");
-        if(auth != null)
-            return userService.findByUsername(auth.getName()).orElse(null);
+        if(auth != null) return userService.findByUsername(auth.getName()).orElse(null);
         return null;
     }
 
@@ -54,14 +53,9 @@ public class UserController {
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
         final ModelAndView mav= new ModelAndView("user/userProfile");
-        User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
-        mav.addObject("user", user);
+        mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         mav.addObject("list", projectService.findByOwner(id));
-        List<Project> favs_projects = new ArrayList<>();
-        for (Long fid : projectService.findFavorites(id)){
-            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
-        }
-        mav.addObject("favs", favs_projects);
+        mav.addObject("favs", projectService.getUserFavorites(id));
         mav.addObject("back", back);
         return mav;
     }
@@ -79,18 +73,6 @@ public class UserController {
     }
 
     /**
-     * My projects. Dashboard and user own project data. Entrepreneur.
-     * @return Model and view.
-     */
-    // TODO: Terminar y descomentar
-//    @RequestMapping(value = "/myProjects")
-//    public ModelAndView myProjects(){
-//        final ModelAndView mav = new ModelAndView("myProjects");
-//        mav.addObject("projects", projectService.findByOwner(loggedUser().getId()));
-//        return mav;
-//    }
-
-    /**
      * Messages view page. Investor.
      * @return Model and view
      */
@@ -99,9 +81,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("project/myProjects");
         List<Project> projects = projectService.findByOwner(loggedUser().getId());
         mav.addObject("projects", projects);
-        projects.forEach(project -> {
-            mav.addObject(project.getName().concat("favs"), projectService.getFavoritesCount(project.getId()));
-        });
+        projects.forEach(project -> mav.addObject(project.getName().concat("favs"), projectService.getFavoritesCount(project.getId())));
         return mav;
     }
 

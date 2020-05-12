@@ -30,6 +30,13 @@ public interface ProjectDao {
     Optional<Project> findById(long projectId);
 
     /**
+     * Finds all the projects given a list of ids.
+     * @param ids The list of projects id.
+     * @return The list with containing projects.
+     */
+    List<Project> findByIds(List<Long> ids);
+
+    /**
      * Finds the projects owned by the same user.
      * @param userId Unique user id.
      * @return List of all the project for the given user.

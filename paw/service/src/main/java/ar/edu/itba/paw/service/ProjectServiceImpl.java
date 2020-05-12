@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Optional<Project> findById(long projectId) {
         return projectDao.findById(projectId);
+    }
+
+    @Override
+    public List<Project> findByIds(List<Long> ids) {
+        return projectDao.findByIds(ids);
     }
 
     @Override
@@ -79,6 +85,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
         return projectDao.isFavorite(projectIds, userId);
+    }
+
+    @Override
+    public List<Project> getUserFavorites(long userId) {
+        return projectDao.findByIds(projectDao.findFavorites(userId));
     }
 }
 

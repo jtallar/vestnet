@@ -31,6 +31,13 @@ public interface ProjectService {
     Optional<Project> findById(long projectId);
 
     /**
+     * Finds all the projects given a list of ids.
+     * @param ids The list of projects id.
+     * @return The list with containing projects.
+     */
+    List<Project> findByIds(List<Long> ids);
+
+    /**
      * Finds the projects owned by the same user.
      * @param userId Unique user id.
      * @return List of all the project for the given user.
@@ -104,4 +111,11 @@ public interface ProjectService {
      * @return boolean list whether project id was faved or not
      */
     List<Boolean> isFavorite(List<Long> projectIds, long userId);
+
+    /**
+     * Gets a list of all the user favorite projects.
+     * @param userId The unique user id.
+     * @return The list of favorited projects.
+     */
+     List<Project> getUserFavorites(long userId);
 }
