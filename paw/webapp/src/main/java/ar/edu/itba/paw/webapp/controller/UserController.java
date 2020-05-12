@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -56,7 +58,7 @@ public class UserController {
         final ModelAndView mav= new ModelAndView("user/userProfile");
         User user = userService.findById(id).orElseThrow(UserNotFoundException::new);
         mav.addObject("user", user);
-        mav.addObject("list", projectService.findByOwner(id));
+//        mav.addObject("list", projectService.findByOwner(id));
         List<Project> favs_projects = new ArrayList<>();
         for (Long fid : projectService.findFavorites(id)){
             favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
@@ -97,11 +99,16 @@ public class UserController {
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
         ModelAndView mav = new ModelAndView("project/myProjects");
-        List<Project> projects = projectService.findByOwner(loggedUser().getId());
+        List<Project> projects = projectService.findByOwner(loggedUser().getId()).stream()
+                .sorted((o1, o2) -> (int) (o1.getId() - o2.getId())).collect(Collectors.toList());
         mav.addObject("projects", projects);
-        projects.forEach(project -> {
+        List<Long> favCount = projectService.getFavoritesCount(projects.stream().map(Project::getId).collect(Collectors.toList()));
+        for (int i = 0; i < projects.size(); i++) {
+            mav.addObject(projects.get(i).getName().concat("favs"), favCount.get(i));
+        }
+        /*projects.forEach(project -> {
             mav.addObject(project.getName().concat("favs"), projectService.getFavoritesCount(project.getId()));
-        });
+        });*/
         return mav;
     }
 
