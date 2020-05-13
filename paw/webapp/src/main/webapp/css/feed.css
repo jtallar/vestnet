@@ -200,3 +200,7 @@ html {
     border:solid 2px #750096;
     background-color: #f1f1f1;
 }
+
+.active-page-deals {
+    color: blue !important;
+}
