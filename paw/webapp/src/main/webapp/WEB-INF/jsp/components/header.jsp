@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
-<%--        TODO: COMO PERSISTO ROL PARA ESTE--%>
+
 <c:choose>
     <c:when test="${roleNumber eq 0}">
         <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom3"/>

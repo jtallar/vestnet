@@ -101,9 +101,9 @@
                             <form:input path="maxCost" type="number" class="form-control mx-auto mx-auto"
                                         placeholder="${max}" id="filter-form-max"/>
                             <form:errors path="maxCost" cssClass="formError"/>
-                            <form:errors path="" cssClass="formError"/>
                         </div>
                     </div>
+                    <form:errors path="" cssClass="formError" element="p"/>
                 </div>
                 <div class="row field">
                     <div class="col-md">

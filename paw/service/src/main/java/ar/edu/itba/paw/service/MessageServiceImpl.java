@@ -52,8 +52,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getOffersDone(long sender_id, String page, long to) {
-        Long intpage = Long.parseLong(page);
-        Long from = (intpage - 1) * PAGE_SIZE;
+        long intpage = Long.parseLong(page);
+        long from = (intpage - 1) * PAGE_SIZE;
         return messageDao.getOffersDone(sender_id,from,to);
     }
 
@@ -64,18 +64,16 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Boolean hasNextRequest(String page, long id) {
-        Integer intpage = Integer.parseInt(page);
-        Integer count = countOffers(id);
-        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
-        return hasNext;
+        int intpage = Integer.parseInt(page);
+        int count = countOffers(id);
+        return count > ((intpage)* PAGE_SIZE);
     }
 
     @Override
     public Boolean hasNextDeal(String page, long id) {
-        Integer intpage = Integer.parseInt(page);
-        Integer count = countAccepted(id);
-        Boolean hasNext = count > ((intpage)* PAGE_SIZE);
-        return hasNext;
+        int intpage = Integer.parseInt(page);
+        int count = countAccepted(id);
+        return count > ((intpage)* PAGE_SIZE);
     }
 
     @Override

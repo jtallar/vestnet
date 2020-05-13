@@ -56,9 +56,15 @@ public class UserController {
     public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
         final ModelAndView mav= new ModelAndView("user/userProfile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        int role = loggedUser().getRole();
-        if(role == 1) mav.addObject("list", projectService.findByOwner(id));
-        if(role == 2 && id == loggedUser().getId()) mav.addObject("favs", projectService.getUserFavorites(id));
+        User loggedUser = loggedUser();
+//      if(loggedUser.getRole() == User.UserRole.ENTREPRENEUR.getId()) mav.addObject("list", projectService.findByOwner(id));
+        /*List<Project> favs_projects = new ArrayList<>();
+        for (Long fid : projectService.findFavorites(id)){
+            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
+        }
+        mav.addObject("favs", favs_projects);*/
+        if(loggedUser.getRole() == User.UserRole.INVESTOR.getId() && id == loggedUser.getId())
+            mav.addObject("favs", projectService.getUserFavorites(id));
         mav.addObject("back", back);
         return mav;
     }
@@ -82,9 +88,13 @@ public class UserController {
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
         ModelAndView mav = new ModelAndView("project/myProjects");
+
         List<Project> projects = projectService.findByOwner(loggedUser().getId());
         mav.addObject("projects", projects);
-        projects.forEach(project -> mav.addObject(project.getName().concat("favs"), projectService.getFavoritesCount(project.getId())));
+        List<Long> favCount = projectService.getFavoritesCount(projects.stream().map(Project::getId).collect(Collectors.toList()));
+        for (int i = 0; i < projects.size(); i++) {
+            mav.addObject(projects.get(i).getName().concat("favs"), favCount.get(i));
+        }
         return mav;
     }
 

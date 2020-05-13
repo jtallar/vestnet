@@ -30,7 +30,7 @@
                     </li>
                     <li class="page-item mx-2"><a href="<c:url value='/deals?page=${previous}'/>" class="page-link2">${previous}</a></li>
                 </c:if>
-                <li class="page-item mx-2"><a href="<c:url  value='/deals?page=${page}'/>" class="page-link2 active-page-deals">${page}</a></li>
+                <li class="page-item mx-2"><a href="<c:url  value='/deals?page=${page}'/>" class="page-link2-active">${page}</a></li>
                 <c:if test="${hasNext eq true}">
                     <li class="page-item mx-2"><a href="<c:url  value='/deals?page=${nextOne}'/>" class="page-link2">${nextOne}</a></li>
                     <li class="page-item mx-2">
