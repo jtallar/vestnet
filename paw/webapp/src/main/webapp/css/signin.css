@@ -49,6 +49,10 @@ body {
         margin-top: 40%;
     }
 
+    .welcome{
+        margin-top: 10%;
+    }
+
     .register-form{
         margin-top: 50%;
     }
@@ -76,4 +80,42 @@ body {
 .btn-black{
     background-color: #000 !important;
     color: #fff;
+}
+
+.nav-tabs{
+    margin-bottom:5%;
+}
+.nav-tabs .nav-link{
+    color: #4b4b4b;
+    /*font-weight:600;*/
+}
+
+.nav-tabs .nav-link.active{
+    color: #750096;
+    border-bottom:2px solid #750096;
+    font-weight: 600;
+}
+
+.inv-tab label{
+    font-weight: 600;
+}
+.inv-tab p{
+    font-weight: 600;
+    color: #750096;
+}
+
+.welcome b{
+    color: #750096;
+}
+
+.distance-btn{
+    margin-left: 20px;
+}
+
+.welcome h4{
+    margin-top: 20px;
+}
+
+#welcome-login {
+    margin-top: 10px;
 }

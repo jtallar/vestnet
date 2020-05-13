@@ -19,19 +19,20 @@ import java.util.List;
 
 public class NewProjectFields {
 
-    @Size(min = 1, max = 50)
+    @Size(min = 5, max = 50)
     private String title;
 
-    @Size(min = 1, max = 250)
+    @Size(min = 50, max = 250)
     private String summary;
 
     // TODO: Delete when stages are ready
+    @Min(1000)
+    @Max(9999999)
     private int cost;
 
     @NotEmpty(message = "List cannot be empty")
     private List<Long> categories;
 
-    // TODO: SEGUN COMO CAPTURE LA EXCEPCION, VER SI HACE FALTA EL PARAM
     @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE)
     private MultipartFile image;
 

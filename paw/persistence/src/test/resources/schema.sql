@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS countries (
     iso2            VARCHAR(2),
     phonecode       VARCHAR(10),
     currency        VARCHAR(10),
-    last_update     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    last_update     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    locale          VARCHAR(5)
 );
 
 CREATE TABLE IF NOT EXISTS states (
@@ -182,4 +183,32 @@ CREATE TABLE IF NOT EXISTS resources (
 
     FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
     PRIMARY KEY (project_id, stage_number, item_number)
+);
+
+/*
+** Favourites of each user
+*/
+CREATE TABLE IF NOT EXISTS favorites (
+	user_id		INT REFERENCES users ON DELETE CASCADE,
+	project_id 	INT REFERENCES projects ON DELETE CASCADE,
+
+	PRIMARY KEY (user_id, project_id)
+);
+
+/*
+** Messages table
+*/
+CREATE TABLE IF NOT EXISTS messages (
+    id                  INTEGER IDENTITY PRIMARY KEY,
+
+    content_message     VARCHAR(250),
+    content_offer       VARCHAR(100) NOT NULL,
+    content_interest    VARCHAR(100),
+
+    publish_date        TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    accepted            BOOLEAN,
+
+    sender_id           INT REFERENCES users ON DELETE CASCADE,
+    receiver_id         INT REFERENCES users ON DELETE CASCADE,
+    project_id          INT REFERENCES projects ON DELETE CASCADE
 );

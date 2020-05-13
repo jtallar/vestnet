@@ -11,8 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -25,19 +23,9 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder encoder;
 
     @Override
-    public Optional<User> findById(long id) {
-        return userDao.findById(id);
-    }
-
-    @Override
     public long create(String role, String firstName, String lastName, String realId, LocalDate birthDate, Location location,
                        String email, String phone, String linkedin, String password, byte[] imageBytes) throws UserAlreadyExistsException {
         return userDao.create(role, firstName,lastName,realId,birthDate,location,email,phone,linkedin, encoder.encode(password), imageBytes);
-    }
-
-    @Override
-    public long createPassword(long id, String password) {
-        return userDao.createPass(id, encoder.encode(password));
     }
 
     @Override
@@ -46,8 +34,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findCoincidence(String name) {
-        return userDao.findCoincidence(name);
+    public Optional<User> findById(long id) {
+        return userDao.findById(id);
     }
 
     @Override

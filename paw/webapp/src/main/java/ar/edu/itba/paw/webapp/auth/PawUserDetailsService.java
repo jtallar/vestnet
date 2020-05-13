@@ -13,12 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.management.relation.Role;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-
 
 @Component
 public class PawUserDetailsService implements UserDetailsService{
@@ -26,9 +22,6 @@ public class PawUserDetailsService implements UserDetailsService{
 
     @Autowired
     private UserService us;
-
-    @Autowired
-    private PasswordEncoder encoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,7 +37,7 @@ public class PawUserDetailsService implements UserDetailsService{
                 authorities.add(new SimpleGrantedAuthority("ROLE_INVESTOR"));
                 break;
             case NOTFOUND:
-                // TODO: VER QUE PONGO ACA, NO DEBERIA PASAR NUNCA
+                LOGGER.error("Username Role not found");
                 throw new UsernameNotFoundException(username + "not found");
             default:
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));

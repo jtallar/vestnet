@@ -6,20 +6,22 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-//TODO cannot print this message
-@SpELAssert(value = "password.equals(repeatPassword)", message = "Passwords do not match")
+@SpELAssert(value = "password.equals(repeatPassword)", message = "{ar.edu.itba.paw.webapp.forms.SpELAssert}")
 public class NewUserFields {
 
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
+    @NotEmpty
     private String password;
     private String repeatPassword;
-    @Size(min = 1, max = 25)
+    @Size(max = 25)
     @NotEmpty
     private String firstName;
-    @Size(min = 1, max = 25)
+    @Size(max = 25)
     @NotEmpty
     private String lastName;
 
@@ -29,23 +31,21 @@ public class NewUserFields {
     private Integer month;
     private Integer year;
 
-    private int country;
-    private int state;
-    private int city;
+    private Integer country;
+    private Integer state;
+    private Integer city;
 
     private String role;
 
 // Aca si quiero que se complete despues, debiera poner un locationId que sea final y un Location que no lo sea
-    @Email
     @NotEmpty
-    @Pattern(regexp="^[^@]+@[^@]+\\.[a-zA-Z]{2,}$")
+    @Pattern(regexp="^([^@]+@[^@]+\\.[a-zA-Z]{2,}$)?")
     private String email;
     @Pattern(regexp = "[0-9]*")
     private String phone;
     @Pattern(regexp = "^((http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$)?")
     private String linkedin;
 
-    // TODO: SEGUN COMO CAPTURE LA EXCEPCION, VER SI HACE FALTA EL PARAM
     @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE)
     private MultipartFile profilePicture;
 
@@ -57,27 +57,27 @@ public class NewUserFields {
         this.role = role;
     }
 
-    public int getCountry() {
+    public Integer getCountry() {
         return country;
     }
 
-    public void setCountry(int country) {
+    public void setCountry(Integer country) {
         this.country = country;
     }
 
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 
-    public int getCity() {
+    public Integer getCity() {
         return city;
     }
 
-    public void setCity(int city) {
+    public void setCity(Integer city) {
         this.city = city;
     }
 

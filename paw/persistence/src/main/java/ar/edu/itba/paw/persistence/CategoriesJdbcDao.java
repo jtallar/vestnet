@@ -14,6 +14,7 @@ import java.util.List;
 
 @Repository
 public class CategoriesJdbcDao implements CategoriesDao {
+
     private JdbcTemplate jdbcTemplate;
 
     private final static ResultSetExtractor<List<Category>> RESULT_SET_EXTRACTOR = JdbcTemplateMapperFactory
@@ -26,20 +27,11 @@ public class CategoriesJdbcDao implements CategoriesDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    /**
-     * Lists all the available categories.
-     * @return List of all available categories.
-     */
     @Override
     public List<Category> findAll() {
         return jdbcTemplate.query(JdbcQueries.CATEGORY_FIND_ALL, RESULT_SET_EXTRACTOR);
     }
 
-    /**
-     * Finds all the categories of a project given its id.
-     * @param projectId The unique project id.
-     * @return A list with all the project categories.
-     */
     @Override
     public List<Category> findProjectCategories(long projectId) { // TODO check if its needed
         return jdbcTemplate.query(JdbcQueries.CATEGORY_FIND_BY_PROJECT_ID, RESULT_SET_EXTRACTOR, projectId);

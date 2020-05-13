@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Primary
 @Service
 public class CategoriesServiceImpl implements CategoriesService {
 
     @Autowired
     CategoriesDao categoriesDao;
+
     @Override
-    public List<Category> findAllCats() {
+    public List<Category> findAll() {
         return categoriesDao.findAll();
     }
 

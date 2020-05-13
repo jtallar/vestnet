@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
 
-import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.cookie.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,7 +32,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @EnableWebSecurity
 @ComponentScan({"ar.edu.itba.paw.webapp.auth"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
-
+    private static final int TOKEN_DAYS = 365;
 
     @Autowired
     private PawUserDetailsService userDetails;
@@ -52,30 +52,53 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource("classpath:public.pem");
         http.sessionManagement()
-                .invalidSessionUrl("/login")
+                .invalidSessionUrl("/welcome")
                 .and().authorizeRequests()
-                .antMatchers("/login","/signUp").anonymous()
+//                .antMatchers("/login","/signUp", "/location/**").anonymous()
+                .antMatchers("/login", "/signUp", "/projects", "/search*", "/welcome", "/").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/projects/**").hasRole("INVESTOR")
-                .antMatchers("/newProject", "/myProjects").hasRole("ENTREPRENEUR")
+                .antMatchers("/newProject", "/myProjects", "/messages/**").hasRole("ENTREPRENEUR")
                 .antMatchers("/**").authenticated()
                 .and().formLogin()
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", false)
+                .successHandler(new RoleCookieSuccessHandler())
                 .and().rememberMe()
                 .rememberMeParameter("remember_me")
                 .key(asString(resource))
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(365))
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
+                .authenticationSuccessHandler(new RoleCookieSuccessHandler())
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
+                .deleteCookies(CookieUtil.ROLE_COOKIE_NAME)
                 .and().csrf().disable();
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico",
+                        "/location/**", "/imageController/**");
+    }
 
-    //used to convert the key resource into string
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    /* Auxiliary functions */
+
+    /**
+     * Converts key resource to a string.
+     * @param resource The resource to convert.
+     * @return The resource converted to string.
+     */
     private static String asString(Resource resource) {
         try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
             return FileCopyUtils.copyToString(reader);
@@ -84,16 +107,4 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico");
-
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
 }

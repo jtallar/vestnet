@@ -1,50 +1,134 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.Pair;
+import ar.edu.itba.paw.model.components.ProjectFilter;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProjectService {
 
     /**
-     * Finds a project given its id
-     * @param id The unique id for the project
-     * @return The matched project or null otherwise
+     * Creates a project given its parameters.
+     * @param name The project's name.
+     * @param summary The project's summary.
+     * @param cost The project's total cost.
+     * @param ownerId The user id owner of the project.
+     * @param categoriesIds The project's categories ids.
+     * @param stages The project's list of stages.
+     * @param imageBytes The project's front image.
+     * @return operation return.
      */
-    Optional<Project> findById(long id);
+    @Transactional
+    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
 
     /**
-     * Find all available projects
-     * @return List of available projects
+     * Finds a project given its id
+     * @param projectId The unique id for the project
+     * @return The matched project or null otherwise
      */
-    List<Project> findAll();
+    Optional<Project> findById(long projectId);
 
+    /**
+     * Finds all the projects given a list of ids.
+     * @param ids The list of projects id.
+     * @return The list with containing projects.
+     */
+    List<Project> findByIds(List<Long> ids);
+
+    /**
+     * Finds the projects owned by the same user.
+     * @param userId Unique user id.
+     * @return List of all the project for the given user.
+     */
     List<Project> findByOwner(long userId);
 
     /**
-     * Finds a list of projects that matches one or more categories
-     * @param categories The list of categories to find
-     * @return List of available projects that fit those categories
+     * Finds all projects with the given filter.
+     * @param filter All the filters applied to the search.
+     * @return The list of matching projects.
      */
-    List<Project> findByCategories(List<Category> categories);
-
-    public List<Project> findCoincidence(String name);
+    List<Project> findFiltered(ProjectFilter filter);
 
     /**
-     * Create a project given all thes parameters
-     * @return The created project
+     * Counts all projects with the given filter.
+     * @param filter All the filters applied to the search.
+     * @return The quantity of matching projects.
      */
-//    Project create(String name, String summary, Date publishDate, Date updateDate, long cost, User owner,
-//                   List<Category> categories, List<Stage> stages);
-
-    // TODO: VER SI HACE FALTA DEVOLVER UN PROJECT O PUEDO DEVOLVER EL ID
-    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
+    Integer countFiltered(ProjectFilter filter);
 
     /**
      * @param projectId The id of the project we want to get a portrait image
      * @return Image as a byte array
      */
     byte[] findImageForProject(long projectId);
+
+    /**
+     * Adds a hit to the given project.
+     * @param projectId The unique project id.
+     */
+    void addHit(long projectId);
+
+    /**
+     * Adds to the user the project as favorite.
+     * @param projectId The unique project id.
+     * @param userId The unique user id.
+     */
+    void addFavorite(long projectId, long userId);
+
+    /**
+     * Deletes a project as favorite for the given user.
+     * @param projectId The unique project id.
+     * @param userId The unique user id.
+     */
+    void deleteFavorite(long projectId, long userId);
+
+    /**
+     * Finds if a user has a given project as favorite.
+     * @param projectId The unique project id.
+     * @param userId The unique user id.
+     * @return If user has it as favorite true, false otherwise.
+     */
+    boolean isFavorite(long projectId, long userId);
+
+    /**
+     * Find all projects matching with user id.
+     * @return List of Projects.
+     */
+    List<Long> findFavorites(long id);
+
+    /**
+     * Gets the count of how many times the given project is favorite.
+     * @param projectId The unique project id.
+     * @return Count of favorites.
+     */
+    long getFavoritesCount(long projectId);
+
+    /**
+     * Gets the count of how many times each given project is favorite.
+     * @param projectIds The list of project ids.
+     * @return Count of favorites for each id ordered by Id.
+     */
+    List<Long> getFavoritesCount(List<Long> projectIds);
+
+    /**
+     * @param projectIds projects to check if where faved by user
+     * @param userId user who could have faved ids
+     * @return boolean list whether project id was faved or not
+     */
+    List<Boolean> isFavorite(List<Long> projectIds, long userId);
+
+    /**
+     * Gets a list of all the user favorite projects.
+     * @param userId The unique user id.
+     * @return The list of favorited projects.
+     */
+     List<Project> getUserFavorites(long userId);
+
+
+    Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page);
+
+    Integer getPageSize();
 }

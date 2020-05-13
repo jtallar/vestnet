@@ -3,6 +3,9 @@ package ar.edu.itba.paw.model;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Models a project with all its properties.
+ */
 public class Project {
     private final long id;
     private final String name;
@@ -21,9 +24,9 @@ public class Project {
     private final List<Long> stageIds;
     private List<Stage> stages;
 
-    // TODO: CREAR CONSTRUCTOR PRIVADO PARA SALVAR LA REPE
-    // TODO: VER SI HACEN FALTA ESTOS DOS SIGUIENTES (CON LISTA DE STAGES O SOLO IDs, NO PUEDO PONER solo el primero)
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits, User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
+
+    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
+                   User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -38,7 +41,8 @@ public class Project {
         this.stageIds = stageIds;
     }
 
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits, User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds, List<Stage> stages) {
+    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
+                   User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds, List<Stage> stages) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -54,7 +58,8 @@ public class Project {
         this.stages = stages;
     }
 
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits, long ownerUserId, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
+    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
+                   long ownerUserId, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -132,6 +137,14 @@ public class Project {
         this.stages = stages;
     }
 
+    public boolean hasCategory(String cat){
+        boolean[] hasIt = {false};
+        this.getCategories().forEach(category -> {
+            if(category.getName().equals(cat)) hasIt[0] = true;
+        });
+        return hasIt[0];
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -151,6 +164,10 @@ public class Project {
                 '}';
     }
 
+    /**
+     * Model for back office control.
+     * Saved for later implementation.
+     */
     public static class ProjectBackOffice {
         private final boolean approved;
         private final int profitIndex;
@@ -183,12 +200,4 @@ public class Project {
                     '}';
         }
     }
-
-        public boolean hasCategory(String cat){
-            boolean[] hasIt = {false};
-            this.getCategories().forEach(category -> {
-                if(category.getName().equals(cat)) hasIt[0] = true;
-            });
-            return hasIt[0];
-        }
 }
