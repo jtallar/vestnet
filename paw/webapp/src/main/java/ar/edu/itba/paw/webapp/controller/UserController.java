@@ -56,8 +56,8 @@ public class UserController {
     public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
         final ModelAndView mav= new ModelAndView("user/userProfile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        mav.addObject("list", projectService.findByOwner(id));
-        mav.addObject("favs", projectService.getUserFavorites(id));
+        if(loggedUser().getRole() == 1) mav.addObject("list", projectService.findByOwner(id));
+        if(loggedUser().getRole() == 2) mav.addObject("favs", projectService.getUserFavorites(id));
         mav.addObject("back", back);
         return mav;
     }
