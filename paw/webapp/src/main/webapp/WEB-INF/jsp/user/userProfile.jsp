@@ -56,7 +56,7 @@
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><spring:message code="projects"/></a>
                         </li>
                         </c:if>--%>
-                        <c:if test="${user.role eq 2}">
+                        <c:if test="${user.role eq 2 and sessionUser.id eq user.id}">
                         <li class="nav-item">
                             <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false"><spring:message code="favorites"/></a>
                         </li>
