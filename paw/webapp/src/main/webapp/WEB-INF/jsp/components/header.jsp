@@ -43,14 +43,14 @@
         <c:set var="searchButtonClass" value="btn btn-black"/>
         <c:url var="logo" value="/images/logo_wp.png"/>
         <c:url var="lupa" value="/images/lupa_bw.png"/>
-        <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile,/logout', ',')}"/>
+        <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile', ',')}"/>
     </c:when>
     <c:when test="${roleNumber eq 2}">
         <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
         <c:set var="searchButtonClass" value="btn logopurple"/>
         <c:url var="logo" value="/images/logo_bp.png"/>
         <c:url var="lupa" value="/images/lupa_v.png"/>
-        <c:set var="options" value="${fn:split('/projects,/requests,/myProfile,/logout', ',')}"/>
+        <c:set var="options" value="${fn:split('/projects,/requests,/myProfile', ',')}"/>
     </c:when>
 </c:choose>
 
@@ -72,6 +72,17 @@
                         <a class="nav-link" href="<c:url value="${option}"/>"><spring:message code="header.${option}"/></a>
                     </li>
                 </c:forEach>
+                <c:if test="${roleNumber != 0}">
+                    <li class="nav-item">
+
+                        <!-- Button trigger modal -->
+                        <a type="button" class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                            <spring:message code="header./logout"></spring:message>
+                        </a>
+
+
+                    </li>
+                </c:if>
             </ul>
         </div>
         <c:url var="createUrl" value='/projects'/>
@@ -98,5 +109,25 @@
             </button>
         </form>
     </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content mx-auto my-auto">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><spring:message code="conf_logout"></spring:message> </h5>
+                </div>
+                <div class="modal-body">
+                    <spring:message code="conf_logout_body"></spring:message>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><spring:message code="cancel"></spring:message> </button>
+                        <a href="<c:url value="/logout"></c:url> " type="button" class="btn btn-success"><spring:message code="confirm"></spring:message></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
