@@ -4,6 +4,7 @@
 <html>
 <head>
 
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <%--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -159,6 +160,19 @@
                                 <p>${user.location.state.name}</p>
                             </div>
                         </div>
+                        <c:if test="${not empty user.linkedin}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label><spring:message code="linkedin_profile"></spring:message> </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="//${user.linkedin}" target="_blank" rel="noopener noreferrer" class="btn btn-linkedin  btn-lg"><i class="fab fa-linkedin-in"></i> LinkedIn Profile</a>
+                                </div>
+                            </div>
+                        </c:if>
+
 
 
 
