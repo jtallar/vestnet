@@ -52,7 +52,21 @@
                                 <p>  ${requestScope[favorites]}</p>
                             </div>
                             <div class="col-">
-                                <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}"><spring:message code="see_msgs"></spring:message> </button>
+
+
+
+                                    <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}">
+                                        <div class="notification-icon">
+                                            <span> <spring:message code="see_msgs"></spring:message></span>
+                                            <c:if test="${project.notRead != 0}">
+                                                <span class="badge bg-danger">${project.notRead}</span>
+                                            </c:if>
+                                        </div>
+
+                                    </button>
+
+
+
                             </div>
                         </div>
                     </div>
