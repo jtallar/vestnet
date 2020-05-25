@@ -86,6 +86,11 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.queryForObject(JdbcQueries.USER_FIND_IMAGE_BY_ID, new Object[] {userId}, byte[].class);
     }
 
+    @Override
+    public long updateUserPassword(String username, String password) {
+        return jdbcTemplate.update(JdbcQueries.USER_USERNAME_PASSWORD_UPDATE, password, username);
+    }
+
 
     /* Auxiliary functions */
 

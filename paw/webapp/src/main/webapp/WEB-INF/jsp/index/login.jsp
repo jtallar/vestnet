@@ -56,6 +56,7 @@
                 <div class="form-group">
                     <label><spring:message code = "password"></spring:message></label>
                     <input name="password" class="form-control" type="password" placeholder="<spring:message code = "enter_password"/>"/>
+                    <a href="<c:url value='/requestPassword'/>"><spring:message code="forgotPassword"/></a>
                 </div>
                 <div class="form-group">
                     <label>

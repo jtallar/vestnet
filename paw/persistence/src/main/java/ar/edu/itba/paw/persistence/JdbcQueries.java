@@ -94,7 +94,7 @@ public class JdbcQueries {
             "WHERE u.id = ? ";
 
     static final String USER_UPDATE =
-            "UPDATE users SET " +
+            "UPDATE " + USER_TABLE + " SET " +
             "role_id = ?, " +
             "first_name = ?, " +
             "last_name = ?, " +
@@ -108,6 +108,11 @@ public class JdbcQueries {
             "profile_pic = ?, " +
             "password = ? " +
             "WHERE users.id = ? ";
+
+    static final String USER_USERNAME_PASSWORD_UPDATE =
+            "UPDATE " + USER_TABLE + " SET " +
+            "password = ? " +
+            "WHERE users.email = ? ";
 
     static final String USER_FIND_FAVORITES =
             "SELECT project_id " +

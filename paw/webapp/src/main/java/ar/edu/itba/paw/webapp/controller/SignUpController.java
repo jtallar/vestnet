@@ -3,8 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.cookie.CookieUtil;
+import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -110,6 +113,34 @@ public class SignUpController {
         return new ModelAndView("redirect:/");
     }
 
+    @RequestMapping(value = "/resetPassword")
+    public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
+                                      @RequestParam(name = "username") String email, @RequestParam(name = "token") int token) {
+        String escapedEmail = StringEscapeUtils.escapeXml11(email);
+        Optional<User> maybeUser = userService.findByUsername(escapedEmail);
+        // TODO: CHANGE TOKEN TO USE TIME BASED TOKEN
+        if (!maybeUser.isPresent() || maybeUser.get().getPassword().hashCode() != token) {
+            return new ModelAndView("redirect:/login");
+        }
+        final ModelAndView mav = new ModelAndView("index/resetPassword");
+        mav.addObject("email", escapedEmail);
+        mav.addObject("token", token);
+        return mav;
+    }
+
+    @RequestMapping(value = "/resetPassword", method = {RequestMethod.POST})
+    public ModelAndView resetPassword(@Valid @ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
+                                      final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
+        if (errors.hasErrors()) {
+            return resetPassword(passwordFields, passwordFields.getEmail(), passwordFields.getToken());
+        }
+        String password = StringEscapeUtils.escapeXml11(passwordFields.getPassword());
+        userService.updateUserPassword(passwordFields.getEmail(), password);
+
+        // Auto Log In
+        authenticateUserAndSetSession(passwordFields.getEmail(), password, request, response);
+        return new ModelAndView("redirect:/");
+    }
 
 
     /**
