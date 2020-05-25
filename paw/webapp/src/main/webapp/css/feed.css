@@ -13,8 +13,8 @@
 
 .card {
     border-color: #750096;
-    margin: 8px !important;
-    min-width: 450px;
+    margin: 5px !important;
+    min-width: 350px;
     max-width: 650px;
     /*max-width: 100px;*/
 }
@@ -49,8 +49,12 @@
 }
 
 .proj-img{
-    width: 200px;
+    width: 110%;
     height: auto;
+}
+
+.card-img{
+    max-width:200px !important
 }
 
 .container-img {
@@ -182,12 +186,12 @@ html {
     font-size:xx-large
 }
 
-.card-img{
-    min-width:200px
+.card-content{
+    max-width:65%
 }
 
-.card-content{
-    min-width:400px
+.card-text{
+    max-width:100%
 }
 
 .msg-content{
@@ -216,9 +220,7 @@ html {
 }
 
 .searchbar{
-    margin-top:auto;
-    margin-bottom: auto;
-    margin-left: 10px;
+    margin:auto !important;
 }
 
 .range{

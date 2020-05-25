@@ -57,7 +57,7 @@
 <div class="sidenav">
     <div class="form-row align-items-center">
         <c:url var="createUrl" value='/projects'/>
-        <div class="col- searchbar">
+        <div class="col-12 searchbar">
             <form class="form col-12 mx-2 my-2" action="${createUrl}" method="get">
                 <div class="row">
                     <spring:message var="search" code="search"/>
@@ -70,7 +70,7 @@
                         </c:when>
                     </c:choose>
                     <button type="submit" class="${searchButtonClass} col-1">
-                        <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
+                        <img src="${lupa}" height="22" alt="<spring:message code='search'/>"/>
                     </button>
                 </div>
                 <div class="row">
@@ -180,7 +180,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-4 card-img">
+                            <div class="col-4">
                                 <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img"
                                      alt="<spring:message code="projectImage"/>"
                                      aria-placeholder="<spring:message code="projectImage"/>"/>

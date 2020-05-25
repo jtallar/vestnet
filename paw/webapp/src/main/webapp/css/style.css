@@ -63,7 +63,8 @@ body{
 }
 
 .btn-black{
-    min-width:60px
+    min-width:40px;
+    max-width: 50px;
 }
 
 .logopurple{
