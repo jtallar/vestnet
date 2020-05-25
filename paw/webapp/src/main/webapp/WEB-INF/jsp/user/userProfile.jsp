@@ -43,7 +43,8 @@
             <div class="col-md-6">
                 <div class="profile-head">
                     <h2 class="bold">
-                        <c:out value="${user.firstName}"/><c:out value=" "/><c:out value="${user.lastName}"/>
+<%--                        <c:out value="${user.firstName}"/><c:out value=" "/><c:out value="${user.lastName}"/>--%>
+                        ${user.firstName}<c:out value=" "/>${user.lastName}
                     </h2>
 <%--                    <div>--%>
 <%--                        <h6>--%>
