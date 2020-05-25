@@ -13,8 +13,8 @@
 
 .card {
     border-color: #750096;
-    margin: 8px !important;
-    min-width: 450px;
+    margin: 5px !important;
+    min-width: 350px;
     max-width: 650px;
     /*max-width: 100px;*/
 }
@@ -49,8 +49,12 @@
 }
 
 .proj-img{
-    width: 200px;
+    width: 110%;
     height: auto;
+}
+
+.card-img{
+    max-width:200px !important
 }
 
 .container-img {
@@ -73,26 +77,27 @@
 
 @media screen and (min-width: 768px){
     .sidenav{
-        height: 45%; /* Full-height: remove this if you want "auto" height */
+        height: auto; /* Full-height: remove this if you want "auto" height */
         width: 23%; /* Set the width of the sidebar */
         position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-        top: 185px; /* Stay at the top */
+        top: 195px; /* Stay at the top */
         background-color: #f6f6f6;
         border: solid 1px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
         left:0;
-        margin-left:5px;
+        margin-left:10px;
         overflow-y:hidden;
-        min-height:400px
+        min-height:480px
     }
 }
 
 .field{
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .pagination{
-    margin-top:20px;
+    margin-top:5px !important;
+    margin-bottom:0px !important
 }
 
 .page-link{
@@ -121,6 +126,7 @@
 
 .no-proj{
     margin-left:25% !important;
+    margin-top:30px !important
 }
 
 .no-proj-mine{
@@ -180,12 +186,12 @@ html {
     font-size:xx-large
 }
 
-.card-img{
-    min-width:200px
+.card-content{
+    max-width:65%
 }
 
-.card-content{
-    min-width:400px
+.card-text{
+    max-width:100%
 }
 
 .msg-content{
@@ -211,4 +217,23 @@ html {
 
 .active-page-deals {
     color: blue !important;
+}
+
+.searchbar{
+    margin:auto !important;
+}
+
+.range{
+    font-size:16px;
+    color: grey;
+}
+
+.dropdown-divider{
+    margin-top:18px;
+    margin-bottom:18px;
+    border:solid 0.5px #adadadad
+}
+
+.form-row{
+    margin-top: 20px; margin-left:20px; margin-right:20px
 }

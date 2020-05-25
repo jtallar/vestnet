@@ -77,7 +77,7 @@ public class ProjectController {
 
 
         ProjectFilter projectFilter = new ProjectFilter(page, projectService.getPageSize());
-        projectFilter.setSearch(StringEscapeUtils.escapeHtml4(keyword), searchField);
+        projectFilter.setSearch(keyword, searchField);
         projectFilter.setCost(form.getMinCost(), form.getMaxCost());
         projectFilter.setCategory(form.getCategoryId());
         projectFilter.setSort(form.getOrderBy());
@@ -89,7 +89,7 @@ public class ProjectController {
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("projects", projects);
-        mav.addObject("keyword", StringEscapeUtils.escapeHtml4(keyword));
+        mav.addObject("keyword", StringEscapeUtils.escapeXml11(keyword));
         mav.addObject("searchField", searchField);
         mav.addObject("startPage", paginationLimits.getKey());
         mav.addObject("endPage", paginationLimits.getValue());
@@ -209,8 +209,8 @@ public class ProjectController {
             return createProject(projectFields);
         }
 
-        String title = StringEscapeUtils.escapeHtml4(projectFields.getTitle());
-        String summary = StringEscapeUtils.escapeHtml4(projectFields.getSummary());
+        String title = StringEscapeUtils.escapeXml11(projectFields.getTitle());
+        String summary = StringEscapeUtils.escapeXml11(projectFields.getSummary());
         long userId = loggedUser().getId();
 
         long projectId = projectService.create(title, summary,

@@ -89,10 +89,14 @@ public class SignUpController {
 
         final long userId;
         try {
-            // Escaping from potential XSS code insertions
-            String firstName = StringEscapeUtils.escapeHtml4(userFields.getFirstName()), lastName = StringEscapeUtils.escapeHtml4(userFields.getLastName()),
-                    id = StringEscapeUtils.escapeHtml4(userFields.getRealId()), email =  StringEscapeUtils.escapeHtml4(userFields.getEmail()),
-                    phone = StringEscapeUtils.escapeHtml4(userFields.getPhone()), linkedin = StringEscapeUtils.escapeHtml4(userFields.getLinkedin());
+//             Escaping from potential XSS code insertions
+            String firstName = StringEscapeUtils.escapeXml11(userFields.getFirstName()), lastName = StringEscapeUtils.escapeXml11(userFields.getLastName()),
+                    id = StringEscapeUtils.escapeXml11(userFields.getRealId()), email =  StringEscapeUtils.escapeXml11(userFields.getEmail()),
+                    phone = StringEscapeUtils.escapeXml11(userFields.getPhone()), linkedin = StringEscapeUtils.escapeXml11(userFields.getLinkedin());
+
+//            String firstName = userFields.getFirstName(), lastName = userFields.getLastName(),
+//                    id = userFields.getRealId(), email =  userFields.getEmail(),
+//                    phone = userFields.getPhone(), linkedin = userFields.getLinkedin();
 
             userId = userService.create(userFields.getRole(), firstName, lastName, id,
                     LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
@@ -101,12 +105,12 @@ public class SignUpController {
                             new Location.City(userFields.getCity(), "")),
                     email, phone, linkedin, userFields.getPassword(), imageBytes);
         } catch (UserAlreadyExistsException e) {
-            LOGGER.error("User already exists with email {} in VestNet", StringEscapeUtils.escapeHtml4(userFields.getEmail()));
+            LOGGER.error("User already exists with email {} in VestNet", userFields.getEmail());
             return signUp(userFields, true);
         }
 
         // Auto Log In
-        authenticateUserAndSetSession(StringEscapeUtils.escapeHtml4(userFields.getEmail()), userFields.getPassword(), request, response);
+        authenticateUserAndSetSession(StringEscapeUtils.escapeXml11(userFields.getEmail()), userFields.getPassword(), request, response);
         return new ModelAndView("redirect:/");
     }
 
