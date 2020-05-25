@@ -29,10 +29,38 @@
 <c:url var="favOn" value="/images/bookmarkOnB.png"/>
 <c:url var="order" value="/images/order.png"/>
 <c:url var="filter" value="/images/filter.png"/>
-<div>
 
-</div>
-<div class="col">
+<div class="row">
+    <div class="col-3 searchbar">
+        <c:url var="createUrl" value='/projects'/>
+        <form class="form-inline mx-2 my-2" action="${createUrl}" method="get">
+            <div class="row">
+                <spring:message var="search" code="search"/>
+                <c:choose>
+                    <c:when test="${not empty keyword}">
+                        <input class="form-control mx-1 my-auto" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
+                    </c:when>
+                    <c:when test="${empty keyword}">
+                        <input class="form-control mx-1 my-auto" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
+                    </c:when>
+                </c:choose>
+                <button type="submit" class="${searchButtonClass}">
+                    <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
+                </button>
+            </div>
+            <div class="row">
+                <select id="searchSelector" name="searchField" class="custom-select mx-1">
+                    <option value="default" <c:if test="${searchField == null or searchField eq 'default'}"> selected </c:if>> <spring:message code="project_name"/> </option>
+                    <option value="project_info" <c:if test="${searchField eq 'project_info'}"> selected </c:if>> <spring:message code="project_info"/> </option>
+                    <option value="owner_name" <c:if test="${searchField eq 'owner_name'}"> selected </c:if>> <spring:message code="owner_name"/> </option>
+                    <option value="owner_email" <c:if test="${searchField eq 'owner_email'}"> selected </c:if>> <spring:message code="owner_email"/> </option>
+                    <option value="project_location" <c:if test="${searchField eq 'project_location'}"> selected </c:if>> <spring:message code="loc"/> </option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-8">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
                 <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" aria-label="<spring:message code="previous"/>">
@@ -48,7 +76,10 @@
                 </a>
             </li>
         </ul>
+    </div>
+    <div class="col-1"> </div>
 </div>
+
 <%--    <div class="row grid">--%>
 
 <div class="sidenav">
@@ -67,7 +98,7 @@
                         <form:select class="custom-select mr-sm-2" path="categoryId">
                             <form:option value="0"><spring:message code="noFilter"/> </form:option>
                             <c:forEach items="${categories}" var="category">
-                                <form:option value="${category.id}"><spring:message code="${category.name}"></spring:message> </form:option>
+                                <form:option value="${category.id}"><spring:message code="${category.name}"/> </form:option>
                             </c:forEach>
                         </form:select>
                     </div>
