@@ -11,7 +11,9 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>--%>
     <link rel="stylesheet" href="<c:url value='/css/userprofile.css'/>"/>
 
-    <title><spring:message code="my_profile"/> | VestNet</title>
+<%--    TODO: CHECK--%>
+<%--    <title><spring:message code="my_profile"/> | VestNet</title>--%>
+    <title>${user.firstName} ${user.lastName} | VestNet</title>
 </head>
 <body>
 <c:if test="${back}">
@@ -23,7 +25,7 @@
 <%--    <form method="post">--%>
         <div class="row">
             <div class="col-md-4">
-                <div class="profile-img">
+                <div class="profile-img ">
                     <img src="<c:url value="/imageController/user/${user.id}"/>" alt="<spring:message code="userPicture"/>"
                          aria-placeholder="<spring:message code="userPicture"/>"/>
 <%--                    <div class="file btn btn-lg btn-primary">--%>
@@ -31,6 +33,12 @@
 <%--                        <input type="file" name="file"/>--%>
 <%--                    </div>--%>
                 </div>
+                <c:if test="${not empty user.linkedin}">
+                    <div class="text-center my-2">
+                            <%--                                    <a href="${user.linkedin}" target="_blank" rel="noopener noreferrer" class="btn btn-linkedin  btn-lg"><i class="fab fa-linkedin-in"></i> LinkedIn Profile</a>--%>
+                        <button onclick="goToLinkedin('<c:out value="${user.linkedin}"/>')" class="btn btn-linkedin"><i class="fab fa-linkedin-in"></i> <spring:message code="linkedin_profile"/></button>
+                    </div>
+                </c:if>
             </div>
             <div class="col-md-6">
                 <div class="profile-head">
@@ -160,18 +168,7 @@
                                 <p>${user.location.state.name}</p>
                             </div>
                         </div>
-                        <c:if test="${not empty user.linkedin}">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label><spring:message code="linkedin_profile"></spring:message> </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <a href="//${user.linkedin}" target="_blank" rel="noopener noreferrer" class="btn btn-linkedin  btn-lg"><i class="fab fa-linkedin-in"></i> LinkedIn Profile</a>
-                                </div>
-                            </div>
-                        </c:if>
+
 
 
 
@@ -245,6 +242,14 @@
         </div>
 <%--    </form>--%>
 </div>
-
+<script>
+    var aux = '${user.linkedin}';
+    function goToLinkedin(url) {
+        if (!(url.indexOf('http') === 0)) {
+            url = '//' + url;
+        }
+        window.open(url, '_blank');
+    }
+</script>
 </body>
 </html>
