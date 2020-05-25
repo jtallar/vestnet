@@ -31,35 +31,7 @@
 <c:url var="filter" value="/images/filter.png"/>
 
 <div class="row">
-    <div class="col-3 searchbar">
-        <c:url var="createUrl" value='/projects'/>
-        <form class="form-inline mx-2 my-2" action="${createUrl}" method="get">
-            <div class="row">
-                <spring:message var="search" code="search"/>
-                <c:choose>
-                    <c:when test="${not empty keyword}">
-                        <input class="form-control mx-1 my-auto" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
-                    </c:when>
-                    <c:when test="${empty keyword}">
-                        <input class="form-control mx-1 my-auto" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
-                    </c:when>
-                </c:choose>
-                <button type="submit" class="${searchButtonClass}">
-                    <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
-                </button>
-            </div>
-            <div class="row">
-                <select id="searchSelector" name="searchField" class="custom-select mx-1">
-                    <option value="default" <c:if test="${searchField == null or searchField eq 'default'}"> selected </c:if>> <spring:message code="project_name"/> </option>
-                    <option value="project_info" <c:if test="${searchField eq 'project_info'}"> selected </c:if>> <spring:message code="project_info"/> </option>
-                    <option value="owner_name" <c:if test="${searchField eq 'owner_name'}"> selected </c:if>> <spring:message code="owner_name"/> </option>
-                    <option value="owner_email" <c:if test="${searchField eq 'owner_email'}"> selected </c:if>> <spring:message code="owner_email"/> </option>
-                    <option value="project_location" <c:if test="${searchField eq 'project_location'}"> selected </c:if>> <spring:message code="loc"/> </option>
-                </select>
-            </div>
-        </form>
-    </div>
-
+    <div class="col-3"></div>
     <div class="col-8">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
@@ -83,13 +55,42 @@
 <%--    <div class="row grid">--%>
 
 <div class="sidenav">
-    <div class="form-row align-items-center" style="margin: 20px">
+    <div class="form-row align-items-center">
         <c:url var="createUrl" value='/projects'/>
         <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
             <input type="hidden" name="keyword" value="${keyword}" />
             <input type="hidden" name="searchField" value="${searchField}" />
             <div class="container">
-                <div class="row"><h5><spring:message code="filter"/></h5></div>
+                <div class="col- searchbar">
+                    <c:url var="createUrl" value='/projects'/>
+                    <form class="form col-12 mx-2 my-2" action="${createUrl}" method="get">
+                        <div class="row">
+                            <spring:message var="search" code="search"/>
+                            <c:choose>
+                                <c:when test="${not empty keyword}">
+                                    <input class="form-control col-9 mx-1 my-auto" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
+                                </c:when>
+                                <c:when test="${empty keyword}">
+                                    <input class="form-control col-9 mx-1 my-auto" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
+                                </c:when>
+                            </c:choose>
+                            <button type="submit" class="${searchButtonClass} col-1">
+                                <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
+                            </button>
+                        </div>
+                        <div class="row">
+                            <select id="searchSelector" name="searchField" class="custom-select col-9 mx-1">
+                                <option value="default" <c:if test="${searchField == null or searchField eq 'default'}"> selected </c:if>> <spring:message code="project_name"/> </option>
+                                <option value="project_info" <c:if test="${searchField eq 'project_info'}"> selected </c:if>> <spring:message code="project_info"/> </option>
+                                <option value="owner_name" <c:if test="${searchField eq 'owner_name'}"> selected </c:if>> <spring:message code="owner_name"/> </option>
+                                <option value="owner_email" <c:if test="${searchField eq 'owner_email'}"> selected </c:if>> <spring:message code="owner_email"/> </option>
+                                <option value="project_location" <c:if test="${searchField eq 'project_location'}"> selected </c:if>> <spring:message code="loc"/> </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="dropdown-divider"></div>
+<%--                <div class="row"><h6><spring:message code="filter"/></h6></div>--%>
                 <div class="row">
                     <div class="col-">
                         <img src="${filter}" width="40" class="logo-img">
@@ -118,7 +119,7 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label class="font-weight-bold"><spring:message code="range"/> </label>
+                    <label class="range"><spring:message code="range"/> </label>
                     <div class="row">
                         <div class="col-sm">
                             <spring:message var="min" code="min"/>

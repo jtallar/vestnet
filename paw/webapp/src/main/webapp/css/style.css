@@ -80,3 +80,7 @@ body{
 .navbar-nav{
     margin-left:auto
 }
+
+.btn-dark{
+    min-width:60px
+}

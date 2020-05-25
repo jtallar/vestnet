@@ -73,26 +73,27 @@
 
 @media screen and (min-width: 768px){
     .sidenav{
-        height: 45%; /* Full-height: remove this if you want "auto" height */
+        height: auto; /* Full-height: remove this if you want "auto" height */
         width: 23%; /* Set the width of the sidebar */
         position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-        top: 233px; /* Stay at the top */
+        top: 195px; /* Stay at the top */
         background-color: #f6f6f6;
         border: solid 1px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
         left:0;
         margin-left:10px;
         overflow-y:hidden;
-        min-height:400px
+        min-height:480px
     }
 }
 
 .field{
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .pagination{
-    margin-top:20px;
+    margin-top:5px !important;
+    margin-bottom:0px !important
 }
 
 .page-link{
@@ -217,4 +218,19 @@ html {
     margin-top:auto;
     margin-bottom: auto;
     margin-left: 10px;
+}
+
+.range{
+    font-size:16px;
+    color: grey;
+}
+
+.dropdown-divider{
+    margin-top:18px;
+    margin-bottom:18px;
+    border:solid 0.5px #adadadad
+}
+
+.form-row{
+    margin-top: 20px; margin-left:20px; margin-right:20px
 }
