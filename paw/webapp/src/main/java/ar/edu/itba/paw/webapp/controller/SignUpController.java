@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
@@ -25,6 +26,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -44,6 +46,9 @@ public class SignUpController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     protected AuthenticationManager authenticationManager;
@@ -79,7 +84,7 @@ public class SignUpController {
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields,
                                final BindingResult errors, @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
-                               HttpServletRequest request, HttpServletResponse response){
+                               HttpServletRequest request, HttpServletResponse response) throws MessagingException {
         if(errors.hasErrors()){
             LOGGER.error("Sign Up failed. There are {} errors in form\n", errors.getErrorCount());
             for (ObjectError error : errors.getAllErrors())
@@ -117,9 +122,8 @@ public class SignUpController {
             return signUp(userFields, true);
         }
 
-        // Auto Log In
-        authenticateUserAndSetSession(StringEscapeUtils.escapeXml11(userFields.getEmail()), userFields.getPassword(), request, response);
-        return new ModelAndView("redirect:/");
+        sendVerificationMail(userId, request);
+        return new ModelAndView("redirect:/login?me=1");
     }
 
     @RequestMapping(value = "/resetPassword")
@@ -158,6 +162,27 @@ public class SignUpController {
         return new ModelAndView("redirect:/");
     }
 
+    @RequestMapping(value = "/verify")
+    public ModelAndView resetPassword(@RequestParam(name = "username") String email,
+                                      @RequestParam(name = "token") int token, HttpServletRequest request) throws MessagingException {
+        String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
+        Optional<User> maybeUser = userService.findByUsername(decodedEmail);
+        if (!maybeUser.isPresent())
+            return new ModelAndView("redirect:/login?me=2");
+        try {
+            if (!TokenGeneratorUtil.checkToken(maybeUser.get().getEmail() + maybeUser.get().getPassword(), token)) {
+                LOGGER.warn("\n\nToken Expired\n\n");
+                sendVerificationMail(maybeUser.get().getId(), request);
+                return new ModelAndView("redirect:/login?me=3");
+            }
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            LOGGER.error("Failed to check token");
+            return new ModelAndView("redirect:/login?me=2");
+        }
+        userService.verifyUser(decodedEmail);
+        return new ModelAndView("redirect:/login?me=4");
+    }
+
 
     /**
      *  Auxiliary functions
@@ -181,6 +206,24 @@ public class SignUpController {
 
         CookieUtil.generateRoleCookie(response, authenticatedUser);
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+    }
+
+    /**
+     * Sends the verification email
+     * @param userId The unique user id
+     * @param request The http request
+     * @throws MessagingException
+     */
+    private void sendVerificationMail(long userId, HttpServletRequest request) throws MessagingException {
+        Optional<User> maybeUser = userService.findById(userId);
+        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        int token = 0;
+        try {
+            token = TokenGeneratorUtil.getToken(maybeUser.get().getEmail() + maybeUser.get().getPassword());
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            LOGGER.error("Failed to generate token");
+        }
+        emailService.sendVerificationEmail(userService.findById(userId).get(), String.valueOf(token), baseUrl);
     }
 
 }

@@ -67,6 +67,10 @@ body {
     color: red;
 }
 
+.noError p{
+    color: green;
+}
+
 .login-main-text{
     margin-top: 20%;
     padding: 60px;
