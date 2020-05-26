@@ -74,6 +74,7 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findByIds(List<Long> ids) {
+        if(ids == null || ids.isEmpty()) return new ArrayList<>();
         return namedParameterJdbcTemplate.query(PROJECT_FIND_BY_IDS, new MapSqlParameterSource().addValue("ids", ids), RESULT_SET_EXTRACTOR);
     }
 
