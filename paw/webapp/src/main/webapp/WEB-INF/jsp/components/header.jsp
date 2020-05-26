@@ -74,7 +74,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<c:url value="${option}"/>">
                             <c:url var="icon" value="/images/${icons[index.index]}.png"/>
-                            <div class="row justify-content-center"> <img width="30" src="${icon}"></div>
+                            <div class="row justify-content-center"> <img class="nav-icon" src="${icon}"></div>
                             <div class="row text-icon"><spring:message code="header.${option}"/></div>
                         </a>
                     </li>
@@ -85,7 +85,7 @@
                         <!-- Button trigger modal -->
                         <a type="button" class="nav-link" data-toggle="modal" data-target="#exampleModal">
                             <c:url var="logout" value="/images/logout-icon.png"/>
-                            <div class="row justify-content-center"> <img width="30" src="${logout}"></div>
+                            <div class="row justify-content-center"> <img class="nav-icon" src="${logout}"></div>
                             <div class="row text-icon"> <spring:message code="header./logout"/> </div>
                         </a>
                     </li>

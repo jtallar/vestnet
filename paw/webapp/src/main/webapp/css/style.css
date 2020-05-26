@@ -85,3 +85,8 @@ body{
 .btn-dark{
     min-width:60px
 }
+
+.nav-icon{
+    width: 30px;
+    height: 100%;
+}
