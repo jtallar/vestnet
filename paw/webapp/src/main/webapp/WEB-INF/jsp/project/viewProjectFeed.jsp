@@ -63,7 +63,7 @@
                     <spring:message var="search" code="search"/>
                     <c:choose>
                         <c:when test="${not empty keyword}">
-                            <input class="form-control col-9 mx-1 my-auto" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
+                            <input class="form-control col-9 mx-1 my-auto" name="keyword" value="<c:out value="${keyword}"/>" type="text" placeholder="${search}" aria-label="Search"/>
                         </c:when>
                         <c:when test="${empty keyword}">
                             <input class="form-control col-9 mx-1 my-auto" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
@@ -85,7 +85,7 @@
             </form>
         </div>
         <form:form modelAttribute="categoryForm" method="GET" action="${createUrl}">
-            <input type="hidden" name="keyword" value="${keyword}" />
+            <input type="hidden" name="keyword" value="<c:out value="${keyword}"/>" />
             <input type="hidden" name="searchField" value="${searchField}" />
             <div class="container">
 

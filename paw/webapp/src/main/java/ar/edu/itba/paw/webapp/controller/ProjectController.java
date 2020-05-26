@@ -89,7 +89,7 @@ public class ProjectController {
         final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("projects", projects);
-        mav.addObject("keyword", StringEscapeUtils.escapeXml11(keyword));
+        mav.addObject("keyword", keyword);
         mav.addObject("searchField", searchField);
         mav.addObject("startPage", paginationLimits.getKey());
         mav.addObject("endPage", paginationLimits.getValue());
