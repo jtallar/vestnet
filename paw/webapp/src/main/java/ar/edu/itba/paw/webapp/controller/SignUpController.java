@@ -3,9 +3,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.cookie.CookieUtil;
+import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
+import ar.edu.itba.paw.webapp.token.TokenGeneratorUtil;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -114,6 +122,41 @@ public class SignUpController {
         return new ModelAndView("redirect:/");
     }
 
+    @RequestMapping(value = "/resetPassword")
+    public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
+                                      @RequestParam(name = "username") String email, @RequestParam(name = "token") int token) {
+        String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
+        Optional<User> maybeUser = userService.findByUsername(decodedEmail);
+        if (!maybeUser.isPresent())
+            return new ModelAndView("redirect:/login");
+        try {
+            if (!TokenGeneratorUtil.checkToken(maybeUser.get().getEmail() + maybeUser.get().getPassword(), token)) {
+                LOGGER.warn("\n\nToken Expired\n\n");
+                return new ModelAndView("redirect:/requestPassword?invalidToken=1");
+            }
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            LOGGER.error("Failed to check token");
+            return new ModelAndView("redirect:/login");
+        }
+        final ModelAndView mav = new ModelAndView("index/resetPassword");
+        mav.addObject("email", decodedEmail);
+        mav.addObject("token", token);
+        return mav;
+    }
+
+    @RequestMapping(value = "/resetPassword", method = {RequestMethod.POST})
+    public ModelAndView resetPassword(@Valid @ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
+                                      final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
+        if (errors.hasErrors()) {
+            return resetPassword(passwordFields, passwordFields.getEmail(), passwordFields.getToken());
+        }
+        String password = StringEscapeUtils.escapeXml11(passwordFields.getPassword());
+        userService.updateUserPassword(passwordFields.getEmail(), password);
+
+        // Auto Log In
+        authenticateUserAndSetSession(passwordFields.getEmail(), password, request, response);
+        return new ModelAndView("redirect:/");
+    }
 
 
     /**

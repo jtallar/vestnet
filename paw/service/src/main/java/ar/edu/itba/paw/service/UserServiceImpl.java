@@ -42,4 +42,9 @@ public class UserServiceImpl implements UserService {
     public byte[] findImageForUser(long userId) {
         return userDao.findImageForUser(userId);
     }
+
+    @Override
+    public long updateUserPassword(String username, String password) {
+        return userDao.updateUserPassword(username, encoder.encode(password));
+    }
 }
