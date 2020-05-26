@@ -35,7 +35,7 @@ public class UserJdbcDao implements UserDao {
                 .withTableName(JdbcQueries.USER_TABLE)
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("role_id", "first_name", "last_name", "real_id", "country_id", "state_id", "city_id",
-                        "aux_date", "email", "password", "phone", "linkedin", "profile_pic", "verified");
+                        "aux_date", "email", "password", "phone", "linkedin", "profile_pic");
     }
 
     @Override

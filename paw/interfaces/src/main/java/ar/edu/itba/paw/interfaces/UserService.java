@@ -49,7 +49,6 @@ public interface UserService {
      */
     byte[] findImageForUser(long userId);
 
-
     /**
      * Updates password for the given user
      * @param username The username to update
@@ -57,4 +56,10 @@ public interface UserService {
      * @return userId
      */
     long updateUserPassword(String username, String password);
+
+    /**
+     * Sets a user as verified
+     * @param username
+     */
+    void verifyUser(String username);
 }
