@@ -45,7 +45,7 @@ public class PawUserDetailsService implements UserDetailsService{
                 authorities.add(new SimpleGrantedAuthority("ROLE_INVESTOR"));
                 break;
         }
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), user.isVerified(), true, true, true, authorities);
     }
 
 

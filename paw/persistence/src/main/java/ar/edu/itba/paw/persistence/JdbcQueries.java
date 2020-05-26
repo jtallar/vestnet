@@ -60,6 +60,7 @@ public class JdbcQueries {
             "u.linkedin, " +
             "u.join_date, " +
             "u.trust_index, " +
+            "u.verified, " +
 
             "co.id AS location_country_id, " +
             "co.country AS location_country_name, " +
@@ -112,6 +113,11 @@ public class JdbcQueries {
     static final String USER_USERNAME_PASSWORD_UPDATE =
             "UPDATE " + USER_TABLE + " SET " +
             "password = ? " +
+            "WHERE users.email = ? ";
+
+    static final String USER_SET_VERIFIED_TRUE =
+            "UPDATE " + USER_TABLE + " SET " +
+            "verified = true " +
             "WHERE users.email = ? ";
 
     static final String USER_FIND_FAVORITES =
@@ -235,6 +241,7 @@ public class JdbcQueries {
             "u.linkedin AS owner_linkedin, " +
             "u.join_date AS owner_join_date, " +
             "u.trust_index AS owner_trust_index, " +
+            "u.verified, " +
 
             "co.id AS owner_location_country_id, " +
             "co.country AS owner_location_country_name, " +
@@ -325,6 +332,7 @@ public class JdbcQueries {
                     "u.linkedin AS owner_linkedin, " +
                     "u.join_date AS owner_join_date, " +
                     "u.trust_index AS owner_trust_index, " +
+                    "u.verified, " +
 
                     "co.id AS owner_location_country_id, " +
                     "co.country AS owner_location_country_name, " +

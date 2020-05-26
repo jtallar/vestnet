@@ -35,7 +35,7 @@ public class UserJdbcDao implements UserDao {
                 .withTableName(JdbcQueries.USER_TABLE)
                 .usingGeneratedKeyColumns("id")
                 .usingColumns("role_id", "first_name", "last_name", "real_id", "country_id", "state_id", "city_id",
-                        "aux_date", "email", "password", "phone", "linkedin", "profile_pic");
+                        "aux_date", "email", "password", "phone", "linkedin", "profile_pic", "verified");
     }
 
     @Override
@@ -91,6 +91,10 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.update(JdbcQueries.USER_USERNAME_PASSWORD_UPDATE, password, username);
     }
 
+    @Override
+    public void verifyUser(String username) {
+        jdbcTemplate.update(JdbcQueries.USER_SET_VERIFIED_TRUE, username);
+    }
 
     /* Auxiliary functions */
 

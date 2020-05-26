@@ -56,4 +56,10 @@ public interface UserDao {
      * @return userId
      */
     long updateUserPassword(String username, String password);
+
+    /**
+     * Sets a user as verified
+     * @param username
+     */
+    void verifyUser(String username);
 }

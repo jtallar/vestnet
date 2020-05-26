@@ -24,6 +24,7 @@ public class User {
 
     private final LocalDate joinDate;
     private int trustIndex;
+    private boolean verified;
 
     public User(long id, int role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, LocalDate joinDate, int trustIndex) {
         this.id = id;
@@ -94,6 +95,14 @@ public class User {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public void setPassword(String password){
