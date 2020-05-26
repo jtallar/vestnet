@@ -22,7 +22,7 @@
             crossorigin="anonymous"></script>--%>
 
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Projects | VestNet</title>
+    <title><spring:message code="page.title.feed"/></title>
 </head>
 <body>
 <c:url var="favOff" value="/images/bookmarkOffB.png"/>

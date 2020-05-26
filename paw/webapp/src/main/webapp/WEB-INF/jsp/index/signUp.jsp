@@ -21,7 +21,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="<c:url value="/images/favicon-32x32.png"/>">
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
 <%--    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">--%>
-    <title>Sign up | VestNet</title>
+    <title><spring:message code="page.title.signUp"/></title>
 </head>
 
 <body background="<c:url value ="/images/signupBack.png"/>">

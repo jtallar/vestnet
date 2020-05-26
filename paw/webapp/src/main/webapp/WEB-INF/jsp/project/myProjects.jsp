@@ -10,7 +10,7 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>--%>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
-    <title><spring:message code="my_projects"/> | VestNet</title>
+    <title><spring:message code="page.title.dashboard"/></title>
 </head>
 <body>
 

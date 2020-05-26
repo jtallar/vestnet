@@ -12,7 +12,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>--%>
     <link rel="stylesheet" href="<c:url value='/css/userprofile.css'/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>${user.firstName} ${user.lastName} | VestNet</title>
+    <title><spring:message code="page.title.profile" arguments="${user.firstName},${user.lastName}"/></title>
 </head>
 <body>
 <c:if test="${back}">
