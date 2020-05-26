@@ -35,8 +35,9 @@ public interface EmailService {
 
     /**
      * @param user User that requests new password
+     * @param token Token used for URL
      * @param baseUrl Base URL used to request new password
      * @throws MessagingException When mail cannot be sent.
      */
-    void sendPasswordRecovery(User user, String baseUrl) throws MessagingException;
+    void sendPasswordRecovery(User user, String token, String baseUrl) throws MessagingException;
 }

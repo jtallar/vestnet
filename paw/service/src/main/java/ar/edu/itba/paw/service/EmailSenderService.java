@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -88,7 +89,7 @@ public class EmailSenderService implements EmailService {
     }
 
     @Override
-    public void sendPasswordRecovery(User user, String baseUrl) throws MessagingException {
+    public void sendPasswordRecovery(User user, String token, String baseUrl) throws MessagingException {
         Properties props = getEmailProperties();
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
@@ -96,12 +97,14 @@ public class EmailSenderService implements EmailService {
         Locale localeInst = Locale.forLanguageTag(user.getLocation().getCountry().getLocale());
         ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", localeInst, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
+        final String encodedEmail = Base64.getUrlEncoder().encodeToString(user.getEmail().getBytes());
         String subject = bundle.getString("email.subject.passwordReset");
         StringBuilder fullBodySB = new StringBuilder();
         fullBodySB.append(bundle.getString("email.body.vestnetReports")).append('\n')
                 .append(bundle.getString("email.body.passwordReset")).append("\n")
                 .append(MessageFormat.format(bundle.getString("email.body.passwordResetButton"),
-                        String.format("%s/resetPassword?username=%s&token=%s", baseUrl, user.getEmail(), user.getPassword().hashCode())));
+                        String.format("%s/resetPassword?username=%s&token=%s", baseUrl, encodedEmail, token)));
+
 
         try {
             sendEmail(session, VESTNET_EMAIL, user.getEmail(), subject, fullBodySB.toString());

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
+import ar.edu.itba.paw.webapp.token.TokenGeneratorUtil;
 import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -95,22 +98,30 @@ public class MainController {
 
     @RequestMapping(value = "/requestPassword")
     public ModelAndView requestPassword(@RequestParam(name = "error", defaultValue = "false") boolean error,
-                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent) {
+                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent,
+                                        @RequestParam(name = "invalidToken", defaultValue = "false") boolean invalidToken) {
         final ModelAndView mav = new ModelAndView("index/requestPassword");
         mav.addObject("error", error);
         mav.addObject("mailSent", mailSent);
+        mav.addObject("invalidToken", invalidToken);
         return mav;
     }
 
     @RequestMapping(value = "/requestPassword", method = {RequestMethod.POST})
     public ModelAndView requestPassword(@RequestParam(name = "username") String email, HttpServletRequest request) throws MessagingException {
-        LOGGER.debug("\n\nEl email recibido es {}\n\n", email);
         Optional<User> maybeUser = userService.findByUsername(StringEscapeUtils.escapeXml11(email));
         if (!maybeUser.isPresent()) {
-            return requestPassword(true, false);
+            return requestPassword(true, false, false);
         }
         String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        emailService.sendPasswordRecovery(maybeUser.get(), baseUrl);
-        return requestPassword(false, true);
+        int token;
+        try {
+            token = TokenGeneratorUtil.getToken(maybeUser.get().getEmail() + maybeUser.get().getPassword());
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            LOGGER.error("Failed to generate token");
+            return requestPassword(true, false, false);
+        }
+        emailService.sendPasswordRecovery(maybeUser.get(), String.valueOf(token), baseUrl);
+        return requestPassword(false, true, false);
     }
 }

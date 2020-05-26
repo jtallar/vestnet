@@ -31,8 +31,15 @@
 <div class="main">
     <div class="col-md-8">
         <div class="login-form">
-            <div class="text-left my-2">
-                <a href="<c:url value="/login"/>" class="btn btn-outline-dark pull-left"><spring:message code="back"/></a>
+            <div class="row text-left my-2">
+                <div class="col-2">
+                    <a href="<c:url value="/login"/>" class="btn btn-outline-dark pull-left"><spring:message code="back"/></a>
+                </div>
+                <div class="col mailError">
+                    <c:if test="${invalidToken}">
+                        <p class="mailError"><spring:message code="invalidToken"/></p>
+                    </c:if>
+                </div>
             </div>
             <c:url value="/requestPassword" var="loginUrl"/>
             <form method="post" action="${loginUrl}">
