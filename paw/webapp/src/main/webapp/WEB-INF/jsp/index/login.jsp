@@ -70,8 +70,12 @@
                     </div>
                     <div class="col mailError">
                         <c:if test="${param.error != null}">
-                            <p class="mailError"><spring:message code="loginError"/></p>
+                            <c:choose>
+                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'Bad credentials'}"><p class="mailError"><spring:message code = "loginError"></spring:message></p></c:when>
+                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'User is disabled'}"><p class="mailError"><spring:message code = "loginVerificationError"></spring:message></p></c:when>
+                            </c:choose>
                         </c:if>
+
                         <c:choose>
                             <c:when test="${message eq 1}"><p class="noError"><spring:message code = "verificationMessageSent"></spring:message></p></c:when>
                             <c:when test="${message eq 2}"><p class="mailError"><spring:message code = "verificationInvalid"></spring:message></p></c:when>

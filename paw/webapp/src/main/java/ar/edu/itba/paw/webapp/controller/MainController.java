@@ -71,13 +71,15 @@ public class MainController {
      * @return Model and view.
      */
     @RequestMapping(value = "/login")
-    public ModelAndView login(@RequestParam(name = "me", required = false) Integer message) {
+    public ModelAndView login(@RequestParam(name = "me", required = false) Integer message,
+                              @RequestParam(name = "err", required = false) Integer error) {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
             return new ModelAndView("redirect:/");
 
         final ModelAndView modelAndView = new ModelAndView("index/login");
         modelAndView.addObject("message", message);
+        modelAndView.addObject("messageError", error);
         return modelAndView;
     }
 
