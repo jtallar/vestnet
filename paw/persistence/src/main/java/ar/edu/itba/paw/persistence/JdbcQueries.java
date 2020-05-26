@@ -241,7 +241,7 @@ public class JdbcQueries {
             "u.linkedin AS owner_linkedin, " +
             "u.join_date AS owner_join_date, " +
             "u.trust_index AS owner_trust_index, " +
-            "u.verified, " +
+            "u.verified AS owner_verified, " +
 
             "co.id AS owner_location_country_id, " +
             "co.country AS owner_location_country_name, " +
@@ -332,7 +332,7 @@ public class JdbcQueries {
                     "u.linkedin AS owner_linkedin, " +
                     "u.join_date AS owner_join_date, " +
                     "u.trust_index AS owner_trust_index, " +
-                    "u.verified, " +
+                    "u.verified AS owner_verified, " +
 
                     "co.id AS owner_location_country_id, " +
                     "co.country AS owner_location_country_name, " +
