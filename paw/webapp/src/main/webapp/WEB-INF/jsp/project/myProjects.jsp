@@ -6,8 +6,6 @@
 <html>
 <head>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <%--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>--%>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
     <title><spring:message code="page.title.dashboard"/></title>
@@ -27,7 +25,6 @@
                 <div class="col-md-10 px-3">
                     <div class="card-block px-3">
                         <h4 class="card-title msg-title"><c:out value="${project.name}"/></h4>
-<%--                        <p class="card-text">${project.summary} </p>--%>
                         <div class="row msg-content">
                             <div class="col-"><h5><spring:message code="cost"/> </h5></div>
                             <div class="col-5 msg-content"><p class="card-text"> <c:out value="${project.cost}"/></p></div>
@@ -156,12 +153,9 @@
                         let refuseUrl = window.location.origin + '<c:url value="/message/refuse/"/>' + data[i]["projectId"] + "/" + data[i]["senderId"]
                         let refuse = document.createElement('button')
                         refuse.setAttribute('id', 'refuse-message-' + data[i]["projectId"] + "-" + data[i]["senderId"]);
-                        // refuse.setAttribute('href', refuseUrl)
                         refuse.addEventListener("click", function () {
                             fetch(refuseUrl, options)
                                 .then(response => {
-                                    // div.removeChild(g);
-                                    // window.location.href = window.location.origin + window.location.pathname + '#dashboard-project-' + data[i]["projectId"];
                                     window.location.reload();
                             }).catch((function (reason) { console.error(reason) }));
                         });
@@ -171,13 +165,10 @@
                         let acceptUrl = window.location.origin + '<c:url value="/message/accept/"/>' + data[i]["projectId"] + "/" + data[i]["senderId"]
                         let accept = document.createElement('button')
                         accept.setAttribute('id', 'refuse-message-' + data[i]["projectId"] + "-" + data[i]["senderId"]);
-                        // accept.setAttribute('href', acceptUrl)
                         accept.addEventListener("click", function () {
                             fetch(acceptUrl, options)
                                 .then(response => {
-                                    // div.removeChild(g);
-                                    // window.location.href = window.location.origin + window.location.pathname + '#dashboard-project-' + data[i]["projectId"];
-                                    window.location.reload();
+                                   window.location.reload();
                             }).catch((function (reason) { console.error(reason) }));
                         });
                         accept.innerText = '<spring:message code="accept"/>'
@@ -189,7 +180,6 @@
                         g.appendChild(h)
                         div.appendChild(g)
                     }
-
 
                     if (data.length === 0){
                         console.log("hola")
@@ -208,13 +198,8 @@
                     console.error(reason)
                 }));
         }
-
     }
-
-
 </script>
 
 </body>
 </html>
-<!--
--->
