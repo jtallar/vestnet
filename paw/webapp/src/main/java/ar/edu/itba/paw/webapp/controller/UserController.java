@@ -57,12 +57,6 @@ public class UserController {
         final ModelAndView mav= new ModelAndView("user/userProfile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         User loggedUser = loggedUser();
-//      if(loggedUser.getRole() == User.UserRole.ENTREPRENEUR.getId()) mav.addObject("list", projectService.findByOwner(id));
-        /*List<Project> favs_projects = new ArrayList<>();
-        for (Long fid : projectService.findFavorites(id)){
-            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
-        }
-        mav.addObject("favs", favs_projects);*/
         if(loggedUser.getRole() == User.UserRole.INVESTOR.getId() && id == loggedUser.getId())
             mav.addObject("favs", projectService.getUserFavorites(id));
         mav.addObject("back", back);
