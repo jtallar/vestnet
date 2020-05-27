@@ -120,8 +120,6 @@ public class ProjectController {
         mav.addObject("contactStatus", contactStatus);
         boolean isFav = projectService.isFavorite(id, loggedUser().getId());
         mav.addObject("isFav", isFav);
-        mav.addObject("favCount", projectService.getFavoritesCount(id));
-
         return mav;
     }
 
