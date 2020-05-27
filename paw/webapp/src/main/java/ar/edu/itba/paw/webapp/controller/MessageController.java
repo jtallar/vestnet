@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.MessageService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.User;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.mail.MessageRemovedException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -105,7 +103,7 @@ public class MessageController {
 
     @RequestMapping(value = "/deals")
     public ModelAndView deals(@RequestParam(name = "page", defaultValue = "1") String page){
-        final ModelAndView mav = new ModelAndView("/project/deals");
+        final ModelAndView mav = new ModelAndView("user/deals");
         long id = loggedUser().getId();
         boolean hasNext = messageService.hasNextDeal(page, id);
         mav.addObject("hasNext", hasNext);
@@ -119,7 +117,7 @@ public class MessageController {
 
     @RequestMapping("/requests")
     public ModelAndView requests(@RequestParam(name = "page", defaultValue = "1")String page){
-        final ModelAndView mav = new ModelAndView("/project/requests");
+        final ModelAndView mav = new ModelAndView("user/requests");
         long id = loggedUser().getId();
         boolean hasNext = messageService.hasNextRequest(page, id);
         List<Message> messages = messageService.getOffersDone(id,page, messageService.getPageSize());
