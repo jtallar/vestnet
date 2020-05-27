@@ -23,7 +23,7 @@ public class Project {
     private List<Category> categories;
     private final List<Long> stageIds;
     private List<Stage> stages;
-    private Integer notRead;
+    private Integer notRead; // TODO: SACAR DE ACA, pasarlo a metodo que recibe lista de ids como en favs
 
     public Integer getNotRead() {
         return notRead;
