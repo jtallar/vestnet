@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
@@ -29,33 +29,32 @@
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
+<sec:authorize access="!isAuthenticated()">
+    <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
+    <c:set var="searchButtonClass" value="btn btn-black"/>
+    <c:url var="logo" value="/images/logo_bp.png"/>
+    <c:url var="lupa" value="/images/lupa_bw.png"/>
+    <c:set var="options" value="${fn:split('/welcome,/login,/signUp', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,login-icon,signup-icon', ',')}"/>
+</sec:authorize>
 
-<c:choose>
-    <c:when test="${roleNumber eq 0}">
-        <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-        <c:set var="searchButtonClass" value="btn btn-black"/>
-        <c:url var="logo" value="/images/logo_bp.png"/>
-        <c:url var="lupa" value="/images/lupa_bw.png"/>
-        <c:set var="options" value="${fn:split('/welcome,/login,/signUp', ',')}"/>
-        <c:set var="icons" value="${fn:split('home-icon,login-icon,signup-icon', ',')}"/>
-    </c:when>
-    <c:when test="${roleNumber eq 1}">
-        <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-        <c:set var="searchButtonClass" value="btn btn-black"/>
-        <c:url var="logo" value="/images/logo_bp.png"/>
-        <c:url var="lupa" value="/images/lupa_bw.png"/>
-        <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile', ',')}"/>
-        <c:set var="icons" value="${fn:split('home-icon,new-icon,projects-icon,deals-icon,user-icon', ',')}"/>
-    </c:when>
-    <c:when test="${roleNumber eq 2}">
-        <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-        <c:set var="searchButtonClass" value="btn btn-black"/>
-        <c:url var="logo" value="/images/logo_bp.png"/>
-        <c:url var="lupa" value="/images/lupa_bw.png"/>
-        <c:set var="options" value="${fn:split('/projects,/requests,/myProfile', ',')}"/>
-        <c:set var="icons" value="${fn:split('home-icon,offer-icon,user-icon', ',')}"/>
-    </c:when>
-</c:choose>
+<sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
+    <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
+    <c:set var="searchButtonClass" value="btn btn-black"/>
+    <c:url var="logo" value="/images/logo_bp.png"/>
+    <c:url var="lupa" value="/images/lupa_bw.png"/>
+    <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,new-icon,projects-icon,deals-icon,user-icon', ',')}"/>
+</sec:authorize>
+
+<sec:authorize access="hasRole('ROLE_INVESTOR')">
+    <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
+    <c:set var="searchButtonClass" value="btn btn-black"/>
+    <c:url var="logo" value="/images/logo_bp.png"/>
+    <c:url var="lupa" value="/images/lupa_bw.png"/>
+    <c:set var="options" value="${fn:split('/projects,/requests,/myProfile', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,offer-icon,user-icon', ',')}"/>
+</sec:authorize>
 
 <body>
     <nav class="${navbarClass}">
@@ -79,7 +78,7 @@
                         </a>
                     </li>
                 </c:forEach>
-                <c:if test="${roleNumber != 0}">
+                <sec:authorize access="isAuthenticated()">
                     <li class="nav-item">
 
                         <!-- Button trigger modal -->
@@ -89,7 +88,7 @@
                             <div class="row text-icon"> <spring:message code="header./logout"/> </div>
                         </a>
                     </li>
-                </c:if>
+                </sec:authorize>
             </ul>
         </div>
 

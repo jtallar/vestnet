@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.config;
 
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
-import ar.edu.itba.paw.webapp.cookie.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -55,7 +54,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/welcome")
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                .antMatchers("/login", "/signUp", "/projects", "/search*", "/welcome", "/",
+                .antMatchers("/login", "/signUp", "/projects", "/welcome", "/",
                         "/requestPassword", "/resetPassword", "/verify").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/projects/**").hasRole("INVESTOR")
@@ -66,17 +65,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", false)
-                .successHandler(new RoleCookieSuccessHandler())
                 .and().rememberMe()
                 .rememberMeParameter("remember_me")
                 .key(asString(resource))
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
-                .authenticationSuccessHandler(new RoleCookieSuccessHandler())
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .deleteCookies(CookieUtil.ROLE_COOKIE_NAME)
                 .and().csrf().disable();
     }
 

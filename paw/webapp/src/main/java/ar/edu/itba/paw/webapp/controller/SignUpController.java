@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.config.WebConfig;
-import ar.edu.itba.paw.webapp.cookie.CookieUtil;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import ar.edu.itba.paw.webapp.token.TokenGeneratorUtil;
@@ -195,7 +194,6 @@ public class SignUpController {
         token.setDetails(new WebAuthenticationDetails(request));
         Authentication authenticatedUser = authenticationManager.authenticate(token);
 
-        CookieUtil.generateRoleCookie(response, authenticatedUser);
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
     }
 

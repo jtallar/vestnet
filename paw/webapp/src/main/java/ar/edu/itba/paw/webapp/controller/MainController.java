@@ -95,8 +95,9 @@ public class MainController {
      * @return Model and view.
      */
     @RequestMapping(value = "/header")
-    public ModelAndView headerComponent() {
-        return new ModelAndView("components/header");
+    public ModelAndView headerComponent(HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView("components/header");
+        return modelAndView;
     }
 
     @RequestMapping(value = "/requestPassword")
