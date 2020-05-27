@@ -25,7 +25,7 @@
 
     <link rel="stylesheet" href="<c:url value="/css/detail.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>${project.name} | VestNet</title>
+    <title><spring:message code="page.title.singleProject" arguments="${project.name}"/></title>
 </head>
 <body>
 <c:url var="favOff" value="/images/bookmarkOff.png"/>

@@ -121,4 +121,8 @@ public class MessageJdbcDao implements MessageDao {
     public Integer countOffers(long sender_id) {
         return jdbcTemplate.queryForObject(JdbcQueries.MESSAGE_OFFER_COUNT, new Object[]{sender_id}, Integer.class);
     }
+
+
+
+
 }

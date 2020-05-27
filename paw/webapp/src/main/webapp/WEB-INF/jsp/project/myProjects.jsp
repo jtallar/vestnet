@@ -10,7 +10,7 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>--%>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
-    <title><spring:message code="my_projects"/> | VestNet</title>
+    <title><spring:message code="page.title.dashboard"/></title>
 </head>
 <body>
 
@@ -26,18 +26,18 @@
                 </div>
                 <div class="col-md-10 px-3">
                     <div class="card-block px-3">
-                        <h4 class="card-title msg-title">${project.name}</h4>
+                        <h4 class="card-title msg-title"><c:out value="${project.name}"/></h4>
 <%--                        <p class="card-text">${project.summary} </p>--%>
                         <div class="row msg-content">
                             <div class="col-"><h5><spring:message code="cost"/> </h5></div>
-                            <div class="col-5 msg-content"><p class="card-text"> ${project.cost}</p></div>
+                            <div class="col-5 msg-content"><p class="card-text"> <c:out value="${project.cost}"/></p></div>
                         </div>
                         <div class="row msg-content">
                             <div class="col-3">
                                 <strong><spring:message code="hits"/> </strong>
                             </div>
                             <div class="col-7">
-                                <p>  ${project.hits}</p>
+                                <p>  <c:out value="${project.hits}"/></p>
                             </div>
                             <div class="col-">
                                 <a href="<c:url value="/messages/${project.id}"/>" class="btn btn-dark btn-project pull-right"> <spring:message code="preview_project"/> </a>
@@ -49,10 +49,24 @@
                             </div>
                             <div class="col-7">
                                 <c:set var="favorites" value="${project.name}favs"/>
-                                <p>  ${requestScope[favorites]}</p>
+                                <p>  <c:out value="${requestScope[favorites]}"/></p>
                             </div>
                             <div class="col-">
-                                <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}"><spring:message code="see_msgs"></spring:message> </button>
+
+
+
+                                    <button onclick="fetchMsgs(${project.id}, ${theCount.index})" class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse" data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}">
+                                        <div class="notification-icon">
+                                            <span> <spring:message code="see_msgs"></spring:message></span>
+                                            <c:if test="${project.notRead != 0}">
+                                                <span class="badge bg-danger"><c:out value="${project.notRead}"/></span>
+                                            </c:if>
+                                        </div>
+
+                                    </button>
+
+
+
                             </div>
                         </div>
                     </div>

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -80,6 +81,60 @@ public class EmailSenderService implements EmailService {
 
         try {
             sendEmail(session, sender.getEmail(), to, subject, fullBodySB.toString());
+        } catch (MessagingException me) {
+            me.printStackTrace();   //Si se produce un error
+            System.out.println("ERROR AL ENVIAR EMAIL");
+            throw new MessagingException();
+        }
+    }
+
+    @Override
+    public void sendPasswordRecovery(User user, String token, String baseUrl) throws MessagingException {
+        Properties props = getEmailProperties();
+        Session session = Session.getDefaultInstance(props);
+        session.setDebug(true);
+
+        Locale localeInst = Locale.forLanguageTag(user.getLocation().getCountry().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", localeInst, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+
+        final String encodedEmail = Base64.getUrlEncoder().encodeToString(user.getEmail().getBytes());
+        String subject = bundle.getString("email.subject.passwordReset");
+        StringBuilder fullBodySB = new StringBuilder();
+        fullBodySB.append(bundle.getString("email.body.vestnetReports")).append('\n')
+                .append(bundle.getString("email.body.passwordReset")).append("\n")
+                .append(MessageFormat.format(bundle.getString("email.body.passwordResetButton"),
+                        String.format("%s/resetPassword?username=%s&token=%s", baseUrl, encodedEmail, token)));
+
+
+        try {
+            sendEmail(session, VESTNET_EMAIL, user.getEmail(), subject, fullBodySB.toString());
+        } catch (MessagingException me) {
+            me.printStackTrace();   //Si se produce un error
+            System.out.println("ERROR AL ENVIAR EMAIL");
+            throw new MessagingException();
+        }
+    }
+
+    @Override
+    public void sendVerificationEmail(User user, String token, String baseUrl) throws MessagingException {
+        Properties props = getEmailProperties();
+        Session session = Session.getDefaultInstance(props);
+        session.setDebug(true);
+
+        Locale localeInst = Locale.forLanguageTag(user.getLocation().getCountry().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", localeInst, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+
+        final String encodedEmail = Base64.getUrlEncoder().encodeToString(user.getEmail().getBytes());
+        String subject = bundle.getString("email.subject.verification");
+        StringBuilder fullBodySB = new StringBuilder();
+        fullBodySB.append(bundle.getString("email.body.vestnetReports")).append('\n')
+                .append(bundle.getString("email.body.verification")).append("\n")
+                .append(MessageFormat.format(bundle.getString("email.body.verificationButton"),
+                        String.format("%s/verify?username=%s&token=%s", baseUrl, encodedEmail, token)));
+
+
+        try {
+            sendEmail(session, VESTNET_EMAIL, user.getEmail(), subject, fullBodySB.toString());
         } catch (MessagingException me) {
             me.printStackTrace();   //Si se produce un error
             System.out.println("ERROR AL ENVIAR EMAIL");

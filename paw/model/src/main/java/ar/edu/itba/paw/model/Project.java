@@ -23,7 +23,15 @@ public class Project {
     private List<Category> categories;
     private final List<Long> stageIds;
     private List<Stage> stages;
+    private Integer notRead;
 
+    public Integer getNotRead() {
+        return notRead;
+    }
+
+    public void setNotRead(Integer notRead) {
+        this.notRead = notRead;
+    }
 
     public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
                    User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
@@ -56,6 +64,24 @@ public class Project {
         this.categories = categories;
         this.stageIds = stageIds;
         this.stages = stages;
+    }
+
+    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
+                   User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds, List<Stage> stages, Integer notRead) {
+        this.id = id;
+        this.name = name;
+        this.summary = summary;
+        this.publishDate = publishDate;
+        this.updateDate = updateDate;
+        this.cost = cost;
+        this.hits = hits;
+        this.owner = owner;
+        this.ownerUserId = owner.getId();
+        this.backOffice = backOffice;
+        this.categories = categories;
+        this.stageIds = stageIds;
+        this.stages = stages;
+        this.notRead = notRead;
     }
 
     public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,

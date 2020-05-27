@@ -29,7 +29,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="<c:url value="/images/apple-touch-icon.png"/>">
     <link rel="icon" type="image/png" sizes="32x32" href="<c:url value="/images/favicon-32x32.png"/>">
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
-    <title>Login | VestNet</title>
+    <title><spring:message code="page.title.login"/></title>
 </head>
 <body>
 
@@ -56,6 +56,7 @@
                 <div class="form-group">
                     <label><spring:message code = "password"></spring:message></label>
                     <input name="password" class="form-control" type="password" placeholder="<spring:message code = "enter_password"/>"/>
+                    <a href="<c:url value='/requestPassword'/>"><spring:message code="forgotPassword"/></a>
                 </div>
                 <div class="form-group">
                     <label>
@@ -69,8 +70,18 @@
                     </div>
                     <div class="col mailError">
                         <c:if test="${param.error != null}">
-                        <p class="mailError"><spring:message code="loginError"/></p>
+                            <c:choose>
+                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'Bad credentials'}"><p class="mailError"><spring:message code = "loginError"></spring:message></p></c:when>
+                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'User is disabled'}"><p class="mailError"><spring:message code = "loginVerificationError"></spring:message></p></c:when>
+                            </c:choose>
                         </c:if>
+
+                        <c:choose>
+                            <c:when test="${message eq 1}"><p class="noError"><spring:message code = "verificationMessageSent"></spring:message></p></c:when>
+                            <c:when test="${message eq 2}"><p class="mailError"><spring:message code = "verificationInvalid"></spring:message></p></c:when>
+                            <c:when test="${message eq 3}"><p class="mailError"><spring:message code = "verificationTokenExpired"></spring:message></p></c:when>
+                            <c:when test="${message eq 4}"><p class="noError"><spring:message code = "verificationMade"></spring:message></p></c:when>
+                        </c:choose>
                     </div>
                 </div>
             </form>

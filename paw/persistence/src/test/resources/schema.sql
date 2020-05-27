@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS users (
     -- Profile picture URN. Optional. Max 100 characters.
     profile_pic     VARCHAR(50),
     join_date       TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    verified        BOOLEAN DEFAULT FALSE,
 
     -- BACK OFFICE INFO
     -- Trust Index. -100 to 100 range. Default 0.

@@ -67,6 +67,10 @@ body {
     color: red;
 }
 
+.noError p{
+    color: green;
+}
+
 .login-main-text{
     margin-top: 20%;
     padding: 60px;
@@ -119,3 +123,18 @@ body {
 #welcome-login {
     margin-top: 10px;
 }
+
+
+.mailSent{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.mailSent p{
+    color: blue;
+}
+
+.formError {
+    color: red;
+}
+

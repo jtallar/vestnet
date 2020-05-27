@@ -43,9 +43,23 @@ public interface UserService {
     Optional<User> findById(long id);
 
     /**
-     * Finds the image fot the given user.
+     * Finds the image for the given user.
      * @param userId The unique user id.
      * @return Image as a byte array.
      */
     byte[] findImageForUser(long userId);
+
+    /**
+     * Updates password for the given user
+     * @param username The username to update
+     * @param password The new password for username
+     * @return userId
+     */
+    long updateUserPassword(String username, String password);
+
+    /**
+     * Sets a user as verified
+     * @param username
+     */
+    void verifyUser(String username);
 }

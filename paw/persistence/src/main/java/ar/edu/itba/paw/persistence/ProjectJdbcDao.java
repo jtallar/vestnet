@@ -74,12 +74,22 @@ public class ProjectJdbcDao implements ProjectDao {
 
     @Override
     public List<Project> findByIds(List<Long> ids) {
+        if(ids == null || ids.isEmpty()) return new ArrayList<>();
         return namedParameterJdbcTemplate.query(PROJECT_FIND_BY_IDS, new MapSqlParameterSource().addValue("ids", ids), RESULT_SET_EXTRACTOR);
     }
 
     @Override
     public List<Project> findByOwner(long userId) {
-        return jdbcTemplate.query(PROJECT_FIND_BY_OWNER, new Object[] {userId}, RESULT_SET_EXTRACTOR);
+
+        List<Project> projects = jdbcTemplate.query(PROJECT_FIND_BY_OWNER, new Object[] {userId}, RESULT_SET_EXTRACTOR);
+
+        projects.forEach(project -> {
+            if(project.getNotRead() == null) project.setNotRead(0);
+        }); //set 0 if not read because it sets null
+
+
+        return  projects;
+
     }
 
     @Override
