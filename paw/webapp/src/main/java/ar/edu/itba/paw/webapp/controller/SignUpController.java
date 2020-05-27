@@ -102,21 +102,12 @@ public class SignUpController {
 
         final long userId;
         try {
-//             Escaping from potential XSS code insertions
-            String firstName = StringEscapeUtils.escapeXml11(userFields.getFirstName()), lastName = StringEscapeUtils.escapeXml11(userFields.getLastName()),
-                    id = StringEscapeUtils.escapeXml11(userFields.getRealId()), email =  StringEscapeUtils.escapeXml11(userFields.getEmail()),
-                    phone = StringEscapeUtils.escapeXml11(userFields.getPhone()), linkedin = StringEscapeUtils.escapeXml11(userFields.getLinkedin());
-
-//            String firstName = userFields.getFirstName(), lastName = userFields.getLastName(),
-//                    id = userFields.getRealId(), email =  userFields.getEmail(),
-//                    phone = userFields.getPhone(), linkedin = userFields.getLinkedin();
-
-            userId = userService.create(userFields.getRole(), firstName, lastName, id,
+            userId = userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
                     LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
                     new Location(new Location.Country(userFields.getCountry(), "", "", "", "", ""),
                             new Location.State(userFields.getState(), "", ""),
                             new Location.City(userFields.getCity(), "")),
-                    email, phone, linkedin, userFields.getPassword(), imageBytes);
+                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", userFields.getEmail());
             return signUp(userFields, true);
