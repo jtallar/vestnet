@@ -24,94 +24,99 @@
     <link rel="apple-touch-icon" sizes="180x180" href="<c:url value="/images/apple-touch-icon.png"/>">
     <link rel="icon" type="image/png" sizes="32x32" href="<c:url value="/images/favicon-32x32.png"/>">
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
-<%--    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">--%>
-
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
+
+<%-- Set used variables --%>
 <sec:authorize access="!isAuthenticated()">
-    <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-    <c:set var="searchButtonClass" value="btn btn-black"/>
-    <c:url var="logo" value="/images/logo_bp.png"/>
-    <c:url var="lupa" value="/images/lupa_bw.png"/>
     <c:set var="options" value="${fn:split('/welcome,/login,/signUp', ',')}"/>
     <c:set var="icons" value="${fn:split('home-icon,login-icon,signup-icon', ',')}"/>
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
-    <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-    <c:set var="searchButtonClass" value="btn btn-black"/>
-    <c:url var="logo" value="/images/logo_bp.png"/>
-    <c:url var="lupa" value="/images/lupa_bw.png"/>
     <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile', ',')}"/>
     <c:set var="icons" value="${fn:split('home-icon,new-icon,projects-icon,deals-icon,user-icon', ',')}"/>
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_INVESTOR')">
-    <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-    <c:set var="searchButtonClass" value="btn btn-black"/>
-    <c:url var="logo" value="/images/logo_bp.png"/>
-    <c:url var="lupa" value="/images/lupa_bw.png"/>
     <c:set var="options" value="${fn:split('/projects,/requests,/myProfile', ',')}"/>
     <c:set var="icons" value="${fn:split('home-icon,offer-icon,user-icon', ',')}"/>
 </sec:authorize>
 
+<%-- Set used URLs --%>
+<c:url var="link_home" value='/'/>
+<c:url var="icon_logo" value="/images/logo_bp.png"/>
+<c:url var="icon_logout" value="/images/logout-icon.png"/>
+
 <body>
-    <nav class="${navbarClass}">
-        <a class="navbar-brand" href="<c:url value='/'/>">
-            <img src="${logo}" width="60" class="logo-img" alt="<spring:message code="logo"/>">
+    <nav class="navbar navbar-dark navbar-expand-sm navbar-custom">
+        <%-- Logo and name --%>
+        <a class="navbar-brand" href="${link_home}">
+            <img src="${icon_logo}" width="60" class="logo-img" alt="<spring:message code="logo"/>">
         </a>
-        <a class="logo-text" href="<c:url value='/'/>">
+        <a class="logo-text" href="${link_home}">
             VestNet
         </a>
+
+        <%-- Align --%>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
+        <%-- Icons --%>
         <div class="collapse navbar-collapse topnav-right" id="navbarNavDropdown">
             <ul class="navbar-nav">
+
+                <%-- Most icons --%>
                 <c:forEach var="option" items="${options}" varStatus="index">
                     <li class="nav-item">
                         <a class="nav-link" href="<c:url value="${option}"/>">
-                            <c:url var="icon" value="/images/${icons[index.index]}.png"/>
-                            <div class="row justify-content-center"> <img class="nav-icon" src="${icon}"></div>
+                            <c:url var="icon_generic" value="/images/${icons[index.index]}.png"/>
+                            <div class="row justify-content-center"><img class="nav-icon" src="${icon_generic}"></div>
                             <div class="row text-icon"><spring:message code="header.${option}"/></div>
                         </a>
                     </li>
                 </c:forEach>
+
+                <%-- Show logout --%>
                 <sec:authorize access="isAuthenticated()">
                     <li class="nav-item">
-
-                        <!-- Button trigger modal -->
                         <a type="button" class="nav-link" data-toggle="modal" data-target="#exampleModal">
-                            <c:url var="logout" value="/images/logout-icon.png"/>
-                            <div class="row justify-content-center"> <img class="nav-icon" src="${logout}"></div>
-                            <div class="row text-icon"> <spring:message code="header./logout"/> </div>
+                            <div class="row justify-content-center"><img class="nav-icon" src="${icon_logout}"></div>
+                            <div class="row text-icon"><spring:message code="header./logout"/></div>
                         </a>
                     </li>
                 </sec:authorize>
             </ul>
         </div>
-
     </nav>
 
-    <!-- Modal -->
+    <!-- Show logout confirmation -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog " role="document">
             <div class="modal-content mx-auto my-auto">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><spring:message code="conf_logout"/> </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <spring:message code="conf_logout"/>
+                    </h5>
                 </div>
                 <div class="modal-body">
                     <spring:message code="conf_logout_body"/>
                 </div>
                 <div class="modal-footer">
                     <div class="row">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><spring:message code="cancel"/> </button>
-                        <a href="<c:url value="/logout"/> " type="button" class="btn btn-success"><spring:message code="confirm"/></a>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <spring:message code="cancel"/>
+                        </button>
+                        <a href="<c:url value="/logout"/> " type="button" class="btn btn-success">
+                            <spring:message code="confirm"/>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 </html>
