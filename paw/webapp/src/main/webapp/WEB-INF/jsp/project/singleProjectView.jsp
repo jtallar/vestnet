@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file = "../components/header.jsp" %>
 
 <html>
@@ -15,6 +16,12 @@
 <body>
 <c:url var="favOff" value="/images/bookmarkOff.png"/>
 <c:url var="favOn" value="/images/bookmarkOn.png"/>
+
+<sec:authorize access="isAuthenticated()">
+    <sec:authentication var="session_user_id" property="principal.id"/>
+    <sec:authentication var="session_user_mail" property="principal.username"/>
+</sec:authorize>
+
 <div class="container" style="margin-top: 20px">
     <div>
             <div class="d-flex justify-content-between align-self-center">
@@ -83,23 +90,23 @@
             <div class="col-6">
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
-                        <c:if test="${sessionUser.role eq 2}">
-                        <div class="card-header header-white">
-                            <button onclick="favTap()" class="btn-transp pull-right">
-                                <c:set var="fav" value="${isFav}"/>
-                                <c:choose>
-                                    <c:when test="${isFav==true}" >
-                                        <c:set var="favSrc" value="${favOn}"/>
-                                    </c:when>
-                                    <c:when test="${isFav==false}">
-                                        <c:set var="favSrc" value="${favOff}"/>
-                                    </c:when>
-                                </c:choose>
-                                <img id="favImg" src="${favSrc}" height="40">
+                        <sec:authorize access="hasRole('ROLE_INVESTOR')">
+                            <div class="card-header header-white">
+                                <button onclick="favTap()" class="btn-transp pull-right">
+                                    <c:set var="fav" value="${isFav}"/>
+                                    <c:choose>
+                                        <c:when test="${isFav==true}" >
+                                            <c:set var="favSrc" value="${favOn}"/>
+                                        </c:when>
+                                        <c:when test="${isFav==false}">
+                                            <c:set var="favSrc" value="${favOff}"/>
+                                        </c:when>
+                                    </c:choose>
+                                    <img id="favImg" src="${favSrc}" height="40">
 
-                            </button>
-                        </div>
-                        </c:if>
+                                </button>
+                            </div>
+                        </sec:authorize>
                         <div class="card-body">
                             <h5 class="card-title"><b><c:out value="${project.name}"/></b></h5>
                             <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/>
@@ -117,7 +124,7 @@
                             <h5 class="card-title"><b><spring:message code="contactMail"/></b></h5>
                             <p><c:out value="${project.owner.email}"/></p>
 
-                            <c:if test="${sessionUser.id != project.owner.id}">
+                            <c:if test="${session_user_id != project.owner.id}">
                                 <h5><a href="<c:url value='/users/${project.owner.id}?back=yes'/>" class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
                             </c:if>
 
@@ -128,83 +135,81 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <c:if test="${sessionUser.id == project.owner.id}">
-                    </c:if>
-                    <c:if test="${sessionUser.role == 2}">
+                    <sec:authorize access="hasRole('ROLE_INVESTOR')">
                             <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact"
                                     aria-expanded="false" aria-controls="contact" id="contact-expand-button">
                                 <spring:message code="contactowner"/>
                             </button>
-                    </c:if>
+                    </sec:authorize>
                 </div>
             </div>
         </div>
 
-    <c:if test="${sessionUser.role == 2}">
-    <div class="collapse" id="contact">
-        <div class="card contact">
-            <div class="card-header">
-                <label class="label-header"> <spring:message code="contact.header"/> ${project.owner.firstName} ${project.owner.lastName}</label>
-                <button class="btn btn-dark pull-right" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">X</button>
-            </div>
-            <div class="card-body">
-                <c:url value="/projects/${project.id}" var="postPath"/>
-                <form:form modelAttribute="mailForm" action="${postPath}" method="post">
+    <sec:authorize access="hasRole('ROLE_INVESTOR')">
+        <div class="collapse" id="contact">
+            <div class="card contact">
+                <div class="card-header">
+                    <label class="label-header"> <spring:message code="contact.header"/> ${project.owner.firstName} ${project.owner.lastName}</label>
+                    <button class="btn btn-dark pull-right" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">X</button>
+                </div>
+                <div class="card-body">
+                    <c:url value="/projects/${project.id}" var="postPath"/>
+                    <form:form modelAttribute="mailForm" action="${postPath}" method="post">
 
-                    <div class="form-group">
-                        <label><spring:message code="contact.bodyMessage"/></label>
-                        <div class="input-group mb-3">
-                            <spring:message code="writemessage" var="placeholdermessage" />
-                            <form:textarea path="body" type="text" class="form-control" placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
-                        </div>
-                    </div>
-
-                    <div class="container-contact">
-                        <div class="row">
-                            <div class="col-2">
-                                <label><spring:message code="contact.offerMessage"/></label>
+                        <div class="form-group">
+                            <label><spring:message code="contact.bodyMessage"/></label>
+                            <div class="input-group mb-3">
+                                <spring:message code="writemessage" var="placeholdermessage" />
+                                <form:textarea path="body" type="text" class="form-control" placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
                             </div>
-                            <div class="col-md-5">
-                                <div class="row justify-content-center">
-                                    <div class="col-2">
-                                        <label><spring:message code="currency"/></label>
-                                    </div>
-                                    <div class="col">
-                                        <spring:message code="writemessage" var="placeholderoffers" />
-                                        <form:input path="offers" type="number" class="form-control" placeholder="${placeholderoffers}" aria-describedby="basic-addon2" id="contact-offer"/>
+                        </div>
+
+                        <div class="container-contact">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label><spring:message code="contact.offerMessage"/></label>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="row justify-content-center">
+                                        <div class="col-2">
+                                            <label><spring:message code="currency"/></label>
+                                        </div>
+                                        <div class="col">
+                                            <spring:message code="writemessage" var="placeholderoffers" />
+                                            <form:input path="offers" type="number" class="form-control" placeholder="${placeholderoffers}" aria-describedby="basic-addon2" id="contact-offer"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <form:errors path="offers" cssClass="formError"/>
                         </div>
-                        <form:errors path="offers" cssClass="formError"/>
-                    </div>
 
-                    <div class="container-contact">
-                        <div class="row">
-                            <div class="col-2">
-                                <label><spring:message code="contact.exchangeMessage"/></label>
-                            </div>
-                            <div class="col-md-5">
-                                <spring:message code="writemessage" var="placeholderexchange" />
-                                <form:textarea path="exchange" type="text" class="form-control" placeholder="${placeholderexchange}" aria-describedby="basic-addon2"/>
+                        <div class="container-contact">
+                            <div class="row">
+                                <div class="col-2">
+                                    <label><spring:message code="contact.exchangeMessage"/></label>
+                                </div>
+                                <div class="col-md-5">
+                                    <spring:message code="writemessage" var="placeholderexchange" />
+                                    <form:textarea path="exchange" type="text" class="form-control" placeholder="${placeholderexchange}" aria-describedby="basic-addon2"/>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <form:input path="from" value="${sessionUser.email}" type="hidden"/>
-                    <form:input path="toId" value="${project.owner.id}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
-                    <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
-                    <form:input path="project" value="${project.name}" type="hidden"/>
-                    <form:input path="locale" value="${project.owner.location.country.locale}" type="hidden"/>
+                        <form:input path="from" value="${session_user_mail}" type="hidden"/>
+                        <form:input path="toId" value="${project.owner.id}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+                        <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+                        <form:input path="project" value="${project.name}" type="hidden"/>
+                        <form:input path="locale" value="${project.owner.location.country.locale}" type="hidden"/>
 
-                    <div class="text-right">
-                        <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark" onclick="adjustInputs()" id="contact-send"/>
-                    </div
-                </form:form>
+                        <div class="text-right">
+                            <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark" onclick="adjustInputs()" id="contact-send"/>
+                        </div
+                    </form:form>
+                </div>
             </div>
         </div>
-    </div>
-    </c:if>
+    </sec:authorize>
     </div>
 </div>
 <script>
@@ -217,7 +222,7 @@
 
     // Every time window loads its a hit
     window.onload = function () {
-        if (${sessionUser.id != project.owner.id}) {
+        if (${session_user_id != project.owner.id}) {
             fetch(window.location.origin + "${pageContext.request.contextPath}" + "/addHit/" + "${project.id}", options)
             .catch((function (reason) { console.error(reason) }))
         }
@@ -234,12 +239,12 @@
     });
     function addFav() {
        let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+        let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${session_user_id}+"&p_id="+${project.id};
         fetch(path, options).catch((function (reason) { console.error(reason) }));
     }
     function delFav() {
         let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id="+${project.id};
+        let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${session_user_id}+"&p_id="+${project.id};
         fetch(path, options).catch((function (reason) { console.error(reason) }));
     }
 

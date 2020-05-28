@@ -52,19 +52,8 @@ public class ProjectController {
     @Autowired
     private MessageService messageService;
 
-    /**
-     * Session user data.
-     *
-     * @return The logged in user.
-     */
-    @ModelAttribute("sessionUser")
-    public User loggedUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        LOGGER.debug("\n\n loggedUser() called\n\n");
-        if (auth != null)
-            return userService.findByUsername(auth.getName()).orElse(null);
-        return null;
-    }
+    @Autowired
+    protected SessionUserFacade sessionUser;
 
     /**
      */
@@ -95,9 +84,8 @@ public class ProjectController {
         mav.addObject("endPage", paginationLimits.getValue());
         mav.addObject("page", page);
 
-        User loggedUser = loggedUser();
-        if (loggedUser != null && loggedUser.getRole() == User.UserRole.INVESTOR.getId())
-            mav.addObject("isFav", projectService.isFavorite(projects.stream().map(Project::getId).collect(Collectors.toList()), loggedUser.getId()));
+        if (sessionUser.isInvestor())
+            mav.addObject("isFav", projectService.isFavorite(projects.stream().map(Project::getId).collect(Collectors.toList()), sessionUser.getId()));
         else
             mav.addObject("isFav", new ArrayList<>());
         return mav;
@@ -118,7 +106,7 @@ public class ProjectController {
         final ModelAndView mav = new ModelAndView("project/singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("contactStatus", contactStatus);
-        boolean isFav = projectService.isFavorite(id, loggedUser().getId());
+        boolean isFav = projectService.isFavorite(id, sessionUser.getId());
         mav.addObject("isFav", isFav);
         return mav;
     }
@@ -150,10 +138,9 @@ public class ProjectController {
                 LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
             return singleProjectView(mailFields, id, 0);
         }
-        User loggedUser = loggedUser();
 
         try {
-            messageService.create(mailFields.getBody(), String.valueOf(mailFields.getOffers()), mailFields.getExchange(), loggedUser.getId(), mailFields.getToId(), id);
+            messageService.create(mailFields.getBody(), String.valueOf(mailFields.getOffers()), mailFields.getExchange(), sessionUser.getId(), mailFields.getToId(), id);
         } catch (MessageAlreadySentException e) {
             LOGGER.error("Message already sent to this user about this project.");
             return singleProjectView(mailFields, id, 2);
@@ -161,8 +148,10 @@ public class ProjectController {
 
         String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
         LOGGER.debug("\n\nLocale: {}\n\n", mailFields.getLocale());
-        emailService.sendNewEmail(loggedUser, mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
-                mailFields.getTo(), mailFields.getProject(), id, baseUrl, mailFields.getLocale());
+// TODO do not forget this
+
+//        emailService.sendNewEmail(userService.gun, mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
+//                mailFields.getTo(), mailFields.getProject(), id, baseUrl, mailFields.getLocale());
         return new ModelAndView("redirect:/projects/{id}?contactStatus=1");
     }
 
@@ -209,7 +198,7 @@ public class ProjectController {
 
         String title = StringEscapeUtils.escapeXml11(projectFields.getTitle());
         String summary = StringEscapeUtils.escapeXml11(projectFields.getSummary());
-        long userId = loggedUser().getId();
+        long userId = sessionUser.getId();
 
         long projectId = projectService.create(title, summary,
                 projectFields.getCost(), userId, projectFields.getCategories(), null, imageBytes);

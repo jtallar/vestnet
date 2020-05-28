@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.LoggedUser;
 import ar.edu.itba.paw.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class PawUserDetailsService implements UserDetailsService{
                 authorities.add(new SimpleGrantedAuthority("ROLE_INVESTOR"));
                 break;
         }
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), user.isVerified(), true, true, true, authorities);
+        return new LoggedUser(user.getId(), username, user.getPassword(), user.isVerified(), true, true, true, authorities);
     }
 
 

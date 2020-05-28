@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.ProjectService;
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,17 +33,8 @@ public class UserController {
     @Autowired
     private ProjectService projectService;
 
-    /**
-     * Session user data.
-     * @return The logged in user.
-     */
-    @ModelAttribute("sessionUser")
-    public User loggedUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        LOGGER.debug("\n\n loggedUser() called\n\n");
-        if(auth != null) return userService.findByUsername(auth.getName()).orElse(null);
-        return null;
-    }
+    @Autowired
+    protected SessionUserFacade sessionUser;
 
     /**
      * Single user profile.
@@ -54,10 +44,9 @@ public class UserController {
      */
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav= new ModelAndView("user/userProfile");
+        final ModelAndView mav= new ModelAndView("user/profile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        User loggedUser = loggedUser();
-        if(loggedUser.getRole() == User.UserRole.INVESTOR.getId() && id == loggedUser.getId())
+        if(sessionUser.isInvestor() && id == sessionUser.getId())
             mav.addObject("favs", projectService.getUserFavorites(id));
         mav.addObject("back", back);
         return mav;
@@ -70,7 +59,7 @@ public class UserController {
      */
     @RequestMapping(value = "/myProfile")
     public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav = new ModelAndView("redirect:/users/" + loggedUser().getId());
+        final ModelAndView mav = new ModelAndView("redirect:/users/" + sessionUser.getId());
         mav.addObject("back", back);
         return mav;
     }
@@ -83,7 +72,7 @@ public class UserController {
     public ModelAndView myMessages() {
         ModelAndView mav = new ModelAndView("project/myProjects");
 
-        List<Project> projects = projectService.findByOwner(loggedUser().getId());
+        List<Project> projects = projectService.findByOwner(sessionUser.getId());
         mav.addObject("projects", projects);
         List<Long> favCount = projectService.getFavoritesCount(projects.stream().map(Project::getId).collect(Collectors.toList()));
         for (int i = 0; i < projects.size(); i++) {
@@ -96,7 +85,7 @@ public class UserController {
     public ModelAndView singleProjectView(@PathVariable("id") long id) {
         final Project project = projectService.findById(id).orElseThrow(ProjectNotFoundException::new);
         // Prevent entrepreneurs from accessing other projects that are not theirs
-        if (project.getOwnerUserId() != loggedUser().getId())
+        if (project.getOwnerUserId() != sessionUser.getId())
             return new ModelAndView("redirect:/messages");
         final ModelAndView mav = new ModelAndView("project/singleProjectView");
         mav.addObject("project", project);

@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -39,18 +40,9 @@ public class MainController {
     @Autowired
     protected AuthenticationManager authenticationManager;
 
-    /**
-     * Session user data.
-     * @return The logged in user.
-     */
-    @ModelAttribute("sessionUser")
-    public User loggedUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        LOGGER.debug("\n\n loggedUser() called\n\n");
-        if(auth != null)
-            return userService.findByUsername(auth.getName()).orElse(null);
-        return null;
-    }
+    @Autowired
+    protected SessionUserFacade sessionUser;
+
 
     /**
      * Mapping for /, depends on user where it starts.
@@ -58,24 +50,18 @@ public class MainController {
      */
     @RequestMapping("/")
     public ModelAndView index(){
-        User user = loggedUser();
-        if (user == null)
-            return new ModelAndView("redirect:/welcome");
-        if (user.getRole() == User.UserRole.ENTREPRENEUR.getId())
-            return new ModelAndView("redirect:/messages");
-        return new ModelAndView("redirect:/projects");
+        if (sessionUser.isAnonymous()) return new ModelAndView("redirect:/welcome");
+        if (sessionUser.isInvestor()) return new ModelAndView("redirect:/projects");
+        return new ModelAndView("redirect:/messages");
     }
 
     /**
      * Login page view. Only anonymous user.
-     * @return Model and view.
+     * @return Model and view.x
      */
     @RequestMapping(value = "/login")
     public ModelAndView login(@RequestParam(name = "me", required = false) Integer message) {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
-            return new ModelAndView("redirect:/");
-
+        if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
         final ModelAndView modelAndView = new ModelAndView("index/login");
         modelAndView.addObject("message", message);
         return modelAndView;
@@ -96,8 +82,7 @@ public class MainController {
      */
     @RequestMapping(value = "/header")
     public ModelAndView headerComponent(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("components/header");
-        return modelAndView;
+        return new ModelAndView("components/header");
     }
 
     @RequestMapping(value = "/requestPassword")

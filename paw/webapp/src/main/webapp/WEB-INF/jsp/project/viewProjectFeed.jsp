@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../components/header.jsp" %>
 
 <html>
@@ -18,6 +19,10 @@
 <c:url var="favOn" value="/images/bookmarkOnB.png"/>
 <c:url var="order" value="/images/order.png"/>
 <c:url var="filter" value="/images/filter.png"/>
+
+<sec:authorize access="isAuthenticated()">
+    <sec:authentication var="session_user_id" property="principal.id"/>
+</sec:authorize>
 
 <%-- PAGINATION --%>
 <div class="row">
@@ -168,7 +173,7 @@
                                 </div>
                             </div>
                             <div class="col-md">
-                                <c:if test="${sessionUser.role eq 2}">
+                                <sec:authorize access="hasRole('ROLE_INVESTOR')">
                                     <button onclick="favTap(${project.id}, ${projectIndex.index})"
                                             class="btn-transp pull-right">
                                         <c:choose>
@@ -181,7 +186,7 @@
                                         </c:choose>
                                         <img id="favImg_${project.id}" src="${favSrc}" class="fav-img" alt="${favSrc}"/>
                                     </button>
-                                </c:if>
+                                </sec:authorize>
                             </div>
                         </div>
                     </div>
@@ -204,12 +209,13 @@
                             </div>
                         </div>
                     </div>
-                    <c:if test="${sessionUser.role != 1}">
+
+                    <sec:authorize access="hasRole('ROLE_INVESTOR')">
                         <div class="card-footer">
                             <a href="<c:url value='/projects/${project.id}'/>"
                                class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
                         </div>
-                    </c:if>
+                    </sec:authorize>
                 </div>
 
             </c:forEach>
@@ -246,7 +252,7 @@
 
     function addFav(p_id) {
         let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux + "/addFavorite?u_id=" + ${sessionUser.id}+"&p_id=" + p_id;
+        let path = window.location.origin + path_aux + "/addFavorite?u_id=" + ${session_user_id}+"&p_id=" + p_id;
         fetch(path, options).catch((function (reason) {
             console.error(reason)
         }));
@@ -254,7 +260,7 @@
 
     function delFav(p_id) {
         let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux + "/deleteFavorite?u_id=" + ${sessionUser.id}+"&p_id=" + p_id;
+        let path = window.location.origin + path_aux + "/deleteFavorite?u_id=" + ${session_user_id}+"&p_id=" + p_id;
         fetch(path, options).catch((function (reason) {
             console.error(reason)
         }));

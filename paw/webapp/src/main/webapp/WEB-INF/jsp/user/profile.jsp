@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="../components/header.jsp" %>
 <html>
 
@@ -13,23 +14,31 @@
     <title><spring:message code="page.title.profile" arguments="${user.firstName},${user.lastName}"/></title>
 </head>
 
+<%-- Used variables --%>
+<c:url var="user_image" value="/imageController/user/${user.id}"/>
+<sec:authorize access="isAuthenticated()">
+    <sec:authentication var="session_user_id" property="principal.id"/>
+</sec:authorize>
+
 <body>
-<%-- BACK BUTTON LOGIC --%>
+<%-- Back button logic --%>
     <c:if test="${back}">
         <div class="back">
             <a onclick="history.back()" class="btn btn-dark"><spring:message code="back"/></a>
         </div>
     </c:if>
 
-<%-- PROFILE --%>
+<%-- User profile --%>
     <div class="container emp-profile">
         <div class="row">
             <div class="col-md-4">
+
+                <%-- User profile picture --%>
                 <div class="profile-img ">
-                    <img src="<c:url value="/imageController/user/${user.id}"/>" alt="<spring:message code="userPicture"/>"
-                         aria-placeholder="<spring:message code="userPicture"/>"/>
+                    <img src="${user_image}" alt="<spring:message code="userPicture"/>" aria-placeholder="<spring:message code="userPicture"/>"/>
                 </div>
 
+                <%-- User linkedin button --%>
                 <c:if test="${not empty user.linkedin}">
                     <div class="text-center my-2">
                         <button onclick="goToLinkedin('<c:out value="${user.linkedin}"/>')" class="btn btn-linkedin">
@@ -41,24 +50,28 @@
             <div class="col-md-6">
                 <div class="profile-head">
                     <h2 class="bold">
-                        <c:out value="${user.firstName}" escapeXml="false"/><c:out value=" "/><c:out
-                            value="${user.lastName}" escapeXml="false"/>
+                        <c:out value="${user.firstName} " escapeXml="false"/>
+                        <c:out value="${user.lastName}" escapeXml="false"/>
                     </h2>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                                aria-controls="home" aria-selected="true"><spring:message code="information"/></a>
                         </li>
-                        <c:if test="${user.role eq 2 and sessionUser.id eq user.id}">
-                            <li class="nav-item">
-                                <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
-                                   aria-controls="favorites" aria-selected="false"><spring:message code="favorites"/></a>
-                            </li>
-                        </c:if>
+
+                        <%-- Check if can show favorites --%>
+                        <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
+                            <c:if test="${session_user_id eq user.id}">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
+                                       aria-controls="favorites" aria-selected="false"><spring:message code="favorites"/></a>
+                                </li>
+                            </c:if>
+                        </sec:authorize>
                     </ul>
                 </div>
 
-                <%-- USER INFO --%>
+                <%-- User information card --%>
                 <div class="tab-content profile-tab" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
@@ -130,7 +143,7 @@
                         </div>
                     </div>
 
-                    <%-- FAVORITES PANE --%>
+                    <%-- User favorites pane --%>
                     <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="profile-tab">
                         <c:if test="${!empty favs}">
                             <c:forEach items="${favs}" var="project">
@@ -149,6 +162,8 @@
                                 </div>
                             </c:forEach>
                         </c:if>
+
+                        <%-- If there is no favorites --%>
                         <c:if test="${empty favs}">
                             <div class="card m-2">
                                 <div class="card-header">

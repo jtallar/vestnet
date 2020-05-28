@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.EmailService;
 import ar.edu.itba.paw.interfaces.MessageService;
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.User;
@@ -32,23 +33,11 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-
-
     @Autowired
     private EmailService emailService;
 
-    /**
-     * Session user data.
-     * @return The logged in user.
-     */
-    @ModelAttribute("sessionUser")
-    public User loggedUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        LOGGER.debug("\n\n loggedUser() called\n\n");
-        if(auth != null)
-            return userService.findByUsername(auth.getName()).orElse(null);
-        return null;
-    }
+    @Autowired
+    protected SessionUserFacade sessionUser;
 
     /**
      * Gets all the unread messages for a project.
@@ -58,7 +47,7 @@ public class MessageController {
     @RequestMapping(value = "/message/{project_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Message> unreadMessages(@PathVariable("project_id") long projectId) {
-        return messageService.getProjectUnread(loggedUser().getId(), projectId);
+        return messageService.getProjectUnread(sessionUser.getId(), projectId);
     }
 
     /**
@@ -71,12 +60,15 @@ public class MessageController {
     @ResponseBody
     public ResponseEntity<Boolean> acceptMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId,
                                       HttpServletRequest request) throws MessagingException {
-        User loggedUser = loggedUser();
-        messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, true);
-        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
-        emailService.sendEmailAnswer(loggedUser, true, senderUser.getEmail(),
-                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
+
+        messageService.updateMessageStatus(senderId, sessionUser.getId(), projectId, true);
+
+        // TODO check this shit
+
+//        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+//        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
+//        emailService.sendEmailAnswer(loggedUser, true, senderUser.getEmail(),
+//                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
 //        return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -91,20 +83,21 @@ public class MessageController {
     @ResponseBody
     public ResponseEntity<Boolean> refuseMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId,
                                       HttpServletRequest request) throws MessagingException{
-        User loggedUser = loggedUser();
-        messageService.updateMessageStatus(senderId, loggedUser.getId(), projectId, false);
-        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
-        emailService.sendEmailAnswer(loggedUser, false, senderUser.getEmail(),
-                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
-//        return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
+        messageService.updateMessageStatus(senderId, sessionUser.getId(), projectId, false);
+        // TODO also check this
+
+//        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+//        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
+//        emailService.sendEmailAnswer(loggedUser, false, senderUser.getEmail(),
+//                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
+////        return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deals")
     public ModelAndView deals(@RequestParam(name = "page", defaultValue = "1") String page){
         final ModelAndView mav = new ModelAndView("user/deals");
-        long id = loggedUser().getId();
+        long id = sessionUser.getId();
         boolean hasNext = messageService.hasNextDeal(page, id);
         mav.addObject("hasNext", hasNext);
         List<Message> messages = messageService.getAccepted(id,page, messageService.getPageSize());
@@ -118,7 +111,7 @@ public class MessageController {
     @RequestMapping("/requests")
     public ModelAndView requests(@RequestParam(name = "page", defaultValue = "1")String page){
         final ModelAndView mav = new ModelAndView("user/requests");
-        long id = loggedUser().getId();
+        long id = sessionUser.getId();
         boolean hasNext = messageService.hasNextRequest(page, id);
         List<Message> messages = messageService.getOffersDone(id,page, messageService.getPageSize());
         mav.addObject("hasNext", hasNext);

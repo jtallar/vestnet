@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import java.time.LocalDate;
+//import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Model of the registered user on the web app.
