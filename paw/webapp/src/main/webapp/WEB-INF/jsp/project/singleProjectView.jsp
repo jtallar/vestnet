@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ include file = "../components/header.jsp" %>
+<%@ include file="../components/header.jsp" %>
 
 <html>
 <head>
@@ -13,79 +13,50 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title><spring:message code="page.title.singleProject" arguments="${project.name}"/></title>
 </head>
-<body>
-<c:url var="favOff" value="/images/bookmarkOff.png"/>
-<c:url var="favOn" value="/images/bookmarkOn.png"/>
 
+<%-- Set used variables --%>
 <sec:authorize access="isAuthenticated()">
     <sec:authentication var="session_user_id" property="principal.id"/>
     <sec:authentication var="session_user_mail" property="principal.username"/>
 </sec:authorize>
 
+<sec:authorize access="!isAuthenticated()">
+    <c:set var="session_user_id" value="0"/>
+</sec:authorize>
+
+<%-- Set used URLs --%>
+<c:url var="icon_fav_off" value="/images/bookmarkOff.png"/>
+<c:url var="icon_fav_on" value="/images/bookmarkOn.png"/>
+
+<body>
+
+<%-- Message and Back logic --%>
 <div class="container" style="margin-top: 20px">
     <div>
-            <div class="d-flex justify-content-between align-self-center">
-                <div class="p-2">
-                    <a onclick="getBackAction()" class="btn btn-dark"><spring:message code="back"/></a>
-                </div>
-                <c:if test="${contactStatus == 1}">
-                <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="successfulContact"/> <c:out value="${project.owner.firstName}"/></h5>
-                </div>
-                </c:if>
-                <c:if test="${contactStatus == 2}">
-                    <div class="p-2 ml-8">
-                        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="waitReply"/></h5>
-                    </div>
-                </c:if>
+        <div class="d-flex justify-content-between align-self-center">
+            <div class="p-2">
+                <a onclick="getBackAction()" class="btn btn-dark"><spring:message code="back"/></a>
             </div>
+            <c:if test="${contactStatus == 1}">
+                <div class="p-2 ml-8">
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message
+                            code="successfulContact"/> <c:out value="${project.owner.firstName}"/></h5>
+                </div>
+            </c:if>
+            <c:if test="${contactStatus == 2}">
+                <div class="p-2 ml-8">
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message
+                            code="waitReply"/></h5>
+                </div>
+            </c:if>
+        </div>
         <div class="row" style="margin: 20px">
             <div class="col-5">
                 <div class="container-img">
-                <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img" alt="<spring:message code="projectImage"/>"
-                     aria-placeholder="<spring:message code="projectImage"/>"/>
+                    <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img"
+                         alt="<spring:message code="projectImage"/>"
+                         aria-placeholder="<spring:message code="projectImage"/>"/>
                 </div>
-<%--                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel"--%>
-<%--                     style="width: 450px; height:500px; margin: 0 auto">--%>
-<%--                    <ol class="carousel-indicators">--%>
-<%--                        <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>--%>
-<%--                        &lt;%&ndash;<li data-target="#carouselExampleCaptions" data-slide-to="1"></li>--%>
-<%--                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>&ndash;%&gt;--%>
-<%--                    </ol>--%>
-<%--                    <div class="carousel-inner">--%>
-<%--                        <div class="carousel-item active">--%>
-<%--                            &lt;%&ndash;<c:url var="first_pic" value="/images/purple.png"/>--%>
-<%--                            <img src="${first_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">&ndash;%&gt;--%>
-<%--                            <img src="<c:url value="/imageController/project/${project.id}"/>" class="d-block w-100" alt="<spring:message code="projectImage"/>"--%>
-<%--                                 style="width: 100%; height:100% " aria-placeholder="<spring:message code="projectImage"/>"/>--%>
-<%--&lt;%&ndash;                            <div class="carousel-caption d-none d-md-block">--%>
-<%--                                <p>This is a first view of the web prototype</p>--%>
-<%--                            </div>&ndash;%&gt;--%>
-<%--                        </div>--%>
-<%--                        &lt;%&ndash;<div class="carousel-item">--%>
-<%--                            <c:url var="second_pic" value="/images/orange.png"/>--%>
-<%--                            <img src="${second_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
-<%--                            <div class="carousel-caption d-none d-md-block">--%>
-<%--                                <p>Another view of the web prototype</p>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        <div class="carousel-item">--%>
-<%--                            <c:url var="third_pic" value="/images/green.png"/>--%>
-<%--                            <img src="${third_pic}" class="d-block w-100" alt="" style="width: 100%; height:100% ">--%>
-<%--                            <div class="carousel-caption d-none d-md-block">--%>
-<%--                                <p>This is how we design de database</p>--%>
-<%--                            </div>--%>
-<%--                        </div>&ndash;%&gt;--%>
-<%--                    </div>--%>
-<%--                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">--%>
-<%--                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>--%>
-<%--                        <span class="sr-only">Previous</span>--%>
-<%--                    </a>--%>
-<%--                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">--%>
-<%--                        <span class="carousel-control-next-icon" aria-hidden="true"></span>--%>
-<%--                        <span class="sr-only">Next</span>--%>
-<%--                    </a>--%>
-<%--                </div>--%>
             </div>
             <div class="col-6">
                 <div class="d-flex justify-content-center">
@@ -93,17 +64,15 @@
                         <sec:authorize access="hasRole('ROLE_INVESTOR')">
                             <div class="card-header header-white">
                                 <button onclick="favTap()" class="btn-transp pull-right">
-                                    <c:set var="fav" value="${isFav}"/>
                                     <c:choose>
-                                        <c:when test="${isFav==true}" >
-                                            <c:set var="favSrc" value="${favOn}"/>
+                                        <c:when test="${isFav == true}">
+                                            <c:set var="favSrc" value="${icon_fav_on}"/>
                                         </c:when>
-                                        <c:when test="${isFav==false}">
-                                            <c:set var="favSrc" value="${favOff}"/>
+                                        <c:when test="${isFav == false}">
+                                            <c:set var="favSrc" value="${icon_fav_off}"/>
                                         </c:when>
                                     </c:choose>
                                     <img id="favImg" src="${favSrc}" height="40">
-
                                 </button>
                             </div>
                         </sec:authorize>
@@ -115,7 +84,7 @@
 
                             <h5 class="card-title"><b><spring:message code="categories"/></b></h5>
                             <c:forEach var="category" items="${project.categories}">
-                                <li><spring:message code="${category.name}"/> </li>
+                                <li><spring:message code="${category.name}"/></li>
                             </c:forEach>
                             <br/>
                             <h5 class="card-title"><b><spring:message code="totalCost"/></b></h5>
@@ -125,91 +94,105 @@
                             <p><c:out value="${project.owner.email}"/></p>
 
                             <c:if test="${session_user_id != project.owner.id}">
-                                <h5><a href="<c:url value='/users/${project.owner.id}?back=yes'/>" class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
+                                <h5><a href="<c:url value='/users/${project.owner.id}?back=yes'/>"
+                                       class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
                             </c:if>
 
                             <div class="dropdown-divider"></div>
 
-                            <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out value="${project.updateDate}"/></small></p>
+                            <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out
+                                    value="${project.updateDate}"/></small></p>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
                     <sec:authorize access="hasRole('ROLE_INVESTOR')">
-                            <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse" data-target="#contact"
-                                    aria-expanded="false" aria-controls="contact" id="contact-expand-button">
-                                <spring:message code="contactowner"/>
-                            </button>
+                        <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse"
+                                data-target="#contact"
+                                aria-expanded="false" aria-controls="contact" id="contact-expand-button">
+                            <spring:message code="contactowner"/>
+                        </button>
                     </sec:authorize>
                 </div>
             </div>
         </div>
 
-    <sec:authorize access="hasRole('ROLE_INVESTOR')">
-        <div class="collapse" id="contact">
-            <div class="card contact">
-                <div class="card-header">
-                    <label class="label-header"> <spring:message code="contact.header"/> ${project.owner.firstName} ${project.owner.lastName}</label>
-                    <button class="btn btn-dark pull-right" type="button" data-toggle="collapse" data-target="#contact" aria-expanded="false" aria-controls="contact">X</button>
-                </div>
-                <div class="card-body">
-                    <c:url value="/projects/${project.id}" var="postPath"/>
-                    <form:form modelAttribute="mailForm" action="${postPath}" method="post">
+        <sec:authorize access="hasRole('ROLE_INVESTOR')">
+            <div class="collapse" id="contact">
+                <div class="card contact">
+                    <div class="card-header">
+                        <label class="label-header"> <spring:message
+                                code="contact.header"/> ${project.owner.firstName} ${project.owner.lastName}</label>
+                        <button class="btn btn-dark pull-right" type="button" data-toggle="collapse"
+                                data-target="#contact" aria-expanded="false" aria-controls="contact">X
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <c:url value="/projects/${project.id}" var="postPath"/>
+                        <form:form modelAttribute="mailForm" action="${postPath}" method="post">
 
-                        <div class="form-group">
-                            <label><spring:message code="contact.bodyMessage"/></label>
-                            <div class="input-group mb-3">
-                                <spring:message code="writemessage" var="placeholdermessage" />
-                                <form:textarea path="body" type="text" class="form-control" placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
-                            </div>
-                        </div>
-
-                        <div class="container-contact">
-                            <div class="row">
-                                <div class="col-2">
-                                    <label><spring:message code="contact.offerMessage"/></label>
+                            <div class="form-group">
+                                <label><spring:message code="contact.bodyMessage"/></label>
+                                <div class="input-group mb-3">
+                                    <spring:message code="writemessage" var="placeholdermessage"/>
+                                    <form:textarea path="body" type="text" class="form-control"
+                                                   placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
                                 </div>
-                                <div class="col-md-5">
-                                    <div class="row justify-content-center">
-                                        <div class="col-2">
-                                            <label><spring:message code="currency"/></label>
-                                        </div>
-                                        <div class="col">
-                                            <spring:message code="writemessage" var="placeholderoffers" />
-                                            <form:input path="offers" type="number" class="form-control" placeholder="${placeholderoffers}" aria-describedby="basic-addon2" id="contact-offer"/>
+                            </div>
+
+                            <div class="container-contact">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <label><spring:message code="contact.offerMessage"/></label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="row justify-content-center">
+                                            <div class="col-2">
+                                                <label><spring:message code="currency"/></label>
+                                            </div>
+                                            <div class="col">
+                                                <spring:message code="writemessage" var="placeholderoffers"/>
+                                                <form:input path="offers" type="number" class="form-control"
+                                                            placeholder="${placeholderoffers}"
+                                                            aria-describedby="basic-addon2" id="contact-offer"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <form:errors path="offers" cssClass="formError"/>
                             </div>
-                            <form:errors path="offers" cssClass="formError"/>
-                        </div>
 
-                        <div class="container-contact">
-                            <div class="row">
-                                <div class="col-2">
-                                    <label><spring:message code="contact.exchangeMessage"/></label>
-                                </div>
-                                <div class="col-md-5">
-                                    <spring:message code="writemessage" var="placeholderexchange" />
-                                    <form:textarea path="exchange" type="text" class="form-control" placeholder="${placeholderexchange}" aria-describedby="basic-addon2"/>
+                            <div class="container-contact">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <label><spring:message code="contact.exchangeMessage"/></label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <spring:message code="writemessage" var="placeholderexchange"/>
+                                        <form:textarea path="exchange" type="text" class="form-control"
+                                                       placeholder="${placeholderexchange}"
+                                                       aria-describedby="basic-addon2"/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <form:input path="from" value="${session_user_mail}" type="hidden"/>
-                        <form:input path="toId" value="${project.owner.id}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
-                        <form:input path="to" value="${project.owner.email}" type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
-                        <form:input path="project" value="${project.name}" type="hidden"/>
-                        <form:input path="locale" value="${project.owner.location.country.locale}" type="hidden"/>
+                            <form:input path="from" value="${session_user_mail}" type="hidden"/>
+                            <form:input path="toId" value="${project.owner.id}"
+                                        type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+                            <form:input path="to" value="${project.owner.email}"
+                                        type="hidden"/>    <%--TODO chequear si hay una mejor forma de hacerlo --%>
+                            <form:input path="project" value="${project.name}" type="hidden"/>
+                            <form:input path="locale" value="${project.owner.location.country.locale}" type="hidden"/>
 
-                        <div class="text-right">
-                            <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark" onclick="adjustInputs()" id="contact-send"/>
-                        </div
-                    </form:form>
+                            <div class="text-right">
+                                <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark"
+                                       onclick="adjustInputs()" id="contact-send"/>
+                            </div
+                        </form:form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </sec:authorize>
+        </sec:authorize>
     </div>
 </div>
 <script>
@@ -224,40 +207,48 @@
     window.onload = function () {
         if (${session_user_id != project.owner.id}) {
             fetch(window.location.origin + "${pageContext.request.contextPath}" + "/addHit/" + "${project.id}", options)
-            .catch((function (reason) { console.error(reason) }))
+                .catch((function (reason) {
+                    console.error(reason)
+                }))
         }
     };
 </script>
 
 <script>
     $('.collapse').on('shown.bs.collapse', function () {
-        var element = document.getElementById('contact');
+        let element = document.getElementById('contact');
         element.scrollIntoView({
             block: 'start',
             behavior: 'smooth'
         });
     });
+
     function addFav() {
-       let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux +"/addFavorite?u_id=" + ${session_user_id}+"&p_id="+${project.id};
-        fetch(path, options).catch((function (reason) { console.error(reason) }));
-    }
-    function delFav() {
         let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux +"/deleteFavorite?u_id=" + ${session_user_id}+"&p_id="+${project.id};
-        fetch(path, options).catch((function (reason) { console.error(reason) }));
+        let path = window.location.origin + path_aux + "/addFavorite?u_id=" + ${session_user_id}+"&p_id=" +${project.id};
+        fetch(path, options).catch((function (reason) {
+            console.error(reason)
+        }));
     }
 
-    var favImage = document.getElementById('favImg');
-    var fav = ${isFav};
+    function delFav() {
+        let path_aux = "${pageContext.request.contextPath}";
+        let path = window.location.origin + path_aux + "/deleteFavorite?u_id=" + ${session_user_id}+"&p_id=" +${project.id};
+        fetch(path, options).catch((function (reason) {
+            console.error(reason)
+        }));
+    }
+
+    let favImage = document.getElementById('favImg');
+    let fav = ${isFav};
 
     function favTap() {
         if (fav) {
-            favImage.setAttribute("src","${favOff}");
+            favImage.setAttribute("src", "${icon_fav_off}");
             fav = false;
             delFav();
         } else {
-            favImage.setAttribute("src","${favOn}");
+            favImage.setAttribute("src", "${icon_fav_on}");
             fav = true;
             addFav();
         }
@@ -273,7 +264,7 @@
         }
     }
 
-    var offerTag = document.getElementById('contact-offer');
+    let offerTag = document.getElementById('contact-offer');
     if (offerTag != null) {
         offerTag.addEventListener("keypress", function (key) {
             if (offerTag.value.length > 6) {
@@ -281,6 +272,7 @@
             }
         });
     }
+
     function adjustInputs() {
         if (offerTag.value.length === 0 || offerTag.value < 0) {
             offerTag.value = 0;

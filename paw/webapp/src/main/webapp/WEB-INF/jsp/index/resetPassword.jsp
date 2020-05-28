@@ -15,12 +15,16 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
     <title><spring:message code="page.title.resetPassword"/></title>
 </head>
-<body>
 
+<%-- Set used URLs --%>
+<c:url var="icon_logo" value="/images/logo_bp.png"/>
+<c:url var="link_home" value="/"/>
+<c:url var="link_reset_pass" value="/resetPassword"/>
+
+<body>
 <div class="sidenav">
-    <c:url var="logo" value="/images/logo_bp.png"/>
     <div class="text-center mt-5">
-        <img class="logo-img" src=${logo}>
+        <img class="logo-img" src=${icon_logo}>
     </div>
 </div>
 
@@ -28,10 +32,9 @@
     <div class="col-md-8">
         <div class="login-form">
             <div class="text-left my-2">
-                <a href="<c:url value="/"/>" class="btn btn-outline-dark pull-left"><spring:message code="home"/></a>
+                <a href="${link_home}" class="btn btn-outline-dark pull-left"><spring:message code="home"/></a>
             </div>
-            <c:url value="/resetPassword" var="resetUrl"/>
-            <form:form modelAttribute="passwordForm" method="POST" action="${resetUrl}">
+            <form:form modelAttribute="passwordForm" method="POST" action="${link_reset_pass}">
                 <h4><spring:message code="resetPasswordTitle"/></h4>
                 <p><spring:message code="resetPasswordSubtitle" arguments="${email}"/></p>
                 <div class="form-group">
@@ -61,9 +64,9 @@
 
 <script>
     function adjustInputs() {
-        var passwordTag = document.getElementById('reset-password');
+        let passwordTag = document.getElementById('reset-password');
         passwordTag .value = passwordTag .value.trim();
-        var repeatPasswordTag = document.getElementById('reset-repeat-password');
+        let repeatPasswordTag = document.getElementById('reset-repeat-password');
         repeatPasswordTag .value = repeatPasswordTag .value.trim();
     }
 </script>

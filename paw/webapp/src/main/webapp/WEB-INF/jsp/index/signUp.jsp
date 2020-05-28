@@ -15,14 +15,16 @@
     <title><spring:message code="page.title.signUp"/></title>
 </head>
 
-<body background="<c:url value ="/images/signupBack.png"/>">
-<c:set var="val"><spring:message code="select_country"/></c:set>
-<input id="select_country_msg" type="hidden" value="${val}"/>
-<c:set var="val"><spring:message code="select_state"/></c:set>
-<input id="select_state_msg" type="hidden" value="${val}"/>
-<c:set var="val"><spring:message code="select_city"/></c:set>
-<input id="select_city_msg" type="hidden" value="${val}"/>
+<%-- Set used URLs--%>
+<c:url var="image_background" value="/images/signupBack.png"/>
+<c:url var="link_sign_up" value='/signUp'/>
+<c:url var="link_login" value="/login"/>
 
+<body background="${image_background}">
+
+<input id="select_country_msg" type="hidden" value="<spring:message code="select_country"/>"/>
+<input id="select_state_msg" type="hidden" value="<spring:message code="select_state"/>"/>
+<input id="select_city_msg" type="hidden" value="<spring:message code="select_city"/>"/>
 
 <spring:message code="enter_first_name" var="enter_first_name"/>
 <spring:message code="enter_password" var="enter_password"/>
@@ -34,23 +36,25 @@
 <spring:message code="enter_email" var="enter_email"/>
 <spring:message code="enter_last_name" var="enter_last_name"/>
 
-<c:url var="createUrl" value='/signUp'/>
 
 <div class="container">
     <div class="row h-100">
         <div class="col-sm-12 my-auto">
             <div class="card rounded-lg px-4 py-3">
-                <form:form modelAttribute="userForm" method="POST" action="${createUrl}" enctype="multipart/form-data">
+                <form:form modelAttribute="userForm" method="POST" action="${link_sign_up}"
+                           enctype="multipart/form-data">
                     <div class="row justify-content-center">
                         <div class="col-2 text-left">
-                            <a href="<c:url value="/login"/>" class="btn btn-dark pull-left"><spring:message code="back"/></a>
+                            <a href="${link_login}" class="btn btn-dark pull-left"><spring:message code="back"/></a>
                         </div>
                         <div class="col-md text-left">
                             <h2 class="bold" style="margin-right: 20%"><spring:message code="sign_up_title"/></h2>
                         </div>
                     </div>
+
                     <div class="dropdown-divider"></div>
 
+                    <%-- Name form --%>
                     <div class="container">
                         <div class="row">
                             <div class="col-md">
@@ -72,6 +76,7 @@
                         </div>
                     </div>
 
+                    <%-- Real ID and phone form --%>
                     <div class="container">
                         <div class="row">
                             <div class="col-md">
@@ -95,6 +100,7 @@
 
                     <div class="dropdown-divider"></div>
 
+                    <%-- Mail form --%>
                     <div class="container">
                         <div class="row">
                             <div class="col-md">
@@ -110,13 +116,15 @@
                                     <label><spring:message code="role"/> </label>
                                     <form:select path="role" class="custom-select mr-sm-2">
                                         <form:option value="Investor"><spring:message code="investor"/></form:option>
-                                        <form:option value="Entrepreneur"><spring:message code="entrepreneur"/></form:option>
+                                        <form:option value="Entrepreneur"><spring:message
+                                                code="entrepreneur"/></form:option>
                                     </form:select>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <%-- Password form --%>
                     <div class="container">
                         <div class="row">
                             <div class="col-md">
@@ -140,6 +148,7 @@
 
                     <div class="dropdown-divider"></div>
 
+                    <%-- Linkedin and profile picture --%>
                     <div class="container">
                         <div class="row">
                             <div class="col-md">
@@ -156,7 +165,9 @@
                                 <p class="form-requirement"><spring:message code="userPictureRequirement"/></p>
                                 <div class="custom-file">
                                     <form:input path="profilePicture" type="file" class="custom-file-input" id="customFileProfilePic"/>
-                                    <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel"><spring:message code="chooseFile"/></label><br>
+                                    <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel">
+                                        <spring:message code="chooseFile"/></label>
+                                    <br>
                                     <form:errors path="profilePicture" cssClass="formError" element="p" id="fileErrorFormTag"/>
                                 </div>
                                 <label class="formError" id="maxSizeErrorMsg" hidden><spring:message code="imageMaxSize"/></label>
@@ -164,6 +175,7 @@
                         </div>
                     </div>
 
+                    <%-- Birth date form --%>
                     <div class="container">
                         <div class="form-group">
                             <label><spring:message code="birthdate"/> </label>
@@ -205,6 +217,7 @@
                         </div>
                     </div>
 
+                    <%-- Location form --%>
                     <div class="container">
                         <div class="form-group">
                             <div class="container">
@@ -213,13 +226,15 @@
                                         <label><spring:message code="country"/></label>
                                     </div>
                                     <div class="col-md">
-                                        <form:select id="country-select" path="country" class="custom-select mr-sm-2" onchange="fetchData('country', 'state')"/>
+                                        <form:select id="country-select" path="country" class="custom-select mr-sm-2"
+                                                     onchange="fetchData('country', 'state')"/>
                                     </div>
                                     <div class="col-1">
                                         <label><spring:message code="state"/> </label>
                                     </div>
                                     <div class="col-md">
-                                        <form:select id="state-select" path="state" class="custom-select mr-sm-2" onchange="fetchData('state', 'city')"/>
+                                        <form:select id="state-select" path="state" class="custom-select mr-sm-2"
+                                                     onchange="fetchData('state', 'city')"/>
                                     </div>
                                     <div class="col-1">
                                         <label><spring:message code="city"/> </label>
@@ -233,27 +248,24 @@
                         </div>
                     </div>
 
-
-                        <div class="text-right">
-                            <c:if test="${invalidUser}">
-                                <h4 class="big-error"><spring:message code="userAlreadyExists"/></h4>
-                            </c:if>
-                            <input type="submit" class="btn btn-dark pull-right"
-                                   value="<spring:message code="sign_up"/>" onclick="adjustInputs()"/>
-                        </div>
-
-
+                    <%-- Invalid user error --%>
+                    <div class="text-right">
+                        <c:if test="${invalidUser}">
+                            <h4 class="big-error"><spring:message code="userAlreadyExists"/></h4>
+                        </c:if>
+                        <input type="submit" class="btn btn-dark pull-right" value="<spring:message code="sign_up"/>" onclick="adjustInputs()"/>
+                    </div>
                 </form:form>
             </div>
         </div>
     </div>
 </div>
 <script>
-    var fileBox = document.getElementById('customFileProfilePic');
-    var maxSizeMsg = document.getElementById('maxSizeErrorMsg');
-    var errorTag = document.getElementById('fileErrorFormTag');
+    let fileBox = document.getElementById('customFileProfilePic');
+    let maxSizeMsg = document.getElementById('maxSizeErrorMsg');
+    let errorTag = document.getElementById('fileErrorFormTag');
     fileBox.addEventListener("change", function () {
-        var label = document.getElementById('customFileProfilePicLabel');
+        let label = document.getElementById('customFileProfilePicLabel');
         if (fileBox.files[0].size >= ${maxSize}) {
             fileBox.value = null;
             if (errorTag != null) {
@@ -265,9 +277,7 @@
             maxSizeMsg.hidden = true;
         }
     });
-</script>
 
-<script>
     function fetchData(source, receiver) {
         let id = "";
         if (source !== '') {
@@ -297,20 +307,22 @@
                 }
             })
     }
+
     window.onload = function () {
         fetchData('', 'country');
     };
+
     function adjustInputs() {
-        var firstNameTag = document.getElementById('sign-up-first-name');
-        firstNameTag .value = firstNameTag .value.trim();
-        var lastNameTag = document.getElementById('sign-up-last-name');
-        lastNameTag .value = lastNameTag .value.trim();
-        var realIdTag = document.getElementById('sign-up-real-id');
-        realIdTag .value = realIdTag .value.trim();
-        var passwordTag = document.getElementById('sign-up-password');
-        passwordTag .value = passwordTag .value.trim();
-        var repeatPasswordTag = document.getElementById('sign-up-repeat-password');
-        repeatPasswordTag .value = repeatPasswordTag .value.trim();
+        let firstNameTag = document.getElementById('sign-up-first-name');
+        firstNameTag.value = firstNameTag.value.trim();
+        let lastNameTag = document.getElementById('sign-up-last-name');
+        lastNameTag.value = lastNameTag.value.trim();
+        let realIdTag = document.getElementById('sign-up-real-id');
+        realIdTag.value = realIdTag.value.trim();
+        let passwordTag = document.getElementById('sign-up-password');
+        passwordTag.value = passwordTag.value.trim();
+        let repeatPasswordTag = document.getElementById('sign-up-repeat-password');
+        repeatPasswordTag.value = repeatPasswordTag.value.trim();
     }
 </script>
 </body>

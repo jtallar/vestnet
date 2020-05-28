@@ -21,65 +21,69 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
     <title><spring:message code="page.title.login"/></title>
 </head>
+
+<%-- Set used URLs --%>
+<c:url var="icon_logo" value="/images/logo_bp.png"/>
+<c:url var="link_sign_up" value="/signUp"/>
+<c:url var="link_request_pass" value='/requestPassword'/>
+
 <body>
 
 <div class="sidenav">
-    <c:url var="logo" value="/images/logo_bp.png"/>
     <div class="text-center mt-5">
-        <img class="logo-img" src=${logo} >
+        <img class="logo-img" src=${icon_logo} >
     </div>
 </div>
 
 <div class="main">
     <div class="col-md-8">
         <div class="login-form">
-            <c:url value="/login" var="loginUrl"></c:url>
+            <c:url value="/login" var="loginUrl"/>
             <form method="post" action="${loginUrl}" >
                 <div class="form-group">
-                    <label><spring:message code = "email"></spring:message></label>
+                    <label><spring:message code = "email"/></label>
                     <input name="username" class="form-control" placeholder="<spring:message code = "enter_email"/>"/>
                 </div>
                 <div class="form-group">
-                    <label><spring:message code = "password"></spring:message></label>
+                    <label><spring:message code = "password"/></label>
                     <input name="password" class="form-control" type="password" placeholder="<spring:message code = "enter_password"/>"/>
-                    <a href="<c:url value='/requestPassword'/>"><spring:message code="forgotPassword"/></a>
+                    <a href="${link_request_pass}"><spring:message code="forgotPassword"/></a>
                 </div>
                 <div class="form-group">
                     <label>
                         <input name="remember_me" type="checkbox"/>
-                        <spring:message code = "rememberMe"></spring:message>
+                        <spring:message code = "rememberMe"/>
                     </label>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-2 text-left">
-                        <input type="submit"   class="btn btn-dark" value="<spring:message code = "submit"></spring:message>">
+                        <input type="submit"   class="btn btn-dark" value="<spring:message code = "submit"/>">
                     </div>
                     <div class="col mailError">
                         <c:if test="${param.error != null}">
                             <c:choose>
-                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'Bad credentials'}"><p class="mailError"><spring:message code = "loginError"></spring:message></p></c:when>
-                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'User is disabled'}"><p class="mailError"><spring:message code = "loginVerificationError"></spring:message></p></c:when>
+                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'Bad credentials'}"><p class="mailError"><spring:message code = "loginError"/></p></c:when>
+                                <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'User is disabled'}"><p class="mailError"><spring:message code = "loginVerificationError"/></p></c:when>
                             </c:choose>
                         </c:if>
 
                         <c:choose>
-                            <c:when test="${message eq 1}"><p class="noError"><spring:message code = "verificationMessageSent"></spring:message></p></c:when>
-                            <c:when test="${message eq 2}"><p class="mailError"><spring:message code = "verificationInvalid"></spring:message></p></c:when>
-                            <c:when test="${message eq 3}"><p class="mailError"><spring:message code = "verificationTokenExpired"></spring:message></p></c:when>
-                            <c:when test="${message eq 4}"><p class="noError"><spring:message code = "verificationMade"></spring:message></p></c:when>
+                            <c:when test="${message eq 1}"><p class="noError"><spring:message code = "verificationMessageSent"/></p></c:when>
+                            <c:when test="${message eq 2}"><p class="mailError"><spring:message code = "verificationInvalid"/></p></c:when>
+                            <c:when test="${message eq 3}"><p class="mailError"><spring:message code = "verificationTokenExpired"/></p></c:when>
+                            <c:when test="${message eq 4}"><p class="noError"><spring:message code = "verificationMade"/></p></c:when>
                         </c:choose>
                     </div>
                 </div>
             </form>
-            <c:url var="register" value="/signUp"></c:url>
+
             <div>
-                <label><spring:message code = "noReg"></spring:message></label>
-                <a href="<c:url value='/signUp'/>" class="btn btn-outline-dark"><spring:message code='sign_up'/></a>
+                <label><spring:message code = "noReg"/></label>
+                <a href="${link_sign_up}" class="btn btn-outline-dark"><spring:message code='sign_up'/></a>
             </div>
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

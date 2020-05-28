@@ -178,7 +178,7 @@
         </div>
     </div>
 
-<%-- FORMAT LINKEDIN LINK --%>
+<%-- TODO check if can change on signup // Format linkedin link --%>
     <script>
         var aux = '${user.linkedin}';
 
