@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.component.OnRegistrationCompleteEvent;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
@@ -14,6 +15,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -42,6 +44,9 @@ public class SignUpController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
 
     @Autowired
     protected AuthenticationManager authenticationManager;
@@ -105,13 +110,45 @@ public class SignUpController {
                             new Location.State(userFields.getState(), "", ""),
                             new Location.City(userFields.getCity(), "")),
                     userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userId, request.getLocale(), ""));
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", userFields.getEmail());
             return signUp(userFields, true);
+        } catch (RuntimeException e) {
+            return new ModelAndView("redirect:/login?me=1"); // TODO cuando falla mail
         }
 
         sendVerificationMail(userId, request);
         return new ModelAndView("redirect:/login?me=1");
+    }
+
+    @RequestMapping(value = "/requestPassword")
+    public ModelAndView requestPassword(@RequestParam(name = "error", defaultValue = "false") boolean error,
+                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent,
+                                        @RequestParam(name = "invalidToken", defaultValue = "false") boolean invalidToken) {
+        final ModelAndView mav = new ModelAndView("index/requestPassword");
+        mav.addObject("error", error);
+        mav.addObject("mailSent", mailSent);
+        mav.addObject("invalidToken", invalidToken);
+        return mav;
+    }
+
+    @RequestMapping(value = "/requestPassword", method = {RequestMethod.POST})
+    public ModelAndView requestPassword(@RequestParam(name = "username") String email,
+                                        HttpServletRequest request) throws MessagingException {
+        Optional<User> maybeUser = userService.findByUsername(email);
+        if (!maybeUser.isPresent()) return requestPassword(true, false, false);
+
+        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        int token;
+        try {
+            token = TokenGeneratorUtil.getToken(maybeUser.get().getEmail() + maybeUser.get().getPassword());
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            LOGGER.error("Failed to generate token");
+            return requestPassword(true, false, false);
+        }
+        emailService.sendPasswordRecovery(maybeUser.get(), String.valueOf(token), baseUrl);
+        return requestPassword(false, true, false);
     }
 
     @RequestMapping(value = "/resetPassword")

@@ -15,13 +15,18 @@ public class ErrorController {
 
     @RequestMapping(value = "/errors")
     public ModelAndView errorPage(HttpServletRequest httpServletRequest) {
-        ModelAndView mv = new ModelAndView("error/error");
         int errorCode = getErrorCode(httpServletRequest);
-        LOGGER.error("Error page loaded. Error code {}", errorCode);
+        ModelAndView mv = new ModelAndView("error/error");
         mv.addObject("errorCode", errorCode);
+        LOGGER.error("Error page loaded. Error code {}", errorCode);
         return mv;
     }
 
+    /**
+     * Gets the error code generated
+     * @param httpRequest The http request.
+     * @return The error code generated.
+     */
     private int getErrorCode(HttpServletRequest httpRequest) {
         return (Integer) httpRequest.getAttribute("javax.servlet.error.status_code");
     }

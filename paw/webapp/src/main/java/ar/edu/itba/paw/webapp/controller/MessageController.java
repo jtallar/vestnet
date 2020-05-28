@@ -63,14 +63,14 @@ public class MessageController {
                                                  HttpServletRequest request) throws MessagingException {
 
         messageService.updateMessageStatus(senderId, sessionUser.getId(), projectId, true);
+        System.out.println("MATIII: " + request.getRequestURL());
+        System.out.println("MATIII: " + request.getContextPath());
+        System.out.println("MATIII: " + request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath());
 
-        // TODO check this shit
-
-//        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
 //        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
 //        emailService.sendEmailAnswer(loggedUser, true, senderUser.getEmail(),
 //                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
-//        return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
