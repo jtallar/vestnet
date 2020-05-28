@@ -58,8 +58,9 @@ public class MessageController {
      */
     @RequestMapping(value = "/message/accept/{project_id}/{sender_id}", method = RequestMethod.PUT, headers = "accept=application/json")
     @ResponseBody
-    public ResponseEntity<Boolean> acceptMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId,
-                                      HttpServletRequest request) throws MessagingException {
+    public ResponseEntity<Boolean> acceptMessage(@PathVariable("project_id") long projectId,
+                                                 @PathVariable("sender_id") long senderId,
+                                                 HttpServletRequest request) throws MessagingException {
 
         messageService.updateMessageStatus(senderId, sessionUser.getId(), projectId, true);
 
@@ -81,8 +82,9 @@ public class MessageController {
      */
     @RequestMapping(value = "/message/refuse/{project_id}/{sender_id}", method = RequestMethod.PUT, headers = "accept=application/json")
     @ResponseBody
-    public ResponseEntity<Boolean> refuseMessage(@PathVariable("project_id") long projectId, @PathVariable("sender_id") long senderId,
-                                      HttpServletRequest request) throws MessagingException{
+    public ResponseEntity<Boolean> refuseMessage(@PathVariable("project_id") long projectId,
+                                                 @PathVariable("sender_id") long senderId,
+                                                 HttpServletRequest request) throws MessagingException{
         messageService.updateMessageStatus(senderId, sessionUser.getId(), projectId, false);
         // TODO also check this
 

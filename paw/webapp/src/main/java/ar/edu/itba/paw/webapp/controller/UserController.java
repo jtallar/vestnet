@@ -71,7 +71,6 @@ public class UserController {
     @RequestMapping(value = "/messages")
     public ModelAndView myMessages() {
         ModelAndView mav = new ModelAndView("project/myProjects");
-
         List<Project> projects = projectService.findByOwner(sessionUser.getId());
         mav.addObject("projects", projects);
         List<Long> favCount = projectService.getFavoritesCount(projects.stream().map(Project::getId).collect(Collectors.toList()));

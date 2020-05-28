@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Location;
@@ -14,11 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -33,10 +29,8 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class SignUpController {
@@ -52,6 +46,9 @@ public class SignUpController {
     @Autowired
     protected AuthenticationManager authenticationManager;
 
+    @Autowired
+    protected SessionUserFacade sessionUser;
+
     /**
      * Sign up view page mapping.
      * @param userFields The for fields to be filled.
@@ -61,8 +58,7 @@ public class SignUpController {
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
                                @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser){
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ANONYMOUS"))
+        if (!sessionUser.isAnonymous())
             return new ModelAndView("redirect:/");
         final ModelAndView mav = new ModelAndView("index/signUp");
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
@@ -82,8 +78,10 @@ public class SignUpController {
      */
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields,
-                               final BindingResult errors, @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
-                               HttpServletRequest request, HttpServletResponse response) throws MessagingException {
+                               @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
+                               final BindingResult errors,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws MessagingException {
         if(errors.hasErrors()){
             LOGGER.error("Sign Up failed. There are {} errors in form\n", errors.getErrorCount());
             for (ObjectError error : errors.getAllErrors())
@@ -118,7 +116,8 @@ public class SignUpController {
 
     @RequestMapping(value = "/resetPassword")
     public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
-                                      @RequestParam(name = "username") String email, @RequestParam(name = "token") int token) {
+                                      @RequestParam(name = "username") String email,
+                                      @RequestParam(name = "token") int token) {
         String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
         Optional<User> maybeUser = userService.findByUsername(decodedEmail);
         if (!maybeUser.isPresent())
@@ -146,15 +145,13 @@ public class SignUpController {
         }
         String password = StringEscapeUtils.escapeXml11(passwordFields.getPassword());
         userService.updateUserPassword(passwordFields.getEmail(), password);
-
-        // Auto Log In
-        authenticateUserAndSetSession(passwordFields.getEmail(), password, request, response);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(value = "/verify")
     public ModelAndView resetPassword(@RequestParam(name = "username") String email,
-                                      @RequestParam(name = "token") int token, HttpServletRequest request) throws MessagingException {
+                                      @RequestParam(name = "token") int token,
+                                      HttpServletRequest request) throws MessagingException {
         String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
         Optional<User> maybeUser = userService.findByUsername(decodedEmail);
         if (!maybeUser.isPresent())
@@ -177,25 +174,6 @@ public class SignUpController {
     /**
      *  Auxiliary functions
      */
-
-    /**
-     * Authenticates user and set its session for automatic login.
-     * @param username The user's name.
-     * @param password The user's password.
-     * @param request The http request.
-     * @param response The http response.
-     */
-    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request, HttpServletResponse response) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
-        // generate session if one doesn't exist
-        request.getSession();
-
-        token.setDetails(new WebAuthenticationDetails(request));
-        Authentication authenticatedUser = authenticationManager.authenticate(token);
-
-        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-    }
 
     /**
      * Sends the verification email

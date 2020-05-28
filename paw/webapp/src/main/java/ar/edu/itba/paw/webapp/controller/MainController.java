@@ -2,29 +2,19 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.token.TokenGeneratorUtil;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -36,9 +26,6 @@ public class MainController {
 
     @Autowired
     private EmailService emailService;
-
-    @Autowired
-    protected AuthenticationManager authenticationManager;
 
     @Autowired
     protected SessionUserFacade sessionUser;
@@ -81,7 +68,7 @@ public class MainController {
      * @return Model and view.
      */
     @RequestMapping(value = "/header")
-    public ModelAndView headerComponent(HttpServletRequest request) {
+    public ModelAndView headerComponent() {
         return new ModelAndView("components/header");
     }
 
@@ -97,11 +84,11 @@ public class MainController {
     }
 
     @RequestMapping(value = "/requestPassword", method = {RequestMethod.POST})
-    public ModelAndView requestPassword(@RequestParam(name = "username") String email, HttpServletRequest request) throws MessagingException {
-        Optional<User> maybeUser = userService.findByUsername(StringEscapeUtils.escapeXml11(email));
-        if (!maybeUser.isPresent()) {
-            return requestPassword(true, false, false);
-        }
+    public ModelAndView requestPassword(@RequestParam(name = "username") String email,
+                                        HttpServletRequest request) throws MessagingException {
+        Optional<User> maybeUser = userService.findByUsername(email);
+        if (!maybeUser.isPresent()) return requestPassword(true, false, false);
+
         String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
         int token;
         try {
