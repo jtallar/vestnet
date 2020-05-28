@@ -12,6 +12,10 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -20,9 +24,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 @EnableWebMvc
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.component" })
@@ -48,6 +54,29 @@ public class WebConfig {
         return viewResolver;
     }
 
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setPackagesToScan("ar.edu.itba.model");
+        factoryBean.setDataSource(dataSource());
+
+        final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factoryBean.setJpaVendorAdapter(vendorAdapter);
+
+        final Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
+        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
+        properties.setProperty("format_sql", "true"); // TODO same as above
+        factoryBean.setJpaProperties(properties);
+        return factoryBean;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
+    }
+
     /**
      * Sets up postgres driver data source.
      * @return The data source.
@@ -63,16 +92,13 @@ public class WebConfig {
     }
 
     /**
-     * Initializes de data source with its populator.
-     * @param ds The given data source
-     * @return The initialized data source.
+     * Initializes the transaction manager.
+     * @param ds Data source.
+     * @return Platform transaction manager.
      */
     @Bean
-    public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
-        final DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(ds);
-        dsi.setDatabasePopulator(databasePopulator());
-        return dsi;
+    public PlatformTransactionManager transactionManager(final DataSource ds) {
+        return new DataSourceTransactionManager(ds);
     }
 
     /**
@@ -97,28 +123,5 @@ public class WebConfig {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
         commonsMultipartResolver.setMaxUploadSize(MAX_UPLOAD_SIZE);
         return commonsMultipartResolver;
-    }
-
-    /**
-     * Initializes the transaction manager.
-     * @param ds Data source.
-     * @return Platform transaction manager.
-     */
-    @Bean
-    public PlatformTransactionManager transactionManager(final DataSource ds) {
-        return new DataSourceTransactionManager(ds);
-    }
-
-
-    /* Auxiliary Functions */
-
-    /**
-     * Returns database populator based on sql schema.
-     * @return The database pupolator.
-     */
-    private DatabasePopulator databasePopulator() {
-        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-        dbp.addScript(schemaSql);
-        return dbp;
     }
 }
