@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -28,11 +29,12 @@ public class User {
     @Column(name = "real_id", length = 15, nullable = false)
     private String realId; // Specific to country
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "aux_date")
-    private LocalDate birthDate;
+    private Date birthDate;
 
-//    @Column(name = "aux_date")
-//    private Location location;
+    @Embedded
+    private Location location;
 
     @Column(name = "email", length = 255, nullable = false)
     private String email;
@@ -46,8 +48,9 @@ public class User {
     @Column(name = "profile_pic")
     private byte[] image;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "join_date")
-    private LocalDate joinDate;
+    private Date joinDate;
 
     @Column(name = "verified", nullable = false)
     private boolean verified;
@@ -56,7 +59,7 @@ public class User {
         /** For Hibernate only */
     }
 
-    public User(Integer role, String password, String firstName, String lastName, String realId, LocalDate birthDate,
+    public User(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,
                 Location location, String email, String phone, String linkedin, byte[] image) {
         this.role = role;
         this.password = password;
@@ -64,7 +67,7 @@ public class User {
         this.lastName = lastName;
         this.realId = realId;
         this.birthDate = birthDate;
-//        this.location = location;
+        this.location = location;
         this.email = email;
         this.phone = phone;
         this.linkedin = linkedin;
@@ -119,21 +122,21 @@ public class User {
         this.realId = realId;
     }
 
-    public LocalDate getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
-//    public Location getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(Location location) {
-//        this.location = location;
-//    }
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
     public String getEmail() {
         return email;
@@ -167,11 +170,11 @@ public class User {
         this.image = image;
     }
 
-    public LocalDate getJoinDate() {
+    public Date getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(LocalDate joinDate) {
+    public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
     }
 
@@ -191,7 +194,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", realId='" + realId + '\'' +
                 ", birthDate=" + birthDate +
-//                ", location=" + location +
+                ", location=" + location +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", linkedin='" + linkedin + '\'' +

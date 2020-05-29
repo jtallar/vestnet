@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 @Repository
@@ -19,7 +20,7 @@ public class UserJpaDao implements UserDao {
     private EntityManager entityManager;
 
     @Override
-    public User create(Integer role, String password, String firstName, String lastName, String realId, LocalDate birthDate,
+    public User create(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,
                        Location location, String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException {
         // TODO make JPA do it by itself
         if (findByUsername(email).isPresent()) throw new UserAlreadyExistsException();
@@ -30,9 +31,11 @@ public class UserJpaDao implements UserDao {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        final TypedQuery<User> query = entityManager.createQuery("from User as u where u.email = :username", User.class);
+        final TypedQuery<User> query = entityManager.createQuery("from User where email = :username", User.class);
         query.setParameter("username", username);
-        return query.getResultList().stream().findFirst();
+        Optional<User> user = query.getResultList().stream().findFirst();
+        System.out.println("MATI ACA: " + user);
+        return user;
     }
 
     @Override

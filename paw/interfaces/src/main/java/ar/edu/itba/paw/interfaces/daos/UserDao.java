@@ -5,6 +5,8 @@ import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 public interface UserDao {
@@ -26,7 +28,7 @@ public interface UserDao {
      * @throws UserAlreadyExistsException If the user's mail already exists.
      */
      User create(Integer role, String password, String firstName, String lastName, String realId,
-                LocalDate birthDate, Location location, String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException;
+                 Date birthDate, Location location, String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException;
 
 
     /**

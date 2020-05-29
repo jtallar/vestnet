@@ -3,7 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.model.City;
+import ar.edu.itba.paw.model.Country;
 import ar.edu.itba.paw.model.Location;
+import ar.edu.itba.paw.model.State;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +116,7 @@ public class RestApiController {
      */
     @RequestMapping(value = "/location/country",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Location.Country> countryList() {
+    public List<Country> countryList() {
         return locationService.findAllCountries();
     }
 
@@ -124,7 +127,7 @@ public class RestApiController {
      */
     @RequestMapping(value = "/location/state/{country_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Location.State> stateList(@PathVariable("country_id") long countryId) {
+    public List<State> stateList(@PathVariable("country_id") long countryId) {
         return locationService.findStates(countryId);
     }
 
@@ -135,7 +138,7 @@ public class RestApiController {
      */
     @RequestMapping(value = "/location/city/{state_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Location.City> cityList(@PathVariable("state_id") long stateId) {
+    public List<City> cityList(@PathVariable("state_id") long stateId) {
         return locationService.findCities(stateId);
     }
 }

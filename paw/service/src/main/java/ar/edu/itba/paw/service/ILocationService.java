@@ -2,7 +2,10 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.LocationDao;
 import ar.edu.itba.paw.interfaces.services.LocationService;
+import ar.edu.itba.paw.model.City;
+import ar.edu.itba.paw.model.Country;
 import ar.edu.itba.paw.model.Location;
+import ar.edu.itba.paw.model.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -11,23 +14,23 @@ import java.util.List;
 
 @Primary
 @Service
-public class LocationServiceImpl implements LocationService {
+public class ILocationService implements LocationService {
 
     @Autowired
     LocationDao locationDao;
 
     @Override
-    public List<Location.Country> findAllCountries() {
+    public List<Country> findAllCountries() {
         return locationDao.findAllCountries();
     }
 
     @Override
-    public List<Location.State> findStates(long countryId) {
+    public List<State> findStates(long countryId) {
         return locationDao.findStates(countryId);
     }
 
     @Override
-    public List<Location.City> findCities(long stateId) {
+    public List<City> findCities(long stateId) {
         return locationDao.findCities(stateId);
     }
 }

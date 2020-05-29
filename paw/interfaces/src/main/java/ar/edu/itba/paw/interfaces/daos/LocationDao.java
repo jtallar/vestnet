@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.interfaces.daos;
 
-import ar.edu.itba.paw.model.Location.City;
-import ar.edu.itba.paw.model.Location.Country;
-import ar.edu.itba.paw.model.Location.State;
+import ar.edu.itba.paw.model.City;
+import ar.edu.itba.paw.model.Country;
+import ar.edu.itba.paw.model.State;
 
 import java.util.List;
 
