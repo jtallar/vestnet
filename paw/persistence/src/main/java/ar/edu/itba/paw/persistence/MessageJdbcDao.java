@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.MessageAlreadySentException;
-import ar.edu.itba.paw.interfaces.MessageDao;
+import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
+import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.model.Message;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;

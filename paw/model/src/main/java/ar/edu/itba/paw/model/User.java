@@ -1,101 +1,178 @@
 package ar.edu.itba.paw.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
-//import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * Model of the registered user on the web app.
- */
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_user_id_seq")
+    @SequenceGenerator(sequenceName = "users_user_id_seq", name = "users_user_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "role_id")
+    private Integer role;
+
+    @Column(name = "password", length = 76, nullable = false)
     private String password;
 
-    private final long id;
-    private final int role;
-    private final String firstName;
-    private final String lastName;
-    private final String realId; // Specific to country
-    private final LocalDate birthDate;
+    @Column(name = "first_name", length = 25, nullable = false)
+    private String firstName;
 
-    private final Location location;
+    @Column(name = "last_name", length = 25, nullable = false)
+    private String lastName;
 
-    private final String email;
-    private final String phone;
-    private final String linkedin;
+    @Column(name = "real_id", length = 15, nullable = false)
+    private String realId; // Specific to country
 
-    private final LocalDate joinDate;
-    private int trustIndex;
+    @Column(name = "aux_date")
+    private LocalDate birthDate;
+
+//    @Column(name = "aux_date")
+//    private Location location;
+
+    @Column(name = "email", length = 255, nullable = false)
+    private String email;
+
+    @Column(name = "phone", length = 25)
+    private String phone;
+
+    @Column(name = "linkedin", length = 100)
+    private String linkedin;
+
+    @Column(name = "profile_pic")
+    private byte[] image;
+
+    @Column(name = "join_date")
+    private LocalDate joinDate;
+
+    @Column(name = "verified", nullable = false)
     private boolean verified;
 
-    public User(long id, int role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, LocalDate joinDate, int trustIndex) {
-        this.id = id;
+    /** Package */ User() {
+        /** For Hibernate only */
+    }
+
+    public User(Integer role, String password, String firstName, String lastName, String realId, LocalDate birthDate,
+                Location location, String email, String phone, String linkedin, byte[] image) {
         this.role = role;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.realId = realId;
         this.birthDate = birthDate;
-        this.location = location;
+//        this.location = location;
         this.email = email;
         this.phone = phone;
         this.linkedin = linkedin;
-        this.joinDate = joinDate;
-        this.trustIndex = trustIndex;
+        this.image = image;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getLastName() {
         return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getRealId() {
         return realId;
     }
 
+    public void setRealId(String realId) {
+        this.realId = realId;
+    }
+
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public Location getLocation() {
-        return location;
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
+
+//    public Location getLocation() {
+//        return location;
+//    }
+//
+//    public void setLocation(Location location) {
+//        this.location = location;
+//    }
 
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {
         return phone;
     }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getLinkedin() {
         return linkedin;
+    }
+
+    public void setLinkedin(String linkedin) {
+        this.linkedin = linkedin;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public LocalDate getJoinDate() {
         return joinDate;
     }
 
-    public int getTrustIndex() {
-        return trustIndex;
-    }
-
-    public void setTrustIndex(int trustIndex) {
-        this.trustIndex = trustIndex;
-    }
-
-    public int getRole() {
-        return role;
-    }
-
-    public String getPassword() {
-        return this.password;
+    public void setJoinDate(LocalDate joinDate) {
+        this.joinDate = joinDate;
     }
 
     public boolean isVerified() {
@@ -106,10 +183,6 @@ public class User {
         this.verified = verified;
     }
 
-    public void setPassword(String password){
-        this.password = password;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -118,12 +191,11 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", realId='" + realId + '\'' +
                 ", birthDate=" + birthDate +
-                ", location=" + location +
+//                ", location=" + location +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", linkedin='" + linkedin + '\'' +
                 ", joinDate=" + joinDate +
-                ", trustIndex=" + trustIndex +
                 '}';
     }
 

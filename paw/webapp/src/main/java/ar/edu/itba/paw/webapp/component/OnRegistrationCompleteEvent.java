@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.component;
 
+import ar.edu.itba.paw.model.User;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.Locale;
@@ -7,9 +8,9 @@ import java.util.Locale;
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private String baseUrl;
     private Locale locale;
-    private long user;
+    private User user;
 
-    public OnRegistrationCompleteEvent(long user, Locale locale, String baseUrl) {
+    public OnRegistrationCompleteEvent(User user, Locale locale, String baseUrl) {
         super(user);
 
         this.user = user;
@@ -26,7 +27,7 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
     }
 
-    public long getUser() {
+    public User getUser() {
         return user;
     }
 }

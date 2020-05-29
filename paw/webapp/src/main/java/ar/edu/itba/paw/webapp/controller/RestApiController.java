@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.LocationService;
-import ar.edu.itba.paw.interfaces.ProjectService;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.services.LocationService;
+import ar.edu.itba.paw.interfaces.services.ProjectService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Location;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class RestApiController {
     @RequestMapping(value = "/imageController/user/{u_id}")
     @ResponseBody
     public byte[] imageControllerUser(@PathVariable("u_id") long userId) {
-        byte[] image = userService.findImageForUser(userId);
+        byte[] image /*= userService.findImageForUser(userId)*/ = null;
         if (image != null) return image;
         try {
             Resource stockImage = new ClassPathResource("userNoImage.png");

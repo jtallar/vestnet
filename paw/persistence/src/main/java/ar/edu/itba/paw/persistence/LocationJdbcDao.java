@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.LocationDao;
+import ar.edu.itba.paw.interfaces.daos.LocationDao;
 import ar.edu.itba.paw.model.Location.City;
 import ar.edu.itba.paw.model.Location.Country;
 import ar.edu.itba.paw.model.Location.State;

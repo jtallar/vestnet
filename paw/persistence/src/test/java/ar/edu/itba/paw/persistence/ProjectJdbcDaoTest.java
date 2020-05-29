@@ -95,7 +95,7 @@ public class ProjectJdbcDaoTest {
         Number userId = createUser();
 
         // 2 - Execute
-        projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, 0, userId.longValue(), new ArrayList<>(), new ArrayList<>(), new byte[0]);
+        projectJdbcDao.create(PROJECT_NAME, PROJECT_SUMMARY, 0, userId.longValue(), new ArrayList<>(), new byte[0]);
 
         // 3 - Assert
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, PROJECTS_TABLE));

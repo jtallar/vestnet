@@ -1,14 +1,13 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.ProjectDao;
-import ar.edu.itba.paw.interfaces.ProjectService;
+import ar.edu.itba.paw.interfaces.daos.ProjectDao;
+import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.Pair;
 import ar.edu.itba.paw.model.components.ProjectFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +22,8 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectDao projectDao;
 
     @Override
-    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes) {
-        return projectDao.create(name, summary, cost, ownerId, categoriesIds, stages, imageBytes);
+    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] imageBytes) {
+        return projectDao.create(name, summary, cost, ownerId, categoriesIds, imageBytes);
     }
 
     @Override

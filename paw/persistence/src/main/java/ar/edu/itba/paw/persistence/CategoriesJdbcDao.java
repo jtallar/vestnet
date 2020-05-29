@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.CategoriesDao;
+import ar.edu.itba.paw.interfaces.daos.CategoriesDao;
 import ar.edu.itba.paw.model.Category;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;

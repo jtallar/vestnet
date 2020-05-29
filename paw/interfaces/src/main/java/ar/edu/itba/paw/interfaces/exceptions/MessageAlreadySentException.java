@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.interfaces.exceptions;
 
 /**
  * Exception when user sends a message again.

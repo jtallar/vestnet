@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.MessageAlreadySentException;
-import ar.edu.itba.paw.interfaces.MessageDao;
-import ar.edu.itba.paw.interfaces.MessageService;
+import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
+import ar.edu.itba.paw.interfaces.daos.MessageDao;
+import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

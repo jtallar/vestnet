@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.LocationDao;
-import ar.edu.itba.paw.interfaces.LocationService;
+import ar.edu.itba.paw.interfaces.daos.LocationDao;
+import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.model.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

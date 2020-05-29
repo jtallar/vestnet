@@ -57,7 +57,7 @@ public class WebConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setPackagesToScan("ar.edu.itba.model");
+        factoryBean.setPackagesToScan("ar.edu.itba.paw.model");
         factoryBean.setDataSource(dataSource());
 
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -91,15 +91,15 @@ public class WebConfig {
         return dataSource;
     }
 
-    /**
-     * Initializes the transaction manager.
-     * @param ds Data source.
-     * @return Platform transaction manager.
-     */
-    @Bean
-    public PlatformTransactionManager transactionManager(final DataSource ds) {
-        return new DataSourceTransactionManager(ds);
-    }
+//    /**
+//     * Initializes the transaction manager.
+//     * @param ds Data source.
+//     * @return Platform transaction manager.
+//     */
+//    @Bean
+//    public PlatformTransactionManager transactionManager(final DataSource ds) {
+//        return new DataSourceTransactionManager(ds);
+//    }
 
     /**
      * Set message source for i18n.

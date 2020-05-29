@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.interfaces.exceptions;
 
 //@ResponseStatus(code = HttpStatus.CONFLICT)
 public class UserAlreadyExistsException extends Exception {

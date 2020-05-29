@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.model.Category;
+import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Pair;
 import ar.edu.itba.paw.model.components.ProjectFilter;
 import ar.edu.itba.paw.webapp.config.WebConfig;
@@ -11,13 +11,10 @@ import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.forms.MailFields;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.ProjectFilterForm;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -198,7 +195,7 @@ public class ProjectController {
             return createProject(projectFields);
         }
         long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), null, imageBytes);
+                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), imageBytes);
         return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
     }
 

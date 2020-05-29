@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.service;
 
-import  ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -94,7 +92,8 @@ public class EmailSenderService implements EmailService {
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
-        Locale localeInst = Locale.forLanguageTag(user.getLocation().getCountry().getLocale());
+        // TODO eventually fix this
+        Locale localeInst = Locale.forLanguageTag(/*user.getLocation().getCountry().getLocale()*/"en");
         ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", localeInst, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
         final String encodedEmail = Base64.getUrlEncoder().encodeToString(user.getEmail().getBytes());
@@ -121,7 +120,8 @@ public class EmailSenderService implements EmailService {
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true);
 
-        Locale localeInst = Locale.forLanguageTag(user.getLocation().getCountry().getLocale());
+        // TODO eventually fix also this
+        Locale localeInst = Locale.forLanguageTag(/*user.getLocation().getCountry().getLocale()*/"en");
         ResourceBundle bundle = ResourceBundle.getBundle("i18n/emailMessages", localeInst, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
         final String encodedEmail = Base64.getUrlEncoder().encodeToString(user.getEmail().getBytes());

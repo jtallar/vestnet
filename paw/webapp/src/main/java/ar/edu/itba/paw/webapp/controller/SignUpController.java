@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.EmailService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
-import ar.edu.itba.paw.interfaces.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.component.OnRegistrationCompleteEvent;
@@ -62,7 +62,7 @@ public class SignUpController {
      */
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
-                               @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser){
+                               @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser) {
         if (!sessionUser.isAnonymous())
             return new ModelAndView("redirect:/");
         final ModelAndView mav = new ModelAndView("index/signUp");
@@ -87,38 +87,35 @@ public class SignUpController {
                                final BindingResult errors,
                                HttpServletRequest request,
                                HttpServletResponse response) throws MessagingException {
-        if(errors.hasErrors()){
-            LOGGER.error("Sign Up failed. There are {} errors in form\n", errors.getErrorCount());
-            for (ObjectError error : errors.getAllErrors())
-                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
-            return signUp(userFields, false);
-        }
+
+        // TODO check how to handle form errors, exception or not
+        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Sign Up", signUp(userFields, false));
 
         byte[] imageBytes = new byte[0];
+        User newUser;
         try {
-            if (!userFields.getProfilePicture().isEmpty())
-                imageBytes = userFields.getProfilePicture().getBytes();
-        } catch (IOException e) {
-            return signUp(userFields, false);
-        }
+            if (!userFields.getProfilePicture().isEmpty()) imageBytes = userFields.getProfilePicture().getBytes();
 
-        final long userId;
-        try {
-            userId = userService.create(userFields.getRole(), userFields.getFirstName(), userFields.getLastName(), userFields.getRealId(),
-                    LocalDate.of(userFields.getYear(), userFields.getMonth(), userFields.getDay()),
-                    new Location(new Location.Country(userFields.getCountry(), "", "", "", "", ""),
-                            new Location.State(userFields.getState(), "", ""),
-                            new Location.City(userFields.getCity(), "")),
-                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getPassword(), imageBytes);
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userId, request.getLocale(), ""));
+            newUser= userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
+                    userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
+                    userFields.getCountry(), userFields.getState(),userFields.getCity(),
+                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), imageBytes);
+
+            // TODO finish this
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUser, request.getLocale(), ""));
+
         } catch (UserAlreadyExistsException e) {
+            // TODO when user already exists
             LOGGER.error("User already exists with email {} in VestNet", userFields.getEmail());
             return signUp(userFields, true);
+        } catch (IOException e) {
+            // TODO when image conversion fails
+            return signUp(userFields, false);
         } catch (RuntimeException e) {
-            return new ModelAndView("redirect:/login?me=1"); // TODO cuando falla mail
+            // TODO when mail fails
+            return new ModelAndView("redirect:/login?me=1");
         }
 
-        sendVerificationMail(userId, request);
         return new ModelAndView("redirect:/login?me=1");
     }
 
@@ -136,6 +133,8 @@ public class SignUpController {
     @RequestMapping(value = "/requestPassword", method = {RequestMethod.POST})
     public ModelAndView requestPassword(@RequestParam(name = "username") String email,
                                         HttpServletRequest request) throws MessagingException {
+
+        // TODO check if solve with exceptions
         Optional<User> maybeUser = userService.findByUsername(email);
         if (!maybeUser.isPresent()) return requestPassword(true, false, false);
 
@@ -156,6 +155,8 @@ public class SignUpController {
                                       @RequestParam(name = "username") String email,
                                       @RequestParam(name = "token") int token) {
         String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
+
+        // TODO check if solve with exceptions
         Optional<User> maybeUser = userService.findByUsername(decodedEmail);
         if (!maybeUser.isPresent())
             return new ModelAndView("redirect:/login");
@@ -176,12 +177,14 @@ public class SignUpController {
 
     @RequestMapping(value = "/resetPassword", method = {RequestMethod.POST})
     public ModelAndView resetPassword(@Valid @ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
-                                      final BindingResult errors, HttpServletRequest request, HttpServletResponse response) {
-        if (errors.hasErrors()) {
-            return resetPassword(passwordFields, passwordFields.getEmail(), passwordFields.getToken());
-        }
-        String password = StringEscapeUtils.escapeXml11(passwordFields.getPassword());
-        userService.updateUserPassword(passwordFields.getEmail(), password);
+                                      final BindingResult errors,
+                                      HttpServletRequest request,
+                                      HttpServletResponse response) {
+
+        if (errors.hasErrors()) return resetPassword(passwordFields, passwordFields.getEmail(), passwordFields.getToken());
+
+        // TODO do not forget this
+//        userService.updateUserPassword(passwordFields.getEmail(), passwordFields.getPassword());
         return new ModelAndView("redirect:/login");
     }
 
@@ -196,38 +199,23 @@ public class SignUpController {
         try {
             if (!TokenGeneratorUtil.checkToken(maybeUser.get().getEmail() + maybeUser.get().getPassword(), token)) {
                 LOGGER.warn("\n\nToken Expired\n\n");
-                sendVerificationMail(maybeUser.get().getId(), request);
+//                sendVerificationMail(maybeUser.get().getId(), request);
                 return new ModelAndView("redirect:/login?me=3");
             }
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             LOGGER.error("Failed to check token");
             return new ModelAndView("redirect:/login?me=2");
         }
-        userService.verifyUser(decodedEmail);
+
+        // TODO do not forget this
+//        userService.verifyUser(decodedEmail);
         return new ModelAndView("redirect:/login?me=4");
     }
 
-
-    /**
-     *  Auxiliary functions
-     */
-
-    /**
-     * Sends the verification email
-     * @param userId The unique user id
-     * @param request The http request
-     * @throws MessagingException
-     */
-    private void sendVerificationMail(long userId, HttpServletRequest request) throws MessagingException {
-        Optional<User> maybeUser = userService.findById(userId);
-        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        int token = 0;
-        try {
-            token = TokenGeneratorUtil.getToken(maybeUser.get().getEmail() + maybeUser.get().getPassword());
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            LOGGER.error("Failed to generate token");
-        }
-        emailService.sendVerificationEmail(userService.findById(userId).get(), String.valueOf(token), baseUrl);
+    private ModelAndView logFormErrorsAndReturn(BindingResult errors, String formName, ModelAndView modelAndView) {
+            LOGGER.error(formName + " failed. There are {} errors in form\n", errors.getErrorCount());
+            for (ObjectError error : errors.getAllErrors())
+                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
+            return modelAndView;
     }
-
 }

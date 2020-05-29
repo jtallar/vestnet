@@ -116,8 +116,7 @@
                                     <label><spring:message code="role"/> </label>
                                     <form:select path="role" class="custom-select mr-sm-2">
                                         <form:option value="Investor"><spring:message code="investor"/></form:option>
-                                        <form:option value="Entrepreneur"><spring:message
-                                                code="entrepreneur"/></form:option>
+                                        <form:option value="Entrepreneur"><spring:message code="entrepreneur"/></form:option>
                                     </form:select>
                                 </div>
                             </div>

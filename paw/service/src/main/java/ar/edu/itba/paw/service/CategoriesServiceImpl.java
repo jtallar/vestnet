@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.CategoriesDao;
-import ar.edu.itba.paw.interfaces.CategoriesService;
+import ar.edu.itba.paw.interfaces.daos.CategoriesDao;
+import ar.edu.itba.paw.interfaces.services.CategoriesService;
 import ar.edu.itba.paw.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

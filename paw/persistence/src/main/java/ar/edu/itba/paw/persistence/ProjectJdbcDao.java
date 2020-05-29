@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 
-import ar.edu.itba.paw.interfaces.ProjectDao;
+import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.Pair;
 import ar.edu.itba.paw.model.components.ProjectFilter;
@@ -55,7 +55,7 @@ public class ProjectJdbcDao implements ProjectDao {
     }
 
     @Override
-    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes) {
+    public long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] imageBytes) {
         Map<String, Object> values = new HashMap<>();
         values.put("owner_id", ownerId);
         values.put("project_name", name);

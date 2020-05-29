@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces;
+package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.Pair;
@@ -17,12 +17,11 @@ public interface ProjectService {
      * @param cost The project's total cost.
      * @param ownerId The user id owner of the project.
      * @param categoriesIds The project's categories ids.
-     * @param stages The project's list of stages.
      * @param imageBytes The project's front image.
      * @return operation return.
      */
     @Transactional
-    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, List<Stage> stages, byte[] imageBytes);
+    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] imageBytes);
 
     /**
      * Finds a project given its id

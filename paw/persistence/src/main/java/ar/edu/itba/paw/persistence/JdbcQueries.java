@@ -81,44 +81,6 @@ public class JdbcQueries {
             "JOIN " + STATE_TABLE + " st ON (u.state_id = st.id) " +
             "JOIN " + CITY_TABLE + " ci ON (u.city_id = ci.id) ";
 
-    static final String USER_FIND_BY_ID =
-            USER_FIND_ALL +
-            "WHERE u.id = ? ";
-
-    static final String USER_FIND_BY_USERNAME =
-            USER_FIND_ALL +
-            "WHERE u.email = ? ";
-
-    static final String USER_FIND_IMAGE_BY_ID =
-            "SELECT u.profile_pic " +
-            "FROM " + USER_TABLE + " u " +
-            "WHERE u.id = ? ";
-
-    static final String USER_UPDATE =
-            "UPDATE " + USER_TABLE + " SET " +
-            "role_id = ?, " +
-            "first_name = ?, " +
-            "last_name = ?, " +
-            "real_id = ?, " +
-            "aux_date = ?, " +
-            "country_id = ?, " +
-            "state_id = ?, " +
-            "city_id = ?, " +
-            "phone = ?, " +
-            "linkedin = ?, " +
-            "profile_pic = ?, " +
-            "password = ? " +
-            "WHERE users.id = ? ";
-
-    static final String USER_USERNAME_PASSWORD_UPDATE =
-            "UPDATE " + USER_TABLE + " SET " +
-            "password = ? " +
-            "WHERE users.email = ? ";
-
-    static final String USER_SET_VERIFIED_TRUE =
-            "UPDATE " + USER_TABLE + " SET " +
-            "verified = true " +
-            "WHERE users.email = ? ";
 
     static final String USER_FIND_FAVORITES =
             "SELECT project_id " +
@@ -226,10 +188,6 @@ public class JdbcQueries {
             "p.publish_date, " +
             "p.update_date, " +
 
-            "p.aproved AS back_office_approved, " +
-            "p.profit_index AS back_office_profit_index, " +
-            "p.risk_index AS back_office_risk_index, " +
-
             "u.id AS owner_id, " +
             "u.first_name AS owner_first_name, " +
             "u.last_name AS owner_last_name, " +
@@ -240,7 +198,6 @@ public class JdbcQueries {
             "u.phone AS owner_phone, " +
             "u.linkedin AS owner_linkedin, " +
             "u.join_date AS owner_join_date, " +
-            "u.trust_index AS owner_trust_index, " +
             "u.verified AS owner_verified, " +
 
             "co.id AS owner_location_country_id, " +
