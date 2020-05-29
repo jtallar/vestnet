@@ -41,10 +41,12 @@ public class IUserService implements UserService {
         return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin, image);
     }
 
+    @Transactional
     @Override
     public Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
     }
+
 
     @Override
     public Optional<User> findById(Long id) {

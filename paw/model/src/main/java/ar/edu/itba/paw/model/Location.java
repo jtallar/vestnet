@@ -10,13 +10,13 @@ import javax.persistence.*;
 @Embeddable
 public class Location {
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Country country;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private State state;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private City city;
 
     /** Protected */ Location() {

@@ -33,9 +33,7 @@ public class UserJpaDao implements UserDao {
     public Optional<User> findByUsername(String username) {
         final TypedQuery<User> query = entityManager.createQuery("from User where email = :username", User.class);
         query.setParameter("username", username);
-        Optional<User> user = query.getResultList().stream().findFirst();
-        System.out.println("MATI ACA: " + user);
-        return user;
+        return query.getResultList().stream().findFirst();
     }
 
     @Override

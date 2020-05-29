@@ -11,7 +11,7 @@ import java.util.List;
 
 @Primary
 @Service
-public class CategoriesServiceImpl implements CategoriesService {
+public class ICategoriesService implements CategoriesService {
 
     @Autowired
     CategoriesDao categoriesDao;
