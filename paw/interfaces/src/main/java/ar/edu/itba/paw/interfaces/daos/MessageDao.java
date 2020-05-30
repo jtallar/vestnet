@@ -2,6 +2,8 @@ package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 
 import java.util.List;
 
@@ -9,15 +11,13 @@ public interface MessageDao {
 
     /**
      * Creates a new message.
-     * @param message Message string.
-     * @param offer Offer string.
-     * @param interest Interest string.
-     * @param senderId Unique user sender id.
-     * @param receiverId Unique user receiver id.
-     * @param projectId Unique project id.
-     * @return operation return.
+     * @param content Message content. Message, offer, interest.
+     * @param sender User sender.
+     * @param receiver User receiver.
+     * @param project Project message topic.
+     * @return The created message.
      */
-    long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException;
+    Message create(Message.MessageContent content, User sender, User receiver, Project project) throws MessageAlreadySentException;
 
     /**
      * Gets all the messages from a negotiation.

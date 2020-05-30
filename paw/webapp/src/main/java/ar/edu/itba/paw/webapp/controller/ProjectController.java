@@ -140,7 +140,8 @@ public class ProjectController {
         }
 
         try {
-            messageService.create(mailFields.getBody(), String.valueOf(mailFields.getOffers()), mailFields.getExchange(), sessionUser.getId(), mailFields.getToId(), id);
+            messageService.create(mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
+                    sessionUser.getId(), mailFields.getToId(), id);
         } catch (MessageAlreadySentException e) {
             LOGGER.error("Message already sent to this user about this project.");
             return singleProjectView(mailFields, id, 2);

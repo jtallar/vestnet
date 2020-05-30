@@ -15,9 +15,9 @@ public interface MessageService {
      * @param senderId Unique user sender id.
      * @param receiverId Unique user receiver id.
      * @param projectId Unique project id.
-     * @return operation return.
+     * @return The created message.
      */
-    long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException;
+    Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException;
 
     /**
      * Gets all the messages from a negotiation.

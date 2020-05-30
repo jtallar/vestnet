@@ -3,6 +3,8 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,8 +18,13 @@ public class MessageJpaDao implements MessageDao {
     private EntityManager entityManager;
 
     @Override
-    public long create(String message, String offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException {
-        return 0;
+    public Message create(Message.MessageContent content, User sender, User receiver, Project project) throws MessageAlreadySentException {
+        // TODO check this how are we going to do it
+        if(project == null) throw new MessageAlreadySentException();
+
+        final Message message = new Message(content, sender, receiver, project);
+        entityManager.persist(message);
+        return message;
     }
 
     @Override

@@ -39,6 +39,13 @@ public class Message {
         /** For hibernate only */
     }
 
+    public Message(MessageContent content, User sender, User receiver, Project project) {
+        this.content = content;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.project = project;
+    }
+
     public long getId() {
         return id;
     }
@@ -113,7 +120,7 @@ public class Message {
      * It suits for the negotiation between investors and entrepreneurs.
      */
     @Embeddable
-    public class MessageContent {
+    public static class MessageContent {
 
         @Column(name = "content_message", length = 250)
         private String message;

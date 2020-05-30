@@ -68,6 +68,10 @@ public class Project {
         this.categories = categories;
     }
 
+    public Project(long id) {
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
