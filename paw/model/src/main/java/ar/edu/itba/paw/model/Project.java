@@ -1,74 +1,66 @@
 package ar.edu.itba.paw.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Models a project with all its properties.
  */
+@Entity
+@Table(name = "projects")
 public class Project {
-    private final long id;
-    private final String name;
 
-    private final String summary;
-    private final LocalDate publishDate;
-    private final LocalDate updateDate;
-    private final long cost;
-    private final long hits;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_project_id_seq")
+    @SequenceGenerator(sequenceName = "projects_project_id_seq", name = "projects_project_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private long id;
 
-    // Si quiero poder inicializarlo despues, poner tamb final ownerId y sacarle el final a owner
-    private final long ownerUserId;
+    @Column(name = "project_name", nullable = false)
+    private String name;
+
+    @Column(name = "summary", length = 250, nullable = false)
+    private String summary;
+
+    @Column(name = "cost", nullable = false)
+    private long cost;
+
+    @Temporal(value = TemporalType.DATE)
+    @Column(name = "publish_date")
+    private Date publishDate;
+
+    @Temporal(value = TemporalType.DATE)
+    @Column(name = "update_date")
+    private Date updateDate;
+
+    @Column(name = "hits", nullable = false)
+    private long hits;
+
+    @Column(name = "images")
+    private byte[] image;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User owner;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "project_categories",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
-    private Integer notRead; // TODO: SACAR DE ACA, pasarlo a metodo que recibe lista de ids como en favs
 
-    public Integer getNotRead() {
-        return notRead;
+    /** Protected */ Project() {
+        /** For hibernate only */
     }
 
-    public void setNotRead(Integer notRead) {
-        this.notRead = notRead;
-    }
-
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
-                   User owner, List<Category> categories) {
-        this.id = id;
+    public Project(String name, String summary, long cost, byte[] image, User owner, List<Category> categories) {
         this.name = name;
         this.summary = summary;
-        this.publishDate = publishDate;
-        this.updateDate = updateDate;
         this.cost = cost;
-        this.hits = hits;
+        this.image = image;
         this.owner = owner;
-        this.ownerUserId = owner.getId();
-        this.categories = categories;
-    }
-
-        public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
-                   User owner, List<Category> categories, Integer notRead) {
-        this.id = id;
-        this.name = name;
-        this.summary = summary;
-        this.publishDate = publishDate;
-        this.updateDate = updateDate;
-        this.cost = cost;
-        this.hits = hits;
-        this.owner = owner;
-        this.ownerUserId = owner.getId();
-        this.categories = categories;
-        this.notRead = notRead;
-    }
-
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
-                   long ownerUserId, List<Category> categories) {
-        this.id = id;
-        this.name = name;
-        this.summary = summary;
-        this.publishDate = publishDate;
-        this.updateDate = updateDate;
-        this.cost = cost;
-        this.hits = hits;
-        this.ownerUserId = ownerUserId;
         this.categories = categories;
     }
 
@@ -76,28 +68,64 @@ public class Project {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSummary() {
         return summary;
     }
 
-    public LocalDate getPublishDate() {
-        return publishDate;
-    }
-
-    public LocalDate getUpdateDate() {
-        return updateDate;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public long getCost() {
         return cost;
     }
 
+    public void setCost(long cost) {
+        this.cost = cost;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
     public long getHits() {
         return hits;
+    }
+
+    public void setHits(long hits) {
+        this.hits = hits;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public User getOwner() {
@@ -108,40 +136,11 @@ public class Project {
         this.owner = owner;
     }
 
-    public long getOwnerUserId() {
-        return ownerUserId;
-    }
-
-
     public List<Category> getCategories() {
         return categories;
     }
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
-    }
-
-    public boolean hasCategory(String cat){
-        boolean[] hasIt = {false};
-        this.getCategories().forEach(category -> {
-            if(category.getName().equals(cat)) hasIt[0] = true;
-        });
-        return hasIt[0];
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", summary='" + summary + '\'' +
-                ", publishDate=" + publishDate +
-                ", updateDate=" + updateDate +
-                ", cost=" + cost +
-                ", hits=" + hits +
-                ", ownerUserId=" + ownerUserId +
-                ", owner=" + owner +
-                ", categories=" + categories +
-                '}';
     }
 }

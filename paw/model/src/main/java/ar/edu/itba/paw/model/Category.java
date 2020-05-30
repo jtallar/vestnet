@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Models a project category.
@@ -19,6 +20,9 @@ public class Category {
     @Column(name = "parent_id")
     private Long parent;
 
+    @ManyToMany(mappedBy = "categories")
+    private List<Project> projectList;
+
     /** Protected */ Category() {
         /** For hibernate only */
     }
@@ -27,6 +31,10 @@ public class Category {
         this.id = id;
         this.name = name;
         this.parent = parent;
+    }
+
+    public Category(long id) {
+        this.id = id;
     }
 
     public long getId() {
@@ -53,8 +61,17 @@ public class Category {
         this.parent = parent;
     }
 
+    public List<Project> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<Project> projectList) {
+        this.projectList = projectList;
+    }
+
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "Category{" +
                 "id=" + id +
                 ", name='" + name + '\'' +

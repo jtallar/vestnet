@@ -14,12 +14,12 @@ public interface ProjectDao {
      * @param name The project's name.
      * @param summary The project's summary.
      * @param cost The project's total cost.
-     * @param ownerId The user id owner of the project.
-     * @param categoriesIds The project's categories ids.
-     * @param imageBytes The project's front image.
-     * @return operation return.
+     * @param owner The user owner of the project.
+     * @param categories The project's categories.
+     * @param image The project's front image.
+     * @return The created project.
      */
-    long create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] imageBytes);
+    Project create(String name, String summary, long cost, byte[] image, User owner, List<Category> categories);
 
     /**
      * Finds a project given its id

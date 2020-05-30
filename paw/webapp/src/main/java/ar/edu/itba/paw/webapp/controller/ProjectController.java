@@ -194,9 +194,9 @@ public class ProjectController {
             LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
             return createProject(projectFields);
         }
-        long projectId = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), imageBytes);
-        return new ModelAndView("redirect:/messages#dashboard-project-" + projectId);
+        Project project = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
+                projectFields.getCost(), imageBytes, sessionUser.getId(), projectFields.getCategories());
+        return new ModelAndView("redirect:/messages#dashboard-project-" + project.getId());
     }
 
 

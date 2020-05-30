@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -36,7 +38,7 @@ public class User {
     @Embedded
     private Location location;
 
-    @Column(name = "email", length = 255, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "phone", length = 25)
@@ -55,6 +57,9 @@ public class User {
     @Column(name = "verified", nullable = false)
     private boolean verified;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
+    private List<Project> projectList;
+
     /** Package */ User() {
         /** For Hibernate only */
     }
@@ -72,6 +77,10 @@ public class User {
         this.phone = phone;
         this.linkedin = linkedin;
         this.image = image;
+    }
+
+    public User(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -186,10 +195,20 @@ public class User {
         this.verified = verified;
     }
 
+    public List<Project> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<Project> projectList) {
+        this.projectList = projectList;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", role=" + role +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", realId='" + realId + '\'' +
@@ -198,7 +217,10 @@ public class User {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", linkedin='" + linkedin + '\'' +
+                ", image=" + Arrays.toString(image) +
                 ", joinDate=" + joinDate +
+                ", verified=" + verified +
+                ", projectList=" + projectList +
                 '}';
     }
 

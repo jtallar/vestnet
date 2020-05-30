@@ -80,7 +80,7 @@ public class UserController {
     public ModelAndView singleProjectView(@PathVariable("id") long id) {
         final Project project = projectService.findById(id).orElseThrow(ProjectNotFoundException::new);
         // Prevent entrepreneurs from accessing other projects that are not theirs
-        if (project.getOwnerUserId() != sessionUser.getId())
+        if (project.getOwner().getId() != sessionUser.getId())
             return new ModelAndView("redirect:/messages");
         final ModelAndView mav = new ModelAndView("project/singleProjectView");
         mav.addObject("project", project);
