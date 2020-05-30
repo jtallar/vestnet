@@ -1,69 +1,110 @@
 package ar.edu.itba.paw.model;
 
-import java.time.LocalDate;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Models a message. Used for communication between users.
  */
+@Entity
+@Table(name = "messages")
 public class Message {
-    private final long id;
 
-    private final MessageContent content;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messages_message_id_seq")
+    @SequenceGenerator(sequenceName = "messages_message_id_seq", name = "messages_message_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private long id;
 
-    private final LocalDate publishDate;
+    @Embedded
+    private MessageContent content;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "publish_date")
+    private Date publishDate;
+
+    @Column(name = "accepted")
     private Boolean accepted;
 
-    private final long senderId;
-    private final long receiverId;
-    private final long projectId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private User sender;
 
-    public Message(long id, MessageContent content, LocalDate publishDate, Boolean accepted, long senderId, long receiverId, long projectId) {
-        this.id = id;
-        this.content = content;
-        this.publishDate = publishDate;
-        this.accepted = accepted;
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-        this.projectId = projectId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private User receiver;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Project project;
+
+    /** Protected */ Message() {
+        /** For hibernate only */
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public MessageContent getContent() {
         return content;
     }
 
-    public LocalDate getPublishDate() {
+    public void setContent(MessageContent content) {
+        this.content = content;
+    }
+
+    public Date getPublishDate() {
         return publishDate;
     }
 
-    public Boolean isAccepted() {
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public Boolean getAccepted() {
         return accepted;
     }
 
-    public long getSenderId() {
-        return senderId;
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
     }
 
-    public long getReceiverId() {
-        return receiverId;
+    public User getSender() {
+        return sender;
     }
 
-    public long getProjectId() {
-        return projectId;
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", messageContent=" + content +
+                ", content=" + content +
                 ", publishDate=" + publishDate +
                 ", accepted=" + accepted +
-                ", senderId=" + senderId +
-                ", receiverId=" + receiverId +
+                ", sender=" + sender +
+                ", receiver=" + receiver +
+                ", project=" + project +
                 '}';
     }
 
@@ -71,10 +112,21 @@ public class Message {
      * Model of the message content.
      * It suits for the negotiation between investors and entrepreneurs.
      */
+    @Embeddable
     public class MessageContent {
-        private final String message;
-        private final String offer;
-        private final String interest;
+
+        @Column(name = "content_message", length = 250)
+        private String message;
+
+        @Column(name = "content_offer", length = 100, nullable = false)
+        private String offer;
+
+        @Column(name = "content_interest", length = 100)
+        private String interest;
+
+        /** Protected */ MessageContent() {
+            /** For hibernate only */
+        }
 
         public MessageContent(String message, String offer, String interest) {
             this.message = message;
@@ -86,12 +138,24 @@ public class Message {
             return message;
         }
 
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
         public String getOffer() {
             return offer;
         }
 
+        public void setOffer(String offer) {
+            this.offer = offer;
+        }
+
         public String getInterest() {
             return interest;
+        }
+
+        public void setInterest(String interest) {
+            this.interest = interest;
         }
 
         @Override

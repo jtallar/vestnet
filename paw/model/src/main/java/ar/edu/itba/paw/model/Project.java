@@ -2,6 +2,7 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private List<Message> messageList;
 
     /** Protected */ Project() {
         /** For hibernate only */
@@ -142,5 +146,29 @@ public class Project {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public List<Message> getMessageList() {
+        return messageList;
+    }
+
+    public void setMessageList(List<Message> messageList) {
+        this.messageList = messageList;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", summary='" + summary + '\'' +
+                ", cost=" + cost +
+                ", publishDate=" + publishDate +
+                ", updateDate=" + updateDate +
+                ", hits=" + hits +
+                ", image=" + Arrays.toString(image) +
+                ", owner=" + owner +
+                ", categories=" + categories +
+                '}';
     }
 }
