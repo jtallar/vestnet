@@ -60,7 +60,7 @@
                         </li>
 
                         <%-- Check if can show favorites --%>
-                        <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
+                        <sec:authorize access="hasRole('ROLE_INVESTOR')">
                             <c:if test="${session_user_id eq user.id}">
                                 <li class="nav-item">
                                     <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
@@ -144,35 +144,42 @@
                     </div>
 
                     <%-- User favorites pane --%>
-                    <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="profile-tab">
-                        <c:if test="${!empty favs}">
-                            <c:forEach items="${favs}" var="project">
-                                <div class="card m-2">
-                                    <div class="card-header">
-                                        <h5 class="card-title"><c:out value="${project.name}"/></h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-text"><c:out value="${project.summary}"/></p>
-                                        <strong><spring:message code="owner"/></strong>
-                                        <p><c:out value="${project.owner.firstName}"/> <c:out value="${project.owner.lastName}"/></p>
-                                        <strong><spring:message code="price"/></strong>
-                                        <p><c:out value="${project.cost}"/></p>
-                                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark"><spring:message code="moreinfo"/></a>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </c:if>
+                    <sec:authorize access="hasRole('ROLE_INVESTOR')">
+                        <c:if test="${session_user_id eq user.id}">
+                            <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="profile-tab">
+                                <c:if test="${!empty user.favorites}">
+                                    <c:forEach items="${user.favorites}" var="project">
+                                        <div class="card m-2">
+                                            <div class="card-header">
+                                                <h5 class="card-title"><c:out value="${project.name}"/></h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text"><c:out value="${project.summary}"/></p>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <strong><spring:message code="price"/></strong>
+                                                        <p><c:out value="${project.cost}"/></p>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </c:if>
 
-                        <%-- If there is no favorites --%>
-                        <c:if test="${empty favs}">
-                            <div class="card m-2">
-                                <div class="card-header">
-                                    <h5 class="card-title centered"><spring:message code="noProjFound"/></h5>
-                                </div>
+                                <%-- If there is no favorites --%>
+                                <c:if test="${empty user.favorites}">
+                                    <div class="card m-2">
+                                        <div class="card-header">
+                                            <h5 class="card-title centered"><spring:message code="noProjFound"/></h5>
+                                        </div>
+                                    </div>
+                                </c:if>
                             </div>
                         </c:if>
-                    </div>
-
+                    </sec:authorize>
                 </div>
             </div>
         </div>
@@ -180,7 +187,7 @@
 
 <%-- TODO check if can change on signup // Format linkedin link --%>
     <script>
-        var aux = '${user.linkedin}';
+        let aux = '${user.linkedin}';
 
         function goToLinkedin(url) {
             if (!(url.indexOf('http') === 0)) {

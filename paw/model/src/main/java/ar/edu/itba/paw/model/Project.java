@@ -55,6 +55,10 @@ public class Project {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private List<Message> messageList;
 
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
+    private List<User> favoriteBy;
+
     /** Protected */ Project() {
         /** For hibernate only */
     }

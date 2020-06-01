@@ -20,7 +20,7 @@ public class Category {
     @Column(name = "parent_id")
     private Long parent;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
     private List<Project> projectList;
 
     /** Protected */ Category() {

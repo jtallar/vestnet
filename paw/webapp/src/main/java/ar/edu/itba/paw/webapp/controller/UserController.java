@@ -39,11 +39,11 @@ public class UserController {
      * @return Model and view.
      */
     @RequestMapping(value = "/users/{u_id}")
-    public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
+    public ModelAndView userProfile(@PathVariable("u_id") long id,
+                                    @RequestParam(name = "back", defaultValue = "false") boolean back){
+
         final ModelAndView mav= new ModelAndView("user/profile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        if(sessionUser.isInvestor() && id == sessionUser.getId())
-            mav.addObject("favs", projectService.getUserFavorites(id));
         mav.addObject("back", back);
         return mav;
     }
