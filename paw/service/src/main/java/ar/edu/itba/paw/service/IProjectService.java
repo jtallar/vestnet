@@ -30,6 +30,17 @@ public class IProjectService implements ProjectService {
     }
 
     @Override
+    public List<Project> findByOwnerId(long id) {
+        return projectDao.findByOwner(new User(id));
+    }
+
+
+
+
+
+
+
+    @Override
     public Optional<Project> findById(long projectId) {
         return projectDao.findById(projectId);
     }
@@ -39,11 +50,7 @@ public class IProjectService implements ProjectService {
         return projectDao.findByIds(ids);
     }
 
-    @Override
-    public List<Project> findByOwner(long userId) {
-        User owner = new User(userId);
-        return projectDao.findByOwner(owner);
-    }
+
 
     @Override
     public List<Project> findFiltered(ProjectFilter filter) {

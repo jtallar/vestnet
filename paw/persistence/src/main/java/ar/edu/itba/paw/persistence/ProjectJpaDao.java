@@ -27,6 +27,17 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
     @Override
+    public List<Project> findByOwner(User owner) {
+        final TypedQuery<Project> query = entityManager.createQuery("from Project where owner = :owner", Project.class);
+        query.setParameter("owner", owner);
+        return query.getResultList();
+    }
+
+
+
+
+
+    @Override
     public Optional<Project> findById(long projectId) {
         return Optional.empty();
     }
@@ -36,12 +47,7 @@ public class ProjectJpaDao implements ProjectDao {
         return null;
     }
 
-    @Override
-    public List<Project> findByOwner(User owner) {
-        final TypedQuery<Project> query = entityManager.createQuery("from Project where owner = :owner", Project.class);
-        query.setParameter("owner", owner);
-        return query.getResultList();
-    }
+
 
     @Override
     public List<Project> findFiltered(ProjectFilter filter) {

@@ -93,31 +93,6 @@ public class MessageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/deals")
-    public ModelAndView deals(@RequestParam(name = "page", defaultValue = "1") String page){
-        final ModelAndView mav = new ModelAndView("user/deals");
-        long id = sessionUser.getId();
-        boolean hasNext = messageService.hasNextDeal(page, id);
-        mav.addObject("hasNext", hasNext);
-        List<Message> messages = messageService.getAccepted(id,page, messageService.getPageSize());
-        mav.addObject("page", page);
-        mav.addObject("messages", messages);
-
-        return mav;
-    }
 
 
-    @RequestMapping("/requests")
-    public ModelAndView requests(@RequestParam(name = "page", defaultValue = "1")String page){
-        final ModelAndView mav = new ModelAndView("user/requests");
-        long id = sessionUser.getId();
-        boolean hasNext = messageService.hasNextRequest(page, id);
-        List<Message> messages = messageService.getOffersDone(id,page, messageService.getPageSize());
-        mav.addObject("hasNext", hasNext);
-        mav.addObject("page", page);
-        mav.addObject("messages", messages);
-
-        return mav;
-
-    }
 }

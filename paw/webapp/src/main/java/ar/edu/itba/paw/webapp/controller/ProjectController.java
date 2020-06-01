@@ -197,7 +197,7 @@ public class ProjectController {
         }
         Project project = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
                 projectFields.getCost(), imageBytes, sessionUser.getId(), projectFields.getCategories());
-        return new ModelAndView("redirect:/messages#dashboard-project-" + project.getId());
+        return new ModelAndView("redirect:/dashboard#dashboard-project-" + project.getId());
     }
 
 

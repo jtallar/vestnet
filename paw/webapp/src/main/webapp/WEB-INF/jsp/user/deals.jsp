@@ -14,55 +14,14 @@
 </head>
 
 <%-- Set used variables --%>
-<c:set var="nextOne" value="${page + 1}"/>
-<c:set var="previous" value="${page - 1}"/>
 
-<%-- Set userd URLs--%>
-<c:url var="pagination_prev" value='/deals?page=${previous}'/>
-<c:url var="pagination_page" value='/deals?page=${page}'/>
-<c:url var="pagination_next" value='/deals?page=${nextOne}'/>
+<%-- Set used URLs--%>
+
 
 <body>
 
-<%-- Deals pagination --%>
-<c:if test="${!empty messages}">
-    <div class="flex-row-reverse mt-4">
-        <nav aria-label="Page navigation example">
-            <div class="row">
-                <div class="col-4 text-center tab-title">
-                    <strong> <spring:message code="deals_title"/> </strong>
-                </div>
-                <div class="col-4">
-                    <ul class="pagination justify-content-center">
-                        <c:if test="${page != 1}">
-                            <li class="page-item mx-2">
-                                <a href="${pagination_prev}" class="page-link2"><spring:message code="previous"/></a>
-                            </li>
-                            <li class="page-item mx-2">
-                                <a href="${pagination_prev}" class="page-link2">${previous}</a>
-                            </li>
-                        </c:if>
-                        <li class="page-item mx-2">
-                            <a href="${pagination_page}" class="page-link2-active">${page}</a>
-                        </li>
-                        <c:if test="${hasNext eq true}">
-                            <li class="page-item mx-2">
-                                <a href="${pagination_next}" class="page-link2">${nextOne}</a>
-                            </li>
-                            <li class="page-item mx-2">
-                                <a href="${pagination_next}" class="page-link2"><spring:message code="next"/> </a>
-                            </li>
-                        </c:if>
-                    </ul>
-                </div>
-                <div class="col-"></div>
-            </div>
-        </nav>
-    </div>
-</c:if>
-
 <%-- Deals display --%>
-<c:forEach var="message" items="${messages}" varStatus="theCount">
+<c:forEach var="message" items="${messages}">
     <span class="anchor-header" id="dashboard-project-${message.projectId}"></span>
     <div class="container-deal py-3">
         <div class="card">

@@ -35,12 +35,12 @@
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
-    <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile', ',')}"/>
+    <c:set var="options" value="${fn:split('/projects,/newProject,/dashboard,/deals,/profile', ',')}"/>
     <c:set var="icons" value="${fn:split('home-icon,new-icon,projects-icon,deals-icon,user-icon', ',')}"/>
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_INVESTOR')">
-    <c:set var="options" value="${fn:split('/projects,/requests,/myProfile', ',')}"/>
+    <c:set var="options" value="${fn:split('/projects,/requests,/profile', ',')}"/>
     <c:set var="icons" value="${fn:split('home-icon,offer-icon,user-icon', ',')}"/>
 </sec:authorize>
 

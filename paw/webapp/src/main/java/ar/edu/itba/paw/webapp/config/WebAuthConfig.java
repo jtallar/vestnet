@@ -55,10 +55,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
                 .antMatchers("/login", "/signUp", "/projects", "/welcome", "/",
-                        "/requestPassword", "/resetPassword", "/verify").permitAll()
+                        "/requestPassword", "/resetPassword", "/verify", "/projects/**").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/projects/**").hasRole("INVESTOR")
-                .antMatchers("/newProject", "/myProjects", "/messages/**").hasRole("ENTREPRENEUR")
+                .antMatchers("/requests").hasRole("INVESTOR")
+                .antMatchers("/newProject", "/deals", "/dashboard", "/**").hasRole("ENTREPRENEUR")
                 .antMatchers("/**").authenticated()
                 .and().formLogin()
                 .loginPage("/login")

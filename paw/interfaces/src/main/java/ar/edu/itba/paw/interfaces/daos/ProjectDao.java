@@ -37,7 +37,7 @@ public interface ProjectDao {
 
     /**
      * Finds the projects owned by the same user.
-     * @param userId Unique user id.
+     * @param owner The user owner.
      * @return List of all the project for the given user.
      */
     List<Project> findByOwner(User owner);

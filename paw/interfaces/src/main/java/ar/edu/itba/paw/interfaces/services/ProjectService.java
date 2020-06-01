@@ -24,6 +24,19 @@ public interface ProjectService {
     Project create(String name, String summary, long cost, byte[] image, long ownerId, List<Long> categoriesIds);
 
     /**
+     * Finds the projects owned by the same user.
+     * @param id Unique user id.
+     * @return List of all the project for the given user.
+     */
+    List<Project> findByOwnerId(long id);
+
+
+
+
+
+
+
+    /**
      * Finds a project given its id
      * @param projectId The unique id for the project
      * @return The matched project or null otherwise
@@ -37,12 +50,7 @@ public interface ProjectService {
      */
     List<Project> findByIds(List<Long> ids);
 
-    /**
-     * Finds the projects owned by the same user.
-     * @param userId Unique user id.
-     * @return List of all the project for the given user.
-     */
-    List<Project> findByOwner(long userId);
+
 
     /**
      * Finds all projects with the given filter.

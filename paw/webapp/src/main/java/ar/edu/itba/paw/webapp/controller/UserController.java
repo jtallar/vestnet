@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -48,40 +48,56 @@ public class UserController {
         return mav;
     }
 
+
     /**
      * My profile view. Redirected to users/.
      * @param back To hide/show back button.
      * @return Model and view.
      */
-    @RequestMapping(value = "/myProfile")
-    public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav = new ModelAndView("redirect:/users/" + sessionUser.getId());
-        mav.addObject("back", back);
-        return mav;
+    @RequestMapping(value = "/profile")
+    public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back) {
+
+        return userProfile(sessionUser.getId(), back);
     }
+
 
     /**
-     * Messages view page. Investor.
+     * Messages view page. Entrepreneur.
      * @return Model and view
      */
-    @RequestMapping(value = "/messages")
-    public ModelAndView myMessages() {
-        ModelAndView mav = new ModelAndView("project/myProjects");
-        List<Project> projects = projectService.findByOwner(sessionUser.getId());
-        mav.addObject("projects", projects);
+    @RequestMapping(value = "/dashboard")
+    public ModelAndView myDashboard() {
+
+        ModelAndView mav = new ModelAndView("user/dashboard");
+        mav.addObject("projects", projectService.findByOwnerId(sessionUser.getId()));
         return mav;
     }
 
-    @RequestMapping(value = "/messages/{id}")
-    public ModelAndView singleProjectView(@PathVariable("id") long id) {
-        final Project project = projectService.findById(id).orElseThrow(ProjectNotFoundException::new);
-        // Prevent entrepreneurs from accessing other projects that are not theirs
-        if (project.getOwner().getId() != sessionUser.getId())
-            return new ModelAndView("redirect:/messages");
-        final ModelAndView mav = new ModelAndView("project/singleProjectView");
-        mav.addObject("project", project);
-        mav.addObject("isFav", false);
-        mav.addObject("contactStatus", 0);
-        return mav;
+
+    /**
+     * Deals vew page. Entrepreneur.
+     * @return Model and view.
+     */
+    @RequestMapping(value = "/deals")
+    public ModelAndView myDeals() {
+        throw new UserNotFoundException();
+        // TODO implement
+//        final ModelAndView mav = new ModelAndView("user/deals");
+//        mav.addObject("messages", messageService.getAccepted(sessionUser.getId()));
+//        return mav;
+    }
+
+
+    /**
+     * Requests made view page. Investor.
+     * @return Model and view.
+     */
+    @RequestMapping("/requests")
+    public ModelAndView myRequests() {
+        throw new UserNotFoundException();
+        // TODO implement
+//        final ModelAndView mav = new ModelAndView("user/requests");
+//        mav.addObject("messages", messageService.getOffersDone(sessionUser.getId()));
+//        return mav;
     }
 }

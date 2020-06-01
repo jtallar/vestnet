@@ -44,9 +44,7 @@
                                 </div>
                             </div>
                             <div class="col-3">
-                                    <%-- TODO check this here, link is wrong --%>
-                                <a href="<c:url value="/messages/${project.id}"/>"
-                                   class="btn btn-dark btn-project pull-right">
+                                <a href="<c:url value="/projects/${project.id}"/>" class="btn btn-dark btn-project pull-right">
                                     <spring:message code="preview_project"/>
                                 </a>
                                 <button class="btn btn-dark btn-project pull-right" type="button" data-toggle="collapse"
