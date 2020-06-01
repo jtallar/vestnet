@@ -69,10 +69,6 @@ public class UserController {
         ModelAndView mav = new ModelAndView("project/myProjects");
         List<Project> projects = projectService.findByOwner(sessionUser.getId());
         mav.addObject("projects", projects);
-        List<Long> favCount = projectService.getFavoritesCount(projects.stream().map(Project::getId).collect(Collectors.toList()));
-        for (int i = 0; i < projects.size(); i++) {
-            mav.addObject(projects.get(i).getName().concat("favs"), favCount.get(i));
-        }
         return mav;
     }
 

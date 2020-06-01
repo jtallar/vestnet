@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +37,10 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findByOwner(long userId) {
-        return null;
+    public List<Project> findByOwner(User owner) {
+        final TypedQuery<Project> query = entityManager.createQuery("from Project where owner = :owner", Project.class);
+        query.setParameter("owner", owner);
+        return query.getResultList();
     }
 
     @Override

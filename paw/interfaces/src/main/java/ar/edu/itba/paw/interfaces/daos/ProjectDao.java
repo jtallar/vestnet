@@ -40,7 +40,7 @@ public interface ProjectDao {
      * @param userId Unique user id.
      * @return List of all the project for the given user.
      */
-    List<Project> findByOwner(long userId);
+    List<Project> findByOwner(User owner);
 
     /**
      * Finds all projects with the given filter.

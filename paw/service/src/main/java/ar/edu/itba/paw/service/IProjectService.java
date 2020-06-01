@@ -41,7 +41,8 @@ public class IProjectService implements ProjectService {
 
     @Override
     public List<Project> findByOwner(long userId) {
-        return projectDao.findByOwner(userId);
+        User owner = new User(userId);
+        return projectDao.findByOwner(owner);
     }
 
     @Override
