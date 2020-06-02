@@ -4,8 +4,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.components.Pair;
-import ar.edu.itba.paw.model.components.ProjectFilter;
+import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.forms.MailFields;
@@ -26,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class ProjectController {
@@ -78,10 +76,12 @@ public class ProjectController {
 
         System.out.println("MATIIII: " + form.toString());
 
+        List<Project> projects = projectService.findFiltered(form.getFiltersMap());
 
         final ModelAndView mav = new ModelAndView("project/feed");
         mav.addObject("categories", categoriesService.findAll());
-        mav.addObject("projects", null);
+        mav.addObject("fields", SearchField.values());
+        mav.addObject("projects", projects);
         mav.addObject("startPage", 1);
         mav.addObject("endPage",1);
         mav.addObject("page", 1);

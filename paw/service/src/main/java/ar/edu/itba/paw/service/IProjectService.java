@@ -3,14 +3,13 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.FilterCriteria;
 import ar.edu.itba.paw.model.components.Pair;
-import ar.edu.itba.paw.model.components.ProjectFilter;
+import ar.edu.itba.paw.model.components.SearchField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +33,16 @@ public class IProjectService implements ProjectService {
         return projectDao.findByOwner(new User(id));
     }
 
+    @Override
+    public List<Project> findFiltered(Map<String, Object> filters) {
+        filters.values().removeIf(value -> (value == null || value.toString().equals("")));
+        List<FilterCriteria> params = new ArrayList<>();
+        filters.forEach((key, value) -> params.add(new FilterCriteria(key, "",value)));
+
+        System.out.println("MATIII2: " + params);
+        return projectDao.findFiltered(params);
+    }
+
 
 
 
@@ -52,14 +61,11 @@ public class IProjectService implements ProjectService {
 
 
 
-    @Override
-    public List<Project> findFiltered(ProjectFilter filter) {
-        return projectDao.findFiltered(filter);
-    }
+
 
     @Override
-    public Integer countFiltered(ProjectFilter filter) {
-        return projectDao.countFiltered(filter);
+    public Integer countFiltered(Map<String, Object> filter) {
+        return null;
     }
 
     @Override

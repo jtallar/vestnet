@@ -2,10 +2,11 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.Pair;
-import ar.edu.itba.paw.model.components.ProjectFilter;
+import ar.edu.itba.paw.model.components.SearchField;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ProjectService {
@@ -31,7 +32,12 @@ public interface ProjectService {
     List<Project> findByOwnerId(long id);
 
 
-
+    /**
+     * Finds all projects with the given filter.
+     * @param filters All the filters applied to the search.
+     * @return The list of matching projects.
+     */
+    List<Project> findFiltered(Map<String, Object> filters);
 
 
 
@@ -52,19 +58,13 @@ public interface ProjectService {
 
 
 
-    /**
-     * Finds all projects with the given filter.
-     * @param filter All the filters applied to the search.
-     * @return The list of matching projects.
-     */
-    List<Project> findFiltered(ProjectFilter filter);
 
     /**
      * Counts all projects with the given filter.
      * @param filter All the filters applied to the search.
      * @return The quantity of matching projects.
      */
-    Integer countFiltered(ProjectFilter filter);
+    Integer countFiltered(Map<String, Object> filter);
 
     /**
      * @param projectId The id of the project we want to get a portrait image

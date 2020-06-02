@@ -2,9 +2,11 @@ package ar.edu.itba.paw.interfaces.daos;
 
 
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.components.ProjectFilter;
+import ar.edu.itba.paw.model.components.FilterCriteria;
+import ar.edu.itba.paw.model.components.Pair;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ProjectDao {
@@ -22,6 +24,27 @@ public interface ProjectDao {
     Project create(String name, String summary, long cost, byte[] image, User owner, List<Category> categories);
 
     /**
+     * Finds the projects owned by the same user.
+     * @param owner The user owner.
+     * @return List of all the project for the given user.
+     */
+    List<Project> findByOwner(User owner);
+
+    /**
+     * Finds all projects with the given filter.
+     * @param params All the filters applied to the search.
+     * @return The list of matching projects.
+     */
+    List<Project> findFiltered(List<FilterCriteria> params);
+
+
+
+
+
+
+
+
+    /**
      * Finds a project given its id
      * @param projectId The unique id for the project
      * @return The matched project or null otherwise
@@ -35,26 +58,16 @@ public interface ProjectDao {
      */
     List<Project> findByIds(List<Long> ids);
 
-    /**
-     * Finds the projects owned by the same user.
-     * @param owner The user owner.
-     * @return List of all the project for the given user.
-     */
-    List<Project> findByOwner(User owner);
 
-    /**
-     * Finds all projects with the given filter.
-     * @param filter All the filters applied to the search.
-     * @return The list of matching projects.
-     */
-    List<Project> findFiltered(ProjectFilter filter);
+
+
 
     /**
      * Counts all projects with the given filter.
      * @param filter All the filters applied to the search.
      * @return The quantity of matching projects.
      */
-    Integer countFiltered(ProjectFilter filter);
+//    Integer countFiltered(Ls filter);
 
     /**
      * @param projectId The id of the project we want to get a portrait image

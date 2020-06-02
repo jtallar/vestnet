@@ -75,12 +75,11 @@
                     </div>
                 </div>
                 <div class="row field">
+
                     <form:select path="field" name="searchField" class="custom-select mr-sm-2">
-                        <form:option value="default"><spring:message code="project_name"/> </form:option>
-                        <form:option value="project_info"><spring:message code="project_info"/> </form:option>
-                        <form:option value="owner_name"><spring:message code="owner_name"/> </form:option>
-                        <form:option value="owner_email"><spring:message code="owner_email"/> </form:option>
-                        <form:option value="project_location"><spring:message code="loc"/> </form:option>
+                        <c:forEach items="${fields}" var="item">
+                            <form:option value="${item.value}"><spring:message code="${item.value}"/></form:option>
+                        </c:forEach>
                     </form:select>
                 </div>
 

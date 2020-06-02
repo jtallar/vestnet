@@ -4,14 +4,22 @@ import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.ProjectFilter;
+import ar.edu.itba.paw.model.components.FilterCriteria;
+import com.sun.corba.se.spi.ior.ObjectKey;
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Repository
 public class ProjectJpaDao implements ProjectDao {
@@ -33,12 +41,39 @@ public class ProjectJpaDao implements ProjectDao {
         return query.getResultList();
     }
 
+    @Override
+    public List<Project> findFiltered(List<FilterCriteria> params) {
+        CriteriaQuery<Project> query = buildCriteriaQuery(params);
+        return entityManager.createQuery(query).getResultList();
+    }
+
+
+
+    private CriteriaQuery<Project> buildCriteriaQuery(List<FilterCriteria> params) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> query = builder.createQuery(Project.class);
+
+        Root<Project> root = query.from(Project.class);
+
+        Predicate predicate = builder.conjunction();
+
+        ProjectCriteriaConsumer filterConsumer = new ProjectCriteriaConsumer(predicate, builder, root);
+        params.stream().forEach(filterConsumer);
+        predicate = filterConsumer.getPredicate();
+        query.where(predicate);
+
+        return query;
+    }
+
+
+
 
 
 
 
     @Override
     public Optional<Project> findById(long projectId) {
+
         return Optional.empty();
     }
 
@@ -48,16 +83,10 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
 
-
-    @Override
-    public List<Project> findFiltered(ProjectFilter filter) {
-        return null;
-    }
-
-    @Override
-    public Integer countFiltered(ProjectFilter filter) {
-        return null;
-    }
+//    @Override
+//    public Integer countFiltered(ProjectFilter filter) {
+//        return null;
+//    }
 
     @Override
     public byte[] findImageForProject(long projectId) {
@@ -103,4 +132,9 @@ public class ProjectJpaDao implements ProjectDao {
     public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
         return null;
     }
+
+
+
+
+
 }

@@ -1,13 +1,15 @@
 package ar.edu.itba.paw.webapp.forms;
 
+import ar.edu.itba.paw.model.components.SearchField;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FilterForm {
 
     private Integer category;
-
-    private String order;
 
     @Pattern(regexp = "^[0-9]{0,7}")
     private String minCost;
@@ -20,20 +22,16 @@ public class FilterForm {
 
     private String field;
 
+    private String order;
+
+
+
     public Integer getCategory() {
         return category;
     }
 
     public void setCategory(Integer category) {
         this.category = category;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
     }
 
     public String getMinCost() {
@@ -66,6 +64,24 @@ public class FilterForm {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+
+    public Map<String, Object> getFiltersMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("category", getCategory());
+        map.put("minCost", getMinCost());
+        map.put("maxCost", getMaxCost());
+        map.put(getField(), getKeyword());
+        return map;
     }
 
     @Override
