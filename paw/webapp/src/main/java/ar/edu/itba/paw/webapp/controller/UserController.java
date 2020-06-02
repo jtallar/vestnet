@@ -41,7 +41,6 @@ public class UserController {
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id,
                                     @RequestParam(name = "back", defaultValue = "false") boolean back){
-
         final ModelAndView mav= new ModelAndView("user/profile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         mav.addObject("back", back);
@@ -56,7 +55,6 @@ public class UserController {
      */
     @RequestMapping(value = "/profile")
     public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back) {
-
         return userProfile(sessionUser.getId(), back);
     }
 
@@ -67,7 +65,6 @@ public class UserController {
      */
     @RequestMapping(value = "/dashboard")
     public ModelAndView myDashboard() {
-
         ModelAndView mav = new ModelAndView("user/dashboard");
         mav.addObject("projects", projectService.findByOwnerId(sessionUser.getId()));
         return mav;

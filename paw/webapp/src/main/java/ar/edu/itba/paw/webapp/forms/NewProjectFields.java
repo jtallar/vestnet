@@ -25,7 +25,6 @@ public class NewProjectFields {
     @Size(min = 50, max = 250)
     private String summary;
 
-    // TODO: Delete when stages are ready
     @Min(1000)
     @Max(9999999)
     private int cost;

@@ -25,10 +25,10 @@ public class MainController {
      * @return Model and view.
      */
     @RequestMapping("/")
-    public ModelAndView index(HttpServletRequest request) {
-        if (sessionUser.isAnonymous()) return new ModelAndView("redirect:/welcome");
+    public ModelAndView index() {
+        if (sessionUser.isEntrepreneur()) return new ModelAndView("redirect:/dashboard");
         if (sessionUser.isInvestor()) return new ModelAndView("redirect:/projects");
-        return new ModelAndView("redirect:/messages");
+        return new ModelAndView("redirect:/welcome");
     }
 
     /**
@@ -38,9 +38,9 @@ public class MainController {
     @RequestMapping(value = "/login")
     public ModelAndView login(@RequestParam(name = "me", required = false) Integer message) {
         if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
-        final ModelAndView modelAndView = new ModelAndView("index/login");
-        modelAndView.addObject("message", message);
-        return modelAndView;
+        final ModelAndView mav = new ModelAndView("index/login");
+        mav.addObject("message", message);
+        return mav;
     }
 
     /**

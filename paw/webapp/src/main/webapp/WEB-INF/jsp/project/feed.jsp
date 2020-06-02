@@ -26,7 +26,7 @@
 <c:url var="icon_fav_on" value="/images/bookmarkOnB.png"/>
 <c:url var="icon_order" value="/images/order.png"/>
 <c:url var="icon_filter" value="/images/filter.png"/>
-<c:url var="icon_search" value="/images/lupa_bw.png"/>
+<c:url var="icon_search" value="/images/lupa_v.png"/>
 <c:url var="link_projects" value='/projects'/>
 
 <body>
@@ -59,48 +59,40 @@
 <%-- Side Navigation Bar --%>
 <div class="sidenav">
     <div class="form-row align-items-center">
-
-        <%-- Search form --%>
-        <div class="col-12 searchbar">
-            <form class="form col-12 mx-2 my-2" action="${link_projects}" method="get">
-                <div class="row">
-                    <spring:message var="search" code="search"/>
-                    <input class="form-control col-9 mx-1 my-auto" name="keyword" value="<c:out value="${keyword}"/>"
-                           type="text" placeholder="${search}" aria-label="Search"/>
-                    <button type="submit" class="${searchButtonClass} col-1">
-                        <img src="${icon_search}" height="22" alt="<spring:message code='search'/>"/>
-                    </button>
-                </div>
-                <div class="row">
-                    <select id="searchSelector" name="searchField" class="custom-select col-9 mx-1">
-                        <option value="default" <c:if test="${searchField == null or searchField eq 'default'}"> selected </c:if>>
-                            <spring:message code="project_name"/></option>
-                        <option value="project_info" <c:if test="${searchField eq 'project_info'}"> selected </c:if>>
-                            <spring:message code="project_info"/></option>
-                        <option value="owner_name" <c:if test="${searchField eq 'owner_name'}"> selected </c:if>>
-                            <spring:message code="owner_name"/></option>
-                        <option value="owner_email" <c:if test="${searchField eq 'owner_email'}"> selected </c:if>>
-                            <spring:message code="owner_email"/></option>
-                        <option value="project_location" <c:if test="${searchField eq 'project_location'}"> selected </c:if>>
-                            <spring:message code="loc"/></option>
-                    </select>
-                </div>
-            </form>
-        </div>
-
-        <%-- Filter Form --%>
-        <form:form modelAttribute="categoryForm" method="GET" action="${link_projects}">
-            <input type="hidden" name="keyword" value="<c:out value="${keyword}"/>"/>
-            <input type="hidden" name="searchField" value="${searchField}"/>
+                <%-- Filter Form --%>
+        <form:form modelAttribute="filter" method="GET" action="${link_projects}">
             <div class="container">
+
+                <%-- Search --%>
+                <div class="row field">
+                    <div class="col-">
+                        <img src="${icon_search}" width="40" class="logo-img">
+                    </div>
+                    <div class="col-md">
+                        <spring:message var="search" code="search"/>
+                        <form:input path="keyword" class="form-control mr-sm-2" type="text" placeholder="${search}" aria-label="Search"/>
+                        <form:errors path="keyword" element="p" cssClass="formError"/>
+                    </div>
+                </div>
+                <div class="row field">
+                    <form:select path="field" name="searchField" class="custom-select mr-sm-2">
+                        <form:option value="default"><spring:message code="project_name"/> </form:option>
+                        <form:option value="project_info"><spring:message code="project_info"/> </form:option>
+                        <form:option value="owner_name"><spring:message code="owner_name"/> </form:option>
+                        <form:option value="owner_email"><spring:message code="owner_email"/> </form:option>
+                        <form:option value="project_location"><spring:message code="loc"/> </form:option>
+                    </form:select>
+                </div>
+
                 <div class="dropdown-divider"></div>
-                <div class="row">
+
+                <div class="row field">
                     <div class="col-">
                         <img src="${icon_filter}" width="40" class="logo-img">
                     </div>
                     <div class="col-md">
-                        <form:select class="custom-select mr-sm-2" path="categoryId">
-                            <form:option value="0"><spring:message code="noFilter"/> </form:option>
+                        <form:select class="custom-select mr-sm-2" path="category">
+                            <form:option value=""><spring:message code="noFilter"/> </form:option>
                             <c:forEach items="${categories}" var="category">
                                 <form:option value="${category.id}">
                                     <spring:message code="${category.name}"/>
@@ -114,7 +106,7 @@
                         <img src="${icon_order}" width="40" class="logo-img">
                     </div>
                     <div class="col-md">
-                        <form:select path="orderBy" class="custom-select mr-sm-2">
+                        <form:select path="order" class="custom-select mr-sm-2">
                             <form:option value="default"><spring:message code="noOrder"/> </form:option>
                             <form:option value="date"><spring:message code="date"/> </form:option>
                             <form:option value="cost_ascending"><spring:message code="cost_l_h"/></form:option>
@@ -123,22 +115,29 @@
                         </form:select>
                     </div>
                 </div>
-                <div class="field">
+                <div class="row field">
                     <label class="range"><spring:message code="range"/> </label>
                     <div class="row">
-                        <div class="col-sm">
-                            <spring:message var="min" code="min"/>
-                            <form:input path="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="${min}" id="filter-form-min"/>
-                            <form:errors path="minCost" cssClass="formError"/>
+                        <div class="col-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><spring:message code="min"/></span>
+                                </div>
+                                <form:input path="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="100" id="filter-form-min"/>
+                            </div>
+                            <form:errors path="minCost" element="p" cssClass="formError"/>
                         </div>
-                        <p>-</p>
-                        <div class="col-sm">
-                            <spring:message var="max" code="max"/>
-                            <form:input path="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="${max}" id="filter-form-max"/>
-                            <form:errors path="maxCost" cssClass="formError"/>
+                        <div class="col-6" >
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><spring:message code="max"/></span>
+                                </div>
+                                <form:input path="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="100000"
+                                            id="filter-form-max"/>
+                            </div>
+                            <form:errors path="maxCost" element="p" cssClass="formError"/>
                         </div>
                     </div>
-                    <form:errors path="" cssClass="formError" element="p"/>
                 </div>
                 <div class="row field">
                     <div class="col-md">
@@ -289,13 +288,13 @@
 
     function adjustInputs() {
         let minTag = document.getElementById('filter-form-min');
-        if (minTag.value < 0) {
-            minTag.value = 0;
+        if (minTag.value < 0 || minTag.value > 9999999) {
+            minTag.value = '';
         }
         if (minTag.value.length) minTag.value = Math.round(minTag.value);
         let maxTag = document.getElementById('filter-form-max');
-        if (maxTag.value < 0) {
-            maxTag.value = 0;
+        if (maxTag.value < 0 || maxTag.value > 9999999) {
+            maxTag.value = '';
         }
         if (maxTag.value.length) maxTag.value = Math.round(maxTag.value);
     }

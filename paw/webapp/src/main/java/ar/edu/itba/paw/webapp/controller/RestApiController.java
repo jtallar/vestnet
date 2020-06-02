@@ -141,4 +141,5 @@ public class RestApiController {
     public List<City> cityList(@PathVariable("state_id") long stateId) {
         return locationService.findCities(stateId);
     }
+
 }

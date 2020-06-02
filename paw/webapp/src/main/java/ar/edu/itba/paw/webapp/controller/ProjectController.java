@@ -10,7 +10,7 @@ import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.forms.MailFields;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
-import ar.edu.itba.paw.webapp.forms.ProjectFilterForm;
+import ar.edu.itba.paw.webapp.forms.FilterForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,38 +52,43 @@ public class ProjectController {
     @Autowired
     protected SessionUserFacade sessionUser;
 
+
+
+
+
+    /**
+     * Message not set exception handler
+     * @return Model and view.
+     */
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView failedEmail() {
+        return new ModelAndView("error/error");
+    }
+
+
+
+
     /**
      */
     @RequestMapping(value = "/projects", method = {RequestMethod.GET})
-    public ModelAndView mainView(@ModelAttribute("categoryForm") @Valid ProjectFilterForm form,
-                                 @RequestParam(name = "keyword", required = false) String keyword,
-                                 @RequestParam(name = "searchField", required = false) String searchField,
-                                 @RequestParam(name = "page", defaultValue = "1") Integer page,
-                                 final BindingResult error) {
+    public ModelAndView mainView(@Valid @ModelAttribute("filter") FilterForm form,
+                                 final BindingResult error,
+                                @RequestParam(name = "page", defaultValue = "1") Integer page) {
+
+        System.out.println("MATIIII: " + form.toString());
 
 
-        ProjectFilter projectFilter = new ProjectFilter(page, projectService.getPageSize());
-        projectFilter.setSearch(keyword, searchField);
-        projectFilter.setCost(form.getMinCost(), form.getMaxCost());
-        projectFilter.setCategory(form.getCategoryId());
-        projectFilter.setSort(form.getOrderBy());
-
-        List<Project> projects = projectService.findFiltered(projectFilter);
-        Integer projectCount = projectService.countFiltered(projectFilter);
-        Pair<Integer, Integer> paginationLimits = projectService.setPaginationLimits(projectCount, page);
-
-        final ModelAndView mav = new ModelAndView("project/viewProjectFeed");
+        final ModelAndView mav = new ModelAndView("project/feed");
         mav.addObject("categories", categoriesService.findAll());
-        mav.addObject("projects", projects);
-        mav.addObject("keyword", keyword);
-        mav.addObject("searchField", searchField);
-        mav.addObject("startPage", paginationLimits.getKey());
-        mav.addObject("endPage", paginationLimits.getValue());
-        mav.addObject("page", page);
-
-        if (sessionUser.isInvestor())
-            mav.addObject("isFav", projectService.isFavorite(projects.stream().map(Project::getId).collect(Collectors.toList()), sessionUser.getId()));
-        else
+        mav.addObject("projects", null);
+        mav.addObject("startPage", 1);
+        mav.addObject("endPage",1);
+        mav.addObject("page", 1);
+//
+//        if (sessionUser.isInvestor())
+//            mav.addObject("isFav", projectService.isFavorite(projects.stream().map(Project::getId).collect(Collectors.toList()), sessionUser.getId()));
+//        else
             mav.addObject("isFav", new ArrayList<>());
         return mav;
     }
@@ -108,15 +113,6 @@ public class ProjectController {
         return mav;
     }
 
-    /**
-     * Message not set exception handler
-     * @return Model and view.
-     */
-    @ExceptionHandler(MessagingException.class)
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView failedEmail() {
-        return new ModelAndView("error/error");
-    }
 
     /**
      * Post method. Used when contacted project owner.

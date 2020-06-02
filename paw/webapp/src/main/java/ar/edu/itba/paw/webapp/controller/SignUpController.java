@@ -63,14 +63,14 @@ public class SignUpController {
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
                                @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser) {
-        if (!sessionUser.isAnonymous())
-            return new ModelAndView("redirect:/");
+        if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
         final ModelAndView mav = new ModelAndView("index/signUp");
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         mav.addObject("maxYear", LocalDate.now().getYear() - 18);
         mav.addObject("invalidUser", invalidUser);
         return mav;
     }
+
 
     /**
      * Maps the submitted form for new user.
@@ -83,8 +83,8 @@ public class SignUpController {
      */
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields,
-                               @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
                                final BindingResult errors,
+                               @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
                                HttpServletRequest request,
                                HttpServletResponse response) throws MessagingException {
 
