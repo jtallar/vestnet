@@ -80,7 +80,9 @@ public class RestApiController {
     @ResponseBody
     public ResponseEntity<Boolean> addFavorite(@RequestParam("p_id") int projectId,
                                                @RequestParam("u_id") int userId) {
-        projectService.addFavorite(projectId, userId);
+        // TODO this and below
+
+//        projectService.addFavorite(projectId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -94,7 +96,7 @@ public class RestApiController {
     @ResponseBody
     public ResponseEntity<Boolean> deleteFavorite(@RequestParam("p_id") int projectId,
                                                   @RequestParam("u_id") int userId) {
-        projectService.deleteFavorite(projectId, userId);
+//        projectService.deleteFavorite(projectId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

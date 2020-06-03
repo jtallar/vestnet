@@ -51,20 +51,6 @@ public class IProjectService implements ProjectService {
 
 
 
-
-    @Override
-    public List<Project> findByIds(List<Long> ids) {
-        return projectDao.findByIds(ids);
-    }
-
-
-
-
-
-
-
-
-
     @Override
     public byte[] findImageForProject(long projectId) {
         return projectDao.findImageForProject(projectId);
@@ -74,55 +60,6 @@ public class IProjectService implements ProjectService {
     public void addHit(long projectId) {
         projectDao.addHit(projectId);
     }
-
-    @Override
-    public void addFavorite(long projectId, long userId) {
-        projectDao.addFavorite(projectId, userId);
-    }
-
-    @Override
-    public void deleteFavorite(long projectId, long userId) {
-        projectDao.deleteFavorite(projectId, userId);
-    }
-
-    @Override
-    public boolean isFavorite(long projectId, long userId) {
-        return projectDao.isFavorite(projectId,userId);
-    }
-
-    @Override
-    public  List<Long> findFavorites(long id) {
-        return projectDao.findFavorites(id);
-    }
-
-    @Override
-    public long getFavoritesCount(long projectId) {
-        return projectDao.getFavoritesCount(projectId);
-    }
-
-    @Override
-    public List<Long> getFavoritesCount(List<Long> projectIds) {
-        return projectDao.getFavoritesCount(projectIds);
-    }
-
-    @Override
-    public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
-        return projectDao.isFavorite(projectIds, userId);
-    }
-
-    @Override
-    public List<Project> getUserFavorites(long userId) {
-        return findByIds(findFavorites(userId));
-    }
-
-
-
-    /**
-     * Creates the pagination logic.
-     * @param projectCount The count of projects to paginate.
-     * @param page The current pagination page.
-     * @return A pair set as <startPage, endPage>
-     */
 
 }
 

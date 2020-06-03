@@ -55,12 +55,6 @@ public interface ProjectService {
 
 
 
-    /**
-     * Finds all the projects given a list of ids.
-     * @param ids The list of projects id.
-     * @return The list with containing projects.
-     */
-    List<Project> findByIds(List<Long> ids);
 
 
     /**
@@ -74,61 +68,4 @@ public interface ProjectService {
      * @param projectId The unique project id.
      */
     void addHit(long projectId);
-
-    /**
-     * Adds to the user the project as favorite.
-     * @param projectId The unique project id.
-     * @param userId The unique user id.
-     */
-    void addFavorite(long projectId, long userId);
-
-    /**
-     * Deletes a project as favorite for the given user.
-     * @param projectId The unique project id.
-     * @param userId The unique user id.
-     */
-    void deleteFavorite(long projectId, long userId);
-
-    /**
-     * Finds if a user has a given project as favorite.
-     * @param projectId The unique project id.
-     * @param userId The unique user id.
-     * @return If user has it as favorite true, false otherwise.
-     */
-    boolean isFavorite(long projectId, long userId);
-
-    /**
-     * Find all projects matching with user id.
-     * @return List of Projects.
-     */
-    List<Long> findFavorites(long id);
-
-    /**
-     * Gets the count of how many times the given project is favorite.
-     * @param projectId The unique project id.
-     * @return Count of favorites.
-     */
-    long getFavoritesCount(long projectId);
-
-    /**
-     * Gets the count of how many times each given project is favorite.
-     * @param projectIds The list of project ids.
-     * @return Count of favorites for each id ordered by Id.
-     */
-    List<Long> getFavoritesCount(List<Long> projectIds);
-
-    /**
-     * @param projectIds projects to check if where faved by user
-     * @param userId user who could have faved ids
-     * @return boolean list whether project id was faved or not
-     */
-    List<Boolean> isFavorite(List<Long> projectIds, long userId);
-
-    /**
-     * Gets a list of all the user favorite projects.
-     * @param userId The unique user id.
-     * @return The list of favorited projects.
-     */
-     List<Project> getUserFavorites(long userId);
-
 }

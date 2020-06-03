@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -163,6 +162,14 @@ public class Project {
         this.messageList = messageList;
     }
 
+    public List<User> getFavoriteBy() {
+        return favoriteBy;
+    }
+
+    public void setFavoriteBy(List<User> favoriteBy) {
+        this.favoriteBy = favoriteBy;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -177,5 +184,18 @@ public class Project {
                 ", owner=" + owner +
                 ", categories=" + categories +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Project)) return false;
+        Project project = (Project) o;
+        return id == project.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 }

@@ -167,14 +167,14 @@
                                     <button onclick="favTap(${project.id}, ${projectIndex.index})"
                                             class="btn-transp pull-right">
                                         <c:choose>
-                                            <c:when test="${isFav[projectIndex.index]}">
-                                                <c:set var="favSrc" value="${icon_fav_on}"/>
+                                            <c:when test="${user.favorites.contains(project)}">
+                                                <c:set var="icon_fav" value="${icon_fav_on}"/>
                                             </c:when>
                                             <c:otherwise>
-                                                <c:set var="favSrc" value="${icon_fav_off}"/>
+                                                <c:set var="icon_fav" value="${icon_fav_off}"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <img id="favImg_${project.id}" src="${favSrc}" class="fav-img" alt="${favSrc}"/>
+                                        <img width="40" id="favImg_${project.id}" src="${icon_fav}" class="logo-img" alt="${icon_fav}"/>
                                     </button>
                                 </sec:authorize>
                             </div>

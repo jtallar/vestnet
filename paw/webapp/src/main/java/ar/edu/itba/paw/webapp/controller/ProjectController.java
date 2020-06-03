@@ -9,6 +9,7 @@ import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import ar.edu.itba.paw.webapp.forms.MailFields;
 import ar.edu.itba.paw.webapp.forms.NewProjectFields;
 import ar.edu.itba.paw.webapp.forms.FilterForm;
@@ -86,8 +87,9 @@ public class ProjectController {
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("fieldValues", SearchField.values());
         mav.addObject("orderValues", OrderField.values());
+        if (sessionUser.isInvestor())
+            mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
 
-//
 //        if (sessionUser.isInvestor())
 //            mav.addObject("isFav", projectService.isFavorite(projects.stream().map(Project::getId).collect(Collectors.toList()), sessionUser.getId()));
 //        else

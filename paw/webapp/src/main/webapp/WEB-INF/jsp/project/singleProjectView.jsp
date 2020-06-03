@@ -66,13 +66,13 @@
                                 <button onclick="favTap()" class="btn-transp pull-right">
                                     <c:choose>
                                         <c:when test="${isFav == true}">
-                                            <c:set var="favSrc" value="${icon_fav_on}"/>
+                                            <c:set var="icon_fav" value="${icon_fav_on}"/>
                                         </c:when>
                                         <c:when test="${isFav == false}">
                                             <c:set var="favSrc" value="${icon_fav_off}"/>
                                         </c:when>
                                     </c:choose>
-                                    <img id="favImg" src="${favSrc}" height="40">
+                                    <img id="favImg" src="${icon_fav}" height="40">
                                 </button>
                             </div>
                         </sec:authorize>

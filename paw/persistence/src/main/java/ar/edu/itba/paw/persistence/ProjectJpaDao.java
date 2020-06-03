@@ -34,9 +34,7 @@ public class ProjectJpaDao implements ProjectDao {
 
     @Override
     public Optional<Project> findById(long id) {
-        final TypedQuery<Project> query = entityManager.createQuery("from Project where id = :id", Project.class);
-        query.setParameter("id", id);
-        return query.getResultList().stream().findFirst();
+        return Optional.ofNullable(entityManager.find(Project.class, id));
     }
 
     @Override
