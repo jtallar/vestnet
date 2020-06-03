@@ -5,21 +5,15 @@ import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.FilterCriteria;
-import com.sun.corba.se.spi.ior.ObjectKey;
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
+import ar.edu.itba.paw.model.components.OrderField;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @Repository
 public class ProjectJpaDao implements ProjectDao {
@@ -42,26 +36,35 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findFiltered(List<FilterCriteria> params) {
-        CriteriaQuery<Project> query = buildCriteriaQuery(params);
+    public List<Project> findAll(List<FilterCriteria> params, OrderField order) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> query = builder.createQuery(Project.class);
+        Root<Project> root = query.from(Project.class);
+
+        addPredicates(query, builder, root, params);
+        addOrder(query, builder, root, order);
         return entityManager.createQuery(query).getResultList();
     }
 
 
+    private CriteriaQuery<Project> addOrder(CriteriaQuery<Project> query, CriteriaBuilder builder, Root<Project> root, OrderField order) {
+        switch (order) {
+            case DEFAULT:  query.orderBy(builder.desc(root.get("hits")), builder.desc(root.get("id"))); break;
+            case ALPHABETICAL: query.orderBy(builder.asc(root.get("name")), builder.desc(root.get("id"))); break;
+            case COST_ASCENDING: query.orderBy(builder.asc(root.get("cost")), builder.desc(root.get("id"))); break;
+            case COST_DESCENDING: query.orderBy(builder.desc(root.get("cost")), builder.desc(root.get("id"))); break;
+            case DATE_ASCENDING: query.orderBy(builder.asc(root.get("publishDate")), builder.desc(root.get("id"))); break;
+            case DATE_DESCENDING: query.orderBy(builder.desc(root.get("publishDate")), builder.desc(root.get("id"))); break;
+        }
+        return query;
+    }
 
-    private CriteriaQuery<Project> buildCriteriaQuery(List<FilterCriteria> params) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Project> query = builder.createQuery(Project.class);
-
-        Root<Project> root = query.from(Project.class);
-
+    private CriteriaQuery<Project> addPredicates(CriteriaQuery<Project> query, CriteriaBuilder builder, Root<Project> root, List<FilterCriteria> params) {
         Predicate predicate = builder.conjunction();
-
         ProjectCriteriaConsumer filterConsumer = new ProjectCriteriaConsumer(predicate, builder, root);
         params.stream().forEach(filterConsumer);
         predicate = filterConsumer.getPredicate();
         query.where(predicate);
-
         return query;
     }
 

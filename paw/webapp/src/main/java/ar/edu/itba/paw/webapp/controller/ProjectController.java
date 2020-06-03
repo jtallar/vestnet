@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
@@ -74,13 +75,13 @@ public class ProjectController {
                                  final BindingResult error,
                                 @RequestParam(name = "page", defaultValue = "1") Integer page) {
 
-        System.out.println("MATIIII: " + form.toString());
-
-        List<Project> projects = projectService.findFiltered(form.getFiltersMap());
+        List<Project> projects = projectService.findAll(form.getFiltersMap(), form.getOrder());
 
         final ModelAndView mav = new ModelAndView("project/feed");
         mav.addObject("categories", categoriesService.findAll());
-        mav.addObject("fields", SearchField.values());
+        mav.addObject("fieldValues", SearchField.values());
+        mav.addObject("orderValues", OrderField.values());
+
         mav.addObject("projects", projects);
         mav.addObject("startPage", 1);
         mav.addObject("endPage",1);

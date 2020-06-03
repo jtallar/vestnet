@@ -35,9 +35,10 @@ public interface ProjectService {
     /**
      * Finds all projects with the given filter.
      * @param filters All the filters applied to the search.
+     * @param order The order to order by.
      * @return The list of matching projects.
      */
-    List<Project> findFiltered(Map<String, Object> filters);
+    List<Project> findAll(Map<String, Object> filters, String order);
 
 
 

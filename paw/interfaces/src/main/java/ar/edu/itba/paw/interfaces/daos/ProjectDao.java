@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.FilterCriteria;
+import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Pair;
 
 import java.util.List;
@@ -33,9 +34,10 @@ public interface ProjectDao {
     /**
      * Finds all projects with the given filter.
      * @param params All the filters applied to the search.
+     * @param order The order field to order by.
      * @return The list of matching projects.
      */
-    List<Project> findFiltered(List<FilterCriteria> params);
+    List<Project> findAll(List<FilterCriteria> params, OrderField order);
 
 
 

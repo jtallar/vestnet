@@ -4,8 +4,8 @@ import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.FilterCriteria;
+import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Pair;
-import ar.edu.itba.paw.model.components.SearchField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +34,16 @@ public class IProjectService implements ProjectService {
     }
 
     @Override
-    public List<Project> findFiltered(Map<String, Object> filters) {
+    public List<Project> findAll(Map<String, Object> filters, String order) {
+        /** Clean filters and create Criteria list */
         filters.values().removeIf(value -> (value == null || value.toString().equals("")));
         List<FilterCriteria> params = new ArrayList<>();
         filters.forEach((key, value) -> params.add(new FilterCriteria(key, "",value)));
 
-        System.out.println("MATIII2: " + params);
-        return projectDao.findFiltered(params);
+        System.out.println("MATIII1: " + params);
+        System.out.println("MATIII2: " + OrderField.getEnum(order));
+
+        return projectDao.findAll(params, OrderField.getEnum(order));
     }
 
 

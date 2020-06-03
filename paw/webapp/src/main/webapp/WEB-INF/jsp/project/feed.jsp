@@ -75,9 +75,8 @@
                     </div>
                 </div>
                 <div class="row field">
-
-                    <form:select path="field" name="searchField" class="custom-select mr-sm-2">
-                        <c:forEach items="${fields}" var="item">
+                    <form:select path="field" class="custom-select mr-sm-2">
+                        <c:forEach items="${fieldValues}" var="item">
                             <form:option value="${item.value}"><spring:message code="${item.value}"/></form:option>
                         </c:forEach>
                     </form:select>
@@ -106,11 +105,9 @@
                     </div>
                     <div class="col-md">
                         <form:select path="order" class="custom-select mr-sm-2">
-                            <form:option value="default"><spring:message code="noOrder"/> </form:option>
-                            <form:option value="date"><spring:message code="date"/> </form:option>
-                            <form:option value="cost_ascending"><spring:message code="cost_l_h"/></form:option>
-                            <form:option value="cost_descending"><spring:message code="cost_h_l"/></form:option>
-                            <form:option value="alphabetical"><spring:message code="alf"/></form:option>
+                            <c:forEach items="${orderValues}" var="item">
+                                <form:option value="${item.value}"><spring:message code="${item.value}"/></form:option>
+                            </c:forEach>
                         </form:select>
                     </div>
                 </div>
@@ -189,24 +186,15 @@
                             <div class="col-8 card-content">
                                 <p class="card-text"><c:out value="${project.summary}"/></p>
                                 <div class="card-secondary">
-                                    <strong><spring:message code="owner"/></strong>
-                                    <p><c:out value="${project.owner.firstName}"/> <c:out
-                                            value="${project.owner.lastName}"/></p>
                                     <strong><spring:message code="price"/></strong>
                                     <p><c:out value="${project.cost}"/></p>
                                 </div>
+                                <a href="<c:url value='/projects/${project.id}'/>"
+                                   class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
                             </div>
                         </div>
                     </div>
-
-                    <sec:authorize access="hasRole('ROLE_INVESTOR')">
-                        <div class="card-footer">
-                            <a href="<c:url value='/projects/${project.id}'/>"
-                               class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
-                        </div>
-                    </sec:authorize>
                 </div>
-
             </c:forEach>
         </div>
     </div>

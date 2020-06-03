@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,18 +33,18 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 
 @EnableWebMvc
 @ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.component" })
 @Configuration
+@EnableCaching
 @EnableTransactionManagement
 public class WebConfig {
 
     public static final long MAX_UPLOAD_SIZE = 2097152; // 2 MB
-
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
 
     /**
      * Sets where are the files for the views.
@@ -55,6 +59,11 @@ public class WebConfig {
         return viewResolver;
     }
 
+
+    /**
+     * Entity manager for Hibernate & JPA factory.
+     * @return The created entity manager.
+     */
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -73,10 +82,16 @@ public class WebConfig {
         return factoryBean;
     }
 
+    /**
+     * Creates the transaction manager for the repository.
+     * @param entityManagerFactory The corresponding entity manager.
+     * @return The created transaction manager.
+     */
     @Bean
     public PlatformTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
+
 
     /**
      * Sets up postgres driver data source.
@@ -92,15 +107,6 @@ public class WebConfig {
         return dataSource;
     }
 
-//    /**
-//     * Initializes the transaction manager.
-//     * @param ds Data source.
-//     * @return Platform transaction manager.
-//     */
-//    @Bean
-//    public PlatformTransactionManager transactionManager(final DataSource ds) {
-//        return new DataSourceTransactionManager(ds);
-//    }
 
     /**
      * Set message source for i18n.
@@ -124,5 +130,17 @@ public class WebConfig {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
         commonsMultipartResolver.setMaxUploadSize(MAX_UPLOAD_SIZE);
         return commonsMultipartResolver;
+    }
+
+
+    /**
+     * Creates a cache manager. Used only to store all categories (they do not change)
+     * @return The created cache manager.
+     */
+    @Bean
+    CacheManager cacheManager() {
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        cacheManager.setCaches(Collections.singletonList(new ConcurrentMapCache("allCategories")));
+        return cacheManager;
     }
 }

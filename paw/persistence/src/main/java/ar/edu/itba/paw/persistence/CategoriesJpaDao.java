@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.CategoriesDao;
 import ar.edu.itba.paw.model.Category;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ public class CategoriesJpaDao implements CategoriesDao {
     private EntityManager entityManager;
 
     @Override
+    @Cacheable("allCategories")
     public List<Category> findAll() {
         final TypedQuery<Category> query = entityManager.createQuery("from Category order by name", Category.class);
         return query.getResultList();
