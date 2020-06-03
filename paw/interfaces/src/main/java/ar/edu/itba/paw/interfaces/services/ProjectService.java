@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.components.Pair;
 import ar.edu.itba.paw.model.components.SearchField;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,30 +26,34 @@ public interface ProjectService {
     Project create(String name, String summary, long cost, byte[] image, long ownerId, List<Long> categoriesIds);
 
     /**
+     * Finds a project given its id
+     * @param id The unique id for the project
+     * @return The matched project or null otherwise
+     */
+    Optional<Project> findById(long id);
+
+    /**
      * Finds the projects owned by the same user.
      * @param id Unique user id.
      * @return List of all the project for the given user.
      */
     List<Project> findByOwnerId(long id);
 
-
     /**
      * Finds all projects with the given filter.
      * @param filters All the filters applied to the search.
      * @param order The order to order by.
+     * @param page The number of page to get the projects.
+     * @param pageSize The page size to consider.
      * @return The list of matching projects.
      */
-    List<Project> findAll(Map<String, Object> filters, String order);
+    Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize);
 
 
 
 
-    /**
-     * Finds a project given its id
-     * @param projectId The unique id for the project
-     * @return The matched project or null otherwise
-     */
-    Optional<Project> findById(long projectId);
+
+
 
     /**
      * Finds all the projects given a list of ids.
@@ -57,15 +62,6 @@ public interface ProjectService {
      */
     List<Project> findByIds(List<Long> ids);
 
-
-
-
-    /**
-     * Counts all projects with the given filter.
-     * @param filter All the filters applied to the search.
-     * @return The quantity of matching projects.
-     */
-    Integer countFiltered(Map<String, Object> filter);
 
     /**
      * @param projectId The id of the project we want to get a portrait image
@@ -135,8 +131,4 @@ public interface ProjectService {
      */
      List<Project> getUserFavorites(long userId);
 
-
-    Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page);
-
-    Integer getPageSize();
 }

@@ -8,6 +8,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /** Protected */ class ProjectCriteriaConsumer implements Consumer<FilterCriteria> {
@@ -23,11 +25,13 @@ import java.util.function.Consumer;
 
     @Override
     public void accept(FilterCriteria param) {
-        String value = param.getValue().toString();
         switch (param.getField()) {
-            case "minCost": minCost(value); break;
-            case "maxCost": maxCost(value); break;
-            case "category": category(value); break;
+            case "minCost": minCost(param.getValue()); break;
+            case "maxCost": maxCost(param.getValue()); break;
+            case "category": category(param.getValue()); break;
+            case "owner": owner(param.getValue()); break;
+            case "id": id(param.getValue()); break;
+            case "ids": ids(param.getValue()); break;
             /** If its not a filter, its a search */
             default: search(param);
         }
@@ -45,17 +49,29 @@ import java.util.function.Consumer;
     }
 
 
-    private void minCost(String value) {
-        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get("cost"), value));
+    private void minCost(Object value) {
+        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get("cost"), value.toString()));
     }
 
-    private void maxCost(String value) {
-        predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("cost"), value));
+    private void maxCost(Object value) {
+        predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("cost"), value.toString()));
     }
 
-    private void category(String value) {
+    private void category(Object value) {
         Join<Project, Category> categoryJoin = root.join("categories");
-        predicate = builder.and(predicate, builder.equal(categoryJoin.get("id"), value));
+        predicate = builder.and(predicate, builder.equal(categoryJoin.get("id"), value.toString()));
+    }
+
+    private void owner(Object value) {
+        predicate = builder.and(predicate, builder.equal(root.get("owner"), value));
+    }
+
+    private void id(Object value) {
+        predicate = builder.equal(root.get("id"), value.toString());
+    }
+
+    private void ids(Object value) {
+        predicate = root.get("id").in((List) value);
     }
 
     private void projectSearch(String column, String value) {

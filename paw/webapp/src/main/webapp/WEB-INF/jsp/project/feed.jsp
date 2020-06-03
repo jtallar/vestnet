@@ -20,6 +20,10 @@
 <sec:authorize access="isAuthenticated()">
     <sec:authentication var="session_user_id" property="principal.id"/>
 </sec:authorize>
+<c:set var="projects" value="${projectPage.content}"/>
+<c:set var="page" value="${projectPage.currentPage}"/>
+<c:set var="startPage" value="${projectPage.startPage}"/>
+<c:set var="endPage" value="${projectPage.endPage}"/>
 
 <%-- Set used URLs --%>
 <c:url var="icon_fav_off" value="/images/bookmarkOffB.png"/>
@@ -77,7 +81,7 @@
                 <div class="row field">
                     <form:select path="field" class="custom-select mr-sm-2">
                         <c:forEach items="${fieldValues}" var="item">
-                            <form:option value="${item.value}"><spring:message code="${item.value}"/></form:option>
+                            <form:option value="${item.value}"><spring:message code="${item.message}"/></form:option>
                         </c:forEach>
                     </form:select>
                 </div>
@@ -106,7 +110,7 @@
                     <div class="col-md">
                         <form:select path="order" class="custom-select mr-sm-2">
                             <c:forEach items="${orderValues}" var="item">
-                                <form:option value="${item.value}"><spring:message code="${item.value}"/></form:option>
+                                <form:option value="${item.value}"><spring:message code="${item.message}"/></form:option>
                             </c:forEach>
                         </form:select>
                     </div>

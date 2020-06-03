@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.OrderField;
+import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
@@ -31,6 +32,9 @@ import java.util.*;
 public class ProjectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
+    /** This are constant for now */
+    private static final int PAGE_SIZE = 2;
+    private static final int PAGINATION_ITEMS = 5;
 
 
     @Autowired
@@ -75,17 +79,14 @@ public class ProjectController {
                                  final BindingResult error,
                                 @RequestParam(name = "page", defaultValue = "1") Integer page) {
 
-        List<Project> projects = projectService.findAll(form.getFiltersMap(), form.getOrder());
-
+        Page<Project> projectPage = projectService.findAll(form.getFiltersMap(), form.getOrder(), page, PAGE_SIZE);
+        projectPage.setPageRange(PAGINATION_ITEMS);
         final ModelAndView mav = new ModelAndView("project/feed");
+        mav.addObject("projectPage", projectPage);
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("fieldValues", SearchField.values());
         mav.addObject("orderValues", OrderField.values());
 
-        mav.addObject("projects", projects);
-        mav.addObject("startPage", 1);
-        mav.addObject("endPage",1);
-        mav.addObject("page", 1);
 //
 //        if (sessionUser.isInvestor())
 //            mav.addObject("isFav", projectService.isFavorite(projects.stream().map(Project::getId).collect(Collectors.toList()), sessionUser.getId()));
@@ -109,7 +110,8 @@ public class ProjectController {
 
         final ModelAndView mav = new ModelAndView("project/singleProjectView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
-        mav.addObject("isFav", projectService.isFavorite(id, sessionUser.getId()));
+        // TODO implement favorites
+//        mav.addObject("isFav", projectService.isFavorite(id, sessionUser.getId()));
         mav.addObject("contactStatus", contactStatus);
         return mav;
     }

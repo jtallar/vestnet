@@ -3,21 +3,16 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Pair;
+import ar.edu.itba.paw.model.components.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Order;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class IProjectService implements ProjectService {
-
-    private static final int PAGE_SIZE = 12;
-    private static final Integer FIRST_PAGE = 1;
-    private static final int PAGINATION_ITEMS = 5;
 
     @Autowired
     private ProjectDao projectDao;
@@ -29,21 +24,24 @@ public class IProjectService implements ProjectService {
     }
 
     @Override
-    public List<Project> findByOwnerId(long id) {
-        return projectDao.findByOwner(new User(id));
+    public Optional<Project> findById(long id) {
+        return projectDao.findById(id);
     }
 
     @Override
-    public List<Project> findAll(Map<String, Object> filters, String order) {
+    public List<Project> findByOwnerId(long id) {
+        List<FilterCriteria> param = Collections.singletonList(new FilterCriteria("owner", new User(id)));
+        return projectDao.findAll(param, OrderField.DEFAULT, new PageRequest()).getContent();
+    }
+
+    @Override
+    public Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize) {
         /** Clean filters and create Criteria list */
         filters.values().removeIf(value -> (value == null || value.toString().equals("")));
         List<FilterCriteria> params = new ArrayList<>();
-        filters.forEach((key, value) -> params.add(new FilterCriteria(key, "",value)));
+        filters.forEach((key, value) -> params.add(new FilterCriteria(key, value)));
 
-        System.out.println("MATIII1: " + params);
-        System.out.println("MATIII2: " + OrderField.getEnum(order));
-
-        return projectDao.findAll(params, OrderField.getEnum(order));
+        return projectDao.findAll(params, OrderField.getEnum(order), new PageRequest(page, pageSize));
     }
 
 
@@ -52,10 +50,7 @@ public class IProjectService implements ProjectService {
 
 
 
-    @Override
-    public Optional<Project> findById(long projectId) {
-        return projectDao.findById(projectId);
-    }
+
 
     @Override
     public List<Project> findByIds(List<Long> ids) {
@@ -66,10 +61,9 @@ public class IProjectService implements ProjectService {
 
 
 
-    @Override
-    public Integer countFiltered(Map<String, Object> filter) {
-        return null;
-    }
+
+
+
 
     @Override
     public byte[] findImageForProject(long projectId) {
@@ -130,22 +124,5 @@ public class IProjectService implements ProjectService {
      * @return A pair set as <startPage, endPage>
      */
 
-
-    @Override
-    public Pair<Integer, Integer> setPaginationLimits(Integer projectCount, Integer page) {
-        int maxPages = (int) Math.ceil((double) projectCount / (double) PAGE_SIZE);
-        if (maxPages <= PAGINATION_ITEMS) return new Pair<>(FIRST_PAGE, maxPages == 0 ? 1: maxPages);
-        int firstPage = page - PAGINATION_ITEMS / 2;
-        if (firstPage <= FIRST_PAGE ) return new Pair<>(FIRST_PAGE, PAGINATION_ITEMS);
-        int lastPage = page + PAGINATION_ITEMS / 2;
-        if (lastPage <= maxPages) return new Pair<>(firstPage, lastPage);
-        return new Pair<>(maxPages - PAGINATION_ITEMS, maxPages);
-    }
-
-
-    @Override
-    public Integer getPageSize() {
-        return PAGE_SIZE;
-    }
 }
 

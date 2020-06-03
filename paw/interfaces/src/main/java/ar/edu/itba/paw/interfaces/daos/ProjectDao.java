@@ -2,9 +2,7 @@ package ar.edu.itba.paw.interfaces.daos;
 
 
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Pair;
+import ar.edu.itba.paw.model.components.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,19 +23,20 @@ public interface ProjectDao {
     Project create(String name, String summary, long cost, byte[] image, User owner, List<Category> categories);
 
     /**
-     * Finds the projects owned by the same user.
-     * @param owner The user owner.
-     * @return List of all the project for the given user.
+     * Finds a project given its id
+     * @param id The unique id for the project
+     * @return The matched project or null otherwise
      */
-    List<Project> findByOwner(User owner);
+    Optional<Project> findById(long id);
 
     /**
      * Finds all projects with the given filter.
-     * @param params All the filters applied to the search.
+     * @param filters All the filters applied to the search.
      * @param order The order field to order by.
+     * @param page The page requested.
      * @return The list of matching projects.
      */
-    List<Project> findAll(List<FilterCriteria> params, OrderField order);
+    Page<Project> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page);
 
 
 
@@ -46,12 +45,7 @@ public interface ProjectDao {
 
 
 
-    /**
-     * Finds a project given its id
-     * @param projectId The unique id for the project
-     * @return The matched project or null otherwise
-     */
-    Optional<Project> findById(long projectId);
+
 
     /**
      * Finds all the projects given a list of ids.

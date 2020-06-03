@@ -1,22 +1,20 @@
 package ar.edu.itba.paw.model.components;
 
+/**
+ * Filter Criteria for filtering repository calls
+ * based on the field, operation, and value.
+ */
 public class FilterCriteria {
     String field;
-    String operation;
     Object value;
 
-    public FilterCriteria(String field, String operation, Object value) {
+    public FilterCriteria(String field, Object value) {
         this.field = field;
-        this.operation = operation;
         this.value = value;
     }
 
     public String getField() {
         return field;
-    }
-
-    public String getOperation() {
-        return operation;
     }
 
     public Object getValue() {
@@ -27,7 +25,6 @@ public class FilterCriteria {
     public String toString() {
         return "FilterCriteria{" +
                 "field='" + field + '\'' +
-                ", operation='" + operation + '\'' +
                 ", value=" + value +
                 '}';
     }

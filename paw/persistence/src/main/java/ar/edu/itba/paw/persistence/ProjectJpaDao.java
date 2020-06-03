@@ -6,12 +6,16 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.FilterCriteria;
 import ar.edu.itba.paw.model.components.OrderField;
+import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.model.components.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,43 +33,27 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
     @Override
-    public List<Project> findByOwner(User owner) {
-        final TypedQuery<Project> query = entityManager.createQuery("from Project where owner = :owner", Project.class);
-        query.setParameter("owner", owner);
-        return query.getResultList();
+    public Optional<Project> findById(long id) {
+        final TypedQuery<Project> query = entityManager.createQuery("from Project where id = :id", Project.class);
+        query.setParameter("id", id);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override
-    public List<Project> findAll(List<FilterCriteria> params, OrderField order) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Project> query = builder.createQuery(Project.class);
-        Root<Project> root = query.from(Project.class);
+    public Page<Project> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page) {
+        /** Get to total count of projects with matching criteria */
+        Long count = findAllIdsCount(filters);
+        if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
-        addPredicates(query, builder, root, params);
-        addOrder(query, builder, root, order);
-        return entityManager.createQuery(query).getResultList();
-    }
+        /** Get all project's ids with matching criteria, order and page  */
+        // TODO check here, should be an exception. Wrong page
+        List<Long> ids = findAllIds(filters, order, page);
+        if (ids.isEmpty()) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
+        /** Gets all the corresponding projects in order */
+        List<Project> projects = findAllByIds(ids, order);
 
-    private CriteriaQuery<Project> addOrder(CriteriaQuery<Project> query, CriteriaBuilder builder, Root<Project> root, OrderField order) {
-        switch (order) {
-            case DEFAULT:  query.orderBy(builder.desc(root.get("hits")), builder.desc(root.get("id"))); break;
-            case ALPHABETICAL: query.orderBy(builder.asc(root.get("name")), builder.desc(root.get("id"))); break;
-            case COST_ASCENDING: query.orderBy(builder.asc(root.get("cost")), builder.desc(root.get("id"))); break;
-            case COST_DESCENDING: query.orderBy(builder.desc(root.get("cost")), builder.desc(root.get("id"))); break;
-            case DATE_ASCENDING: query.orderBy(builder.asc(root.get("publishDate")), builder.desc(root.get("id"))); break;
-            case DATE_DESCENDING: query.orderBy(builder.desc(root.get("publishDate")), builder.desc(root.get("id"))); break;
-        }
-        return query;
-    }
-
-    private CriteriaQuery<Project> addPredicates(CriteriaQuery<Project> query, CriteriaBuilder builder, Root<Project> root, List<FilterCriteria> params) {
-        Predicate predicate = builder.conjunction();
-        ProjectCriteriaConsumer filterConsumer = new ProjectCriteriaConsumer(predicate, builder, root);
-        params.stream().forEach(filterConsumer);
-        predicate = filterConsumer.getPredicate();
-        query.where(predicate);
-        return query;
+        return new Page<>(projects, page.getPage(), page.getPageSize(), count);
     }
 
 
@@ -74,11 +62,11 @@ public class ProjectJpaDao implements ProjectDao {
 
 
 
-    @Override
-    public Optional<Project> findById(long projectId) {
 
-        return Optional.empty();
-    }
+
+
+
+
 
     @Override
     public List<Project> findByIds(List<Long> ids) {
@@ -137,7 +125,81 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
 
+    /**
+     * Auxiliary functions.
+     */
+
+
+    private List<Project> findAllByIds(List<Long> ids, OrderField order) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> query = builder.createQuery(Project.class);
+
+        Root<Project> root = query.from(Project.class);
+        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria("ids", ids)));
+        addOrder(query, builder, root, order);
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    private Long findAllIdsCount(List<FilterCriteria> filters) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+
+        Root<Project> root = query.from(Project.class);
+        query.select(builder.countDistinct(root.get("id")));
+        addPredicates(query, builder,root, filters);
+        return entityManager.createQuery(query).getSingleResult();
+    }
+
+    private List<Long> findAllIds(List<FilterCriteria> filters, OrderField order, PageRequest page) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+
+        Root<Project> root = query.from(Project.class);
+        query.select(root.get("id"));
+        addPredicates(query, builder, root, filters);
+        addOrder(query, builder, root, order);
+        query.groupBy(root.get("id"));
+
+        TypedQuery<Long> typedQuery = entityManager.createQuery(query);
+        typedQuery.setFirstResult(page.getFirstResult());
+        typedQuery.setMaxResults(page.getPageSize());
+        return typedQuery.getResultList();
+    }
 
 
 
+    /**
+     * Applies to the query the given order.
+     * @param <T> The type of criteria query.
+     * @param query The query to be applied the order.
+     * @param builder Criteria query builder;
+     * @param root Query project root.
+     * @param order The order to be applied.
+     */
+    private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Project> root, OrderField order) {
+        switch (order) {
+            case DEFAULT:  query.orderBy(builder.desc(root.get("hits")), builder.desc(root.get("id"))); break;
+            case ALPHABETICAL: query.orderBy(builder.asc(root.get("name")), builder.desc(root.get("id"))); break;
+            case COST_ASCENDING: query.orderBy(builder.asc(root.get("cost")), builder.desc(root.get("id"))); break;
+            case COST_DESCENDING: query.orderBy(builder.desc(root.get("cost")), builder.desc(root.get("id"))); break;
+            case DATE_ASCENDING: query.orderBy(builder.asc(root.get("publishDate")), builder.desc(root.get("id"))); break;
+            case DATE_DESCENDING: query.orderBy(builder.desc(root.get("publishDate")), builder.desc(root.get("id"))); break;
+        }
+    }
+
+    /**
+     * Applies the given filters to the query.
+     * @param <T> The type of Criteria Query
+     * @param query The query to be applied the filters.
+     * @param builder Criteria query builder.
+     * @param root Query project root.
+     * @param filters List of criteria filters.
+     */
+    private <T> void addPredicates(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Project> root, List<FilterCriteria> filters) {
+        Predicate predicate = builder.conjunction();
+        ProjectCriteriaConsumer filterConsumer = new ProjectCriteriaConsumer(predicate, builder, root);
+        filters.stream().forEach(filterConsumer);
+        predicate = filterConsumer.getPredicate();
+        query.where(predicate);
+    }
 }
