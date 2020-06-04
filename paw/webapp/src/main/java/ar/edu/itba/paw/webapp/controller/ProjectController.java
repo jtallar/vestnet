@@ -44,9 +44,6 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
-    private CategoriesService categoriesService;
-
-    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -84,7 +81,7 @@ public class ProjectController {
         projectPage.setPageRange(PAGINATION_ITEMS);
         final ModelAndView mav = new ModelAndView("project/feed");
         mav.addObject("projectPage", projectPage);
-        mav.addObject("categories", categoriesService.findAll());
+        mav.addObject("categories", projectService.findAllCategories());
         mav.addObject("fieldValues", SearchField.values());
         mav.addObject("orderValues", OrderField.values());
         if (sessionUser.isInvestor())
@@ -107,9 +104,9 @@ public class ProjectController {
 
         final ModelAndView mav = new ModelAndView("project/singleView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
+        mav.addObject("contactStatus", contactStatus);
         if (sessionUser.isInvestor())
             mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
-        mav.addObject("contactStatus", contactStatus);
         return mav;
     }
 
@@ -156,7 +153,7 @@ public class ProjectController {
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
 
         final ModelAndView mav = new ModelAndView("project/newProject");
-        mav.addObject("categories", categoriesService.findAll());
+        mav.addObject("categories", projectService.findAllCategories());
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         return mav;
     }

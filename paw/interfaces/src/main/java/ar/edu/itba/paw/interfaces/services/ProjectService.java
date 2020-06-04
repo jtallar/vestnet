@@ -54,4 +54,10 @@ public interface ProjectService {
      * @param projectId The unique project id.
      */
     void addHit(long projectId);
+
+    /**
+     * Finds all the possible categories from the database.
+     * @return List of all the categories.
+     */
+    List<Category> findAllCategories();
 }

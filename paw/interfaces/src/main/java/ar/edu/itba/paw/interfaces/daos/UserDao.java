@@ -38,6 +38,7 @@ public interface UserDao {
      */
      Optional<User> findByUsername(String username);
 
+
     /**
      * Finds a user given its ID.
      * @param id The unique user's ID

@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.components.FilterCriteria;
 import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.components.PageRequest;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -59,6 +60,13 @@ public class ProjectJpaDao implements ProjectDao {
         Project project = entityManager.find(Project.class, id);
         project.setHits(project.getHits() + 1);
         entityManager.persist(project);
+    }
+
+    @Override
+    @Cacheable("allCategories")
+    public List<Category> findAllCategories() {
+        final TypedQuery<Category> query = entityManager.createQuery("from Category order by name", Category.class);
+        return query.getResultList();
     }
 
 

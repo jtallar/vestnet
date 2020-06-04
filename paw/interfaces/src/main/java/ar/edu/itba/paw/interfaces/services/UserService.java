@@ -13,7 +13,19 @@ public interface UserService {
                  Integer countryId, Integer stateId, Integer cityId,
                  String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException;
 
+
+    /**
+     * Finds a user given its username / mail.
+     * @param username The user's username / mail.
+     * @return The user with the given username / mail, null otherwise
+     */
     Optional<User> findByUsername(String username);
 
+
+    /**
+     * Finds a user given its ID.
+     * @param id The unique user's ID
+     * @return The user optional.
+     */
     Optional<User> findById(Long id);
 }

@@ -49,5 +49,10 @@ public class IProjectService implements ProjectService {
     public void addHit(long projectId) {
         projectDao.addHit(projectId);
     }
+
+    @Override
+    public List<Category> findAllCategories() {
+        return projectDao.findAllCategories();
+    }
 }
 

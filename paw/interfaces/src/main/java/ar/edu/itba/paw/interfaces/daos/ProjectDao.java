@@ -47,4 +47,10 @@ public interface ProjectDao {
      */
     @Transactional
     void addHit(long id);
+
+    /**
+     * Finds all the possible categories from the database.
+     * @return List of all the categories.
+     */
+    List<Category> findAllCategories();
 }
