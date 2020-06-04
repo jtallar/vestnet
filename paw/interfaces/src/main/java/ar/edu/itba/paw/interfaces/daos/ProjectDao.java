@@ -56,9 +56,10 @@ public interface ProjectDao {
     /**
      * Adds a hit to the given project.
      * @param id The unique project id.
+     * @return The modified project, null if not found.
      */
     @Transactional
-    void addHit(long id);
+    Project addHit(long id);
 
 
     /**

@@ -46,8 +46,8 @@ public class IProjectService implements ProjectService {
     }
 
     @Override
-    public void addHit(long projectId) {
-        projectDao.addHit(projectId);
+    public Project addHit(long projectId) {
+        return projectDao.addHit(projectId);
     }
 
     @Override

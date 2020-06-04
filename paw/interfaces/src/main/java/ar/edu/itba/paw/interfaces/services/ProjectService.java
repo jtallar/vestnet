@@ -52,8 +52,9 @@ public interface ProjectService {
     /**
      * Adds a hit to the given project.
      * @param projectId The unique project id.
+     * @return The modified project, null if not found.
      */
-    void addHit(long projectId);
+    Project addHit(long projectId);
 
     /**
      * Finds all the possible categories from the database.

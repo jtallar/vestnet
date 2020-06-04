@@ -63,10 +63,15 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
     @Override
-    public void addHit(long id) {
-        Project project = entityManager.find(Project.class, id);
+    public Project addHit(long id) {
+        // TODO maybe throw no such element exception?
+        Optional<Project> optionalProject = findById(id);
+        if (!optionalProject.isPresent()) return null;
+
+        Project project = optionalProject.get();
         project.setHits(project.getHits() + 1);
         entityManager.persist(project);
+        return project;
     }
 
     @Override

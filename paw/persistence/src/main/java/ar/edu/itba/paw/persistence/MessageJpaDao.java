@@ -67,6 +67,7 @@ public class MessageJpaDao implements MessageDao {
         // TODO maybe throw no such element exception?
         Optional<Message> optionalMessage = findAll(filters, OrderField.DEFAULT).stream().findFirst();
         if (!optionalMessage.isPresent()) return null;
+
         Message message = optionalMessage.get();
         message.setAccepted(accepted);
         entityManager.persist(message);
