@@ -120,7 +120,7 @@ public class RestApiController {
     @ResponseBody
     public List<Message> unreadMessages(@RequestParam(name = "p_id") Long projectId,
                                         @RequestParam(name = "u_id") Long userId) {
-//
+
         List<Message> messages = messageService.getUserProjectUnread(userId, projectId);
         messages.stream().forEach(message -> {
             message.setProject(null);

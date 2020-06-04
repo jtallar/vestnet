@@ -15,8 +15,8 @@ import java.util.Objects;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_project_id_seq")
-    @SequenceGenerator(sequenceName = "projects_project_id_seq", name = "projects_project_id_seq", allocationSize = 1, initialValue = 250)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_id_seq")
+    @SequenceGenerator(sequenceName = "projects_id_seq", name = "projects_id_seq", allocationSize = 1)
     @Column(name = "id")
     private long id;
 

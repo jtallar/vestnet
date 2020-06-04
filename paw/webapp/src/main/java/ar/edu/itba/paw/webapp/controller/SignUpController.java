@@ -97,13 +97,13 @@ public class SignUpController {
         try {
             if (!userFields.getProfilePicture().isEmpty()) imageBytes = userFields.getProfilePicture().getBytes();
 
-            newUser= userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
+            newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
                     userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
                     userFields.getCountry(), userFields.getState(),userFields.getCity(),
                     userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), imageBytes);
 
             // TODO finish this
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUser, request.getLocale(), ""));
+//            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUser, request.getLocale(), ""));
 
         } catch (UserAlreadyExistsException e) {
             // TODO when user already exists
@@ -112,10 +112,11 @@ public class SignUpController {
         } catch (IOException e) {
             // TODO when image conversion fails
             return signUp(userFields, false);
-        } catch (RuntimeException e) {
-            // TODO when mail fails
-            return new ModelAndView("redirect:/login?me=1");
         }
+//        catch (RuntimeException e) {
+//            // TODO when mail fails
+//            return new ModelAndView("redirect:/login?me=1");
+//        }
 
         return new ModelAndView("redirect:/login?me=1");
     }

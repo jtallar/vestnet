@@ -32,7 +32,7 @@ public class IUserService implements UserService {
                        Integer countryId, Integer stateId, Integer cityId,
                        String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException {
 
-        Integer roleId = User.UserRole.valueOf(role).getId();
+        Integer roleId = User.UserRole.getEnum(role).getId();
         Country country = new Country(countryId, "", "", "", "", "");
         State state = new State(stateId, "", "");
         City city = new City(cityId, "");

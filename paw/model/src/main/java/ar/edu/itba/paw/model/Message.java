@@ -12,8 +12,8 @@ import java.util.Objects;
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messages_message_id_seq")
-    @SequenceGenerator(sequenceName = "messages_message_id_seq", name = "messages_message_id_seq", allocationSize = 1, initialValue = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messages_id_seq")
+    @SequenceGenerator(sequenceName = "messages_id_seq", name = "messages_id_seq", allocationSize = 1)
     @Column(name = "id")
     private long id;
 

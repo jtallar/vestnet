@@ -8,8 +8,8 @@ import java.util.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_user_id_seq")
-    @SequenceGenerator(sequenceName = "users_user_id_seq", name = "users_user_id_seq", allocationSize = 1, initialValue = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
+    @SequenceGenerator(sequenceName = "users_id_seq", name = "users_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -274,7 +274,8 @@ public class User {
      * User possible roles.
      */
     public enum UserRole {
-        ENTREPRENEUR("Entrepreneur", 1), INVESTOR("Investor", 2),
+        ENTREPRENEUR("Entrepreneur", 1),
+        INVESTOR("Investor", 2),
         NOTFOUND("Not found", 0);
 
         private String role;
@@ -296,6 +297,14 @@ public class User {
         public static UserRole valueOf(int id) {
             for (UserRole role : UserRole.values()) {
                 if (role.getId() == id)
+                    return role;
+            }
+            return NOTFOUND;
+        }
+
+        public static UserRole getEnum(String value) {
+            for (UserRole role : UserRole.values()) {
+                if (role.getRole().equals(value))
                     return role;
             }
             return NOTFOUND;
