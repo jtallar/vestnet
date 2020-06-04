@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.model.Category;
+import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.FilterCriteria;
@@ -56,6 +57,12 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
     @Override
+    public List<Project> findAll(List<FilterCriteria> filters, OrderField order) {
+        /** Finds all avoiding paging and thus 2 unnecessary queries */
+        return findAllNotPaged(filters, order);
+    }
+
+    @Override
     public void addHit(long id) {
         Project project = entityManager.find(Project.class, id);
         project.setHits(project.getHits() + 1);
@@ -77,6 +84,24 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     /**
+     * Finds all ids of messages given a filter and order.
+     * @param filters The filters to apply.
+     * @param order The order to order by.
+     * @return List of all unique ids.
+     */
+    private List<Project> findAllNotPaged(List<FilterCriteria> filters, OrderField order) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> query = builder.createQuery(Project.class);
+
+        Root<Project> root = query.from(Project.class);
+        addPredicates(query, builder, root, filters);
+        addOrder(query, builder, root, order);
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
+
+    /**
      * Finds all the projects in the ids list, ordered.
      * @param ids The projects ids.
      * @param order The given order to order by.
@@ -91,6 +116,7 @@ public class ProjectJpaDao implements ProjectDao {
         addOrder(query, builder, root, order);
         return entityManager.createQuery(query).getResultList();
     }
+
 
     /**
      * Counts how many projects match criteria.

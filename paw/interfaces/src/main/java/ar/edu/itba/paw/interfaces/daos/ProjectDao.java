@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Filter;
 
 public interface ProjectDao {
 
@@ -24,12 +25,14 @@ public interface ProjectDao {
     @Transactional
     Project create(String name, String summary, long cost, byte[] image, User owner, List<Category> categories);
 
+
     /**
      * Finds a project given its id
      * @param id The unique id for the project
      * @return The matched project or null otherwise
      */
     Optional<Project> findById(long id);
+
 
     /**
      * Finds all projects with the given filter.
@@ -42,11 +45,21 @@ public interface ProjectDao {
 
 
     /**
+     * Finds all the projects given the filters, ordered not paged.
+     * @param filters Filters to be applied to the projects.
+     * @param order Order to bring the projects.
+     * @return List with the projects.
+     */
+    List<Project> findAll(List<FilterCriteria> filters, OrderField order);
+
+
+    /**
      * Adds a hit to the given project.
      * @param id The unique project id.
      */
     @Transactional
     void addHit(long id);
+
 
     /**
      * Finds all the possible categories from the database.

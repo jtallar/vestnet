@@ -40,7 +40,7 @@ public interface MessageDao {
      * Finds all the messages given the filters, ordered not paged.
      * @param filters Filters to be applied to the messages.
      * @param order Order to bring the messages.
-     * @return Page with the messages and pagination data.
+     * @return List with the messages.
      */
     List<Message> findAll(List<FilterCriteria> filters, OrderField order);
 

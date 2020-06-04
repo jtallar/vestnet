@@ -32,7 +32,7 @@ public class IProjectService implements ProjectService {
     @Override
     public List<Project> findByOwnerId(long id) {
         List<FilterCriteria> param = Collections.singletonList(new FilterCriteria("owner", new User(id)));
-        return projectDao.findAll(param, OrderField.DEFAULT, new PageRequest()).getContent();
+        return projectDao.findAll(param, OrderField.DEFAULT);
     }
 
     @Override
