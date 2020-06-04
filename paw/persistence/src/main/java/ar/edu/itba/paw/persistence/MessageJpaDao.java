@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.Page;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -43,7 +44,7 @@ public class MessageJpaDao implements MessageDao {
     }
 
     @Override
-    public List<Message> getAccepted(long receiver_id, long from, long to) {
+    public Page<Message> getAccepted(long receiver_id, long from, long to) {
         return null;
     }
 

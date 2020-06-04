@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.slf4j.Logger;
@@ -32,6 +34,9 @@ public class UserController {
     @Autowired
     protected SessionUserFacade sessionUser;
 
+    @Autowired
+    private MessageService messageService;
+
     /**
      * Single user profile.
      * @param id The unique user id.
@@ -40,7 +45,8 @@ public class UserController {
      */
     @RequestMapping(value = "/users/{u_id}")
     public ModelAndView userProfile(@PathVariable("u_id") long id,
-                                    @RequestParam(name = "back", defaultValue = "false") boolean back){
+                                    @RequestParam(name = "back", defaultValue = "false") boolean back) {
+
         final ModelAndView mav= new ModelAndView("user/profile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
         mav.addObject("back", back);
@@ -65,10 +71,16 @@ public class UserController {
      */
     @RequestMapping(value = "/dashboard")
     public ModelAndView myDashboard() {
+
         ModelAndView mav = new ModelAndView("user/dashboard");
         mav.addObject("projects", projectService.findByOwnerId(sessionUser.getId()));
         return mav;
     }
+
+
+    /** This are constant for now */
+    private static final int PAGE_SIZE = 12;
+    private static final int PAGINATION_ITEMS = 5;
 
 
     /**
@@ -76,12 +88,13 @@ public class UserController {
      * @return Model and view.
      */
     @RequestMapping(value = "/deals")
-    public ModelAndView myDeals() {
-        throw new UserNotFoundException();
+    public ModelAndView myDeals(@RequestParam(name = "page", defaultValue = "1") Integer page) {
         // TODO implement
-//        final ModelAndView mav = new ModelAndView("user/deals");
-//        mav.addObject("messages", messageService.getAccepted(sessionUser.getId()));
-//        return mav;
+        final ModelAndView mav = new ModelAndView("user/deals");
+        Page<Message> messagePage = messageService.getAccepted(sessionUser.getId(), page, PAGE_SIZE);
+        messagePage.setPageRange(PAGINATION_ITEMS);
+        mav.addObject("messagePage", messagePage);
+        return mav;
     }
 
 
@@ -91,10 +104,9 @@ public class UserController {
      */
     @RequestMapping("/requests")
     public ModelAndView myRequests() {
-        throw new UserNotFoundException();
         // TODO implement
-//        final ModelAndView mav = new ModelAndView("user/requests");
+        final ModelAndView mav = new ModelAndView("user/requests");
 //        mav.addObject("messages", messageService.getOffersDone(sessionUser.getId()));
-//        return mav;
+        return mav;
     }
 }

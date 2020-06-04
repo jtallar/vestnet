@@ -63,6 +63,7 @@ public class SignUpController {
     @RequestMapping(value = "/signUp")
     public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
                                @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser) {
+
         if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
         final ModelAndView mav = new ModelAndView("index/signUp");
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
@@ -123,6 +124,7 @@ public class SignUpController {
     public ModelAndView requestPassword(@RequestParam(name = "error", defaultValue = "false") boolean error,
                                         @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent,
                                         @RequestParam(name = "invalidToken", defaultValue = "false") boolean invalidToken) {
+
         final ModelAndView mav = new ModelAndView("index/requestPassword");
         mav.addObject("error", error);
         mav.addObject("mailSent", mailSent);
@@ -154,6 +156,7 @@ public class SignUpController {
     public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
                                       @RequestParam(name = "username") String email,
                                       @RequestParam(name = "token") int token) {
+
         String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
 
         // TODO check if solve with exceptions
@@ -192,6 +195,7 @@ public class SignUpController {
     public ModelAndView resetPassword(@RequestParam(name = "username") String email,
                                       @RequestParam(name = "token") int token,
                                       HttpServletRequest request) throws MessagingException {
+
         String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
         Optional<User> maybeUser = userService.findByUsername(decodedEmail);
         if (!maybeUser.isPresent())
@@ -212,6 +216,14 @@ public class SignUpController {
         return new ModelAndView("redirect:/login?me=4");
     }
 
+
+    /**
+     * Logs form errors and returns the given model and view
+     * @param errors The errors returned.
+     * @param formName The form name used to generate the string.
+     * @param modelAndView Model and view to return to.
+     * @return To the given model and view.
+     */
     private ModelAndView logFormErrorsAndReturn(BindingResult errors, String formName, ModelAndView modelAndView) {
             LOGGER.error(formName + " failed. There are {} errors in form\n", errors.getErrorCount());
             for (ObjectError error : errors.getAllErrors())

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,11 @@ public class IMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> getConversation(long entrepreneurId, long investorId, long projectId) {
-        return messageDao.getConversation(entrepreneurId, investorId, projectId);
+    public Page<Message> getAccepted(long receiver_id, Integer page, Integer pageSize) {
+        return messageDao.getAccepted(receiver_id,page, pageSize);
     }
+
+
 
     @Override
     public List<Message> getProjectUnread(long userId, long projectId) {
@@ -43,11 +46,7 @@ public class IMessageService implements MessageService {
         return messageDao.updateMessageStatus(senderId, receiverId, projectId, accepted);
     }
 
-    @Override
-    public List<Message> getAccepted( long receiver_id,String page, long to) {
-        int from = (Integer.parseInt(page) - 1) * PAGE_SIZE;
-        return messageDao.getAccepted(receiver_id,from,to);
-    }
+
 
     @Override
     public Integer countAccepted( long receiver_id) {

@@ -20,7 +20,7 @@
 <body>
 <%-- Message display --%>
 <c:forEach var="message" items="${messages}" varStatus="theCount">
-    <span class="anchor-header" id="dashboard-project-${message.projectId}"></span>
+    <span class="anchor-header" id="dashboard-project-${message.project_id}"></span>
     <div class="container-deal py-3">
         <div class="card">
             <div class="card-deal">
@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-8 text-centered">
                         <strong><spring:message code="state"/> </strong>
-                        <c:set var="accepted" value="${message.isAccepted()}"/>
+                        <c:set var="accepted" value="${message.accepted}"/>
                         <c:choose>
                             <c:when test="${accepted == null}">
                                 <h3 class="text-secondary"><spring:message code="pending"/></h3>
@@ -61,7 +61,7 @@
                         <p>${message.publishDate}</p>
                     </div>
                     <div class="col-4">
-                        <c:url value="/users/${message.receiverId}?back=yes" var="profileURL"/>
+                        <c:url value="/users/${message.receiver_id}?back=yes" var="profileURL"/>
                         <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></a>
                     </div>
                 </div>

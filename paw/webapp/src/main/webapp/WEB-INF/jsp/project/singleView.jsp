@@ -65,12 +65,12 @@
                             <div class="card-header header-white">
                                 <button onclick="favTap()" class="btn-transp pull-right">
                                     <c:choose>
-                                        <c:when test="${isFav == true}">
+                                        <c:when test="${user.favorites.contains(project)}">
                                             <c:set var="icon_fav" value="${icon_fav_on}"/>
                                         </c:when>
-                                        <c:when test="${isFav == false}">
-                                            <c:set var="favSrc" value="${icon_fav_off}"/>
-                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="icon_fav" value="${icon_fav_off}"/>
+                                        </c:otherwise>
                                     </c:choose>
                                     <img id="favImg" src="${icon_fav}" height="40">
                                 </button>

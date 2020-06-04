@@ -42,10 +42,6 @@
                                     <div class="col-"><h5><spring:message code="hits"/></h5></div>
                                     <div class="col-5 msg-content"><p class="card-text"><c:out value="${project.hits}"/></p></div>
                                 </div>
-                                <div class="row msg-content">
-                                    <div class="col-"><h5><spring:message code="favs"/></h5></div>
-                                    <div class="col-5 msg-content"><p class="card-text"><c:out value="${project.favoriteBy.size()}"/></p></div>
-                                </div>
                             </div>
                             <div class="col-3">
                                 <a href="<c:url value="/projects/${project.id}"/>" class="btn btn-dark btn-project pull-right">

@@ -44,13 +44,15 @@ public class RestApiController {
     @RequestMapping(value = "/imageController/project/{p_id}", produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     public byte[] imageControllerProject(@PathVariable("p_id") long projectId) {
-        byte[] image = projectService.findImageForProject(projectId);
-        if (image != null) return image;
-        try {
-            Resource stockImage = new ClassPathResource("projectNoImage.png");
-            image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
-        return image;
+        // TODO its no a project service
+//        byte[] image = projectService.findImageForProject(projectId);
+//        if (image != null) return image;
+//        try {
+//            Resource stockImage = new ClassPathResource("projectNoImage.png");
+//            image = IOUtils.toByteArray(stockImage.getInputStream());
+//        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
+//        return image;
+        return null;
     }
 
     /**
@@ -61,13 +63,15 @@ public class RestApiController {
     @RequestMapping(value = "/imageController/user/{u_id}")
     @ResponseBody
     public byte[] imageControllerUser(@PathVariable("u_id") long userId) {
-        byte[] image /*= userService.findImageForUser(userId)*/ = null;
-        if (image != null) return image;
-        try {
-            Resource stockImage = new ClassPathResource("userNoImage.png");
-            image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
-        return image;
+        // TODO its no a user service
+//        byte[] image /*= userService.findImageForUser(userId)*/ = null;
+//        if (image != null) return image;
+//        try {
+//            Resource stockImage = new ClassPathResource("userNoImage.png");
+//            image = IOUtils.toByteArray(stockImage.getInputStream());
+//        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
+//        return image;
+        return null;
     }
 
     /**
@@ -96,9 +100,12 @@ public class RestApiController {
     @ResponseBody
     public ResponseEntity<Boolean> deleteFavorite(@RequestParam("p_id") int projectId,
                                                   @RequestParam("u_id") int userId) {
+        // TODO is user service
 //        projectService.deleteFavorite(projectId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 
     /**
      * Adds a hit to a given project.
@@ -112,6 +119,7 @@ public class RestApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     /**
      * Gets all the countries stored in the database.
      * @return List of all the countries.
@@ -121,6 +129,7 @@ public class RestApiController {
     public List<Country> countryList() {
         return locationService.findAllCountries();
     }
+
 
     /**
      * Gets all the states for a given country.
@@ -133,6 +142,7 @@ public class RestApiController {
         return locationService.findStates(countryId);
     }
 
+
     /**
      * Gets all the cites for a given state.
      * @param stateId The unique state id.
@@ -143,5 +153,4 @@ public class RestApiController {
     public List<City> cityList(@PathVariable("state_id") long stateId) {
         return locationService.findCities(stateId);
     }
-
 }

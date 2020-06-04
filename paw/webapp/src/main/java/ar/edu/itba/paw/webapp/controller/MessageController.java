@@ -60,11 +60,8 @@ public class MessageController {
                                                  HttpServletRequest request) throws MessagingException {
 
         messageService.updateMessageStatus(senderId, sessionUser.getId(), projectId, true);
-        System.out.println("MATIII: " + request.getRequestURL());
-        System.out.println("MATIII: " + request.getContextPath());
-        System.out.println("MATIII: " + request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath());
 
-        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+//        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
 //        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
 //        emailService.sendEmailAnswer(loggedUser, true, senderUser.getEmail(),
 //                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
@@ -83,7 +80,6 @@ public class MessageController {
                                                  @PathVariable("sender_id") long senderId,
                                                  HttpServletRequest request) throws MessagingException{
         messageService.updateMessageStatus(senderId, sessionUser.getId(), projectId, false);
-        // TODO also check this
 
 //        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
 //        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);

@@ -49,20 +49,6 @@ public interface ProjectService {
      */
     Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize);
 
-
-
-
-
-
-
-
-
-    /**
-     * @param projectId The id of the project we want to get a portrait image
-     * @return Image as a byte array
-     */
-    byte[] findImageForProject(long projectId);
-
     /**
      * Adds a hit to the given project.
      * @param projectId The unique project id.

@@ -22,7 +22,7 @@
 
 <%-- Deals display --%>
 <c:forEach var="message" items="${messages}">
-    <span class="anchor-header" id="dashboard-project-${message.projectId}"></span>
+    <span class="anchor-header" id="dashboard-project-${message.project_id}"></span>
     <div class="container-deal py-3">
         <div class="card">
             <div class="card-deal">
@@ -46,7 +46,7 @@
                         <p>${message.publishDate}</p>
                     </div>
                     <div class="col-4">
-                        <c:url value="/users/${message.senderId}?back=yes" var="profileURL"/>
+                        <c:url value="/users/${message.sender_id}?back=yes" var="profileURL"/>
                         <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_inv_profile"/></a>
                     </div>
                 </div>

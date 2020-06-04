@@ -54,73 +54,13 @@ public class ProjectJpaDao implements ProjectDao {
         return new Page<>(projects, page.getPage(), page.getPageSize(), count);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
-    public List<Project> findByIds(List<Long> ids) {
-        return null;
+    public void addHit(long id) {
+        Project project = entityManager.find(Project.class, id);
+        project.setHits(project.getHits() + 1);
+        entityManager.persist(project);
     }
 
-
-//    @Override
-//    public Integer countFiltered(ProjectFilter filter) {
-//        return null;
-//    }
-
-    @Override
-    public byte[] findImageForProject(long projectId) {
-        return new byte[0];
-    }
-
-    @Override
-    public void addHit(long projectId) {
-
-    }
-
-    @Override
-    public void addFavorite(long projectId, long userId) {
-
-    }
-
-    @Override
-    public void deleteFavorite(long projectId, long userId) {
-
-    }
-
-    @Override
-    public boolean isFavorite(long projectId, long userId) {
-        return false;
-    }
-
-    @Override
-    public List<Long> findFavorites(long id) {
-        return null;
-    }
-
-    @Override
-    public long getFavoritesCount(long projectId) {
-        return 0;
-    }
-
-    @Override
-    public List<Long> getFavoritesCount(List<Long> projectIds) {
-        return null;
-    }
-
-    @Override
-    public List<Boolean> isFavorite(List<Long> projectIds, long userId) {
-        return null;
-    }
 
 
     /**
@@ -128,6 +68,12 @@ public class ProjectJpaDao implements ProjectDao {
      */
 
 
+    /**
+     * Finds all the projects in the ids list, ordered.
+     * @param ids The projects ids.
+     * @param order The given order to order by.
+     * @return List of projects.
+     */
     private List<Project> findAllByIds(List<Long> ids, OrderField order) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Project> query = builder.createQuery(Project.class);
@@ -138,6 +84,11 @@ public class ProjectJpaDao implements ProjectDao {
         return entityManager.createQuery(query).getResultList();
     }
 
+    /**
+     * Counts how many projects match criteria.
+     * @param filters Filter criteria to apply.
+     * @return Count.
+     */
     private Long findAllIdsCount(List<FilterCriteria> filters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
@@ -148,6 +99,14 @@ public class ProjectJpaDao implements ProjectDao {
         return entityManager.createQuery(query).getSingleResult();
     }
 
+
+    /**
+     * Finds all ids of projects given a filter, order and page.
+     * @param filters The filters to apply.
+     * @param order The order to order by.
+     * @param page The page requested.
+     * @return List of all unique ids.
+     */
     private List<Long> findAllIds(List<FilterCriteria> filters, OrderField order, PageRequest page) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);

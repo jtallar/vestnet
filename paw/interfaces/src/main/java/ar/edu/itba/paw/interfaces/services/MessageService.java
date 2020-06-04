@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.components.Page;
 
 import java.util.List;
 
@@ -19,14 +20,21 @@ public interface MessageService {
      */
     Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException;
 
+
     /**
-     * Gets all the messages from a negotiation.
-     * @param entrepreneurId The unique user id.
-     * @param investorId The unique investor id.
-     * @param projectId The unique project id, which the conversation is about.
-     * @return List of all the messages from the given conversation.
+     * Gets accepted messages for a receiver.
+     * @param receiver_id The user receiver id.
+     * @param page The page to ask.
+     * @param pageSize The page size.
+     * @return Page with the messages.
      */
-    List<Message> getConversation(long entrepreneurId, long investorId, long projectId);
+    Page<Message> getAccepted(long receiver_id, Integer page, Integer pageSize);
+
+
+
+
+
+
 
     /**
      * Gets all unread messages from a specific project.
@@ -46,7 +54,12 @@ public interface MessageService {
      */
     long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
 
-    List<Message> getAccepted( long receiver_id, String page, long to);
+
+
+
+
+
+
 
     Integer countAccepted( long receiver_id);
 

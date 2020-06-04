@@ -35,6 +35,15 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Project project;
 
+    @Column(name = "sender_id", insertable = false, updatable = false)
+    private int sender_id;
+
+    @Column(name = "receiver_id", insertable = false, updatable = false)
+    private int receiver_id;
+
+    @Column(name = "project_id", insertable = false, updatable = false)
+    private int project_id;
+
     /** Protected */ Message() {
         /** For hibernate only */
     }
@@ -100,6 +109,30 @@ public class Message {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public int getSender_id() {
+        return sender_id;
+    }
+
+    public void setSender_id(int sender_id) {
+        this.sender_id = sender_id;
+    }
+
+    public int getReceiver_id() {
+        return receiver_id;
+    }
+
+    public void setReceiver_id(int receiver_id) {
+        this.receiver_id = receiver_id;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
     }
 
     @Override

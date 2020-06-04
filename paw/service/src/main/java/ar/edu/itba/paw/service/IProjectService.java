@@ -19,6 +19,7 @@ public class IProjectService implements ProjectService {
 
     @Override
     public Project create(String name, String summary, long cost, byte[] image, long ownerId, List<Long> categoriesIds) {
+
         List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
         return projectDao.create(name, summary, cost, image, new User(ownerId), categories);
     }
@@ -44,22 +45,9 @@ public class IProjectService implements ProjectService {
         return projectDao.findAll(params, OrderField.getEnum(order), new PageRequest(page, pageSize));
     }
 
-
-
-
-
-
-
-
-    @Override
-    public byte[] findImageForProject(long projectId) {
-        return projectDao.findImageForProject(projectId);
-    }
-
     @Override
     public void addHit(long projectId) {
         projectDao.addHit(projectId);
     }
-
 }
 

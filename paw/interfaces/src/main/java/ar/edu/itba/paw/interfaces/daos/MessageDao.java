@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.Page;
 
 import java.util.List;
 
@@ -18,6 +19,19 @@ public interface MessageDao {
      * @return The created message.
      */
     Message create(Message.MessageContent content, User sender, User receiver, Project project) throws MessageAlreadySentException;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Gets all the messages from a negotiation.
@@ -46,7 +60,7 @@ public interface MessageDao {
      */
     long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
 
-    List<Message> getAccepted( long receiver_id, long from, long to);
+    Page<Message> getAccepted(long receiver_id, long from, long to);
 
     Integer countAccepted(long receiver_id);
 

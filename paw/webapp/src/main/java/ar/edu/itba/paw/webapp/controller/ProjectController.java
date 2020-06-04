@@ -27,14 +27,13 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
 
 @Controller
 public class ProjectController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
     /** This are constant for now */
-    private static final int PAGE_SIZE = 2;
+    private static final int PAGE_SIZE = 12;
     private static final int PAGINATION_ITEMS = 5;
 
 
@@ -58,8 +57,6 @@ public class ProjectController {
 
 
 
-
-
     /**
      * Message not set exception handler
      * @return Model and view.
@@ -71,9 +68,12 @@ public class ProjectController {
     }
 
 
-
-
     /**
+     * The model and view mapping for the feed.
+     * @param form Filter form.
+     * @param error Error bind to the filter form.
+     * @param page The paged asked to show.
+     * @return The model and view
      */
     @RequestMapping(value = "/projects", method = {RequestMethod.GET})
     public ModelAndView mainView(@Valid @ModelAttribute("filter") FilterForm form,
@@ -89,19 +89,14 @@ public class ProjectController {
         mav.addObject("orderValues", OrderField.values());
         if (sessionUser.isInvestor())
             mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
-
-//        if (sessionUser.isInvestor())
-//            mav.addObject("isFav", projectService.isFavorite(projects.stream().map(Project::getId).collect(Collectors.toList()), sessionUser.getId()));
-//        else
-            mav.addObject("isFav", new ArrayList<>());
         return mav;
     }
 
+
     /**
      * Single project view page.
-     *
-     * @param mailFields    Fields for mail contact
-     * @param id            The unique project id.
+     * @param mailFields Fields for mail contact
+     * @param id The unique project id.
      * @param contactStatus Boolean if mail was sent.
      * @return Model and view.
      */
@@ -110,10 +105,10 @@ public class ProjectController {
                                           @PathVariable("id") long id,
                                           @RequestParam(name = "contactStatus", defaultValue = "0") int contactStatus) {
 
-        final ModelAndView mav = new ModelAndView("project/singleProjectView");
+        final ModelAndView mav = new ModelAndView("project/singleView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
-        // TODO implement favorites
-//        mav.addObject("isFav", projectService.isFavorite(id, sessionUser.getId()));
+        if (sessionUser.isInvestor())
+            mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
         mav.addObject("contactStatus", contactStatus);
         return mav;
     }
@@ -123,8 +118,8 @@ public class ProjectController {
      * Post method. Used when contacted project owner.
      *
      * @param mailFields Fields for mail contact
-     * @param errors     Errors on form.
-     * @param id         The unique project id.
+     * @param errors Errors on form.
+     * @param id The unique project id.
      * @return Model and view.
      * @throws MessagingException When mail cannot be sent.
      */
@@ -133,12 +128,8 @@ public class ProjectController {
                                           @PathVariable("id") long id,
                                           final BindingResult errors,
                                           HttpServletRequest request) throws MessagingException {
-        if (errors.hasErrors()) {
-            LOGGER.error("Contact failed. There are {} errors in form\n", errors.getErrorCount());
-            for (ObjectError error : errors.getAllErrors())
-                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
-            return singleProjectView(mailFields, id, 0);
-        }
+
+        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Message", singleProjectView(mailFields, id , 0));
 
         try {
             messageService.create(mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
@@ -148,10 +139,9 @@ public class ProjectController {
             return singleProjectView(mailFields, id, 2);
         }
 
+        // TODO do not forget this
 //        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
 //        LOGGER.debug("\n\nLocale: {}\n\n", mailFields.getLocale());
-// TODO do not forget this
-
 //        emailService.sendNewEmail(userService.gun, mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
 //                mailFields.getTo(), mailFields.getProject(), id, baseUrl, mailFields.getLocale());
         return new ModelAndView("redirect:/projects/{id}?contactStatus=1");
@@ -159,12 +149,12 @@ public class ProjectController {
 
     /**
      * Shows the new project form.
-     *
      * @param newProjectFields Form fields to be filled for a new project.
      * @return Model and view.
      */
     @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
+
         final ModelAndView mav = new ModelAndView("project/newProject");
         mav.addObject("categories", categoriesService.findAll());
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
@@ -174,20 +164,16 @@ public class ProjectController {
 
     /**
      * New project post mapping. On submit.
-     *
      * @param projectFields The filled form fields for new project.
-     * @param errors        Errors on the form fields.
+     * @param errors Errors on the form fields.
      * @return Model and view.
      */
     @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
     public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields,
-                                      final BindingResult errors) {
-        if (errors.hasErrors()) {
-            LOGGER.error("Project creation failed. There are {} errors in form\n", errors.getErrorCount());
-            for (ObjectError error : errors.getAllErrors())
-                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
-            return createProject(projectFields);
-        }
+                                      final BindingResult errors) throws IOException {
+
+        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "New Project", createProject(projectFields));
+
         byte[] imageBytes = new byte[0];
         try {
             if (!projectFields.getImage().isEmpty())
@@ -196,10 +182,25 @@ public class ProjectController {
             LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
             return createProject(projectFields);
         }
+
         Project project = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
                 projectFields.getCost(), imageBytes, sessionUser.getId(), projectFields.getCategories());
         return new ModelAndView("redirect:/dashboard#dashboard-project-" + project.getId());
     }
 
 
+
+    /**
+     * Logs form errors and returns the given model and view
+     * @param errors The errors returned.
+     * @param formName The form name used to generate the string.
+     * @param modelAndView Model and view to return to.
+     * @return To the given model and view.
+     */
+    private ModelAndView logFormErrorsAndReturn(BindingResult errors, String formName, ModelAndView modelAndView) {
+        LOGGER.error(formName + " failed. There are {} errors in form\n", errors.getErrorCount());
+        for (ObjectError error : errors.getAllErrors())
+            LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
+        return modelAndView;
+    }
 }
