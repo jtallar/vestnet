@@ -81,7 +81,7 @@
                 <div class="row field">
                     <form:select path="field" class="custom-select mr-sm-2">
                         <c:forEach items="${fieldValues}" var="item">
-                            <form:option value="${item.value}"><spring:message code="${item.message}"/></form:option>
+                            <form:option value="${item.value}"><spring:message code="feed.${item.message}"/></form:option>
                         </c:forEach>
                     </form:select>
                 </div>
@@ -110,7 +110,7 @@
                     <div class="col-md">
                         <form:select path="order" class="custom-select mr-sm-2">
                             <c:forEach items="${orderValues}" var="item">
-                                <form:option value="${item.value}"><spring:message code="${item.message}"/></form:option>
+                                <form:option value="${item.value}"><spring:message code="feed.${item.message}"/></form:option>
                             </c:forEach>
                         </form:select>
                     </div>

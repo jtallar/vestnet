@@ -14,10 +14,39 @@
 </head>
 
 <%-- Set used variables --%>
+<c:set var="messages" value="${messagePage.content}"/>
+<c:set var="page" value="${messagePage.currentPage}"/>
+<c:set var="startPage" value="${messagePage.startPage}"/>
+<c:set var="endPage" value="${messagePage.endPage}"/>
 
 <%-- Set used URLs --%>
 
 <body>
+<%-- Message pagniation --%>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-8">
+        <ul class="pagination justify-content-center">
+            <li id="li-previous" class="page-item">
+                <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" aria-label="<spring:message code="previous"/>">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">
+                <li class="page-item <c:if test="${pageNumber == page }"> active-item </c:if>">
+                    <a class="page-link" onclick="modHref(${pageNumber})">${pageNumber}</a>
+                </li>
+            </c:forEach>
+            <li id="li-next" class="page-item">
+                <a id="li-a-next" class="page-link" onclick="modHref(${page+1})" aria-label="<spring:message code="next"/>">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-1"></div>
+</div>
+
 <%-- Message display --%>
 <c:forEach var="message" items="${messages}" varStatus="theCount">
     <span class="anchor-header" id="dashboard-project-${message.project_id}"></span>
@@ -81,6 +110,28 @@
         </div>
     </div>
 </c:if>
+
+<script>
+    window.onload = function () {
+        disableArrows(${page}, ${startPage}, "previous");
+        disableArrows(${page}, ${endPage}, "next");
+    }
+
+    function disableArrows(page, limitPage, name) {
+        if (page === limitPage) {
+            document.getElementById("li-" + name).className = "page-item disabled";
+            document.getElementById("li-a-" + name).setAttribute("tabindex", "-1");
+            document.getElementById("li-a-" + name).setAttribute("aria-disabled", "true");
+        }
+    }
+
+    function modHref(page) {
+        let url = window.location.href;
+        if (!window.location.search.includes("?")) window.location.href = url + "?page=" + page;
+        else if (window.location.search.includes("page")) window.location.href = url.replace(/page=[0-9]*/, "page=" + page);
+        else window.location.href = url + "&page=" + page;
+    }
+</script>
 
 </body>
 </html>

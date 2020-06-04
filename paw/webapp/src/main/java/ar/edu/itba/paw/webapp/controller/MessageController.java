@@ -45,7 +45,8 @@ public class MessageController {
     @RequestMapping(value = "/message/{project_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Message> unreadMessages(@PathVariable("project_id") long projectId) {
-        return messageService.getProjectUnread(sessionUser.getId(), projectId);
+
+        return messageService.getUserProjectUnread(sessionUser.getId(), projectId);
     }
 
     /**

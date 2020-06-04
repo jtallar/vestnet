@@ -79,9 +79,7 @@ public class UserController {
 
 
     /** This are constant for now */
-    private static final int PAGE_SIZE = 12;
-    private static final int PAGINATION_ITEMS = 5;
-
+    private static final Integer PAGE_SIZE = 6;
 
     /**
      * Deals vew page. Entrepreneur.
@@ -89,10 +87,9 @@ public class UserController {
      */
     @RequestMapping(value = "/deals")
     public ModelAndView myDeals(@RequestParam(name = "page", defaultValue = "1") Integer page) {
-        // TODO implement
+
         final ModelAndView mav = new ModelAndView("user/deals");
-        Page<Message> messagePage = messageService.getAccepted(sessionUser.getId(), page, PAGE_SIZE);
-        messagePage.setPageRange(PAGINATION_ITEMS);
+        Page<Message> messagePage = messageService.getUserAccepted(sessionUser.getId(), page, PAGE_SIZE);
         mav.addObject("messagePage", messagePage);
         return mav;
     }
@@ -103,10 +100,10 @@ public class UserController {
      * @return Model and view.
      */
     @RequestMapping("/requests")
-    public ModelAndView myRequests() {
-        // TODO implement
+    public ModelAndView myRequests(@RequestParam(name = "page", defaultValue = "1") Integer page) {
+
         final ModelAndView mav = new ModelAndView("user/requests");
-//        mav.addObject("messages", messageService.getOffersDone(sessionUser.getId()));
+        mav.addObject("messagePage", messageService.getUserOffers(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
 }

@@ -5,12 +5,12 @@ package ar.edu.itba.paw.model.components;
  * Must match the string for spring message.
  */
 public enum OrderField {
-    DEFAULT("1", "feed.order.recommended"),
-    DATE_ASCENDING("2", "feed.order.date.asc"),
-    DATE_DESCENDING("3", "feed.order.date.desc"),
-    COST_ASCENDING("4", "feed.order.cost.asc"),
-    COST_DESCENDING( "5","feed.order.cost.desc"),
-    ALPHABETICAL( "6","feed.order.alpha");
+    DEFAULT("1", "order.recommended"),
+    DATE_ASCENDING("2", "order.date.asc"),
+    DATE_DESCENDING("3", "order.date.desc"),
+    COST_ASCENDING("4", "order.cost.asc"),
+    COST_DESCENDING( "5","order.cost.desc"),
+    ALPHABETICAL( "6","order.alpha");
 
     private String value;
     private String message;

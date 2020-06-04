@@ -5,11 +5,11 @@ package ar.edu.itba.paw.model.components;
  * Must match the string on jsp and message from .
  */
 public enum SearchField {
-    PROJECT_NAME("1", "feed.search.name"),
-    PROJECT_SUMMARY("2", "feed.search.summary"),
-    OWNER_NAME("3", "feed.search.owner.name"),
-    OWNER_MAIL("4", "feed.search.owner.mail"),
-    PROJECT_LOCATION("5", "feed.search.location");
+    PROJECT_NAME("1", "search.name"),
+    PROJECT_SUMMARY("2", "search.summary"),
+    OWNER_NAME("3", "search.owner.name"),
+    OWNER_MAIL("4", "search.owner.mail"),
+    PROJECT_LOCATION("5", "search.location");
 
     private String value;
     private String message;

@@ -22,27 +22,45 @@ public interface MessageService {
 
 
     /**
-     * Gets accepted messages for a receiver.
-     * @param receiver_id The user receiver id.
-     * @param page The page to ask.
-     * @param pageSize The page size.
-     * @return Page with the messages.
+     * Gets all the user accepted offers.
+     * @param receiverId User in matter unique id.
+     * @param page Page requested.
+     * @param pageSize Page size.
+     * @return Messages page with the required data.
      */
-    Page<Message> getAccepted(long receiver_id, Integer page, Integer pageSize);
-
-
-
-
-
+    Page<Message> getUserAccepted(long receiverId, Integer page, Integer pageSize);
 
 
     /**
-     * Gets all unread messages from a specific project.
-     * @param userId The user id requesting its unread messages.
-     * @param projectId The project id.
-     * @return List of all the messages to the user of the given project.
+     * Gets all the user made offers.
+     * @param senderId User in matter unique id.
+     * @param page Page requested.
+     * @param pageSize Page size.
+     * @return Messages page with the required data.
      */
-    List<Message> getProjectUnread(long userId, long projectId);
+    Page<Message> getUserOffers(long senderId, Integer page, Integer pageSize);
+
+
+    /**
+     * Gets all the unread messages for an user and a project.
+     * @param userId Unique user id.
+     * @param projectId Unique project id.
+     * @return A list of all the messages that match criteria.
+     */
+    List<Message> getUserProjectUnread(long userId, long projectId);
+
+
+    /**
+     * Gets an entire conversation paged.
+     * @param receiverId User receiver id.
+     * @param senderId User sender id.
+     * @param projectId Project in matter.
+     * @param page Page requested.
+     * @param pageSize Page size.
+     * @return Messages page with the required data.
+     */
+    Page<Message> getConversation(long receiverId, long senderId, long projectId, Integer page, Integer pageSize);
+
 
     /**
      * Identifies a message and updates its status.
@@ -50,29 +68,7 @@ public interface MessageService {
      * @param receiverId Unique user receiver id.
      * @param projectId Unique project id.
      * @param accepted Status to be updated.
-     * @return operation return.
+     * @return The updated message or null if not found.
      */
-    long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
-
-
-
-
-
-
-
-
-    Integer countAccepted( long receiver_id);
-
-
-    List<Message> getOffersDone(long sender_id, String page, long to);
-
-    Integer countOffers(long sender_id);
-
-
-    Boolean hasNextRequest(String page, long id);
-
-    Boolean hasNextDeal(String page, long id);
-
-    Integer getPageSize();
-
+    Message updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
 }

@@ -7,11 +7,16 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.FilterCriteria;
+import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.model.components.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Primary
@@ -21,66 +26,56 @@ public class IMessageService implements MessageService {
     @Autowired
     private MessageDao messageDao;
 
-    private final Integer PAGE_SIZE = 10;
 
     @Override
     public Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException {
+        // TODO how do we throw the exception
+
         MessageContent content = new MessageContent(message, String.valueOf(offer), interest);
         return messageDao.create(content, new User(senderId), new User(receiverId), new Project(projectId));
     }
 
     @Override
-    public Page<Message> getAccepted(long receiver_id, Integer page, Integer pageSize) {
-        return messageDao.getAccepted(receiver_id,page, pageSize);
-    }
-
-
-
-    @Override
-    public List<Message> getProjectUnread(long userId, long projectId) {
-        return messageDao.getProjectUnread(userId, projectId);
+    public Page<Message> getUserAccepted(long receiverId, Integer page, Integer pageSize) {
+        List<FilterCriteria> filters = new ArrayList<>();
+        filters.add(new FilterCriteria("receiver", new User(receiverId)));
+        filters.add(new FilterCriteria("accepted", true));
+        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
     }
 
     @Override
-    public long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted) {
-        return messageDao.updateMessageStatus(senderId, receiverId, projectId, accepted);
-    }
-
-
-
-    @Override
-    public Integer countAccepted( long receiver_id) {
-        return messageDao.countAccepted(receiver_id);
+    public Page<Message> getUserOffers(long senderId, Integer page, Integer pageSize) {
+        List<FilterCriteria> filters = Collections.singletonList(new FilterCriteria("sender", new User(senderId)));
+        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
     }
 
     @Override
-    public List<Message> getOffersDone(long sender_id, String page, long to) {
-        long intpage = Long.parseLong(page);
-        long from = (intpage - 1) * PAGE_SIZE;
-        return messageDao.getOffersDone(sender_id,from,to);
+    public List<Message> getUserProjectUnread(long userId, long projectId) {
+        List<FilterCriteria> filters = new ArrayList<>();
+        filters.add(new FilterCriteria("receiver", new User(userId)));
+        filters.add(new FilterCriteria("project", new Project(projectId)));
+        filters.add(new FilterCriteria("unread", true));
+        return messageDao.findAll(filters, OrderField.DATE_DESCENDING);
     }
 
     @Override
-    public Integer countOffers(long sender_id) {
-        return messageDao.countOffers(sender_id);
+    public Page<Message> getConversation(long receiverId, long senderId, long projectId, Integer page, Integer pageSize) {
+        List<FilterCriteria> filters = new ArrayList<>();
+        filters.add(new FilterCriteria("receiver", new User(receiverId)));
+        filters.add(new FilterCriteria("receiver", new User(senderId)));
+        filters.add(new FilterCriteria("sender", new User(receiverId)));
+        filters.add(new FilterCriteria("sender", new User(senderId)));
+        filters.add(new FilterCriteria("project", new Project(projectId)));
+        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
     }
 
     @Override
-    public Boolean hasNextRequest(String page, long id) {
-        int intpage = Integer.parseInt(page);
-        int count = countOffers(id);
-        return count > ((intpage)* PAGE_SIZE);
-    }
-
-    @Override
-    public Boolean hasNextDeal(String page, long id) {
-        int intpage = Integer.parseInt(page);
-        int count = countAccepted(id);
-        return count > ((intpage)* PAGE_SIZE);
-    }
-
-    @Override
-    public Integer getPageSize() {
-        return PAGE_SIZE;
+    public Message updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted) {
+        List<FilterCriteria> filters = new ArrayList<>();
+        filters.add(new FilterCriteria("sender", new User(senderId)));
+        filters.add(new FilterCriteria("receiver", new User(receiverId)));
+        filters.add(new FilterCriteria("project", new Project(projectId)));
+        filters.add(new FilterCriteria("unread", true));
+        return messageDao.updateMessageStatus(filters, accepted);
     }
 }

@@ -4,7 +4,11 @@ import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.FilterCriteria;
+import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.model.components.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,56 +22,35 @@ public interface MessageDao {
      * @param project Project message topic.
      * @return The created message.
      */
+    @Transactional
     Message create(Message.MessageContent content, User sender, User receiver, Project project) throws MessageAlreadySentException;
 
 
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Finds all the messages given the filters, ordered and paged.
+     * @param filters Filters to be applied to the messages.
+     * @param order Order to bring the messages.
+     * @param page Page request.
+     * @return Page with the messages and pagination data.
+     */
+    Page<Message> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page);
 
 
     /**
-     * Gets all the messages from a negotiation.
-     * @param entrepreneurId The unique user id.
-     * @param investorId The unique investor id.
-     * @param projectId The unique project id, which the conversation is about.
-     * @return List of all the messages from the given conversation.
+     * Finds all the messages given the filters, ordered not paged.
+     * @param filters Filters to be applied to the messages.
+     * @param order Order to bring the messages.
+     * @return Page with the messages and pagination data.
      */
-    List<Message> getConversation(long entrepreneurId, long investorId, long projectId);
+    List<Message> findAll(List<FilterCriteria> filters, OrderField order);
 
-    /**
-     * Gets all unread messages from a specific project.
-     * @param userId The user id requesting its unread messages.
-     * @param projectId The project id.
-     * @return List of all the messages to the user of the given project.
-     */
-    List<Message> getProjectUnread(long userId, long projectId);
 
     /**
      * Identifies a message and updates its status.
-     * @param senderId Unique user sender id.
-     * @param receiverId Unique user receiver id.
-     * @param projectId Unique project id.
+     * @param filters Filters needed to identify the message.
      * @param accepted Status to be updated.
-     * @return operation return.
+     * @return The updated message on null if not found.
      */
-    long updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
-
-    Page<Message> getAccepted(long receiver_id, long from, long to);
-
-    Integer countAccepted(long receiver_id);
-
-
-    List<Message> getOffersDone(long sender_id, long from, long to);
-
-    Integer countOffers(long sender_id);
-
-
+    @Transactional
+    Message updateMessageStatus(List<FilterCriteria> filters, boolean accepted);
 }

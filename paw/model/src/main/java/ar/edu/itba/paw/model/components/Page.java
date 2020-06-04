@@ -11,7 +11,7 @@ import java.util.List;
 public class Page<T> {
 
     private static final int FIRST_PAGE = 1;
-    private static final int DEFAULT_RANGE = 1;
+    private static final int DEFAULT_RANGE = 5;
 
     private List<T> content;
     private long totalCount;
@@ -31,9 +31,7 @@ public class Page<T> {
         this.pageSize = pageSize;
         this.totalCount = totalCount;
         this.totalPages = (long) Math.ceil((double) totalCount / (double) pageSize);
-        this.pageRange = DEFAULT_RANGE;
-        this.startPage = currentPage;
-        this.endPage = currentPage;
+        setPageRange(DEFAULT_RANGE);
     }
 
     public List<T> getContent() {
