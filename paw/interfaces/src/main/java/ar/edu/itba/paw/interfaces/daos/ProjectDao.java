@@ -53,14 +53,6 @@ public interface ProjectDao {
 
 
     /**
-     * Adds a hit to the given project.
-     * @param id The unique project id.
-     * @return The modified project, null if not found.
-     */
-    Project addHit(long id);
-
-
-    /**
      * Finds all the possible categories from the database.
      * @return List of all the categories.
      */

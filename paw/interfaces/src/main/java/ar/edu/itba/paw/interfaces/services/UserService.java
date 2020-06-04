@@ -13,7 +13,6 @@ public interface UserService {
      * @return The created User.
      * @throws UserAlreadyExistsException when the username is already taken.
      */
-    @Transactional
     User create (String role, String password, String firstName, String lastName, String realId,
                  Integer birthYear, Integer birthMonth, Integer birthDay,
                  Integer countryId, Integer stateId, Integer cityId,
@@ -34,4 +33,23 @@ public interface UserService {
      * @return The user optional.
      */
     Optional<User> findById(Long id);
+
+
+    /**
+     * Deletes a favorite from a user.
+     * @param userId The user unique id.
+     * @param projectId The project to remove from favorites.
+     * @return The changed user, null if user not exists.
+     */
+    User deleteFavorite(Long userId, Long projectId);
+
+
+    /**
+     * Adds a favorite to a user.
+     * @param userId The user unique id.
+     * @param projectId The project to add to favorites.
+     * @return The changed user, null if user not exists.
+     */
+    User addFavorite(Long userId, Long projectId);
+
 }

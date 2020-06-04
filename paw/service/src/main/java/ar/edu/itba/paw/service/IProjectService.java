@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Order;
 import java.util.*;
@@ -18,6 +19,7 @@ public class IProjectService implements ProjectService {
     private ProjectDao projectDao;
 
     @Override
+    @Transactional
     public Project create(String name, String summary, long cost, byte[] image, long ownerId, List<Long> categoriesIds) {
 
         List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
@@ -46,8 +48,13 @@ public class IProjectService implements ProjectService {
     }
 
     @Override
+    @Transactional
     public Project addHit(long projectId) {
-        return projectDao.addHit(projectId);
+        Optional<Project> optionalProject = findById(projectId);
+        if (!optionalProject.isPresent()) return null;
+        Project project = optionalProject.get();
+        project.setHits(project.getHits() + 1);
+        return project;
     }
 
     @Override

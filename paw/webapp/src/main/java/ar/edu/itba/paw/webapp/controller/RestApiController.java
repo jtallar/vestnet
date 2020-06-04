@@ -86,11 +86,10 @@ public class RestApiController {
      */
     @RequestMapping(value = "/addFavorite", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Boolean> addFavorite(@RequestParam("p_id") int projectId,
-                                               @RequestParam("u_id") int userId) {
-        // TODO this and below
+    public ResponseEntity<Boolean> addFavorite(@RequestParam("p_id") Long projectId,
+                                               @RequestParam("u_id") Long userId) {
 
-//        projectService.addFavorite(projectId, userId);
+        userService.addFavorite(userId, projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -102,10 +101,10 @@ public class RestApiController {
      */
     @RequestMapping(value = "/deleteFavorite", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Boolean> deleteFavorite(@RequestParam("p_id") int projectId,
-                                                  @RequestParam("u_id") int userId) {
-        // TODO is user service
-//        projectService.deleteFavorite(projectId, userId);
+    public ResponseEntity<Boolean> deleteFavorite(@RequestParam("p_id") Long projectId,
+                                                  @RequestParam("u_id") Long userId) {
+
+        userService.deleteFavorite(userId, projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

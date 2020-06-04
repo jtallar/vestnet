@@ -22,7 +22,6 @@ public interface ProjectService {
      * @param image The project's front image.
      * @return operation return.
      */
-    @Transactional
     Project create(String name, String summary, long cost, byte[] image, long ownerId, List<Long> categoriesIds);
 
     /**
@@ -54,7 +53,6 @@ public interface ProjectService {
      * @param projectId The unique project id.
      * @return The modified project, null if not found.
      */
-    @Transactional
     Project addHit(long projectId);
 
     /**

@@ -58,17 +58,7 @@ public class MessageJpaDao implements MessageDao {
         return findAllNotPaged(filters, order);
     }
 
-    @Override
-    public Message updateMessageStatus(List<FilterCriteria> filters, boolean accepted) {
-        // TODO maybe throw no such element exception?
-        Optional<Message> optionalMessage = findAll(filters, OrderField.DEFAULT).stream().findFirst();
-        if (!optionalMessage.isPresent()) return null;
 
-        Message message = optionalMessage.get();
-        message.setAccepted(accepted);
-        entityManager.persist(message);
-        return message;
-    }
 
     /**
      * Auxiliary functions.

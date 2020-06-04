@@ -63,18 +63,6 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
     @Override
-    public Project addHit(long id) {
-        // TODO maybe throw no such element exception?
-        Optional<Project> optionalProject = findById(id);
-        if (!optionalProject.isPresent()) return null;
-
-        Project project = optionalProject.get();
-        project.setHits(project.getHits() + 1);
-        entityManager.persist(project);
-        return project;
-    }
-
-    @Override
     @Cacheable("allCategories")
     public List<Category> findAllCategories() {
         final TypedQuery<Category> query = entityManager.createQuery("from Category order by name", Category.class);

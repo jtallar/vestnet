@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.crypto.Data;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Optional;
+import java.util.*;
 
 @Primary
 @Service
@@ -27,6 +24,7 @@ public class IUserService implements UserService {
     private PasswordEncoder encoder;
 
     @Override
+    @Transactional
     public User create(String role, String password, String firstName, String lastName, String realId,
                        Integer birthYear, Integer birthMonth, Integer birthDay,
                        Integer countryId, Integer stateId, Integer cityId,
@@ -41,7 +39,6 @@ public class IUserService implements UserService {
         return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin, image);
     }
 
-    @Transactional
     @Override
     public Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
@@ -51,5 +48,27 @@ public class IUserService implements UserService {
     @Override
     public Optional<User> findById(Long id) {
         return userDao.findById(id);
+    }
+
+    @Override
+    public User deleteFavorite(Long userId, Long projectId) {
+        Optional<User> userOptional = userDao.findById(userId);
+        if (!userOptional.isPresent()) return null;
+
+        User user = userOptional.get();
+        List<Project> favorites = user.getFavorites();
+        favorites.remove(new Project(projectId));
+        return user;
+    }
+
+    @Override
+    public User addFavorite(Long userId, Long projectId) {
+        Optional<User> userOptional = userDao.findById(userId);
+        if (!userOptional.isPresent()) return null;
+
+        User user = userOptional.get();
+        List<Project> favorites = user.getFavorites();
+        favorites.add(new Project(projectId));
+        return user;
     }
 }

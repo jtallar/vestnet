@@ -41,12 +41,4 @@ public interface MessageDao {
      */
     List<Message> findAll(List<FilterCriteria> filters, OrderField order);
 
-
-    /**
-     * Identifies a message and updates its status.
-     * @param filters Filters needed to identify the message.
-     * @param accepted Status to be updated.
-     * @return The updated message on null if not found.
-     */
-    Message updateMessageStatus(List<FilterCriteria> filters, boolean accepted);
 }
