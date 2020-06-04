@@ -89,8 +89,7 @@ public class UserController {
     public ModelAndView myDeals(@RequestParam(name = "page", defaultValue = "1") Integer page) {
 
         final ModelAndView mav = new ModelAndView("user/deals");
-        Page<Message> messagePage = messageService.getUserAccepted(sessionUser.getId(), page, PAGE_SIZE);
-        mav.addObject("messagePage", messagePage);
+        mav.addObject("messagePage", messageService.getUserAccepted(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
 

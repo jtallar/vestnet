@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.components.FilterCriteria;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.function.Consumer;
 
 /** Protected */ class MessageCriteriaConsumer implements Consumer<FilterCriteria> {
@@ -22,12 +23,17 @@ import java.util.function.Consumer;
     @Override
     public void accept(FilterCriteria param) {
         switch (param.getField()) {
+            case "ids": ids(param.getValue()); break;
             case "receiver": receiver(param.getValue()); break;
             case "sender": sender(param.getValue()); break;
             case "project": project(param.getValue()); break;
             case "unread": unread(); break;
             case "accepted": accepted(param.getValue()); break;
         }
+    }
+
+    public void ids(Object value) {
+        predicate = root.get("id").in((List) value);
     }
 
     public void receiver(Object value) {

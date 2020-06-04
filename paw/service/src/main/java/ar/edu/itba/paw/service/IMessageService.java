@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.model.Message;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Primary
 @Service
@@ -28,9 +28,7 @@ public class IMessageService implements MessageService {
 
 
     @Override
-    public Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException {
-        // TODO how do we throw the exception
-
+    public Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) {
         MessageContent content = new MessageContent(message, String.valueOf(offer), interest);
         return messageDao.create(content, new User(senderId), new User(receiverId), new Project(projectId));
     }
@@ -50,6 +48,17 @@ public class IMessageService implements MessageService {
     }
 
     @Override
+    public Page<Message> getConversation(long receiverId, long senderId, long projectId, Integer page, Integer pageSize) {
+        List<FilterCriteria> filters = new ArrayList<>();
+        filters.add(new FilterCriteria("receiver", new User(receiverId)));
+        filters.add(new FilterCriteria("receiver", new User(senderId)));
+        filters.add(new FilterCriteria("sender", new User(receiverId)));
+        filters.add(new FilterCriteria("sender", new User(senderId)));
+        filters.add(new FilterCriteria("project", new Project(projectId)));
+        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
+    }
+
+    @Override
     public List<Message> getUserProjectUnread(long userId, long projectId) {
         List<FilterCriteria> filters = new ArrayList<>();
         filters.add(new FilterCriteria("receiver", new User(userId)));
@@ -59,14 +68,11 @@ public class IMessageService implements MessageService {
     }
 
     @Override
-    public Page<Message> getConversation(long receiverId, long senderId, long projectId, Integer page, Integer pageSize) {
+    public Optional<Message> getUserProjectLast(long userId, long projectId) {
         List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(receiverId)));
-        filters.add(new FilterCriteria("receiver", new User(senderId)));
-        filters.add(new FilterCriteria("sender", new User(receiverId)));
-        filters.add(new FilterCriteria("sender", new User(senderId)));
+        filters.add(new FilterCriteria("sender", new User(userId)));
         filters.add(new FilterCriteria("project", new Project(projectId)));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
+        return messageDao.findAll(filters, OrderField.DATE_DESCENDING).stream().findFirst();
     }
 
     @Override

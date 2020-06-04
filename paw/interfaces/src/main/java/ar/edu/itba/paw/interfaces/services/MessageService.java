@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageService {
 
@@ -18,7 +19,8 @@ public interface MessageService {
      * @param projectId Unique project id.
      * @return The created message.
      */
-    Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) throws MessageAlreadySentException;
+    @Transactional
+    Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId);
 
 
     /**
@@ -42,15 +44,6 @@ public interface MessageService {
 
 
     /**
-     * Gets all the unread messages for an user and a project.
-     * @param userId Unique user id.
-     * @param projectId Unique project id.
-     * @return A list of all the messages that match criteria.
-     */
-    List<Message> getUserProjectUnread(long userId, long projectId);
-
-
-    /**
      * Gets an entire conversation paged.
      * @param receiverId User receiver id.
      * @param senderId User sender id.
@@ -63,6 +56,24 @@ public interface MessageService {
 
 
     /**
+     * Gets all the unread messages for an user and a project.
+     * @param userId Unique user id.
+     * @param projectId Unique project id.
+     * @return A list of all the messages that match criteria.
+     */
+    List<Message> getUserProjectUnread(long userId, long projectId);
+
+
+    /**
+     * Gets the last sent message.
+     * @param userId Unique user id.
+     * @param projectId Unique project id.
+     * @return An optional for the last sent message.
+     */
+    Optional<Message> getUserProjectLast(long userId, long projectId);
+
+
+    /**
      * Identifies a message and updates its status.
      * @param senderId Unique user sender id.
      * @param receiverId Unique user receiver id.
@@ -70,5 +81,6 @@ public interface MessageService {
      * @param accepted Status to be updated.
      * @return The updated message or null if not found.
      */
+    @Transactional
     Message updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
 }

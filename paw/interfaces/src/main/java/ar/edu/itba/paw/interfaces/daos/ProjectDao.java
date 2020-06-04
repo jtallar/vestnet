@@ -22,7 +22,6 @@ public interface ProjectDao {
      * @param image The project's front image.
      * @return The created project.
      */
-    @Transactional
     Project create(String name, String summary, long cost, byte[] image, User owner, List<Category> categories);
 
 
@@ -58,7 +57,6 @@ public interface ProjectDao {
      * @param id The unique project id.
      * @return The modified project, null if not found.
      */
-    @Transactional
     Project addHit(long id);
 
 

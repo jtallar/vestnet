@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
-import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.OrderField;
@@ -105,8 +104,10 @@ public class ProjectController {
         final ModelAndView mav = new ModelAndView("project/singleView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
         mav.addObject("contactStatus", contactStatus);
-        if (sessionUser.isInvestor())
+        if (sessionUser.isInvestor()) {
             mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
+            mav.addObject("lastMessage", messageService.getUserProjectLast(sessionUser.getId(), id));
+        }
         return mav;
     }
 
@@ -128,13 +129,8 @@ public class ProjectController {
 
         if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Message", singleProjectView(mailFields, id , 0));
 
-        try {
-            messageService.create(mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(),
-                    sessionUser.getId(), mailFields.getToId(), id);
-        } catch (MessageAlreadySentException e) {
-            LOGGER.error("Message already sent to this user about this project.");
-            return singleProjectView(mailFields, id, 2);
-        }
+        messageService.create(mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), sessionUser.getId(), mailFields.getToId(), id);
+
 
         // TODO do not forget this
 //        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();

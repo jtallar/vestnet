@@ -58,6 +58,8 @@
                          aria-placeholder="<spring:message code="projectImage"/>"/>
                 </div>
             </div>
+
+            <%-- Favorite icon logic --%>
             <div class="col-6">
                 <div class="d-flex justify-content-center">
                     <div class="card mb-3">
@@ -76,6 +78,8 @@
                                 </button>
                             </div>
                         </sec:authorize>
+
+                        <%-- Project card --%>
                         <div class="card-body">
                             <h5 class="card-title"><b><c:out value="${project.name}"/></b></h5>
                             <footer class="blockquote-footer">by <c:out value="${project.owner.firstName}"/>
@@ -105,13 +109,30 @@
                         </div>
                     </div>
                 </div>
+
+                <%-- Contact button --%>
                 <div class="d-flex justify-content-end">
-                    <sec:authorize access="hasRole('ROLE_INVESTOR')">
-                        <button class="btn btn-dark btn-lg btn-block" type="button" data-toggle="collapse"
-                                data-target="#contact"
-                                aria-expanded="false" aria-controls="contact" id="contact-expand-button">
-                            <spring:message code="contactowner"/>
+                    <sec:authorize access="isAnonymous()">
+                        <%-- TODO ask if wants to login/sign up --%>
+                        <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button">
+                            <spring:message code="singleView.button.createToContactOwner"/>
                         </button>
+                    </sec:authorize>
+
+                    <sec:authorize access="hasRole('ROLE_INVESTOR')">
+                            <c:choose>
+                                <c:when test="${lastMessage.isPresent() and lastMessage.get().accepted eq null}">
+                                    <button class="btn btn-dark btn-lg btn-block" id="contact-already-sent-button" disabled>
+                                        <spring:message code="singleView.button.alreadySent"/>
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="btn btn-dark btn-lg btn-block" data-toggle="collapse"
+                                    data-target="#contact" aria-expanded="false" aria-controls="contact" id="contact-expand-button">
+                                        <spring:message code="contactowner"/>
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
                     </sec:authorize>
                 </div>
             </div>

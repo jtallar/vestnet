@@ -2,6 +2,7 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Models a message. Used for communication between users.
@@ -12,7 +13,7 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messages_message_id_seq")
-    @SequenceGenerator(sequenceName = "messages_message_id_seq", name = "messages_message_id_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "messages_message_id_seq", name = "messages_message_id_seq", allocationSize = 1, initialValue = 100)
     @Column(name = "id")
     private long id;
 
@@ -20,7 +21,7 @@ public class Message {
     private MessageContent content;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "publish_date")
+    @Column(name = "publish_date", insertable = false)
     private Date publishDate;
 
     @Column(name = "accepted")
@@ -142,10 +143,23 @@ public class Message {
                 ", content=" + content +
                 ", publishDate=" + publishDate +
                 ", accepted=" + accepted +
-                ", sender=" + sender +
-                ", receiver=" + receiver +
-                ", project=" + project +
+                ", sender_id=" + sender_id +
+                ", receiver_id=" + receiver_id +
+                ", project_id=" + project_id +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Message)) return false;
+        Message message = (Message) o;
+        return id == message.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 
     /**

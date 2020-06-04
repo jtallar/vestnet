@@ -1,12 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.LocationService;
+import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.model.City;
-import ar.edu.itba.paw.model.Country;
-import ar.edu.itba.paw.model.Location;
-import ar.edu.itba.paw.model.State;
+import ar.edu.itba.paw.model.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,6 +27,9 @@ import java.util.List;
 public class RestApiController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiController.class);
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private UserService userService;
@@ -105,6 +109,52 @@ public class RestApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    /**
+     * Gets all the unread messages for a project.
+     * @param projectId The unique project id.
+     * @param userId The user id that requested
+     * @return List of all messages.
+     */
+    @RequestMapping(value = "/messages/unread",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<Message> unreadMessages(@RequestParam(name = "p_id") Long projectId,
+                                        @RequestParam(name = "u_id") Long userId) {
+//
+        List<Message> messages = messageService.getUserProjectUnread(userId, projectId);
+        messages.stream().forEach(message -> {
+            message.setProject(null);
+            message.setReceiver(null);
+            message.setSender(null); });
+        return messages;
+    }
+
+
+    /**
+     * Updates the status to accepted for a specific message.
+     * @param projectId The unique project id.
+     * @param senderId The unique user message sender id.
+     * @param receiverId The unique receiver id. Session user.
+     * @param value The value to update status
+     * @return Model and view.
+     */
+    @RequestMapping(value = "/message/update", method = RequestMethod.PUT, headers = "accept=application/json")
+    @ResponseBody
+    public ResponseEntity<Boolean> acceptMessage(@RequestParam(name = "p_id") Long projectId,
+                                                 @RequestParam(name = "s_id") Long senderId,
+                                                 @RequestParam(name = "r_id") Long receiverId,
+                                                 @RequestParam(name = "val") Boolean value,
+                                                 HttpServletRequest request) throws MessagingException {
+
+        // receiver is session id
+        messageService.updateMessageStatus(senderId, receiverId, projectId, value);
+
+//        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
+//        emailService.sendEmailAnswer(loggedUser, true, senderUser.getEmail(),
+//                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
     /**

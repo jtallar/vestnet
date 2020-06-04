@@ -16,7 +16,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_project_id_seq")
-    @SequenceGenerator(sequenceName = "projects_project_id_seq", name = "projects_project_id_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "projects_project_id_seq", name = "projects_project_id_seq", allocationSize = 1, initialValue = 250)
     @Column(name = "id")
     private long id;
 
@@ -30,11 +30,11 @@ public class Project {
     private long cost;
 
     @Temporal(value = TemporalType.DATE)
-    @Column(name = "publish_date")
+    @Column(name = "publish_date", insertable = false)
     private Date publishDate;
 
     @Temporal(value = TemporalType.DATE)
-    @Column(name = "update_date")
+    @Column(name = "update_date", insertable = false)
     private Date updateDate;
 
     @Column(name = "hits", nullable = false)
@@ -70,6 +70,7 @@ public class Project {
         this.image = image;
         this.owner = owner;
         this.categories = categories;
+        this.hits = 0;
     }
 
     public Project(long id) {
@@ -182,9 +183,8 @@ public class Project {
                 ", publishDate=" + publishDate +
                 ", updateDate=" + updateDate +
                 ", hits=" + hits +
-                ", image=" + Arrays.toString(image) +
-                ", owner=" + owner +
-                ", categories=" + categories +
+//                ", owner=" + owner +
+//                ", categories=" + categories +
                 '}';
     }
 

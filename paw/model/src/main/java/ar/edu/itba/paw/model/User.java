@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -12,7 +9,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_user_id_seq")
-    @SequenceGenerator(sequenceName = "users_user_id_seq", name = "users_user_id_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "users_user_id_seq", name = "users_user_id_seq", allocationSize = 1, initialValue = 100)
     @Column(name = "id")
     private Long id;
 
@@ -51,7 +48,7 @@ public class User {
     private byte[] image;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "join_date")
+    @Column(name = "join_date", insertable = false)
     private Date joinDate;
 
     @Column(name = "verified", nullable = false)
@@ -90,6 +87,7 @@ public class User {
         this.phone = phone;
         this.linkedin = linkedin;
         this.image = image;
+        this.verified = false;
     }
 
     public User(Long id) {
@@ -254,11 +252,22 @@ public class User {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", linkedin='" + linkedin + '\'' +
-                ", image=" + Arrays.toString(image) +
                 ", joinDate=" + joinDate +
                 ", verified=" + verified +
-                ", projectList=" + projectList +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 
     /**

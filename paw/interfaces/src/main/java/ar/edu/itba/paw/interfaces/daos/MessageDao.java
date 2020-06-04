@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces.daos;
 
-import ar.edu.itba.paw.interfaces.exceptions.MessageAlreadySentException;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
@@ -8,7 +7,6 @@ import ar.edu.itba.paw.model.components.FilterCriteria;
 import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.components.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,8 +20,7 @@ public interface MessageDao {
      * @param project Project message topic.
      * @return The created message.
      */
-    @Transactional
-    Message create(Message.MessageContent content, User sender, User receiver, Project project) throws MessageAlreadySentException;
+    Message create(Message.MessageContent content, User sender, User receiver, Project project);
 
 
     /**
@@ -51,6 +48,5 @@ public interface MessageDao {
      * @param accepted Status to be updated.
      * @return The updated message on null if not found.
      */
-    @Transactional
     Message updateMessageStatus(List<FilterCriteria> filters, boolean accepted);
 }

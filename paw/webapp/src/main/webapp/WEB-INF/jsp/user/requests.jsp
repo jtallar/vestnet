@@ -24,8 +24,7 @@
 <body>
 <%-- Message pagniation --%>
 <div class="row">
-    <div class="col-3"></div>
-    <div class="col-8">
+    <div class="col">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
                 <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" aria-label="<spring:message code="previous"/>">
@@ -44,7 +43,6 @@
             </li>
         </ul>
     </div>
-    <div class="col-1"></div>
 </div>
 
 <%-- Message display --%>

@@ -54,6 +54,7 @@ public interface ProjectService {
      * @param projectId The unique project id.
      * @return The modified project, null if not found.
      */
+    @Transactional
     Project addHit(long projectId);
 
     /**

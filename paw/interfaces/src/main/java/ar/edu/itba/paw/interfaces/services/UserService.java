@@ -2,12 +2,18 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.model.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 public interface UserService {
 
-
+    /**
+     * Creates a new user given the params.
+     * @return The created User.
+     * @throws UserAlreadyExistsException when the username is already taken.
+     */
+    @Transactional
     User create (String role, String password, String firstName, String lastName, String realId,
                  Integer birthYear, Integer birthMonth, Integer birthDay,
                  Integer countryId, Integer stateId, Integer cityId,
