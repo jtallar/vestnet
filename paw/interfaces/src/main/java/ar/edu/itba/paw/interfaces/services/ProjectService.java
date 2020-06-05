@@ -19,10 +19,9 @@ public interface ProjectService {
      * @param cost The project's total cost.
      * @param ownerId The user id owner of the project.
      * @param categoriesIds The project's categories ids.
-     * @param image The project's front image.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, byte[] image, long ownerId, List<Long> categoriesIds);
+    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds);
 
     /**
      * Finds a project given its id

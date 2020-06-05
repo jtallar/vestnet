@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.model;
 
+import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.Location;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -44,15 +47,15 @@ public class User {
     @Column(name = "linkedin", length = 100)
     private String linkedin;
 
-    @Column(name = "profile_pic")
-    private byte[] image;
-
     @Temporal(TemporalType.DATE)
     @Column(name = "join_date", insertable = false)
     private Date joinDate;
 
     @Column(name = "verified", nullable = false)
     private boolean verified;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private UserImage image;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
     private List<Project> projectList;
@@ -75,7 +78,7 @@ public class User {
     }
 
     public User(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,
-                Location location, String email, String phone, String linkedin, byte[] image) {
+                Location location, String email, String phone, String linkedin) {
         this.role = role;
         this.password = password;
         this.firstName = firstName;
@@ -86,7 +89,6 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.linkedin = linkedin;
-        this.image = image;
         this.verified = false;
     }
 
@@ -182,14 +184,6 @@ public class User {
         this.linkedin = linkedin;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
     public Date getJoinDate() {
         return joinDate;
     }
@@ -204,6 +198,14 @@ public class User {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public UserImage getImage() {
+        return image;
+    }
+
+    public void setImage(UserImage image) {
+        this.image = image;
     }
 
     public List<Project> getProjectList() {

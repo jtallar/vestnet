@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.component;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
-import ar.edu.itba.paw.model.LoggedUser;
-import org.springframework.context.annotation.Primary;
+import ar.edu.itba.paw.model.components.LoggedUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

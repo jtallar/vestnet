@@ -3,10 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.model.Location;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.webapp.component.OnRegistrationCompleteEvent;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
@@ -44,6 +43,9 @@ public class SignUpController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     ApplicationEventPublisher eventPublisher;
@@ -100,8 +102,8 @@ public class SignUpController {
             newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
                     userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
                     userFields.getCountry(), userFields.getState(),userFields.getCity(),
-                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), imageBytes);
-
+                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin());
+            imageService.create(newUser.getId(), imageBytes);
             // TODO finish this
 //            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUser, request.getLocale(), ""));
 

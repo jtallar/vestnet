@@ -3,12 +3,15 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.FilterCriteria;
 import ar.edu.itba.paw.model.components.SearchField;
+import ar.edu.itba.paw.model.location.City;
+import ar.edu.itba.paw.model.location.Country;
+import ar.edu.itba.paw.model.location.Location;
+import ar.edu.itba.paw.model.location.State;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 

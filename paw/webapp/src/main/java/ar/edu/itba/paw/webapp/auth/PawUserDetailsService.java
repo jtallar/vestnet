@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.model.LoggedUser;
+import ar.edu.itba.paw.model.components.LoggedUser;
 import ar.edu.itba.paw.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

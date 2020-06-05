@@ -20,10 +20,10 @@ public class IProjectService implements ProjectService {
 
     @Override
     @Transactional
-    public Project create(String name, String summary, long cost, byte[] image, long ownerId, List<Long> categoriesIds) {
+    public Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds) {
 
         List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
-        return projectDao.create(name, summary, cost, image, new User(ownerId), categories);
+        return projectDao.create(name, summary, cost, new User(ownerId), categories);
     }
 
     @Override

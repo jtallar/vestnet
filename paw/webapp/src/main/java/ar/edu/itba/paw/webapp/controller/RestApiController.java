@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.LocationService;
-import ar.edu.itba.paw.interfaces.services.MessageService;
-import ar.edu.itba.paw.interfaces.services.ProjectService;
-import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.model.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import ar.edu.itba.paw.model.image.ProjectImage;
+import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.City;
+import ar.edu.itba.paw.model.location.Country;
+import ar.edu.itba.paw.model.location.State;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class RestApiController {
@@ -40,6 +42,9 @@ public class RestApiController {
     @Autowired
     private LocationService locationService;
 
+    @Autowired
+    private ImageService imageService;
+
     /**
      * Gets the stored image for a project.
      * @param projectId The unique project id.
@@ -48,15 +53,16 @@ public class RestApiController {
     @RequestMapping(value = "/imageController/project/{p_id}", produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     public byte[] imageControllerProject(@PathVariable("p_id") long projectId) {
-        // TODO its no a project service
-//        byte[] image = projectService.findImageForProject(projectId);
-//        if (image != null) return image;
-//        try {
-//            Resource stockImage = new ClassPathResource("projectNoImage.png");
-//            image = IOUtils.toByteArray(stockImage.getInputStream());
-//        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
-//        return image;
-        return null;
+
+        Optional<ProjectImage> projectImage = imageService.findProjectMain(projectId);
+        if (projectImage.isPresent()) return projectImage.get().getImage();
+
+        byte[] image = new byte[0];
+        try {
+            Resource stockImage = new ClassPathResource("projectNoImage.png");
+            image = IOUtils.toByteArray(stockImage.getInputStream());
+        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
+        return image;
     }
 
     /**
@@ -67,15 +73,16 @@ public class RestApiController {
     @RequestMapping(value = "/imageController/user/{u_id}")
     @ResponseBody
     public byte[] imageControllerUser(@PathVariable("u_id") long userId) {
-        // TODO its no a user service
-//        byte[] image /*= userService.findImageForUser(userId)*/ = null;
-//        if (image != null) return image;
-//        try {
-//            Resource stockImage = new ClassPathResource("userNoImage.png");
-//            image = IOUtils.toByteArray(stockImage.getInputStream());
-//        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
-//        return image;
-        return null;
+
+        Optional<UserImage> userImage = imageService.findUserImage(userId);
+        if (userImage.isPresent()) return userImage.get().getImage();
+
+        byte[] image = new byte[0];
+        try {
+            Resource stockImage = new ClassPathResource("userNoImage.png");
+            image = IOUtils.toByteArray(stockImage.getInputStream());
+        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
+        return image;
     }
 
     /**
@@ -145,7 +152,6 @@ public class RestApiController {
                                                  @RequestParam(name = "val") Boolean value,
                                                  HttpServletRequest request) throws MessagingException {
 
-        // receiver is session id
         messageService.updateMessageStatus(senderId, receiverId, projectId, value);
 
 //        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();

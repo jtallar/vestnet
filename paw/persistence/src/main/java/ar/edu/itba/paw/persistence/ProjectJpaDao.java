@@ -28,8 +28,8 @@ public class ProjectJpaDao implements ProjectDao {
     private EntityManager entityManager;
 
     @Override
-    public Project create(String name, String summary, long cost, byte[] image, User owner, List<Category> categories) {
-        final Project project = new Project(name, summary, cost, image, owner, categories);
+    public Project create(String name, String summary, long cost, User owner, List<Category> categories) {
+        final Project project = new Project(name, summary, cost, owner, categories);
         entityManager.persist(project);
         return project;
     }

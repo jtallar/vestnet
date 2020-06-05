@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.model;
+package ar.edu.itba.paw.model.components;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.GrantedAuthority;

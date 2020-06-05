@@ -1,23 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.model.Country;
-import ar.edu.itba.paw.model.State;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static ar.edu.itba.paw.model.Location.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

@@ -1,6 +1,4 @@
-package ar.edu.itba.paw.model;
-
-import jdk.nashorn.internal.ir.annotations.Reference;
+package ar.edu.itba.paw.model.location;
 
 import javax.persistence.*;
 

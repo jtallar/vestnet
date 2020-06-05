@@ -1,11 +1,10 @@
 package ar.edu.itba.paw.model;
 
+import ar.edu.itba.paw.model.image.ProjectImage;
+
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Models a project with all its properties.
@@ -40,11 +39,11 @@ public class Project {
     @Column(name = "hits", nullable = false)
     private long hits;
 
-    @Column(name = "images")
-    private byte[] image;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User owner;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private List<ProjectImage> images;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -63,11 +62,10 @@ public class Project {
         /** For hibernate only */
     }
 
-    public Project(String name, String summary, long cost, byte[] image, User owner, List<Category> categories) {
+    public Project(String name, String summary, long cost, User owner, List<Category> categories) {
         this.name = name;
         this.summary = summary;
         this.cost = cost;
-        this.image = image;
         this.owner = owner;
         this.categories = categories;
         this.hits = 0;
@@ -133,20 +131,20 @@ public class Project {
         this.hits = hits;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
     public User getOwner() {
         return owner;
     }
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public List<ProjectImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProjectImage> images) {
+        this.images = images;
     }
 
     public List<Category> getCategories() {

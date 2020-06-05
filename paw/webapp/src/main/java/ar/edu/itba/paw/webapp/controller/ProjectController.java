@@ -43,6 +43,9 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
+    private ImageService imageService;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -177,7 +180,8 @@ public class ProjectController {
         }
 
         Project project = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), imageBytes, sessionUser.getId(), projectFields.getCategories());
+                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories());
+        imageService.create(project.getId(), imageBytes, true);
         return new ModelAndView("redirect:/dashboard#dashboard-project-" + project.getId());
     }
 
