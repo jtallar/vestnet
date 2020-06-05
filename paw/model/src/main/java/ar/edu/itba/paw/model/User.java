@@ -54,7 +54,7 @@ public class User {
     @Column(name = "verified", nullable = false)
     private boolean verified;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
     @JoinColumn(name = "image_id")
     private UserImage image;
 

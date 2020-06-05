@@ -101,6 +101,7 @@ public class SignUpController {
             if (!userFields.getProfilePicture().isEmpty()) imageBytes = userFields.getProfilePicture().getBytes();
 
             UserImage userImage = imageService.create(imageBytes);
+            System.out.println("MATI HASTA ACA VA: " + userImage.getId());
             newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
                     userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
                     userFields.getCountry(), userFields.getState(),userFields.getCity(),

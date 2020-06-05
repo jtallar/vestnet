@@ -6,13 +6,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "project_images")
-public class ProjectImage {
+public class ProjectImage extends Image {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_images_id_seq")
-    @SequenceGenerator(sequenceName = "project_images_id_seq", name = "project_images_id_seq", allocationSize = 1)
-    @Column(name = "id")
-    private long id;
 
     @Column(name = "main")
     private boolean main;
@@ -20,26 +15,21 @@ public class ProjectImage {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Project project;
 
-    @Column(name = "image")
-    private byte[] image;
 
     /** Protected */ ProjectImage() {
         /** For hibernate only */
     }
 
     public ProjectImage(Project project, byte[] image, boolean main) {
+        super(image);
         this.project = project;
-        this.image = image;
         this.main = main;
     }
 
-    public long getId() {
-        return id;
+    public ProjectImage(long id) {
+        super(id);
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public Project getProject() {
         return project;
@@ -49,14 +39,11 @@ public class ProjectImage {
         this.project = project;
     }
 
-    public byte[] getImage() {
-        return image;
+    public boolean isMain() {
+        return main;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setMain(boolean main) {
+        this.main = main;
     }
-
-
-
 }

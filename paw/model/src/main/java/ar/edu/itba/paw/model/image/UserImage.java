@@ -6,38 +6,21 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "user_images")
-public class UserImage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_images_id_seq")
-    @SequenceGenerator(sequenceName = "user_images_id_seq", name = "user_images_id_seq", allocationSize = 1)
-    @Column(name = "id")
-    private long id;
+public class UserImage extends Image {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, mappedBy = "image")
     private User user;
-
-    @Column(name = "image")
-    private byte[] image;
 
     /** Protected */ UserImage() {
         /** For hibernate only */
     }
 
-    public UserImage(byte[] image) {
-        this.image = image;
-    }
-
     public UserImage(long id) {
-        this.id = id;
+        super(id);
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public UserImage(byte[] image) {
+        super(image);
     }
 
     public User getUser() {
@@ -48,11 +31,5 @@ public class UserImage {
         this.user = user;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
 }
