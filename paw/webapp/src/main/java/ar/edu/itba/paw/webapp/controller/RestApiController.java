@@ -67,14 +67,14 @@ public class RestApiController {
 
     /**
      * Gets the stored image for a user.
-     * @param userId The unique user id.
+     * @param imageId The unique user image id.
      * @return The image in a byte vector.
      */
-    @RequestMapping(value = "/imageController/user/{u_id}")
+    @RequestMapping(value = "/imageController/user/{i_id}")
     @ResponseBody
-    public byte[] imageControllerUser(@PathVariable("u_id") long userId) {
+    public byte[] imageControllerUser(@PathVariable("i_id") long imageId) {
 
-        Optional<UserImage> userImage = imageService.findUserImage(userId);
+        Optional<UserImage> userImage = imageService.findUserImage(imageId);
         if (userImage.isPresent()) return userImage.get().getImage();
 
         byte[] image = new byte[0];

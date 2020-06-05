@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.User;
 
@@ -25,7 +26,7 @@ public interface UserDao {
      * @throws UserAlreadyExistsException If the user's mail already exists.
      */
      User create(Integer role, String password, String firstName, String lastName, String realId,
-                 Date birthDate, Location location, String email, String phone, String linkedin) throws UserAlreadyExistsException;
+                 Date birthDate, Location location, String email, String phone, String linkedin, UserImage image) throws UserAlreadyExistsException;
 
 
     /**

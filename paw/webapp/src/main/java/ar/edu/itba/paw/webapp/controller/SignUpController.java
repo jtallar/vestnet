@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
@@ -99,11 +100,11 @@ public class SignUpController {
         try {
             if (!userFields.getProfilePicture().isEmpty()) imageBytes = userFields.getProfilePicture().getBytes();
 
+            UserImage userImage = imageService.create(imageBytes);
             newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
                     userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
                     userFields.getCountry(), userFields.getState(),userFields.getCity(),
-                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin());
-            imageService.create(newUser.getId(), imageBytes);
+                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userImage.getId());
             // TODO finish this
 //            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUser, request.getLocale(), ""));
 

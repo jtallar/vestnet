@@ -9,11 +9,12 @@ import javax.persistence.*;
 public class UserImage {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_images_id_seq")
+    @SequenceGenerator(sequenceName = "user_images_id_seq", name = "user_images_id_seq", allocationSize = 1)
     @Column(name = "id")
     private long id;
 
-    @OneToOne
-    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false, mappedBy = "image")
     private User user;
 
     @Column(name = "image")
@@ -23,9 +24,12 @@ public class UserImage {
         /** For hibernate only */
     }
 
-    public UserImage(User user, byte[] image) {
-        this.user = user;
+    public UserImage(byte[] image) {
         this.image = image;
+    }
+
+    public UserImage(long id) {
+        this.id = id;
     }
 
     public long getId() {

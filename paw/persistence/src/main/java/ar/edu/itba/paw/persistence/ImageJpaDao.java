@@ -28,17 +28,15 @@ public class ImageJpaDao implements ImageDao {
     }
 
     @Override
-    public UserImage create(User user, byte[] image) {
-        final UserImage userImage = new UserImage(user, image);
+    public UserImage create(byte[] image) {
+        final UserImage userImage = new UserImage(image);
         entityManager.persist(userImage);
         return userImage;
     }
 
     @Override
-    public Optional<UserImage> findUserImage(User user) {
-        final TypedQuery<UserImage> query = entityManager.createQuery("from UserImage where user = :user", UserImage.class);
-        query.setParameter("user", user);
-        return query.getResultList().stream().findFirst();
+    public Optional<UserImage> findUserImage(long id) {
+        return Optional.ofNullable(entityManager.find(UserImage.class, id));
     }
 
     @Override

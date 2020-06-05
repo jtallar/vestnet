@@ -16,7 +16,7 @@ public interface UserService {
     User create (String role, String password, String firstName, String lastName, String realId,
                  Integer birthYear, Integer birthMonth, Integer birthDay,
                  Integer countryId, Integer stateId, Integer cityId,
-                 String email, String phone, String linkedin) throws UserAlreadyExistsException;
+                 String email, String phone, String linkedin, long imageId) throws UserAlreadyExistsException;
 
 
     /**

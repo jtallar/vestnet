@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,18 +20,20 @@ public class IImageService implements ImageService {
     private ImageDao imageDao;
 
     @Override
+    @Transactional
     public ProjectImage create(long id, byte[] image, boolean main) {
         return imageDao.create(new Project(id), image, main);
     }
 
     @Override
-    public UserImage create(long id, byte[] image) {
-        return imageDao.create(new User(id), image);
+    @Transactional
+    public UserImage create(byte[] image) {
+        return imageDao.create(image);
     }
 
     @Override
     public Optional<UserImage> findUserImage(long id) {
-        return imageDao.findUserImage(new User(id));
+        return imageDao.findUserImage(id);
     }
 
     @Override

@@ -22,11 +22,10 @@ public interface ImageService {
 
     /**
      * Creates an image and saves it.
-     * @param id The image "owner" user's id.
      * @param image The image bytes.
      * @return The created image.
      */
-    UserImage create(long id, byte[] image);
+    UserImage create(byte[] image);
 
 
     /**

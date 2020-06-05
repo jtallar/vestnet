@@ -15,7 +15,7 @@
 </head>
 
 <%-- Used variables --%>
-<c:url var="user_image" value="/imageController/user/${user.id}"/>
+<c:url var="user_image" value="/imageController/user/${user.image_id}"/>
 <sec:authorize access="isAuthenticated()">
     <sec:authentication var="session_user_id" property="principal.id"/>
 </sec:authorize>

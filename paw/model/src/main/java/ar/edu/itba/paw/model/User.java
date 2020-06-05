@@ -14,7 +14,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @SequenceGenerator(sequenceName = "users_id_seq", name = "users_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private Long id;
+    private long id;
 
     @Column(name = "role_id")
     private Integer role;
@@ -54,8 +54,12 @@ public class User {
     @Column(name = "verified", nullable = false)
     private boolean verified;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "image_id")
     private UserImage image;
+
+    @Column(name = "image_id", insertable = false, updatable = false)
+    private Long image_id;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
     private List<Project> projectList;
@@ -78,7 +82,7 @@ public class User {
     }
 
     public User(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,
-                Location location, String email, String phone, String linkedin) {
+                Location location, String email, String phone, String linkedin, UserImage image) {
         this.role = role;
         this.password = password;
         this.firstName = firstName;
@@ -90,17 +94,18 @@ public class User {
         this.phone = phone;
         this.linkedin = linkedin;
         this.verified = false;
+        this.image = image;
     }
 
-    public User(Long id) {
+    public User(long id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -208,6 +213,14 @@ public class User {
         this.image = image;
     }
 
+    public Long getImage_id() {
+        return image_id;
+    }
+
+    public void setImage_id(Long image_id) {
+        this.image_id = image_id;
+    }
+
     public List<Project> getProjectList() {
         return projectList;
     }
@@ -264,7 +277,7 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return id.equals(user.id);
+        return id == user.id;
     }
 
     @Override

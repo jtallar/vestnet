@@ -22,19 +22,18 @@ public interface ImageDao {
 
     /**
      * Creates an image and saves it.
-     * @param user The user image "owner".
      * @param image The image bytes.
      * @return The created image.
      */
-    UserImage create(User user, byte[] image);
+    UserImage create(byte[] image);
 
 
     /**
      * Finds user only profile image.
-     * @param user The user to find its image.
+     * @param id The image id.
      * @return The optional user image.
      */
-    Optional<UserImage> findUserImage(User user);
+    Optional<UserImage> findUserImage(long id);
 
 
     /**

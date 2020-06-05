@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
@@ -30,7 +31,7 @@ public class IUserService implements UserService {
     public User create(String role, String password, String firstName, String lastName, String realId,
                        Integer birthYear, Integer birthMonth, Integer birthDay,
                        Integer countryId, Integer stateId, Integer cityId,
-                       String email, String phone, String linkedin) throws UserAlreadyExistsException {
+                       String email, String phone, String linkedin, long imageId) throws UserAlreadyExistsException {
 
         Integer roleId = User.UserRole.getEnum(role).getId();
         Country country = new Country(countryId, "", "", "", "", "");
@@ -38,7 +39,7 @@ public class IUserService implements UserService {
         City city = new City(cityId, "");
         Location location = new Location(country, state, city);
         Date birthDate = new GregorianCalendar(birthYear, birthMonth, birthDay).getTime();
-        return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin);
+        return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin, new UserImage(imageId));
     }
 
     @Override
