@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.daos.TokenDao;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.daos.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -20,8 +21,12 @@ import java.util.*;
 @Primary
 @Service
 public class IUserService implements UserService {
+
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private TokenDao tokenDao;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -49,12 +54,35 @@ public class IUserService implements UserService {
 
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(long id) {
         return userDao.findById(id);
     }
 
     @Override
-    public User deleteFavorite(Long userId, Long projectId) {
+    @Transactional
+    public User updatePassword(String mail, String password) {
+        Optional<User> userOptional = userDao.findByUsername(mail);
+        if (!userOptional.isPresent()) return null;
+
+        User user = userOptional.get();
+        user.setPassword(encoder.encode(password));
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public User verifyUser(long id) {
+        Optional<User> userOptional = userDao.findById(id);
+        if (!userOptional.isPresent()) return null;
+
+        User user = userOptional.get();
+        user.setVerified(true);
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public User deleteFavorite(long userId, long projectId) {
         Optional<User> userOptional = userDao.findById(userId);
         if (!userOptional.isPresent()) return null;
 
@@ -65,7 +93,8 @@ public class IUserService implements UserService {
     }
 
     @Override
-    public User addFavorite(Long userId, Long projectId) {
+    @Transactional
+    public User addFavorite(long userId, long projectId) {
         Optional<User> userOptional = userDao.findById(userId);
         if (!userOptional.isPresent()) return null;
 
@@ -73,5 +102,17 @@ public class IUserService implements UserService {
         List<Project> favorites = user.getFavorites();
         favorites.add(new Project(projectId));
         return user;
+    }
+
+    @Override
+    @Transactional
+    public Token createToken(long userId) {
+        return tokenDao.create(new User(userId));
+    }
+
+    @Override
+    @Transactional
+    public Optional<Token> findToken(String token) {
+        return tokenDao.findByToken(token);
     }
 }

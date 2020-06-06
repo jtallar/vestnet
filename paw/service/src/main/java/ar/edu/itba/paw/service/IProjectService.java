@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.daos.CategoryDao;
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
@@ -17,6 +18,9 @@ public class IProjectService implements ProjectService {
 
     @Autowired
     private ProjectDao projectDao;
+
+    @Autowired
+    private CategoryDao categoryDao;
 
     @Override
     @Transactional
@@ -59,7 +63,7 @@ public class IProjectService implements ProjectService {
 
     @Override
     public List<Category> findAllCategories() {
-        return projectDao.findAllCategories();
+        return categoryDao.findAllCategories();
     }
 }
 

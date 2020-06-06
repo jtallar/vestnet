@@ -62,13 +62,6 @@ public class ProjectJpaDao implements ProjectDao {
         return findAllNotPaged(filters, order);
     }
 
-    @Override
-    @Cacheable("allCategories")
-    public List<Category> findAllCategories() {
-        final TypedQuery<Category> query = entityManager.createQuery("from Category order by name", Category.class);
-        return query.getResultList();
-    }
-
 
 
     /**

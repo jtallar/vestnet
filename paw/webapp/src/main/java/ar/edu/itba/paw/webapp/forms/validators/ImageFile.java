@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.forms;
+package ar.edu.itba.paw.webapp.forms.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = ImageValidator.class)
 public @interface ImageFile {
-    String message() default "{ar.edu.itba.paw.webapp.forms.ImageValidator}";
+    String message() default "{ar.edu.itba.paw.webapp.forms.validator.ImageValidator}";
 
     long maxSize();
 

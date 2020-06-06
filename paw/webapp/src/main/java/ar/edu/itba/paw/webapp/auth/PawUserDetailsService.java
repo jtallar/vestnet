@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 @Component
-public class PawUserDetailsService implements UserDetailsService{
+public class PawUserDetailsService implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PawUserDetailsService.class);
 
     @Autowired

@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.webapp.forms;
 
 import ar.edu.itba.paw.webapp.config.WebConfig;
+import ar.edu.itba.paw.webapp.forms.validators.ImageFile;
 import cz.jirutka.validator.spring.SpELAssert;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 

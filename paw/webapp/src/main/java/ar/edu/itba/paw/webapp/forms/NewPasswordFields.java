@@ -15,7 +15,7 @@ public class NewPasswordFields {
     private String repeatPassword;
 
     private String email; // Inyected
-    private int token; // Inyected
+    private String token; // Inyected
 
     public String getRepeatPassword() {
         return repeatPassword;
@@ -37,11 +37,11 @@ public class NewPasswordFields {
         this.email = email;
     }
 
-    public int getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(int token) {
+    public void setToken(String token) {
         this.token = token;
     }
 }

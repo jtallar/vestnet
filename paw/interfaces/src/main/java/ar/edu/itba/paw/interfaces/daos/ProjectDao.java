@@ -50,10 +50,4 @@ public interface ProjectDao {
      */
     List<Project> findAll(List<FilterCriteria> filters, OrderField order);
 
-
-    /**
-     * Finds all the possible categories from the database.
-     * @return List of all the categories.
-     */
-    List<Category> findAllCategories();
 }

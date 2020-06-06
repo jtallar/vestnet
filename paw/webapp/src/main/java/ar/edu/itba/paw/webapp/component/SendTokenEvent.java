@@ -1,33 +1,33 @@
 package ar.edu.itba.paw.webapp.component;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.TokenEventType;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.Locale;
 
-public class OnRegistrationCompleteEvent extends ApplicationEvent {
+public class SendTokenEvent extends ApplicationEvent {
     private String baseUrl;
-    private Locale locale;
     private User user;
+    private TokenEventType eventType;
 
-    public OnRegistrationCompleteEvent(User user, Locale locale, String baseUrl) {
+    public SendTokenEvent(User user, String baseUrl, TokenEventType eventType) {
         super(user);
 
         this.user = user;
-        this.locale = locale;
         this.baseUrl = baseUrl;
+        this.eventType = eventType;
     }
 
     public String getBaseUrl() {
         return baseUrl;
     }
 
-    public Locale getLocale() {
-        return locale;
-
-    }
-
     public User getUser() {
         return user;
+    }
+
+    public TokenEventType getEventType() {
+        return eventType;
     }
 }

@@ -46,6 +46,8 @@
     <org.hibernate.version>5.1.0.Final</org.hibernate.version>
     <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
 
+    <org.springframework.boot.version>2.2.5.RELEASE</org.springframework.boot.version>
+
   </properties>
 
   <dependencyManagement>
@@ -75,6 +77,11 @@
         <version>${spring-security.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>javax.servlet</groupId>

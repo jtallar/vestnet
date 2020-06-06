@@ -8,7 +8,7 @@ public abstract class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "images_id_seq")
-    @SequenceGenerator(sequenceName = "images_id_seq", name = "images_id_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "images_id_seq", name = "images_id_seq", allocationSize = 1, initialValue = 50)
     @Column(name = "id")
     private long id;
 

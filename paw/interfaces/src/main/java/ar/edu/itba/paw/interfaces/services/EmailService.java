@@ -20,7 +20,7 @@ public interface EmailService {
      * @param locale    Receiver Locale
      * @throws MessagingException When mail cannot be sent.
      */
-    void sendNewEmail(User sender, String body, int offers, String exchange, String to, String project, long projectId, String baseUrl, String locale) throws MessagingException;
+    void sendNewEmail(User sender, String body, int offers, String exchange, String to, String project, long projectId, String baseUrl, String locale);
 
 
     /**
@@ -32,7 +32,7 @@ public interface EmailService {
      * @param locale    Receiver Locale
      * @throws MessagingException When mail cannot be sent.
      */
-    void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl, String locale) throws MessagingException;
+    void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl, String locale);
 
     /**
      * @param user    User that requests new password
@@ -40,7 +40,7 @@ public interface EmailService {
      * @param baseUrl Base URL used to request new password
      * @throws MessagingException When mail cannot be sent.
      */
-    void sendPasswordRecovery(User user, String token, String baseUrl) throws MessagingException;
+    void sendPasswordRecovery(User user, String token, String baseUrl);
 
     /**
      * Send a verification email
@@ -50,5 +50,5 @@ public interface EmailService {
      * @param baseUrl The base url
      * @throws MessagingException
      */
-    void sendVerificationEmail(User user, String token, String baseUrl) throws MessagingException;
+    void sendVerification(User user, String token, String baseUrl);
 }

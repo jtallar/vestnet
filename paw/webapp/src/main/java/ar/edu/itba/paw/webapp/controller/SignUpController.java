@@ -5,13 +5,14 @@ import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.TokenEventType;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.webapp.component.SendTokenEvent;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
-import ar.edu.itba.paw.webapp.token.TokenGeneratorUtil;
-import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.Optional;
 
 @Controller
@@ -43,13 +40,10 @@ public class SignUpController {
     private UserService userService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private ImageService imageService;
 
     @Autowired
-    ApplicationEventPublisher eventPublisher;
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     protected AuthenticationManager authenticationManager;
@@ -90,7 +84,7 @@ public class SignUpController {
                                final BindingResult errors,
                                @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
                                HttpServletRequest request,
-                               HttpServletResponse response) throws MessagingException {
+                               HttpServletResponse response)  {
 
         // TODO check how to handle form errors, exception or not
         if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Sign Up", signUp(userFields, false));
@@ -101,13 +95,13 @@ public class SignUpController {
             if (!userFields.getProfilePicture().isEmpty()) imageBytes = userFields.getProfilePicture().getBytes();
 
             UserImage userImage = imageService.create(imageBytes);
-            System.out.println("MATI HASTA ACA VA: " + userImage.getId());
+
             newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
                     userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
                     userFields.getCountry(), userFields.getState(),userFields.getCity(),
                     userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userImage.getId());
-            // TODO finish this
-//            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUser, request.getLocale(), ""));
+
+            eventPublisher.publishEvent(new SendTokenEvent(newUser, getBaseUrl(request), TokenEventType.USER_VERIFICATION));
 
         } catch (UserAlreadyExistsException e) {
             // TODO when user already exists
@@ -116,11 +110,10 @@ public class SignUpController {
         } catch (IOException e) {
             // TODO when image conversion fails
             return signUp(userFields, false);
+        } catch (RuntimeException e) {
+            // TODO when mail fails
+            return new ModelAndView("redirect:/login?me=1");
         }
-//        catch (RuntimeException e) {
-//            // TODO when mail fails
-//            return new ModelAndView("redirect:/login?me=1");
-//        }
 
         return new ModelAndView("redirect:/login?me=1");
     }
@@ -139,85 +132,67 @@ public class SignUpController {
 
     @RequestMapping(value = "/requestPassword", method = {RequestMethod.POST})
     public ModelAndView requestPassword(@RequestParam(name = "username") String email,
-                                        HttpServletRequest request) throws MessagingException {
+                                        HttpServletRequest request) {
 
         // TODO check if solve with exceptions
         Optional<User> maybeUser = userService.findByUsername(email);
         if (!maybeUser.isPresent()) return requestPassword(true, false, false);
 
-        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        int token;
         try {
-            token = TokenGeneratorUtil.getToken(maybeUser.get().getEmail() + maybeUser.get().getPassword());
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            LOGGER.error("Failed to generate token");
-            return requestPassword(true, false, false);
+            eventPublisher.publishEvent(new SendTokenEvent(maybeUser.get(), getBaseUrl(request), TokenEventType.FORGOT_PASSWORD));
+        } catch (RuntimeException e) {
+            // TODO when mail fails
         }
-        emailService.sendPasswordRecovery(maybeUser.get(), String.valueOf(token), baseUrl);
+
         return requestPassword(false, true, false);
     }
 
     @RequestMapping(value = "/resetPassword")
-    public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
-                                      @RequestParam(name = "username") String email,
-                                      @RequestParam(name = "token") int token) {
-
-        String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
+    public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields form,
+                                      @RequestParam(name = "token") String token) {
 
         // TODO check if solve with exceptions
-        Optional<User> maybeUser = userService.findByUsername(decodedEmail);
-        if (!maybeUser.isPresent())
-            return new ModelAndView("redirect:/login");
-        try {
-            if (!TokenGeneratorUtil.checkToken(maybeUser.get().getEmail() + maybeUser.get().getPassword(), token)) {
-                LOGGER.warn("\n\nToken Expired\n\n");
-                return new ModelAndView("redirect:/requestPassword?invalidToken=1");
-            }
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            LOGGER.error("Failed to check token");
-            return new ModelAndView("redirect:/login");
-        }
+        Optional<Token> optionalToken = userService.findToken(token);
+        if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login");
+        if (!optionalToken.get().isValid()) return new ModelAndView("redirect:/requestPassword?invalidToken=1");
+
         final ModelAndView mav = new ModelAndView("index/resetPassword");
-        mav.addObject("email", decodedEmail);
+        mav.addObject("email", optionalToken.get().getUser().getEmail());
         mav.addObject("token", token);
         return mav;
     }
 
     @RequestMapping(value = "/resetPassword", method = {RequestMethod.POST})
-    public ModelAndView resetPassword(@Valid @ModelAttribute("passwordForm") final NewPasswordFields passwordFields,
+    public ModelAndView resetPassword(@Valid @ModelAttribute("passwordForm") final NewPasswordFields form,
                                       final BindingResult errors,
                                       HttpServletRequest request,
                                       HttpServletResponse response) {
 
-        if (errors.hasErrors()) return resetPassword(passwordFields, passwordFields.getEmail(), passwordFields.getToken());
+        // TODO this is wrong, already checked and went to the DB
+        if (errors.hasErrors()) return logFormErrorsAndReturn(errors, "Reset Pass", resetPassword(form, form.getToken()));
 
-        // TODO do not forget this
-//        userService.updateUserPassword(passwordFields.getEmail(), passwordFields.getPassword());
+        userService.updatePassword(form.getEmail(), form.getPassword());
         return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(value = "/verify")
-    public ModelAndView resetPassword(@RequestParam(name = "username") String email,
-                                      @RequestParam(name = "token") int token,
-                                      HttpServletRequest request) throws MessagingException {
+    public ModelAndView verifyUser(@RequestParam(name = "token") String token,
+                                      HttpServletRequest request) {
 
-        String decodedEmail = new String(Base64.getUrlDecoder().decode(StringEscapeUtils.escapeXml11(email).getBytes()));
-        Optional<User> maybeUser = userService.findByUsername(decodedEmail);
-        if (!maybeUser.isPresent())
-            return new ModelAndView("redirect:/login?me=2");
-        try {
-            if (!TokenGeneratorUtil.checkToken(maybeUser.get().getEmail() + maybeUser.get().getPassword(), token)) {
-                LOGGER.warn("\n\nToken Expired\n\n");
-//                sendVerificationMail(maybeUser.get().getId(), request);
-                return new ModelAndView("redirect:/login?me=3");
+        // TODO check if solve with exceptions
+        Optional<Token> optionalToken = userService.findToken(token);
+        if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login?me=3");
+
+        if (!optionalToken.get().isValid()) {
+            try{
+                eventPublisher.publishEvent(new SendTokenEvent(optionalToken.get().getUser(), getBaseUrl(request), TokenEventType.USER_VERIFICATION));
+            } catch (RuntimeException e) {
+                // TODO when mail fails
             }
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            LOGGER.error("Failed to check token");
             return new ModelAndView("redirect:/login?me=2");
         }
 
-        // TODO do not forget this
-//        userService.verifyUser(decodedEmail);
+        userService.verifyUser(optionalToken.get().getUser().getId());
         return new ModelAndView("redirect:/login?me=4");
     }
 
@@ -234,5 +209,14 @@ public class SignUpController {
             for (ObjectError error : errors.getAllErrors())
                 LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
             return modelAndView;
+    }
+
+    /**
+     * Creates the base url needed.
+     * @param request The given request to get the base url from.
+     * @return Base url string formatted.
+     */
+    private String getBaseUrl(HttpServletRequest request) {
+        return request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
     }
 }
