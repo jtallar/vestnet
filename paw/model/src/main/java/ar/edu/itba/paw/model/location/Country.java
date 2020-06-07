@@ -43,6 +43,10 @@ public class Country {
         this.locale = locale;
     }
 
+    public Country(int id) {
+        this.id = id;
+    }
+
 
     /** Getters and setters */
 

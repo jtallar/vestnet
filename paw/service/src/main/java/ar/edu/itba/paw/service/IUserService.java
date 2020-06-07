@@ -55,9 +55,9 @@ public class IUserService implements UserService {
         UserImage userImage = imageDao.create(image);
 
         Integer roleId = UserRole.getEnum(role).getId();
-        Country country = new Country(countryId, "", "", "", "", "");
-        State state = new State(stateId, "", "");
-        City city = new City(cityId, "");
+        Country country = new Country(countryId);
+        State state = new State(stateId);
+        City city = new City(cityId);
         Location location = new Location(country, state, city);
         Date birthDate = new GregorianCalendar(birthYear, birthMonth, birthDay).getTime();
         return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin, userImage);

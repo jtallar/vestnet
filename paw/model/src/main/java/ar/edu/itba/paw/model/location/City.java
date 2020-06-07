@@ -28,6 +28,9 @@ public class City {
         this.name = name;
     }
 
+    public City(int id) {
+        this.id = id;
+    }
 
     /** Getters and setters */
 

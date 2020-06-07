@@ -1,4 +1,3 @@
--- TODO: NO ME DEJA PONER bytea porque ROMPE TODO
 -- HSQL WONT ACCEPT NOT NULL AND DEFAULT TOGETHER
 -- HSQL WONT ACCEPT LOCAL DATE AS DATE, USE DATE
 /****************************************
@@ -146,7 +145,6 @@ CREATE TABLE IF NOT EXISTS stages (
 
     -- TOP INFO
     type_id         INT REFERENCES stage_types ON DELETE SET NULL,
---     TODO: CHECK IF INTERVAL DAY o QUE INTERVAL TYPE
     duration        INTERVAL DAY NOT NULL,
     key_result      VARCHAR(50) NOT NULL,
     cost            INT DEFAULT 0,

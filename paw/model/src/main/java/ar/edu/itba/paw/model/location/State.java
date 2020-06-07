@@ -29,6 +29,10 @@ public class State {
         this.isoCode = isoCode;
     }
 
+    public State(int id) {
+        this.id = id;
+    }
+
 
     /** Getters and setters */
 

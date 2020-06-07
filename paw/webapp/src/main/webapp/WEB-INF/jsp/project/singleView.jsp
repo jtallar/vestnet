@@ -279,7 +279,7 @@
         }
     }
 
-    // TODO: VER SI SE PUEDE HACER DE OTRA FORMA
+    // TODO check if can be done diferently
     function getBackAction() {
         if (${contactStatus == 0}) {
             history.back();
