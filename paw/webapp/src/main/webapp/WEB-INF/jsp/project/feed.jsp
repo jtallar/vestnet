@@ -32,6 +32,8 @@
 <c:url var="icon_filter" value="/images/filter.png"/>
 <c:url var="icon_search" value="/images/lupa_v.png"/>
 <c:url var="link_projects" value='/projects'/>
+<c:url var="link_delete_fav" value="/deleteFavorite"/>
+<c:url var="link_add_fav" value="/addFavorite"/>
 
 <body>
 
@@ -164,7 +166,7 @@
                             </div>
                             <div class="col-md">
                                 <sec:authorize access="hasRole('ROLE_INVESTOR')">
-                                    <button onclick="favTap(${project.id}, ${projectIndex.index})"
+                                    <button onclick="favTap(${project.id})"
                                             class="btn-transp pull-right">
                                         <c:choose>
                                             <c:when test="${user.favorites.contains(project)}">
@@ -215,7 +217,6 @@
 
 <script>
 
-    let fav = ${isFav};
 
     let options = {
         method: 'PUT',
@@ -225,31 +226,27 @@
     };
 
     function addFav(p_id) {
-        let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux + "/addFavorite?u_id=" + ${session_user_id}+"&p_id=" + p_id;
+        let path = '${link_add_fav}' + "?u_id=" + ${session_user_id} + "&p_id=" + p_id;
         fetch(path, options).catch((function (reason) {
             console.error(reason)
         }));
     }
 
     function delFav(p_id) {
-        let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux + "/deleteFavorite?u_id=" + ${session_user_id}+"&p_id=" + p_id;
+        let path = '${link_delete_fav}' + "?u_id=" + ${session_user_id} + "&p_id=" + p_id;
         fetch(path, options).catch((function (reason) {
             console.error(reason)
         }));
     }
 
-    function favTap(p_id, index) {
+    function favTap(p_id) {
         let pid = "favImg_" + p_id;
         let favImage = document.getElementById(pid);
-        if (fav[index]) {
+        if (favImage.getAttribute("src") === "${icon_fav_on}") {
             favImage.setAttribute("src", "${icon_fav_off}");
-            fav[index] = false;
             delFav(p_id);
         } else {
             favImage.setAttribute("src", "${icon_fav_on}");
-            fav[index] = true;
             addFav(p_id);
         }
     }

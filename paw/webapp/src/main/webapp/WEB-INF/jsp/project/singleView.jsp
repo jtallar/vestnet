@@ -27,6 +27,8 @@
 <%-- Set used URLs --%>
 <c:url var="icon_fav_off" value="/images/bookmarkOff.png"/>
 <c:url var="icon_fav_on" value="/images/bookmarkOn.png"/>
+<c:url var="link_delete_fav" value="/deleteFavorite"/>
+<c:url var="link_add_fav" value="/addFavorite"/>
 
 <body>
 
@@ -249,37 +251,31 @@
     });
 
     function addFav() {
-        let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux + "/addFavorite?u_id=" + ${session_user_id}+"&p_id=" +${project.id};
+        let path = '${link_add_fav}' + "?u_id=" + ${session_user_id} + "&p_id=" + ${project.id};
         fetch(path, options).catch((function (reason) {
             console.error(reason)
         }));
     }
 
     function delFav() {
-        let path_aux = "${pageContext.request.contextPath}";
-        let path = window.location.origin + path_aux + "/deleteFavorite?u_id=" + ${session_user_id}+"&p_id=" +${project.id};
+        let path = '${link_delete_fav}' + "?u_id=" + ${session_user_id} + "&p_id=" + ${project.id};
         fetch(path, options).catch((function (reason) {
             console.error(reason)
         }));
     }
 
-    let favImage = document.getElementById('favImg');
-    let fav = ${isFav};
-
     function favTap() {
-        if (fav) {
+        let favImage = document.getElementById('favImg');
+        if (favImage.getAttribute("src") === "${icon_fav_on}") {
             favImage.setAttribute("src", "${icon_fav_off}");
-            fav = false;
             delFav();
         } else {
             favImage.setAttribute("src", "${icon_fav_on}");
-            fav = true;
             addFav();
         }
     }
 
-    // TODO check if can be done diferently
+    // TODO check if can be done differently
     function getBackAction() {
         if (${contactStatus == 0}) {
             history.back();
