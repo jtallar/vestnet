@@ -1,12 +1,19 @@
 package ar.edu.itba.paw.model.location;
 
+import ar.edu.itba.paw.model.User;
+
 import javax.persistence.*;
 
 /**
  * Models a location object with Country, State and City.
  */
-@Embeddable
+@Entity
+@Table(name = "user_location")
 public class Location {
+
+    @Id
+    @Column(name = "id")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Country country;
@@ -16,6 +23,10 @@ public class Location {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private City city;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId
+    private User user;
 
     /** Protected */ Location() {
         /** For hibernate only*/
@@ -28,7 +39,16 @@ public class Location {
     }
 
 
+
     /** Getters and setters */
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Country getCountry() {
         return country;
@@ -54,6 +74,13 @@ public class Location {
         this.city = city;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public String toString() {

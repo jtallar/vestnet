@@ -15,7 +15,18 @@
 </head>
 
 <%-- Used variables --%>
-<c:url var="user_image" value="/imageController/user/${user.image_id}"/>
+<c:choose>
+    <c:when test="${user.image_id eq null}">
+        <c:url var="user_image" value="/imageController/user/0"/>
+    </c:when>
+    <c:otherwise>
+        <c:url var="user_image" value="/imageController/user/${user.image_id}"/>
+    </c:otherwise>
+</c:choose>
+<c:if test="">
+
+</c:if>
+
 <sec:authorize access="isAuthenticated()">
     <sec:authentication var="session_user_id" property="principal.id"/>
 </sec:authorize>

@@ -59,7 +59,7 @@ public class RestApiController {
      */
     @RequestMapping(value = "/imageController/user/{i_id}")
     @ResponseBody
-    public byte[] imageControllerUser(@PathVariable("i_id") long imageId) {
+    public byte[] imageControllerUser(@PathVariable("i_id") Long imageId) {
 
         return userService.getProfileImage(imageId);
     }

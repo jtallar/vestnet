@@ -170,15 +170,17 @@ public class IUserService implements UserService {
 
     @Override
     public byte[] getProfileImage(long id) {
-        Optional<UserImage> optionalImage = imageDao.findUserImage(id);
-        if (optionalImage.isPresent()) return optionalImage.get().getImage();
+        if (id != 0) {
+            Optional<UserImage> optionalImage = imageDao.findUserImage(id);
+            if (optionalImage.isPresent()) return optionalImage.get().getImage();
+        }
 
-        byte[] image = new byte[0];
+        byte[] image;
         try {
             Resource stockImage = new ClassPathResource("userNoImage.png");
             image = IOUtils.toByteArray(stockImage.getInputStream());
         } catch (IOException e) {
-            return image;
+            return new byte[0];
         }
         return image;
     }

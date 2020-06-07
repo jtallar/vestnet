@@ -35,7 +35,7 @@ public class User {
     @Column(name = "aux_date")
     private Date birthDate;
 
-    @Embedded
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
     private Location location;
 
     @Column(name = "email", nullable = false)
