@@ -15,6 +15,10 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Builds dynamically the query criteria.
+ */
+
 /** Protected */ class ProjectCriteriaConsumer implements Consumer<FilterCriteria> {
     private Predicate predicate;
     private CriteriaBuilder builder;
@@ -40,6 +44,21 @@ import java.util.function.Consumer;
         }
     }
 
+
+    /** Getters */
+
+    public Predicate getPredicate() {
+        return predicate;
+    }
+
+
+    /** Auxiliary functions */
+
+
+    /**
+     * For search criteria, depending on field, executes action.
+     * @param param The parameters, field and value.
+     */
     private void search(FilterCriteria param) {
         String keyword = param.getValue().toString().toLowerCase();
         switch (SearchField.getEnum(param.getField())) {
@@ -52,40 +71,86 @@ import java.util.function.Consumer;
     }
 
 
+    /**
+     * Filters by min cost.
+     * @param value The min cost.
+     */
     private void minCost(Object value) {
         predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get("cost"), value.toString()));
     }
 
+
+    /**
+     * Filters by max cost.
+     * @param value The max cost.
+     */
     private void maxCost(Object value) {
         predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("cost"), value.toString()));
     }
 
+
+    /**
+     * Filters by a single category.
+     * @param value The category id.
+     */
     private void category(Object value) {
         Join<Project, Category> categoryJoin = root.join("categories");
         predicate = builder.and(predicate, builder.equal(categoryJoin.get("id"), value.toString()));
     }
 
+
+    /**
+     * Filters by owner.
+     * @param value The owner id.
+     */
     private void owner(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("owner"), value));
     }
 
+
+    /**
+     * Filters by min cost.
+     * @param value The min cost.
+     */
     private void id(Object value) {
         predicate = builder.equal(root.get("id"), value.toString());
     }
 
+
+    /**
+     * Filters by a list of ids.
+     * @param value The list of ids.
+     */
     private void ids(Object value) {
         predicate = root.get("id").in((List) value);
     }
 
+
+    /**
+     * Filters by a string in a project column.
+     * @param column The column to search for matches.
+     * @param value The keyword to search.
+     */
     private void projectSearch(String column, String value) {
         predicate = builder.and(predicate, builder.like(builder.lower(root.get(column)), "%" + value + "%"));
     }
 
+
+    /**
+     * Filters by a string in the user owner column.
+     * @param column The column to search for matches.
+     * @param value The keyword to search.
+     */
     private void userSearch(String column, String value) {
         Join<Project, User> userJoin = root.join("owner");
         predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get(column)), "%" + value + "%"));
     }
 
+
+    /**
+     * Filters by the full name of the user owner.
+     * @param value The keyword.
+     */
     private void userNameSearch(String value) {
         Join<Project, User> userJoin = root.join("owner");
         predicate = builder.and(predicate,
@@ -93,6 +158,11 @@ import java.util.function.Consumer;
                 builder.like(builder.lower(userJoin.get("lastName")), "%" + value + "%")));
     }
 
+
+    /**
+     * Filters by user owner location.
+     * @param value The keyword.
+     */
     private void locationSearch(String value) {
         Join<Project, User> userJoin = root.join("owner");
         Join<User, Location> locationJoin = userJoin.join("location");
@@ -107,7 +177,5 @@ import java.util.function.Consumer;
     }
 
 
-    public Predicate getPredicate() {
-        return predicate;
-    }
+
 }

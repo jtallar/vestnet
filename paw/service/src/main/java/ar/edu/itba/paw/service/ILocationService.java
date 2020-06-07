@@ -18,15 +18,18 @@ public class ILocationService implements LocationService {
     @Autowired
     LocationDao locationDao;
 
+
     @Override
     public List<Country> findAllCountries() {
         return locationDao.findAllCountries();
     }
 
+
     @Override
     public List<State> findStates(long countryId) {
         return locationDao.findStates(countryId);
     }
+
 
     @Override
     public List<City> findCities(long stateId) {

@@ -2,11 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.webapp.event.PasswordRecoveryEvent;
 import ar.edu.itba.paw.webapp.event.VerificationEvent;
 import ar.edu.itba.paw.webapp.config.WebConfig;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -39,9 +36,6 @@ public class SignUpController {
     private UserService userService;
 
     @Autowired
-    private ImageService imageService;
-
-    @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @Autowired
@@ -49,6 +43,7 @@ public class SignUpController {
 
     @Autowired
     protected SessionUserFacade sessionUser;
+
 
     /**
      * Sign up view page mapping.
@@ -73,78 +68,78 @@ public class SignUpController {
      * Maps the submitted form for new user.
      * @param userFields The completed user fields.
      * @param errors Errors.
-     * @param invalidUser If there is an invalid user error.
      * @param request Used for auto login after sign up.
-     * @param response Used for auto login after sign up.
      * @return Model and view.
      */
     @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
     public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields,
                                final BindingResult errors,
-                               @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser,
-                               HttpServletRequest request,
-                               HttpServletResponse response)  {
+                               HttpServletRequest request)  {
 
-        // TODO check how to handle form errors, exception or not
         if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Sign Up", signUp(userFields, false));
 
-        byte[] imageBytes = new byte[0];
-        User newUser;
         try {
-            if (!userFields.getProfilePicture().isEmpty()) imageBytes = userFields.getProfilePicture().getBytes();
-
-            UserImage userImage = imageService.create(imageBytes);
-
-            newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
+            User newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
                     userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
                     userFields.getCountry(), userFields.getState(),userFields.getCity(),
-                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userImage.getId());
+                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getProfilePicture().getBytes());
 
+            eventPublisher.publishEvent(new VerificationEvent(newUser, getBaseUrl(request)));
         } catch (UserAlreadyExistsException e) {
-            // TODO when user already exists
             LOGGER.error("User already exists with email {} in VestNet", userFields.getEmail());
             return signUp(userFields, true);
         } catch (IOException e) {
-            // TODO when image conversion fails
             return signUp(userFields, false);
         }
-
-        eventPublisher.publishEvent(new VerificationEvent(newUser, getBaseUrl(request)));
-        return new ModelAndView("redirect:/login?me=1");
+        return new ModelAndView("redirect:/login" + "?me=1");
     }
 
-    @RequestMapping(value = "/requestPassword")
-    public ModelAndView requestPassword(@RequestParam(name = "error", defaultValue = "false") boolean error,
-                                        @RequestParam(name = "mailSent", defaultValue = "false") boolean mailSent,
-                                        @RequestParam(name = "invalidToken", defaultValue = "false") boolean invalidToken) {
+
+    /**
+     * Gets the view for a password recovery.
+     * @param error If there is no user with such email.
+     * @return Model and view.
+     */
+    @RequestMapping(value = "/requestPassword", method = {RequestMethod.GET})
+    public ModelAndView requestPassword(@RequestParam(name = "error", defaultValue = "false") boolean error ) {
 
         final ModelAndView mav = new ModelAndView("index/requestPassword");
         mav.addObject("error", error);
-        mav.addObject("mailSent", mailSent);
-        mav.addObject("invalidToken", invalidToken);
         return mav;
     }
 
+
+    /**
+     * Maps the posted form for a password recovery.
+     * @param email The username email to make the recover.
+     * @param request Http request.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/requestPassword", method = {RequestMethod.POST})
     public ModelAndView requestPassword(@RequestParam(name = "username") String email,
                                         HttpServletRequest request) {
 
-        // TODO check if solve with exceptions
         Optional<User> maybeUser = userService.findByUsername(email);
-        if (!maybeUser.isPresent()) return requestPassword(true, false, false);
+        if (!maybeUser.isPresent()) return requestPassword(true);
 
         eventPublisher.publishEvent(new PasswordRecoveryEvent(maybeUser.get(), getBaseUrl(request)));
-        return requestPassword(false, true, false);
+        return new ModelAndView("redirect:/login" + "?me=3");
     }
 
-    @RequestMapping(value = "/resetPassword")
+
+    /**
+     * Reset password form view, checks token.
+     * @param form The used form for a new password.
+     * @param token The token given.
+     * @return Model and view.
+     */
+    @RequestMapping(value = "/resetPassword", method = {RequestMethod.GET})
     public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields form,
                                       @RequestParam(name = "token") String token) {
 
-        // TODO check if solve with exceptions
         Optional<Token> optionalToken = userService.findToken(token);
-        if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login");
-        if (!optionalToken.get().isValid()) return new ModelAndView("redirect:/requestPassword?invalidToken=1");
+        if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login" + "?me=12");
+        if (!optionalToken.get().isValid()) return new ModelAndView("redirect:/login" + "?me=13");
 
         final ModelAndView mav = new ModelAndView("index/resetPassword");
         mav.addObject("email", optionalToken.get().getUser().getEmail());
@@ -152,35 +147,48 @@ public class SignUpController {
         return mav;
     }
 
+
+    /**
+     * Post model for the password recovery form.
+     * @param form Form with the new password.
+     * @param errors Errors from the form.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/resetPassword", method = {RequestMethod.POST})
     public ModelAndView resetPassword(@Valid @ModelAttribute("passwordForm") final NewPasswordFields form,
-                                      final BindingResult errors,
-                                      HttpServletRequest request,
-                                      HttpServletResponse response) {
+                                      final BindingResult errors ) {
 
-        // TODO this is wrong, already checked and went to the DB
-        if (errors.hasErrors()) return logFormErrorsAndReturn(errors, "Reset Pass", resetPassword(form, form.getToken()));
+        if (errors.hasErrors()) return logFormErrorsAndReturn(errors, "Reset Password", resetPassword(form, form.getToken()));
 
         userService.updatePassword(form.getEmail(), form.getPassword());
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/login" + "?me=4");
     }
 
+
+    /**
+     * Verify view page, checks token and verifies user.
+     * @param token Token to check.
+     * @param request Http request.
+     * @return Model and view.
+     */
     @RequestMapping(value = "/verify")
     public ModelAndView verifyUser(@RequestParam(name = "token") String token,
                                       HttpServletRequest request) {
 
-        // TODO check if solve with exceptions
         Optional<Token> optionalToken = userService.findToken(token);
-        if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login?me=3");
+        if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login" + "?me=10");
 
         if (!optionalToken.get().isValid()) {
             eventPublisher.publishEvent(new VerificationEvent(optionalToken.get().getUser(), getBaseUrl(request)));
-            return new ModelAndView("redirect:/login?me=2");
+            return new ModelAndView("redirect:/login" + "?me=11");
         }
 
         userService.verifyUser(optionalToken.get().getUser().getId());
-        return new ModelAndView("redirect:/login?me=4");
+        return new ModelAndView("redirect:/login" + "?me=2");
     }
+
+
+    /** Auxiliary functions (to reduce code) */
 
 
     /**
@@ -196,6 +204,7 @@ public class SignUpController {
                 LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
             return modelAndView;
     }
+
 
     /**
      * Creates the base url needed.

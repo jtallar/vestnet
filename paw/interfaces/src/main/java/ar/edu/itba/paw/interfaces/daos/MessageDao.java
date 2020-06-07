@@ -40,5 +40,4 @@ public interface MessageDao {
      * @return List with the messages.
      */
     List<Message> findAll(List<FilterCriteria> filters, OrderField order);
-
 }

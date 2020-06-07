@@ -88,7 +88,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    /* Auxiliary functions */
+    /** Auxiliary functions */
 
     /**
      * Converts key resource to a string.

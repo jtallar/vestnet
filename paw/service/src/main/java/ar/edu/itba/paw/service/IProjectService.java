@@ -1,15 +1,20 @@
 package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.CategoryDao;
+import ar.edu.itba.paw.interfaces.daos.ImageDao;
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.image.ProjectImage;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Order;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,24 +27,26 @@ public class IProjectService implements ProjectService {
     @Autowired
     private CategoryDao categoryDao;
 
+    @Autowired
+    private ImageDao imageDao;
+
+
     @Override
     @Transactional
-    public Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds) {
+    public Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image) {
 
         List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
-        return projectDao.create(name, summary, cost, new User(ownerId), categories);
+        Project newProject = projectDao.create(name, summary, cost, new User(ownerId), categories);
+        imageDao.create(newProject, image, true);
+        return newProject;
     }
+
 
     @Override
     public Optional<Project> findById(long id) {
         return projectDao.findById(id);
     }
 
-    @Override
-    public List<Project> findByOwnerId(long id) {
-        List<FilterCriteria> param = Collections.singletonList(new FilterCriteria("owner", new User(id)));
-        return projectDao.findAll(param, OrderField.DEFAULT);
-    }
 
     @Override
     public Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize) {
@@ -51,6 +58,7 @@ public class IProjectService implements ProjectService {
         return projectDao.findAll(params, OrderField.getEnum(order), new PageRequest(page, pageSize));
     }
 
+
     @Override
     @Transactional
     public Project addHit(long projectId) {
@@ -61,9 +69,32 @@ public class IProjectService implements ProjectService {
         return project;
     }
 
+
     @Override
-    public List<Category> findAllCategories() {
+    public List<Category> getAllCategories() {
         return categoryDao.findAllCategories();
+    }
+
+
+    @Override
+    public byte[] getPortraitImage(long id) {
+        Optional<ProjectImage> optionalImage = imageDao.findProjectMain(new Project(id));
+        if (optionalImage.isPresent()) return optionalImage.get().getImage();
+
+        byte[] image;
+        try {
+            Resource stockImage = new ClassPathResource("projectNoImage.png");
+            image = IOUtils.toByteArray(stockImage.getInputStream());
+        } catch (IOException e) {
+            return new byte[0];
+        }
+        return image;
+    }
+
+
+    @Override
+    public List<ProjectImage> getAllImages(long id) {
+        return imageDao.findProjectAll(new Project(id));
     }
 }
 

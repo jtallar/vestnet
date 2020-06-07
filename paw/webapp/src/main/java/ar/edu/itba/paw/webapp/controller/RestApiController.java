@@ -2,40 +2,29 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.image.ProjectImage;
-import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.State;
 import ar.edu.itba.paw.webapp.event.OfferAnswerEvent;
 import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class RestApiController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiController.class);
-
-    @Autowired
-    private MessageService messageService;
 
     @Autowired
     private UserService userService;
@@ -47,10 +36,8 @@ public class RestApiController {
     private LocationService locationService;
 
     @Autowired
-    private ImageService imageService;
-
-    @Autowired
     private ApplicationEventPublisher eventPublisher;
+
 
     /**
      * Gets the stored image for a project.
@@ -61,16 +48,9 @@ public class RestApiController {
     @ResponseBody
     public byte[] imageControllerProject(@PathVariable("p_id") long projectId) {
 
-        Optional<ProjectImage> projectImage = imageService.findProjectMain(projectId);
-        if (projectImage.isPresent()) return projectImage.get().getImage();
-
-        byte[] image = new byte[0];
-        try {
-            Resource stockImage = new ClassPathResource("projectNoImage.png");
-            image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
-        return image;
+        return projectService.getPortraitImage(projectId);
     }
+
 
     /**
      * Gets the stored image for a user.
@@ -81,16 +61,9 @@ public class RestApiController {
     @ResponseBody
     public byte[] imageControllerUser(@PathVariable("i_id") long imageId) {
 
-        Optional<UserImage> userImage = imageService.findUserImage(imageId);
-        if (userImage.isPresent()) return userImage.get().getImage();
-
-        byte[] image = new byte[0];
-        try {
-            Resource stockImage = new ClassPathResource("userNoImage.png");
-            image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) { LOGGER.error("Could not load stock image. Error {}", e.getMessage()); }
-        return image;
+        return userService.getProfileImage(imageId);
     }
+
 
     /**
      * Puts a project as a favorite to an user.
@@ -106,6 +79,7 @@ public class RestApiController {
         userService.addFavorite(userId, projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     /**
      * Removes a project as a favorite to an user.
@@ -134,7 +108,7 @@ public class RestApiController {
     public List<Message> unreadMessages(@RequestParam(name = "p_id") Long projectId,
                                         @RequestParam(name = "u_id") Long userId) {
 
-        List<Message> messages = messageService.getUserProjectUnread(userId, projectId);
+        List<Message> messages = userService.getProjectUnreadMessages(userId, projectId);
         messages.stream().forEach(message -> {
             message.setProject(null);
             message.setReceiver(null);

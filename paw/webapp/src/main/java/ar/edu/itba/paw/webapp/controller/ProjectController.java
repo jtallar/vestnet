@@ -45,13 +45,7 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
-    private ImageService imageService;
-
-    @Autowired
     private ApplicationEventPublisher eventPublisher;
-
-    @Autowired
-    private MessageService messageService;
 
     @Autowired
     protected SessionUserFacade sessionUser;
@@ -73,7 +67,7 @@ public class ProjectController {
         projectPage.setPageRange(PAGINATION_ITEMS);
         final ModelAndView mav = new ModelAndView("project/feed");
         mav.addObject("projectPage", projectPage);
-        mav.addObject("categories", projectService.findAllCategories());
+        mav.addObject("categories", projectService.getAllCategories());
         mav.addObject("fieldValues", SearchField.values());
         mav.addObject("orderValues", OrderField.values());
         if (sessionUser.isInvestor())
@@ -99,7 +93,7 @@ public class ProjectController {
         mav.addObject("contactStatus", contactStatus);
         if (sessionUser.isInvestor()) {
             mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
-            mav.addObject("lastMessage", messageService.getUserProjectLast(sessionUser.getId(), id));
+            mav.addObject("lastMessage", userService.getLastProjectOfferMessage(sessionUser.getId(), id));
         }
         return mav;
     }
@@ -127,8 +121,9 @@ public class ProjectController {
         Project project = projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         eventPublisher.publishEvent(new OfferEvent(sender, receiver, project,
                 mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), getBaseUrl(request)));
-        return new ModelAndView("redirect:/projects/{id}?contactStatus=1");
+        return new ModelAndView("redirect:/projects/{id}" + "?contactStatus=1");
     }
+
 
     /**
      * Shows the new project form.
@@ -139,7 +134,7 @@ public class ProjectController {
     public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
 
         final ModelAndView mav = new ModelAndView("project/newProject");
-        mav.addObject("categories", projectService.findAllCategories());
+        mav.addObject("categories", projectService.getAllCategories());
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
         return mav;
     }
@@ -153,26 +148,25 @@ public class ProjectController {
      */
     @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
     public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields,
-                                      final BindingResult errors) throws IOException {
+                                      final BindingResult errors) {
 
         if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "New Project", createProject(projectFields));
 
-        byte[] imageBytes = new byte[0];
+        Project newProject;
         try {
-            if (!projectFields.getImage().isEmpty())
-                imageBytes = projectFields.getImage().getBytes();
+            newProject = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
+                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), projectFields.getImage().getBytes());
         } catch (IOException e) {
             LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
             return createProject(projectFields);
         }
 
-        Project project = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                projectFields.getCost(), sessionUser.getId(), projectFields.getCategories());
-        imageService.create(project.getId(), imageBytes, true);
-        return new ModelAndView("redirect:/dashboard#dashboard-project-" + project.getId());
+        return new ModelAndView("redirect:/dashboard#dashboard-project-" + newProject.getId());
     }
 
 
+
+    /** Auxiliary functions */
 
     /**
      * Logs form errors and returns the given model and view
@@ -187,6 +181,7 @@ public class ProjectController {
             LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
         return modelAndView;
     }
+
 
     /**
      * Creates the base url needed.

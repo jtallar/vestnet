@@ -27,6 +27,9 @@ public class Location {
         this.city = city;
     }
 
+
+    /** Getters and setters */
+
     public Country getCountry() {
         return country;
     }
@@ -50,6 +53,7 @@ public class Location {
     public void setCity(City city) {
         this.city = city;
     }
+
 
     @Override
     public String toString() {

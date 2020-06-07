@@ -66,13 +66,24 @@
                                 <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'User is disabled'}"><p class="mailError"><spring:message code = "loginVerificationError"/></p></c:when>
                             </c:choose>
                         </c:if>
-
                         <c:choose>
-                            <c:when test="${message eq 1}"><p class="noError"><spring:message code = "verificationMessageSent"/></p></c:when>
-                            <c:when test="${message eq 2}"><p class="mailError"><spring:message code = "verificationInvalid"/></p></c:when>
-                            <c:when test="${message eq 3}"><p class="mailError"><spring:message code = "verificationTokenExpired"/></p></c:when>
-                            <c:when test="${message eq 4}"><p class="noError"><spring:message code = "verificationMade"/></p></c:when>
+                            <c:when test="${message eq 10}"><p class="mailError"><spring:message code = "verificationInvalid"/></p></c:when>
+                            <c:when test="${message eq 11}"><p class="mailError"><spring:message code = "verificationTokenExpired"/></p></c:when>
+                            <c:when test="${message eq 12}"><p class="mailError"><spring:message code="passwordInvalidToken"/></p></c:when>
+                            <c:when test="${message eq 13}"><p class="mailError"><spring:message code="passwordExpiredToken"/></p></c:when>
                         </c:choose>
+                    </div>
+                    <div class="col mailSent">
+                        <c:choose>
+                            <c:when test="${message eq 1}"><p class="mailSent"><spring:message code = "verificationMessageSent"/></p></c:when>
+                            <c:when test="${message eq 2}"><p class="mailSent"><spring:message code = "verificationMade"/></p></c:when>
+                            <c:when test="${message eq 3}"><p class="mailSent"><spring:message code="passwordRecoverySent"/></p></c:when>
+                            <c:when test="${message eq 4}"><p class="mailSent"><spring:message code="passwordRecoveryMade"/></p></c:when>
+                        </c:choose>
+
+                    </div>
+
+
                     </div>
                 </div>
             </form>

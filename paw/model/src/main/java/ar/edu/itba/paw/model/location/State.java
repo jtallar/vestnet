@@ -29,6 +29,9 @@ public class State {
         this.isoCode = isoCode;
     }
 
+
+    /** Getters and setters */
+
     public int getId() {
         return id;
     }
@@ -52,6 +55,7 @@ public class State {
     public void setIsoCode(String isoCode) {
         this.isoCode = isoCode;
     }
+
 
     @Override
     public String toString() {

@@ -31,6 +31,8 @@ public class ProjectImage extends Image {
     }
 
 
+    /** Getters and setters */
+
     public Project getProject() {
         return project;
     }

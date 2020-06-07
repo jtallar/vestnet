@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import org.springframework.context.ApplicationEvent;
 
+/** Event for a new contact offer */
 public class OfferEvent extends ApplicationEvent {
     private User sender;
     private User receiver;
@@ -20,6 +21,9 @@ public class OfferEvent extends ApplicationEvent {
         this.project = project;
         this.content = new Message.MessageContent(body, String.valueOf(offer), interest);
     }
+
+
+    /** Getters */
 
     public User getSender() {
         return sender;

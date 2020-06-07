@@ -31,6 +31,9 @@ public class NewProjectFields {
     @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE)
     private MultipartFile image;
 
+
+    /** Getters and setters */
+
     public String getTitle() {
         return title;
     }

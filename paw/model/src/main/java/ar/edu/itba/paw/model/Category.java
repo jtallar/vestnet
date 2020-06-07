@@ -35,6 +35,9 @@ public class Category {
         this.parent = parent;
     }
 
+
+    /** Getters and setters */
+
     public Category(long id) {
         this.id = id;
     }
@@ -70,6 +73,7 @@ public class Category {
     public void setProjectList(List<Project> projectList) {
         this.projectList = projectList;
     }
+
 
     @Override
     public String

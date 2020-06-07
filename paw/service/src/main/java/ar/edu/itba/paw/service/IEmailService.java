@@ -13,13 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
-import java.util.Base64;
 import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 @Primary
 @Service
@@ -32,6 +26,7 @@ public class IEmailService implements EmailService {
 
     @Autowired
     private MessageSource messageSource;
+
 
     @Override
     public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, String baseUrl) {
@@ -58,6 +53,7 @@ public class IEmailService implements EmailService {
 
     }
 
+
     @Override
     public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, String baseUrl) {
 
@@ -80,6 +76,7 @@ public class IEmailService implements EmailService {
         sendEmail(sender.getEmail(), receiver.getEmail(), subject, fullBodySB);
     }
 
+
     @Override
     public void sendPasswordRecovery(User user, String token, String baseUrl) {
         // TODO eventually fix this
@@ -95,6 +92,7 @@ public class IEmailService implements EmailService {
         sendEmail(VESTNET_EMAIL, user.getEmail(), subject, fullBodySB);
 
     }
+
 
     @Override
     public void sendVerification(User user, String token, String baseUrl) {
@@ -112,6 +110,8 @@ public class IEmailService implements EmailService {
 
     }
 
+
+    /** Auxiliary functions */
 
     /**
      * Sends a simple mail message.

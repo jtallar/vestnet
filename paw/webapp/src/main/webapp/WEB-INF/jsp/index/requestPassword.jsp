@@ -39,14 +39,7 @@
     <div class="col-md-8">
         <div class="login-form">
             <div class="row text-left my-2">
-                <div class="col-2">
-                    <a href="${link_login}" class="btn btn-outline-dark pull-left"><spring:message code="back"/></a>
-                </div>
-                <div class="col mailError">
-                    <c:if test="${invalidToken}">
-                        <p class="mailError"><spring:message code="invalidToken"/></p>
-                    </c:if>
-                </div>
+                <a href="${link_login}" class="btn btn-outline-dark pull-left"><spring:message code="back"/></a>
             </div>
             <form method="post" action="${link_request_pass}">
                 <h4><spring:message code="requestPasswordTitle"/></h4>
@@ -62,11 +55,6 @@
                     <c:if test="${error}">
                         <div class="col mailError">
                             <p class="mailError"><spring:message code="emailError"/></p>
-                        </div>
-                    </c:if>
-                    <c:if test="${mailSent}">
-                        <div class="col mailSent">
-                            <p class="mailSent"><spring:message code="passwordRecoverySent"/></p>
                         </div>
                     </c:if>
                     <div class="col"></div>

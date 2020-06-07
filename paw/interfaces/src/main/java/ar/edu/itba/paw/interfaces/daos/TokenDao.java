@@ -14,6 +14,7 @@ public interface TokenDao {
      */
     Token create(User user);
 
+
     /**
      * Search for a specific token.
      * @param token The token string to look for.
@@ -21,10 +22,10 @@ public interface TokenDao {
      */
     Optional<Token> findByToken(String token);
 
+
     /**
      * Deletes all the outdated tokens.
      * @return The amount of tokens deleted.
      */
     int deleteExpired();
-
 }

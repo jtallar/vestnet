@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,19 +34,6 @@ public class IMessageService implements MessageService {
         return messageDao.create(content, new User(senderId), new User(receiverId), new Project(projectId));
     }
 
-    @Override
-    public Page<Message> getUserAccepted(long receiverId, Integer page, Integer pageSize) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(receiverId)));
-        filters.add(new FilterCriteria("accepted", true));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
-    }
-
-    @Override
-    public Page<Message> getUserOffers(long senderId, Integer page, Integer pageSize) {
-        List<FilterCriteria> filters = Collections.singletonList(new FilterCriteria("sender", new User(senderId)));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
-    }
 
     @Override
     public Page<Message> getConversation(long receiverId, long senderId, long projectId, Integer page, Integer pageSize) {
@@ -60,22 +46,6 @@ public class IMessageService implements MessageService {
         return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
     }
 
-    @Override
-    public List<Message> getUserProjectUnread(long userId, long projectId) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(userId)));
-        filters.add(new FilterCriteria("project", new Project(projectId)));
-        filters.add(new FilterCriteria("unread", true));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING);
-    }
-
-    @Override
-    public Optional<Message> getUserProjectLast(long userId, long projectId) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("sender", new User(userId)));
-        filters.add(new FilterCriteria("project", new Project(projectId)));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING).stream().findFirst();
-    }
 
     @Override
     @Transactional

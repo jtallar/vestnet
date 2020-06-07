@@ -2,14 +2,12 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.model.Category;
-import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.FilterCriteria;
 import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.components.PageRequest;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -27,6 +25,7 @@ public class ProjectJpaDao implements ProjectDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public Project create(String name, String summary, long cost, User owner, List<Category> categories) {
         final Project project = new Project(name, summary, cost, owner, categories);
@@ -34,10 +33,12 @@ public class ProjectJpaDao implements ProjectDao {
         return project;
     }
 
+
     @Override
     public Optional<Project> findById(long id) {
         return Optional.ofNullable(entityManager.find(Project.class, id));
     }
+
 
     @Override
     public Page<Project> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page) {
@@ -55,6 +56,7 @@ public class ProjectJpaDao implements ProjectDao {
 
         return new Page<>(projects, page.getPage(), page.getPageSize(), count);
     }
+
 
     @Override
     public List<Project> findAll(List<FilterCriteria> filters, OrderField order) {
@@ -144,7 +146,6 @@ public class ProjectJpaDao implements ProjectDao {
     }
 
 
-
     /**
      * Applies to the query the given order.
      * @param <T> The type of criteria query.
@@ -163,6 +164,7 @@ public class ProjectJpaDao implements ProjectDao {
             case DATE_DESCENDING: query.orderBy(builder.desc(root.get("publishDate")), builder.desc(root.get("id"))); break;
         }
     }
+
 
     /**
      * Applies the given filters to the query.

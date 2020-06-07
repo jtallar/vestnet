@@ -2,9 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.components.Pair;
-import ar.edu.itba.paw.model.components.SearchField;
-import org.springframework.transaction.annotation.Transactional;
+import ar.edu.itba.paw.model.image.ProjectImage;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +17,11 @@ public interface ProjectService {
      * @param cost The project's total cost.
      * @param ownerId The user id owner of the project.
      * @param categoriesIds The project's categories ids.
+     * @param image Project portrait image.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds);
+    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image);
+
 
     /**
      * Finds a project given its id
@@ -30,12 +30,6 @@ public interface ProjectService {
      */
     Optional<Project> findById(long id);
 
-    /**
-     * Finds the projects owned by the same user.
-     * @param id Unique user id.
-     * @return List of all the project for the given user.
-     */
-    List<Project> findByOwnerId(long id);
 
     /**
      * Finds all projects with the given filter.
@@ -47,6 +41,7 @@ public interface ProjectService {
      */
     Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize);
 
+
     /**
      * Adds a hit to the given project.
      * @param projectId The unique project id.
@@ -54,9 +49,26 @@ public interface ProjectService {
      */
     Project addHit(long projectId);
 
+
     /**
      * Finds all the possible categories from the database.
      * @return List of all the categories.
      */
-    List<Category> findAllCategories();
+    List<Category> getAllCategories();
+
+
+    /**
+     * Finds project main profile image.
+     * @param id The unique project id to find its image.
+     * @return The main image or default if none is found.
+     */
+    byte[] getPortraitImage(long id);
+
+
+    /**
+     * Finds all project images.
+     * @param id The unique project id to find its images.
+     * @return A list with all the related images.
+     */
+    List<ProjectImage> getAllImages(long id);
 }

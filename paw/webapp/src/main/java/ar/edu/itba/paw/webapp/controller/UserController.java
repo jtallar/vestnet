@@ -1,13 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.MessageService;
-import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.model.Message;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
 @Controller
 public class UserController {
 
@@ -29,13 +21,8 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private ProjectService projectService;
-
-    @Autowired
     protected SessionUserFacade sessionUser;
 
-    @Autowired
-    private MessageService messageService;
 
     /**
      * Single user profile.
@@ -73,7 +60,7 @@ public class UserController {
     public ModelAndView myDashboard() {
 
         ModelAndView mav = new ModelAndView("user/dashboard");
-        mav.addObject("projects", projectService.findByOwnerId(sessionUser.getId()));
+        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId()));
         return mav;
     }
 
@@ -89,7 +76,7 @@ public class UserController {
     public ModelAndView myDeals(@RequestParam(name = "page", defaultValue = "1") Integer page) {
 
         final ModelAndView mav = new ModelAndView("user/deals");
-        mav.addObject("messagePage", messageService.getUserAccepted(sessionUser.getId(), page, PAGE_SIZE));
+        mav.addObject("messagePage", userService.getAcceptedMessages(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
 
@@ -102,7 +89,7 @@ public class UserController {
     public ModelAndView myRequests(@RequestParam(name = "page", defaultValue = "1") Integer page) {
 
         final ModelAndView mav = new ModelAndView("user/requests");
-        mav.addObject("messagePage", messageService.getUserOffers(sessionUser.getId(), page, PAGE_SIZE));
+        mav.addObject("messagePage", userService.getOfferMessages(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
 }

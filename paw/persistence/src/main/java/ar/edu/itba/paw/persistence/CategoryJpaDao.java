@@ -16,6 +16,7 @@ public class CategoryJpaDao implements CategoryDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     @Cacheable("allCategories")
     public List<Category> findAllCategories() {

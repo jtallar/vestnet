@@ -1,14 +1,10 @@
 package ar.edu.itba.paw.interfaces.daos;
 
-
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Filter;
 
 public interface ProjectDao {
 
@@ -49,5 +45,4 @@ public interface ProjectDao {
      * @return List with the projects.
      */
     List<Project> findAll(List<FilterCriteria> filters, OrderField order);
-
 }

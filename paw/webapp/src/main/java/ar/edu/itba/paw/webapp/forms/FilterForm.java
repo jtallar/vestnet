@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.forms;
 
-import ar.edu.itba.paw.model.components.SearchField;
-
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.HashMap;
@@ -24,6 +22,8 @@ public class FilterForm {
 
     private String order;
 
+
+    /** Getters and setters */
 
 
     public Integer getCategory() {

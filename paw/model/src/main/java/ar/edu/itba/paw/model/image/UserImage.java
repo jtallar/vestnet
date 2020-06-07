@@ -23,6 +23,9 @@ public class UserImage extends Image {
         super(image);
     }
 
+
+    /** Getters and setters */
+
     public User getUser() {
         return user;
     }

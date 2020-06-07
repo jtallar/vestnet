@@ -71,6 +71,9 @@ public class Project {
         this.hits = 0;
     }
 
+
+    /** Getters and setters */
+
     public Project(long id) {
         this.id = id;
     }
@@ -171,6 +174,7 @@ public class Project {
         this.favoriteBy = favoriteBy;
     }
 
+
     @Override
     public String toString() {
         return "Project{" +
@@ -181,8 +185,6 @@ public class Project {
                 ", publishDate=" + publishDate +
                 ", updateDate=" + updateDate +
                 ", hits=" + hits +
-//                ", owner=" + owner +
-//                ", categories=" + categories +
                 '}';
     }
 

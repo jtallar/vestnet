@@ -14,12 +14,14 @@ public interface LocationDao {
      */
     List<Country> findAllCountries();
 
+
     /**
      * Gets all the states for a given country.
      * @param countryId The unique id of the country.
      * @return The list of the country's respective states.
      */
     List<State> findStates(long countryId);
+
 
     /**
      * Gets all the cities for a given state.

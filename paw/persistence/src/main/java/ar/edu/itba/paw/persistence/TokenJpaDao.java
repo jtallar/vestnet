@@ -17,12 +17,14 @@ public class TokenJpaDao implements TokenDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public Token create(User user) {
         final Token finalToken = new Token(user);
         entityManager.persist(finalToken);
         return finalToken;
     }
+
 
     @Override
     public Optional<Token> findByToken(String token) {
@@ -31,9 +33,10 @@ public class TokenJpaDao implements TokenDao {
         return query.getResultList().stream().findFirst();
     }
 
+
     @Override
     public int deleteExpired() {
-        final TypedQuery<Token> query = entityManager.createQuery("from Token where expiryDate < :now", Token.class);
+        final TypedQuery<Token> query = entityManager.createQuery("delete from Token where expiryDate < :now", Token.class);
         query.setParameter("now", new Date());
         return query.executeUpdate();
     }

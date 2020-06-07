@@ -33,6 +33,9 @@ public class Token {
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 
+
+    /** Getters and setters */
+
     public Long getId() {
         return id;
     }
@@ -69,6 +72,15 @@ public class Token {
         return expiryDate.compareTo(new Date()) >= 0;
     }
 
+
+    /** Auxiliary functions */
+
+
+    /**
+     * Calculates expiry date given a time.
+     * @param expiryTimeInMinutes The time given to calculate.
+     * @return Date of expiry.
+     */
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Timestamp(cal.getTime().getTime()));

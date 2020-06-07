@@ -8,11 +8,13 @@ public interface SessionUserFacade {
      */
     boolean isAnonymous();
 
+
     /**
      * Checks if the logged user is an Investor.
      * @return True if the logged user is Investor, false otherwise.
      */
     boolean isInvestor();
+
 
     /**
      * Checks if the logged user is an Entrepreneur.
@@ -20,11 +22,13 @@ public interface SessionUserFacade {
      */
     boolean isEntrepreneur();
 
+
     /**
      * Gets the logged user ID.
      * @return The unique logged user's ID.
      */
     long getId();
+
 
     /**
      * Gets the logged user mail address.

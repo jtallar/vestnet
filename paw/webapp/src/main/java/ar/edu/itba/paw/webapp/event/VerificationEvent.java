@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.webapp.event;
 
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.TokenEventType;
 import org.springframework.context.ApplicationEvent;
 
-import java.util.Locale;
-
+/** Event for user verification */
 public class VerificationEvent extends ApplicationEvent {
     private String baseUrl;
     private User user;
@@ -16,6 +14,9 @@ public class VerificationEvent extends ApplicationEvent {
         this.user = user;
         this.baseUrl = baseUrl;
     }
+
+
+    /** Getters */
 
     public String getBaseUrl() {
         return baseUrl;

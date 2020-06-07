@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.Page;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.function.ToDoubleBiFunction;
 
 public interface UserService {
 
@@ -17,7 +20,7 @@ public interface UserService {
     User create (String role, String password, String firstName, String lastName, String realId,
                  Integer birthYear, Integer birthMonth, Integer birthDay,
                  Integer countryId, Integer stateId, Integer cityId,
-                 String email, String phone, String linkedin, long imageId) throws UserAlreadyExistsException;
+                 String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException;
 
 
     /**
@@ -72,11 +75,66 @@ public interface UserService {
 
 
     /**
+     * Finds the projects owned by the user.
+     * @param id Unique user id.
+     * @return List of all the project for the given user.
+     */
+    List<Project> getOwnedProjects(long id);
+
+
+    /**
+     * Gets all the user accepted offers.
+     * @param receiverId User in matter unique id.
+     * @param page Page requested.
+     * @param pageSize Page size.
+     * @return Messages page with the required data.
+     */
+    Page<Message> getAcceptedMessages(long receiverId, Integer page, Integer pageSize);
+
+
+    /**
+     * Gets all the user made offers.
+     * @param senderId User in matter unique id.
+     * @param page Page requested.
+     * @param pageSize Page size.
+     * @return Messages page with the required data.
+     */
+    Page<Message> getOfferMessages(long senderId, Integer page, Integer pageSize);
+
+
+    /**
+     * Gets all the unread messages for an user and a project.
+     * @param userId Unique user id.
+     * @param projectId Unique project id.
+     * @return A list of all the messages that match criteria.
+     */
+    List<Message> getProjectUnreadMessages(long userId, long projectId);
+
+
+    /**
+     * Gets the last sent message.
+     * @param userId Unique user id.
+     * @param projectId Unique project id.
+     * @return An optional for the last sent message.
+     */
+    Optional<Message> getLastProjectOfferMessage(long userId, long projectId);
+
+
+    /**
+     * Finds user only profile image.
+     * @param id The user unique id to find its image.
+     * @return The user image, default if none found.
+     */
+    byte[] getProfileImage(long id);
+
+
+    /**
      * Creates a token for a user.
      * @param userId The unique user id.
      * @return The created token
      */
     Token createToken(long userId);
+
 
     /**
      * Finds the token for the given string.
@@ -84,5 +142,4 @@ public interface UserService {
      * @return Found token, if there is.
      */
     Optional<Token> findToken(String token);
-
 }

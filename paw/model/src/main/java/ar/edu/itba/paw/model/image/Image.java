@@ -19,6 +19,9 @@ public abstract class Image {
         /** For hibernate only */
     }
 
+
+    /** Getters and setters */
+
     public Image(byte[] image) {
         this.image = image;
     }

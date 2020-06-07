@@ -56,6 +56,9 @@ public class Message {
         this.project = project;
     }
 
+
+    /** Getters and setters */
+
     public long getId() {
         return id;
     }
@@ -135,6 +138,7 @@ public class Message {
     public void setProject_id(int project_id) {
         this.project_id = project_id;
     }
+
 
     @Override
     public String toString() {

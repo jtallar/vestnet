@@ -29,12 +29,14 @@ public interface EmailService {
      */
     void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, String baseUrl);
 
+
     /**
      * @param user User that requests new password
      * @param token Token used for URL
      * @param baseUrl Base URL used to request new password
      */
     void sendPasswordRecovery(User user, String token, String baseUrl);
+
 
     /**
      * Send a verification email

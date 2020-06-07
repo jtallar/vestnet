@@ -2,14 +2,17 @@ package ar.edu.itba.paw.webapp.forms;
 
 public class MailFields {
 
-    private long receiverId; // Inyected
-
     private String body;
 
     private int offers;
 
     private String exchange;
 
+    /** Injected */
+    private long receiverId;
+
+
+    /** Getters and setters */
 
     public int getOffers() {
         return offers;

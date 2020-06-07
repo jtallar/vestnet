@@ -2,11 +2,8 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ImageDao;
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.image.Image;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.model.location.State;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,12 +18,14 @@ public class ImageJpaDao implements ImageDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public ProjectImage create(Project project, byte[] image, boolean main) {
         final ProjectImage projectImage = new ProjectImage(project, image, main);
         entityManager.persist(projectImage);
         return projectImage;
     }
+
 
     @Override
     public UserImage create(byte[] image) {
@@ -35,10 +34,12 @@ public class ImageJpaDao implements ImageDao {
         return userImage;
     }
 
+
     @Override
     public Optional<UserImage> findUserImage(long id) {
         return Optional.ofNullable(entityManager.find(UserImage.class, id));
     }
+
 
     @Override
     public Optional<ProjectImage> findProjectMain(Project project) {
@@ -46,6 +47,7 @@ public class ImageJpaDao implements ImageDao {
         query.setParameter("project", project);
         return query.getResultList().stream().findFirst();
     }
+
 
     @Override
     public List<ProjectImage> findProjectAll(Project project) {

@@ -19,6 +19,7 @@ public class UserJpaDao implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public User create(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,
                        Location location, String email, String phone, String linkedin, UserImage image) throws UserAlreadyExistsException {
@@ -29,12 +30,14 @@ public class UserJpaDao implements UserDao {
         return user;
     }
 
+
     @Override
     public Optional<User> findByUsername(String username) {
         final TypedQuery<User> query = entityManager.createQuery("from User where email = :username", User.class);
         query.setParameter("username", username);
         return query.getResultList().stream().findFirst();
     }
+
 
     @Override
     public Optional<User> findById(Long id) {

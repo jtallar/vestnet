@@ -28,6 +28,9 @@ public class City {
         this.name = name;
     }
 
+
+    /** Getters and setters */
+
     public int getId() {
         return id;
     }
@@ -43,6 +46,7 @@ public class City {
     public void setName(String name) {
         this.name = name;
     }
+
 
     @Override
     public String toString() {

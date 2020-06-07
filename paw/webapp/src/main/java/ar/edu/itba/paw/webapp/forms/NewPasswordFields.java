@@ -14,8 +14,14 @@ public class NewPasswordFields {
 
     private String repeatPassword;
 
-    private String email; // Inyected
-    private String token; // Inyected
+    /** Injected */
+    private String email;
+
+    /** Injected */
+    private String token;
+
+
+    /** Getters and setters */
 
     public String getRepeatPassword() {
         return repeatPassword;

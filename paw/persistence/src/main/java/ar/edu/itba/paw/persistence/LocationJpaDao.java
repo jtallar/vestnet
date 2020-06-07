@@ -17,6 +17,7 @@ public class LocationJpaDao implements LocationDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public List<Country> findAllCountries() {
         final TypedQuery<Country> query = entityManager.createQuery("from Country order by name", Country.class);
@@ -25,12 +26,14 @@ public class LocationJpaDao implements LocationDao {
         return countries;
     }
 
+
     @Override
     public List<State> findStates(long countryId) {
         final TypedQuery<State> query = entityManager.createQuery("from State where country_id = :countryId order by name", State.class);
         query.setParameter("countryId", countryId);
         return query.getResultList();
     }
+
 
     @Override
     public List<City> findCities(long stateId) {

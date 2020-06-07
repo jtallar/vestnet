@@ -43,6 +43,9 @@ public class Country {
         this.locale = locale;
     }
 
+
+    /** Getters and setters */
+
     public int getId() {
         return id;
     }
@@ -90,6 +93,7 @@ public class Country {
     public void setLocale(String locale) {
         this.locale = locale;
     }
+
 
     @Override
     public String toString() {

@@ -1,14 +1,13 @@
 package ar.edu.itba.paw.webapp.forms.validators;
 
-import ar.edu.itba.paw.webapp.forms.validators.ImageFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class ImageValidator implements ConstraintValidator<ImageFile, MultipartFile> {
-    private static final String ERROR_FILE_TYPE = "{ar.edu.itba.paw.webapp.forms.validator.ImageValidator.image.type}";
-    private static final String ERROR_FILE_SIZE = "{ar.edu.itba.paw.webapp.forms.validator.ImageValidator.image.size}";
+    private static final String ERROR_FILE_TYPE = "{ar.edu.itba.paw.webapp.forms.validators.ImageValidator.image.type}";
+    private static final String ERROR_FILE_SIZE = "{ar.edu.itba.paw.webapp.forms.validators.ImageValidator.image.size}";
     private long maxSize;
 
     @Override

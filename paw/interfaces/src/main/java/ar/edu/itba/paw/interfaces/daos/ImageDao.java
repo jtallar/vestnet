@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces.daos;
 
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
 

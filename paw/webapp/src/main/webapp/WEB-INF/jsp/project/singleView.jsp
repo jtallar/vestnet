@@ -97,10 +97,20 @@
                             <h5 class="card-title"><b><spring:message code="contactMail"/></b></h5>
                             <p><c:out value="${project.owner.email}"/></p>
 
-                            <c:if test="${session_user_id != project.owner.id}">
-                                <h5><a href="<c:url value='/users/${project.owner.id}?back=yes'/>"
-                                       class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
-                            </c:if>
+                            <sec:authorize access="isAnonymous()">
+                            <%-- TODO ask if wants to login/signup --%>
+                                <h5><a href="" class="btn btn-dark btn-sm">
+                                    <spring:message code="singleView.button.createToViewProfile"/>
+                                </a></h5>
+                            </sec:authorize>
+
+                            <sec:authorize access="isAuthenticated()">
+                                <c:if test="${session_user_id != project.owner.id}">
+                                    <h5><a href="<c:url value='/users/${project.owner.id}?back=yes'/>"
+                                           class="btn btn-dark btn-sm"><spring:message code="view_profile"/></a></h5>
+                                </c:if>
+                            </sec:authorize>
+
 
                             <div class="dropdown-divider"></div>
 

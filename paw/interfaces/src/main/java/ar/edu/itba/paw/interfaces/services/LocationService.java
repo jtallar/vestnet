@@ -7,11 +7,13 @@ import ar.edu.itba.paw.model.location.State;
 import java.util.List;
 
 public interface LocationService {
+
     /**
      * Gets the list of all countries.
      * @return The list of all the countries.
      */
     List<Country> findAllCountries();
+
 
     /**
      * Gets all the states for a given country.
@@ -19,6 +21,7 @@ public interface LocationService {
      * @return The list of the country's respective states.
      */
     List<State> findStates(long countryId);
+
 
     /**
      * Gets all the cities for a given state.

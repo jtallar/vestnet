@@ -28,12 +28,14 @@ public class MessageJpaDao implements MessageDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
     public Message create(Message.MessageContent content, User sender, User receiver, Project project) {
         final Message message = new Message(content, sender, receiver, project);
         entityManager.persist(message);
         return message;
     }
+
 
     @Override
     public Page<Message> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page) {
@@ -52,6 +54,7 @@ public class MessageJpaDao implements MessageDao {
         return new Page<>(messages, page.getPage(), page.getPageSize(), count);
     }
 
+
     @Override
     public List<Message> findAll(List<FilterCriteria> filters, OrderField order) {
         /** Finds all avoiding paging and thus 2 unnecessary queries */
@@ -60,9 +63,7 @@ public class MessageJpaDao implements MessageDao {
 
 
 
-    /**
-     * Auxiliary functions.
-     */
+    /** Auxiliary functions */
 
 
     /**
@@ -157,6 +158,7 @@ public class MessageJpaDao implements MessageDao {
             default: /** Do nothing for the rest of them */ break;
         }
     }
+
 
     /**
      * Applies the given filters to the query.
