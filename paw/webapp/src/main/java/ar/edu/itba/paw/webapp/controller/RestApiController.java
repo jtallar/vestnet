@@ -7,10 +7,14 @@ import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.State;
+import ar.edu.itba.paw.webapp.event.OfferAnswerEvent;
+import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
+import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -44,6 +48,9 @@ public class RestApiController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     /**
      * Gets the stored image for a project.
@@ -150,14 +157,12 @@ public class RestApiController {
                                                  @RequestParam(name = "s_id") Long senderId,
                                                  @RequestParam(name = "r_id") Long receiverId,
                                                  @RequestParam(name = "val") Boolean value,
-                                                 HttpServletRequest request) throws MessagingException {
+                                                 HttpServletRequest request) {
 
-        messageService.updateMessageStatus(senderId, receiverId, projectId, value);
-
-//        String baseUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
-        User senderUser = userService.findById(senderId).orElseThrow(MessagingException::new);
-//        emailService.sendEmailAnswer(loggedUser, true, senderUser.getEmail(),
-//                projectId, baseUrl, senderUser.getLocation().getCountry().getLocale());
+        User sender = userService.findById(senderId).orElseThrow(UserNotFoundException::new);
+        User receiver = userService.findById(receiverId).orElseThrow(UserNotFoundException::new);
+        Project project = projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        eventPublisher.publishEvent(new OfferAnswerEvent(sender, receiver, project, value, getBaseUrl(request)));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -207,5 +212,17 @@ public class RestApiController {
     @ResponseBody
     public List<City> cityList(@PathVariable("state_id") long stateId) {
         return locationService.findCities(stateId);
+    }
+
+
+    /** Auxiliary functions */
+
+    /**
+     * Creates the base url needed.
+     * @param request The given request to get the base url from.
+     * @return Base url string formatted.
+     */
+    private String getBaseUrl(HttpServletRequest request) {
+        return request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
     }
 }

@@ -1,15 +1,14 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.TokenEventType;
 import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.webapp.component.SendTokenEvent;
+import ar.edu.itba.paw.webapp.event.PasswordRecoveryEvent;
+import ar.edu.itba.paw.webapp.event.VerificationEvent;
 import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
 import ar.edu.itba.paw.webapp.forms.NewUserFields;
@@ -101,8 +100,6 @@ public class SignUpController {
                     userFields.getCountry(), userFields.getState(),userFields.getCity(),
                     userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userImage.getId());
 
-            eventPublisher.publishEvent(new SendTokenEvent(newUser, getBaseUrl(request), TokenEventType.USER_VERIFICATION));
-
         } catch (UserAlreadyExistsException e) {
             // TODO when user already exists
             LOGGER.error("User already exists with email {} in VestNet", userFields.getEmail());
@@ -110,11 +107,9 @@ public class SignUpController {
         } catch (IOException e) {
             // TODO when image conversion fails
             return signUp(userFields, false);
-        } catch (RuntimeException e) {
-            // TODO when mail fails
-            return new ModelAndView("redirect:/login?me=1");
         }
 
+        eventPublisher.publishEvent(new VerificationEvent(newUser, getBaseUrl(request)));
         return new ModelAndView("redirect:/login?me=1");
     }
 
@@ -138,12 +133,7 @@ public class SignUpController {
         Optional<User> maybeUser = userService.findByUsername(email);
         if (!maybeUser.isPresent()) return requestPassword(true, false, false);
 
-        try {
-            eventPublisher.publishEvent(new SendTokenEvent(maybeUser.get(), getBaseUrl(request), TokenEventType.FORGOT_PASSWORD));
-        } catch (RuntimeException e) {
-            // TODO when mail fails
-        }
-
+        eventPublisher.publishEvent(new PasswordRecoveryEvent(maybeUser.get(), getBaseUrl(request)));
         return requestPassword(false, true, false);
     }
 
@@ -184,11 +174,7 @@ public class SignUpController {
         if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login?me=3");
 
         if (!optionalToken.get().isValid()) {
-            try{
-                eventPublisher.publishEvent(new SendTokenEvent(optionalToken.get().getUser(), getBaseUrl(request), TokenEventType.USER_VERIFICATION));
-            } catch (RuntimeException e) {
-                // TODO when mail fails
-            }
+            eventPublisher.publishEvent(new VerificationEvent(optionalToken.get().getUser(), getBaseUrl(request)));
             return new ModelAndView("redirect:/login?me=2");
         }
 

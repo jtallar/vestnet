@@ -2,6 +2,8 @@ package ar.edu.itba.paw.service;
 
 //import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -32,10 +34,9 @@ public class IEmailService implements EmailService {
     private MessageSource messageSource;
 
     @Override
-    public void sendNewEmail(User sender, String body, int offers, String exchange, String to, String project,
-                             long projectId, String baseUrl, String locale) {
+    public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, String baseUrl) {
 
-        Locale localeInst = Locale.forLanguageTag(locale);
+        Locale localeInst = Locale.forLanguageTag(/*receiver..getLocale()*/"en");
 
         String subject = messageSource.getMessage("email.subject.request", null, localeInst);
 
@@ -44,39 +45,39 @@ public class IEmailService implements EmailService {
                         String.format("%s %s", sender.getFirstName(), sender.getLastName()), project) +
                 '\n' +
                 messageSource.getMessage("email.body.messageHeader", null, localeInst) + "\n\n" +
-                body + "\n\n" +
-                MessageFormat.format(messageSource.getMessage("email.body.offer", null, localeInst), offers) + '\n' +
-                MessageFormat.format(messageSource.getMessage("email.body.inExchange", null, localeInst), exchange) + "\n\n" +
+                content.getMessage() + "\n\n" +
+                MessageFormat.format(messageSource.getMessage("email.body.offer", null, localeInst), content.getOffer()) + '\n' +
+                MessageFormat.format(messageSource.getMessage("email.body.inExchange", null, localeInst), content.getInterest()) + "\n\n" +
                 MessageFormat.format(messageSource.getMessage("email.body.userProfile", null, localeInst),
                         String.format("%s/users/%d", baseUrl, sender.getId())) +
                 "\n" +
                 MessageFormat.format(messageSource.getMessage("email.body.contactInvestor", null, localeInst),
-                        String.format("%s/messages#dashboard-project-%d", baseUrl, projectId));
+                        String.format("%s/messages#dashboard-project-%d", baseUrl, project.getId()));
 
-        sendEmail(sender.getEmail(), to, subject, fullBodySB);
+        sendEmail(sender.getEmail(), receiver.getEmail(), subject, fullBodySB);
 
     }
 
     @Override
-    public void sendEmailAnswer(User sender, boolean answer, String to, long projectId, String baseUrl, String locale) {
+    public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, String baseUrl) {
 
-        Locale localeInst = Locale.forLanguageTag(locale);
+        Locale localeInst = Locale.forLanguageTag(/*receiver..getLocale()*/"en");
 
         String subject = messageSource.getMessage("email.subject.response", null, localeInst);
 
         String fullBodySB = messageSource.getMessage("email.body.vestnetReports", null, localeInst) + '\n' +
                 ((answer) ? MessageFormat.format(messageSource.getMessage("email.body.acceptProposal", null, localeInst),
                         String.format("%s %s", sender.getFirstName(), sender.getLastName()),
-                        String.format("%s/projects/%d", baseUrl, projectId)) :
+                        String.format("%s/projects/%d", baseUrl, project.getId())) :
                         MessageFormat.format(messageSource.getMessage("email.body.rejectProposal", null, localeInst),
                                 String.format("%s %s", sender.getFirstName(), sender.getLastName()),
-                                String.format("%s/projects/%d", baseUrl, projectId))) +
+                                String.format("%s/projects/%d", baseUrl, project.getId()))) +
                 "\n\n" +
                 MessageFormat.format(messageSource.getMessage("email.body.userProfile", null, localeInst),
                         String.format("%s/users/%d", baseUrl, sender.getId())) +
                 "\n\n" +
                 messageSource.getMessage("email.body.contactEntrepreneur", null, localeInst);
-        sendEmail(sender.getEmail(), to, subject, fullBodySB);
+        sendEmail(sender.getEmail(), receiver.getEmail(), subject, fullBodySB);
     }
 
     @Override

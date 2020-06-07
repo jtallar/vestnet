@@ -182,7 +182,7 @@
     }
 
     function answer(project, sender, value) {
-        let url = '${link_update}' + '?p_id=' + project + '&s_id=' + sender + '&r_id=' + '${session_user_id}' + '&val=' + value;
+        let url = '${link_update}' + '?p_id=' + project + '&s_id=' + '${session_user_id}' + '&r_id=' + sender + '&val=' + value;
         put(url);
     }
 
