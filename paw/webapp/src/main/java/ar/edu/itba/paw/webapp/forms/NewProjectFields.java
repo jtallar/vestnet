@@ -1,17 +1,13 @@
 package ar.edu.itba.paw.webapp.forms;
 
-import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.webapp.config.WebConfig;
-import cz.jirutka.validator.spring.SpELAssert;
-import org.hibernate.validator.constraints.Length;
+import ar.edu.itba.paw.webapp.forms.validators.ImageFile;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.util.AutoPopulatingList;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -25,7 +21,6 @@ public class NewProjectFields {
     @Size(min = 50, max = 250)
     private String summary;
 
-    // TODO: Delete when stages are ready
     @Min(1000)
     @Max(9999999)
     private int cost;
@@ -35,6 +30,9 @@ public class NewProjectFields {
 
     @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE)
     private MultipartFile image;
+
+
+    /** Getters and setters */
 
     public String getTitle() {
         return title;

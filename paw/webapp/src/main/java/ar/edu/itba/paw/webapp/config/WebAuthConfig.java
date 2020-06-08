@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.config;
 
 
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
-import ar.edu.itba.paw.webapp.cookie.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -55,27 +54,24 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/welcome")
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                .antMatchers("/login", "/signUp", "/projects", "/search*", "/welcome", "/").permitAll()
+                .antMatchers("/login", "/signUp", "/projects", "/welcome", "/",
+                        "/requestPassword", "/resetPassword", "/verify", "/projects/**", "/addHit/**").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/projects/**").hasRole("INVESTOR")
-                .antMatchers("/newProject", "/myProjects", "/messages/**").hasRole("ENTREPRENEUR")
+                .antMatchers("/requests").hasRole("INVESTOR")
+                .antMatchers("/newProject", "/deals", "/dashboard", "/**").hasRole("ENTREPRENEUR")
                 .antMatchers("/**").authenticated()
                 .and().formLogin()
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", false)
-                .successHandler(new RoleCookieSuccessHandler())
                 .and().rememberMe()
                 .rememberMeParameter("remember_me")
                 .key(asString(resource))
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
-                .authenticationSuccessHandler(new RoleCookieSuccessHandler())
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .deleteCookies(CookieUtil.ROLE_COOKIE_NAME)
                 .and().csrf().disable();
     }
 
@@ -92,7 +88,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    /* Auxiliary functions */
+    /** Auxiliary functions */
 
     /**
      * Converts key resource to a string.

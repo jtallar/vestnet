@@ -1,33 +1,94 @@
 package ar.edu.itba.paw.model;
 
-import java.time.LocalDate;
+import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.Location;
 
-/**
- * Model of the registered user on the web app.
- */
+import javax.persistence.*;
+import java.util.*;
+
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
+    @SequenceGenerator(sequenceName = "users_id_seq", name = "users_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private long id;
+
+    @Column(name = "role_id")
+    private Integer role;
+
+    @Column(name = "password", length = 76, nullable = false)
     private String password;
 
-    private final long id;
-    private final int role;
-    private final String firstName;
-    private final String lastName;
-    private final String realId; // Specific to country
-    private final LocalDate birthDate;
+    @Column(name = "first_name", length = 25, nullable = false)
+    private String firstName;
 
-    private final Location location;
+    @Column(name = "last_name", length = 25, nullable = false)
+    private String lastName;
 
-    private final String email;
-    private final String phone;
-    private final String linkedin;
+    @Column(name = "real_id", length = 15, nullable = false)
+    private String realId; // Specific to country
 
-    private final LocalDate joinDate;
-    private int trustIndex;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "aux_date")
+    private Date birthDate;
 
-    public User(long id, int role, String firstName, String lastName, String realId, LocalDate birthDate, Location location, String email, String phone, String linkedin, LocalDate joinDate, int trustIndex) {
-        this.id = id;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "phone", length = 25)
+    private String phone;
+
+    @Column(name = "linkedin", length = 100)
+    private String linkedin;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "join_date", insertable = false)
+    private Date joinDate;
+
+    @Column(name = "verified", nullable = false)
+    private boolean verified;
+
+    @Column(name = "locale", nullable = false)
+    private String locale;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @JoinColumn(name = "image_id")
+    private UserImage image;
+
+    @Column(name = "image_id", insertable = false, updatable = false)
+    private Long image_id;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Project> projectList;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "receiver")
+    private List<Message> receivedMessages;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "sender")
+    private List<Message> sentMessages;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
+    private List<Project> favorites;
+
+    /** Package */ User() {
+        /** For Hibernate only */
+    }
+
+    public User(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,
+                Location location, String email, String phone, String linkedin, UserImage image) {
         this.role = role;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.realId = realId;
@@ -36,74 +97,184 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.linkedin = linkedin;
-        this.joinDate = joinDate;
-        this.trustIndex = trustIndex;
+        this.verified = false;
+        this.image = image;
+        this.locale = "en";
+    }
+
+
+    /** Getters and setters */
+
+    public User(long id) {
+        this.id = id;
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getRealId() {
         return realId;
     }
 
-    public LocalDate getBirthDate() {
+    public void setRealId(String realId) {
+        this.realId = realId;
+    }
+
+    public Date getBirthDate() {
         return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
     public Location getLocation() {
         return location;
     }
 
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {
         return phone;
     }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getLinkedin() {
         return linkedin;
     }
 
-    public LocalDate getJoinDate() {
+    public void setLinkedin(String linkedin) {
+        this.linkedin = linkedin;
+    }
+
+    public Date getJoinDate() {
         return joinDate;
     }
 
-    public int getTrustIndex() {
-        return trustIndex;
+    public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
     }
 
-    public void setTrustIndex(int trustIndex) {
-        this.trustIndex = trustIndex;
+    public boolean isVerified() {
+        return verified;
     }
 
-    public int getRole() {
-        return role;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
-    public String getPassword() {
-        return this.password;
+    public UserImage getImage() {
+        return image;
     }
 
-    public void setPassword(String password){
-        this.password = password;
+    public void setImage(UserImage image) {
+        this.image = image;
+    }
+
+    public Long getImage_id() {
+        return image_id;
+    }
+
+    public void setImage_id(Long image_id) {
+        this.image_id = image_id;
+    }
+
+    public List<Project> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<Project> projectList) {
+        this.projectList = projectList;
+    }
+
+    public List<Message> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    public void setReceivedMessages(List<Message> receivedMessages) {
+        this.receivedMessages = receivedMessages;
+    }
+
+    public List<Message> getSentMessages() {
+        return sentMessages;
+    }
+
+    public void setSentMessages(List<Message> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
+
+    public List<Project> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Project> favorites) {
+        this.favorites = favorites;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", role=" + role +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", realId='" + realId + '\'' +
@@ -113,39 +284,20 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", linkedin='" + linkedin + '\'' +
                 ", joinDate=" + joinDate +
-                ", trustIndex=" + trustIndex +
+                ", verified=" + verified +
                 '}';
     }
 
-    /**
-     * User possible roles.
-     */
-    public enum UserRole {
-        ENTREPRENEUR("Entrepreneur", 1), INVESTOR("Investor", 2),
-        NOTFOUND("Not found", 0);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
 
-        private String role;
-        private int id;
-
-        UserRole(String role, int id) {
-            this.role = role;
-            this.id = id;
-        }
-
-        public String getRole() {
-            return role;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static UserRole valueOf(int id) {
-            for (UserRole role : UserRole.values()) {
-                if (role.getId() == id)
-                    return role;
-            }
-            return NOTFOUND;
-        }
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 }

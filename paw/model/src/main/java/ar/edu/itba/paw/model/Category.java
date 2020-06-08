@@ -1,38 +1,87 @@
 package ar.edu.itba.paw.model;
 
+import javax.persistence.*;
+import java.util.List;
+
 /**
  * Models a project category.
  */
+@Entity
+@Table(name = "categories")
 public class Category {
 
-    private final long id;
-    private final String name;
-    private final long parentId; // If root category, parentId = 0.
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_id_seq")
+    @SequenceGenerator(sequenceName = "categories_id_seq", name = "categories_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private long id;
 
-    public Category(long id, String name, long parentId) {
+    @Column(name = "category", length = 25, nullable = false)
+    private  String name;
+
+    @Column(name = "parent_id")
+    private Long parent;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
+    private List<Project> projectList;
+
+    /** Protected */ Category() {
+        /** For hibernate only */
+    }
+
+    public Category(long id, String name, long parent) {
         this.id = id;
         this.name = name;
-        this.parentId = parentId;
+        this.parent = parent;
+    }
+
+
+    /** Getters and setters */
+
+    public Category(long id) {
+        this.id = id;
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public long getParent() {
-        return parentId;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public Long getParent() {
+        return parent;
+    }
+
+    public void setParent(Long parent) {
+        this.parent = parent;
+    }
+
+    public List<Project> getProjectList() {
+        return projectList;
+    }
+
+    public void setProjectList(List<Project> projectList) {
+        this.projectList = projectList;
+    }
+
+
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "Category{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", parentId=" + parentId +
+                ", parent=" + parent +
                 '}';
     }
 }

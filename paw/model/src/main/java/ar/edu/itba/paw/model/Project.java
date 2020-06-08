@@ -1,104 +1,137 @@
 package ar.edu.itba.paw.model;
 
-import java.time.LocalDate;
+import ar.edu.itba.paw.model.image.ProjectImage;
+
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Models a project with all its properties.
  */
+@Entity
+@Table(name = "projects")
 public class Project {
-    private final long id;
-    private final String name;
 
-    private final String summary;
-    private final LocalDate publishDate;
-    private final LocalDate updateDate;
-    private final long cost;
-    private final long hits;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_id_seq")
+    @SequenceGenerator(sequenceName = "projects_id_seq", name = "projects_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private long id;
 
-    // Si quiero poder inicializarlo despues, poner tamb final ownerId y sacarle el final a owner
-    private final long ownerUserId;
+    @Column(name = "project_name", nullable = false)
+    private String name;
+
+    @Column(name = "summary", length = 250, nullable = false)
+    private String summary;
+
+    @Column(name = "cost", nullable = false)
+    private long cost;
+
+    @Temporal(value = TemporalType.DATE)
+    @Column(name = "publish_date", insertable = false)
+    private Date publishDate;
+
+    @Temporal(value = TemporalType.DATE)
+    @Column(name = "update_date", insertable = false)
+    private Date updateDate;
+
+    @Column(name = "hits", nullable = false)
+    private long hits;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User owner;
-    private final ProjectBackOffice backOffice;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private List<ProjectImage> images;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "project_categories",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
-    private final List<Long> stageIds;
-    private List<Stage> stages;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private List<Message> messageList;
 
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
-                   User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
-        this.id = id;
-        this.name = name;
-        this.summary = summary;
-        this.publishDate = publishDate;
-        this.updateDate = updateDate;
-        this.cost = cost;
-        this.hits = hits;
-        this.owner = owner;
-        this.ownerUserId = owner.getId();
-        this.backOffice = backOffice;
-        this.categories = categories;
-        this.stageIds = stageIds;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
+    private List<User> favoriteBy;
+
+    /** Protected */ Project() {
+        /** For hibernate only */
     }
 
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
-                   User owner, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds, List<Stage> stages) {
-        this.id = id;
+    public Project(String name, String summary, long cost, User owner, List<Category> categories) {
         this.name = name;
         this.summary = summary;
-        this.publishDate = publishDate;
-        this.updateDate = updateDate;
         this.cost = cost;
-        this.hits = hits;
         this.owner = owner;
-        this.ownerUserId = owner.getId();
-        this.backOffice = backOffice;
         this.categories = categories;
-        this.stageIds = stageIds;
-        this.stages = stages;
+        this.hits = 0;
     }
 
-    public Project(long id, String name, String summary, LocalDate publishDate, LocalDate updateDate, long cost, long hits,
-                   long ownerUserId, ProjectBackOffice backOffice, List<Category> categories, List<Long> stageIds) {
+
+    /** Getters and setters */
+
+    public Project(long id) {
         this.id = id;
-        this.name = name;
-        this.summary = summary;
-        this.publishDate = publishDate;
-        this.updateDate = updateDate;
-        this.cost = cost;
-        this.hits = hits;
-        this.ownerUserId = ownerUserId;
-        this.backOffice = backOffice;
-        this.categories = categories;
-        this.stageIds = stageIds;
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSummary() {
         return summary;
     }
 
-    public LocalDate getPublishDate() {
-        return publishDate;
-    }
-
-    public LocalDate getUpdateDate() {
-        return updateDate;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public long getCost() {
         return cost;
     }
 
+    public void setCost(long cost) {
+        this.cost = cost;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
     public long getHits() {
         return hits;
+    }
+
+    public void setHits(long hits) {
+        this.hits = hits;
     }
 
     public User getOwner() {
@@ -109,12 +142,12 @@ public class Project {
         this.owner = owner;
     }
 
-    public long getOwnerUserId() {
-        return ownerUserId;
+    public List<ProjectImage> getImages() {
+        return images;
     }
 
-    public ProjectBackOffice getBackOffice() {
-        return backOffice;
+    public void setImages(List<ProjectImage> images) {
+        this.images = images;
     }
 
     public List<Category> getCategories() {
@@ -125,25 +158,22 @@ public class Project {
         this.categories = categories;
     }
 
-    public List<Long> getStageIds() {
-        return stageIds;
+    public List<Message> getMessageList() {
+        return messageList;
     }
 
-    public List<Stage> getStages() {
-        return stages;
+    public void setMessageList(List<Message> messageList) {
+        this.messageList = messageList;
     }
 
-    public void setStages(List<Stage> stages) {
-        this.stages = stages;
+    public List<User> getFavoriteBy() {
+        return favoriteBy;
     }
 
-    public boolean hasCategory(String cat){
-        boolean[] hasIt = {false};
-        this.getCategories().forEach(category -> {
-            if(category.getName().equals(cat)) hasIt[0] = true;
-        });
-        return hasIt[0];
+    public void setFavoriteBy(List<User> favoriteBy) {
+        this.favoriteBy = favoriteBy;
     }
+
 
     @Override
     public String toString() {
@@ -151,53 +181,23 @@ public class Project {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", summary='" + summary + '\'' +
+                ", cost=" + cost +
                 ", publishDate=" + publishDate +
                 ", updateDate=" + updateDate +
-                ", cost=" + cost +
                 ", hits=" + hits +
-                ", ownerUserId=" + ownerUserId +
-                ", owner=" + owner +
-                ", backOffice=" + backOffice +
-                ", categories=" + categories +
-                ", stageIds=" + stageIds +
-                ", stages=" + stages +
                 '}';
     }
 
-    /**
-     * Model for back office control.
-     * Saved for later implementation.
-     */
-    public static class ProjectBackOffice {
-        private final boolean approved;
-        private final int profitIndex;
-        private final int riskIndex;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Project)) return false;
+        Project project = (Project) o;
+        return id == project.id;
+    }
 
-        public ProjectBackOffice(boolean approved, int profitIndex, int riskIndex) {
-            this.approved = approved;
-            this.profitIndex = profitIndex;
-            this.riskIndex = riskIndex;
-        }
-
-        public boolean isApproved() {
-            return approved;
-        }
-
-        public int getProfitIndex() {
-            return profitIndex;
-        }
-
-        public int getRiskIndex() {
-            return riskIndex;
-        }
-
-        @Override
-        public String toString() {
-            return "ProjectBackOffice{" +
-                    "approved=" + approved +
-                    ", profitIndex=" + profitIndex +
-                    ", riskIndex=" + riskIndex +
-                    '}';
-        }
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 }

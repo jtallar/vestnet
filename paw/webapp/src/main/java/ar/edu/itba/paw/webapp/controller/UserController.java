@@ -1,27 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.ProjectService;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.webapp.exception.ProjectNotFoundException;
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -32,19 +21,8 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private ProjectService projectService;
+    protected SessionUserFacade sessionUser;
 
-    /**
-     * Session user data.
-     * @return The logged in user.
-     */
-    @ModelAttribute("sessionUser")
-    public User loggedUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        LOGGER.debug("\n\n loggedUser() called\n\n");
-        if(auth != null) return userService.findByUsername(auth.getName()).orElse(null);
-        return null;
-    }
 
     /**
      * Single user profile.
@@ -53,61 +31,65 @@ public class UserController {
      * @return Model and view.
      */
     @RequestMapping(value = "/users/{u_id}")
-    public ModelAndView userProfile(@PathVariable("u_id") long id, @RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav= new ModelAndView("user/userProfile");
+    public ModelAndView userProfile(@PathVariable("u_id") long id,
+                                    @RequestParam(name = "back", defaultValue = "false") boolean back) {
+
+        final ModelAndView mav= new ModelAndView("user/profile");
         mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        User loggedUser = loggedUser();
-//      if(loggedUser.getRole() == User.UserRole.ENTREPRENEUR.getId()) mav.addObject("list", projectService.findByOwner(id));
-        /*List<Project> favs_projects = new ArrayList<>();
-        for (Long fid : projectService.findFavorites(id)){
-            favs_projects.add(projectService.findById(fid).orElseThrow(ProjectNotFoundException::new));
-        }
-        mav.addObject("favs", favs_projects);*/
-        if(loggedUser.getRole() == User.UserRole.INVESTOR.getId() && id == loggedUser.getId())
-            mav.addObject("favs", projectService.getUserFavorites(id));
         mav.addObject("back", back);
         return mav;
     }
+
 
     /**
      * My profile view. Redirected to users/.
      * @param back To hide/show back button.
      * @return Model and view.
      */
-    @RequestMapping(value = "/myProfile")
-    public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back){
-        final ModelAndView mav = new ModelAndView("redirect:/users/" + loggedUser().getId());
-        mav.addObject("back", back);
-        return mav;
+    @RequestMapping(value = "/profile")
+    public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back) {
+        return userProfile(sessionUser.getId(), back);
     }
+
 
     /**
-     * Messages view page. Investor.
+     * Messages view page. Entrepreneur.
      * @return Model and view
      */
-    @RequestMapping(value = "/messages")
-    public ModelAndView myMessages() {
-        ModelAndView mav = new ModelAndView("project/myProjects");
+    @RequestMapping(value = "/dashboard")
+    public ModelAndView myDashboard() {
 
-        List<Project> projects = projectService.findByOwner(loggedUser().getId());
-        mav.addObject("projects", projects);
-        List<Long> favCount = projectService.getFavoritesCount(projects.stream().map(Project::getId).collect(Collectors.toList()));
-        for (int i = 0; i < projects.size(); i++) {
-            mav.addObject(projects.get(i).getName().concat("favs"), favCount.get(i));
-        }
+        ModelAndView mav = new ModelAndView("user/dashboard");
+        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId()));
         return mav;
     }
 
-    @RequestMapping(value = "/messages/{id}")
-    public ModelAndView singleProjectView(@PathVariable("id") long id) {
-        final Project project = projectService.findById(id).orElseThrow(ProjectNotFoundException::new);
-        // Prevent entrepreneurs from accessing other projects that are not theirs
-        if (project.getOwnerUserId() != loggedUser().getId())
-            return new ModelAndView("redirect:/messages");
-        final ModelAndView mav = new ModelAndView("project/singleProjectView");
-        mav.addObject("project", project);
-        mav.addObject("isFav", false);
-        mav.addObject("contactStatus", 0);
+
+    /** This are constant for now */
+    private static final Integer PAGE_SIZE = 6;
+
+    /**
+     * Deals vew page. Entrepreneur.
+     * @return Model and view.
+     */
+    @RequestMapping(value = "/deals")
+    public ModelAndView myDeals(@RequestParam(name = "page", defaultValue = "1") Integer page) {
+
+        final ModelAndView mav = new ModelAndView("user/deals");
+        mav.addObject("messagePage", userService.getAcceptedMessages(sessionUser.getId(), page, PAGE_SIZE));
+        return mav;
+    }
+
+
+    /**
+     * Requests made view page. Investor.
+     * @return Model and view.
+     */
+    @RequestMapping("/requests")
+    public ModelAndView myRequests(@RequestParam(name = "page", defaultValue = "1") Integer page) {
+
+        final ModelAndView mav = new ModelAndView("user/requests");
+        mav.addObject("messagePage", userService.getOfferMessages(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
 }

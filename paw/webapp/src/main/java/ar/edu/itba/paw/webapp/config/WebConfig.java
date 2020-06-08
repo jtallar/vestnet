@@ -1,17 +1,22 @@
 package ar.edu.itba.paw.webapp.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.DatabasePopulator;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -20,20 +25,22 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Properties;
 
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence" })
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.component" })
 @Configuration
+@EnableCaching
+@EnableAsync
 @EnableTransactionManagement
 public class WebConfig {
 
     public static final long MAX_UPLOAD_SIZE = 2097152; // 2 MB
 
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
 
     /**
      * Sets where are the files for the views.
@@ -47,6 +54,41 @@ public class WebConfig {
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
+
+
+    /**
+     * Entity manager for Hibernate & JPA factory.
+     * @return The created entity manager.
+     */
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setPackagesToScan("ar.edu.itba.paw.model");
+        factoryBean.setDataSource(dataSource());
+
+        final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factoryBean.setJpaVendorAdapter(vendorAdapter);
+
+        final Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
+        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
+        properties.setProperty("format_sql", "true"); // TODO same as above
+        factoryBean.setJpaProperties(properties);
+        return factoryBean;
+    }
+
+
+    /**
+     * Creates the transaction manager for the repository.
+     * @param entityManagerFactory The corresponding entity manager.
+     * @return The created transaction manager.
+     */
+    @Bean
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
+    }
+
 
     /**
      * Sets up postgres driver data source.
@@ -62,18 +104,6 @@ public class WebConfig {
         return dataSource;
     }
 
-    /**
-     * Initializes de data source with its populator.
-     * @param ds The given data source
-     * @return The initialized data source.
-     */
-    @Bean
-    public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
-        final DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(ds);
-        dsi.setDatabasePopulator(databasePopulator());
-        return dsi;
-    }
 
     /**
      * Set message source for i18n.
@@ -88,6 +118,7 @@ public class WebConfig {
         return messageSource;
     }
 
+
     /**
      * Resolver for the image max size.
      * @return Multipart Resolver.
@@ -99,26 +130,38 @@ public class WebConfig {
         return commonsMultipartResolver;
     }
 
+
     /**
-     * Initializes the transaction manager.
-     * @param ds Data source.
-     * @return Platform transaction manager.
+     * Bean for mail server configuration
+     * @return
      */
     @Bean
-    public PlatformTransactionManager transactionManager(final DataSource ds) {
-        return new DataSourceTransactionManager(ds);
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(env.getProperty("mail.host"));
+        mailSender.setPort(Integer.parseInt(env.getProperty("mail.port")));
+
+        mailSender.setUsername(env.getProperty("mail.username"));
+        mailSender.setPassword(env.getProperty("mail.password"));
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true"); // TODO remove later. For development
+
+        return mailSender;
     }
 
 
-    /* Auxiliary Functions */
-
     /**
-     * Returns database populator based on sql schema.
-     * @return The database pupolator.
+     * Creates a cache manager. Used only to store all categories (they do not change)
+     * @return The created cache manager.
      */
-    private DatabasePopulator databasePopulator() {
-        final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-        dbp.addScript(schemaSql);
-        return dbp;
+    @Bean
+    CacheManager cacheManager() {
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        cacheManager.setCaches(Collections.singletonList(new ConcurrentMapCache("allCategories")));
+        return cacheManager;
     }
 }

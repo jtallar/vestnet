@@ -2,41 +2,41 @@ package ar.edu.itba.paw.model.components;
 
 /**
  * Enum for search fields
- * Must match the string on jsp.
+ * Must match the string on jsp and message from .
  */
 public enum SearchField {
-    DEFAULT("default", 0),
-    PROJECT_INFO("project_info", 1),
-    OWNER_NAME("owner_name", 2),
-    OWNER_MAIL("owner_mail", 3),
-    PROJECT_LOCATION("project_location", 4);
+    PROJECT_NAME("1", "search.name"),
+    PROJECT_SUMMARY("2", "search.summary"),
+    OWNER_NAME("3", "search.owner.name"),
+    OWNER_MAIL("4", "search.owner.mail"),
+    PROJECT_LOCATION("5", "search.location");
 
-    private String match;
-    private int id;
+    private String value;
+    private String message;
 
-    SearchField(String match, Integer id) {
-        this.match = match;
-        this.id = id;
+    SearchField(String value, String message) {
+        this.value = value;
+        this.message = message;
     }
 
-    public String getMethod() {
-        return match;
+    public String getValue() {
+        return value;
     }
 
-    public int getId() {
-        return id;
+    public String getMessage() {
+        return message;
     }
 
-    public static SearchField getEnum(String match) {
+    public static SearchField getEnum(String id) {
         for (SearchField field : values())
-            if (field.getMethod().equals(match)) return field;
-        return DEFAULT;
+            if (field.getValue().equals(id)) return field;
+        return PROJECT_NAME;
     }
 
     @Override
     public String toString() {
         return "SearchField{" +
-                "match='" + match + '\'' +
+                "value='" + value + '\'' +
                 '}';
     }
 }

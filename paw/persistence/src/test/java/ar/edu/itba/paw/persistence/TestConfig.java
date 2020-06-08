@@ -10,10 +10,19 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Properties;
 
 @ComponentScan({ "ar.edu.itba.paw.persistence" })
+@EnableTransactionManagement
 @Configuration
 public class TestConfig {
 
@@ -26,18 +35,54 @@ public class TestConfig {
      */
     @Bean
     public DataSource dataSource() {
-        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        ds.setDriverClass(JDBCDriver.class);
-        ds.setUrl("jdbc:hsqldb:mem:paw");
-        ds.setUsername("ha");
-        ds.setPassword("");
-        return ds;
+        final SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+        dataSource.setDriverClass(JDBCDriver.class);
+        dataSource.setUrl("jdbc:hsqldb:mem:paw");
+        dataSource.setUsername("user");
+        dataSource.setPassword("password");
+        return dataSource;
+    }
+
+    /**
+     * Entity Manager creator.
+     * @return The created entity manager.
+     */
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setPackagesToScan("ar.edu.itba.paw.model");
+        factoryBean.setDataSource(dataSource());
+
+        final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factoryBean.setJpaVendorAdapter(vendorAdapter);
+
+        final Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
+        properties.setProperty("format_sql", "true"); // TODO same as above
+
+        factoryBean.setJpaProperties(properties);
+
+        return factoryBean;
+    }
+
+    /**
+     * The creator of a transaction manager.
+     * @param entityManagerFactory The related entity manager.
+     * @return The created platform transaction manager.
+     */
+    @Bean
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 
     /**
      * Data source initializer for test.
      * @param ds The data source to initialize.
      * @return The data source initializer.
+     * Entity Manager creator.
+     * @return The created entity manager.
      */
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
@@ -46,10 +91,6 @@ public class TestConfig {
         dsi.setDatabasePopulator(databasePopulator());
         return dsi;
     }
-
-    /**
-     * Auxiliary functions.
-     */
 
     /**
      * Data base populator function.

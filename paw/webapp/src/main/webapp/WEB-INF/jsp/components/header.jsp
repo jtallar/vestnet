@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
@@ -24,79 +24,99 @@
     <link rel="apple-touch-icon" sizes="180x180" href="<c:url value="/images/apple-touch-icon.png"/>">
     <link rel="icon" type="image/png" sizes="32x32" href="<c:url value="/images/favicon-32x32.png"/>">
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/images/favicon-16x16.png"/>">
-<%--    <link rel="manifest" href="<c:url value="/images/site.webmanifest"/>">--%>
-
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>"/>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
-<c:choose>
-    <c:when test="${roleNumber eq 0}">
-        <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom3"/>
-        <c:set var="searchButtonClass" value="btn logopurple"/>
-        <c:url var="logo" value="/images/logo_bw.png"/>
-        <c:url var="lupa" value="/images/lupa_v.png"/>
-        <c:set var="options" value="${fn:split('/welcome,/login,/signUp', ',')}"/>
-    </c:when>
-    <c:when test="${roleNumber eq 1}">
-        <c:set var="navbarClass" value="navbar navbar-light navbar-expand-sm navbar-custom2"/>
-        <c:set var="searchButtonClass" value="btn btn-black"/>
-        <c:url var="logo" value="/images/logo_wp.png"/>
-        <c:url var="lupa" value="/images/lupa_bw.png"/>
-        <c:set var="options" value="${fn:split('/projects,/newProject,/messages,/deals,/myProfile,/logout', ',')}"/>
-    </c:when>
-    <c:when test="${roleNumber eq 2}">
-        <c:set var="navbarClass" value="navbar navbar-dark navbar-expand-sm navbar-custom"/>
-        <c:set var="searchButtonClass" value="btn logopurple"/>
-        <c:url var="logo" value="/images/logo_bp.png"/>
-        <c:url var="lupa" value="/images/lupa_v.png"/>
-        <c:set var="options" value="${fn:split('/projects,/requests,/myProfile,/logout', ',')}"/>
-    </c:when>
-</c:choose>
+<%-- Set used variables --%>
+<sec:authorize access="!isAuthenticated()">
+    <c:set var="options" value="${fn:split('/welcome,/login,/signUp', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,login-icon,signup-icon', ',')}"/>
+</sec:authorize>
+
+<sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
+    <c:set var="options" value="${fn:split('/projects,/newProject,/dashboard,/deals,/profile', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,new-icon,projects-icon,deals-icon,user-icon', ',')}"/>
+</sec:authorize>
+
+<sec:authorize access="hasRole('ROLE_INVESTOR')">
+    <c:set var="options" value="${fn:split('/projects,/requests,/profile', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,offer-icon,user-icon', ',')}"/>
+</sec:authorize>
+
+<%-- Set used URLs --%>
+<c:url var="link_home" value='/'/>
+<c:url var="icon_logo" value="/images/logo_bp.png"/>
+<c:url var="icon_logout" value="/images/logout-icon.png"/>
 
 <body>
-    <nav class="${navbarClass}">
-        <a class="navbar-brand" href="<c:url value='/'/>">
-            <img src="${logo}" width="60" class="logo-img" alt="<spring:message code="logo"/>">
+    <nav class="navbar navbar-dark navbar-expand-sm navbar-custom">
+        <%-- Logo and name --%>
+        <a class="navbar-brand" href="${link_home}">
+            <img src="${icon_logo}" width="60" class="logo-img" alt="<spring:message code="logo"/>">
         </a>
-        <a class="logo-text" href="<c:url value='/'/>">
+        <a class="logo-text" href="${link_home}">
             VestNet
         </a>
+
+        <%-- Align --%>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+        <%-- Icons --%>
+        <div class="collapse navbar-collapse topnav-right" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                <c:forEach var="option" items="${options}">
+
+                <%-- Most icons --%>
+                <c:forEach var="option" items="${options}" varStatus="index">
                     <li class="nav-item">
-                        <a class="nav-link" href="<c:url value="${option}"/>"><spring:message code="header.${option}"/></a>
+                        <a class="nav-link" href="<c:url value="${option}"/>">
+                            <c:url var="icon_generic" value="/images/${icons[index.index]}.png"/>
+                            <div class="row justify-content-center"><img class="nav-icon" src="${icon_generic}"></div>
+                            <div class="row text-icon"><spring:message code="header.${option}"/></div>
+                        </a>
                     </li>
                 </c:forEach>
+
+                <%-- Show logout --%>
+                <sec:authorize access="isAuthenticated()">
+                    <li class="nav-item">
+                        <a type="button" class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                            <div class="row justify-content-center"><img class="nav-icon" src="${icon_logout}"></div>
+                            <div class="row text-icon"><spring:message code="header./logout"/></div>
+                        </a>
+                    </li>
+                </sec:authorize>
             </ul>
         </div>
-        <c:url var="createUrl" value='/projects'/>
-        <form class="form-inline mx-auto my-2 my-lg-0" action="${createUrl}" method="get">
-            <spring:message var="search" code="search"></spring:message>
-            <c:choose>
-                <c:when test="${not empty keyword}">
-                    <input class="form-control mx-1 my-auto col-5" name="keyword" value="${keyword}" type="text" placeholder="${search}" aria-label="Search"/>
-                </c:when>
-                <c:when test="${empty keyword}">
-                    <input class="form-control mx-1 my-auto col-5" name="keyword" type="text" placeholder="${search}" aria-label="Search"/>
-                </c:when>
-            </c:choose>
-
-            <select id="searchSelector" name="searchField" class="custom-select mx-1 col-4">
-                <option value="default" <c:if test="${searchField == null or searchField eq 'default' }"> selected </c:if>><spring:message code="project_name"></spring:message> </option>
-                <option value="project_info" <c:if test="${searchField eq 'project_info'}"> selected </c:if>><spring:message code="project_info"></spring:message> </option>
-                <option value="owner_name" <c:if test="${searchField eq 'owner_name'}"> selected </c:if>><spring:message code="owner_name"></spring:message> </option>
-                <option value="owner_email" <c:if test="${searchField eq 'owner_email'}"> selected </c:if>><spring:message code="owner_email"></spring:message> </option>
-                <option value="project_location" <c:if test="${searchField eq 'project_location'}"> selected </c:if>><spring:message code="loc"></spring:message> </option>
-            </select>
-            <button type="submit" class="${searchButtonClass} col-1">
-                <img src="${lupa}" height="29" alt="<spring:message code='search'/>"/>
-            </button>
-        </form>
     </nav>
+
+    <!-- Show logout confirmation -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content mx-auto my-auto">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <spring:message code="conf_logout"/>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <spring:message code="conf_logout_body"/>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <spring:message code="cancel"/>
+                        </button>
+                        <a href="<c:url value="/logout"/> " type="button" class="btn btn-success">
+                            <spring:message code="confirm"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
