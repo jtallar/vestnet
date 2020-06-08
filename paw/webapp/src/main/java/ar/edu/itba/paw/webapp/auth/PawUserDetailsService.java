@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.components.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,12 +23,14 @@ public class PawUserDetailsService implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PawUserDetailsService.class);
 
     @Autowired
-    private UserService us;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        final User user =  us.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username + "not found"));
+        final User user =  this.userService.setLocale(username, LocaleContextHolder.getLocale().toString());
+        if (user == null) throw  new UsernameNotFoundException(username + "not found");
+
         Collection<GrantedAuthority> authorities = new HashSet<>();
 
         switch (UserRole.valueOf(user.getRole())) {

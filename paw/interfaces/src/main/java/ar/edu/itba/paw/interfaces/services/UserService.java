@@ -57,6 +57,15 @@ public interface UserService {
 
 
     /**
+     * Sets locale and returns found user.
+     * @param username User's username.
+     * @param locale Locale to set.
+     * @return The modified user.
+     */
+    User setLocale(String username, String locale);
+
+
+    /**
      * Deletes a favorite from a user.
      * @param userId The user unique id.
      * @param projectId The project to remove from favorites.

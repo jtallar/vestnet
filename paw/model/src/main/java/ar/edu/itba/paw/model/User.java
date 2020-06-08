@@ -35,7 +35,8 @@ public class User {
     @Column(name = "aux_date")
     private Date birthDate;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @JoinColumn(name = "location_id")
     private Location location;
 
     @Column(name = "email", nullable = false)
@@ -54,6 +55,9 @@ public class User {
     @Column(name = "verified", nullable = false)
     private boolean verified;
 
+    @Column(name = "locale", nullable = false)
+    private String locale;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
     @JoinColumn(name = "image_id")
     private UserImage image;
@@ -61,7 +65,7 @@ public class User {
     @Column(name = "image_id", insertable = false, updatable = false)
     private Long image_id;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projectList;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "receiver")
@@ -95,6 +99,7 @@ public class User {
         this.linkedin = linkedin;
         this.verified = false;
         this.image = image;
+        this.locale = "en";
     }
 
 
@@ -254,6 +259,14 @@ public class User {
 
     public void setFavorites(List<Project> favorites) {
         this.favorites = favorites;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     @Override

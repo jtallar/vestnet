@@ -12,20 +12,24 @@ import javax.persistence.*;
 public class Location {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_location_id_seq")
+    @SequenceGenerator(sequenceName = "user_location_id_seq", name = "user_location_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "country_id")
     private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "state_id")
     private State state;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false, mappedBy = "location")
     private User user;
 
     /** Protected */ Location() {

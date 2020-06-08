@@ -102,6 +102,19 @@ public class IUserService implements UserService {
 
     @Override
     @Transactional
+    public User setLocale(String username, String locale) {
+        Optional<User> userOptional = userDao.findByUsername(username);
+        if (!userOptional.isPresent()) return null;
+
+        User user = userOptional.get();
+        if (!locale.equals(user.getLocale()))
+            user.setLocale(locale);
+        return user;
+    }
+
+
+    @Override
+    @Transactional
     public User deleteFavorite(long userId, long projectId) {
         Optional<User> userOptional = userDao.findById(userId);
         if (!userOptional.isPresent()) return null;
