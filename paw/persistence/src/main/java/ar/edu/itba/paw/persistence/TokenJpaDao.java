@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.Optional;
 
@@ -28,9 +31,12 @@ public class TokenJpaDao implements TokenDao {
 
     @Override
     public Optional<Token> findByToken(String token) {
-        final TypedQuery<Token> query = entityManager.createQuery("from Token where token = :token", Token.class);
-        query.setParameter("token", token);
-        return query.getResultList().stream().findFirst();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Token> query = builder.createQuery(Token.class);
+        Root<Token> root = query.from(Token.class);
+
+        query.where(builder.like(root.get("token"), token));
+        return entityManager.createQuery(query).getResultList().stream().findFirst();
     }
 
 

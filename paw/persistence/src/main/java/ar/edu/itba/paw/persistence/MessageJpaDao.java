@@ -141,7 +141,6 @@ public class MessageJpaDao implements MessageDao {
     }
 
 
-
     /**
      * Applies to the query the given order.
      * @param <T> The type of criteria query.

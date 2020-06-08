@@ -17,16 +17,16 @@ public interface LocationDao {
 
     /**
      * Gets all the states for a given country.
-     * @param countryId The unique id of the country.
+     * @param parent The parent country.
      * @return The list of the country's respective states.
      */
-    List<State> findStates(long countryId);
+    List<State> findStates(Country parent);
 
 
     /**
      * Gets all the cities for a given state.
-     * @param stateId The unique id of the state.
+     * @param parent The parent state.
      * @return The list of the state's respective cities.
      */
-    List<City> findCities(long stateId);
+    List<City> findCities(State parent);
 }

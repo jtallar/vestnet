@@ -176,6 +176,4 @@ import java.util.function.Consumer;
                         builder.like(builder.lower(cityJoin.get("name")), "%" + value + "%")));
     }
 
-
-
 }

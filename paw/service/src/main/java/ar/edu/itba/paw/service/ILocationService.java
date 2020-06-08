@@ -26,13 +26,13 @@ public class ILocationService implements LocationService {
 
 
     @Override
-    public List<State> findStates(long countryId) {
-        return locationDao.findStates(countryId);
+    public List<State> findStates(int countryId) {
+        return locationDao.findStates(new Country(countryId));
     }
 
 
     @Override
-    public List<City> findCities(long stateId) {
-        return locationDao.findCities(stateId);
+    public List<City> findCities(int stateId) {
+        return locationDao.findCities(new State(stateId));
     }
 }

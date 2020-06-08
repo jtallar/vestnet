@@ -20,7 +20,7 @@ public interface LocationService {
      * @param countryId The unique id of the country.
      * @return The list of the country's respective states.
      */
-    List<State> findStates(long countryId);
+    List<State> findStates(int countryId);
 
 
     /**
@@ -28,5 +28,5 @@ public interface LocationService {
      * @param stateId The unique id of the state.
      * @return The list of the state's respective cities.
      */
-    List<City> findCities(long stateId);
+    List<City> findCities(int stateId);
 }
