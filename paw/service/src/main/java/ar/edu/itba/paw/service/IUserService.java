@@ -107,8 +107,7 @@ public class IUserService implements UserService {
         if (!userOptional.isPresent()) return null;
 
         User user = userOptional.get();
-        if (!locale.equals(user.getLocale()))
-            user.setLocale(locale);
+        if (!locale.equals(user.getLocale())) user.setLocale(locale);
         return user;
     }
 

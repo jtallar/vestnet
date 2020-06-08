@@ -37,7 +37,7 @@ public class IProjectService implements ProjectService {
 
         List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
         Project newProject = projectDao.create(name, summary, cost, new User(ownerId), categories);
-        imageDao.create(newProject, image, true);
+        if (image.length > 0) imageDao.create(newProject, image, true);
         return newProject;
     }
 
