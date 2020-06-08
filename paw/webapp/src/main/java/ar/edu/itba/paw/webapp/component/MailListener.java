@@ -52,7 +52,7 @@ public class MailListener {
     @Async
     @EventListener
     public void offerAnswer(OfferAnswerEvent event) {
-        messageService.updateMessageStatus(event.getSender().getId(), event.getReceiver().getId(), event.getProject().getId(), event.getAnswer());
+        messageService.updateMessageStatus(event.getReceiver().getId(), event.getSender().getId(), event.getProject().getId(), event.getAnswer());
         emailService.sendOfferAnswer(event.getSender(), event.getReceiver(), event.getProject(), event.getAnswer(), event.getBaseUrl());
     }
 }
