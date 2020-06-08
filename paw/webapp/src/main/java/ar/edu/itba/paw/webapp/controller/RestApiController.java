@@ -172,7 +172,7 @@ public class RestApiController {
      */
     @RequestMapping(value = "/location/state/{country_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<State> stateList(@PathVariable("country_id") long countryId) {
+    public List<State> stateList(@PathVariable("country_id") int countryId) {
         return locationService.findStates(countryId);
     }
 
@@ -184,7 +184,7 @@ public class RestApiController {
      */
     @RequestMapping(value = "/location/city/{state_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<City> cityList(@PathVariable("state_id") long stateId) {
+    public List<City> cityList(@PathVariable("state_id") int stateId) {
         return locationService.findCities(stateId);
     }
 
