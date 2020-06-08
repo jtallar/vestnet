@@ -195,10 +195,12 @@
                                     <strong><spring:message code="price"/></strong>
                                     <p><c:out value="${project.cost}"/></p>
                                 </div>
-                                <a href="<c:url value='/projects/${project.id}'/>"
-                                   class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
                             </div>
                         </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="<c:url value='/projects/${project.id}'/>"
+                           class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
                     </div>
                 </div>
             </c:forEach>

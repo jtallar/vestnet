@@ -101,7 +101,7 @@
 
                             <sec:authorize access="isAnonymous()">
                             <%-- TODO ask if wants to login/signup --%>
-                                <h5><a href="" class="btn btn-dark btn-sm">
+                                <h5><a href="" class="btn btn-dark btn-sm disabled">
                                     <spring:message code="singleView.button.createToViewProfile"/>
                                 </a></h5>
                             </sec:authorize>
@@ -126,7 +126,7 @@
                 <div class="d-flex justify-content-end">
                     <sec:authorize access="isAnonymous()">
                         <%-- TODO ask if wants to login/sign up --%>
-                        <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button">
+                        <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button" disabled>
                             <spring:message code="singleView.button.createToContactOwner"/>
                         </button>
                     </sec:authorize>

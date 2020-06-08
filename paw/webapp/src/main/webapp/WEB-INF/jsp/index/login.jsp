@@ -59,7 +59,7 @@
                     <div class="col-2 text-left">
                         <input type="submit"   class="btn btn-dark" value="<spring:message code = "submit"/>">
                     </div>
-                    <div class="col mailError">
+                    <div class="col mailError text-right">
                         <c:if test="${param.error != null}">
                             <c:choose>
                                 <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'Bad credentials'}"><p class="mailError"><spring:message code = "loginError"/></p></c:when>
@@ -73,7 +73,7 @@
                             <c:when test="${message eq 13}"><p class="mailError"><spring:message code="passwordExpiredToken"/></p></c:when>
                         </c:choose>
                     </div>
-                    <div class="col mailSent">
+                    <div class="col mailSent text-right">
                         <c:choose>
                             <c:when test="${message eq 1}"><p class="mailSent"><spring:message code = "verificationMessageSent"/></p></c:when>
                             <c:when test="${message eq 2}"><p class="mailSent"><spring:message code = "verificationMade"/></p></c:when>
