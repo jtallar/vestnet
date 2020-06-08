@@ -30,8 +30,7 @@ public class IEmailService implements EmailService {
 
     @Override
     public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, String baseUrl) {
-
-        Locale localeInst = Locale.forLanguageTag(/*receiver..getLocale()*/"en");
+        Locale localeInst = Locale.forLanguageTag(receiver.getLocale());
 
         String subject = messageSource.getMessage("email.subject.request", null, localeInst);
 
@@ -56,8 +55,7 @@ public class IEmailService implements EmailService {
 
     @Override
     public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, String baseUrl) {
-
-        Locale localeInst = Locale.forLanguageTag(/*receiver..getLocale()*/"en");
+        Locale localeInst = Locale.forLanguageTag(receiver.getLocale());
 
         String subject = messageSource.getMessage("email.subject.response", null, localeInst);
 
@@ -79,8 +77,7 @@ public class IEmailService implements EmailService {
 
     @Override
     public void sendPasswordRecovery(User user, String token, String baseUrl) {
-        // TODO eventually fix this
-        Locale localeInst = Locale.forLanguageTag(/*user.getLocation().getCountry().getLocale()*/"en");
+        Locale localeInst = Locale.forLanguageTag(user.getLocale());
 
         String subject = messageSource.getMessage("email.subject.passwordReset", null, localeInst);
 
@@ -96,8 +93,7 @@ public class IEmailService implements EmailService {
 
     @Override
     public void sendVerification(User user, String token, String baseUrl) {
-        // TODO eventually fix also this
-        Locale localeInst = Locale.forLanguageTag(/*user.getLocation().getCountry().getLocale()*/"en");
+        Locale localeInst = Locale.forLanguageTag(user.getLocale());
 
         String subject = messageSource.getMessage("email.subject.verification", null, localeInst);
 
