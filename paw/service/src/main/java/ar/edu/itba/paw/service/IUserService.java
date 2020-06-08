@@ -52,7 +52,8 @@ public class IUserService implements UserService {
                        Integer countryId, Integer stateId, Integer cityId,
                        String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException {
 
-        UserImage userImage = imageDao.create(image);
+        UserImage userImage = null;
+        if (image.length > 0) userImage = imageDao.create(image);
 
         Integer roleId = UserRole.getEnum(role).getId();
         Country country = new Country(countryId);
