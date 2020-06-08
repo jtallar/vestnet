@@ -72,8 +72,6 @@ public class WebConfig {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
-        properties.setProperty("format_sql", "true"); // TODO same as above
         factoryBean.setJpaProperties(properties);
         return factoryBean;
     }
@@ -148,7 +146,6 @@ public class WebConfig {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true"); // TODO remove later. For development
 
         return mailSender;
     }
