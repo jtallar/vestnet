@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.service;
 
-//import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;

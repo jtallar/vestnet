@@ -168,7 +168,7 @@ import java.util.function.Consumer;
         Join<User, Location> locationJoin = userJoin.join("location");
         Join<User, Country> countryJoin = locationJoin.join("country");
         Join<User, State> stateJoin = locationJoin.join("state");
-        Join<User, City> cityJoin = locationJoin.join("state");
+        Join<User, City> cityJoin = locationJoin.join("city");
 
         predicate = builder.and(predicate,
                 builder.or(builder.like(builder.lower(countryJoin.get("name")), "%" + value + "%"),

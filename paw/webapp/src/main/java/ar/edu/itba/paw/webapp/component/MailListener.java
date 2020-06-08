@@ -31,7 +31,6 @@ public class MailListener {
         User user = event.getUser();
         String token = userService.createToken(user.getId()).getToken();
         emailService.sendVerification(user, token, event.getBaseUrl());
-
     }
 
     @Async

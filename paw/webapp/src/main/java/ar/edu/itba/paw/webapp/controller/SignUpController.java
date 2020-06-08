@@ -177,7 +177,6 @@ public class SignUpController {
 
         Optional<Token> optionalToken = userService.findToken(token);
         if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login" + "?me=10");
-
         if (!optionalToken.get().isValid()) {
             eventPublisher.publishEvent(new VerificationEvent(optionalToken.get().getUser(), getBaseUrl(request)));
             return new ModelAndView("redirect:/login" + "?me=11");

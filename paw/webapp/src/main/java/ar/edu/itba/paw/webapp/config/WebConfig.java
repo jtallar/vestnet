@@ -148,7 +148,7 @@ public class WebConfig {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
+        props.put("mail.debug", "true"); // TODO remove later. For development
 
         return mailSender;
     }
