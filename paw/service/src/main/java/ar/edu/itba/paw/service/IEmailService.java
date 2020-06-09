@@ -35,7 +35,7 @@ public class IEmailService implements EmailService {
 
         String fullBodySB = messageSource.getMessage("email.body.vestnetReports", null, localeInst) + '\n' +
                 MessageFormat.format(messageSource.getMessage("email.body.reportContact", null, localeInst),
-                        String.format("%s %s", sender.getFirstName(), sender.getLastName()), project) +
+                        String.format("%s %s", sender.getFirstName(), sender.getLastName()), project.getName()) +
                 '\n' +
                 messageSource.getMessage("email.body.messageHeader", null, localeInst) + "\n\n" +
                 content.getMessage() + "\n\n" +
@@ -45,7 +45,7 @@ public class IEmailService implements EmailService {
                         String.format("%s/users/%d", baseUrl, sender.getId())) +
                 "\n" +
                 MessageFormat.format(messageSource.getMessage("email.body.contactInvestor", null, localeInst),
-                        String.format("%s/messages#dashboard-project-%d", baseUrl, project.getId()));
+                        String.format("%s/dashboard#dashboard-project-%d", baseUrl, project.getId()));
 
         sendEmail(sender.getEmail(), receiver.getEmail(), subject, fullBodySB);
 
@@ -60,10 +60,10 @@ public class IEmailService implements EmailService {
 
         String fullBodySB = messageSource.getMessage("email.body.vestnetReports", null, localeInst) + '\n' +
                 ((answer) ? MessageFormat.format(messageSource.getMessage("email.body.acceptProposal", null, localeInst),
-                        String.format("%s %s", sender.getFirstName(), sender.getLastName()),
+                        String.format("%s %s", sender.getFirstName(), sender.getLastName()), project.getName(),
                         String.format("%s/projects/%d", baseUrl, project.getId())) :
                         MessageFormat.format(messageSource.getMessage("email.body.rejectProposal", null, localeInst),
-                                String.format("%s %s", sender.getFirstName(), sender.getLastName()),
+                                String.format("%s %s", sender.getFirstName(), sender.getLastName()), project.getName(),
                                 String.format("%s/projects/%d", baseUrl, project.getId()))) +
                 "\n\n" +
                 MessageFormat.format(messageSource.getMessage("email.body.userProfile", null, localeInst),

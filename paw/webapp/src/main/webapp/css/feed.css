@@ -64,7 +64,10 @@
 }
 
 .card-title h5{
-    margin-left: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    white-space: nowrap;
 }
 
 .navbar-fixed-bottom, .navbar-fixed-top{
@@ -80,7 +83,7 @@
         height: auto; /* Full-height: remove this if you want "auto" height */
         width: 23%; /* Set the width of the sidebar */
         position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-        top: 195px; /* Stay at the top */
+        top: 191px; /* Stay at the top */
         background-color: #f6f6f6;
         border: solid 1px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
@@ -122,6 +125,33 @@
     font-family:Impact, sans-serif;
     font-variant: all-petite-caps;
     font-weight: bold;
+}
+
+.active-item{
+    border:solid 2px #000000;
+    background-color: #f1f1f1;
+}
+
+.pagination > li > a
+{
+    background-color: #dedede !important;
+    color: #000000 !important;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #000000 !important;
+    background-color: #eee !important;
+    border-color: #ddd !important;
+}
+
+.pagination > .disabled > a
+{
+    color: #000000 !important;
+    background-color: transparent !important;
 }
 
 .no-proj{
@@ -186,9 +216,9 @@ html {
     font-size:xx-large
 }
 
-.card-content{
-    max-width:65%
-}
+/*.card-content{*/
+/*    max-width:65%*/
+/*}*/
 
 .card-text{
     max-width:100%
@@ -208,11 +238,6 @@ html {
 
 .p-img{
     max-width:200px
-}
-
-.active-item{
-    border:solid 2px #750096;
-    background-color: #f1f1f1;
 }
 
 .active-page-deals {
@@ -236,4 +261,19 @@ html {
 
 .form-row{
     margin-top: 20px; margin-left:20px; margin-right:20px
+}
+
+.range-box{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.icon-img{
+    width: 40px;
+}
+
+.apply-btn{
+    margin-top:20px;
+    margin-right: 8px !important;
+    margin-left:auto !important;
 }

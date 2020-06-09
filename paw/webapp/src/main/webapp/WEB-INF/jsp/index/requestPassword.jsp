@@ -38,7 +38,7 @@
 <div class="main">
     <div class="col-md-8">
         <div class="login-form">
-            <div class="row text-left my-2">
+            <div class="row back-req">
                 <a href="${link_login}" class="btn btn-outline-dark pull-left"><spring:message code="back"/></a>
             </div>
             <form method="post" action="${link_request_pass}">

@@ -82,7 +82,7 @@
                 <%-- Show logout --%>
                 <sec:authorize access="isAuthenticated()">
                     <li class="nav-item">
-                        <a type="button" class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
                             <div class="row justify-content-center"><img class="nav-icon" src="${icon_logout}"></div>
                             <div class="row text-icon"><spring:message code="header./logout"/></div>
                         </a>
