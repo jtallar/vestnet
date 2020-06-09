@@ -64,7 +64,10 @@
 }
 
 .card-title h5{
-    margin-left: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    white-space: nowrap;
 }
 
 .navbar-fixed-bottom, .navbar-fixed-top{
@@ -80,7 +83,7 @@
         height: auto; /* Full-height: remove this if you want "auto" height */
         width: 23%; /* Set the width of the sidebar */
         position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-        top: 195px; /* Stay at the top */
+        top: 191px; /* Stay at the top */
         background-color: #f6f6f6;
         border: solid 1px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
@@ -186,9 +189,9 @@ html {
     font-size:xx-large
 }
 
-.card-content{
-    max-width:65%
-}
+/*.card-content{*/
+/*    max-width:65%*/
+/*}*/
 
 .card-text{
     max-width:100%
