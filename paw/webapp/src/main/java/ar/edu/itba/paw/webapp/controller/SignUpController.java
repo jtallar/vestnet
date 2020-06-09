@@ -137,6 +137,7 @@ public class SignUpController {
     public ModelAndView resetPassword(@ModelAttribute("passwordForm") final NewPasswordFields form,
                                       @RequestParam(name = "token") String token) {
 
+        if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
         Optional<Token> optionalToken = userService.findToken(token);
         if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login" + "?me=12");
         if (!optionalToken.get().isValid()) return new ModelAndView("redirect:/login" + "?me=13");
