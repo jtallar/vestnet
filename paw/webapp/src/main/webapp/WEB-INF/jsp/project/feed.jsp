@@ -30,7 +30,7 @@
 <c:url var="icon_fav_on" value="/images/bookmarkOnB.png"/>
 <c:url var="icon_order" value="/images/order.png"/>
 <c:url var="icon_filter" value="/images/filter.png"/>
-<c:url var="icon_search" value="/images/lupa_v.png"/>
+<c:url var="icon_search" value="/images/lupa_bv.png"/>
 <c:url var="link_projects" value='/projects'/>
 <c:url var="link_delete_fav" value="/deleteFavorite"/>
 <c:url var="link_add_fav" value="/addFavorite"/>
@@ -40,7 +40,7 @@
 <%-- Project pagniation --%>
 <div class="row">
     <div class="col-3"></div>
-    <div class="col-8">
+    <div class="col-9">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
                 <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" aria-label="<spring:message code="previous"/>">
@@ -59,7 +59,7 @@
             </li>
         </ul>
     </div>
-    <div class="col-1"></div>
+<%--    <div class="col-1"></div>--%>
 </div>
 
 <%-- Side Navigation Bar --%>
@@ -72,7 +72,7 @@
                 <%-- Search --%>
                 <div class="row field">
                     <div class="col-">
-                        <img src="${icon_search}" width="40" class="logo-img">
+                        <img src="${icon_search}" class="icon-img">
                     </div>
                     <div class="col-md">
                         <spring:message var="search" code="search"/>
@@ -81,18 +81,21 @@
                     </div>
                 </div>
                 <div class="row field">
-                    <form:select path="field" class="custom-select mr-sm-2">
-                        <c:forEach items="${fieldValues}" var="item">
-                            <form:option value="${item.value}"><spring:message code="feed.${item.message}"/></form:option>
-                        </c:forEach>
-                    </form:select>
+                    <div class="col- icon-img"></div>
+                    <div class="col-md">
+                        <form:select path="field" class="custom-select mr-sm-2">
+                            <c:forEach items="${fieldValues}" var="item">
+                                <form:option value="${item.value}"><spring:message code="feed.${item.message}"/></form:option>
+                            </c:forEach>
+                        </form:select>
+                    </div>
                 </div>
 
                 <div class="dropdown-divider"></div>
 
                 <div class="row field">
                     <div class="col-">
-                        <img src="${icon_filter}" width="40" class="logo-img">
+                        <img src="${icon_filter}" class="icon-img">
                     </div>
                     <div class="col-md">
                         <form:select class="custom-select mr-sm-2" path="category">
@@ -107,7 +110,7 @@
                 </div>
                 <div class="row field">
                     <div class="col-">
-                        <img src="${icon_order}" width="40" class="logo-img">
+                        <img src="${icon_order}" class="icon-img">
                     </div>
                     <div class="col-md">
                         <form:select path="order" class="custom-select mr-sm-2">
@@ -119,7 +122,7 @@
                 </div>
                 <div class="row field">
                     <label class="range"><spring:message code="range"/> </label>
-                    <div class="row">
+                    <div class="row range-box">
                         <div class="col-6">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -141,8 +144,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row field">
-                    <div class="col-md">
+                <div class="row">
+                    <div class="apply-btn">
                         <input type="submit" class="btn btn-dark pull-right" value="<spring:message code='apply'/>" onclick="adjustInputs()">
                     </div>
                 </div>
@@ -176,7 +179,7 @@
                                                 <c:set var="icon_fav" value="${icon_fav_off}"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <img width="40" id="favImg_${project.id}" src="${icon_fav}" class="logo-img" alt="${icon_fav}"/>
+                                        <img id="favImg_${project.id}" src="${icon_fav}" class="icon-img" alt="${icon_fav}"/>
                                     </button>
                                 </sec:authorize>
                             </div>
@@ -184,12 +187,12 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-5">
                                 <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img"
                                      alt="<spring:message code="projectImage"/>"
                                      aria-placeholder="<spring:message code="projectImage"/>"/>
                             </div>
-                            <div class="col-8 card-content">
+                            <div class="col-7 card-content">
                                 <p class="card-text"><c:out value="${project.summary}"/></p>
                                 <div class="card-secondary">
                                     <strong><spring:message code="price"/></strong>
