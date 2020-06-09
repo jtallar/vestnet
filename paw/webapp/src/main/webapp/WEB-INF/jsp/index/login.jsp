@@ -55,36 +55,38 @@
                         <spring:message code = "rememberMe"/>
                     </label>
                 </div>
-                <div class="row justify-content-center">
+                <div class="row ">
                     <div class="col-2 text-left">
                         <input type="submit"   class="btn btn-dark" value="<spring:message code = "submit"/>">
                     </div>
-                    <div class="col mailError text-right">
-                        <c:if test="${param.error != null}">
+                    <c:if test="${param.error != null}">
+                        <div class="col mailError text-right">
                             <c:choose>
                                 <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'Bad credentials'}"><p class="mailError"><spring:message code = "loginError"/></p></c:when>
                                 <c:when test="${sessionScope[\"SPRING_SECURITY_LAST_EXCEPTION\"].message eq 'User is disabled'}"><p class="mailError"><spring:message code = "loginVerificationError"/></p></c:when>
                             </c:choose>
-                        </c:if>
+                        </div>
+                    </c:if>
+                    <c:if test="${message > 9}">
+                        <div class="col mailError text-right">
                         <c:choose>
                             <c:when test="${message eq 10}"><p class="mailError"><spring:message code = "verificationInvalid"/></p></c:when>
                             <c:when test="${message eq 11}"><p class="mailError"><spring:message code = "verificationTokenExpired"/></p></c:when>
                             <c:when test="${message eq 12}"><p class="mailError"><spring:message code="passwordInvalidToken"/></p></c:when>
                             <c:when test="${message eq 13}"><p class="mailError"><spring:message code="passwordExpiredToken"/></p></c:when>
                         </c:choose>
-                    </div>
-                    <div class="col mailSent text-right">
-                        <c:choose>
-                            <c:when test="${message eq 1}"><p class="mailSent"><spring:message code = "verificationMessageSent"/></p></c:when>
-                            <c:when test="${message eq 2}"><p class="mailSent"><spring:message code = "verificationMade"/></p></c:when>
-                            <c:when test="${message eq 3}"><p class="mailSent"><spring:message code="passwordRecoverySent"/></p></c:when>
-                            <c:when test="${message eq 4}"><p class="mailSent"><spring:message code="passwordRecoveryMade"/></p></c:when>
-                        </c:choose>
-
-                    </div>
-
-
-                    </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${message < 5}">
+                        <div class="col mailSent text-right">
+                            <c:choose>
+                                <c:when test="${message eq 1}"><p class="mailSent"><spring:message code = "verificationMessageSent"/></p></c:when>
+                                <c:when test="${message eq 2}"><p class="mailSent"><spring:message code = "verificationMade"/></p></c:when>
+                                <c:when test="${message eq 3}"><p class="mailSent"><spring:message code="passwordRecoverySent"/></p></c:when>
+                                <c:when test="${message eq 4}"><p class="mailSent"><spring:message code="passwordRecoveryMade"/></p></c:when>
+                            </c:choose>
+                        </div>
+                    </c:if>
                 </div>
             </form>
 

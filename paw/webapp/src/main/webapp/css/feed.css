@@ -237,3 +237,18 @@ html {
 .form-row{
     margin-top: 20px; margin-left:20px; margin-right:20px
 }
+
+.range-box{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.icon-img{
+    width: 40px;
+}
+
+.apply-btn{
+    margin-top:20px;
+    margin-right: 8px !important;
+    margin-left:auto !important;
+}

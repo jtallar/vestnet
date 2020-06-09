@@ -59,7 +59,8 @@
 }
 
 body{
-    margin-top:100px !important
+    margin-top:100px !important;
+    overflow-x: hidden;
 }
 
 .btn-black{
