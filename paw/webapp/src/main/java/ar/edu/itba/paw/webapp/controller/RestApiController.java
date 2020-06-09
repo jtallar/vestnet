@@ -197,6 +197,6 @@ public class RestApiController {
      * @return Base url string formatted.
      */
     private String getBaseUrl(HttpServletRequest request) {
-        return request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getContextPath())) + request.getContextPath();
+        return request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath()));
     }
 }
