@@ -162,15 +162,15 @@
                 <div class="card mb-3">
                     <div class="card-header text-white">
                         <div class="row">
-                            <div class="col-">
+                            <div class="col-10">
                                 <div class="card-title">
                                     <h5><c:out value="${project.name}"/></h5>
                                 </div>
                             </div>
-                            <div class="col-md">
+                            <div class="col-2">
                                 <sec:authorize access="hasRole('ROLE_INVESTOR')">
                                     <button onclick="favTap(${project.id})"
-                                            class="btn-transp pull-right">
+                                            class="btn-transp">
                                         <c:choose>
                                             <c:when test="${user.favorites.contains(project)}">
                                                 <c:set var="icon_fav" value="${icon_fav_on}"/>
