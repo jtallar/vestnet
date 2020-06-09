@@ -127,6 +127,33 @@
     font-weight: bold;
 }
 
+.active-item{
+    border:solid 2px #000000;
+    background-color: #f1f1f1;
+}
+
+.pagination > li > a
+{
+    background-color: #dedede !important;
+    color: #000000 !important;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #000000 !important;
+    background-color: #eee !important;
+    border-color: #ddd !important;
+}
+
+.pagination > .disabled > a
+{
+    color: #000000 !important;
+    background-color: transparent !important;
+}
+
 .no-proj{
     margin-left:25% !important;
     margin-top:30px !important
@@ -211,11 +238,6 @@ html {
 
 .p-img{
     max-width:200px
-}
-
-.active-item{
-    border:solid 2px #750096;
-    background-color: #f1f1f1;
 }
 
 .active-page-deals {
