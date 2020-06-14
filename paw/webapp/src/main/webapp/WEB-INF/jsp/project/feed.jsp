@@ -161,7 +161,7 @@
             <c:forEach items="${projects}" var="project" varStatus="projectIndex">
                 <div class="card mb-3">
                     <div class="card-header text-white">
-                        <div class="row">
+                        <div class="row icon-fav">
                             <div class="col-10">
                                 <div class="card-title">
                                     <h5><c:out value="${project.name}"/></h5>

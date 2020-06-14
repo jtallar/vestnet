@@ -83,7 +83,7 @@
         height: auto; /* Full-height: remove this if you want "auto" height */
         width: 15%; /* Set the width of the sidebar */
         position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-        top: 190px; /* Stay at the top */
+        top: 178px; /* Stay at the top */
         background-color: #f6f6f6;
         border: solid 1px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
@@ -99,8 +99,7 @@
 }
 
 .pagination{
-    margin-top:5px !important;
-    margin-bottom:0px !important
+    margin:0px !important;
 }
 
 .page-link{
@@ -313,4 +312,12 @@ html {
 .price-footer{
     font-size:18px;
     margin-left:10px;
+}
+
+.icon-fav{
+    padding-right:10px !important;
+}
+
+.dash-text{
+    font-size: 20px !important
 }

@@ -35,13 +35,17 @@
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
-    <c:set var="options" value="${fn:split('/projects,/newProject,/dashboard,/deals,/profile', ',')}"/>
-    <c:set var="icons" value="${fn:split('home-icon,new-icon,projects-icon,deals-icon,user-icon', ',')}"/>
+<%--    <c:set var="options" value="${fn:split('/projects,/newProject,/dashboard,/deals,/profile', ',')}"/>--%>
+    <c:set var="dropdownpages" value="${fn:split('/dashboard,/deals,/profile', ',')}"/>
+    <c:set var="dropdownaction" value="${fn:split('/newProject,/logout', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,user-icon', ',')}"/>
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_INVESTOR')">
-    <c:set var="options" value="${fn:split('/projects,/requests,/profile', ',')}"/>
-    <c:set var="icons" value="${fn:split('home-icon,offer-icon,user-icon', ',')}"/>
+<%--    <c:set var="options" value="${fn:split('/projects,/requests,/profile', ',')}"/>--%>
+    <c:set var="dropdownpages" value="${fn:split('/requests,/profile', ',')}"/>
+    <c:set var="dropdownaction" value="${fn:split('/logout', ',')}"/>
+    <c:set var="icons" value="${fn:split('home-icon,user-icon', ',')}"/>
 </sec:authorize>
 
 <%-- Set used URLs --%>
@@ -68,26 +72,54 @@
         <div class="collapse navbar-collapse topnav-right" id="navbarNavDropdown">
             <ul class="navbar-nav">
 
-                <%-- Most icons --%>
-                <c:forEach var="option" items="${options}" varStatus="index">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<c:url value="${option}"/>">
-                            <c:url var="icon_generic" value="/images/${icons[index.index]}.png"/>
-                            <div class="row justify-content-center"><img class="nav-icon" src="${icon_generic}"></div>
-                            <div class="row text-icon"><spring:message code="header.${option}"/></div>
-                        </a>
-                    </li>
-                </c:forEach>
-
-                <%-- Show logout --%>
                 <sec:authorize access="isAuthenticated()">
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-                            <div class="row justify-content-center"><img class="nav-icon" src="${icon_logout}"></div>
-                            <div class="row text-icon"><spring:message code="header./logout"/></div>
+                        <a class="btn btn-header btn-transp nav-link" href="<c:url value="/projects"/>">
+                            <c:url var="homeicon" value="/images/home-icon.png"/>
+                            <div class="row justify-content-center"><img class="nav-icon" src="${homeicon}"></div>
+<%--                            <div class="row text-icon"><spring:message code="header./projects"/></div>--%>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a class="btn btn-header btn-transp dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <c:url var="usericon" value="/images/user-icon.png"/>
+                                <div class="row justify-content-center"><img class="nav-icon" src="${usericon}"></div>
+<%--                                <div class="row text-icon"><spring:message code="header./profile"/></div>--%>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <c:forEach var="page" items="${dropdownpages}" varStatus="index">
+                                    <a class="dropdown-item" href="${page}"><spring:message code="header.${page}"/></a>
+                                </c:forEach>
+                                <div class="dropdown-divider"></div>
+                                <c:forEach var="action" items="${dropdownaction}" varStatus="index">
+                                    <a class="dropdown-item" href="${action}"><spring:message code="header.${action}"/></a>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </li>
                 </sec:authorize>
+
+                <sec:authorize access="!isAuthenticated()">
+                    <c:forEach var="option" items="${options}" varStatus="index">
+                        <li class="nav-item">
+                            <a class="nav-link" href="<c:url value="${option}"/>">
+                                <c:url var="icon_generic" value="/images/${icons[index.index]}.png"/>
+                                <div class="row justify-content-center"><img class="nav-icon" src="${icon_generic}"></div>
+                                <div class="row text-icon"><spring:message code="header.${option}"/></div>
+                            </a>
+                        </li>
+                    </c:forEach>
+                </sec:authorize>
+
+<%--                <sec:authorize access="isAuthenticated()">--%>
+<%--                    <li class="nav-item">--%>
+<%--                        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">--%>
+<%--                            <div class="row justify-content-center"><img class="nav-icon" src="${icon_logout}"></div>--%>
+<%--                            <div class="row text-icon"><spring:message code="header./logout"/></div>--%>
+<%--                        </a>--%>
+<%--                    </li>--%>
+<%--                </sec:authorize>--%>
             </ul>
         </div>
     </nav>
