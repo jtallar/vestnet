@@ -39,8 +39,8 @@
 
 <%-- Project pagniation --%>
 <div class="row">
-    <div class="col-3"></div>
-    <div class="col-9">
+    <div class="col-1"></div>
+    <div class="col-11">
         <ul class="pagination justify-content-center">
             <li id="li-previous" class="page-item">
                 <a id="li-a-previous" class="page-link" onclick="modHref(${page-1})" aria-label="<spring:message code="previous"/>">
@@ -122,8 +122,8 @@
                 </div>
                 <div class="row field">
                     <label class="range"><spring:message code="range"/> </label>
-                    <div class="row range-box">
-                        <div class="col-6">
+                    <div>
+                        <div class="row range-box col-md">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><spring:message code="min"/></span>
@@ -132,7 +132,7 @@
                             </div>
                             <form:errors path="minCost" element="p" cssClass="formError"/>
                         </div>
-                        <div class="col-6" >
+                        <div class="row range-box col-md" >
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><spring:message code="max"/></span>
@@ -194,16 +194,23 @@
                             </div>
                             <div class="col-7 card-content">
                                 <p class="card-text"><c:out value="${project.summary}"/></p>
-                                <div class="card-secondary">
-                                    <strong><spring:message code="price"/></strong>
-                                    <p><c:out value="${project.cost}"/></p>
-                                </div>
+<%--                                <div class="card-secondary">--%>
+<%--                                    <strong><spring:message code="price"/></strong>--%>
+<%--                                    <p><c:out value="${project.cost}"/></p>--%>
+<%--                                </div>--%>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="<c:url value='/projects/${project.id}'/>"
-                           class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
+                        <div class="row">
+                            <div class="price-footer col-5">
+                                <strong><spring:message code="price"/></strong>
+                                <p><c:out value="${project.cost}"/></p>
+                            </div>
+                            <div class="col-6">
+                                <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </c:forEach>

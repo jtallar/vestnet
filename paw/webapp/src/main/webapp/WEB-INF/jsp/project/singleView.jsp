@@ -64,7 +64,7 @@
             <%-- Favorite icon logic --%>
             <div class="col-6">
                 <div class="d-flex justify-content-center">
-                    <div class="card mb-3">
+                    <div class="card description mb-3">
                         <sec:authorize access="hasRole('ROLE_INVESTOR')">
                             <div class="card-header header-white">
                                 <button onclick="favTap()" class="btn-transp pull-right">

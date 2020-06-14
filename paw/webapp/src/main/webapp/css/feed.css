@@ -2,21 +2,18 @@
 /* The container must be positioned relative: */
 .custom-select {
     position: relative;
-    font-family: Arial;
-
+    font-family: Arial, serif;
 }
 
 .card-deck{
-    margin: 20px;
-    margin-left:25%;
+    margin: 20px 10% 20px 17%;
 }
 
 .card {
     border-color: #750096;
     margin: 5px !important;
-    min-width: 350px;
-    max-width: 650px;
-    /*max-width: 100px;*/
+    min-width: 300px;
+    max-width: 40%;
 }
 
 .msg{
@@ -32,7 +29,8 @@
 }
 
 .card-header{
-    background-color: #222222
+    background-color: #222222;
+    max-height:55px
 }
 
 .checked {
@@ -51,6 +49,7 @@
 .proj-img{
     width: 110%;
     height: auto;
+    max-width:150px
 }
 
 .card-img{
@@ -68,6 +67,7 @@
     overflow: hidden;
     width: 100%;
     white-space: nowrap;
+    font-size:20px
 }
 
 .navbar-fixed-bottom, .navbar-fixed-top{
@@ -81,16 +81,16 @@
 @media screen and (min-width: 768px){
     .sidenav{
         height: auto; /* Full-height: remove this if you want "auto" height */
-        width: 23%; /* Set the width of the sidebar */
+        width: 15%; /* Set the width of the sidebar */
         position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-        top: 191px; /* Stay at the top */
+        top: 190px; /* Stay at the top */
         background-color: #f6f6f6;
         border: solid 1px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
         left:0;
         margin-left:10px;
         overflow-y:hidden;
-        min-height:480px
+        min-height:480px;
     }
 }
 
@@ -216,12 +216,16 @@ html {
     font-size:xx-large
 }
 
-/*.card-content{*/
-/*    max-width:65%*/
-/*}*/
+.card-body{
+    padding: 15px 15px 20px;
+}
 
 .card-text{
-    max-width:100%
+    font-size:15px !important;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
 }
 
 .msg-content{
@@ -264,16 +268,49 @@ html {
 }
 
 .range-box{
+    margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
 }
 
+.form-control{
+    font-size:15px;
+    color:gray !important;
+}
+
+.custom-select{
+    font-size:15px;
+    color: grey;
+}
+.input-group-text{
+    min-width:70px;
+}
+.input-group-prepend span{
+    font-size: 15px;
+}
 .icon-img{
-    width: 40px;
+    width: 38px;
 }
 
 .apply-btn{
     margin-top:20px;
     margin-right: 8px !important;
     margin-left:auto !important;
+}
+.apply-btn input{
+    font-size:15px;
+}
+
+.card-footer{
+    padding: 10px 0 0 10px;
+    max-height: 80px
+}
+
+.card-footer a{
+    font-size:15px !important;
+}
+
+.price-footer{
+    font-size:18px;
+    margin-left:10px;
 }
