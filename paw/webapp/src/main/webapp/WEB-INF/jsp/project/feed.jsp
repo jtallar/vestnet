@@ -141,6 +141,7 @@
                                             id="filter-form-max"/>
                             </div>
                             <form:errors path="maxCost" element="p" cssClass="formError"/>
+                            <form:errors cssClass="formError" element="p"/>
                         </div>
                     </div>
                 </div>
@@ -196,7 +197,8 @@
                                 <p class="card-text"><c:out value="${project.summary}"/></p>
 <%--                                <div class="card-secondary">--%>
 <%--                                    <strong><spring:message code="price"/></strong>--%>
-<%--                                    <p><c:out value="${project.cost}"/></p>--%>
+<%--                                    <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>--%>
+<%--                                    <p><c:out value="${costVar}"/></p>--%>
 <%--                                </div>--%>
                             </div>
                         </div>
@@ -205,7 +207,8 @@
                         <div class="row">
                             <div class="price-footer col-5">
                                 <strong><spring:message code="price"/></strong>
-                                <p><c:out value="${project.cost}"/></p>
+                                <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>
+                                <p><c:out value="${costVar}"/></p>
                             </div>
                             <div class="col-6">
                                 <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
@@ -222,7 +225,7 @@
 <c:if test="${empty projects}">
     <div class="card m-2 no-proj">
         <div class="card-header">
-            <h5 class="card-title text-white centered"><spring:message code="noProjFound" arguments=""/></h5>
+            <h5 class="card-title text-white centered"><spring:message code="noProjFound"/></h5>
         </div>
     </div>
 </c:if>

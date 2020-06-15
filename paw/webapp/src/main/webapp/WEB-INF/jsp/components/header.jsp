@@ -89,11 +89,11 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <c:forEach var="page" items="${dropdownpages}" varStatus="index">
-                                    <a class="dropdown-item" href="${page}"><spring:message code="header.${page}"/></a>
+                                    <a class="dropdown-item" href="<c:url value='${page}'/>"><spring:message code="header.${page}"/></a>
                                 </c:forEach>
                                 <div class="dropdown-divider"></div>
                                 <c:forEach var="action" items="${dropdownaction}" varStatus="index">
-                                    <a class="dropdown-item" href="${action}"><spring:message code="header.${action}"/></a>
+                                    <a class="dropdown-item" href="<c:url value='${action}'/>"><spring:message code="header.${action}"/></a>
                                     <c:if test="${action =='/newProject'}">
                                         <div class="dropdown-divider"></div>
                                     </c:if>
