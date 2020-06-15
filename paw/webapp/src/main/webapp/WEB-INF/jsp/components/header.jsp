@@ -94,6 +94,9 @@
                                 <div class="dropdown-divider"></div>
                                 <c:forEach var="action" items="${dropdownaction}" varStatus="index">
                                     <a class="dropdown-item" href="${action}"><spring:message code="header.${action}"/></a>
+                                    <c:if test="${action =='/newProject'}">
+                                        <div class="dropdown-divider"></div>
+                                    </c:if>
                                 </c:forEach>
                             </div>
                         </div>

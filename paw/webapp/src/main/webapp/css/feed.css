@@ -6,7 +6,7 @@
 }
 
 .card-deck{
-    margin: 20px 10% 20px 17%;
+    margin: 20px 15% 20px 25%;
 }
 
 .card {
@@ -81,14 +81,14 @@
 @media screen and (min-width: 768px){
     .sidenav{
         height: auto; /* Full-height: remove this if you want "auto" height */
-        width: 15%; /* Set the width of the sidebar */
+        width: 17%; /* Set the width of the sidebar */
         position: absolute; /* Fixed Sidebar (stay in place on scroll) */
         top: 178px; /* Stay at the top */
         background-color: #f6f6f6;
         border: solid 1px #000000;
         overflow-x: hidden; /* Disable horizontal scroll */
         left:0;
-        margin-left:10px;
+        margin-left:4%;
         overflow-y:hidden;
         min-height:480px;
     }
