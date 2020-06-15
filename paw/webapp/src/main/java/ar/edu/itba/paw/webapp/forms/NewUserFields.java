@@ -25,6 +25,7 @@ public class NewUserFields {
     @NotEmpty
     private String lastName;
 
+    @Size(max = 15)
     @NotEmpty
     private String realId; // CUIT/CUIL/DNI
 
@@ -42,13 +43,16 @@ public class NewUserFields {
 
     private String role;
 
+    @Size(max = 255)
     @NotEmpty
     @Pattern(regexp="^([^@]+@[^@]+\\.[a-zA-Z]{2,}$)?")
     private String email;
 
+    @Size(max = 25)
     @Pattern(regexp = "[0-9]*")
     private String phone;
 
+    @Size(max = 100)
     @Pattern(regexp = "^((http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$)?")
     private String linkedin;
 

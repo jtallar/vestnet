@@ -41,14 +41,14 @@
             </div>
             <c:if test="${contactStatus == 1}">
                 <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message
-                            code="successfulContact"/> <c:out value="${project.owner.firstName}"/></h5>
+                    <spring:message code="successfulContact" arguments="${project.owner.firstName}" var="firstNameVar"/>
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096">
+                        <c:out value="${firstNameVar}"/></h5>
                 </div>
             </c:if>
             <c:if test="${contactStatus == 2}">
                 <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message
-                            code="waitReply"/></h5>
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="waitReply"/></h5>
                 </div>
             </c:if>
         </div>
@@ -94,7 +94,8 @@
                             </c:forEach>
                             <br/>
                             <h5 class="card-title"><b><spring:message code="totalCost"/></b></h5>
-                            <p>U$D<c:out value="${project.cost}"/></p>
+                            <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>
+                            <p><c:out value="${costVar}"/></p>
 
                             <h5 class="card-title"><b><spring:message code="contactMail"/></b></h5>
                             <p><c:out value="${project.owner.email}"/></p>
@@ -115,9 +116,8 @@
 
 
                             <div class="dropdown-divider"></div>
-
-                            <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out
-                                    value="${project.updateDate}"/></small></p>
+                            <spring:message code="lastUpdated" arguments="${project.updateDate}" var="updateDateVar"/>
+                            <p class="card-text"><small class="text-muted"><c:out value="${updateDateVar}"/></small></p>
                         </div>
                     </div>
                 </div>
@@ -154,8 +154,8 @@
             <div class="collapse" id="contact">
                 <div class="card contact">
                     <div class="card-header">
-                        <label class="label-header"> <spring:message
-                                code="contact.header"/> ${project.owner.firstName} ${project.owner.lastName}</label>
+                        <spring:message code="contact.header" arguments="${project.owner.firstName},${project.owner.lastName}" var="contactHeaderVar"/>
+                        <label class="label-header"><c:out value="${contactHeaderVar}"/></label>
                         <button class="btn btn-dark pull-right" type="button" data-toggle="collapse"
                                 data-target="#contact" aria-expanded="false" aria-controls="contact">X
                         </button>
@@ -171,6 +171,7 @@
                                     <form:textarea path="body" type="text" class="form-control"
                                                    placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
                                 </div>
+                                <form:errors path="body" cssClass="formError"/>
                             </div>
 
                             <div class="container-contact">
@@ -207,6 +208,7 @@
                                                        aria-describedby="basic-addon2"/>
                                     </div>
                                 </div>
+                                <form:errors path="exchange" cssClass="formError"/>
                             </div>
 
                             <form:input path="receiverId" value="${project.owner.id}" type="hidden"/>
