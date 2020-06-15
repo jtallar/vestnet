@@ -82,7 +82,7 @@
                 <%-- Show logout --%>
                 <sec:authorize access="isAuthenticated()">
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+                        <a class="nav-link" data-toggle="modal" data-target="#expModal">
                             <div class="row justify-content-center"><img class="nav-icon" src="${icon_logout}"></div>
                             <div class="row text-icon"><spring:message code="header./logout"/></div>
                         </a>
@@ -93,7 +93,7 @@
     </nav>
 
     <!-- Show logout confirmation -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="expModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog " role="document">
             <div class="modal-content mx-auto my-auto">
                 <div class="modal-header">

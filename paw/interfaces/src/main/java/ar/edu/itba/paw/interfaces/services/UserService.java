@@ -151,4 +151,12 @@ public interface UserService {
      * @return Found token, if there is.
      */
     Optional<Token> findToken(String token);
+
+
+    /**
+     * Finds the token for the given string.
+     * @param projId accepted project ID
+     * @return Found project with new state
+     */
+    Optional<Project> acceptProject(Long projId);
 }
