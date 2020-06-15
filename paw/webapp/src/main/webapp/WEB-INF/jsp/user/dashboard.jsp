@@ -46,14 +46,14 @@
                                     <div class="col-5 msg-content"><p class="card-text"><c:out value="${project.hits}"/></p></div>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal2">
                                         <spring:message code='stopFunding'/>
                                     </button>
                                 </div>
                             </div>
                             <!-- Show stop funding confirmation -->
 
-                            <div class="modal fade" id="expModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="expModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog " role="document">
                                     <div class="modal-content mx-auto my-auto">
                                         <div class="modal-header">
