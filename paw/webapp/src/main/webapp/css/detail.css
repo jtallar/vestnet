@@ -72,3 +72,7 @@
 .formError {
     color: red;
 }
+
+.description{
+    min-width:500px !important;
+}
