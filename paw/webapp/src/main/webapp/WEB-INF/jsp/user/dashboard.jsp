@@ -6,6 +6,8 @@
 <html>
 <head>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
     <title><spring:message code="page.title.dashboard"/></title>
@@ -22,8 +24,17 @@
 
 <body>
 
+<div class="row">
+    <div class="col-8"></div>
+    <input type="checkbox" onclick="clickedSwitch" checked data-toggle="toggle" data-on="<spring:message code="show_acc_proj"></spring:message> " data-off="<spring:message code="show_curr_proj"></spring:message> " data-onstyle="dark" data-offstyle="white">
+
+</div>
+
 <%-- Dashboard view --%>
+<div class="row">
+    <div class="col-2"></div>
 <strong class="tab-title2"><spring:message code="my_projects"/></strong>
+</div>
 <c:forEach var="project" items="${projects}" varStatus="status">
     <span class="anchor-header" id="dashboard-project-${project.id}"></span>
     <div class="container py-3">
@@ -226,5 +237,8 @@
     }
 </script>
 
+<script>
+    
+</script>
 </body>
 </html>
