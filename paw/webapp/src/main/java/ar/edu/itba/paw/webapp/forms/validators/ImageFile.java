@@ -10,11 +10,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RUNTIME)
-@Constraint(validatedBy = ImageValidator.class)
+@Constraint(validatedBy = {ImageValidator.class, ImageListValidator.class})
 public @interface ImageFile {
     String message() default "{ar.edu.itba.paw.webapp.forms.validators.ImageValidator}";
 
     long maxSize();
+
+    int maxCount() default 1;
 
     Class<?>[] groups() default {};
 

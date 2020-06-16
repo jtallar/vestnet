@@ -86,10 +86,19 @@
             </div>
         </div>
 
-        <h5><spring:message code="projectImage"/></h5>
-        <form:input path="image" type="file" class="form-control" cssClass="custom-form-file" id="customFileProjectPic"/>
-        <form:errors path="image" cssClass="formError" element="p" id="fileErrorFormTag"/>
+        <h5 class="project-image-header"><spring:message code="projectImage"/></h5>
+        <p class="form-requirement"><spring:message code="pictureRequirement"/></p>
+        <form:input path="portraitImage" type="file" class="form-control" cssClass="custom-form-file" id="customFileProjectPic"/>
+        <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/>
         <label class="formError" id="maxSizeErrorMsg" hidden><spring:message code="imageMaxSize"/></label>
+
+        <h5 class="project-image-header"><spring:message code="project.slideshow"/></h5>
+        <p class="form-requirement"><spring:message code="picturesRequirement"/></p>
+        <form:input path="slideshowImages" type="file" class="form-control" cssClass="custom-form-file" id="customMultipleFileProjectPic" multiple="true"/>
+        <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/>
+        <label class="formError" id="maxSizeErrorMsgMultiple" hidden><spring:message code="imageMaxSize"/></label>
+        <label class="formError" id="maxCountErrorMsgMultiple" hidden><spring:message code="imageMaxCount"/></label>
+
         <div class="text-right">
             <input type="submit" value="<spring:message code="create"/>" class="btn btn-dark" onclick="adjustInputs()"/>
         </div
@@ -101,7 +110,7 @@
     let maxSizeMsg = document.getElementById('maxSizeErrorMsg');
     let errorTag = document.getElementById('fileErrorFormTag');
     fileBox.addEventListener("change", function () {
-        if (fileBox.files[0].size >= ${maxSize}) {
+        if (!(fileBox.files.length === 0) && fileBox.files[0].size >= ${maxSize}) {
             fileBox.value = null;
             if (errorTag != null) {
                 errorTag.hidden = true;
@@ -109,6 +118,37 @@
             maxSizeMsg.hidden = false;
         } else {
             maxSizeMsg.hidden = true;
+        }
+    });
+
+    let multipleFileBox = document.getElementById('customMultipleFileProjectPic');
+    let maxSizeMsgMultiple = document.getElementById('maxSizeErrorMsgMultiple');
+    let maxCountMsgMultiple = document.getElementById('maxCountErrorMsgMultiple');
+    let errorTagMultiple = document.getElementById('multipleFileErrorFormTag');
+    multipleFileBox.addEventListener("change", function () {
+        let index = 0, error = 0;
+        if (multipleFileBox.files.length > ${maxSlideshowCount}) {
+            error = 1;
+            maxSizeMsgMultiple.hidden = true;
+            maxCountMsgMultiple.hidden = false;
+        } else if (!(multipleFileBox.files.length === 0)) {
+            for (index = 0; index < multipleFileBox.files.length; index++) {
+                if (multipleFileBox.files[index].size >= ${maxSize}) {
+                    error = 1;
+                    maxSizeMsgMultiple.hidden = false;
+                    maxCountMsgMultiple.hidden = true;
+                    break;
+                }
+            }
+        }
+        if (error === 0) {
+            maxSizeMsgMultiple.hidden = true;
+            maxCountMsgMultiple.hidden = true;
+        } else {
+            multipleFileBox.value = null;
+            if (errorTagMultiple != null) {
+                errorTagMultiple.hidden = true;
+            }
         }
     });
 

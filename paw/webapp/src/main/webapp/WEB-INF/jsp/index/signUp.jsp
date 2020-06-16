@@ -161,7 +161,7 @@
                             </div>
                             <div class="col-md">
                                 <label><spring:message code="userPicture"/> </label>
-                                <p class="form-requirement"><spring:message code="userPictureRequirement"/></p>
+                                <p class="form-requirement"><spring:message code="pictureRequirement"/></p>
                                 <div class="custom-file">
                                     <form:input path="profilePicture" type="file" class="custom-file-input" id="customFileProfilePic"/>
                                     <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel">
