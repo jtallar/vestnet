@@ -6,6 +6,8 @@
 <html>
 <head>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
     <title><spring:message code="page.title.dashboard"/></title>
@@ -22,8 +24,17 @@
 
 <body>
 
+<div class="row">
+    <div class="col-8"></div>
+    <input type="checkbox" onclick="clickedSwitch" checked data-toggle="toggle" data-on="<spring:message code="show_acc_proj"></spring:message> " data-off="<spring:message code="show_curr_proj"></spring:message> " data-onstyle="dark" data-offstyle="white">
+
+</div>
+
 <%-- Dashboard view --%>
+<div class="row">
+    <div class="col-2"></div>
 <strong class="tab-title2"><spring:message code="my_projects"/></strong>
+</div>
 <c:forEach var="project" items="${projects}" varStatus="status">
     <span class="anchor-header" id="dashboard-project-${project.id}"></span>
     <div class="container py-3">
@@ -47,6 +58,37 @@
                                 <div class="row msg-content">
                                     <div class="col-"><h5><spring:message code="hits"/></h5></div>
                                     <div class="col-5 msg-content"><p class="card-text dash-text"><c:out value="${project.hits}"/></p></div>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal2">
+                                        <spring:message code='stopFunding'/>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Show stop funding confirmation -->
+
+                            <div class="modal fade" id="expModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog " role="document">
+                                    <div class="modal-content mx-auto my-auto">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">
+                                                <spring:message code="confirm_stop_funding"/>
+                                            </h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <spring:message code="stop_funding_result"/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                    <spring:message code="cancel"/>
+                                                </button>
+                                                <a href="<c:url value="/stop/${project.id}"/> " type="button" class="btn btn-success">
+                                                    <spring:message code="confirm"/>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-3">
@@ -179,5 +221,8 @@
     }
 </script>
 
+<script>
+    
+</script>
 </body>
 </html>

@@ -263,15 +263,6 @@
         fetchImages();
     };
 
-    // <div class="carousel-item">
-    //     <img src="" class="d-block w-100" alt="" style="width: 100%; height:100% ">
-    //     <div class="carousel-caption d-none d-md-block"></div>
-    // </div>
-
-    // <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-    //     <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-    //     <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
-
     function fetchImages() {
 
         fetch( '${link_slideshow}' + "/" + '${project.id}')

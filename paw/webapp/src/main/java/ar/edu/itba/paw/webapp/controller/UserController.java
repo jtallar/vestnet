@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
+import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.slf4j.Logger;
@@ -22,6 +23,10 @@ public class UserController {
 
     @Autowired
     protected SessionUserFacade sessionUser;
+
+
+
+
 
 
     /**
@@ -92,4 +97,12 @@ public class UserController {
         mav.addObject("messagePage", userService.getOfferMessages(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
+
+    @RequestMapping("/stop/{p_id}")
+    public ModelAndView stopFunding(@PathVariable("p_id") Long projectId){
+        userService.acceptProject(projectId);
+        return new ModelAndView("redirect:/dashboard");
+    }
+
+
 }
