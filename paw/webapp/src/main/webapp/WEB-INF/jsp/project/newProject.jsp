@@ -47,7 +47,7 @@
                 <h6 class="form-label"><spring:message code="cost_required"/></h6>
                 <p class="form-requirement"><spring:message code="costRequirement"/></p>
                 <div class="row justify-content-center">
-                    <div class="col-1">
+                    <div class="col-2">
                         <label><spring:message code="currency"/></label>
                     </div>
                     <div class="col">

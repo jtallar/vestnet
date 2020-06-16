@@ -205,7 +205,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="row">
-                            <div class="price-footer col-5">
+                            <div class="price-footer col-6">
                                 <strong><spring:message code="price"/></strong>
                                 <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>
                                 <p><c:out value="${costVar}"/></p>

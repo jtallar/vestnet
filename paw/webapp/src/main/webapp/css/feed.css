@@ -9,7 +9,7 @@
     margin: 20px 15% 20px 25%;
 }
 
-.card {
+.card-deck .card{
     border-color: #750096;
     margin: 5px !important;
     min-width: 300px;
@@ -25,6 +25,7 @@
 
 .msg-collapse{
     background-color:#dcdcdc;
+    margin-top:10px !important;
     padding:0px
 }
 
@@ -99,7 +100,7 @@
 }
 
 .pagination{
-    margin:0px !important;
+    margin:0 !important;
 }
 
 .page-link{
@@ -159,8 +160,9 @@
 }
 
 .no-proj-mine{
-    margin-left: auto !important;
-    margin-right: auto !important;
+    margin-left: 28% !important;
+    margin-right: 28% !important;
+    margin-top:30px !important;
 }
 
 .card-secondary{
@@ -190,29 +192,38 @@ html {
 
 .card-deal{
     min-width: 100% !important;
-    padding:20px;
+    padding:20px 20px 0px 20px;
     margin-left:auto !important;
     margin-right:auto !important;
 }
 
+.card-deal strong, .card-deal p{
+    font-size:16px
+}
+
+.card-deal h3{
+    font-size:25px
+}
+
 .container-deal{
-    margin-left:30% !important;
-    margin-right:30% !important
+    margin-left:28% !important;
+    margin-right:28% !important
 }
 
 .tab-title{
-    color:white;
-    font-family:sans-serif;
-    font-variant:all-petite-caps;
-    font-size:x-large
+    margin-left: 100px;
+    color:#d8d8d8;
+    font-family: 'Lato', sans-serif;
+    font-weight:500;
+    font-size:large
 }
 
 .tab-title2{
-    margin-left: 30px;
-    color:white;
-    font-family:sans-serif;
-    font-variant:all-petite-caps;
-    font-size:xx-large
+    margin-left: 100px;
+    color:#d8d8d8;
+    font-family: 'Lato', sans-serif;
+    font-weight:500;
+    font-size:x-large
 }
 
 .card-body{
@@ -232,7 +243,7 @@ html {
 }
 .msg-title{
     color:#750096;
-    margin-left:10px
+    margin-left:35px
 }
 .btn-project{
     padding:10px !important;
@@ -305,13 +316,22 @@ html {
     max-height: 80px
 }
 
+.btn-deal{
+    margin-right: 25px;
+}
+
 .card-footer a{
     font-size:15px !important;
+    margin-right:20px;
+}
+
+.card-footer p, .card-footer strong{
+    font-size:18px !important;
+    margin-left:10px
 }
 
 .price-footer{
     font-size:18px;
-    margin-left:10px;
 }
 
 .icon-fav{

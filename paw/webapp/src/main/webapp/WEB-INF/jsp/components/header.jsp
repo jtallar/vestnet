@@ -37,14 +37,14 @@
 <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
 <%--    <c:set var="options" value="${fn:split('/projects,/newProject,/dashboard,/deals,/profile', ',')}"/>--%>
     <c:set var="dropdownpages" value="${fn:split('/dashboard,/deals,/profile', ',')}"/>
-    <c:set var="dropdownaction" value="${fn:split('/newProject,/logout', ',')}"/>
+<%--    <c:set var="dropdownaction" value="${fn:split('/newProject,/logout', ',')}"/>--%>
     <c:set var="icons" value="${fn:split('home-icon,user-icon', ',')}"/>
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_INVESTOR')">
 <%--    <c:set var="options" value="${fn:split('/projects,/requests,/profile', ',')}"/>--%>
     <c:set var="dropdownpages" value="${fn:split('/requests,/profile', ',')}"/>
-    <c:set var="dropdownaction" value="${fn:split('/logout', ',')}"/>
+<%--    <c:set var="dropdownaction" value="${fn:split('/logout', ',')}"/>--%>
     <c:set var="icons" value="${fn:split('home-icon,user-icon', ',')}"/>
 </sec:authorize>
 
@@ -92,12 +92,22 @@
                                     <a class="dropdown-item" href="<c:url value='${page}'/>"><spring:message code="header.${page}"/></a>
                                 </c:forEach>
                                 <div class="dropdown-divider"></div>
-                                <c:forEach var="action" items="${dropdownaction}" varStatus="index">
-                                    <a class="dropdown-item" href="<c:url value='${action}'/>"><spring:message code="header.${action}"/></a>
-                                    <c:if test="${action =='/newProject'}">
-                                        <div class="dropdown-divider"></div>
-                                    </c:if>
-                                </c:forEach>
+
+<%--                                <c:forEach var="action" items="${dropdownaction}" varStatus="index">--%>
+<%--                                    <a class="dropdown-item" href="<c:url value='${action}'/>"><spring:message code="header.${action}"/></a>--%>
+<%--                                    <c:if test="${action =='/newProject'}">--%>
+<%--                                        <div class="dropdown-divider"></div>--%>
+<%--                                    </c:if>--%>
+<%--                                </c:forEach>--%>
+
+                                <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
+                                    <a class="dropdown-item" href="<c:url value="/newProject"/>"><spring:message code="header./newProject"/></a>
+                                    <div class="dropdown-divider"></div>
+                                </sec:authorize>
+
+                                <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal"><spring:message code="header./logout"/>
+<%--                                    <div class="row text-icon"><spring:message code="header./logout"/></div>--%>
+                                </a>
                             </div>
                         </div>
                     </li>

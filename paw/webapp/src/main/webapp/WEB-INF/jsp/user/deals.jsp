@@ -23,6 +23,9 @@
 
 
 <body>
+
+<strong class="tab-title"> <spring:message code="deals_title"/> </strong>
+
 <%-- Message pagniation --%>
 <div class="row">
     <div class="col">
@@ -73,7 +76,7 @@
                     </div>
                     <div class="col-4">
                         <c:url value="/users/${message.sender_id}?back=yes" var="profileURL"/>
-                        <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_inv_profile"/></a>
+                        <a href="${profileURL}" class="btn btn-dark btn-deal pull-right"><spring:message code="view_inv_profile"/></a>
                     </div>
                 </div>
             </div>
@@ -83,9 +86,6 @@
 
 <%-- If there are no deals --%>
 <c:if test="${empty messages}">
-    <div class="col-4 text-center tab-title">
-        <strong> <spring:message code="deals_title"/> </strong>
-    </div>
     <div class="card no-proj-mine">
         <div class="card-header">
             <h5 class="card-title text-white centered"><spring:message code="no_msg"/></h5>
