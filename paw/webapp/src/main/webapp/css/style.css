@@ -1,5 +1,5 @@
 .navbar{
-    top:0px;
+    top:0;
     width:100%;
     position: fixed !important; /* Fixed Sidebar (stay in place on scroll) */
     z-index:500;
@@ -61,6 +61,12 @@
 body{
     margin-top:90px !important;
     overflow-x: hidden;
+}
+
+body text, a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
+.btn, a.page-link, .msg-title, .msg-content, .row, .modal,
+.custom-form-input, .custom-form-file,.custom-form-select{
+    font-family: 'Lato', sans-serif;
 }
 
 .btn-black{

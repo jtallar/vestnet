@@ -30,7 +30,7 @@
         <div class="card msg">
             <div class="row ">
                 <div class="col-2">
-                    <img src="<c:url value="/imageController/project/${project.id}"/>" class="p-img w-100"/>
+                    <img src="<c:url value="/imageController/project/${project.id}"/>" class="p-img w-200"/>
                 </div>
                 <div class="col-md-10 px-3">
                     <div class="card-block px-3">
@@ -84,7 +84,7 @@
 </c:if>
 
 <%-- Add a new project link --%>
-<div class="text-center mt-5">
+<div class="text-center mt-5 mb-5">
     <a href="${link_new_project}" class="btn btn-white btn-lg"> <spring:message code="add_project"/> </a>
 </div>
 
