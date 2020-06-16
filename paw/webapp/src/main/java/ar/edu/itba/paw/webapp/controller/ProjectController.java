@@ -136,6 +136,7 @@ public class ProjectController {
         final ModelAndView mav = new ModelAndView("project/newProject");
         mav.addObject("categories", projectService.getAllCategories());
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
+        mav.addObject("maxSlideshowCount", WebConfig.MAX_SLIDESHOW_COUNT);
         return mav;
     }
 
@@ -155,7 +156,7 @@ public class ProjectController {
         Project newProject;
         try {
             newProject = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), projectFields.getImage().getBytes());
+                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), projectFields.getPortraitImage().getBytes());
         } catch (IOException e) {
             LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
             return createProject(projectFields);

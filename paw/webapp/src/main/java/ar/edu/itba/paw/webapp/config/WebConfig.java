@@ -40,6 +40,7 @@ import java.util.Properties;
 public class WebConfig {
 
     public static final long MAX_UPLOAD_SIZE = 2097152; // 2 MB
+    public static final int MAX_SLIDESHOW_COUNT = 5;
 
 
     /**

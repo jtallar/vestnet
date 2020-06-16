@@ -36,7 +36,8 @@
             </div>
             <form:form modelAttribute="passwordForm" method="POST" action="${link_reset_pass}">
                 <h4><spring:message code="resetPasswordTitle"/></h4>
-                <p><spring:message code="resetPasswordSubtitle" arguments="${email}"/></p>
+                <spring:message code="resetPasswordSubtitle" arguments="${email}" var="emailVar"/>
+                <p><c:out value="${emailVar}"/></p>
                 <div class="form-group">
                     <label><spring:message code="password"/> </label>
                     <spring:message code="enter_password" var="enter_password"/>

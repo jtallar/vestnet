@@ -51,6 +51,7 @@ public class UserJdbcDaoTest {
     private static final String REAL_ID = "00-0000000000-0";
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "12345";
+    private static final String LOCALE = "en";
 
     @Autowired
     private DataSource dataSource;
@@ -87,22 +88,22 @@ public class UserJdbcDaoTest {
     }
 
 
-//    @Test
-//    @Transactional
-//    public void testCreate() {
-//        // 1 - Setup
-//        Location location = assignLocation();
-//
-//        // 2 - Execute
-//        try {
-//            userJdbcDao.create(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, new UserImage(new byte[]{1}));
-//        } catch (UserAlreadyExistsException e) {
-//            fail();
-//        }
-//
-//        // 3 - Assert
-//        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, USERS_TABLE));
-//    }
+    @Test
+    @Transactional
+    public void testCreate() {
+        // 1 - Setup
+        Location location = assignLocation();
+
+        // 2 - Execute
+        try {
+            userJdbcDao.create(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, new UserImage(new byte[]{1}));
+        } catch (UserAlreadyExistsException e) {
+            fail();
+        }
+
+        // 3 - Assert
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, USERS_TABLE));
+    }
 
     @Test
     public void testFindByEmailDoesntExists() {
@@ -220,6 +221,7 @@ public class UserJdbcDaoTest {
         user.put("aux_date", new Date());
         user.put("email", EMAIL);
         user.put("verified", false);
+        user.put("locale", LOCALE);
         jdbcInsertUser.execute(user);
         return USER_ID;
     }

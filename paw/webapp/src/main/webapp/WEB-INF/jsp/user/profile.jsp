@@ -60,10 +60,8 @@
             </div>
             <div class="col-md-6">
                 <div class="profile-head">
-                    <h2 class="bold">
-                        <c:out value="${user.firstName} " escapeXml="false"/>
-                        <c:out value="${user.lastName}" escapeXml="false"/>
-                    </h2>
+                    <spring:message code="profile.title" arguments="${user.firstName},${user.lastName}" var="titleVar"/>
+                    <h2 class="bold"><c:out value="${titleVar}"/></h2>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
@@ -90,7 +88,7 @@
                                 <label><spring:message code="name"/></label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.firstName}</p>
+                                <p><c:out value="${user.firstName}"/></p>
                             </div>
                         </div>
                         <div class="row">
@@ -98,7 +96,7 @@
                                 <label><spring:message code="last_name"/></label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.lastName}</p>
+                                <p><c:out value="${user.lastName}"/></p>
                             </div>
                         </div>
                         <div class="row">
@@ -106,7 +104,7 @@
                                 <label><spring:message code="email"/> </label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.email}</p>
+                                <p><c:out value="${user.email}"/></p>
                             </div>
                         </div>
                         <div class="row">
@@ -114,7 +112,7 @@
                                 <label><spring:message code="phone"/> </label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.phone}</p>
+                                <p><c:out value="${user.phone}"/></p>
                             </div>
                         </div>
                         <div class="row">
@@ -122,7 +120,7 @@
                                 <label><spring:message code="birthdate"/> </label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.birthDate}</p>
+                                <p><c:out value="${user.birthDate}"/></p>
                             </div>
                         </div>
                         <div class="row mt-2 mb-2">
@@ -133,7 +131,7 @@
                                 <label class="font-weight-bold"><spring:message code="country"/> </label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.location.country.name}</p>
+                                <p><c:out value="${user.location.country.name}"/></p>
                             </div>
                         </div>
                         <div class="row">
@@ -141,7 +139,7 @@
                                 <label><spring:message code="city"/> </label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.location.city.name}</p>
+                                <p><c:out value="${user.location.city.name}"/></p>
                             </div>
                         </div>
                         <div class="row">
@@ -149,7 +147,7 @@
                                 <label><spring:message code="state"/> </label>
                             </div>
                             <div class="col-md-6">
-                                <p>${user.location.state.name}</p>
+                                <p><c:out value="${user.location.state.name}"/></p>
                             </div>
                         </div>
                     </div>
@@ -169,7 +167,8 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <strong><spring:message code="price"/></strong>
-                                                        <p><c:out value="${project.cost}"/></p>
+                                                        <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>
+                                                        <p><c:out value="${costVar}"/></p>
                                                     </div>
                                                     <div class="col">
                                                         <a href="<c:url value='/projects/${project.id}'/>" class="btn btn-dark pull-right"><spring:message code="moreinfo"/></a>
