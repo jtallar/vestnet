@@ -18,9 +18,10 @@ public interface ProjectService {
      * @param ownerId The user id owner of the project.
      * @param categoriesIds The project's categories ids.
      * @param image Project portrait image.
+     * @param slideshow Project slideshow images.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image);
+    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image, List<byte[]> slideshow);
 
 
     /**
@@ -66,9 +67,9 @@ public interface ProjectService {
 
 
     /**
-     * Finds all project images.
+     * Finds all slideshow images.
      * @param id The unique project id to find its images.
      * @return A list with all the related images.
      */
-    List<ProjectImage> getAllImages(long id);
+    List<byte[]> getSlideshowImages(long id);
 }

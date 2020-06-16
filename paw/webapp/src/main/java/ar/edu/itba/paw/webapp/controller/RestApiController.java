@@ -52,16 +52,17 @@ public class RestApiController {
         return projectService.getPortraitImage(projectId);
     }
 
+
+    /**
+     * Gets the stored slideshow images of a project,
+     * @param projectId The unique project id.
+     * @return The list with images in byte vector.
+     */
     @RequestMapping(value = "/imageController/slideshow/{p_id}")
     @ResponseBody
     public List<byte[]> imageControllerProjectSlideshow(@PathVariable("p_id") long projectId) {
-        List<byte[]> list = new ArrayList<>();
-        list.add(projectService.getPortraitImage(projectId));
-        list.add(projectService.getPortraitImage(projectId));
-        list.add(projectService.getPortraitImage(projectId));
-        list.add(projectService.getPortraitImage(projectId));
 
-        return list;
+        return projectService.getSlideshowImages(projectId);
     }
 
     /**

@@ -30,7 +30,6 @@ public class ProjectImage extends Image {
         super(id);
     }
 
-
     /** Getters and setters */
 
     public Project getProject() {

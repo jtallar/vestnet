@@ -29,6 +29,7 @@
 <c:url var="icon_fav_on" value="/images/bookmarkOn.png"/>
 <c:url var="link_delete_fav" value="/deleteFavorite"/>
 <c:url var="link_add_fav" value="/addFavorite"/>
+<c:url var="link_slideshow" value="/imageController/slideshow"/>
 
 <body>
 
@@ -273,7 +274,7 @@
 
     function fetchImages() {
 
-        fetch( '/imageController/slideshow/' + ${project.id})
+        fetch( '${link_slideshow}' + "/" + '${project.id}')
             .then(response => response.json())
             .then(data => {
                 let div = document.getElementById("carousel-items");
