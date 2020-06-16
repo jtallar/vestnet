@@ -52,12 +52,31 @@
                 </div>
             </c:if>
         </div>
-        <div class="row" style="margin: 20px">
+
+        <div class="row" style="margin: 0">
             <div class="col-5">
-                <div class="container-img">
-                    <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img"
-                         alt="<spring:message code="projectImage"/>"
-                         aria-placeholder="<spring:message code="projectImage"/>"/>
+
+                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel" style="width: 100%; margin: 0 auto">
+                    <ol class="carousel-indicators" id="carousel-slides">
+
+                    </ol>
+                    <div class="carousel-inner">
+                        <div id="carousel-items">
+                        <div class="carousel-item active">
+                            <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img d-block w-100" alt="<spring:message code="projectImage"/>"
+                                 style="width: 100%" aria-placeholder="<spring:message code="projectImage"/>"/>
+                        </div>
+                        </div>
+                    </div>
+
+                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="false"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="false"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
             </div>
 
@@ -240,7 +259,55 @@
                     console.error(reason)
                 }))
         }
+        fetchImages();
     };
+
+    // <div class="carousel-item">
+    //     <img src="" class="d-block w-100" alt="" style="width: 100%; height:100% ">
+    //     <div class="carousel-caption d-none d-md-block"></div>
+    // </div>
+
+    // <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+    //     <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+    //     <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+
+    function fetchImages() {
+
+        fetch( '/imageController/slideshow/' + ${project.id})
+            .then(response => response.json())
+            .then(data => {
+                let div = document.getElementById("carousel-items");
+                let ol = document.getElementById("carousel-slides");
+                let i;
+                for (i = 0; i < data.length; i++) {
+                    const dot = slidesDots(i);
+                    const element = imgTemplate(data[i]);
+                    div.innerHTML = div.innerHTML + element;
+                    ol.innerHTML = ol.innerHTML + dot;
+                }
+                const dot = slidesDots(i);
+                ol.innerHTML = ol.innerHTML + dot;
+
+            }).catch((function (reason) {
+            console.error(reason)
+        }));
+    }
+
+    function slidesDots(index){
+        if(index === 0)
+            return ` <li data-target="#carouselExampleCaptions" data-slide-to="\${index}" class="active"></li> `;
+        else
+            return ` <li data-target="#carouselExampleCaptions" data-slide-to="\${index}"></li> `;
+    }
+
+    function imgTemplate(imageSrc){
+        return `
+            <div class="carousel-item">
+            <img src="data:image/png;base64, \${imageSrc}" class="proj-img d-block w-100" alt="" style="width: 100%">
+            <div class="carousel-caption d-none d-md-block"></div>
+            </div>
+        `;
+    }
 </script>
 
 <script>
