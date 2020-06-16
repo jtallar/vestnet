@@ -175,7 +175,7 @@ public class RestApiController {
     @RequestMapping(value = "/stopFunding", method = RequestMethod.PUT, headers = "accept=application/json")
     @ResponseBody
     public ResponseEntity<Boolean> stopFunding(@RequestParam("p_id") long projectId) {
-//        projectService.addHit(projectId); //TODO this
+        projectService.setFunded(projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

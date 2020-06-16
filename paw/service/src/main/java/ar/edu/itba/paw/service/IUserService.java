@@ -207,12 +207,7 @@ public class IUserService implements UserService {
 
 
     @Override
-    @Transactional
     public Optional<Token> findToken(String token) {
         return tokenDao.findByToken(token);
     }
-
-
-    @Override
-    public Optional<Project> acceptProject(Long projID){ return projectDao.findById(projID);}
 }

@@ -73,6 +73,16 @@ public class IProjectService implements ProjectService {
         return project;
     }
 
+    @Override
+    @Transactional
+    public Project setFunded(long projectId) {
+        Optional<Project> optionalProject = findById(projectId);
+        if (!optionalProject.isPresent()) return null;
+        Project project = optionalProject.get();
+        project.setFunded(true);
+        return project;
+    }
+
 
     @Override
     public List<Category> getAllCategories() {
@@ -101,5 +111,7 @@ public class IProjectService implements ProjectService {
         List<ProjectImage> images = imageDao.findProjectImages(new Project(id), false);
         return images.stream().map(Image::getImage).collect(Collectors.toList());
     }
+
+
 }
 

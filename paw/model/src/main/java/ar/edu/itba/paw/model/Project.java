@@ -28,6 +28,9 @@ public class Project {
     @Column(name = "cost", nullable = false)
     private long cost;
 
+    @Column(name = "funded", nullable = false)
+    private boolean funded;
+
     @Temporal(value = TemporalType.DATE)
     @Column(name = "publish_date", insertable = false)
     private Date publishDate;
@@ -69,6 +72,7 @@ public class Project {
         this.owner = owner;
         this.categories = categories;
         this.hits = 0;
+        this.funded = false;
     }
 
 
@@ -108,6 +112,14 @@ public class Project {
 
     public void setCost(long cost) {
         this.cost = cost;
+    }
+
+    public boolean isFunded() {
+        return funded;
+    }
+
+    public void setFunded(boolean funded) {
+        this.funded = funded;
     }
 
     public Date getPublishDate() {

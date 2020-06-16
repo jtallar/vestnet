@@ -52,6 +52,14 @@ public interface ProjectService {
 
 
     /**
+     * Sets a project as funded.
+     * @param projectId The unique project id.
+     * @return The project modified, null if not found.
+     */
+    Project setFunded(long projectId);
+
+
+    /**
      * Finds all the possible categories from the database.
      * @return List of all the categories.
      */
