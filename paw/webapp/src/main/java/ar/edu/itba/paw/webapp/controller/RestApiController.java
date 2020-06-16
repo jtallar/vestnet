@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,6 +52,17 @@ public class RestApiController {
         return projectService.getPortraitImage(projectId);
     }
 
+    @RequestMapping(value = "/imageController/slideshow/{p_id}")
+    @ResponseBody
+    public List<byte[]> imageControllerProjectSlideshow(@PathVariable("p_id") long projectId) {
+        List<byte[]> list = new ArrayList<>();
+        list.add(projectService.getPortraitImage(projectId));
+        list.add(projectService.getPortraitImage(projectId));
+        list.add(projectService.getPortraitImage(projectId));
+        list.add(projectService.getPortraitImage(projectId));
+
+        return list;
+    }
 
     /**
      * Gets the stored image for a user.
