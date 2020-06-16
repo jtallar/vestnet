@@ -21,13 +21,17 @@
 <c:url var="link_update" value="/message/update"/>
 <c:url var="link_unread" value="/messages/unread"/>
 <c:url var="link_user" value="/users/"/>
+<c:url var="link_dashboard" value="/dashboard"/>
+<c:url var="link_stop_funding" value="/stopFunding"/>
 
 <body>
 
 <div class="row">
     <div class="col-8"></div>
-    <input type="checkbox" onclick="clickedSwitch" checked data-toggle="toggle" data-on="<spring:message code="show_acc_proj"></spring:message> " data-off="<spring:message code="show_curr_proj"></spring:message> " data-onstyle="dark" data-offstyle="white">
-
+    <input type="checkbox" onchange="changeFunded()" data-toggle="toggle"
+           data-on="<spring:message code="show_acc_proj"/> " data-off="<spring:message code="show_curr_proj"/> "
+           data-onstyle="dark" data-offstyle="white" id="funded-toggle"
+            <c:if test="${funded}">checked</c:if>>
 </div>
 
 <%-- Dashboard view --%>
@@ -36,6 +40,7 @@
 <strong class="tab-title2"><spring:message code="my_projects"/></strong>
 </div>
 <c:forEach var="project" items="${projects}" varStatus="status">
+
     <span class="anchor-header" id="dashboard-project-${project.id}"></span>
     <div class="container py-3">
         <div class="card msg">
@@ -60,14 +65,14 @@
                                     <div class="col-5 msg-content"><p class="card-text dash-text"><c:out value="${project.hits}"/></p></div>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal2">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal-p${project.id}">
                                         <spring:message code='stopFunding'/>
                                     </button>
                                 </div>
                             </div>
                             <!-- Show stop funding confirmation -->
 
-                            <div class="modal fade" id="expModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="expModal-p${project.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog " role="document">
                                     <div class="modal-content mx-auto my-auto">
                                         <div class="modal-header">
@@ -83,9 +88,9 @@
                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">
                                                     <spring:message code="cancel"/>
                                                 </button>
-                                                <a href="<c:url value="/stop/${project.id}"/> " type="button" class="btn btn-success">
+                                                <button onclick="stopFunding(${project.id})" type="button" class="btn btn-success">
                                                     <spring:message code="confirm"/>
-                                                </a>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -209,6 +214,15 @@
 
     function answer(project, sender, value) {
         let url = '${link_update}' + '?p_id=' + project + '&s_id=' + '${session_user_id}' + '&r_id=' + sender + '&val=' + value;
+        put(url);
+    }
+
+    function changeFunded() {
+        location.href = '${link_dashboard}' + '?funded=' + '${!funded}';
+    }
+
+    function stopFunding(project) {
+        let url = '${link_stop_funding}' + '?p_id=' + project;
         put(url);
     }
 

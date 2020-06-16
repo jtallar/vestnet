@@ -168,6 +168,19 @@ public class RestApiController {
 
 
     /**
+     * Sets funded to stopped on project.
+     * @param projectId The unique project id.
+     * @return Response entity.
+     */
+    @RequestMapping(value = "/stopFunding", method = RequestMethod.PUT, headers = "accept=application/json")
+    @ResponseBody
+    public ResponseEntity<Boolean> stopFunding(@RequestParam("p_id") long projectId) {
+//        projectService.addHit(projectId); //TODO this
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    /**
      * Gets all the countries stored in the database.
      * @return List of all the countries.
      */
