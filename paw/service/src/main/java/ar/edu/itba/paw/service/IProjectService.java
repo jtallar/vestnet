@@ -58,6 +58,7 @@ public class IProjectService implements ProjectService {
         filters.values().removeIf(value -> (value == null || value.toString().equals("")));
         List<FilterCriteria> params = new ArrayList<>();
         filters.forEach((key, value) -> params.add(new FilterCriteria(key, value)));
+        params.add(new FilterCriteria("funded", false));
 
         return projectDao.findAll(params, OrderField.getEnum(order), new PageRequest(page, pageSize));
     }

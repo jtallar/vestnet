@@ -86,9 +86,10 @@ public interface UserService {
     /**
      * Finds the projects owned by the user.
      * @param id Unique user id.
+     * @param funded Distinguishes from founded project from the ones not.
      * @return List of all the project for the given user.
      */
-    List<Project> getOwnedProjects(long id);
+    List<Project> getOwnedProjects(long id, boolean funded);
 
 
     /**

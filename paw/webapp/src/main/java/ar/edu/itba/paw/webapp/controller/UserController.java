@@ -65,7 +65,7 @@ public class UserController {
     public ModelAndView myDashboard(@RequestParam(name = "funded", defaultValue = "false") boolean funded) {
 
         ModelAndView mav = new ModelAndView("user/dashboard");
-        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId()));
+        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId(), funded));
         mav.addObject("funded", funded);
         return mav;
     }

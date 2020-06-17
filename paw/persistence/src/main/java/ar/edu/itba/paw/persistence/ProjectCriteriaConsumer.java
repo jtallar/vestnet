@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
+import sun.jvm.hotspot.asm.sparc.SPARCRegister;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
@@ -37,6 +38,7 @@ import java.util.function.Consumer;
             case "maxCost": maxCost(param.getValue()); break;
             case "category": category(param.getValue()); break;
             case "owner": owner(param.getValue()); break;
+            case "funded": funded(param.getValue()); break;
             case "id": id(param.getValue()); break;
             case "ids": ids(param.getValue()); break;
             /** If its not a filter, its a search */
@@ -105,6 +107,14 @@ import java.util.function.Consumer;
      */
     private void owner(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("owner"), value));
+    }
+
+    /**
+     * Filter by project fully founded or not.
+     * @param value Boolean funded.
+     */
+    private void funded(Object value) {
+        predicate = builder.and(predicate, builder.equal(root.get("funded"), value));
     }
 
 
