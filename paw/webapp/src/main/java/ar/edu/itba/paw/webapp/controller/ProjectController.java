@@ -28,6 +28,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProjectController {
@@ -155,8 +157,12 @@ public class ProjectController {
 
         Project newProject;
         try {
+            List<byte[]> slideshow = projectFields.getSlideshowImages().stream().map(i -> {
+                try { return i.getBytes(); } catch (IOException e) {} return new byte[0]; }).collect(Collectors.toList());
+
             newProject = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), projectFields.getPortraitImage().getBytes());
+                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(),
+                    projectFields.getPortraitImage().getBytes(), slideshow);
         } catch (IOException e) {
             LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
             return createProject(projectFields);
@@ -192,4 +198,6 @@ public class ProjectController {
     private String getBaseUrl(HttpServletRequest request) {
         return request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath()));
     }
+
+
 }

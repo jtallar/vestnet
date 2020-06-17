@@ -6,6 +6,8 @@
 <html>
 <head>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <link rel="stylesheet" href="<c:url value="/css/feed.css"/>"/>
     <link rel="stylesheet" href="<c:url value="/css/userprofile.css"/>"/>
     <title><spring:message code="page.title.dashboard"/></title>
@@ -19,12 +21,26 @@
 <c:url var="link_update" value="/message/update"/>
 <c:url var="link_unread" value="/messages/unread"/>
 <c:url var="link_user" value="/users/"/>
+<c:url var="link_dashboard" value="/dashboard"/>
+<c:url var="link_stop_funding" value="/stopFunding"/>
 
 <body>
 
+<div class="row">
+    <div class="col-8"></div>
+    <input type="checkbox" onchange="changeFunded()" data-toggle="toggle"
+           data-on="<spring:message code="show_acc_proj"/> " data-off="<spring:message code="show_curr_proj"/> "
+           data-onstyle="dark" data-offstyle="white" id="funded-toggle"
+            <c:if test="${funded}">checked</c:if>>
+</div>
+
 <%-- Dashboard view --%>
+<div class="row">
+    <div class="col-2"></div>
 <strong class="tab-title2"><spring:message code="my_projects"/></strong>
+</div>
 <c:forEach var="project" items="${projects}" varStatus="status">
+
     <span class="anchor-header" id="dashboard-project-${project.id}"></span>
     <div class="container py-3">
         <div class="card msg">
@@ -48,22 +64,57 @@
                                     <div class="col-"><h5><spring:message code="hits"/></h5></div>
                                     <div class="col-5 msg-content"><p class="card-text dash-text"><c:out value="${project.hits}"/></p></div>
                                 </div>
+                                <div>
+                                    <c:if test="${!project.funded}">
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal-p${project.id}">
+                                            <spring:message code='stopFunding'/>
+                                        </button>
+                                    </c:if>
+                                </div>
+                            </div>
+                            <!-- Show stop funding confirmation -->
+
+                            <div class="modal fade" id="expModal-p${project.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog " role="document">
+                                    <div class="modal-content mx-auto my-auto">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">
+                                                <spring:message code="confirm_stop_funding"/>
+                                            </h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <spring:message code="stop_funding_result"/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                    <spring:message code="cancel"/>
+                                                </button>
+                                                <button onclick="stopFunding(${project.id})" type="button" class="btn btn-success">
+                                                    <spring:message code="confirm"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-3">
                                 <a href="<c:url value="/projects/${project.id}"/>" class="btn btn-dark btn-project pull-right">
                                     <spring:message code="preview_project"/>
                                 </a>
-                                <button onclick="fetchMessages(${project.id}, ${status.index})"
-                                        class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse"
-                                        data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}">
-<%--                                    <div class="notification-icon">--%>
+                                <c:if test="${!project.funded}">
+                                    <button onclick="fetchMessages(${project.id}, ${status.index})"
+                                            class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse"
+                                            data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}">
+                                            <%--                                    <div class="notification-icon">--%>
                                         <span> <spring:message code="see_msgs"/></span>
                                             <%-- TODO fix this, make it work --%>
                                             <%--<c:if test="${project.notRead != 0}">--%>
                                             <%--<span class="badge bg-danger"><c:out value="${project.notRead}"/></span>--%>
                                             <%--</c:if>--%>
-<%--                                    </div>--%>
-                                </button>
+                                            <%--                                    </div>--%>
+                                    </button>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -78,7 +129,14 @@
 <c:if test="${empty projects}">
     <div class="card no-proj-mine">
         <div class="card-header">
-            <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
+            <c:choose>
+                <c:when test="${funded}">
+                    <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
+                </c:when>
+                <c:otherwise>
+                    <h5 class="card-title text-white centered"><spring:message code="noProjFunded"/></h5>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </c:if>
@@ -170,14 +228,28 @@
         put(url);
     }
 
+    function changeFunded() {
+        location.href = '${link_dashboard}' + '?funded=' + '${!funded}';
+    }
+
+    function stopFunding(project) {
+        let url = '${link_stop_funding}' + '?p_id=' + project;
+        put(url);
+    }
+
     function put(url) {
         fetch(url, options)
-            .then(window.location.reload())
             .catch((reason => {
                 console.error(reason)
-            }));
+            }))
+            .finally(function() {
+                window.location.reload(true)
+            });
     }
 </script>
 
+<script>
+    
+</script>
 </body>
 </html>
