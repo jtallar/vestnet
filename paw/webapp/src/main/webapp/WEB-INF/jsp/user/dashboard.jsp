@@ -143,7 +143,6 @@
             fetch('${link_unread}' + '?p_id=' + project_id + '&u_id=' + '${session_user_id}')
                 .then(response => response.json())
                 .then(data => {
-                    console.log("MATI: " + data);
                     let div = document.getElementById("collapse" + project_id);
                     for (let i = 0; i < data.length; i++) {
                         let g = document.createElement('div');
@@ -238,7 +237,7 @@
 </script>
 
 <script>
-    
+
 </script>
 </body>
 </html>

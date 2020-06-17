@@ -1,12 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
@@ -35,8 +38,12 @@ public class MainController {
      * @return Model and view.x
      */
     @RequestMapping(value = "/login")
-    public ModelAndView login(@RequestParam(name = "me", required = false) Integer message) {
+    public ModelAndView login(@RequestParam(name = "me", required = false) Integer message,@RequestHeader(value = "referer", required = false) final String referer, HttpServletRequest request) {
         if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
+        System.out.println(referer);
+        request.getSession().setAttribute("url_prior_login", referer);
+
+
         final ModelAndView mav = new ModelAndView("index/login");
         mav.addObject("message", message);
         return mav;
