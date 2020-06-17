@@ -37,8 +37,8 @@ public class IEmailService implements EmailService {
     private MessageSource messageSource;
 
 
-    @Override
-    public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, String baseUrl) {
+    @Override //TODO aca en cada uno se tiene que setear el contenido del modelo MAIL, a mano algunas cosas, el contenido se hace con las funciones
+    public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, String baseUrl) { // TODO de abajo. Luego se manda mail con el send mail nuevo.
         Locale localeInst = Locale.forLanguageTag(receiver.getLocale());
 
         String subject = messageSource.getMessage("email.subject.request", null, localeInst);
@@ -62,8 +62,8 @@ public class IEmailService implements EmailService {
     }
 
 
-    @Override
-    public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, String baseUrl) {
+    @Override //TODO aca en cada uno se tiene que setear el contenido del modelo MAIL, a mano algunas cosas, el contenido se hace con las funciones
+    public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, String baseUrl) { // TODO de abajo. Luego se manda mail con el send mail nuevo.
         Locale localeInst = Locale.forLanguageTag(receiver.getLocale());
 
         String subject = messageSource.getMessage("email.subject.response", null, localeInst);
@@ -84,8 +84,8 @@ public class IEmailService implements EmailService {
     }
 
 
-    @Override
-    public void sendPasswordRecovery(User user, String token, String baseUrl) {
+    @Override //TODO aca en cada uno se tiene que setear el contenido del modelo MAIL, a mano algunas cosas, el contenido se hace con las funciones
+    public void sendPasswordRecovery(User user, String token, String baseUrl) {// TODO de abajo. Luego se manda mail con el send mail nuevo.
         Locale localeInst = Locale.forLanguageTag(user.getLocale());
 
         String subject = messageSource.getMessage("email.subject.passwordReset", null, localeInst);
@@ -100,8 +100,8 @@ public class IEmailService implements EmailService {
     }
 
 
-    @Override
-    public void sendVerification(User user, String token, String baseUrl) {
+    @Override //TODO aca en cada uno se tiene que setear el contenido del modelo MAIL, a mano algunas cosas, el contenido se hace con las funciones
+    public void sendVerification(User user, String token, String baseUrl) { // TODO de abajo. Luego se manda mail con el send mail nuevo.
         Locale localeInst = Locale.forLanguageTag(user.getLocale());
 
         String subject = messageSource.getMessage("email.subject.verification", null, localeInst);
@@ -135,7 +135,14 @@ public class IEmailService implements EmailService {
     }
 
 
-    public void sendEmail(Mail mail, String content) { // TODO aca se le pasa el mail con los datos y el content pasado por velocity (func de abajo)
+    /** Velocity new auxiliary functions */
+
+
+    /**
+     * Sends a formatted mail in html.
+     * @param mail The formatted mail. Content must be filled previously.
+     */
+    public void sendEmail(Mail mail) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -143,7 +150,6 @@ public class IEmailService implements EmailService {
             mimeMessageHelper.setSubject(mail.getSubject());
             mimeMessageHelper.setFrom(mail.getFrom());
             mimeMessageHelper.setTo(mail.getTo());
-            mail.setContent(content);
             mimeMessageHelper.setText(mail.getContent(), true);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
@@ -152,14 +158,91 @@ public class IEmailService implements EmailService {
         }
     }
 
-    private String prepareEmailText(Mail mail, User from, User to, Project project) { // TODO se hace uno por template, como se necesite
+
+    /**
+     * Prepares the body formatting for a new offer mail.
+     * @param mail The mail contents, without the content per se.
+     * @param sender The user sender.
+     * @param receiver The user receiver.
+     * @param project The project in matter.
+     * @param offer The offer content.
+     * @param baseUrl The base url for the answer.
+     * @return Formatted text in html.
+     */
+    private String prepareOfferEmail(Mail mail, User sender, User receiver, Project project, Message.MessageContent offer, String baseUrl) {
         VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("from", from);
-        velocityContext.put("to", to);
         velocityContext.put("mail", mail);
-        velocityContext.put("from", from);
+        velocityContext.put("sender", sender);
+        velocityContext.put("receiver", receiver);
+        velocityContext.put("project", project);
+        velocityContext.put("offer", offer);
+        velocityContext.put("baseUrl", baseUrl);
         StringWriter stringWriter = new StringWriter();
-        velocityEngine.mergeTemplate("/templates/email-template.vm", "UTF-8", velocityContext, stringWriter);
+        velocityEngine.mergeTemplate("/templates/offer.vm", "UTF-8", velocityContext, stringWriter);
+        return stringWriter.toString();
+    }
+
+
+    /**
+     * Prepares the body formatting for an offer answer mail.
+     * @param mail The mail contents, without the content per se.
+     * @param sender The user sender.
+     * @param receiver The user receiver.
+     * @param project The project in matter.
+     * @param answer The answer of the made offer.
+     * @param baseUrl The base url for the answer.
+     * @return Formatted text in html.
+     */
+    private String prepareOfferAnswerEmail(Mail mail, User sender, User receiver, Project project, boolean answer, String baseUrl) {
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("mail", mail);
+        velocityContext.put("sender", sender);
+        velocityContext.put("receiver", receiver);
+        velocityContext.put("project", project);
+        velocityContext.put("answer", answer);
+        velocityContext.put("baseUrl", baseUrl);
+        StringWriter stringWriter = new StringWriter();
+        velocityEngine.mergeTemplate("/templates/offer-answer.vm", "UTF-8", velocityContext, stringWriter);
+        return stringWriter.toString();
+    }
+
+
+    /**
+     * Prepares the body formatting for a password recovery mail.
+     * @param mail The mail contents, without the content per se.
+     * @param user The user receiver model.
+     * @param token The generated token.
+     * @param baseUrl The base url for the answer.
+     * @return Formatted text in html.
+     */
+    private String preparePasswordRecoveryEmail(Mail mail, User user, String token, String baseUrl) {
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("mail", mail);
+        velocityContext.put("user", user);
+        velocityContext.put("token", token);
+        velocityContext.put("baseUrl", baseUrl);
+        StringWriter stringWriter = new StringWriter();
+        velocityEngine.mergeTemplate("/templates/password-recovery.vm", "UTF-8", velocityContext, stringWriter);
+        return stringWriter.toString();
+    }
+
+
+    /**
+     * Prepares the body formatting for a user verification mail.
+     * @param mail The mail contents, without the content per se.
+     * @param user The user receiver model.
+     * @param token The generated token.
+     * @param baseUrl The base url for the answer.
+     * @return Formatted text in html.
+     */
+    private String prepareVerificationEmail(Mail mail, User user, String token, String baseUrl) {
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("mail", mail);
+        velocityContext.put("user", user);
+        velocityContext.put("token", token);
+        velocityContext.put("baseUrl", baseUrl);
+        StringWriter stringWriter = new StringWriter();
+        velocityEngine.mergeTemplate("/templates/user-verification.vm", "UTF-8", velocityContext, stringWriter);
         return stringWriter.toString();
     }
 
