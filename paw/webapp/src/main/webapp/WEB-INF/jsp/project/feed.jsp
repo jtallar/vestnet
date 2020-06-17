@@ -223,9 +223,9 @@
 
 <%-- EMPTY PROJECT CARD --%>
 <c:if test="${empty projects}">
-    <div class="card m-2 no-proj">
+    <div class="card m-2 no-proj-feed">
         <div class="card-header">
-            <h5 class="card-title text-white centered"><spring:message code="noProjFound"/></h5>
+            <h5 class="card-title text-white"><spring:message code="noProjFound"/></h5>
         </div>
     </div>
 </c:if>
