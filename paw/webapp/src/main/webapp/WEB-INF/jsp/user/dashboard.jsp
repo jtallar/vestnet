@@ -65,9 +65,11 @@
                                     <div class="col-5 msg-content"><p class="card-text dash-text"><c:out value="${project.hits}"/></p></div>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal-p${project.id}">
-                                        <spring:message code='stopFunding'/>
-                                    </button>
+                                    <c:if test="${!project.funded}">
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#expModal-p${project.id}">
+                                            <spring:message code='stopFunding'/>
+                                        </button>
+                                    </c:if>
                                 </div>
                             </div>
                             <!-- Show stop funding confirmation -->
@@ -100,17 +102,19 @@
                                 <a href="<c:url value="/projects/${project.id}"/>" class="btn btn-dark btn-project pull-right">
                                     <spring:message code="preview_project"/>
                                 </a>
-                                <button onclick="fetchMessages(${project.id}, ${status.index})"
-                                        class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse"
-                                        data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}">
-<%--                                    <div class="notification-icon">--%>
+                                <c:if test="${!project.funded}">
+                                    <button onclick="fetchMessages(${project.id}, ${status.index})"
+                                            class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse"
+                                            data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}">
+                                            <%--                                    <div class="notification-icon">--%>
                                         <span> <spring:message code="see_msgs"/></span>
                                             <%-- TODO fix this, make it work --%>
                                             <%--<c:if test="${project.notRead != 0}">--%>
                                             <%--<span class="badge bg-danger"><c:out value="${project.notRead}"/></span>--%>
                                             <%--</c:if>--%>
-<%--                                    </div>--%>
-                                </button>
+                                            <%--                                    </div>--%>
+                                    </button>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -125,7 +129,14 @@
 <c:if test="${empty projects}">
     <div class="card no-proj-mine">
         <div class="card-header">
-            <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
+            <c:choose>
+                <c:when test="${funded}">
+                    <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
+                </c:when>
+                <c:otherwise>
+                    <h5 class="card-title text-white centered"><spring:message code="noProjFunded"/></h5>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </c:if>
@@ -228,10 +239,12 @@
 
     function put(url) {
         fetch(url, options)
-            .then(window.location.reload())
             .catch((reason => {
                 console.error(reason)
-            }));
+            }))
+            .finally(function() {
+                window.location.reload(true)
+            });
     }
 </script>
 
