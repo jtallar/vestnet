@@ -1,16 +1,23 @@
 package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.model.Mail;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Locale;
 
@@ -22,6 +29,9 @@ public class IEmailService implements EmailService {
 
     @Autowired
     private JavaMailSender emailSender;
+
+    @Autowired
+    private VelocityEngine velocityEngine;
 
     @Autowired
     private MessageSource messageSource;
@@ -123,4 +133,34 @@ public class IEmailService implements EmailService {
         message.setReplyTo(from);
         emailSender.send(message);
     }
+
+
+    public void sendEmail(Mail mail, String content) { // TODO aca se le pasa el mail con los datos y el content pasado por velocity (func de abajo)
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        try {
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+            mimeMessageHelper.setSubject(mail.getSubject());
+            mimeMessageHelper.setFrom(mail.getFrom());
+            mimeMessageHelper.setTo(mail.getTo());
+            mail.setContent(content);
+            mimeMessageHelper.setText(mail.getContent(), true);
+
+            emailSender.send(mimeMessageHelper.getMimeMessage());
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String prepareEmailText(Mail mail, User from, User to, Project project) { // TODO se hace uno por template, como se necesite
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("from", from);
+        velocityContext.put("to", to);
+        velocityContext.put("mail", mail);
+        velocityContext.put("from", from);
+        StringWriter stringWriter = new StringWriter();
+        velocityEngine.mergeTemplate("/templates/email-template.vm", "UTF-8", velocityContext, stringWriter);
+        return stringWriter.toString();
+    }
+
 }

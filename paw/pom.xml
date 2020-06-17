@@ -48,6 +48,8 @@
 
     <org.springframework.boot.version>2.2.5.RELEASE</org.springframework.boot.version>
 
+    <org.apache.velocity.version>1.7</org.apache.velocity.version>
+
   </properties>
 
   <dependencyManagement>
@@ -195,6 +197,13 @@
         <artifactId>javax.mail</artifactId>
         <version>${javax.mail.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.velocity</groupId>
+        <artifactId>velocity</artifactId>
+        <version>${org.apache.velocity.version}</version>
+      </dependency>
+
 
       <dependency>
         <groupId>org.mockito</groupId>
