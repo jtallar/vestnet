@@ -20,7 +20,7 @@ public class MyCustomLoginSuccessHandler implements AuthenticationSuccessHandler
         HttpSession session = request.getSession();
         if (session != null) {
             String redirectUrl = (String) session.getAttribute("url_prior_login");
-            if (redirectUrl != null && !redirectUrl.contains("welcome")) {
+            if (redirectUrl != null) {
                 // we do not forget to clean this attribute from session
                 session.removeAttribute("url_prior_login");
                 // then we redirect

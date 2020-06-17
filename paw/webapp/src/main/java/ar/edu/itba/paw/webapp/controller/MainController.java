@@ -40,7 +40,6 @@ public class MainController {
     @RequestMapping(value = "/login")
     public ModelAndView login(@RequestParam(name = "me", required = false) Integer message,@RequestHeader(value = "referer", required = false) final String referer, HttpServletRequest request) {
         if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
-        System.out.println(referer);
         request.getSession().setAttribute("url_prior_login", referer);
 
 
@@ -56,6 +55,7 @@ public class MainController {
      */
     @RequestMapping(value = "/welcome")
     public ModelAndView welcome(){
+        if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
         return new ModelAndView("index/welcome");
     }
 
