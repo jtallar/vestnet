@@ -172,6 +172,7 @@ public class WebConfig {
         properties.setProperty("output.encoding", "UTF-8");
         properties.setProperty("resource.loader", "class");
         properties.setProperty("exposeSpringMacroHelpers", "true");
+        properties.setProperty("velocimacro.library", "macro-library.vm");
         properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         return new VelocityEngine(properties);
     }

@@ -1,17 +1,3 @@
-#**
- * msg
- *
- * Shorthand macro to retrieve locale sensitive message from language.properties
- *#
-#macro(msg $key)
-    ${messages.getMessage($key, null, ${locale})}
-#end
-
-#macro(msgArgs $key, $args)
-    ${messages.getMessage($key,$args.toArray(),$locale)}
-#end
-
-
 
 ## #parse("/templates(o donde sea)/footer.vm") si se quisiera hacer componentes ponele
 
@@ -19,8 +5,7 @@
 <body>
 <h5>${mail.subject}</h5>
 <div>
-    #msg("add_project")
-    #springMessage("add_project")
+    #message("add_project")
     ${baseUrl}/verify?token=${token}
 </div>
 </span>

@@ -1,0 +1,10 @@
+#**
+ * Shorthand macro to retrieve locale sensitive message from language.properties
+ *#
+#macro(message $key)
+    ${messages.getMessage($key, null, ${locale})}
+#end
+
+#macro(messageArgs $key, $args)
+    ${messages.getMessage($key,$args.toArray(),$locale)}
+#end
