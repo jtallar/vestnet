@@ -104,15 +104,20 @@ public class IEmailService implements EmailService {
     public void sendVerification(User user, String token, String baseUrl) { // TODO de abajo. Luego se manda mail con el send mail nuevo.
         Locale localeInst = Locale.forLanguageTag(user.getLocale());
 
-        String subject = messageSource.getMessage("email.subject.verification", null, localeInst);
-
-        String fullBodySB = messageSource.getMessage("email.body.vestnetReports", null, localeInst) + '\n' +
-                messageSource.getMessage("email.body.verification", null, localeInst) + "\n" +
-                MessageFormat.format(messageSource.getMessage("email.body.verificationButton", null, localeInst),
-                        String.format("%s/verify?token=%s", baseUrl, token));
-
-        sendEmail(VESTNET_EMAIL, user.getEmail(), subject, fullBodySB);
-
+//        String subject = messageSource.getMessage("email.subject.verification", null, localeInst);
+//
+//        String fullBodySB = messageSource.getMessage("email.body.vestnetReports", null, localeInst) + '\n' +
+//                messageSource.getMessage("email.body.verification", null, localeInst) + "\n" +
+//                MessageFormat.format(messageSource.getMessage("email.body.verificationButton", null, localeInst),
+//                        String.format("%s/verify?token=%s", baseUrl, token));
+//
+//        sendEmail(VESTNET_EMAIL, user.getEmail(), subject, fullBodySB);
+        Mail mail = new Mail();
+        mail.setFrom(VESTNET_EMAIL);
+        mail.setTo(user.getEmail());
+        mail.setSubject(messageSource.getMessage("email.subject.verification", null, localeInst));
+        mail.setContent(prepareVerificationEmail(mail, user, token, baseUrl));
+        sendEmail(mail);
     }
 
 
@@ -241,6 +246,8 @@ public class IEmailService implements EmailService {
         velocityContext.put("user", user);
         velocityContext.put("token", token);
         velocityContext.put("baseUrl", baseUrl);
+        velocityContext.put("messages", this.messageSource);
+        velocityContext.put("locale", Locale.forLanguageTag(user.getLocale()));
         StringWriter stringWriter = new StringWriter();
         velocityEngine.mergeTemplate("/templates/user-verification.vm", "UTF-8", velocityContext, stringWriter);
         return stringWriter.toString();
