@@ -1,8 +1,9 @@
 .navbar{
-    top:0px;
+    top:0;
     width:100%;
     position: fixed !important; /* Fixed Sidebar (stay in place on scroll) */
     z-index:500;
+    height:70px
 }
 
 .navbar-custom {
@@ -20,19 +21,18 @@
     background-color: white;
 }
 
-
-.navbar-brand
+.navbar-brand img
 {
     position: relative;
     width: 60px;
     height: 60px;
-    vertical-align: middle;
 }
 
 .logo-text
 {
     color: #750096; font-family: 'Lato', sans-serif; font-size: 30px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center; margin-right: 30px;
-    vertical-align: middle;
+    margin-top:auto;
+    margin-bottom: auto
 }
 
 .logopurple{
@@ -59,8 +59,14 @@
 }
 
 body{
-    margin-top:100px !important;
+    margin-top:90px !important;
     overflow-x: hidden;
+}
+
+body text, a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
+.btn, a.page-link, .msg-title, .msg-content, .row, .modal,
+.custom-form-input, .custom-form-file,.custom-form-select{
+    font-family: 'Lato', sans-serif;
 }
 
 .btn-black{
@@ -90,4 +96,16 @@ body{
 .nav-icon{
     width: 30px;
     height: 30px;
+}
+
+.btn-header{
+    padding: 0 !important;
+    margin-left:30px !important;
+    margin-right: 20px !important;
+    border: none !important;
+    background: none !important;
+}
+
+.dropdown-toggle:after {
+    border: none !important;
 }

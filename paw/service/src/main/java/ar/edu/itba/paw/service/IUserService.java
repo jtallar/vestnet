@@ -140,8 +140,10 @@ public class IUserService implements UserService {
 
 
     @Override
-    public List<Project> getOwnedProjects(long id) {
-        List<FilterCriteria> param = Collections.singletonList(new FilterCriteria("owner", new User(id)));
+    public List<Project> getOwnedProjects(long id, boolean funded) {
+        List<FilterCriteria> param = new ArrayList<>();
+        param.add(new FilterCriteria("owner", new User(id)));
+        param.add(new FilterCriteria("funded", funded));
         return projectDao.findAll(param, OrderField.DEFAULT);
     }
 
@@ -207,12 +209,7 @@ public class IUserService implements UserService {
 
 
     @Override
-    @Transactional
     public Optional<Token> findToken(String token) {
         return tokenDao.findByToken(token);
     }
-
-
-    @Override
-    public Optional<Project> acceptProject(Long projID){ return projectDao.findById(projID);}
 }

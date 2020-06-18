@@ -22,6 +22,9 @@
 <%-- Set used URLs --%>
 
 <body>
+
+<strong class="tab-title"><spring:message code="req_title"/></strong>
+
 <%-- Message pagniation --%>
 <div class="row">
     <div class="col">
@@ -51,20 +54,18 @@
     <div class="container-deal py-3">
         <div class="card">
             <div class="card-deal">
-                <strong><spring:message code="msg"/> </strong>
-                <p>${message.content.message}</p>
+                <strong><spring:message code="msg.title.body"/> </strong>
+                <p><c:out value="${message.content.message}"/></p>
                 <div class="row ">
-                    <div class="col-5">
-                        <strong><spring:message code="offer"/> </strong>
-                        <p>${message.content.offer}</p>
+                    <div class="col-2">
+                        <strong><spring:message code="msg.title.offer"/> </strong>
+                        <p><c:out value="${message.content.offer}"/></p>
                     </div>
-                    <div class="col-6">
-                        <strong><spring:message code="request"/> </strong>
-                        <p>${message.content.interest}</p>
+                    <div class="col-7">
+                        <strong><spring:message code="msg.title.request"/> </strong>
+                        <p><c:out value="${message.content.interest}"/></p>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-8 text-centered">
+                    <div class="col-3">
                         <strong><spring:message code="state"/> </strong>
                         <c:set var="accepted" value="${message.accepted}"/>
                         <c:choose>
@@ -83,13 +84,13 @@
             </div>
             <div class="card-footer">
                 <div class="row ">
-                    <div class="col-8">
+                    <div class="col-7">
                         <strong><spring:message code="published_date"/> </strong>
-                        <p>${message.publishDate}</p>
+                        <p><c:out value="${message.publishDate}"/></p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
                         <c:url value="/users/${message.receiver_id}?back=yes" var="profileURL"/>
-                        <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_profile"/></a>
+                        <a href="${profileURL}" class="btn btn-dark btn-deal pull-right"><spring:message code="view_profile"/></a>
                     </div>
                 </div>
             </div>
@@ -99,12 +100,9 @@
 
 <%-- If there is no messages history --%>
 <c:if test="${empty messages}">
-    <div class="col-4 text-center tab-title">
-        <strong><spring:message code="req_title"/></strong>
-    </div>
     <div class="card no-proj-mine">
         <div class="card-header">
-            <h5 class="card-title text-white centered"><spring:message code="no_offers" arguments=""/></h5>
+            <h5 class="card-title text-white centered"><spring:message code="no_offers"/></h5>
         </div>
     </div>
 </c:if>

@@ -62,10 +62,11 @@ public class UserController {
      * @return Model and view
      */
     @RequestMapping(value = "/dashboard")
-    public ModelAndView myDashboard() {
+    public ModelAndView myDashboard(@RequestParam(name = "funded", defaultValue = "false") boolean funded) {
 
         ModelAndView mav = new ModelAndView("user/dashboard");
-        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId()));
+        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId(), funded));
+        mav.addObject("funded", funded);
         return mav;
     }
 
@@ -97,12 +98,5 @@ public class UserController {
         mav.addObject("messagePage", userService.getOfferMessages(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
-
-    @RequestMapping("/stop/{p_id}")
-    public ModelAndView stopFunding(@PathVariable("p_id") Long projectId){
-        userService.acceptProject(projectId);
-        return new ModelAndView("redirect:/dashboard");
-    }
-
 
 }

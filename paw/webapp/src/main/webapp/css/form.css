@@ -1,3 +1,8 @@
+body a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
+.btn, .row, .custom-form-input, .custom-form-file,.custom-form-select{
+    font-family: 'Lato', sans-serif;
+}
+
 .formError {
     color: red;
 }
@@ -64,9 +69,14 @@ h2 {
     font-style: italic;
     margin-top: 0px;
     margin-bottom: 5px;
+    white-space: pre-wrap;
 }
 
 .form-label {
     margin-top: 10px;
     margin-bottom: 5px;
+}
+
+.project-image-header {
+    margin-top: 10px;
 }

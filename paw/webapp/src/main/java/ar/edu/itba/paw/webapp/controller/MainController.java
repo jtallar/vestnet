@@ -27,7 +27,7 @@ public class MainController {
      */
     @RequestMapping("/")
     public ModelAndView index() {
-        if (sessionUser.isEntrepreneur()) return new ModelAndView("redirect:/dashboard");
+        if (sessionUser.isEntrepreneur()) return new ModelAndView("redirect:/projects");
         if (sessionUser.isInvestor()) return new ModelAndView("redirect:/projects");
         return new ModelAndView("redirect:/welcome");
     }

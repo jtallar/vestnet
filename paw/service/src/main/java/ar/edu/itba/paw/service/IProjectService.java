@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.image.Image;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,14 @@ public class IProjectService implements ProjectService {
 
     @Override
     @Transactional
-    public Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image) {
+    public Project create(String name, String summary, long cost, long ownerId,
+                          List<Long> categoriesIds, byte[] image, List<byte[]> slideshow) {
 
         List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
         Project newProject = projectDao.create(name, summary, cost, new User(ownerId), categories);
         if (image.length > 0) imageDao.create(newProject, image, true);
+        slideshow.removeIf(bytes -> bytes.length == 0);
+        slideshow.forEach(bytes -> imageDao.create(newProject, bytes, false));
         return newProject;
     }
 
@@ -54,6 +58,7 @@ public class IProjectService implements ProjectService {
         filters.values().removeIf(value -> (value == null || value.toString().equals("")));
         List<FilterCriteria> params = new ArrayList<>();
         filters.forEach((key, value) -> params.add(new FilterCriteria(key, value)));
+        params.add(new FilterCriteria("funded", false));
 
         return projectDao.findAll(params, OrderField.getEnum(order), new PageRequest(page, pageSize));
     }
@@ -69,6 +74,16 @@ public class IProjectService implements ProjectService {
         return project;
     }
 
+    @Override
+    @Transactional
+    public Project setFunded(long projectId) {
+        Optional<Project> optionalProject = findById(projectId);
+        if (!optionalProject.isPresent()) return null;
+        Project project = optionalProject.get();
+        project.setFunded(true);
+        return project;
+    }
+
 
     @Override
     public List<Category> getAllCategories() {
@@ -78,7 +93,7 @@ public class IProjectService implements ProjectService {
 
     @Override
     public byte[] getPortraitImage(long id) {
-        Optional<ProjectImage> optionalImage = imageDao.findProjectMain(new Project(id));
+        Optional<ProjectImage> optionalImage = imageDao.findProjectImages(new Project(id), true).stream().findFirst();
         if (optionalImage.isPresent()) return optionalImage.get().getImage();
 
         byte[] image;
@@ -93,8 +108,11 @@ public class IProjectService implements ProjectService {
 
 
     @Override
-    public List<ProjectImage> getAllImages(long id) {
-        return imageDao.findProjectAll(new Project(id));
+    public List<byte[]> getSlideshowImages(long id) {
+        List<ProjectImage> images = imageDao.findProjectImages(new Project(id), false);
+        return images.stream().map(Image::getImage).collect(Collectors.toList());
     }
+
+
 }
 

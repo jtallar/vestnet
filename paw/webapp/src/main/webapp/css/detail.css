@@ -72,3 +72,11 @@
 .formError {
     color: red;
 }
+
+.description{
+    min-width:500px !important;
+}
+
+.dropdown-item{
+    padding: 5px 5px 0 15px !important
+}

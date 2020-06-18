@@ -29,8 +29,10 @@ public class NewProjectFields {
     private List<Long> categories;
 
     @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE)
-    private MultipartFile image;
+    private MultipartFile portraitImage;
 
+    @ImageFile(maxSize = WebConfig.MAX_UPLOAD_SIZE, maxCount = WebConfig.MAX_SLIDESHOW_COUNT)
+    private List<MultipartFile> slideshowImages;
 
     /** Getters and setters */
 
@@ -50,8 +52,8 @@ public class NewProjectFields {
         return categories;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public MultipartFile getPortraitImage() {
+        return portraitImage;
     }
 
     public void setTitle(String title) {
@@ -70,8 +72,16 @@ public class NewProjectFields {
         this.categories = categories;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setPortraitImage(MultipartFile portraitImage) {
+        this.portraitImage = portraitImage;
+    }
+
+    public List<MultipartFile> getSlideshowImages() {
+        return slideshowImages;
+    }
+
+    public void setSlideshowImages(List<MultipartFile> slideshowImages) {
+        this.slideshowImages = slideshowImages;
     }
 
     @Override

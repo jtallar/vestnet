@@ -29,6 +29,7 @@
 <c:url var="icon_fav_on" value="/images/bookmarkOn.png"/>
 <c:url var="link_delete_fav" value="/deleteFavorite"/>
 <c:url var="link_add_fav" value="/addFavorite"/>
+<c:url var="link_slideshow" value="/imageController/slideshow"/>
 
 <body>
 
@@ -41,30 +42,49 @@
             </div>
             <c:if test="${contactStatus == 1}">
                 <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message
-                            code="successfulContact"/> <c:out value="${project.owner.firstName}"/></h5>
+                    <spring:message code="successfulContact" arguments="${project.owner.firstName}" var="firstNameVar"/>
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096">
+                        <c:out value="${firstNameVar}"/></h5>
                 </div>
             </c:if>
             <c:if test="${contactStatus == 2}">
                 <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message
-                            code="waitReply"/></h5>
+                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="waitReply"/></h5>
                 </div>
             </c:if>
         </div>
-        <div class="row" style="margin: 20px">
+
+        <div class="row" style="margin: 0">
             <div class="col-5">
-                <div class="container-img">
-                    <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img"
-                         alt="<spring:message code="projectImage"/>"
-                         aria-placeholder="<spring:message code="projectImage"/>"/>
+
+                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel" style="width: 100%; margin: 0 auto">
+                    <ol class="carousel-indicators" id="carousel-slides">
+
+                    </ol>
+                    <div class="carousel-inner">
+                        <div id="carousel-items">
+                        <div class="carousel-item active">
+                            <img src="<c:url value="/imageController/project/${project.id}"/>" class="proj-img d-block w-100" alt="<spring:message code="projectImage"/>"
+                                 style="width: 100%" aria-placeholder="<spring:message code="projectImage"/>"/>
+                        </div>
+                        </div>
+                    </div>
+
+                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="false"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="false"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
             </div>
 
             <%-- Favorite icon logic --%>
             <div class="col-6">
                 <div class="d-flex justify-content-center">
-                    <div class="card mb-3">
+                    <div class="card description mb-3">
                         <sec:authorize access="hasRole('ROLE_INVESTOR')">
                             <div class="card-header header-white">
                                 <button onclick="favTap()" class="btn-transp pull-right">
@@ -94,7 +114,8 @@
                             </c:forEach>
                             <br/>
                             <h5 class="card-title"><b><spring:message code="totalCost"/></b></h5>
-                            <p>U$D<c:out value="${project.cost}"/></p>
+                            <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>
+                            <p><c:out value="${costVar}"/></p>
 
                             <h5 class="card-title"><b><spring:message code="contactMail"/></b></h5>
                             <p><c:out value="${project.owner.email}"/></p>
@@ -150,9 +171,8 @@
 
 
                             <div class="dropdown-divider"></div>
-
-                            <p class="card-text"><small class="text-muted"><spring:message code="lastUpdated"/> <c:out
-                                    value="${project.updateDate}"/></small></p>
+                            <spring:message code="lastUpdated" arguments="${project.updateDate}" var="updateDateVar"/>
+                            <p class="card-text"><small class="text-muted"><c:out value="${updateDateVar}"/></small></p>
                         </div>
                     </div>
                 </div>
@@ -189,8 +209,8 @@
             <div class="collapse" id="contact">
                 <div class="card contact">
                     <div class="card-header">
-                        <label class="label-header"> <spring:message
-                                code="contact.header"/> ${project.owner.firstName} ${project.owner.lastName}</label>
+                        <spring:message code="contact.header" arguments="${project.owner.firstName},${project.owner.lastName}" var="contactHeaderVar"/>
+                        <label class="label-header"><c:out value="${contactHeaderVar}"/></label>
                         <button class="btn btn-dark pull-right" type="button" data-toggle="collapse"
                                 data-target="#contact" aria-expanded="false" aria-controls="contact">X
                         </button>
@@ -206,6 +226,7 @@
                                     <form:textarea path="body" type="text" class="form-control"
                                                    placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
                                 </div>
+                                <form:errors path="body" cssClass="formError"/>
                             </div>
 
                             <div class="container-contact">
@@ -242,6 +263,7 @@
                                                        aria-describedby="basic-addon2"/>
                                     </div>
                                 </div>
+                                <form:errors path="exchange" cssClass="formError"/>
                             </div>
 
                             <form:input path="receiverId" value="${project.owner.id}" type="hidden"/>
@@ -273,7 +295,46 @@
                     console.error(reason)
                 }))
         }
+        fetchImages();
     };
+
+    function fetchImages() {
+
+        fetch( '${link_slideshow}' + "/" + '${project.id}')
+            .then(response => response.json())
+            .then(data => {
+                let div = document.getElementById("carousel-items");
+                let ol = document.getElementById("carousel-slides");
+                let i;
+                for (i = 0; i < data.length; i++) {
+                    const dot = slidesDots(i);
+                    const element = imgTemplate(data[i]);
+                    div.innerHTML = div.innerHTML + element;
+                    ol.innerHTML = ol.innerHTML + dot;
+                }
+                const dot = slidesDots(i);
+                ol.innerHTML = ol.innerHTML + dot;
+
+            }).catch((function (reason) {
+            console.error(reason)
+        }));
+    }
+
+    function slidesDots(index){
+        if(index === 0)
+            return ` <li data-target="#carouselExampleCaptions" data-slide-to="\${index}" class="active"></li> `;
+        else
+            return ` <li data-target="#carouselExampleCaptions" data-slide-to="\${index}"></li> `;
+    }
+
+    function imgTemplate(imageSrc){
+        return `
+            <div class="carousel-item">
+            <img src="data:image/png;base64, \${imageSrc}" class="proj-img d-block w-100" alt="" style="width: 100%">
+            <div class="carousel-caption d-none d-md-block"></div>
+            </div>
+        `;
+    }
 </script>
 
 <script>

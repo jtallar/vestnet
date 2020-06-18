@@ -46,17 +46,10 @@ public class ImageJpaDao implements ImageDao {
 
 
     @Override
-    public Optional<ProjectImage> findProjectMain(Project project) {
-        final TypedQuery<ProjectImage> query = entityManager.createQuery("from ProjectImage where project = :project and main = true", ProjectImage.class);
+    public List<ProjectImage> findProjectImages(Project project, boolean main) {
+        final TypedQuery<ProjectImage> query = entityManager.createQuery("from ProjectImage where project = :project and main = :main", ProjectImage.class);
         query.setParameter("project", project);
-        return query.getResultList().stream().findFirst();
-    }
-
-
-    @Override
-    public List<ProjectImage> findProjectAll(Project project) {
-        final TypedQuery<ProjectImage> query = entityManager.createQuery("from ProjectImage where project = :project", ProjectImage.class);
-        query.setParameter("project", project);
+        query.setParameter("main", main);
         return query.getResultList();
     }
 }

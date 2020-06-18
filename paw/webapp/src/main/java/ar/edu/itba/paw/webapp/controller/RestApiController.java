@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,6 +52,18 @@ public class RestApiController {
         return projectService.getPortraitImage(projectId);
     }
 
+
+    /**
+     * Gets the stored slideshow images of a project,
+     * @param projectId The unique project id.
+     * @return The list with images in byte vector.
+     */
+    @RequestMapping(value = "/imageController/slideshow/{p_id}")
+    @ResponseBody
+    public List<byte[]> imageControllerProjectSlideshow(@PathVariable("p_id") long projectId) {
+
+        return projectService.getSlideshowImages(projectId);
+    }
 
     /**
      * Gets the stored image for a user.
@@ -150,6 +163,19 @@ public class RestApiController {
     @ResponseBody
     public ResponseEntity<Boolean> addHit(@PathVariable("p_id") long projectId) {
         projectService.addHit(projectId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    /**
+     * Sets funded to stopped on project.
+     * @param projectId The unique project id.
+     * @return Response entity.
+     */
+    @RequestMapping(value = "/stopFunding", method = RequestMethod.PUT, headers = "accept=application/json")
+    @ResponseBody
+    public ResponseEntity<Boolean> stopFunding(@RequestParam("p_id") long projectId) {
+        projectService.setFunded(projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
