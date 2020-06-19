@@ -1,13 +1,18 @@
-
-## #parse("/templates(o donde sea)/footer.vm") si se quisiera hacer componentes ponele
-
 <html>
-<body>
-<h5>${mail.subject}</h5>
-<div>
-    #message("add_project")
-    ${baseUrl}/verify?token=${token}
-</div>
-</span>
+<body style="font-family: 'Lato', sans-serif">
+
+<img src="cid:headerImage">
+
+<h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
+<h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
+
+<h4>#message("email.body.passwordReset")</h4>
+<h3>
+    #message("email.body.passwordResetButton")
+    <a href="${baseUrl}/resetPassword?token=${token}">#message("email.clickhere")</a>
+</h3>
+
+<h6><i>#message("email.moreinfo")</i></h6>
+
 </body>
 </html>

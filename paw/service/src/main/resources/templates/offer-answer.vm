@@ -1,0 +1,38 @@
+<html>
+
+<body style="font-family: 'Lato', sans-serif">
+
+<img src="cid:headerImage">
+
+<h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
+<h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
+
+<div>
+
+</div>
+
+#if(${answer})
+<h3>
+    #messageArgs("email.body.acceptProposal",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])
+    #message("email.click")<a href="${baseUrl}/projects/${project.getId()}">#message("email.clickhere")</a>
+    #message("email.clickproject")
+</h3>
+#else
+<h3>
+    #messageArgs("email.body.rejectProposal",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])
+    #message("email.click")<a href="${baseUrl}/projects/${project.getId()}">#message("email.clickhere")</a>
+    #message("email.clickproject")
+</h3>
+#end
+
+<h5>
+    #message("email.body.userProfile")
+    <a href="${baseUrl}/users/${sender.getId()}"> #message("email.clickhere")</a>
+</h5>
+
+<h5>#message("email.body.contactEntrepreneur")</h5>
+
+<h6><i>#message("email.moreinfo")</i></h6>
+
+</body>
+</html>

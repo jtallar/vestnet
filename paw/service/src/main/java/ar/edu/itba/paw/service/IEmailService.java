@@ -120,13 +120,6 @@ public class IEmailService implements EmailService {
         velocityContext.put("project", project);
         velocityContext.put("offer", offer);
 
-//        File image = new File("../resources/mailImages/email-header.png");
-//        String cid = emailSender.embed(url, "Logo");
-//        Map emailModel = new HashMap();
-//        emailModel.put("cid", cid);
-
-//        velocityContext.put("header", image);
-
         StringWriter stringWriter = new StringWriter();
         velocityEngine.mergeTemplate("/templates/offer.vm", "UTF-8", velocityContext, stringWriter);
         return stringWriter.toString();
