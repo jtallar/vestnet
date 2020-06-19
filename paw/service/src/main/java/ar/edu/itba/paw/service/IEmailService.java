@@ -10,6 +10,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -86,14 +87,16 @@ public class IEmailService implements EmailService {
     public void sendEmail(Mail mail) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         try {
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             mimeMessageHelper.setSubject(mail.getSubject());
             mimeMessageHelper.setFrom(mail.getFrom());
             mimeMessageHelper.setTo(mail.getTo());
             mimeMessageHelper.setText(mail.getContent(), true);
+            ClassPathResource resource = new ClassPathResource("/images/mail-header.png");
+            mimeMessageHelper.addInline("headerImage", resource);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
+
         } catch (MessagingException e) {
             e.printStackTrace(); // TODO should we do something? Retry send?
         }
@@ -116,6 +119,13 @@ public class IEmailService implements EmailService {
         velocityContext.put("sender", sender);
         velocityContext.put("project", project);
         velocityContext.put("offer", offer);
+
+//        File image = new File("../resources/mailImages/email-header.png");
+//        String cid = emailSender.embed(url, "Logo");
+//        Map emailModel = new HashMap();
+//        emailModel.put("cid", cid);
+
+//        velocityContext.put("header", image);
 
         StringWriter stringWriter = new StringWriter();
         velocityEngine.mergeTemplate("/templates/offer.vm", "UTF-8", velocityContext, stringWriter);
@@ -182,6 +192,7 @@ public class IEmailService implements EmailService {
         velocityContext.put("baseUrl", baseUrl);
         velocityContext.put("messages", this.messageSource);
         velocityContext.put("locale", Locale.forLanguageTag(receiver.getLocale()));
+//        velocityContext.put("header", new )
         return velocityContext;
     }
 

@@ -1,0 +1,25 @@
+##VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUrl);
+##velocityContext.put("sender", sender);
+##velocityContext.put("project", project);
+##velocityContext.put("offer", offer);
+
+<html>
+<body style="font-family: 'Lato', sans-serif">
+
+<img src="cid:headerImage">
+
+<h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
+<h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
+
+<h3>#messageArgs("email.body.reportContact",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])</h3>
+<h4>#messageArgs("email.body.offer",[${offer.getOffer()}])</h4>
+<h4>#messageArgs("email.body.inExchange",[${offer.getInterest()}])</h4>
+<h3>#message("email.body.messageHeader")</h3>
+<h4><i>${offer.getMessage()}</i></h4>
+
+<h5>#messageArgs("email.body.userProfile", ["${baseUrl}/users/${sender.getId()}"])</h5>
+<h5>#messageArgs("email.body.contactInvestor", ["${baseUrl}/dashboard#dashboard-project-${project.getId()}"])</h5>
+
+
+</body>
+</html>

@@ -24,7 +24,7 @@ public class Mail {
     private List<Object> attachments;
 
     public Mail() {
-        contentType = "text/plain";
+        contentType = "text/html";
         from = DEFAULT_EMAIL;
     }
 

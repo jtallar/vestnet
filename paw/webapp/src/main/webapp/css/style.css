@@ -43,7 +43,8 @@
 .logo-text:active, .logo-text:hover
 {
     color: #53006d;
-    text-decoration: none;
+    text-decoration: none;    font-family: 'Lato', sans-serif;
+
 }
 
 .dropdown-item{

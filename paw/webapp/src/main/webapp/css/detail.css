@@ -57,7 +57,7 @@
 }
 
 .contact{
-    margin-right:11%;
+    margin-right:10%;
     margin-left:auto;
     margin-bottom:50px;
 }
@@ -74,5 +74,10 @@
 }
 
 .description{
-    min-width:500px !important;
+    /*     margin-left:100px !important; */
+    width:570px !important;
+}
+
+.d-flex .btn-block{
+    margin-bottom:20px
 }
