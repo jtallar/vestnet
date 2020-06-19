@@ -6,5 +6,5 @@
 #end
 
 #macro(messageArgs $key, $args)
-    ${messages.getMessage($key,$args.toArray(),$locale)}
+    ${messages.getMessage($key, $args.toArray(), ${locale})}
 #end

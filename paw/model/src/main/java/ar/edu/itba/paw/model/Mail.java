@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Mail {
+
+    private static final String DEFAULT_EMAIL = "noreply.vestnet@gmail.com";
+
     private String from;
 
     private String to;
@@ -22,6 +25,7 @@ public class Mail {
 
     public Mail() {
         contentType = "text/plain";
+        from = DEFAULT_EMAIL;
     }
 
     public String getContentType() {
