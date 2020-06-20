@@ -82,17 +82,17 @@ public class ProjectController {
      * Single project view page.
      * @param mailFields Fields for mail contact
      * @param id The unique project id.
-     * @param contactStatus Boolean if mail was sent.
+     * @param sent Boolean if mail was sent.
      * @return Model and view.
      */
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.GET})
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields,
                                           @PathVariable("id") long id,
-                                          @RequestParam(name = "contactStatus", defaultValue = "0") int contactStatus) {
+                                          @RequestParam(name = "sent", defaultValue = "false") boolean sent) {
 
         final ModelAndView mav = new ModelAndView("project/singleView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
-        mav.addObject("contactStatus", contactStatus);
+        mav.addObject("sent", sent);
         if (sessionUser.isInvestor()) {
             mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
             mav.addObject("lastMessage", userService.getLastProjectOfferMessage(sessionUser.getId(), id));
@@ -116,14 +116,14 @@ public class ProjectController {
                                           final BindingResult errors,
                                           HttpServletRequest request) {
 
-        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Message", singleProjectView(mailFields, projectId, 0));
+        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Message", singleProjectView(mailFields, projectId, false));
 
         User sender = userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new);
         User receiver = userService.findById(mailFields.getReceiverId()).orElseThrow(UserNotFoundException::new);
         Project project = projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         eventPublisher.publishEvent(new OfferEvent(sender, receiver, project,
                 mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), getBaseUrl(request)));
-        return new ModelAndView("redirect:/projects/{id}" + "?contactStatus=1");
+        return new ModelAndView("redirect:/projects/{id}" + "?sent=true");
     }
 
 
