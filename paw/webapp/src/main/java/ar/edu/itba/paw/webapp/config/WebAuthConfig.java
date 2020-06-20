@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 
+import ar.edu.itba.paw.webapp.auth.MyCustomLoginSuccessHandler;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
@@ -51,6 +53,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource("classpath:public.pem");
         http.sessionManagement()
+
                 .invalidSessionUrl("/welcome")
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
@@ -62,18 +65,23 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").authenticated()
                 .and().formLogin()
                 .loginPage("/login")
+                .successHandler(myAuthenticationSuccessHandler())
+
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/", false)
                 .and().rememberMe()
                 .rememberMeParameter("remember_me")
                 .key(asString(resource))
                 .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
+
+
                 .and().logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and().csrf().disable();
     }
+
+    //                .defaultSuccessUrl("/", false)
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -87,6 +95,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+
+
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        System.out.println("CHAU");
+        return new MyCustomLoginSuccessHandler();
+    }
+
 
     /** Auxiliary functions */
 
