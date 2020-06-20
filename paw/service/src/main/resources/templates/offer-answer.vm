@@ -1,38 +1,39 @@
 <html>
 
-<body style="font-family: 'Lato', sans-serif">
+<body style="font-family:'Lato',sans-serif;border:solid black 1px; max-width:800px">
 
 <img src="cid:headerImage">
 
-<h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
-<h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
+<div style="padding: 10px; color: #4e4e4e; text-align:center; max-width:800px">
 
-<div>
+    <h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
+    <h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
 
+    #if(${answer})
+    <h3>
+        #messageArgs("email.body.acceptProposal",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])
+        #message("email.click")<a href="${baseUrl}/projects/${project.getId()}">#message("email.clickhere")</a>
+        #message("email.clickproject")
+    </h3>
+    #else
+    <h3>
+        #messageArgs("email.body.rejectProposal",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])
+        #message("email.click")<a href="${baseUrl}/projects/${project.getId()}">#message("email.clickhere")</a>
+        #message("email.clickproject")
+    </h3>
+    #end
 </div>
 
-#if(${answer})
-<h3>
-    #messageArgs("email.body.acceptProposal",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])
-    #message("email.click")<a href="${baseUrl}/projects/${project.getId()}">#message("email.clickhere")</a>
-    #message("email.clickproject")
-</h3>
-#else
-<h3>
-    #messageArgs("email.body.rejectProposal",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])
-    #message("email.click")<a href="${baseUrl}/projects/${project.getId()}">#message("email.clickhere")</a>
-    #message("email.clickproject")
-</h3>
-#end
+<div style="padding:10px;color:#38004d;text-align:left;max-width:800px;font-size:16px">
 
-<h5>
-    #message("email.body.userProfile")
-    <a href="${baseUrl}/users/${sender.getId()}"> #message("email.clickhere")</a>
-</h5>
+    <p style="font-weight:bold">
+        #message("email.body.userProfile")
+        <a href="${baseUrl}/users/${sender.getId()}"> #message("email.clickhere").</a>
+    </p>
+    <p style="font-weight: bold">#message("email.body.contactEntrepreneur")</p>
 
-<h5>#message("email.body.contactEntrepreneur")</h5>
-
-<h6><i>#message("email.moreinfo")</i></h6>
+    <p><i>#message("email.moreinfo")</i></p>
+</div>
 
 </body>
 </html>

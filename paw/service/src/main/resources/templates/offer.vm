@@ -4,30 +4,35 @@
 ##velocityContext.put("offer", offer);
 
 <html>
-<body style="font-family: 'Lato', sans-serif">
+
+<body style="font-family:'Lato',sans-serif;border:solid black 1px; max-width:800px">
 
 <img src="cid:headerImage">
 
-<h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
-<h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
+<div style="padding: 10px; color: #4e4e4e; text-align:center; max-width:800px">
+    <h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
+    <h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
 
-<h3>#messageArgs("email.body.reportContact",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])</h3>
-<h4>#messageArgs("email.body.offer",[${offer.getOffer()}])</h4>
-<h4>#messageArgs("email.body.inExchange",[${offer.getInterest()}])</h4>
-<h4>#message("email.body.messageHeader")</h4>
-<h4><i>${offer.getMessage()}</i></h4>
+    <h3>#messageArgs("email.body.reportContact",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])</h3>
+    <h4>#messageArgs("email.body.offer",[${offer.getOffer()}])</h4>
+    <h4>#messageArgs("email.body.inExchange",[${offer.getInterest()}])</h4>
+    <h4>#message("email.body.messageHeader")
+        <i>${offer.getMessage()}</i>
+    </h4>
+</div>
+<div style="padding:10px;color:#38004d;text-align:left;max-width:800px;font-size:16px">
+    <p style="font-weight:bold">
+        #message("email.body.userProfile")
+        <a href="${baseUrl}/users/${sender.getId()}">#message("email.clickhere").</a>
+    </p>
+    <p style="font-weight:bold">
+        #message("email.body.contactInvestor")
+        <a href="${baseUrl}/dashboard#dashboard-project-${project.getId()}">#message("email.clickhere")</a>
+        #message("email.body.contactInvestor2")
+    </p>
 
-<h5>
-    #message("email.body.userProfile")
-    <a href="${baseUrl}/users/${sender.getId()}">#message("email.clickhere").</a>
-</h5>
-<h5>
-    #message("email.body.contactInvestor")
-    <a href="${baseUrl}/dashboard#dashboard-project-${project.getId()}">#message("email.clickhere") </a>
-    #message("email.body.contactInvestor2")
-</h5>
-
-<h6><i>#message("email.moreinfo")</i></h6>
+    <p><i>#message("email.moreinfo")</i></p>
+</div>
 
 </body>
 </html>
