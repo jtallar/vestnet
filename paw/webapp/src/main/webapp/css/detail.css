@@ -78,6 +78,11 @@
     width:570px !important;
 }
 
+.dropdown-item{
+    padding: 5px 5px 0 15px !important
+}
+
+
 .d-flex .btn-block{
     margin-bottom:20px
 }

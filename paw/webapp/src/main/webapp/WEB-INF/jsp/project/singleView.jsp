@@ -122,10 +122,45 @@
 
                             <sec:authorize access="isAnonymous()">
                             <%-- TODO ask if wants to login/signup --%>
-                                <h5><a href="" class="btn btn-dark btn-sm disabled">
+                                <h5><a href="" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#expFunding">
                                     <spring:message code="singleView.button.createToViewProfile"/>
                                 </a></h5>
+
+
+
+
                             </sec:authorize>
+                            <!-- Authorization needed -->
+                            <div class="modal fade" id="expFunding" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog " role="document">
+                                    <div class="modal-content mx-auto my-auto">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">
+                                                <spring:message code="aut_needed"/>
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <spring:message code="aut_text"/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+
+                                                <a href="<c:url value="/login"/> " type="button" class="btn btn-dark">
+                                                    <spring:message code="header./login"/>
+                                                </a>
+
+                                                <a href="<c:url value="/signUp"/> " type="button" class="btn btn-dark">
+                                                    <spring:message code="sign_up"/>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
 
                             <sec:authorize access="isAuthenticated()">
                                 <c:if test="${session_user_id != project.owner.id}">
@@ -146,7 +181,7 @@
                 <div class="d-flex justify-content-end">
                     <sec:authorize access="isAnonymous()">
                         <%-- TODO ask if wants to login/sign up --%>
-                        <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button" disabled>
+                        <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button" data-toggle="modal" data-target="#expFunding">
                             <spring:message code="singleView.button.createToContactOwner"/>
                         </button>
                     </sec:authorize>
