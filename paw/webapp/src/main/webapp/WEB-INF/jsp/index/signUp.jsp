@@ -44,11 +44,14 @@
                 <form:form modelAttribute="userForm" method="POST" action="${link_sign_up}"
                            enctype="multipart/form-data">
                     <div class="row justify-content-center">
-                        <div class="col-2 text-left">
-                            <a href="${link_login}" class="btn btn-dark pull-left"><spring:message code="back"/></a>
+                        <div class="col-3 text-left">
+                            <a onclick="history.back()" class="btn btn-dark pull-left" href><spring:message code="back"/></a>
                         </div>
-                        <div class="col-md text-left">
-                            <h2 class="bold" style="margin-right: 20%"><spring:message code="sign_up_title"/></h2>
+                        <div class="col-6 text-center">
+                            <h2 class="bold" style="margin: 5 0 0 0"><spring:message code="sign_up_title"/></h2>
+                        </div>
+                        <div class="col-3 text-right">
+                            <a href="${link_login}" class="btn btn-dark pull-left"><spring:message code="submit"/></a>
                         </div>
                     </div>
 

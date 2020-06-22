@@ -39,6 +39,13 @@
 
 <%-- Project pagniation --%>
 <div class="row">
+<%--    <div class="col-3">--%>
+<%--         <c:set var="totalFound" value="12"/>--%>
+<%--         <c:if test="${page == endPage}">--%>
+<%--            <c:set var="totalFound" value="${projectPage.totalCount % 12}"/>--%>
+<%--         </c:if>--%>
+<%--        <p><spring:message code="feed.search.pages" arguments="${totalFound},${projectPage.totalCount}"/></p>--%>
+<%--    </div>--%>
     <div class="col-1"></div>
     <div class="col-11">
         <ul class="pagination justify-content-center">
@@ -146,13 +153,30 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="apply-btn">
+                    <div class="col-6 clear-btn">
+                    <input class="btn btn-clear pull-left" value="<spring:message code='clear'/>" onclick="clearFilter()">
+                    </div>
+                    <div class="col-6 apply-btn">
                         <input type="submit" class="btn btn-dark pull-right" value="<spring:message code='apply'/>" onclick="adjustInputs()">
                     </div>
                 </div>
             </div>
         </form:form>
     </div>
+
+    <c:choose>
+        <c:when test="${page == endPage && page != startPage}">
+            <c:set var="totalFound" value="${projectPage.totalCount % 12}"/>
+        </c:when>
+        <c:when test="${page == endPage && page == startPage}">
+            <c:set var="totalFound" value="${projectPage.totalCount}"/>
+        </c:when>
+        <c:otherwise>
+            <c:set var="totalFound" value="12"/>
+        </c:otherwise>
+    </c:choose>
+    <p class="results"><spring:message code="feed.search.pages" arguments="${totalFound},${projectPage.totalCount}"/></p>
+
 </div>
 
 <%-- PROJECTS --%>
@@ -287,6 +311,15 @@
         if (!window.location.search.includes("?")) window.location.href = url + "?page=" + page;
         else if (window.location.search.includes("page")) window.location.href = url.replace(/page=[0-9]*/, "page=" + page);
         else window.location.href = url + "&page=" + page;
+    }
+
+    function clearFilter() {
+        document.getElementById("keyword").value = "";
+        document.getElementById("field").value = '1';
+        document.getElementById("category").value = '';
+        document.getElementById("order").value = '1';
+        document.getElementById("filter-form-min").value = null;
+        document.getElementById("filter-form-max").value = null;
     }
 
     function adjustInputs() {

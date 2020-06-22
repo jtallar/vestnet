@@ -378,7 +378,7 @@
 
     // TODO check if can be done differently
     function getBackAction() {
-        if (${!sent}) {
+        if (${sent==false}) {
             history.back();
         } else {
             history.back();
