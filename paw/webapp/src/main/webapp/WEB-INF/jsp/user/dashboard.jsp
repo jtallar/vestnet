@@ -25,19 +25,17 @@
 <c:url var="link_stop_funding" value="/stopFunding"/>
 
 <body>
-
+<%-- Dashboard view --%>
+<div class="row">
+    <div class="col-2"></div>
+    <strong class="tab-title2"><spring:message code="my_projects"/></strong>
+</div>
 <div class="row">
     <div class="col-8"></div>
     <input type="checkbox" onchange="changeFunded()" data-toggle="toggle"
            data-on="<spring:message code="show_acc_proj"/> " data-off="<spring:message code="show_curr_proj"/> "
            data-onstyle="dark" data-offstyle="white" id="funded-toggle"
-            <c:if test="${funded}">checked</c:if>>
-</div>
-
-<%-- Dashboard view --%>
-<div class="row">
-    <div class="col-2"></div>
-<strong class="tab-title2"><spring:message code="my_projects"/></strong>
+           <c:if test="${funded}">checked</c:if>>
 </div>
 <c:forEach var="project" items="${projects}" varStatus="status">
 

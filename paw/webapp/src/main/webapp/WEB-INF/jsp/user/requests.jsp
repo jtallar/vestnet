@@ -53,6 +53,11 @@
     <span class="anchor-header" id="dashboard-project-${message.project_id}"></span>
     <div class="container-deal py-3">
         <div class="card">
+
+            <div class="card-header header-grey">
+                <c:url value="/projects/${message.project.id}" var="viewProject"/>
+                <a href="${viewProject}" class="btn-link"><c:out value="${message.project.name}"/></a>
+            </div>
             <div class="card-deal">
                 <strong><spring:message code="msg.title.body"/> </strong>
                 <p><c:out value="${message.content.message}"/></p>
