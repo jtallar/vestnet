@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class MessageJdbcDaoTest {
+public class MessageJpaDaoTest {
 
     private static final String MESSAGE_TABLE = "messages";
     private static final String COUNTRIES_TABLE = "countries";
