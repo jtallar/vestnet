@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
+import ar.edu.itba.paw.model.location.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -31,6 +35,7 @@ public class LocationJpaDaoTest {
     private static final String CITY_TABLE = "cities";
     private static final String USERS_TABLE = "users";
 
+
     private static final String COUNTRY_NAME = "Peronlandia";
     private static final int COUNTRY_ID = 1;
     private static final String STATE_NAME = "Buenos Aires";
@@ -44,7 +49,7 @@ public class LocationJpaDaoTest {
     private DataSource dataSource;
 
     @Autowired
-    private LocationJpaDao locationJdbcDao;
+    private LocationJpaDao locationJpaDao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity;
@@ -73,7 +78,7 @@ public class LocationJpaDaoTest {
         // 1 - Setup - Empty country table
 
         // 2 - Execute
-        List<Country> countries = locationJdbcDao.findAllCountries();
+        List<Country> countries = locationJpaDao.findAllCountries();
 
         // 3 - Assert
         assertTrue(countries.isEmpty());
@@ -85,7 +90,7 @@ public class LocationJpaDaoTest {
         createCountry();
 
         // 2 - Execute
-        List<Country> countries = locationJdbcDao.findAllCountries();
+        List<Country> countries = locationJpaDao.findAllCountries();
 
         // 3 - Assert - Quantity, Name, ID
         assertEquals(1, countries.size());
@@ -98,7 +103,7 @@ public class LocationJpaDaoTest {
         // 1 - Setup - Empty tables
 
         // 2 - Execute
-        List<State> states = locationJdbcDao.findStates(COUNTRY_ID);
+        List<State> states = locationJpaDao.findStates(new Country(COUNTRY_ID));
 
         // 3 - Assert
         assertTrue(states.isEmpty());
@@ -111,7 +116,7 @@ public class LocationJpaDaoTest {
         createState();
 
         // 2 - Execute
-        List<State> states = locationJdbcDao.findStates(COUNTRY_ID);
+        List<State> states = locationJpaDao.findStates(new Country(COUNTRY_ID));
 
         // 3 - Assert - Quantity, Name, ID
         assertEquals(1, states.size());
@@ -124,7 +129,7 @@ public class LocationJpaDaoTest {
         // 1 - Setup - Empty tables
 
         // 2 - Execute
-        List<City> city = locationJdbcDao.findCities(STATE_ID);
+        List<City> city = locationJpaDao.findCities(new State(STATE_ID));
 
         // 3 - Assert
         assertTrue(city.isEmpty());
@@ -138,7 +143,7 @@ public class LocationJpaDaoTest {
         createCity();
 
         // 2 - Execute
-        List<City> city = locationJdbcDao.findCities(STATE_ID);
+        List<City> city = locationJpaDao.findCities(new State(STATE_ID));
 
         // 3 - Assert - Quantity, Name, ID
         assertEquals(1, city.size());
