@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import java.util.*;
@@ -28,6 +30,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
+@Rollback(false)
 public class MessageJpaDaoTest {
 
     private static final String MESSAGE_TABLE = "messages";
@@ -50,6 +53,9 @@ public class MessageJpaDaoTest {
     private static final int ROLE_ID = 3;
     private static final int USER_ID = 1;
     private static final int PROJECT_ID = 1;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private DataSource dataSource;
@@ -98,6 +104,7 @@ public class MessageJpaDaoTest {
 
         createLocation();
         createRole();
+        createProject(createUser());
     }
 
     @Test
@@ -109,11 +116,11 @@ public class MessageJpaDaoTest {
         Message.MessageContent content = new Message.MessageContent(MESSAGE, OFFER, INTEREST);
 
         // 2 - Execute
-        Message message = messageJpaDao.create(content, new User(investorId.longValue()), new User(entrepreneurId.longValue()), new Project(projectId.longValue()));
+        messageJpaDao.create(content, new User(investorId.longValue()), new User(entrepreneurId.longValue()), new Project(projectId.longValue()));
 
 
         // 3 - Assert
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, MESSAGE_TABLE));
+        assertEquals(1, TestUtils.countRowsInTable(entityManager, MESSAGE_TABLE));
     }
 
 
@@ -147,11 +154,11 @@ public class MessageJpaDaoTest {
         List<FilterCriteria> filters = fillConversationFilters(investorId, entrepreneurId, projectId);
 
         // 2 - Execute
-        Page<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(1, 10));
+        List<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
 
         // 3 - Assert - Quantity, Name
-        assertEquals(2, messages.getContent().size());
-        assertEquals(MESSAGE, messages.getContent().get(0).getContent().getMessage());
+        assertEquals(2, messages.size());
+        assertEquals(MESSAGE, messages.get(0).getContent().getMessage());
     }
 
     @Test
