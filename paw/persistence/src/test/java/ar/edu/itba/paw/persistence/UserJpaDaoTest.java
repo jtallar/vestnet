@@ -10,6 +10,7 @@ import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
+import org.hibernate.tuple.entity.EntityTuplizer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +59,9 @@ public class UserJpaDaoTest {
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "12345";
     private static final String LOCALE = "en";
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private DataSource dataSource;
@@ -109,7 +116,7 @@ public class UserJpaDaoTest {
         }
 
         // 3 - Assert
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, USERS_TABLE));
+        assertEquals(1, TestUtils.countRowsInTable(entityManager, USERS_TABLE));
     }
 
     @Test
