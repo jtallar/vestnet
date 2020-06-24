@@ -108,7 +108,7 @@
                                         <span> <spring:message code="see_msgs"/></span>
                                             <%-- TODO fix this, make it work --%>
                                             <c:if test="${project.msgCount != 0}">
-                                                <span class="badge bg-danger"><c:out value="${project.notRead}"/></span>
+                                                <span class="badge bg-danger"><c:out value="${project.msgCount}"/></span>
                                             </c:if>
                                             <%--                                    </div>--%>
                                     </button>

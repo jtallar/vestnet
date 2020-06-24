@@ -201,6 +201,15 @@ public class Project {
     }
 
 
+    public void addMsgCount(){
+        this.msgCount += 1;
+    }
+
+    public void decMsgCount(){
+        this.msgCount -= 1;
+    }
+
+
     @Override
     public String toString() {
         return "Project{" +
