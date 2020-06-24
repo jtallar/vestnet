@@ -167,8 +167,9 @@
 }
 
 .no-proj-mine{
-    margin-left: 28% !important;
-    margin-right: 28% !important;
+    width:1000px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     margin-top:30px !important;
 }
 
@@ -385,4 +386,9 @@ html {
     text-align:center !important;
     max-width:450px;
     font-style: italic;
+}
+
+.add-new{
+    margin-left:auto;
+    margin-right:auto;
 }

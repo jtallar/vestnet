@@ -27,12 +27,12 @@
 <body>
 <%-- Dashboard view --%>
 <div class="row">
-    <div class="col-2"></div>
-    <strong class="tab-title2"><spring:message code="my_projects"/></strong>
-</div>
-<div class="row">
-    <div class="col-8"></div>
-    <input type="checkbox" onchange="changeFunded()" data-toggle="toggle"
+    <div class="col-1"></div>
+    <div class="col-4"><strong class="tab-title2"><spring:message code="my_projects"/></strong></div>
+<%--</div>--%>
+<%--<div class="row">--%>
+    <div class="col-3"></div>
+    <div class="col-4"><input type="checkbox" onchange="changeFunded()" data-toggle="toggle"
            data-on="<spring:message code="show_acc_proj"/> " data-off="<spring:message code="show_curr_proj"/> "
            data-onstyle="dark" data-offstyle="white" id="funded-toggle"
            <c:if test="${funded}">checked</c:if>>
@@ -137,9 +137,11 @@
         </div>
     </div>
 </c:if>
+</div>
 
+<div class="dropdown-divider" style="margin-left: auto; margin-right:auto; margin-top:3%; width:50%"></div>
 <%-- Add a new project link --%>
-<div class="text-center mt-5 mb-5">
+<div class="text-center add-new mt-5 mb-5">
     <a href="${link_new_project}" class="btn btn-white btn-lg"> <spring:message code="add_project"/> </a>
 </div>
 
