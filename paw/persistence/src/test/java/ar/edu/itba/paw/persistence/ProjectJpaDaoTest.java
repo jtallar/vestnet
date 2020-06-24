@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-@Rollback(false)
 public class ProjectJpaDaoTest {
 
     private static final String PROJECTS_TABLE = "projects";
@@ -62,8 +61,6 @@ public class ProjectJpaDaoTest {
     private static final String PROJECT_NAME_2 = "Project 2";
     private static final long PROJECT_COST_2 = 9200;
     private static final String CATEGORY_NAME_2 = "Software";
-
-    private static final Integer PAGE_SIZE = 10;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -194,7 +191,7 @@ public class ProjectJpaDaoTest {
 
     @Test
     public void testFindByCategory() {
-        // 1 - Setup - Empty table
+        // 1 - Setup - Create 2 different projects
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
@@ -215,7 +212,7 @@ public class ProjectJpaDaoTest {
 
     @Test
     public void testFindByRangeMin() {
-        // 1 - Setup - Empty table
+        // 1 - Setup - Create 2 different projects
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
@@ -236,7 +233,7 @@ public class ProjectJpaDaoTest {
 
     @Test
     public void testFindByRangeMax() {
-        // 1 - Setup - Empty table
+        // 1 - Setup - Create 2 different projects
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
@@ -257,7 +254,7 @@ public class ProjectJpaDaoTest {
 
     @Test
     public void testFindByRangeMinMax() {
-        // 1 - Setup - Empty table
+        // 1 - Setup - Create 2 different projects
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
@@ -278,7 +275,7 @@ public class ProjectJpaDaoTest {
 
     @Test
     public void testFindByKeywordNameFound() {
-        // 1 - Setup - Empty table
+        // 1 - Setup - Create 2 different projects
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
@@ -299,7 +296,7 @@ public class ProjectJpaDaoTest {
 
     @Test
     public void testFindByKeywordNameNotFound() {
-        // 1 - Setup - Empty table
+        // 1 - Setup - Create 2 different projects
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
@@ -318,7 +315,7 @@ public class ProjectJpaDaoTest {
 
     @Test
     public void testFindByMultipleFilters() {
-        // 1 - Setup - Empty table
+        // 1 - Setup - Create 4 different projects
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
@@ -448,13 +445,15 @@ public class ProjectJpaDaoTest {
     }
 
     /**
-     * Creates a project given its user id.
+     * Creates a project given its name, owner id and cost
+     * @param name Project name
      * @param userId Owner user id.
+     * @param cost Project cost
      * @return The unique project id.
      */
     private Number createProject(String name, Number userId, long cost) {
         Map<String, Object> project = new HashMap<>();
-        project.put("owner_id", userId);
+        project.put("owner_id", userId.longValue());
         project.put("project_name", name);
         project.put("summary", PROJECT_SUMMARY);
         project.put("cost", cost);
@@ -479,7 +478,7 @@ public class ProjectJpaDaoTest {
      * Creates filters for searching keyword projects
      * @param keyword keyword to look for
      * @param field field to search keyword in
-     * @return The list with the criteria
+     * @return The map with the criteria
      */
     private Map<String, Object> getKeywordMap(String keyword, String field) {
         Map<String, Object> map = new HashMap<>();
@@ -491,7 +490,7 @@ public class ProjectJpaDaoTest {
      * Creates filters for searching range projects
      * @param minCost minimun cost
      * @param maxCost minimun cost
-     * @return The list with the criteria
+     * @return The map with the criteria
      */
     private Map<String, Object> getRangeMap(String minCost, String maxCost) {
         Map<String, Object> map = new HashMap<>();
@@ -503,7 +502,7 @@ public class ProjectJpaDaoTest {
     /**
      * Creates filters for searching categories projects
      * @param categoryId Category id.
-     * @return The list with the criteria
+     * @return The map with the criteria
      */
     private Map<String, Object> getCategoryMap(Number categoryId) {
         Map<String, Object> map = new HashMap<>();
@@ -514,7 +513,7 @@ public class ProjectJpaDaoTest {
     /**
      * Creates filters for searching owner's projects
      * @param userId Owner user id.
-     * @return The list with the criteria
+     * @return The map with the criteria
      */
     private Map<String, Object> getOwnerMap(Number userId) {
         Map<String, Object> map = new HashMap<>();
