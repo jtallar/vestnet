@@ -98,7 +98,7 @@ public class IEmailService implements EmailService {
             emailSender.send(mimeMessageHelper.getMimeMessage());
 
         } catch (MessagingException e) {
-            e.printStackTrace(); // TODO should we do something? Retry send?
+//            e.printStackTrace(); // TODO should we do something? Retry send?
         }
     }
 

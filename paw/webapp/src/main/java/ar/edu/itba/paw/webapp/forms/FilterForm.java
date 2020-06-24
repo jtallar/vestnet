@@ -6,7 +6,6 @@ import javax.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: VER como hacer en el projectController para que si hay error vuelva a recargar form
 @ValidRange(minField = "minCost", maxField = "maxCost")
 public class FilterForm {
 
