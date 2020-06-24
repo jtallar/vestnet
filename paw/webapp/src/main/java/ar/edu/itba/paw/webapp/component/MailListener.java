@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.component;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.event.OfferAnswerEvent;
