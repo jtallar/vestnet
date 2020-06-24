@@ -85,10 +85,10 @@
                                 <c:forEach var="page" items="${dropdownpages}" varStatus="index">
                                     <a class="dropdown-item" href="<c:url value='${page}'/>"><spring:message code="header.${page}"/></a>
                                 </c:forEach>
-                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-divider-header"></div>
                                 <sec:authorize access="hasRole('ROLE_ENTREPRENEUR')">
                                     <a class="dropdown-item" href="<c:url value="/newProject"/>"><spring:message code="header./newProject"/></a>
-                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-divider-header"></div>
                                 </sec:authorize>
 
                                 <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal"><spring:message code="header./logout"/></a>
