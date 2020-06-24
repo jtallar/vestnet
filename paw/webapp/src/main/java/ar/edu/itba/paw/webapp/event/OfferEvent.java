@@ -10,16 +10,16 @@ public class OfferEvent extends ApplicationEvent {
     private User sender;
     private User receiver;
     private Project project;
-    private Message.MessageContent content;
+    private Message message;
     private String baseUrl;
 
-    public OfferEvent(User sender, User receiver, Project project, String body, int offer, String interest, String baseUrl) {
+    public OfferEvent(User sender, User receiver, Project project, Message message, String baseUrl) {
         super(sender);
         this.baseUrl = baseUrl;
         this.sender = sender;
         this.receiver = receiver;
         this.project = project;
-        this.content = new Message.MessageContent(body, String.valueOf(offer), interest);
+        this.message = message;
     }
 
 
@@ -37,8 +37,8 @@ public class OfferEvent extends ApplicationEvent {
         return project;
     }
 
-    public Message.MessageContent getContent() {
-        return content;
+    public Message getMessage() {
+        return message;
     }
 
     public String getBaseUrl() {

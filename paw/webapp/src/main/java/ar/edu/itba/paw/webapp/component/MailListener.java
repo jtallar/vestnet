@@ -44,15 +44,12 @@ public class MailListener {
     @Async
     @EventListener
     public void offer(OfferEvent event) {
-        messageService.create(event.getContent().getMessage(), Integer.parseInt(event.getContent().getOffer()), event.getContent().getInterest(),
-                event.getSender().getId(), event.getReceiver().getId(), event.getProject().getId());
-        emailService.sendOffer(event.getSender(), event.getReceiver(), event.getProject(), event.getContent(), event.getBaseUrl());
+        emailService.sendOffer(event.getSender(), event.getReceiver(), event.getProject(), event.getMessage().getContent(), event.getBaseUrl());
     }
 
     @Async
     @EventListener
     public void offerAnswer(OfferAnswerEvent event) {
-        messageService.updateMessageStatus(event.getReceiver().getId(), event.getSender().getId(), event.getProject().getId(), event.getAnswer());
         emailService.sendOfferAnswer(event.getSender(), event.getReceiver(), event.getProject(), event.getAnswer(), event.getBaseUrl());
     }
 }
