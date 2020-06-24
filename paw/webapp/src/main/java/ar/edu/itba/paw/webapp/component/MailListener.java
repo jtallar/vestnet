@@ -22,9 +22,6 @@ public class MailListener {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private MessageService messageService;
-
     @Async
     @EventListener
     public void verification(VerificationEvent event) {
