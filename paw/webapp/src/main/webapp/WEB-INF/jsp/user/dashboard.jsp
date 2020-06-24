@@ -104,13 +104,12 @@
                                     <button onclick="fetchMessages(${project.id}, ${status.index})"
                                             class="btn btn-dark btn-project pull-right"  type="button" data-toggle="collapse"
                                             data-target="#collapse${project.id}" aria-expanded="false" aria-controls="collapse${project.id}">
-                                            <%--                                    <div class="notification-icon">--%>
+                                    <div class="notification-icon">
                                         <span> <spring:message code="see_msgs"/></span>
-                                            <%-- TODO fix this, make it work --%>
-                                            <%--<c:if test="${project.notRead != 0}">--%>
-                                            <%--<span class="badge bg-danger"><c:out value="${project.notRead}"/></span>--%>
-                                            <%--</c:if>--%>
-                                            <%--                                    </div>--%>
+                                            <c:if test="${project.msgCount != 0}">
+                                                <span class="badge bg-danger"><c:out value="${project.msgCount}"/></span>
+                                            </c:if>
+                                        </div>
                                     </button>
                                 </c:if>
                             </div>
