@@ -62,7 +62,7 @@ public class IEmailService implements EmailService {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.passwordReset", null, Locale.forLanguageTag(user.getLocale())));
-        mail.setContent(prepareTokenMail(mail, user, token, baseUrl, true));
+        mail.setContent(prepareTokenMail(mail, user, token, baseUrl, false));
         sendEmail(mail);
     }
 
