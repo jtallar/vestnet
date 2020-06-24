@@ -82,3 +82,7 @@ h2 {
 .project-image-header {
     margin-top: 10px;
 }
+
+.white-text{
+    color:white !important;
+}
