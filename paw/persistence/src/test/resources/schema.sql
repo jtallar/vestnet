@@ -49,14 +49,14 @@ CREATE TABLE IF NOT EXISTS roles (
 );
 
 
-CREATE TABLE user_location (
+CREATE TABLE IF NOT EXISTS user_location (
     id                  INTEGER IDENTITY PRIMARY KEY,
     country_id          INT NOT NULL,
     state_id            INT NOT NULL,
     city_id             INT NOT NULL
 );
 
-CREATE TABLE user_images (
+CREATE TABLE IF NOT EXISTS user_images (
     id                 INT PRIMARY KEY,
     image              VARCHAR(50)
 );
@@ -109,7 +109,8 @@ CREATE TABLE IF NOT EXISTS projects (
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     hits            INT DEFAULT 0,
-    funded          BOOLEAN DEFAULT FALSE
+    funded          BOOLEAN DEFAULT FALSE,
+    message_count   INT DEFAULT 0;
 );
 
 
@@ -159,7 +160,7 @@ CREATE TABLE IF NOT EXISTS messages (
     project_id          INT NOT NULL
 );
 
-CREATE TABLE project_images (
+CREATE TABLE IF NOT EXISTS project_images (
     id                  INT PRIMARY KEY,
     project_id          INT NOT NULL,
     image               VARCHAR(50),
