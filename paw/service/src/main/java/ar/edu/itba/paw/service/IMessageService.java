@@ -36,18 +36,6 @@ public class IMessageService implements MessageService {
 
 
     @Override
-    public Page<Message> getConversation(long receiverId, long senderId, long projectId, Integer page, Integer pageSize) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(receiverId)));
-        filters.add(new FilterCriteria("receiver", new User(senderId)));
-        filters.add(new FilterCriteria("sender", new User(receiverId)));
-        filters.add(new FilterCriteria("sender", new User(senderId)));
-        filters.add(new FilterCriteria("project", new Project(projectId)));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
-    }
-
-
-    @Override
     @Transactional
     public Message updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted) {
         List<FilterCriteria> filters = new ArrayList<>();

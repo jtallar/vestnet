@@ -125,43 +125,6 @@ public class MessageJpaDaoTest {
 
 
     @Test
-    public void testGetConversationsIfTableEmpty() {
-        // 1 - Setup - Empty message tables
-        Number investorId = createUser();
-        Number entrepreneurId = createUser();
-        Number projectId = createProject(entrepreneurId);
-        List<FilterCriteria> filters = fillConversationFilters(investorId, entrepreneurId, projectId);
-
-        // 2 - Execute
-        Page<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(1, 10));
-
-        // 3 - Assert
-        assertTrue(messages.getContent().isEmpty());
-    }
-
-
-
-
-    @Test
-     public void testGetConversationsIfTableNotEmpty() {
-        // 1 - Setup - Create message tables
-        Number investorId = createUser();
-        Number entrepreneurId = createUser();
-        Number projectId = createProject(entrepreneurId);
-        createMessage(investorId, entrepreneurId, projectId, false);
-        createMessage(investorId,entrepreneurId, projectId, true);
-
-        List<FilterCriteria> filters = fillConversationFilters(investorId, entrepreneurId, projectId);
-
-        // 2 - Execute
-        List<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
-
-        // 3 - Assert - Quantity, Name
-        assertEquals(2, messages.size());
-        assertEquals(MESSAGE, messages.get(0).getContent().getMessage());
-    }
-
-    @Test
     public void testGetUnreadMessagesIfTableEmpty() {
         // 1 - Setup - Empty message tables
         Number investorId = createUser();
@@ -297,24 +260,6 @@ public class MessageJpaDaoTest {
         message.put("receiver_id", changeOrder ? senderId : receiverId);
         message.put("project_id", projectId);
         return jdbcInsertMessage.executeAndReturnKey(message);
-    }
-
-
-    /**
-     * Creates filters to get all the conversation.
-     * @param senderId Senders unique id.
-     * @param receiverId Receivers unique id.
-     * @param projectId Project unique id.
-     * @return The list of filters.
-     */
-    private List<FilterCriteria> fillConversationFilters(Number senderId, Number receiverId, Number projectId) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(receiverId.intValue())));
-        filters.add(new FilterCriteria("receiver", new User(senderId.intValue())));
-        filters.add(new FilterCriteria("sender", new User(receiverId.intValue())));
-        filters.add(new FilterCriteria("sender", new User(senderId.intValue())));
-        filters.add(new FilterCriteria("project", new Project(projectId.intValue())));
-        return filters;
     }
 
 
