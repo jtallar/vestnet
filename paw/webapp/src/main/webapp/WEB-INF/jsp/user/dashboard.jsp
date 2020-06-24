@@ -107,9 +107,9 @@
                                             <%--                                    <div class="notification-icon">--%>
                                         <span> <spring:message code="see_msgs"/></span>
                                             <%-- TODO fix this, make it work --%>
-                                            <%--<c:if test="${project.notRead != 0}">--%>
-                                            <%--<span class="badge bg-danger"><c:out value="${project.notRead}"/></span>--%>
-                                            <%--</c:if>--%>
+                                            <c:if test="${project.msgCount != 0}">
+                                                <span class="badge bg-danger"><c:out value="${project.notRead}"/></span>
+                                            </c:if>
                                             <%--                                    </div>--%>
                                     </button>
                                 </c:if>

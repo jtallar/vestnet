@@ -62,7 +62,7 @@ public class Project {
     private List<User> favoriteBy;
 
     @Column(name = "message_count" , nullable = false)
-    private Integer msgCount = 0;
+    private Integer msgCount;
 
     /** Protected */ Project() {
         /** For hibernate only */
@@ -78,6 +78,7 @@ public class Project {
         this.categories = categories;
         this.hits = 0;
         this.funded = false;
+        this.msgCount = 0;
     }
 
 
