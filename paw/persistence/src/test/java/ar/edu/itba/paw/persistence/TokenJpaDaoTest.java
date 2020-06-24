@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.UserRole;
-import ar.edu.itba.paw.model.location.City;
-import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
-import ar.edu.itba.paw.model.location.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,28 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class UserJpaDaoTest {
-
+public class TokenJpaDaoTest {
+    private static final String TOKEN_TABLE = "token";
     private static final String USERS_TABLE = "users";
     private static final String COUNTRIES_TABLE = "countries";
     private static final String STATES_TABLE = "states";
     private static final String CITIES_TABLE = "cities";
     private static final String ROLES_TABLE = "roles";
     private static final String LOCATIONS_TABLE = "user_location";
-
-    private static final int COUNTRY_ID = 1;
-    private static final int STATE_ID = 2;
-    private static final int CITY_ID = 3;
 
     private static final Integer ROLE_ID = UserRole.INVESTOR.getId();
     private static final String FIRST_NAME = "FirstName";
@@ -53,6 +45,14 @@ public class UserJpaDaoTest {
     private static final String PASSWORD = "12345";
     private static final String LOCALE = "en";
 
+    private static final String TOKEN = "this-is-actually-not-like-this";
+    private static final int EXPIRATION = 60 * 24;
+    private static final int TOKEN_ID = 2;
+
+    private static final int COUNTRY_ID = 1;
+    private static final int STATE_ID = 2;
+    private static final int CITY_ID = 3;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -60,15 +60,17 @@ public class UserJpaDaoTest {
     private DataSource dataSource;
 
     @Autowired
-    private UserJpaDao userJdbcDao;
-
+    private TokenJpaDao tokenJpaDao;
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertUser, jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation;
+    private SimpleJdbcInsert jdbcInsertUser, jdbcInsertRole, jdbcInsertToken;
+    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertLocation;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcInsertToken = new SimpleJdbcInsert(dataSource)
+                .withTableName(TOKEN_TABLE);
         jdbcInsertUser = new SimpleJdbcInsert(dataSource)
                 .withTableName(USERS_TABLE)
                 .usingGeneratedKeyColumns("id");
@@ -84,6 +86,7 @@ public class UserJpaDaoTest {
                 .usingGeneratedKeyColumns("id")
                 .withTableName(LOCATIONS_TABLE);
 
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, TOKEN_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CITIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATES_TABLE);
@@ -93,75 +96,47 @@ public class UserJpaDaoTest {
 
         createLocation();
         createRole();
+        createUser();
     }
-
 
     @Test
     public void testCreate() {
         // 1 - Setup
-        Location location = assignLocation();
-
-        // 2 - Execute
-        try {
-            userJdbcDao.create(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
-        } catch (UserAlreadyExistsException e) {
-            fail();
-        }
-
-        // 3 - Assert
-        assertEquals(1, TestUtils.countRowsInTable(entityManager, USERS_TABLE));
-    }
-
-    @Test
-    public void testFindByEmailDoesntExists() {
-        // 1 - Setup - Empty table
-
-        // 2 - Execute
-        Optional<User> optionalUser = userJdbcDao.findByUsername(EMAIL);
-
-        // 3 - Assert
-        assertFalse(optionalUser.isPresent());
-    }
-
-    @Test
-    public void testFindByEmailUserExists() {
-        // 1 - Setup - Create 1 user
-        createUser();
-
-        // 2 - Execute
-        Optional<User> optionalUser = userJdbcDao.findByUsername(EMAIL);
-
-        // 3 - Assert - FIRST, LAST NAME
-        assertTrue(optionalUser.isPresent());
-        assertEquals(FIRST_NAME, optionalUser.get().getFirstName());
-        assertEquals(LAST_NAME, optionalUser.get().getLastName());
-        assertEquals(EMAIL, optionalUser.get().getEmail());
-    }
-
-    @Test
-    public void testFindByIdDoesntExists() {
-        // 1 - Setup - Empty table
-
-        // 2 - Execute
-        Optional<User> optionalUser = userJdbcDao.findById(1L);
-
-        // 3 - Assert
-        assertFalse(optionalUser.isPresent());
-    }
-
-    @Test
-    public void testFindByIdUserExists() {
-        // 1 - Setup - Create 1 user
         Number userId = createUser();
 
         // 2 - Execute
-        Optional<User> optionalUser = userJdbcDao.findById(userId.longValue());
+        tokenJpaDao.create(new User(userId.longValue()));
+
+        // 3 - Assert
+        assertEquals(1, TestUtils.countRowsInTable(entityManager, TOKEN_TABLE));
+    }
+
+    @Test
+    public void testFindByTokenDoesntExists() {
+        // 1 - Setup - Empty table
+
+        // 2 - Execute
+        Optional<Token> optionalToken = tokenJpaDao.findByToken(TOKEN);
+
+        // 3 - Assert
+        assertFalse(optionalToken.isPresent());
+    }
+
+    @Test
+    public void testFindByTokenExists() {
+        // 1 - Setup - Create 1 user
+        Number userId = createToken();
+
+        // 2 - Execute
+        Optional<Token> optionalToken = tokenJpaDao.findByToken(TOKEN);
 
         // 3 - Assert - FIRST, LAST NAME
-        assertTrue(optionalUser.isPresent());
-        assertEquals(FIRST_NAME, optionalUser.get().getFirstName());
-        assertEquals(LAST_NAME, optionalUser.get().getLastName());
+        assertTrue(optionalToken.isPresent());
+        assertEquals(TOKEN, optionalToken.get().getToken());
+        assertTrue(optionalToken.get().isValid());
+        assertEquals(userId.longValue(), optionalToken.get().getUser().getId());
     }
+
 
 
     /**
@@ -201,17 +176,6 @@ public class UserJpaDaoTest {
     }
 
     /**
-     * Assigns the default location to a Location.
-     * @return The Location.
-     */
-    private Location assignLocation() {
-        return new Location(new Country(COUNTRY_ID),
-                new State(STATE_ID),
-                new City(CITY_ID));
-    }
-
-
-    /**
      * Inserts a User location un DB.
      * @return The generated ID.
      */
@@ -241,6 +205,32 @@ public class UserJpaDaoTest {
         user.put("locale", LOCALE);
         user.put("aux_date", new Date());
         return jdbcInsertUser.executeAndReturnKey(user);
+    }
+
+    /**
+     * Creates a new token and inserts it
+     */
+    public Number createToken() {
+        Number userId = createUser();
+        Map<String, Object> token = new HashMap<>();
+        token.put("id", TOKEN_ID);
+        token.put("user_id", userId);
+        token.put("token", TOKEN);
+        token.put("expirydate", calculateExpiryDate(EXPIRATION));
+        jdbcInsertToken.execute(token);
+        return userId;
+    }
+
+    /**
+     * Calculates expiry date given a time.
+     * @param expiryTimeInMinutes The time given to calculate.
+     * @return Date of expiry.
+     */
+    private Date calculateExpiryDate(int expiryTimeInMinutes) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+        return new Date(cal.getTime().getTime());
     }
 
 }
