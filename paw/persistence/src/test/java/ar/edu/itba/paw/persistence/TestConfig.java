@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -48,6 +50,7 @@ public class TestConfig {
      * @return The created entity manager.
      */
     @Bean
+    @DependsOn("dbInitializer")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setPackagesToScan("ar.edu.itba.paw.model");
@@ -67,6 +70,7 @@ public class TestConfig {
         return factoryBean;
     }
 
+
     /**
      * The creator of a transaction manager.
      * @param entityManagerFactory The related entity manager.
@@ -77,6 +81,7 @@ public class TestConfig {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
+
     /**
      * Data source initializer for test.
      * @param ds The data source to initialize.
@@ -84,7 +89,7 @@ public class TestConfig {
      * Entity Manager creator.
      * @return The created entity manager.
      */
-    @Bean
+    @Bean(name = "dbInitializer")
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
         dsi.setDataSource(ds);

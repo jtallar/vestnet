@@ -57,7 +57,7 @@
 }
 
 .contact{
-    margin-right:11%;
+    margin-right:10%;
     margin-left:auto;
     margin-bottom:50px;
 }
@@ -71,4 +71,18 @@
 
 .formError {
     color: red;
+}
+
+.description{
+    /*     margin-left:100px !important; */
+    width:570px !important;
+}
+
+.dropdown-item{
+    padding: 5px 5px 0 15px !important
+}
+
+
+.d-flex .btn-block{
+    margin-bottom:20px
 }

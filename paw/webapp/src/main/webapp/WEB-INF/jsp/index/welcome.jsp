@@ -27,12 +27,15 @@
 <c:url var="link_sign_up" value='/signUp'/>
 <c:url var="link_projects" value='/projects'/>
 <c:url var="link_login" value='/login'/>
+<c:url var="link_welcome" value='/welcome'/>
 
 <body>
 <%-- Side navigation Logo --%>
 <div class="sidenav">
     <div class="text-center mt-5">
-        <img class="logo-img" src=${icon_logo}>
+        <a href="${link_welcome}">
+            <img class="logo-img" src=${icon_logo}>
+        </a>
     </div>
 </div>
 

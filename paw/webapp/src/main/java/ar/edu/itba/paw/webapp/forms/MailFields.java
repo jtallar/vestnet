@@ -1,11 +1,15 @@
 package ar.edu.itba.paw.webapp.forms;
 
+import javax.validation.constraints.Size;
+
 public class MailFields {
 
+    @Size(max = 250)
     private String body;
 
     private int offers;
 
+    @Size(max = 100)
     private String exchange;
 
     /** Injected */

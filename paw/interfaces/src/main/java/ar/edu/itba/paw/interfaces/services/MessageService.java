@@ -18,19 +18,6 @@ public interface MessageService {
      */
     Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId);
 
-
-    /**
-     * Gets an entire conversation paged.
-     * @param receiverId User receiver id.
-     * @param senderId User sender id.
-     * @param projectId Project in matter.
-     * @param page Page requested.
-     * @param pageSize Page size.
-     * @return Messages page with the required data.
-     */
-    Page<Message> getConversation(long receiverId, long senderId, long projectId, Integer page, Integer pageSize);
-
-
     /**
      * Identifies a message and updates its status.
      * @param senderId Unique user sender id.

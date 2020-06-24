@@ -38,15 +38,9 @@ public interface ImageDao {
     /**
      * Finds project main profile image.
      * @param project The project to find its image.
+     * @param main  If the images is the portrait one or not.
      * @return The optional main image.
      */
-    Optional<ProjectImage> findProjectMain(Project project);
+    List<ProjectImage> findProjectImages(Project project, boolean main);
 
-
-    /**
-     * Finds all project images.
-     * @param project The project to find its images.
-     * @return A list with all the related images.
-     */
-    List<ProjectImage> findProjectAll(Project project);
 }

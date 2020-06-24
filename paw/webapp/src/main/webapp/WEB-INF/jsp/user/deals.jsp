@@ -23,6 +23,9 @@
 
 
 <body>
+
+<strong class="tab-title"> <spring:message code="deals_title"/> </strong>
+
 <%-- Message pagniation --%>
 <div class="row">
     <div class="col">
@@ -51,17 +54,21 @@
     <span class="anchor-header" id="dashboard-project-${message.project_id}"></span>
     <div class="container-deal py-3">
         <div class="card">
+            <div class="card-header header-grey">
+                <c:url value="/projects/${message.project.id}" var="viewProject"/>
+                <a href="${viewProject}" class="btn-link"><c:out value="${message.project.name}"/></a>
+            </div>
             <div class="card-deal">
-                <strong><spring:message code="msg"/> </strong>
-                <p>${message.content.message}</p>
+                <strong><spring:message code="msg.title.body"/> </strong>
+                <p><c:out value="${message.content.message}"/></p>
                 <div class="row ">
                     <div class="col-5">
-                        <strong><spring:message code="offer"/> </strong>
-                        <p>${message.content.offer}</p>
+                        <strong><spring:message code="msg.title.offer"/> </strong>
+                        <p><c:out value="${message.content.offer}"/></p>
                     </div>
                     <div class="col-6">
-                        <strong><spring:message code="request"/> </strong>
-                        <p>${message.content.interest}</p>
+                        <strong><spring:message code="msg.title.request"/> </strong>
+                        <p><c:out value="${message.content.interest}"/></p>
                     </div>
                 </div>
             </div>
@@ -69,11 +76,11 @@
                 <div class="row ">
                     <div class="col-8">
                         <strong><spring:message code="published_date"/> </strong>
-                        <p>${message.publishDate}</p>
+                        <p><c:out value="${message.publishDate}"/></p>
                     </div>
                     <div class="col-4">
                         <c:url value="/users/${message.sender_id}?back=yes" var="profileURL"/>
-                        <a href="${profileURL}" class="btn btn-dark btn-md pull-right"><spring:message code="view_inv_profile"/></a>
+                        <a href="${profileURL}" class="btn btn-dark btn-deal pull-right"><spring:message code="view_inv_profile"/></a>
                     </div>
                 </div>
             </div>
@@ -83,12 +90,9 @@
 
 <%-- If there are no deals --%>
 <c:if test="${empty messages}">
-    <div class="col-4 text-center tab-title">
-        <strong> <spring:message code="deals_title"/> </strong>
-    </div>
     <div class="card no-proj-mine">
         <div class="card-header">
-            <h5 class="card-title text-white centered"><spring:message code="no_msg" arguments=""/></h5>
+            <h5 class="card-title text-white centered"><spring:message code="no_msg"/></h5>
         </div>
     </div>
 </c:if>

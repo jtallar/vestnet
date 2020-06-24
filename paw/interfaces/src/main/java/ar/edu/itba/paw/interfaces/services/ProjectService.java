@@ -18,9 +18,10 @@ public interface ProjectService {
      * @param ownerId The user id owner of the project.
      * @param categoriesIds The project's categories ids.
      * @param image Project portrait image.
+     * @param slideshow Project slideshow images.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image);
+    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image, List<byte[]> slideshow);
 
 
     /**
@@ -51,6 +52,30 @@ public interface ProjectService {
 
 
     /**
+     * Sets a project as funded.
+     * @param projectId The unique project id.
+     * @return The project modified, null if not found.
+     */
+    Project setFunded(long projectId);
+
+
+    /**
+     * Ads one more message to the project's message count.
+     * @param projectId The unique project id.
+     * @return The updated project.
+     */
+    Project addMsgCount(long projectId);
+
+
+    /**
+     * Removes one message to the project's message count.
+     * @param projectId The unique project id.
+     * @return The updated project.
+     */
+    Project decMsgCount(long projectId);
+
+
+    /**
      * Finds all the possible categories from the database.
      * @return List of all the categories.
      */
@@ -66,9 +91,9 @@ public interface ProjectService {
 
 
     /**
-     * Finds all project images.
+     * Finds all slideshow images.
      * @param id The unique project id to find its images.
      * @return A list with all the related images.
      */
-    List<ProjectImage> getAllImages(long id);
+    List<byte[]> getSlideshowImages(long id);
 }

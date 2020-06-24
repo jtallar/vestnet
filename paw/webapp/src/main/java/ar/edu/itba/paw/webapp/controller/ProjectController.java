@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.OrderField;
@@ -28,6 +29,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProjectController {
@@ -43,6 +46,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -80,17 +86,17 @@ public class ProjectController {
      * Single project view page.
      * @param mailFields Fields for mail contact
      * @param id The unique project id.
-     * @param contactStatus Boolean if mail was sent.
+     * @param sent Boolean if mail was sent.
      * @return Model and view.
      */
     @RequestMapping(value = "/projects/{id}", method = {RequestMethod.GET})
     public ModelAndView singleProjectView(@Valid @ModelAttribute("mailForm") final MailFields mailFields,
                                           @PathVariable("id") long id,
-                                          @RequestParam(name = "contactStatus", defaultValue = "0") int contactStatus) {
+                                          @RequestParam(name = "sent", defaultValue = "false") boolean sent) {
 
         final ModelAndView mav = new ModelAndView("project/singleView");
         mav.addObject("project", projectService.findById(id).orElseThrow(ProjectNotFoundException::new));
-        mav.addObject("contactStatus", contactStatus);
+        mav.addObject("sent", sent);
         if (sessionUser.isInvestor()) {
             mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
             mav.addObject("lastMessage", userService.getLastProjectOfferMessage(sessionUser.getId(), id));
@@ -114,14 +120,14 @@ public class ProjectController {
                                           final BindingResult errors,
                                           HttpServletRequest request) {
 
-        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Message", singleProjectView(mailFields, projectId, 0));
+        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Message", singleProjectView(mailFields, projectId, false));
 
         User sender = userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new);
         User receiver = userService.findById(mailFields.getReceiverId()).orElseThrow(UserNotFoundException::new);
         Project project = projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new);
-        eventPublisher.publishEvent(new OfferEvent(sender, receiver, project,
-                mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), getBaseUrl(request)));
-        return new ModelAndView("redirect:/projects/{id}" + "?contactStatus=1");
+        Message message = messageService.create(mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), sender.getId(), receiver.getId(), projectId);
+        eventPublisher.publishEvent(new OfferEvent(sender, receiver, project, message, getBaseUrl(request)));
+        return new ModelAndView("redirect:/projects/{id}" + "?sent=true");
     }
 
 
@@ -136,6 +142,7 @@ public class ProjectController {
         final ModelAndView mav = new ModelAndView("project/newProject");
         mav.addObject("categories", projectService.getAllCategories());
         mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
+        mav.addObject("maxSlideshowCount", WebConfig.MAX_SLIDESHOW_COUNT);
         return mav;
     }
 
@@ -154,8 +161,12 @@ public class ProjectController {
 
         Project newProject;
         try {
+            List<byte[]> slideshow = projectFields.getSlideshowImages().stream().map(i -> {
+                try { return i.getBytes(); } catch (IOException e) {} return new byte[0]; }).collect(Collectors.toList());
+
             newProject = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(), projectFields.getImage().getBytes());
+                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(),
+                    projectFields.getPortraitImage().getBytes(), slideshow);
         } catch (IOException e) {
             LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
             return createProject(projectFields);
@@ -191,4 +202,6 @@ public class ProjectController {
     private String getBaseUrl(HttpServletRequest request) {
         return request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath()));
     }
+
+
 }

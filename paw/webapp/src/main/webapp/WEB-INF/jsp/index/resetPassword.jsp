@@ -20,11 +20,15 @@
 <c:url var="icon_logo" value="/images/logo_bp.png"/>
 <c:url var="link_home" value="/"/>
 <c:url var="link_reset_pass" value="/resetPassword"/>
+<c:url var="link_welcome" value='/welcome'/>
 
 <body>
+
 <div class="sidenav">
     <div class="text-center mt-5">
-        <img class="logo-img" src=${icon_logo}>
+        <a href="${link_welcome}">
+            <img class="logo-img" src=${icon_logo}>
+        </a>
     </div>
 </div>
 
@@ -36,7 +40,8 @@
             </div>
             <form:form modelAttribute="passwordForm" method="POST" action="${link_reset_pass}">
                 <h4><spring:message code="resetPasswordTitle"/></h4>
-                <p><spring:message code="resetPasswordSubtitle" arguments="${email}"/></p>
+                <spring:message code="resetPasswordSubtitle" arguments="${email}" var="emailVar"/>
+                <p><c:out value="${emailVar}"/></p>
                 <div class="form-group">
                     <label><spring:message code="password"/> </label>
                     <spring:message code="enter_password" var="enter_password"/>

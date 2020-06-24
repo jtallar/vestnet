@@ -70,9 +70,14 @@
       <artifactId>javax.mail-api</artifactId>
     </dependency>
 
+<!--    <dependency>-->
+<!--      <groupId>com.sun.mail</groupId>-->
+<!--      <artifactId>javax.mail</artifactId>-->
+<!--    </dependency>-->
+
     <dependency>
-      <groupId>com.sun.mail</groupId>
-      <artifactId>javax.mail</artifactId>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity</artifactId>
     </dependency>
 
     <dependency>
@@ -156,12 +161,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
-    </dependency>
-
-
-    <dependency>
-      <groupId>com.sun.mail</groupId>
-      <artifactId>javax.mail</artifactId>
     </dependency>
 
   </dependencies>

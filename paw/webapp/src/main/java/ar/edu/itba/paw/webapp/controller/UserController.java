@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
+import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.exception.UserNotFoundException;
 import org.slf4j.Logger;
@@ -57,10 +58,11 @@ public class UserController {
      * @return Model and view
      */
     @RequestMapping(value = "/dashboard")
-    public ModelAndView myDashboard() {
+    public ModelAndView myDashboard(@RequestParam(name = "funded", defaultValue = "false") boolean funded) {
 
         ModelAndView mav = new ModelAndView("user/dashboard");
-        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId()));
+        mav.addObject("projects", userService.getOwnedProjects(sessionUser.getId(), funded));
+        mav.addObject("funded", funded);
         return mav;
     }
 
@@ -92,4 +94,5 @@ public class UserController {
         mav.addObject("messagePage", userService.getOfferMessages(sessionUser.getId(), page, PAGE_SIZE));
         return mav;
     }
+
 }

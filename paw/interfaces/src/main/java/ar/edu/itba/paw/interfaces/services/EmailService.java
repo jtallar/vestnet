@@ -4,8 +4,6 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 
-import javax.mail.MessagingException;
-
 public interface EmailService {
 
     /**
