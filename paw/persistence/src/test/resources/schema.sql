@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS projects (
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     hits            INT DEFAULT 0,
     funded          BOOLEAN DEFAULT FALSE,
-    message_count   INT DEFAULT 0;
+    message_count   INT DEFAULT 0
 );
 
 
