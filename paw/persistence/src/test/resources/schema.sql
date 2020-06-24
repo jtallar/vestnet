@@ -1,5 +1,6 @@
 -- HSQL WONT ACCEPT NOT NULL AND DEFAULT TOGETHER
 -- HSQL WONT ACCEPT LOCAL DATE AS DATE, USE DATE
+-- HIBERNATE ISSUE WITH REFERENCES - CREATED BY HIBERNATE ONLY
 /****************************************
 **     CREATE ALL NECESSARY TABLES     **
 *****************************************/
@@ -48,6 +49,18 @@ CREATE TABLE IF NOT EXISTS roles (
 );
 
 
+CREATE TABLE user_location (
+    id                  INTEGER IDENTITY PRIMARY KEY,
+    country_id          INT NOT NULL,
+    state_id            INT NOT NULL,
+    city_id             INT NOT NULL
+);
+
+CREATE TABLE user_images (
+    id                 INT PRIMARY KEY,
+    image              VARCHAR(50)
+);
+
 /*
 ** All users table.
 */
@@ -61,9 +74,7 @@ CREATE TABLE IF NOT EXISTS users (
     -- CUIT/CUIL/DNI something.
     real_id         VARCHAR(15) NOT NULL,
     -- Location.
-    country_id      INT REFERENCES countries ON DELETE RESTRICT,
-    state_id        INT REFERENCES states ON DELETE RESTRICT,
-    city_id         INT REFERENCES cities ON DELETE RESTRICT,
+    location_id     INT NOT NULL,
     -- Aux date. Format should be dd/mm/yyy. For natural persons its birth date.
     aux_date        DATE NOT NULL,
 
@@ -74,14 +85,10 @@ CREATE TABLE IF NOT EXISTS users (
     linkedin        VARCHAR(100),
 
     -- EXTRA INFO
-    -- Profile picture URN. Optional. Max 100 characters.
-    profile_pic     VARCHAR(50),
     join_date       TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     verified        BOOLEAN DEFAULT FALSE,
-
-    -- BACK OFFICE INFO
-    -- Trust Index. -100 to 100 range. Default 0.
-    trust_index     SMALLINT DEFAULT 0
+    locale          VARCHAR(5) NOT NULL,
+    image_id        INT
 );
 
 
@@ -91,7 +98,7 @@ CREATE TABLE IF NOT EXISTS users (
 */
 CREATE TABLE IF NOT EXISTS projects (
     id              INTEGER IDENTITY PRIMARY KEY,
-    owner_id        INT REFERENCES users ON DELETE CASCADE,
+    owner_id        INT NOT NULL,
 
     -- TOP INFO
     project_name    VARCHAR(50) NOT NULL,
@@ -101,13 +108,8 @@ CREATE TABLE IF NOT EXISTS projects (
     -- EXTRA INFO
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    images          VARCHAR(50),
     hits            INT DEFAULT 0,
-
-    -- BACK OFFICE INFO
-    aproved         BOOLEAN DEFAULT false,
-    profit_index    INT DEFAULT 0,
-    risk_index      INT DEFAULT 0
+    funded          BOOLEAN DEFAULT FALSE
 );
 
 
@@ -117,79 +119,24 @@ CREATE TABLE IF NOT EXISTS projects (
 */
 CREATE TABLE IF NOT EXISTS categories (
     id              INTEGER IDENTITY PRIMARY KEY,
-    parent          INT REFERENCES categories ON DELETE CASCADE,
+    parent_id          INT REFERENCES categories ON DELETE CASCADE,
     category        VARCHAR(25) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS project_categories (
-    project_id      INT REFERENCES projects ON DELETE CASCADE,
-    category_id     INT REFERENCES categories ON DELETE CASCADE,
+    project_id      INT NOT NULL,
+    category_id     INT NOT NULL,
 
     PRIMARY KEY (project_id, category_id)
 );
 
 
 /*
-** Stages. Each project needs to have at least one.
-** They determine cost. Additional info for investors.
-*/
-CREATE TABLE IF NOT EXISTS stage_types (
-    id              INTEGER IDENTITY PRIMARY KEY,
-    category_id     INT REFERENCES categories ON DELETE SET NULL,
-    type_name       VARCHAR(25) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS stages (
-    project_id      INT REFERENCES projects ON DELETE CASCADE,
-    stage_number    SMALLINT NOT NULL,
-
-    -- TOP INFO
-    type_id         INT REFERENCES stage_types ON DELETE SET NULL,
-    duration        INTERVAL DAY NOT NULL,
-    key_result      VARCHAR(50) NOT NULL,
-    cost            INT DEFAULT 0,
-
-    PRIMARY KEY (project_id, stage_number)
-);
-
-/*
-** Resources per stage tables.
-** Infrastructure, human and law resources.
-*/
--- Human, infrastructure and law for example.
-CREATE TABLE IF NOT EXISTS resource_types (
-    id              INTEGER IDENTITY PRIMARY KEY,
-    type_name       VARCHAR(20) NOT NULL
-);
-
--- All items for each type of resource. Ex Software Developer -> Human resources.
-CREATE TABLE IF NOT EXISTS resource_items (
-    id              INTEGER IDENTITY PRIMARY KEY,
-    type_id         INT REFERENCES resource_types ON DELETE RESTRICT,
-    category_id     INT REFERENCES categories ON DELETE SET NULL,
-    item_name       VARCHAR(20) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS resources (
-    project_id      INT NOT NULL,
-    stage_number    SMALLINT NOT NULL,
-    item_number     SMALLINT NOT NULL,
-
-    -- INFO
-    item_id         INT REFERENCES resource_items ON DELETE RESTRICT,
-    quantity        SMALLINT DEFAULT 1,
-    cost            INT NOT NULL,
-
-    FOREIGN KEY (project_id, stage_number) REFERENCES stages (project_id, stage_number) ON DELETE CASCADE,
-    PRIMARY KEY (project_id, stage_number, item_number)
-);
-
-/*
 ** Favourites of each user
 */
 CREATE TABLE IF NOT EXISTS favorites (
-	user_id		INT REFERENCES users ON DELETE CASCADE,
-	project_id 	INT REFERENCES projects ON DELETE CASCADE,
+	user_id		INT NOT NULL,
+	project_id 	INT NOT NULL,
 
 	PRIMARY KEY (user_id, project_id)
 );
@@ -207,7 +154,16 @@ CREATE TABLE IF NOT EXISTS messages (
     publish_date        TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     accepted            BOOLEAN,
 
-    sender_id           INT REFERENCES users ON DELETE CASCADE,
-    receiver_id         INT REFERENCES users ON DELETE CASCADE,
-    project_id          INT REFERENCES projects ON DELETE CASCADE
+    sender_id           INT NOT NULL,
+    receiver_id         INT NOT NULL,
+    project_id          INT NOT NULL
 );
+
+CREATE TABLE project_images (
+    id                  INT PRIMARY KEY,
+    project_id          INT NOT NULL,
+    image               VARCHAR(50),
+    main                BOOLEAN NOT NULL
+);
+
+
