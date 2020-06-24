@@ -182,19 +182,6 @@ public class ImageJpaDaoTest {
         assertFalse(userImage.isPresent());
     }
 
-    @Test
-    public void testFindUserImageExists() {
-        // 1 - Setup- Create a user
-        Number userId = createUser();
-        createUserImage(userId);
-
-        // 2 - Execute
-        Optional<UserImage> userImage = imageJpaDao.findUserImage(userId.longValue());
-
-        // 3 - Assert
-        assertTrue(userImage.isPresent());
-    }
-
     /**
      * Auxiliary functions.
      */
