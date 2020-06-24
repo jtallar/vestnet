@@ -52,14 +52,14 @@
                         <div class="row msg-content">
                             <div class="col-9">
                                 <div class="row msg-content">
-                                    <div class="col-"><h5><spring:message code="cost"/></h5></div>
+                                    <div class="col-"><h5 class="dash-title"><spring:message code="cost"/></h5></div>
                                     <div class="col-5 msg-content">
                                         <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>
                                         <p class="card-text dash-text"><c:out value="${costVar}"/></p>
                                     </div>
                                 </div>
                                 <div class="row msg-content">
-                                    <div class="col-"><h5><spring:message code="hits"/></h5></div>
+                                    <div class="col-"><h5 class="dash-title"><spring:message code="hits"/></h5></div>
                                     <div class="col-5 msg-content"><p class="card-text dash-text"><c:out value="${project.hits}"/></p></div>
                                 </div>
                                 <div>
