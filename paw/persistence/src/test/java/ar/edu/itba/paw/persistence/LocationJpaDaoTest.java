@@ -27,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-@Rollback(false)
 public class LocationJpaDaoTest {
 
     private static final String COUNTRY_TABLE = "countries";
