@@ -26,12 +26,15 @@
 <c:url var="icon_logo" value="/images/logo_bp.png"/>
 <c:url var="link_request_pass" value="/requestPassword"/>
 <c:url var="link_login" value="/login"/>
+<c:url var="link_welcome" value='/welcome'/>
 
 <body>
-<%-- Side navigation --%>
+
 <div class="sidenav">
     <div class="text-center mt-5">
-        <img class="logo-img" src=${icon_logo}>
+        <a href="${link_welcome}">
+            <img class="logo-img" src=${icon_logo}>
+        </a>
     </div>
 </div>
 

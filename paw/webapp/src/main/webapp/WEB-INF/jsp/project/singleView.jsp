@@ -36,22 +36,22 @@
 <%-- Message and Back logic --%>
 <div class="container" style="margin-top: 20px">
     <div>
-        <div class="d-flex justify-content-between align-self-center">
+        <div class="d-flex justify-content-between align-self-center" style="margin-right:6%">
             <div class="p-2">
                 <a onclick="getBackAction()" class="btn btn-dark"><spring:message code="back"/></a>
             </div>
-            <c:if test="${contactStatus == 1}">
-                <div class="p-2 ml-8">
+            <c:if test="${sent}">
+                <div class="p-2 ml-8" id="mail-feedback">
                     <spring:message code="successfulContact" arguments="${project.owner.firstName}" var="firstNameVar"/>
                     <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096">
                         <c:out value="${firstNameVar}"/></h5>
                 </div>
             </c:if>
-            <c:if test="${contactStatus == 2}">
-                <div class="p-2 ml-8">
-                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="waitReply"/></h5>
-                </div>
-            </c:if>
+<%--            <c:if test="${contactStatus == 2}">--%>
+<%--                <div class="p-2 ml-8">--%>
+<%--                    <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"><spring:message code="waitReply"/></h5>--%>
+<%--                </div>--%>
+<%--            </c:if>--%>
         </div>
 
         <div class="row" style="margin: 0">
@@ -295,6 +295,11 @@
                     console.error(reason)
                 }))
         }
+        if(${sent}){
+            const contact = document.getElementById('contact-expand-button');
+            contact.disabled = true;
+            contact.innerHTML = "<spring:message code='singleView.button.alreadySent'/>";
+        }
         fetchImages();
     };
 
@@ -373,7 +378,7 @@
 
     // TODO check if can be done differently
     function getBackAction() {
-        if (${contactStatus == 0}) {
+        if (${sent==false}) {
             history.back();
         } else {
             history.back();
@@ -395,6 +400,12 @@
             offerTag.value = 0;
         }
         offerTag.value = Math.round(offerTag.value);
+
+        <%--const contact = document.getElementById('contact-expand-button');--%>
+        <%--contact.disabled = true;--%>
+        <%--contact.innerHTML = "<spring:message code='singleView.button.alreadySent'/>";--%>
+
+        // document.getElementById('mail-feedback').hidden = false;
     }
 </script>
 </body>
