@@ -92,6 +92,7 @@ public class IEmailService implements EmailService {
             mimeMessageHelper.setFrom(mail.getFrom());
             mimeMessageHelper.setTo(mail.getTo());
             mimeMessageHelper.setText(mail.getContent(), true);
+            mimeMessageHelper.setReplyTo(mail.getFrom());
             ClassPathResource resource = new ClassPathResource("/images/mail-header.png");
             mimeMessageHelper.addInline("headerImage", resource);
 
