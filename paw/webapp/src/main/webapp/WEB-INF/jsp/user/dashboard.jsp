@@ -125,13 +125,13 @@
 <%-- If there is no projects --%>
 <c:if test="${empty projects}">
     <div class="card no-proj-mine">
-        <div class="card-header">
+        <div class="card-header text-center">
             <c:choose>
                 <c:when test="${funded}">
-                    <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
+                    <h5 class="card-title text-white centered"><spring:message code="noProjFunded"/></h5>
                 </c:when>
                 <c:otherwise>
-                    <h5 class="card-title text-white centered"><spring:message code="noProjFunded"/></h5>
+                    <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
                 </c:otherwise>
             </c:choose>
         </div>
