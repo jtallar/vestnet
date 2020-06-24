@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.MessageService;
+import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.Project;
@@ -28,14 +29,14 @@ public class IMessageService implements MessageService {
     private MessageDao messageDao;
 
     @Autowired
-    private ProjectDao projectDao;
+    private ProjectService projectService;
 
 
     @Override
     @Transactional
     public Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) {
         MessageContent content = new MessageContent(message, String.valueOf(offer), interest);
-        projectDao.findById(projectId).ifPresent(Project::addMsgCount);
+        projectService.addMsgCount(projectId);
         return messageDao.create(content, new User(senderId), new User(receiverId), new Project(projectId));
     }
 
@@ -66,7 +67,7 @@ public class IMessageService implements MessageService {
 
         Message message = optionalMessage.get();
         message.setAccepted(accepted);
-        projectDao.findById(projectId).ifPresent(Project::decMsgCount);
+        projectService.decMsgCount(projectId);
         return message;
     }
 }
