@@ -291,6 +291,12 @@ html {
     border:solid 0.5px #adadadad
 }
 
+.dropdown-divider-header{
+    margin-top:1px;
+    margin-bottom:1px;
+    border:solid 0.5px #adadadad
+}
+
 .form-row{
     margin-top: 20px; margin-left:20px; margin-right:20px
 }

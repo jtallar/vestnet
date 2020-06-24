@@ -439,7 +439,7 @@ public class ProjectJpaDaoTest {
      * @return The category given id.
      */
     private Number createCategory(String name) {
-        Map<String, String> category = new HashMap<String, String>();
+        Map<String, String> category = new HashMap<>();
         category.put("category", name);
         return jdbcInsertCategory.executeAndReturnKey(category);
     }
@@ -469,7 +469,7 @@ public class ProjectJpaDaoTest {
      * @param categoryId Category id
      */
     private void createProjectCategory(Number projectId, Number categoryId) {
-        Map<String, Long> values2 = new HashMap<String, Long>();
+        Map<String, Long> values2 = new HashMap<>();
         values2.put("category_id", categoryId.longValue());
         values2.put("project_id", projectId.longValue());
         jdbcInsertProjectCategory.execute(values2);
