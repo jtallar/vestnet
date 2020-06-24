@@ -86,6 +86,28 @@ public class IProjectService implements ProjectService {
 
 
     @Override
+    @Transactional
+    public Project addMsgCount(long projectId) {
+        Optional<Project> optionalProject = findById(projectId);
+        if (!optionalProject.isPresent()) return null;
+        Project project = optionalProject.get();
+        project.addMsgCount();
+        return project;
+    }
+
+
+    @Override
+    @Transactional
+    public Project decMsgCount(long projectId) {
+        Optional<Project> optionalProject = findById(projectId);
+        if (!optionalProject.isPresent()) return null;
+        Project project = optionalProject.get();
+        project.decMsgCount();
+        return project;
+    }
+
+
+    @Override
     public List<Category> getAllCategories() {
         return categoryDao.findAllCategories();
     }
@@ -112,7 +134,6 @@ public class IProjectService implements ProjectService {
         List<ProjectImage> images = imageDao.findProjectImages(new Project(id), false);
         return images.stream().map(Image::getImage).collect(Collectors.toList());
     }
-
 
 }
 

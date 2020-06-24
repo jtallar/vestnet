@@ -61,9 +61,14 @@ public class Project {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
     private List<User> favoriteBy;
 
+    @Column(name = "message_count" , nullable = false)
+    private Integer msgCount;
+
     /** Protected */ Project() {
         /** For hibernate only */
     }
+
+
 
     public Project(String name, String summary, long cost, User owner, List<Category> categories) {
         this.name = name;
@@ -73,10 +78,19 @@ public class Project {
         this.categories = categories;
         this.hits = 0;
         this.funded = false;
+        this.msgCount = 0;
     }
 
 
     /** Getters and setters */
+
+    public Integer getMsgCount() {
+        return msgCount;
+    }
+
+    public void setMsgCount(Integer msgCount) {
+        this.msgCount = msgCount;
+    }
 
     public Project(long id) {
         this.id = id;
@@ -184,6 +198,15 @@ public class Project {
 
     public void setFavoriteBy(List<User> favoriteBy) {
         this.favoriteBy = favoriteBy;
+    }
+
+
+    public void addMsgCount(){
+        this.msgCount += 1;
+    }
+
+    public void decMsgCount(){
+        this.msgCount -= 1;
     }
 
 

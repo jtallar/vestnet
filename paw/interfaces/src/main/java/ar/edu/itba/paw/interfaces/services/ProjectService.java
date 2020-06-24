@@ -60,6 +60,22 @@ public interface ProjectService {
 
 
     /**
+     * Ads one more message to the project's message count.
+     * @param projectId The unique project id.
+     * @return The updated project.
+     */
+    Project addMsgCount(long projectId);
+
+
+    /**
+     * Removes one message to the project's message count.
+     * @param projectId The unique project id.
+     * @return The updated project.
+     */
+    Project decMsgCount(long projectId);
+
+
+    /**
      * Finds all the possible categories from the database.
      * @return List of all the categories.
      */
