@@ -206,16 +206,22 @@
         return `
             <div class="card msg msg-collapse">
                 <div class="card-body">
-                    <div>
-                        <strong><spring:message code="msg.title.body"/></strong><br>
-                        <p>\${message.body}</p>
-                        <strong><spring:message code="msg.title.offer"/></strong><br>
-                        <p>\${message.offer}</p>
-                        <strong><spring:message code="msg.title.request"/></strong><br>
-                        <p>\${message.request}</p>
-                        <a href="\${message.investorUrl}" class="btn btn-dark btn-md"><spring:message code="view_inv_profile"/></a>
-                        <button id="refuse-message-\${message.projectId}-\${message.senderId}" class="btn btn-danger btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, false)"><spring:message code="dashboard.msg.refuse"/></button>
-                        <button id="accept-message-\${message.projectId}-\${message.senderId}" class="btn btn-success btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, true)"><spring:message code="dashboard.msg.accept"/></button>
+                    <div class="row">
+                        <div class="col-5">
+                            <strong><spring:message code="msg.title.body"/></strong><br>
+                            <p>\${message.body}</p>
+                        </div>
+                        <div class="col-4">
+                            <strong><spring:message code="msg.title.offer"/></strong><br>
+                            <p>\${message.offer}</p>
+                            <strong><spring:message code="msg.title.request"/></strong><br>
+                            <p>\${message.request}</p>
+                        </div>
+                        <div class="col-3">
+                            <a href="\${message.investorUrl}" class="btn btn-dark btn-md pull-right"><spring:message code="view_inv_profile"/></a>
+                            <button id="refuse-message-\${message.projectId}-\${message.senderId}" class="btn btn-danger btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, false)"><spring:message code="dashboard.msg.refuse"/></button>
+                            <button id="accept-message-\${message.projectId}-\${message.senderId}" class="btn btn-success btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, true)"><spring:message code="dashboard.msg.accept"/></button>
+                        </div>
                     </div>
                 </div>
             </div>
