@@ -35,10 +35,7 @@ public class IMessageService implements MessageService {
     @Transactional
     public Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId) {
         MessageContent content = new MessageContent(message, String.valueOf(offer), interest);
-        Optional<Project> project = projectDao.findById(projectId);
-        if(project.isPresent()){
-            project.get().addMsgCount();
-        }
+        projectDao.findById(projectId).ifPresent(Project::addMsgCount);
         return messageDao.create(content, new User(senderId), new User(receiverId), new Project(projectId));
     }
 
@@ -69,12 +66,7 @@ public class IMessageService implements MessageService {
 
         Message message = optionalMessage.get();
         message.setAccepted(accepted);
-
-
-        Optional<Project> project = projectDao.findById(projectId);
-        if(project.isPresent()) {
-            project.get().decMsgCount(); //adding an unread msg
-        }
+        projectDao.findById(projectId).ifPresent(Project::decMsgCount);
         return message;
     }
 }
