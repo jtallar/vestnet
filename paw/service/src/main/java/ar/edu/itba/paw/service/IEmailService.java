@@ -84,7 +84,7 @@ public class IEmailService implements EmailService {
      * Sends a formatted mail in html.
      * @param mail The formatted mail. Content must be filled previously.
      */
-    public void sendEmail(Mail mail) {
+    private void sendEmail(Mail mail) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
