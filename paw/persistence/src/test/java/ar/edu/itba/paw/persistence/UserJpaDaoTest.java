@@ -2,10 +2,8 @@ package ar.edu.itba.paw.persistence;
 
 
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.UserRole;
-import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
@@ -21,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,19 +32,19 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class UserJdbcDaoTest {
+public class UserJpaDaoTest {
 
     private static final String USERS_TABLE = "users";
     private static final String COUNTRIES_TABLE = "countries";
     private static final String STATES_TABLE = "states";
     private static final String CITIES_TABLE = "cities";
     private static final String ROLES_TABLE = "roles";
+    private static final String LOCATIONS_TABLE = "user_location";
 
     private static final int COUNTRY_ID = 1;
     private static final int STATE_ID = 2;
     private static final int CITY_ID = 3;
 
-    private static final Integer USER_ID = 1;
     private static final Integer ROLE_ID = UserRole.INVESTOR.getId();
     private static final String FIRST_NAME = "FirstName";
     private static final String LAST_NAME = "LastName";
@@ -52,6 +52,9 @@ public class UserJdbcDaoTest {
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "12345";
     private static final String LOCALE = "en";
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private DataSource dataSource;
@@ -61,13 +64,14 @@ public class UserJdbcDaoTest {
 
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertUser, jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole;
+    private SimpleJdbcInsert jdbcInsertUser, jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsertUser = new SimpleJdbcInsert(dataSource)
-                .withTableName(USERS_TABLE);
+                .withTableName(USERS_TABLE)
+                .usingGeneratedKeyColumns("id");
         jdbcInsertCountry = new SimpleJdbcInsert(dataSource)
                 .withTableName(COUNTRIES_TABLE);
         jdbcInsertState = new SimpleJdbcInsert(dataSource)
@@ -76,12 +80,16 @@ public class UserJdbcDaoTest {
                 .withTableName(CITIES_TABLE);
         jdbcInsertRole = new SimpleJdbcInsert(dataSource)
                 .withTableName(ROLES_TABLE);
+        jdbcInsertLocation = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("id")
+                .withTableName(LOCATIONS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CITIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, LOCATIONS_TABLE);
 
         createLocation();
         createRole();
@@ -89,20 +97,19 @@ public class UserJdbcDaoTest {
 
 
     @Test
-    @Transactional
     public void testCreate() {
         // 1 - Setup
         Location location = assignLocation();
 
         // 2 - Execute
         try {
-            userJdbcDao.create(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, new UserImage(new byte[]{1}));
+            userJdbcDao.create(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
         } catch (UserAlreadyExistsException e) {
             fail();
         }
 
         // 3 - Assert
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, USERS_TABLE));
+        assertEquals(1, TestUtils.countRowsInTable(entityManager, USERS_TABLE));
     }
 
     @Test
@@ -203,27 +210,37 @@ public class UserJdbcDaoTest {
                 new City(CITY_ID));
     }
 
+
+    /**
+     * Inserts a User location un DB.
+     * @return The generated ID.
+     */
+    private Number createUserLocation() {
+        Map<String, Object> location = new HashMap<>();
+        location.put("country_id", COUNTRY_ID);
+        location.put("state_id", STATE_ID);
+        location.put("city_id", CITY_ID);
+        return jdbcInsertLocation.executeAndReturnKey(location);
+    }
+
     /**
      * Creates a user and inserts it to the database.
      * @return The unique generated user id.
      */
     private Number createUser() {
+
         Map<String, Object> user = new HashMap<>();
-        user.put("id", USER_ID);
         user.put("password", PASSWORD);
         user.put("role_id", UserRole.INVESTOR.getId());
+        user.put("real_id", REAL_ID);
         user.put("first_name", FIRST_NAME);
         user.put("last_name", LAST_NAME);
-        user.put("real_id", REAL_ID);
-        user.put("country_id", COUNTRY_ID);
-        user.put("state_id", STATE_ID);
-        user.put("city_id", CITY_ID);
-        user.put("aux_date", new Date());
+        user.put("location_id", createUserLocation());
         user.put("email", EMAIL);
         user.put("verified", false);
         user.put("locale", LOCALE);
-        jdbcInsertUser.execute(user);
-        return USER_ID;
+        user.put("aux_date", new Date());
+        return jdbcInsertUser.executeAndReturnKey(user);
     }
 
 }

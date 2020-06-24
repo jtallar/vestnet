@@ -5,8 +5,6 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.FilterCriteria;
 import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.components.PageRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import java.util.*;
@@ -26,7 +26,8 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class MessageJdbcDaoTest {
+@Transactional
+public class MessageJpaDaoTest {
 
     private static final String MESSAGE_TABLE = "messages";
     private static final String COUNTRIES_TABLE = "countries";
@@ -35,6 +36,8 @@ public class MessageJdbcDaoTest {
     private static final String ROLES_TABLE = "roles";
     private static final String USERS_TABLE = "users";
     private static final String PROJECTS_TABLE = "projects";
+    private static final String LOCATIONS_TABLE = "user_location";
+
 
     private static final String MESSAGE = "Message here.";
     private static final String OFFER = "Offer here.";
@@ -47,21 +50,25 @@ public class MessageJdbcDaoTest {
     private static final int USER_ID = 1;
     private static final int PROJECT_ID = 1;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
     private DataSource dataSource;
 
     @Autowired
-    private MessageJpaDao messageJdbcDao;
+    private MessageJpaDao messageJpaDao;
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertMessage;
-    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity;
+    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertLocation;
     private SimpleJdbcInsert jdbcInsertRole, jdbcInsertUser, jdbcInsertProject;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsertMessage = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("id")
                 .withTableName(MESSAGE_TABLE);
         jdbcInsertCountry = new SimpleJdbcInsert(dataSource)
                 .withTableName(COUNTRIES_TABLE);
@@ -72,9 +79,14 @@ public class MessageJdbcDaoTest {
         jdbcInsertRole = new SimpleJdbcInsert(dataSource)
                 .withTableName(ROLES_TABLE);
         jdbcInsertUser = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("id")
                 .withTableName(USERS_TABLE);
         jdbcInsertProject = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("id")
                 .withTableName(PROJECTS_TABLE);
+        jdbcInsertLocation = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("id")
+                .withTableName(LOCATIONS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
@@ -82,78 +94,46 @@ public class MessageJdbcDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, LOCATIONS_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, MESSAGE_TABLE);
 
         createLocation();
         createRole();
+        createProject(createUser());
     }
 
-//    @Test
-//    public void testCreate()  {
-//        // 1 - Setup - Create both users, and project
-//        Number investorId = createUser();
-//        Number entrepreneurId = createUser();
-//        Number projectId = createProject(entrepreneurId);
-//        Message.MessageContent content = new Message.MessageContent(MESSAGE, OFFER, INTEREST);
-//
-//        // 2 - Execute
-//        messageJdbcDao.create(content, new User(investorId.longValue()), new User(entrepreneurId.longValue()), new Project(projectId.longValue()));
-//
-//
-//        // 3 - Assert
-//        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, MESSAGE_TABLE));
-//    }
+    @Test
+    public void testCreate()  {
+        // 1 - Setup - Create both users, and project
+        Number investorId = createUser();
+        Number entrepreneurId = createUser();
+        Number projectId = createProject(entrepreneurId);
+        Message.MessageContent content = new Message.MessageContent(MESSAGE, OFFER, INTEREST);
+
+        // 2 - Execute
+        messageJpaDao.create(content, new User(investorId.longValue()), new User(entrepreneurId.longValue()), new Project(projectId.longValue()));
 
 
-//    @Test
-//    public void testGetConversationsIfTableEmpty() {
-//        // 1 - Setup - Empty message tables
-//        Number investorId = createUser();
-//        Number entrepreneurId = createUser();
-//        Number projectId = createProject(entrepreneurId);
-//        List<FilterCriteria> filters = fillConversationFilters(investorId, entrepreneurId, projectId);
-//
-//        // 2 - Execute
-//        Page<Message> messages = messageJdbcDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(1, 10));
-//
-//        // 3 - Assert
-//        assertTrue(messages.getContent().isEmpty());
-//    }
+        // 3 - Assert
+        assertEquals(1, TestUtils.countRowsInTable(entityManager, MESSAGE_TABLE));
+    }
 
 
-//    @Test
-//     public void testGetConversationsIfTableNotEmpty() {
-//        // 1 - Setup - Create message tables
-//        Number investorId = createUser();
-//        Number entrepreneurId = createUser();
-//        Number projectId = createProject(entrepreneurId);
-//        createMessage(investorId, entrepreneurId, projectId, false);
-//        createMessage(investorId,entrepreneurId, projectId, true);
-//        List<FilterCriteria> filters = fillConversationFilters(investorId, entrepreneurId, projectId);
-//
-//        // 2 - Execute
-//        Page<Message> messages = messageJdbcDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(1, 10));
-//
-//        // 3 - Assert - Quantity, Name
-//        assertEquals(2, messages.getContent().size());
-//        assertEquals(MESSAGE, messages.getContent().get(0).getContent().getMessage());
-//    }
+    @Test
+    public void testGetUnreadMessagesIfTableEmpty() {
+        // 1 - Setup - Empty message tables
+        Number investorId = createUser();
+        Number entrepreneurId = createUser();
+        Number projectId = createProject(entrepreneurId);
+        List<FilterCriteria> filters = fillUnreadFilter(entrepreneurId, projectId);
 
-//    @Test
-//    public void testGetUnreadMessagesIfTableEmpty() {
-//        // 1 - Setup - Empty message tables
-//        Number investorId = createUser();
-//        Number entrepreneurId = createUser();
-//        Number projectId = createProject(entrepreneurId);
-//        List<FilterCriteria> filters = fillUnreadFilter(entrepreneurId, projectId);
-//
-//        // 2 - Execute
-//        List<Message> messages = messageJdbcDao.findAll(filters, OrderField.DATE_DESCENDING);
-//
-//        // 3 - Assert
-//        assertTrue(messages.isEmpty());
-//    }
+        // 2 - Execute
+        List<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
+
+        // 3 - Assert
+        assertTrue(messages.isEmpty());
+    }
 
     @Test
     public void testGetUnreadMessagesIfTableNotEmpty() {
@@ -165,7 +145,7 @@ public class MessageJdbcDaoTest {
         List<FilterCriteria> filters = fillUnreadFilter(entrepreneurId, projectId);
 
         // 2 - Execute
-        List<Message> messages = messageJdbcDao.findAll(filters, OrderField.DATE_DESCENDING);
+        List<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
 
         // 3 - Assert
         assertEquals(1, messages.size());
@@ -183,14 +163,12 @@ public class MessageJdbcDaoTest {
      */
     public Number createProject(Number ownerId) {
         Map<String, Object> project = new HashMap<>();
-        project.put("id", PROJECT_ID);
         project.put("project_name", "Project name here.");
         project.put("summary", "Summary here.");
-        project.put("owner_id", ownerId.longValue());
+        project.put("owner_id", ownerId);
         project.put("cost", 10000);
         project.put("hits", 0);
-        jdbcInsertProject.execute(project);
-        return PROJECT_ID;
+        return jdbcInsertProject.executeAndReturnKey(project);
     }
 
     /**
@@ -229,26 +207,37 @@ public class MessageJdbcDaoTest {
      * Creates a user and inserts it on database
      * @return The user id.
      */
-    public int user_id = 0;
     private Number createUser() {
+        Number location_id = createUserLocation();
+
         Map<String, Object> user = new HashMap<>();
-        user.put("id", user_id++);
         user.put("role_id", ROLE_ID);
         user.put("password", "test-password");
         user.put("first_name", "FirstName");
         user.put("last_name", "LastName");
         user.put("real_id", "RealId");
-        user.put("country_id", COUNTRY_ID);
-        user.put("state_id", STATE_ID);
-        user.put("city_id", CITY_ID);
+        user.put("location_id", location_id);
         user.put("aux_date", new Date());
         user.put("email", "test@test.com");
         user.put("phone", "5491100000000");
         user.put("linkedin", "www.linkedin.com/in/test");
         user.put("verified", false);
-        jdbcInsertUser.execute(user);
-        return user_id - 1;
+        user.put("locale", "en");
+        return jdbcInsertUser.executeAndReturnKey(user);
     }
+
+    /**
+     * Inserts a User location un DB.
+     * @return The generated ID.
+     */
+    private Number createUserLocation() {
+        Map<String, Object> location = new HashMap<>();
+        location.put("country_id", COUNTRY_ID);
+        location.put("state_id", STATE_ID);
+        location.put("city_id", CITY_ID);
+        return jdbcInsertLocation.executeAndReturnKey(location);
+    }
+
 
     /**
      * Creates a message and inserts it.
@@ -258,36 +247,15 @@ public class MessageJdbcDaoTest {
      * @param changeOrder Boolean to change order.
      * @return Created message id.
      */
-    public int message_id = 0;
     private Number createMessage(Number senderId, Number receiverId, Number projectId, boolean changeOrder) {
         Map<String, Object> message = new HashMap<>();
-        message.put("id", message_id++);
         message.put("content_message", MESSAGE);
         message.put("content_offer", OFFER);
         message.put("content_interest", INTEREST);
         message.put("sender_id", changeOrder ? receiverId : senderId);
         message.put("receiver_id", changeOrder ? senderId : receiverId);
         message.put("project_id", projectId);
-        jdbcInsertMessage.execute(message);
-        return message_id - 1;
-    }
-
-
-    /**
-     * Creates filters to get all the conversation.
-     * @param senderId Senders unique id.
-     * @param receiverId Receivers unique id.
-     * @param projectId Project unique id.
-     * @return The list of filters.
-     */
-    private List<FilterCriteria> fillConversationFilters(Number senderId, Number receiverId, Number projectId) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(receiverId.intValue())));
-        filters.add(new FilterCriteria("receiver", new User(senderId.intValue())));
-        filters.add(new FilterCriteria("sender", new User(receiverId.intValue())));
-        filters.add(new FilterCriteria("sender", new User(senderId.intValue())));
-        filters.add(new FilterCriteria("project", new Project(projectId.intValue())));
-        return filters;
+        return jdbcInsertMessage.executeAndReturnKey(message);
     }
 
 

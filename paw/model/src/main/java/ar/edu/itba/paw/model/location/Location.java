@@ -29,7 +29,7 @@ public class Location {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false, mappedBy = "location")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "location")
     private User user;
 
     /** Protected */ Location() {
