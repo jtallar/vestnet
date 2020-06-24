@@ -276,6 +276,7 @@ public class ImageJpaDaoTest {
         project.put("cost", PROJECT_COST);
         project.put("funded", true);
         project.put("hits", 0);
+        project.put("message_count", 0);
         return jdbcInsertProject.executeAndReturnKey(project);
     }
 

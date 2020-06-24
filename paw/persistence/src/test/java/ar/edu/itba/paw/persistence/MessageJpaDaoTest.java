@@ -161,13 +161,14 @@ public class MessageJpaDaoTest {
      * Creates a project.
      * @return The category auto generated id.
      */
-    public Number createProject(Number ownerId) {
+    private Number createProject(Number ownerId) {
         Map<String, Object> project = new HashMap<>();
         project.put("project_name", "Project name here.");
         project.put("summary", "Summary here.");
         project.put("owner_id", ownerId);
         project.put("cost", 10000);
         project.put("hits", 0);
+        project.put("message_count", 0);
         return jdbcInsertProject.executeAndReturnKey(project);
     }
 
@@ -265,7 +266,7 @@ public class MessageJpaDaoTest {
      * @param projectId The unique project id.
      * @return The list with the criteria.
      */
-    public List<FilterCriteria> fillUnreadFilter(Number userId, Number projectId) {
+    private List<FilterCriteria> fillUnreadFilter(Number userId, Number projectId) {
         List<FilterCriteria> filters = new ArrayList<>();
         filters.add(new FilterCriteria("receiver", new User(userId.intValue())));
         filters.add(new FilterCriteria("project", new Project(projectId.intValue())));

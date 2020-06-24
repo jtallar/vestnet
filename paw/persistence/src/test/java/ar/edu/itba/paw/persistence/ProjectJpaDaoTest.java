@@ -459,6 +459,7 @@ public class ProjectJpaDaoTest {
         project.put("cost", cost);
         project.put("funded", true);
         project.put("hits", 0);
+        project.put("message_count", 0);
         return jdbcInsertProject.executeAndReturnKey(project);
     }
 
