@@ -100,7 +100,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-        System.out.println("CHAU");
         return new MyCustomLoginSuccessHandler();
     }
 

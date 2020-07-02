@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.OrderField;
@@ -45,6 +46,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -121,8 +125,8 @@ public class ProjectController {
         User sender = userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new);
         User receiver = userService.findById(mailFields.getReceiverId()).orElseThrow(UserNotFoundException::new);
         Project project = projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new);
-        eventPublisher.publishEvent(new OfferEvent(sender, receiver, project,
-                mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), getBaseUrl(request)));
+        Message message = messageService.create(mailFields.getBody(), mailFields.getOffers(), mailFields.getExchange(), sender.getId(), receiver.getId(), projectId);
+        eventPublisher.publishEvent(new OfferEvent(sender, receiver, project, message, getBaseUrl(request)));
         return new ModelAndView("redirect:/projects/{id}" + "?sent=true");
     }
 

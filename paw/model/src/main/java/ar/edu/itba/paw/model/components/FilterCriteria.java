@@ -5,8 +5,8 @@ package ar.edu.itba.paw.model.components;
  * based on the field, operation, and value.
  */
 public class FilterCriteria {
-    String field;
-    Object value;
+    private String field;
+    private Object value;
 
     public FilterCriteria(String field, Object value) {
         this.field = field;

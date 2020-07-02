@@ -167,7 +167,7 @@ public class LocationJpaDaoTest {
     /**
      * Creates a country.
      */
-    public void createCountry() {
+    private void createCountry() {
         Map<String, Object> values = new HashMap<>();
         values.put("id", COUNTRY_ID);
         values.put("country", COUNTRY_NAME);
@@ -177,7 +177,7 @@ public class LocationJpaDaoTest {
     /**
      * Creates a state.
      */
-    public void createState() {
+    private void createState() {
         Map<String, Object> values = new HashMap<>();
         values.put("id", STATE_ID);
         values.put("state", STATE_NAME);
@@ -188,7 +188,7 @@ public class LocationJpaDaoTest {
     /**
      * Creates a city.
      */
-    public void createCity() {
+    private void createCity() {
         Map<String, Object> values = new HashMap<>();
         values.put("id", CITY_ID);
         values.put("city", CITY_NAME);

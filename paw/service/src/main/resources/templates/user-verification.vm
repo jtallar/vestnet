@@ -11,7 +11,7 @@
     <h4>#message("email.body.verification")</h4>
     <h3>
         #message("email.body.verificationButton")
-        <a href="${baseUrl}/verify?username=${token}">#message("email.clickhere")</a>.
+        <a href="${baseUrl}/verify?token=${token}">#message("email.clickhere")</a>.
     </h3>
 
 </div>

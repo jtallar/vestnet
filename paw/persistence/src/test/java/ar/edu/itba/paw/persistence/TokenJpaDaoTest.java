@@ -210,7 +210,7 @@ public class TokenJpaDaoTest {
     /**
      * Creates a new token and inserts it
      */
-    public Number createToken() {
+    private Number createToken() {
         Number userId = createUser();
         Map<String, Object> token = new HashMap<>();
         token.put("id", TOKEN_ID);

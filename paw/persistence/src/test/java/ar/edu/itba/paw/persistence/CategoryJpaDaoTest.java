@@ -88,7 +88,7 @@ public class CategoryJpaDaoTest {
      * Creates a category.
      * @return The category auto generated id.
      */
-    public Number createCategory() {
+    private Number createCategory() {
         Map<String, String> category = new HashMap<>();
         category.put("category", CATEGORY_NAME);
         return jdbcInsertCategory.executeAndReturnKey(category);
