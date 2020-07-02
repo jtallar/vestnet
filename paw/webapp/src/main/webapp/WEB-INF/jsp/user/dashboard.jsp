@@ -251,4 +251,7 @@
 
 </script>
 </body>
+<footer>
+    <%@ include file="../components/footer.jsp" %>
+</footer>
 </html>

@@ -110,3 +110,58 @@ body text, a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
 .dropdown-toggle:after {
     border: none !important;
 }
+
+/***** FOOTER ******/
+
+footer{
+    margin-top:10%;
+    background-color: #2d2d2d;
+    color: white;
+}
+
+.footer-copyright{
+    background-color: #222222;
+    color: #a7a7a7;
+    font-size:18px;
+    margin-top:20px
+}
+
+.footer-content{
+    padding: 30px 0 0 100px;
+}
+
+footer li{
+    margin-top:28px;
+    font-size:18px
+}
+
+footer li>a{
+    color: #ffffff;
+}
+
+footer li>a:hover{
+    color: white;
+}
+
+footer p{
+    font-size:15px;
+    color:grey
+}
+
+footer h5{
+    font-variant:all-petite-caps;
+    color:#9700c2
+}
+
+footer .dropdown-divider{
+    margin: 5px 20% 20px 20%;
+    background-color:black;
+    border-color:#464646
+}
+
+.footer-footer > h6{
+    color: #d6d6d6;
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+    text-align:center
+}

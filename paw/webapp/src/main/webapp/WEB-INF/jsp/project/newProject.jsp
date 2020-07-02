@@ -105,6 +105,9 @@
     </form:form>
 </div>
 </body>
+<footer>
+    <%@ include file="../components/footer.jsp" %>
+</footer>
 <script>
     let fileBox = document.getElementById('customFileProjectPic');
     let maxSizeMsg = document.getElementById('maxSizeErrorMsg');
