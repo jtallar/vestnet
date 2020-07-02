@@ -362,6 +362,9 @@ html {
 .dash-text{
     font-size: 20px !important
 }
+.dash-title{
+    font-size: 22px
+}
 
 .header-grey{
     background-color: #f7f7f7;

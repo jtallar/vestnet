@@ -25,10 +25,6 @@ public class UserController {
     protected SessionUserFacade sessionUser;
 
 
-
-
-
-
     /**
      * Single user profile.
      * @param id The unique user id.

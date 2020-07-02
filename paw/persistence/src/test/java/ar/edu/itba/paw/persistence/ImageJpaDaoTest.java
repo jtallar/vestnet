@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.model.Token;
+import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.UserRole;
-import ar.edu.itba.paw.model.location.Location;
+import ar.edu.itba.paw.model.image.ProjectImage;
+import ar.edu.itba.paw.model.image.UserImage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,23 +19,29 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.sql.Timestamp;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class TokenJpaDaoTest {
-    private static final String TOKEN_TABLE = "token";
-    private static final String USERS_TABLE = "users";
+public class ImageJpaDaoTest {
+    private static final String PROJECT_IMAGES_TABLE = "project_images";
+    private static final String USER_IMAGES_TABLE = "user_images";
+    private static final long IMAGE_ID = 2;
+
+    private static final String PROJECTS_TABLE = "projects";
     private static final String COUNTRIES_TABLE = "countries";
     private static final String STATES_TABLE = "states";
     private static final String CITIES_TABLE = "cities";
     private static final String ROLES_TABLE = "roles";
+    private static final String USERS_TABLE = "users";
     private static final String LOCATIONS_TABLE = "user_location";
+
+    private static final int COUNTRY_ID = 1;
+    private static final int STATE_ID = 2;
+    private static final int CITY_ID = 3;
 
     private static final Integer ROLE_ID = UserRole.INVESTOR.getId();
     private static final String FIRST_NAME = "FirstName";
@@ -45,13 +51,9 @@ public class TokenJpaDaoTest {
     private static final String PASSWORD = "12345";
     private static final String LOCALE = "en";
 
-    private static final String TOKEN = "this-is-actually-not-like-this";
-    private static final int EXPIRATION = 60 * 24;
-    private static final int TOKEN_ID = 2;
 
-    private static final int COUNTRY_ID = 1;
-    private static final int STATE_ID = 2;
-    private static final int CITY_ID = 3;
+    private static final String PROJECT_NAME = "Project Name.", PROJECT_SUMMARY = "Project Summary.";
+    private static final long PROJECT_COST = 1200;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -60,17 +62,22 @@ public class TokenJpaDaoTest {
     private DataSource dataSource;
 
     @Autowired
-    private TokenJpaDao tokenJpaDao;
+    private ImageJpaDao imageJpaDao;
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertUser, jdbcInsertRole, jdbcInsertToken;
-    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertLocation;
+    private SimpleJdbcInsert jdbcInsertProjectImage, jdbcInsertUserImage, jdbcInsertProject, jdbcInsertUser;
+    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcInsertToken = new SimpleJdbcInsert(dataSource)
-                .withTableName(TOKEN_TABLE);
+        jdbcInsertProjectImage = new SimpleJdbcInsert(dataSource)
+                .withTableName(PROJECT_IMAGES_TABLE);
+        jdbcInsertUserImage = new SimpleJdbcInsert(dataSource)
+                .withTableName(USER_IMAGES_TABLE);
+        jdbcInsertProject = new SimpleJdbcInsert(dataSource)
+                .withTableName(PROJECTS_TABLE)
+                .usingGeneratedKeyColumns("id");
         jdbcInsertUser = new SimpleJdbcInsert(dataSource)
                 .withTableName(USERS_TABLE)
                 .usingGeneratedKeyColumns("id");
@@ -86,58 +93,94 @@ public class TokenJpaDaoTest {
                 .usingGeneratedKeyColumns("id")
                 .withTableName(LOCATIONS_TABLE);
 
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, TOKEN_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, LOCATIONS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CITIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_TABLE);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, LOCATIONS_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_IMAGES_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, USER_IMAGES_TABLE);
 
         createLocation();
         createRole();
         createUser();
+        createProject(createUser());
     }
 
     @Test
-    public void testCreate() {
-        // 1 - Setup
+    public void testCreateProjectImage() {
+        // 1 - Setup- Create 1 project
+        Number projectId = createProject(createUser());
+
+        // 2 - Execute
+        imageJpaDao.create(new Project(projectId.longValue()), null, true);
+
+        // 3 - Assert
+        assertEquals(1, TestUtils.countRowsInTable(entityManager, PROJECT_IMAGES_TABLE));
+    }
+
+    @Test
+    public void testCreateUserImage() {
+        // 1 - Setup- Nothing to be done
+
+        // 2 - Execute
+        imageJpaDao.create(null);
+
+        // 3 - Assert
+        assertEquals(1, TestUtils.countRowsInTable(entityManager, USER_IMAGES_TABLE));
+    }
+
+    @Test
+    public void testFindProjectMainImagesEmpty() {
+        // 1 - Setup- Create a project
+        Number projectId = createProject(createUser());
+
+        // 2 - Execute
+        List<ProjectImage> mainImage = imageJpaDao.findProjectImages(new Project(projectId.longValue()), true);
+
+        // 3 - Assert
+        assertEquals(0, mainImage.size());
+    }
+
+    @Test
+    public void testFindProjectMainImagesExists() {
+        // 1 - Setup- Create a project
+        Number projectId = createProject(createUser());
+        createProjectImage(projectId, true);
+
+        // 2 - Execute
+        List<ProjectImage> mainImage = imageJpaDao.findProjectImages(new Project(projectId.longValue()), true);
+
+        // 3 - Assert
+        assertEquals(1, mainImage.size());
+    }
+
+    @Test
+    public void testFindProjectNotMainImagesExist() {
+        // 1 - Setup- Create a project
+        Number projectId = createProject(createUser());
+        createProjectImage(projectId, false);
+
+        // 2 - Execute
+        List<ProjectImage> mainImage = imageJpaDao.findProjectImages(new Project(projectId.longValue()), false);
+
+        // 3 - Assert
+        assertEquals(1, mainImage.size());
+    }
+
+    @Test
+    public void testFindUserImageEmpty() {
+        // 1 - Setup- Create a user
         Number userId = createUser();
 
         // 2 - Execute
-        tokenJpaDao.create(new User(userId.longValue()));
+        Optional<UserImage> userImage = imageJpaDao.findUserImage(userId.longValue());
 
         // 3 - Assert
-        assertEquals(1, TestUtils.countRowsInTable(entityManager, TOKEN_TABLE));
+        assertFalse(userImage.isPresent());
     }
-
-    @Test
-    public void testFindByTokenDoesntExists() {
-        // 1 - Setup - Empty table
-
-        // 2 - Execute
-        Optional<Token> optionalToken = tokenJpaDao.findByToken(TOKEN);
-
-        // 3 - Assert
-        assertFalse(optionalToken.isPresent());
-    }
-
-    @Test
-    public void testFindByTokenExists() {
-        // 1 - Setup - Create 1 user
-        Number userId = createToken();
-
-        // 2 - Execute
-        Optional<Token> optionalToken = tokenJpaDao.findByToken(TOKEN);
-
-        // 3 - Assert - FIRST, LAST NAME
-        assertTrue(optionalToken.isPresent());
-        assertEquals(TOKEN, optionalToken.get().getToken());
-        assertTrue(optionalToken.get().isValid());
-        assertEquals(userId.longValue(), optionalToken.get().getUser().getId());
-    }
-
-
 
     /**
      * Auxiliary functions.
@@ -208,29 +251,46 @@ public class TokenJpaDaoTest {
     }
 
     /**
-     * Creates a new token and inserts it
+     * Creates a project given its name, owner id and cost
+     * @param userId Owner user id.
+     * @return The unique project id.
      */
-    private Number createToken() {
-        Number userId = createUser();
-        Map<String, Object> token = new HashMap<>();
-        token.put("id", TOKEN_ID);
-        token.put("user_id", userId);
-        token.put("token", TOKEN);
-        token.put("expirydate", calculateExpiryDate(EXPIRATION));
-        jdbcInsertToken.execute(token);
-        return userId;
+    private Number createProject(Number userId) {
+        Map<String, Object> project = new HashMap<>();
+        project.put("owner_id", userId.longValue());
+        project.put("project_name", PROJECT_NAME);
+        project.put("summary", PROJECT_SUMMARY);
+        project.put("cost", PROJECT_COST);
+        project.put("funded", true);
+        project.put("hits", 0);
+        project.put("message_count", 0);
+        return jdbcInsertProject.executeAndReturnKey(project);
     }
 
     /**
-     * Calculates expiry date given a time.
-     * @param expiryTimeInMinutes The time given to calculate.
-     * @return Date of expiry.
+     * Create a project image
+     * @param projectId Project id.
+     * @param main Wheter image is main or not
      */
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
+    private void createProjectImage(Number projectId, boolean main) {
+        Map<String, Object> projectImage = new HashMap<>();
+        projectImage.put("id", IMAGE_ID);
+        projectImage.put("project_id", projectId.longValue());
+        projectImage.put("image", null);
+        projectImage.put("main", main);
+        jdbcInsertProjectImage.execute(projectImage);
     }
 
+
+    /**
+     * Create a user image
+     * @param userId User id.
+     */
+    private void createUserImage(Number userId) {
+        Map<String, Object> userImage = new HashMap<>();
+        userImage.put("id", IMAGE_ID);
+        userImage.put("user_id", userId.longValue());
+        userImage.put("image", null);
+        jdbcInsertUserImage.execute(userImage);
+    }
 }

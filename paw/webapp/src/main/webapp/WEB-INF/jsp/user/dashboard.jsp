@@ -52,14 +52,14 @@
                         <div class="row msg-content">
                             <div class="col-9">
                                 <div class="row msg-content">
-                                    <div class="col-"><h5><spring:message code="cost"/></h5></div>
+                                    <div class="col-"><h5 class="dash-title"><spring:message code="cost"/></h5></div>
                                     <div class="col-5 msg-content">
                                         <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>
                                         <p class="card-text dash-text"><c:out value="${costVar}"/></p>
                                     </div>
                                 </div>
                                 <div class="row msg-content">
-                                    <div class="col-"><h5><spring:message code="hits"/></h5></div>
+                                    <div class="col-"><h5 class="dash-title"><spring:message code="hits"/></h5></div>
                                     <div class="col-5 msg-content"><p class="card-text dash-text"><c:out value="${project.hits}"/></p></div>
                                 </div>
                                 <div>
@@ -125,13 +125,13 @@
 <%-- If there is no projects --%>
 <c:if test="${empty projects}">
     <div class="card no-proj-mine">
-        <div class="card-header">
+        <div class="card-header text-center">
             <c:choose>
                 <c:when test="${funded}">
-                    <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
+                    <h5 class="card-title text-white centered"><spring:message code="noProjFunded"/></h5>
                 </c:when>
                 <c:otherwise>
-                    <h5 class="card-title text-white centered"><spring:message code="noProjFunded"/></h5>
+                    <h5 class="card-title text-white centered"><spring:message code="noProjOwned"/></h5>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -206,16 +206,22 @@
         return `
             <div class="card msg msg-collapse">
                 <div class="card-body">
-                    <div>
-                        <strong><spring:message code="msg.title.body"/></strong><br>
-                        <p>\${message.body}</p>
-                        <strong><spring:message code="msg.title.offer"/></strong><br>
-                        <p>\${message.offer}</p>
-                        <strong><spring:message code="msg.title.request"/></strong><br>
-                        <p>\${message.request}</p>
-                        <a href="\${message.investorUrl}" class="btn btn-dark btn-md"><spring:message code="view_inv_profile"/></a>
-                        <button id="refuse-message-\${message.projectId}-\${message.senderId}" class="btn btn-danger btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, false)"><spring:message code="dashboard.msg.refuse"/></button>
-                        <button id="accept-message-\${message.projectId}-\${message.senderId}" class="btn btn-success btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, true)"><spring:message code="dashboard.msg.accept"/></button>
+                    <div class="row">
+                        <div class="col-5">
+                            <strong><spring:message code="msg.title.body"/></strong><br>
+                            <p>\${message.body}</p>
+                        </div>
+                        <div class="col-4">
+                            <strong><spring:message code="msg.title.offer"/></strong><br>
+                            <p>\${message.offer}</p>
+                            <strong><spring:message code="msg.title.request"/></strong><br>
+                            <p>\${message.request}</p>
+                        </div>
+                        <div class="col-3">
+                            <a href="\${message.investorUrl}" class="btn btn-dark btn-md pull-right"><spring:message code="view_inv_profile"/></a>
+                            <button id="refuse-message-\${message.projectId}-\${message.senderId}" class="btn btn-danger btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, false)"><spring:message code="dashboard.msg.refuse"/></button>
+                            <button id="accept-message-\${message.projectId}-\${message.senderId}" class="btn btn-success btn-md pull-right" onclick="answer(\${message.projectId}, \${message.senderId}, true)"><spring:message code="dashboard.msg.accept"/></button>
+                        </div>
                     </div>
                 </div>
             </div>

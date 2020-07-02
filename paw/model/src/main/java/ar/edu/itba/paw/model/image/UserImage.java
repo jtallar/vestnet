@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "user_images")
 public class UserImage extends Image {
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false, mappedBy = "image")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "image")
     private User user;
 
     /** Protected */ UserImage() {

@@ -50,7 +50,7 @@ import java.util.function.Consumer;
      * Filters by ids.
      * @param value The list of ids.
      */
-    public void ids(Object value) {
+    private void ids(Object value) {
         predicate = root.get("id").in((List) value);
     }
 
@@ -59,7 +59,7 @@ import java.util.function.Consumer;
      * Filters by the message receiver.
      * @param value The user receiver.
      */
-    public void receiver(Object value) {
+    private void receiver(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("receiver"), value));
     }
 
@@ -68,7 +68,7 @@ import java.util.function.Consumer;
      * Filters by the message sender.
      * @param value The user sender.
      */
-    public void sender(Object value) {
+    private void sender(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("sender"), value));
     }
 
@@ -77,7 +77,7 @@ import java.util.function.Consumer;
      * Filters by the message project.
      * @param value The project.
      */
-    public void project(Object value) {
+    private void project(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("project"), value));
     }
 
@@ -85,7 +85,7 @@ import java.util.function.Consumer;
     /**
      * Filters unread messages.
      */
-    public void unread() {
+    private void unread() {
         predicate = builder.and(predicate, builder.isNull(root.get("accepted")));
     }
 
@@ -94,7 +94,7 @@ import java.util.function.Consumer;
      * Filters by the accepted status.
      * @param value The status to be checked.
      */
-    public void accepted(Object value) {
+    private void accepted(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("accepted"), value));
     }
 }

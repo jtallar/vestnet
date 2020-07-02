@@ -121,7 +121,6 @@
                             <p><c:out value="${project.owner.email}"/></p>
 
                             <sec:authorize access="isAnonymous()">
-                            <%-- TODO ask if wants to login/signup --%>
                                 <h5><a href="" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#expFunding">
                                     <spring:message code="singleView.button.createToViewProfile"/>
                                 </a></h5>
@@ -180,7 +179,6 @@
                 <%-- Contact button --%>
                 <div class="d-flex justify-content-end">
                     <sec:authorize access="isAnonymous()">
-                        <%-- TODO ask if wants to login/sign up --%>
                         <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button" data-toggle="modal" data-target="#expFunding">
                             <spring:message code="singleView.button.createToContactOwner"/>
                         </button>

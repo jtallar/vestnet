@@ -37,6 +37,9 @@ public class RestApiController {
     private LocationService locationService;
 
     @Autowired
+    private MessageService messageService;
+
+    @Autowired
     private ApplicationEventPublisher eventPublisher;
 
 
@@ -149,6 +152,7 @@ public class RestApiController {
         User sender = userService.findById(senderId).orElseThrow(UserNotFoundException::new);
         User receiver = userService.findById(receiverId).orElseThrow(UserNotFoundException::new);
         Project project = projectService.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        messageService.updateMessageStatus(receiver.getId(), sender.getId(), project.getId(), value);
         eventPublisher.publishEvent(new OfferAnswerEvent(sender, receiver, project, value, getBaseUrl(request)));
         return new ResponseEntity<>(HttpStatus.OK);
     }

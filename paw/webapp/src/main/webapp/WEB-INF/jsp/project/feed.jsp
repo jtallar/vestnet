@@ -39,13 +39,6 @@
 
 <%-- Project pagniation --%>
 <div class="row">
-<%--    <div class="col-3">--%>
-<%--         <c:set var="totalFound" value="12"/>--%>
-<%--         <c:if test="${page == endPage}">--%>
-<%--            <c:set var="totalFound" value="${projectPage.totalCount % 12}"/>--%>
-<%--         </c:if>--%>
-<%--        <p><spring:message code="feed.search.pages" arguments="${totalFound},${projectPage.totalCount}"/></p>--%>
-<%--    </div>--%>
     <div class="col-1"></div>
     <div class="col-11">
         <ul class="pagination justify-content-center">
@@ -219,11 +212,6 @@
                             </div>
                             <div class="col-7 card-content">
                                 <p class="card-text"><c:out value="${project.summary}"/></p>
-<%--                                <div class="card-secondary">--%>
-<%--                                    <strong><spring:message code="price"/></strong>--%>
-<%--                                    <spring:message code="project.cost" arguments="${project.cost}" var="costVar"/>--%>
-<%--                                    <p><c:out value="${costVar}"/></p>--%>
-<%--                                </div>--%>
                             </div>
                         </div>
                     </div>

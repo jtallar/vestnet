@@ -62,7 +62,7 @@ public class IEmailService implements EmailService {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.passwordReset", null, Locale.forLanguageTag(user.getLocale())));
-        mail.setContent(prepareTokenMail(mail, user, token, baseUrl, true));
+        mail.setContent(prepareTokenMail(mail, user, token, baseUrl, false));
         sendEmail(mail);
     }
 
@@ -84,7 +84,7 @@ public class IEmailService implements EmailService {
      * Sends a formatted mail in html.
      * @param mail The formatted mail. Content must be filled previously.
      */
-    public void sendEmail(Mail mail) {
+    private void sendEmail(Mail mail) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -92,13 +92,14 @@ public class IEmailService implements EmailService {
             mimeMessageHelper.setFrom(mail.getFrom());
             mimeMessageHelper.setTo(mail.getTo());
             mimeMessageHelper.setText(mail.getContent(), true);
+            mimeMessageHelper.setReplyTo(mail.getFrom());
             ClassPathResource resource = new ClassPathResource("/images/mail-header.png");
             mimeMessageHelper.addInline("headerImage", resource);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
 
         } catch (MessagingException e) {
-            e.printStackTrace(); // TODO should we do something? Retry send?
+//            e.printStackTrace(); // TODO should we do something? Retry send?
         }
     }
 
