@@ -38,6 +38,11 @@ public interface UserService {
      */
     Optional<User> findById(long id);
 
+    /**
+     * Delete a user given its ID.
+     * @param id The unique user's ID
+     */
+    void removeUser(long id);
 
     /**
      * Updates a user password.

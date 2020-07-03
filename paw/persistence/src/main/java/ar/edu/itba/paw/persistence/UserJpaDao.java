@@ -34,6 +34,11 @@ public class UserJpaDao implements UserDao {
         return user;
     }
 
+    @Override
+    public void removeUser(long id) {
+        Optional<User> maybeUser = findById(id);
+        if (maybeUser.isPresent()) entityManager.remove(maybeUser);     // TODO: CAMBIAR A BORRADO LOGICO?
+    }
 
     @Override
     public Optional<User> findByUsername(String username) {

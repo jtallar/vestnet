@@ -64,6 +64,11 @@ public class IUserService implements UserService {
         return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin, userImage);
     }
 
+    @Override
+    @Transactional
+    public void removeUser(long id) {
+        userDao.removeUser(id);
+    }
 
     @Override
     public Optional<User> findByUsername(String username) {

@@ -28,6 +28,11 @@ public interface UserDao {
      User create(Integer role, String password, String firstName, String lastName, String realId,
                  Date birthDate, Location location, String email, String phone, String linkedin, UserImage image) throws UserAlreadyExistsException;
 
+    /**
+     * Delete a user given its ID.
+     * @param id The unique user's ID
+     */
+    void removeUser(long id);
 
     /**
      * Finds a user given its username / mail.
