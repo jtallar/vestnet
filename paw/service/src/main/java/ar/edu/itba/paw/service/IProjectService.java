@@ -53,14 +53,16 @@ public class IProjectService implements ProjectService {
 
 
     @Override
-    public Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize) {
-        /** Clean filters and create Criteria list */
-        filters.values().removeIf(value -> (value == null || value.toString().equals("")));
+    public Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize) {
         List<FilterCriteria> params = new ArrayList<>();
-        filters.forEach((key, value) -> params.add(new FilterCriteria(key, value)));
+
+        if (category != null) params.add(new FilterCriteria("category", category));
+        if (minCost != null) params.add(new FilterCriteria("minCost", minCost));
+        if (maxCost != null) params.add(new FilterCriteria("maxCost", maxCost));
+        if (keyword != null && !keyword.equals("")) params.add(new FilterCriteria(String.valueOf(field), keyword));
         params.add(new FilterCriteria("funded", false));
 
-        return projectDao.findAll(params, OrderField.getEnum(order), new PageRequest(page, pageSize));
+        return projectDao.findAll(params, OrderField.getEnum(String.valueOf(order)), new PageRequest(page, pageSize));
     }
 
 

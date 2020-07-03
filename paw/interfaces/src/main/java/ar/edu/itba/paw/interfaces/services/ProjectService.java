@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.ProjectImage;
 
@@ -34,13 +35,17 @@ public interface ProjectService {
 
     /**
      * Finds all projects with the given filter.
-     * @param filters All the filters applied to the search.
+     * @param category Projects category. Null if no category set.
+     * @param minCost Projects min cost. Null if no min cost set.
+     * @param maxCost Projects max cost. Null if no max cost set.
+     * @param keyword Keyword to be matched on search. Null or "" if no search.
+     * @param field The field to search the keyword.
      * @param order The order to order by.
      * @param page The number of page to get the projects.
      * @param pageSize The page size to consider.
      * @return The list of matching projects.
      */
-    Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize);
+    Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize);
 
 
     /**
