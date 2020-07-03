@@ -2,6 +2,7 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.*;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
@@ -54,19 +55,55 @@ public class IUserService implements UserService {
 
         UserImage userImage = null;
         if (image.length > 0) userImage = imageDao.create(image);
+        Date birthDate = new GregorianCalendar(birthYear, birthMonth, birthDay).getTime();
+
+        return this.create(role, password, firstName, lastName, realId, birthDate, countryId, stateId, cityId, email, phone, linkedin, userImage);
+    }
+
+    @Override
+    @Transactional
+    public User create(String role, String password, String firstName, String lastName, String realId,
+                       Date birthDate, Integer countryId, Integer stateId, Integer cityId,
+                       String email, String phone, String linkedin, UserImage userImage) throws UserAlreadyExistsException {
 
         Integer roleId = UserRole.getEnum(role).getId();
         Country country = new Country(countryId);
         State state = new State(stateId);
         City city = new City(cityId);
         Location location = new Location(country, state, city);
-        Date birthDate = new GregorianCalendar(birthYear, birthMonth, birthDay).getTime();
         return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin, userImage);
     }
 
     @Override
     @Transactional
+    public User update (long userId, String firstName, String lastName, String realId, Date birthDate,
+                        Integer countryId, Integer stateId, Integer cityId,
+                        String phone, String linkedin) throws UserDoesNotExistException {
+
+        Optional<User> optionalUser = findById(userId);
+        if (!optionalUser.isPresent()) throw new UserDoesNotExistException();
+        User user = optionalUser.get();
+
+        Country country = new Country(countryId);
+        State state = new State(stateId);
+        City city = new City(cityId);
+        Location location = new Location(country, state, city);
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setRealId(realId);
+        user.setBirthDate(birthDate);
+        user.setLocation(location);
+        user.setPhone(phone);
+        user.setLinkedin(linkedin);
+
+        return user;
+    }
+
+    @Override
+    @Transactional
     public void removeUser(long id) {
+//        TODO: ADD TOKEN REMOVAL HERE, ALL OF THOSE WHICH HAVE THIS USER
         userDao.removeUser(id);
     }
 

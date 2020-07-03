@@ -1,12 +1,15 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.model.image.UserImage;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +24,24 @@ public interface UserService {
                  Integer birthYear, Integer birthMonth, Integer birthDay,
                  Integer countryId, Integer stateId, Integer cityId,
                  String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException;
+
+    /**
+     * Creates a new user given the params, for REST API.
+     * @return The created User.
+     * @throws UserAlreadyExistsException when the username is already taken.
+     */
+    User create (String role, String password, String firstName, String lastName, String realId,
+                 Date birthDate, Integer countryId, Integer stateId, Integer cityId,
+                 String email, String phone, String linkedin, UserImage userImage) throws UserAlreadyExistsException;
+
+    /**
+     * Updates an existing user given the params.
+     * @return The created User.
+     * @throws UserDoesNotExistException when the usern does not exist.
+     */
+    User update (long userId, String firstName, String lastName, String realId, Date birthDate,
+                        Integer countryId, Integer stateId, Integer cityId,
+                        String phone, String linkedin) throws UserDoesNotExistException;
 
 
     /**

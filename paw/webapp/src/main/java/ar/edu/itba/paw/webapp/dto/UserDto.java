@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.UserRole;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.net.URI;
 
 public class UserDto {
     private long id;
-    private int role;
+    private String role;
     private String password;
     private String firstName;
     private String lastName;
@@ -21,14 +22,14 @@ public class UserDto {
     private boolean verified;
     private String locale;
 
-//    private long imageId;
+    private int countryId, stateId, cityId;
 
     private URI location, image, projectList, receivedMessages, sentMessages, favorites;
 
     public static UserDto fromUser(User user, UriInfo uriInfo) {
         final UserDto userDto = new UserDto();
         userDto.id = user.getId();
-        userDto.role = user.getRole();
+        userDto.role = UserRole.valueOf(user.getRole()).getRole();
         userDto.firstName = user.getFirstName();
         userDto.lastName = user.getLastName();
         userDto.realId = user.getRealId();
@@ -47,6 +48,10 @@ public class UserDto {
         userDto.sentMessages = uriInfo.getAbsolutePathBuilder().path("sent_messages").build();
         userDto.favorites = uriInfo.getAbsolutePathBuilder().path("favorites").build();
 
+        userDto.countryId = user.getLocation().getCountry().getId();
+        userDto.stateId = user.getLocation().getState().getId();
+        userDto.cityId = user.getLocation().getCity().getId();
+
         return userDto;
     }
 
@@ -58,11 +63,11 @@ public class UserDto {
         this.id = id;
     }
 
-    public int getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -200,5 +205,29 @@ public class UserDto {
 
     public void setFavorites(URI favorites) {
         this.favorites = favorites;
+    }
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    public int getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(int stateId) {
+        this.stateId = stateId;
+    }
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 }
