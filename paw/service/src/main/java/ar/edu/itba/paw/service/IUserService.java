@@ -130,6 +130,19 @@ public class IUserService implements UserService {
         return user;
     }
 
+    @Override
+    @Transactional
+    public User updateImage(long id, byte[] image) {
+        Optional<User> userOptional = userDao.findById(id);
+        if (!userOptional.isPresent()) return null;
+
+        UserImage userImage = null;
+        if (image.length > 0) userImage = imageDao.create(image);
+
+        User user = userOptional.get();
+        user.setImage(userImage);
+        return user;
+    }
 
     @Override
     @Transactional

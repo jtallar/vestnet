@@ -73,6 +73,13 @@ public interface UserService {
      */
     User updatePassword(String mail, String password);
 
+    /**
+     * Update a user image.
+     * @param id User's id
+     * @param image Image byte array.
+     * @return The updated user, null if not exist.
+     */
+    User updateImage(long id, byte[] image);
 
     /**
      * Sets a user as verified.
