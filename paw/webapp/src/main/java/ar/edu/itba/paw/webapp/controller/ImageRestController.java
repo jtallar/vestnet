@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.Optional;
 
 @Component
 @Path("/images")
@@ -31,27 +32,22 @@ public class ImageRestController {
     private UriInfo uriInfo;
 
 
-    // TODO: Esta bien devolver el byte[] asi sin mas o deberia hacer un fromUserImage?
-    //       (en ese caso, habria que devolver UserImage y ProjectImage? O el dto tiene solo image)
+    // TODO: Los errores ya no los debemos capturar, no? Ni debemos mostrar el mensaje de Tomcat
     @GET
     @Path("/users/{user_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getUserImage(@PathParam("user_id") final long userId) {
-        return Response.ok(ImageDto.fromUserImage(new UserImage(userService.getProfileImage(userId)))).build();
-    }
-
-    @GET
-    @Path("/test/{user_id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response testGetUserImage(@PathParam("user_id") final long userId) {
-        return Response.ok(userService.getProfileImage(userId)).build();
+        Optional<UserImage> profileImage = userService.getProfileImageNoDefault(userId);
+        if (!profileImage.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND.getStatusCode()).build();
+        }
+        return Response.ok(ImageDto.fromUserImage(profileImage.get())).build();
     }
 
     @PUT
     @Path("/users/{user_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setUserImage(@PathParam("user_id") final long userId, final ImageDto image) {
-        LOGGER.debug("\n\nImage length: {}", image.getImage().length);
         User updatedUser = userService.updateImage(userId, image.getImage());
         if (updatedUser == null) {
             return Response.status(Response.Status.NOT_FOUND.getStatusCode()).build();
@@ -59,6 +55,8 @@ public class ImageRestController {
         return Response.ok().build();
     }
 
+
+    // TODO: cambiar para que los metodos devuelvan un ProjectImage y usar fromProjectImage para devolver DTO
     @GET
     @Path("/projects/{project_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })

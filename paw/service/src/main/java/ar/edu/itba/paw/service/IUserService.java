@@ -137,9 +137,17 @@ public class IUserService implements UserService {
         if (!userOptional.isPresent()) return null;
 
         UserImage userImage = null;
-        if (image.length > 0) userImage = imageDao.create(image);
-
         User user = userOptional.get();
+
+        Optional<UserImage> maybeImage;
+        Long imageId = user.getImage_id();
+        if (imageId == null || !(maybeImage = imageDao.findUserImage(imageId)).isPresent()) {
+            if (image.length > 0) userImage = imageDao.create(image);
+        } else {
+            userImage = maybeImage.get();
+            userImage.setImage(image);
+        }
+
         user.setImage(userImage);
         return user;
     }
@@ -237,6 +245,17 @@ public class IUserService implements UserService {
         return messageDao.findAll(filters, OrderField.DATE_DESCENDING).stream().findFirst();
     }
 
+    @Override
+    public Optional<UserImage> getProfileImageNoDefault(long userId) {
+        Optional<User> userOptional = userDao.findById(userId);
+        if (!userOptional.isPresent()) return Optional.empty();
+
+        User user = userOptional.get();
+        Long imageId = user.getImage_id();
+        if (imageId == null) return Optional.empty();
+
+        return imageDao.findUserImage(imageId);
+    }
 
     @Override
     public byte[] getProfileImage(long id) {

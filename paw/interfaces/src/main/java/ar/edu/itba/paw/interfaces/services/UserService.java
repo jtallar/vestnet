@@ -165,10 +165,18 @@ public interface UserService {
 
     /**
      * Finds user only profile image.
-     * @param id The user unique id to find its image.
+     * @param id The image unique id to find it.
      * @return The user image, default if none found.
      */
     byte[] getProfileImage(long id);
+
+
+    /**
+     * Finds user only profile image.
+     * @param id The user unique id to find its image.
+     * @return An optional for the user image
+     */
+    Optional<UserImage> getProfileImageNoDefault(long id);
 
 
     /**
