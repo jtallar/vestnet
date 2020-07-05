@@ -4,8 +4,10 @@ import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.ProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -47,7 +49,7 @@ public class ProjectController {
 
     @GET // TODO make lazy relationships if needed
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response list(@QueryParam("p") @DefaultValue("1") int page,
+    public Response projects(@QueryParam("p") @DefaultValue("1") int page,
                          @QueryParam("o") @DefaultValue("1") int order,
                          @QueryParam("f") @DefaultValue("1") int field,
                          @QueryParam("s") String keyword,
@@ -85,6 +87,7 @@ public class ProjectController {
         return project.map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build()).orElseGet(() -> Response.status(404).build());
     }
 
+
     @PUT
     @Path("/{projectId}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
@@ -93,5 +96,32 @@ public class ProjectController {
         return project.map(p -> Response.ok().build()).orElseGet(() -> Response.status(404).build());
     }
 
+
+    @GET
+    @Path("/{projectId}/categories")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response projectCategories(@PathParam("projectId") long id) {
+        // TODO return project categories
+        return Response.ok().build();
+    }
+
+
+    @PUT
+    @Path("/{projectId}/categories")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response updateCategories(final ProjectDto projectDto) {
+        // TODO update project's categories
+        return Response.ok().build();
+    }
+
+
+    @GET
+    @Path("/categories")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response categories() {
+        List<Category> categories = projectService.getAllCategories();
+        List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
+    }
 
 }
