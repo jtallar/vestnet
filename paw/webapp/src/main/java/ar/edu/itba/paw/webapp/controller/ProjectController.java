@@ -109,7 +109,7 @@ public class ProjectController {
     @PUT
     @Path("/{projectId}/categories")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updateCategories(final ProjectDto projectDto) {
+    public Response updateCategories(final List<CategoryDto> categoriesDto) {
         // TODO update project's categories
         return Response.ok().build();
     }
