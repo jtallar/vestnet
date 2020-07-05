@@ -17,12 +17,21 @@ public interface ProjectService {
      * @param summary The project's summary.
      * @param cost The project's total cost.
      * @param ownerId The user id owner of the project.
-     * @param categoriesIds The project's categories ids.
-     * @param image Project portrait image.
-     * @param slideshow Project slideshow images.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image, List<byte[]> slideshow);
+    Project create(String name, String summary, long cost, long ownerId);
+
+
+    /**
+     * Updates a project with the given parameters.
+     * @param id Project's unique id.
+     * @param name The project's name.
+     * @param summary The project's summary.
+     * @param cost The project's total cost.
+     * @return operation return.
+     * @return
+     */
+    Optional<Project> update(long id, String name, String summary, long cost);
 
 
     /**

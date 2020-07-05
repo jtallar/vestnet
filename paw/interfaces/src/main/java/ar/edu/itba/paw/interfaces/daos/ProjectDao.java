@@ -14,10 +14,9 @@ public interface ProjectDao {
      * @param summary The project's summary.
      * @param cost The project's total cost.
      * @param owner The user owner of the project.
-     * @param categories The project's categories.
      * @return The created project.
      */
-    Project create(String name, String summary, long cost, User owner, List<Category> categories);
+    Project create(String name, String summary, long cost, User owner);
 
 
     /**

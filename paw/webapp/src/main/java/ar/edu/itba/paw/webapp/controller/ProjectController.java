@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 @Path("test")
@@ -62,6 +65,32 @@ public class ProjectController {
                 .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getEndPage()).build(), "last")
                 .build();
+    }
+
+
+    @POST
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response create(final ProjectDto projectDto) {
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), sessionUser.getId());
+        final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
+        return Response.created(projectUri).build();
+    }
+
+
+    @GET
+    @Path("/{projectId}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response project(@PathParam("projectId") long id) {
+        Optional<Project> project = projectService.findById(id);
+        return project.map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build()).orElseGet(() -> Response.status(404).build());
+    }
+
+    @PUT
+    @Path("/{projectId}")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response update(final ProjectDto projectDto) {
+        final Optional<Project> project = projectService.update(projectDto.getId(), projectDto.getName(), projectDto.getSummary(), projectDto.getCost());
+        return project.map(p -> Response.ok().build()).orElseGet(() -> Response.status(404).build());
     }
 
 

@@ -17,11 +17,12 @@ public class ProjectDto {
     private long hits;
     private long msgCount;
 
+
 //    private Uri owner; // Lazy fetching
-//    private List<ProjectImage> images; // Lazy fetching
-//    private List<Category> categories; // Lazy fetching
-//    private List<Message> messageList; // Lazy fetching
-//    private List<User> favoriteBy; // Lazy fetching
+//    private Uri portraitImage; // Lazy fetching
+//    private Uri categories; // Lazy fetching
+//    private Uri messageList; // Lazy fetching
+//    private Uri favoriteBy; // Lazy fetching
 
     public static ProjectDto fromProject(Project project, UriInfo uriInfo) {
         final ProjectDto projectDto = new ProjectDto();

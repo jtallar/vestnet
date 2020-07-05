@@ -32,17 +32,35 @@ public class IProjectService implements ProjectService {
     private ImageDao imageDao;
 
 
+//    @Override
+//    @Transactional
+//    public Project create(String name, String summary, long cost, long ownerId,
+//                          List<Long> categoriesIds, byte[] image, List<byte[]> slideshow) {
+//
+//        List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
+//        Project newProject = projectDao.create(name, summary, cost, new User(ownerId), categories);
+//        if (image.length > 0) imageDao.create(newProject, image, true);
+//        slideshow.removeIf(bytes -> bytes.length == 0);
+//        slideshow.forEach(bytes -> imageDao.create(newProject, bytes, false));
+//        return newProject;
+//    }
+
     @Override
     @Transactional
-    public Project create(String name, String summary, long cost, long ownerId,
-                          List<Long> categoriesIds, byte[] image, List<byte[]> slideshow) {
+    public Project create(String name, String summary, long cost, long ownerId) {
+        return projectDao.create(name, summary, cost, new User(ownerId));
+    }
 
-        List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
-        Project newProject = projectDao.create(name, summary, cost, new User(ownerId), categories);
-        if (image.length > 0) imageDao.create(newProject, image, true);
-        slideshow.removeIf(bytes -> bytes.length == 0);
-        slideshow.forEach(bytes -> imageDao.create(newProject, bytes, false));
-        return newProject;
+
+    @Override
+    @Transactional
+    public Optional<Project> update(long id, String name, String summary, long cost) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        if (!optionalProject.isPresent()) return optionalProject;
+        optionalProject.get().setName(name);
+        optionalProject.get().setSummary(summary);
+        optionalProject.get().setCost(cost);
+        return optionalProject;
     }
 
 

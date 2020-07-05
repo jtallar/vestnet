@@ -53,30 +53,6 @@ public class ProjectControllerV1 {
     protected SessionUserFacade sessionUser;
 
 
-//    /**
-//     * The model and view mapping for the feed.
-//     * @param form Filter form.
-//     * @param error Error bind to the filter form.
-//     * @param page The paged asked to show.
-//     * @return The model and view
-//     */
-//    @RequestMapping(value = "/projects", method = {RequestMethod.GET})
-//    public ModelAndView mainView(@Valid @ModelAttribute("filter") FilterForm form,
-//                                 final BindingResult error,
-//                                @RequestParam(name = "page", defaultValue = "1") Integer page) {
-//
-//        Page<Project> projectPage = projectService.findAll(null, null, null, null, 1, 1, page, PAGE_SIZE);
-//        projectPage.setPageRange(PAGINATION_ITEMS);
-//        final ModelAndView mav = new ModelAndView("project/feed");
-//        mav.addObject("projectPage", projectPage);
-//        mav.addObject("categories", projectService.getAllCategories());
-//        mav.addObject("fieldValues", SearchField.values());
-//        mav.addObject("orderValues", OrderField.values());
-//        if (sessionUser.isInvestor())
-//            mav.addObject("user", userService.findById(sessionUser.getId()).orElseThrow(UserNotFoundException::new));
-//        return mav;
-//    }
-
 
     /**
      * Single project view page.
@@ -127,49 +103,6 @@ public class ProjectControllerV1 {
     }
 
 
-    /**
-     * Shows the new project form.
-     * @param newProjectFields Form fields to be filled for a new project.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/newProject", method = {RequestMethod.GET})
-    public ModelAndView createProject(@ModelAttribute("newProjectForm") final NewProjectFields newProjectFields) {
-
-        final ModelAndView mav = new ModelAndView("project/newProject");
-        mav.addObject("categories", projectService.getAllCategories());
-        mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
-        mav.addObject("maxSlideshowCount", WebConfig.MAX_SLIDESHOW_COUNT);
-        return mav;
-    }
-
-
-    /**
-     * New project post mapping. On submit.
-     * @param projectFields The filled form fields for new project.
-     * @param errors Errors on the form fields.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/newProject", method = {RequestMethod.POST})
-    public ModelAndView createProject(@Valid @ModelAttribute("newProjectForm") final NewProjectFields projectFields,
-                                      final BindingResult errors) {
-
-        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "New Project", createProject(projectFields));
-
-        Project newProject;
-        try {
-            List<byte[]> slideshow = projectFields.getSlideshowImages().stream().map(i -> {
-                try { return i.getBytes(); } catch (IOException e) {} return new byte[0]; }).collect(Collectors.toList());
-
-            newProject = projectService.create(projectFields.getTitle(), projectFields.getSummary(),
-                    projectFields.getCost(), sessionUser.getId(), projectFields.getCategories(),
-                    projectFields.getPortraitImage().getBytes(), slideshow);
-        } catch (IOException e) {
-            LOGGER.error("Error {} when getting bytes from MultipartFile", e.getMessage());
-            return createProject(projectFields);
-        }
-
-        return new ModelAndView("redirect:/dashboard#dashboard-project-" + newProject.getId());
-    }
 
 
 
