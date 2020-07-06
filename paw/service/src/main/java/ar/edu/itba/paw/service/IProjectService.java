@@ -145,25 +145,14 @@ public class IProjectService implements ProjectService {
 
 
     @Override
-    public byte[] getPortraitImage(long id) {
-        Optional<ProjectImage> optionalImage = imageDao.findProjectImages(new Project(id), true).stream().findFirst();
-        if (optionalImage.isPresent()) return optionalImage.get().getImage();
-
-        byte[] image;
-        try {
-            Resource stockImage = new ClassPathResource("projectNoImage.png");
-            image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) {
-            return new byte[0];
-        }
-        return image;
+    public Optional<ProjectImage> getPortraitImage(long id) {
+        return imageDao.findProjectImages(new Project(id), true).stream().findFirst();
     }
 
 
     @Override
-    public List<byte[]> getSlideshowImages(long id) {
-        List<ProjectImage> images = imageDao.findProjectImages(new Project(id), false);
-        return images.stream().map(Image::getImage).collect(Collectors.toList());
+    public List<ProjectImage> getSlideshowImages(long id) {
+        return imageDao.findProjectImages(new Project(id), false);
     }
 
 }

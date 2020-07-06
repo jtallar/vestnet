@@ -110,7 +110,7 @@ public interface ProjectService {
      * @param id The unique project id to find its image.
      * @return The main image or default if none is found.
      */
-    byte[] getPortraitImage(long id);
+    Optional<ProjectImage> getPortraitImage(long id);
 
 
     /**
@@ -118,5 +118,5 @@ public interface ProjectService {
      * @param id The unique project id to find its images.
      * @return A list with all the related images.
      */
-    List<byte[]> getSlideshowImages(long id);
+    List<ProjectImage> getSlideshowImages(long id);
 }

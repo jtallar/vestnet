@@ -44,44 +44,6 @@ public class RestApiController {
 
 
     /**
-     * Gets the stored image for a project.
-     * @param projectId The unique project id.
-     * @return The image in a byte vector.
-     */
-    @RequestMapping(value = "/imageController/project/{p_id}", produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    @ResponseBody
-    public byte[] imageControllerProject(@PathVariable("p_id") long projectId) {
-
-        return projectService.getPortraitImage(projectId);
-    }
-
-
-    /**
-     * Gets the stored slideshow images of a project,
-     * @param projectId The unique project id.
-     * @return The list with images in byte vector.
-     */
-    @RequestMapping(value = "/imageController/slideshow/{p_id}")
-    @ResponseBody
-    public List<byte[]> imageControllerProjectSlideshow(@PathVariable("p_id") long projectId) {
-
-        return projectService.getSlideshowImages(projectId);
-    }
-
-    /**
-     * Gets the stored image for a user.
-     * @param imageId The unique user image id.
-     * @return The image in a byte vector.
-     */
-    @RequestMapping(value = "/imageController/user/{i_id}")
-    @ResponseBody
-    public byte[] imageControllerUser(@PathVariable("i_id") Long imageId) {
-
-        return userService.getProfileImage(imageId);
-    }
-
-
-    /**
      * Puts a project as a favorite to an user.
      * @param projectId The unique project id.
      * @param userId The unique user id.
@@ -181,41 +143,6 @@ public class RestApiController {
     public ResponseEntity<Boolean> stopFunding(@RequestParam("p_id") long projectId) {
         projectService.setFunded(projectId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-    /**
-     * Gets all the countries stored in the database.
-     * @return List of all the countries.
-     */
-    @RequestMapping(value = "/location/country",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<Country> countryList() {
-        return locationService.findAllCountries();
-    }
-
-
-    /**
-     * Gets all the states for a given country.
-     * @param countryId The unique country id.
-     * @return List of all the available country's states.
-     */
-    @RequestMapping(value = "/location/state/{country_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<State> stateList(@PathVariable("country_id") int countryId) {
-        return locationService.findStates(countryId);
-    }
-
-
-    /**
-     * Gets all the cites for a given state.
-     * @param stateId The unique state id.
-     * @return List of all the available state's cities.
-     */
-    @RequestMapping(value = "/location/city/{state_id}",  headers = "accept=application/json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<City> cityList(@PathVariable("state_id") int stateId) {
-        return locationService.findCities(stateId);
     }
 
 
