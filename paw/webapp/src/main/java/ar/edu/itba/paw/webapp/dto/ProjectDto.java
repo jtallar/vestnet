@@ -20,10 +20,9 @@ public class ProjectDto {
     private long hits;
     private long msgCount;
 
-    private URI categories; // Lazy fetching
-
-//    private Uri owner; // Lazy fetching
-//    private Uri portraitImage; // Lazy fetching
+    private URI categories;
+    private URI owner;
+    private URI portraitImage;
 
     public static ProjectDto fromProject(Project project, UriInfo uriInfo) {
         final ProjectDto projectDto = new ProjectDto();
@@ -41,6 +40,9 @@ public class ProjectDto {
         if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
         builder.path("categories");
         projectDto.setCategories(builder.build());
+
+        projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
+        projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
         return projectDto;
     }
 
@@ -122,5 +124,21 @@ public class ProjectDto {
 
     public void setCategories(URI categories) {
         this.categories = categories;
+    }
+
+    public URI getOwner() {
+        return owner;
+    }
+
+    public void setOwner(URI owner) {
+        this.owner = owner;
+    }
+
+    public URI getPortraitImage() {
+        return portraitImage;
+    }
+
+    public void setPortraitImage(URI portraitImage) {
+        this.portraitImage = portraitImage;
     }
 }
