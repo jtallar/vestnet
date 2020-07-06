@@ -122,7 +122,7 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
 
         // 2 - Execute
-        projectJpaDao.create(PROJECT_NAME, PROJECT_SUMMARY, PROJECT_COST, new User(userId.longValue()), new ArrayList<>());
+        projectJpaDao.create(PROJECT_NAME, PROJECT_SUMMARY, PROJECT_COST, new User(userId.longValue()));
 
         // 3 - Assert
         assertEquals(1, TestUtils.countRowsInTable(entityManager, PROJECTS_TABLE));

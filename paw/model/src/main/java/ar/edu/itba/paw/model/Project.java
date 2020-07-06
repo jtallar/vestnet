@@ -70,12 +70,11 @@ public class Project {
 
 
 
-    public Project(String name, String summary, long cost, User owner, List<Category> categories) {
+    public Project(String name, String summary, long cost, User owner) {
         this.name = name;
         this.summary = summary;
         this.cost = cost;
         this.owner = owner;
-        this.categories = categories;
         this.hits = 0;
         this.funded = false;
         this.msgCount = 0;
