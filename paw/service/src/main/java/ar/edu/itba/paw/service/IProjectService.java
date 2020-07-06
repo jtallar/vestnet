@@ -128,6 +128,17 @@ public class IProjectService implements ProjectService {
 
 
     @Override
+    @Transactional
+    public Optional<Project> addCategories(long id, List<Category> categories) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        optionalProject.ifPresent(p -> p.setCategories(categories));
+        return optionalProject;
+    }
+
+
+
+
+    @Override
     public List<Category> getAllCategories() {
         return categoryDao.findAllCategories();
     }

@@ -90,6 +90,15 @@ public interface ProjectService {
 
 
     /**
+     * Replaces the projects categories with the given ones.
+     * @param id The unique project's id.
+     * @param categories The list of categories.
+     * @return The modified project if found.
+     */
+    Optional<Project> addCategories(long id, List<Category> categories);
+
+
+    /**
      * Finds all the possible categories from the database.
      * @return List of all the categories.
      */

@@ -62,7 +62,6 @@ public class ProjectController {
 
         List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
 
-
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
                 .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getEndPage()).build(), "last")
@@ -84,7 +83,7 @@ public class ProjectController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response project(@PathParam("projectId") long id) {
         Optional<Project> project = projectService.findById(id);
-        return project.map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build()).orElseGet(() -> Response.status(404).build());
+        return project.map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build()).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 
@@ -93,7 +92,7 @@ public class ProjectController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(final ProjectDto projectDto) {
         final Optional<Project> project = projectService.update(projectDto.getId(), projectDto.getName(), projectDto.getSummary(), projectDto.getCost());
-        return project.map(p -> Response.ok().build()).orElseGet(() -> Response.status(404).build());
+        return project.map(p -> Response.ok().build()).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 
@@ -101,17 +100,20 @@ public class ProjectController {
     @Path("/{projectId}/categories")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projectCategories(@PathParam("projectId") long id) {
-        // TODO return project categories
-        return Response.ok().build();
+        Optional<Project> project = projectService.findById(id);
+        if (!project.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        List<CategoryDto> categoriesDto = project.get().getCategories().stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
     }
 
 
     @PUT
     @Path("/{projectId}/categories")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updateCategories(final List<CategoryDto> categoriesDto) {
-        // TODO update project's categories
-        return Response.ok().build();
+    public Response updateCategories(@PathParam("projectId") long id,
+                                     final List<CategoryDto> categoriesDto) {
+        Optional<Project> project = projectService.addCategories(id, categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList()));
+        return project.map(p -> Response.ok().build()).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 

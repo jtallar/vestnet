@@ -24,7 +24,6 @@ public class ProjectDto {
 //    private Uri owner; // Lazy fetching
 //    private Uri portraitImage; // Lazy fetching
 //    private Uri messageList; // Lazy fetching
-//    private Uri favoriteBy; // Lazy fetching
 
     public static ProjectDto fromProject(Project project, UriInfo uriInfo) {
         final ProjectDto projectDto = new ProjectDto();
