@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.model.Project;
 import org.glassfish.jersey.server.Uri;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
@@ -23,7 +24,6 @@ public class ProjectDto {
 
 //    private Uri owner; // Lazy fetching
 //    private Uri portraitImage; // Lazy fetching
-//    private Uri messageList; // Lazy fetching
 
     public static ProjectDto fromProject(Project project, UriInfo uriInfo) {
         final ProjectDto projectDto = new ProjectDto();
@@ -37,9 +37,10 @@ public class ProjectDto {
         projectDto.setHits(project.getHits());
         projectDto.setMsgCount(project.getMsgCount());
 
-        projectDto.categories = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(projectDto.id)).path("categories")
-                .build();
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+        if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
+        builder.path("categories");
+        projectDto.setCategories(builder.build());
         return projectDto;
     }
 
@@ -117,5 +118,9 @@ public class ProjectDto {
 
     public URI getCategories() {
         return categories;
+    }
+
+    public void setCategories(URI categories) {
+        this.categories = categories;
     }
 }

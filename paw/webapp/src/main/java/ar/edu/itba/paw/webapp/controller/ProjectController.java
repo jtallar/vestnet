@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
-@Path("test")
+@Path("projects")
 @Component
 public class ProjectController {
 
@@ -72,7 +72,7 @@ public class ProjectController {
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response create(final ProjectDto projectDto) {
-        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), sessionUser.getId());
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), /*sessionUser.getId()*/55L);
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
         return Response.created(projectUri).build();
     }
@@ -87,11 +87,13 @@ public class ProjectController {
     }
 
 
+
     @PUT
     @Path("/{projectId}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response update(final ProjectDto projectDto) {
-        final Optional<Project> project = projectService.update(projectDto.getId(), projectDto.getName(), projectDto.getSummary(), projectDto.getCost());
+    public Response update(@PathParam("projectId") long id,
+                           final ProjectDto projectDto) {
+        final Optional<Project> project = projectService.update(id, projectDto.getName(), projectDto.getSummary(), projectDto.getCost());
         return project.map(p -> Response.ok().build()).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
