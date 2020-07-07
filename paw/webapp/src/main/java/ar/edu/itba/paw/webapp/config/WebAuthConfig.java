@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.MyCustomLoginSuccessHandler;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.jwt.JwtTokenAuthenticationProcessingFilter;
+import ar.edu.itba.paw.webapp.auth.jwt.LoginProcessingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,11 +18,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.FileCopyUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -33,6 +39,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @EnableWebSecurity
 @ComponentScan({"ar.edu.itba.paw.webapp.auth"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
+    public static final String AUTH_HEADER = "Authorization";
+
+    private static final String LOGIN_ENTRY_POINT = "/login";
+
     private static final int TOKEN_DAYS = 365;
 
     @Autowired
@@ -52,34 +62,39 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource("classpath:public.pem");
-        http.sessionManagement()
-
-                .invalidSessionUrl("/welcome")
+        http
+                .csrf().disable()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .invalidSessionUrl("/welcome")
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                .antMatchers("/login", "/signUp", "/projects", "/welcome", "/",
+                    .antMatchers("/login", "/signUp", "/projects", "/welcome", "/",
                         "/requestPassword", "/resetPassword", "/verify", "/projects/**", "/addHit/**"
                         , "/users/**").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/requests").hasRole("INVESTOR")
-                .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
-                .antMatchers("/**").authenticated()
+                    .antMatchers("/admin").hasRole("ADMIN")
+                    .antMatchers("/requests").hasRole("INVESTOR")
+                    .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
+                    .antMatchers("/**").authenticated()
                 .and().formLogin()
-                .loginPage("/login")
-                .successHandler(myAuthenticationSuccessHandler())
+                    .loginPage("/login")
+                    .successHandler(myAuthenticationSuccessHandler())
 
-                .usernameParameter("username")
-                .passwordParameter("password")
+                    .usernameParameter("username")
+                    .passwordParameter("password")
                 .and().rememberMe()
-                .rememberMeParameter("remember_me")
-                .key(asString(resource))
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
+                    .rememberMeParameter("remember_me")
+                    .key(asString(resource))
+                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
 
 
                 .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-                .and().csrf().disable();
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login")
+
+                .and()
+                    .addFilterBefore(new LoginProcessingFilter(LOGIN_ENTRY_POINT), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(httpServletRequest -> true), UsernamePasswordAuthenticationFilter.class); // TODO: Check si tengo que hacer el requestMatcher o lo frenan antes
     }
 
     //                .defaultSuccessUrl("/", false)

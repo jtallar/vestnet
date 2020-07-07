@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
 import org.springframework.cache.CacheManager;
@@ -36,7 +39,8 @@ import java.util.Collections;
 import java.util.Properties;
 
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.component" })
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.component",
+        "ar.edu.itba.paw.webapp.auth.jwt" })
 @Configuration
 @EnableCaching
 @EnableAsync
@@ -187,5 +191,14 @@ public class WebConfig {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Collections.singletonList(new ConcurrentMapCache("allCategories")));
         return cacheManager;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+
+        return mapper;
     }
 }

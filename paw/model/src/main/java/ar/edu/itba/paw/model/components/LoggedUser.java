@@ -14,6 +14,11 @@ public class LoggedUser extends User {
         this.id = id;
     }
 
+    public LoggedUser(long id, String username, Collection<? extends GrantedAuthority> authorities) {
+        super(username, "", authorities); // TODO: Ver que hacemos ahi en password, hace falta? Es para JWT
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
