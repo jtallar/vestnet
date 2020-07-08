@@ -39,8 +39,7 @@ import java.util.Collections;
 import java.util.Properties;
 
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.component",
-        "ar.edu.itba.paw.webapp.auth.jwt" })
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.service", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.webapp.component" })
 @Configuration
 @EnableCaching
 @EnableAsync

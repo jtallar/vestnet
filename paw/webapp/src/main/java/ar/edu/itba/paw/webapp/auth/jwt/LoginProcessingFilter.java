@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,25 +20,24 @@ import java.io.IOException;
 
 public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-    @Autowired
-    private AuthenticationSuccessHandler successHandler;
+    private final AuthenticationSuccessHandler successHandler;
+    private final AuthenticationFailureHandler failureHandler;
 
-    @Autowired
-    private AuthenticationFailureHandler failureHandler;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    public LoginProcessingFilter(String defaultFilterProcessesUrl) {
+    public LoginProcessingFilter(String defaultFilterProcessesUrl, AuthenticationSuccessHandler successHandler,
+                                 AuthenticationFailureHandler failureHandler, ObjectMapper objectMapper) {
         super(defaultFilterProcessesUrl);
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
         JsonLoginRequest loginRequest = objectMapper.readValue(request.getReader(), JsonLoginRequest.class);
 
-        if (loginRequest == null || loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty()
-                || loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
+        if (loginRequest == null || StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");
         }
 

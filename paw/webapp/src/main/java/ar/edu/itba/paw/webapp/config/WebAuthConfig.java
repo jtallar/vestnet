@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.webapp.config;
 
 
+import ar.edu.itba.paw.interfaces.TokenExtractor;
 import ar.edu.itba.paw.webapp.auth.MyCustomLoginSuccessHandler;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.jwt.JwtTokenAuthenticationProcessingFilter;
 import ar.edu.itba.paw.webapp.auth.jwt.LoginProcessingFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,6 +15,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -21,9 +24,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.FileCopyUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +38,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -48,6 +60,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PawUserDetailsService userDetails;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private AuthenticationSuccessHandler successHandler;
+    @Autowired
+    private AuthenticationFailureHandler failureHandler;
+    @Autowired
+    private TokenExtractor tokenExtractor;
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -56,6 +80,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
+        auth.authenticationProvider(authenticationProvider);
     }
 
     @Override
@@ -78,7 +103,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/**").authenticated()
                 .and().formLogin()
                     .loginPage("/login")
-                    .successHandler(myAuthenticationSuccessHandler())
+//                    .successHandler(myAuthenticationSuccessHandler())
 
                     .usernameParameter("username")
                     .passwordParameter("password")
@@ -93,11 +118,31 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/login")
 
                 .and()
-                    .addFilterBefore(new LoginProcessingFilter(LOGIN_ENTRY_POINT), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(new JwtTokenAuthenticationProcessingFilter(httpServletRequest -> true), UsernamePasswordAuthenticationFilter.class); // TODO: Check si tengo que hacer el requestMatcher o lo frenan antes
+                    .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class); // TODO: Check si tengo que hacer el requestMatcher o lo frenan antes
     }
 
     //                .defaultSuccessUrl("/", false)
+
+    private LoginProcessingFilter buildLoginFilter() throws Exception {
+        LoginProcessingFilter filter = new LoginProcessingFilter(LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper);
+        filter.setAuthenticationManager(this.authenticationManager());
+        return filter;
+    }
+
+    private JwtTokenAuthenticationProcessingFilter buildJwtTokenFilter() throws Exception {
+        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(new RequestMatcher() {
+            List<String> skipPaths = Collections.singletonList(LOGIN_ENTRY_POINT);
+            RequestMatcher matcher = new OrRequestMatcher(skipPaths.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList()));
+
+            @Override
+            public boolean matches(HttpServletRequest request) {
+                return !matcher.matches(request);
+            }
+        }, tokenExtractor, failureHandler);
+        filter.setAuthenticationManager(this.authenticationManager());
+        return filter;
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -114,10 +159,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
 
 
-    @Bean
+    /*@Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
         return new MyCustomLoginSuccessHandler();
-    }
+    }*/
 
 
     /** Auxiliary functions */

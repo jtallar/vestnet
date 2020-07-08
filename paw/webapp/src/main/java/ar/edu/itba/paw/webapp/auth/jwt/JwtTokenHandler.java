@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.auth.jwt;
 
 import ar.edu.itba.paw.model.components.LoggedUser;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import ar.edu.itba.paw.webapp.exception.jwt.JwtExpiredTokenException;
+import io.jsonwebtoken.*;
 import ar.edu.itba.paw.interfaces.TokenHandler;
-import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.jsonwebtoken.Claims;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -46,7 +46,7 @@ public class JwtTokenHandler implements TokenHandler {
 
     @Override
     public String createAccessToken(LoggedUser sessionUser) {
-        if (sessionUser == null || sessionUser.getUsername().isEmpty()) {
+        if (sessionUser == null || StringUtils.isBlank(sessionUser.getUsername())) {
             LOGGER.error("Cannot create JWT Token without username");
             throw new IllegalArgumentException("Cannot create JWT Token without username");
         }
@@ -70,7 +70,7 @@ public class JwtTokenHandler implements TokenHandler {
 
     @Override
     public String createRefreshToken(LoggedUser sessionUser) {
-        if (sessionUser == null || sessionUser.getUsername().isEmpty()) {
+        if (sessionUser == null || StringUtils.isBlank(sessionUser.getUsername())) {
             LOGGER.error("Cannot create JWT Token without username");
             throw new IllegalArgumentException("Cannot create JWT Token without username");
         }
@@ -92,11 +92,20 @@ public class JwtTokenHandler implements TokenHandler {
 
     @Override
     public LoggedUser getSessionUser(String token) {
-        Jws<Claims> claimsJws = Jwts.parser()
-                .setSigningKey(TOKEN_SIGN_KEY)
-                .parseClaimsJws(token);
+        Jws<Claims> claimsJws;
+        try {
+            claimsJws = Jwts.parser()
+                    .setSigningKey(TOKEN_SIGN_KEY)
+                    .parseClaimsJws(token);
+        } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
+            LOGGER.error("Invalid JWT Token");
+            throw new BadCredentialsException("Invalid JWT token: ", ex);
+        } catch (ExpiredJwtException ex) {
+            LOGGER.error("JWT Token Expired");
+            throw new JwtExpiredTokenException(token, "JWT Token expired", ex);
+        }
         List<String> authorities = claimsJws.getBody().get("roles", List.class);
-        return new LoggedUser(claimsJws.getBody().get("id", long.class),
+        return new LoggedUser(claimsJws.getBody().get("id", Long.class),
                 claimsJws.getBody().getSubject(),
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }

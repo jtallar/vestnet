@@ -28,7 +28,7 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         if (e instanceof BadCredentialsException) {
-            mapper.writeValue(response.getWriter(), ErrorResponse.of("Invalid username or password", ErrorCode.AUTHENTICATION, HttpServletResponse.SC_UNAUTHORIZED));
+            mapper.writeValue(response.getWriter(), ErrorResponse.of("Invalid credentials", ErrorCode.AUTHENTICATION, HttpServletResponse.SC_UNAUTHORIZED));
         } else if (e instanceof JwtExpiredTokenException) {
             mapper.writeValue(response.getWriter(), ErrorResponse.of("Token has expired", ErrorCode.JWT_TOKEN_EXPIRED, HttpServletResponse.SC_UNAUTHORIZED));
         } else if (e instanceof AuthMethodNotSupportedException) {

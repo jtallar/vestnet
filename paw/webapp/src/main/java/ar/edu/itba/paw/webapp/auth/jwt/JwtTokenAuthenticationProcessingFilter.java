@@ -19,14 +19,14 @@ import java.io.IOException;
 
 public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-    @Autowired
-    private AuthenticationFailureHandler failureHandler;
+    private final AuthenticationFailureHandler failureHandler;
+    private final TokenExtractor tokenExtractor;
 
-    @Autowired
-    private TokenExtractor tokenExtractor;
-
-    public JwtTokenAuthenticationProcessingFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+    public JwtTokenAuthenticationProcessingFilter(RequestMatcher requiresAuthenticationRequestMatcher,
+                                                  TokenExtractor tokenExtractor, AuthenticationFailureHandler failureHandler) {
         super(requiresAuthenticationRequestMatcher);
+        this.tokenExtractor = tokenExtractor;
+        this.failureHandler = failureHandler;
     }
 
     @Override
