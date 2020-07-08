@@ -65,6 +65,16 @@ public class ImageRestController {
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
+    @PUT
+    @Path("/projects/{project_id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response setProjectPortrait(@PathParam("project_id") final long id,
+                                       final ImageDto image) {
+        return projectService.setPortraitImage(id, image.getImage())
+                .map(i -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
     @GET
     @Path("/projects/{project_id}/slideshow")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -72,5 +82,16 @@ public class ImageRestController {
         List<ProjectImage> projectImages = projectService.getSlideshowImages(id);
         List<byte []> images = projectImages.stream().map(ProjectImage::getImage).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<byte []>>(images) {}).build();
+    }
+
+    @PUT
+    @Path("/projects/{project_id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response setProjectSlideshow(@PathParam("project_id") final long id,
+                                       final List<ImageDto> images) {
+        List<byte []> bytes = images.stream().map(ImageDto::getImage).collect(Collectors.toList());
+        return projectService.setSlideshowImages(id, bytes)
+                .map(i -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 }

@@ -60,17 +60,17 @@ public interface ProjectService {
     /**
      * Adds a hit to the given project.
      * @param projectId The unique project id.
-     * @return The modified project, null if not found.
+     * @return The modified optional project.
      */
-    Project addHit(long projectId);
+    Optional<Project> addHit(long projectId);
 
 
     /**
      * Sets a project as funded.
      * @param projectId The unique project id.
-     * @return The project modified, null if not found.
+     * @return The optional project modified.
      */
-    Project setFunded(long projectId);
+    Optional<Project> setFunded(long projectId);
 
 
     /**
@@ -96,6 +96,23 @@ public interface ProjectService {
      * @return The modified project if found.
      */
     Optional<Project> addCategories(long id, List<Category> categories);
+
+
+    /**
+     * Sets the project portrait image.
+     * @param id The unique project id.
+     * @param image The image to set.
+     * @return The optional modified project.
+     */
+    Optional<Project> setPortraitImage(long id, byte [] image);
+
+    /**
+     * Sets the project slideshow images.
+     * @param id The unique project id.
+     * @param images The images to insert.
+     * @return The optional modified project.
+     */
+    Optional<Project> setSlideshowImages(long id, List<byte []> images);
 
 
     /**

@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,19 +32,6 @@ public class IProjectService implements ProjectService {
     @Autowired
     private ImageDao imageDao;
 
-
-//    @Override
-//    @Transactional
-//    public Project create(String name, String summary, long cost, long ownerId,
-//                          List<Long> categoriesIds, byte[] image, List<byte[]> slideshow) {
-//
-//        List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
-//        Project newProject = projectDao.create(name, summary, cost, new User(ownerId), categories);
-//        if (image.length > 0) imageDao.create(newProject, image, true);
-//        slideshow.removeIf(bytes -> bytes.length == 0);
-//        slideshow.forEach(bytes -> imageDao.create(newProject, bytes, false));
-//        return newProject;
-//    }
 
     @Override
     @Transactional
@@ -86,22 +74,18 @@ public class IProjectService implements ProjectService {
 
     @Override
     @Transactional
-    public Project addHit(long projectId) {
-        Optional<Project> optionalProject = findById(projectId);
-        if (!optionalProject.isPresent()) return null;
-        Project project = optionalProject.get();
-        project.setHits(project.getHits() + 1);
+    public Optional<Project> addHit(long projectId) {
+        Optional<Project> project = findById(projectId);
+        project.ifPresent(p -> p.setHits(p.getHits() + 1));
         return project;
     }
 
     @Override
     @Transactional
-    public Project setFunded(long projectId) {
+    public Optional<Project> setFunded(long projectId) {
         Optional<Project> optionalProject = findById(projectId);
-        if (!optionalProject.isPresent()) return null;
-        Project project = optionalProject.get();
-        project.setFunded(true);
-        return project;
+        optionalProject.ifPresent(p -> p.setFunded(true));
+        return optionalProject;
     }
 
 
@@ -136,7 +120,32 @@ public class IProjectService implements ProjectService {
     }
 
 
+    @Override
+    @Transactional
+    public Optional<Project> setPortraitImage(long id, byte[] image) {
+        Optional<Project> project = projectDao.findById(id);
+        project.ifPresent(p -> {
+            List<ProjectImage> images = p.getImages();
+            images.removeIf(ProjectImage::isMain);
+            images.add(new ProjectImage(new Project(id), image, true));
+            p.setImages(images);
+        });
+        return project;
+    }
 
+
+    @Override
+    @Transactional
+    public Optional<Project> setSlideshowImages(long id, List<byte[]> images) {
+        Optional<Project> project = projectDao.findById(id);
+        project.ifPresent(p -> {
+            List<ProjectImage> imageList = new ArrayList<>();
+            images.forEach(i -> imageList.add(new ProjectImage(new Project(id), i, false)));
+            p.getImages().stream().filter(ProjectImage::isMain).findFirst().ifPresent(imageList::add);
+            p.setImages(imageList);
+        });
+        return project;
+    }
 
     @Override
     public List<Category> getAllCategories() {

@@ -120,32 +120,6 @@ public class RestApiController {
     }
 
 
-    /**
-     * Adds a hit to a given project.
-     * @param projectId The unique project id.
-     * @return Response entity.
-     */
-    @RequestMapping(value = "/addHit/{p_id}", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseEntity<Boolean> addHit(@PathVariable("p_id") long projectId) {
-        projectService.addHit(projectId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-    /**
-     * Sets funded to stopped on project.
-     * @param projectId The unique project id.
-     * @return Response entity.
-     */
-    @RequestMapping(value = "/stopFunding", method = RequestMethod.PUT, headers = "accept=application/json")
-    @ResponseBody
-    public ResponseEntity<Boolean> stopFunding(@RequestParam("p_id") long projectId) {
-        projectService.setFunded(projectId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
     /** Auxiliary functions */
 
     /**

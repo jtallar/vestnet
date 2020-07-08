@@ -25,33 +25,6 @@ public class UserController {
     protected SessionUserFacade sessionUser;
 
 
-    /**
-     * Single user profile.
-     * @param id The unique user id.
-     * @param back For back navigation. False if my profile.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/users/{u_id}")
-    public ModelAndView userProfile(@PathVariable("u_id") long id,
-                                    @RequestParam(name = "back", defaultValue = "false") boolean back) {
-
-        final ModelAndView mav= new ModelAndView("user/profile");
-        mav.addObject("user", userService.findById(id).orElseThrow(UserNotFoundException::new));
-        mav.addObject("back", back);
-        return mav;
-    }
-
-
-    /**
-     * My profile view. Redirected to users/.
-     * @param back To hide/show back button.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/profile")
-    public ModelAndView myProfile(@RequestParam(name = "back", defaultValue = "false") boolean back) {
-        return userProfile(sessionUser.getId(), back);
-    }
-
 
     /**
      * Messages view page. Entrepreneur.
