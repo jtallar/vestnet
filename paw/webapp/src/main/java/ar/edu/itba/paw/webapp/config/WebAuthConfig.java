@@ -72,6 +72,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
+    private final String[] permitAllEndpoints = {LOGIN_ENTRY_POINT, "/signUp", "/projects", "/welcome", "/",
+            "/requestPassword", "/resetPassword", "/verify", "/projects/**", "/addHit/**"
+            , "/users/**"};
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -94,9 +98,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .invalidSessionUrl("/welcome")
                 .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                    .antMatchers("/login", "/signUp", "/projects", "/welcome", "/",
-                        "/requestPassword", "/resetPassword", "/verify", "/projects/**", "/addHit/**"
-                        , "/users/**").permitAll()
+                    .antMatchers(permitAllEndpoints).permitAll()
                     .antMatchers("/admin").hasRole("ADMIN")
                     .antMatchers("/requests").hasRole("INVESTOR")
                     .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
@@ -132,7 +134,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     private JwtTokenAuthenticationProcessingFilter buildJwtTokenFilter() throws Exception {
         JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(new RequestMatcher() {
-            List<String> skipPaths = Collections.singletonList(LOGIN_ENTRY_POINT);
+            List<String> skipPaths = Arrays.asList(permitAllEndpoints);
             RequestMatcher matcher = new OrRequestMatcher(skipPaths.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList()));
 
             @Override
@@ -147,7 +149,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/css/**", "/images/**", "/error/**", "/favicon.ico",
+                .antMatchers("/css/**", "/images/**", "/errors/**", "/favicon.ico",
                         "/location/**", "/imageController/**");
     }
 
