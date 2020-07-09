@@ -121,7 +121,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                     .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class); // TODO: Check si tengo que hacer el requestMatcher o lo frenan antes
+                    .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     //                .defaultSuccessUrl("/", false)
