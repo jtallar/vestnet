@@ -87,4 +87,14 @@ public class UserRestController {
 //        userService.removeUser(id);   // TODO: CAMBIAR A BORRADO LOGICO?
 //        return Response.noContent().build();
 //    }
+
+
+    // TODO getOwnedProjects. Here or in projectRestController?
+    // userService.getOwnedProjects(sessionUser.getId(), funded)
+
+    // TODO addFavorite. Project
+    // userService.addFavorite(sessionUser.getId(), projectId);
+
+    // TODO deleteFavorite. Project
+    // userService.deleteFavorite(sessionUser.getId(), projectId);
 }

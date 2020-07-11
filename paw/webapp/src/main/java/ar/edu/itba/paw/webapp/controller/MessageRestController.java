@@ -28,10 +28,23 @@ public class MessageRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response offer(final OfferDto offerDto) {
         final Message message = messageService.create(offerDto.getBody(), offerDto.getOffers(), offerDto.getExchange(),
-                offerDto.getSenderId(), offerDto.getReceiverId(), offerDto.getProjectId(), uriInfo.getBaseUri());
+                offerDto.getSenderId() /*sessionUser.getId()*/, offerDto.getReceiverId(), offerDto.getProjectId(), uriInfo.getBaseUri());
         return Response.created(uriInfo.getAbsolutePath()).build(); // TODO what do we do here?
     }
 
     // TODO acceptMessage. Project, sender, receiver id + answer.
     // messageService.updateMessageStatus(receiver.getId(), sender.getId(), project.getId(), value, uriInfo.getBaseUrl());
+
+    // TODO getProjectUnreadMessages. Project + user id
+    // messages = userService.getProjectUnreadMessages(userId, projectId);
+
+
+    // TODO getLastUnreadMessage. Maybe
+    // userService.getLastProjectOfferMessage(sessionUser.getId(), id);
+
+    // TODO getAcceptedMessages. Maybe
+    // userService.getAcceptedMessages(sessionUser.getId(), page, PAGE_SIZE)
+
+    // TODO getOfferMessages. Maybe
+    // userService.getOfferMessages(sessionUser.getId(), page, PAGE_SIZE)
 }
