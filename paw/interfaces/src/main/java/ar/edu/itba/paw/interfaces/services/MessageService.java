@@ -3,6 +3,9 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
 
+import java.net.URI;
+import java.util.Optional;
+
 
 public interface MessageService {
 
@@ -14,9 +17,11 @@ public interface MessageService {
      * @param senderId Unique user sender id.
      * @param receiverId Unique user receiver id.
      * @param projectId Unique project id.
-     * @return The created message.
+     * @param baseUri Base url for replies.
+     * @return The optional created message.
      */
-    Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId);
+    Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId, URI baseUri);
+
 
     /**
      * Identifies a message and updates its status.

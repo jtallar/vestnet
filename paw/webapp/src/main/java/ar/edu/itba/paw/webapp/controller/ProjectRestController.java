@@ -33,12 +33,6 @@ public class ProjectRestController {
     private ProjectService projectService;
 
     @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
-
-    @Autowired
     protected SessionUserFacade sessionUser;
 
     @Context
@@ -47,7 +41,7 @@ public class ProjectRestController {
     private static final int PAGE_SIZE = 3;
     private static final int PAGINATION_ITEMS = 5;
 
-    @GET // TODO make lazy relationships if needed
+    @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projects(@QueryParam("p") @DefaultValue("1") int page,
                          @QueryParam("o") @DefaultValue("1") int order,

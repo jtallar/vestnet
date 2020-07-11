@@ -78,7 +78,7 @@ public interface ProjectService {
      * @param projectId The unique project id.
      * @return The updated project.
      */
-    Project addMsgCount(long projectId);
+    Optional<Project> addMsgCount(long projectId);
 
 
     /**
