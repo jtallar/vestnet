@@ -23,6 +23,7 @@ public class ProjectDto {
     private URI categories;
     private URI owner;
     private URI portraitImage;
+    private URI slideshowImages;
 
     public static ProjectDto fromProject(Project project, UriInfo uriInfo) {
         final ProjectDto projectDto = new ProjectDto();
@@ -43,6 +44,8 @@ public class ProjectDto {
 
         projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
         projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
+        projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
+
         return projectDto;
     }
 
@@ -140,5 +143,13 @@ public class ProjectDto {
 
     public void setPortraitImage(URI portraitImage) {
         this.portraitImage = portraitImage;
+    }
+
+    public URI getSlideshowImages() {
+        return slideshowImages;
+    }
+
+    public void setSlideshowImages(URI slideshowImages) {
+        this.slideshowImages = slideshowImages;
     }
 }
