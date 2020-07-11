@@ -76,7 +76,7 @@ public interface ProjectService {
     /**
      * Ads one more message to the project's message count.
      * @param projectId The unique project id.
-     * @return The updated project.
+     * @return The updated optional project.
      */
     Optional<Project> addMsgCount(long projectId);
 
@@ -84,9 +84,9 @@ public interface ProjectService {
     /**
      * Removes one message to the project's message count.
      * @param projectId The unique project id.
-     * @return The updated project.
+     * @return The updated optional project.
      */
-    Project decMsgCount(long projectId);
+    Optional<Project> decMsgCount(long projectId);
 
 
     /**

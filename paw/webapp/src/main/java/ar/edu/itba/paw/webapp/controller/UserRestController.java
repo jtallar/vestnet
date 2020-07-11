@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.event.VerificationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,6 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
-
     @Context
     private UriInfo uriInfo;
 
@@ -44,7 +40,12 @@ public class UserRestController {
             newUser = userService.create(user.getRole(), user.getPassword(), user.getFirstName(), user.getLastName(),
                     user.getRealId(), user.getBirthDate(), user.getCountryId(), user.getStateId(), user.getCityId(),
                     user.getEmail(), user.getPhone(), user.getLinkedin(), null);
-            eventPublisher.publishEvent(new VerificationEvent(newUser, uriInfo.getBaseUri().toString()));
+
+            // TODO event publisher removed. It did:
+            // User user = event.getUser();
+            // String token = userService.createToken(user.getId()).getToken();
+            // emailService.sendVerification(user, token, event.getBaseUrl());
+
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
             return Response.status(Response.Status.CONFLICT).build();

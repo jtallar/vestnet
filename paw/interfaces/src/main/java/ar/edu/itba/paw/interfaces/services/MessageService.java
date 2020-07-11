@@ -29,7 +29,8 @@ public interface MessageService {
      * @param receiverId Unique user receiver id.
      * @param projectId Unique project id.
      * @param accepted Status to be updated.
+     * @param baseUri Base uri for replies.
      * @return The updated message or null if not found.
      */
-    Message updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted);
+    Optional<Message> updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted, URI baseUri);
 }

@@ -100,11 +100,9 @@ public class IProjectService implements ProjectService {
 
     @Override
     @Transactional
-    public Project decMsgCount(long projectId) {
-        Optional<Project> optionalProject = findById(projectId);
-        if (!optionalProject.isPresent()) return null;
-        Project project = optionalProject.get();
-        project.decMsgCount();
+    public Optional<Project> decMsgCount(long projectId) {
+        Optional<Project> project = findById(projectId);
+        project.ifPresent(Project::decMsgCount);
         return project;
     }
 

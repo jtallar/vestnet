@@ -47,7 +47,7 @@ public class IMessageService implements MessageService {
         Optional<User> sender = userService.findById(senderId);
         Optional<User> receiver = userService.findById(receiverId);
         Optional<Project> project = projectService.addMsgCount(projectId);
-        if (!sender.isPresent() || !receiver.isPresent() || !project.isPresent()) return null; // Should not reach here
+        if (!sender.isPresent() || !receiver.isPresent() || !project.isPresent()) return null; // TODO this. What happens if not exists one of them
         emailService.sendOffer(sender.get(), receiver.get(), project.get(), content, baseUri);
 
         return finalMessage;
@@ -56,7 +56,7 @@ public class IMessageService implements MessageService {
 
     @Override
     @Transactional
-    public Message updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted) {
+    public Optional<Message> updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted, URI baseUri) {
         List<FilterCriteria> filters = new ArrayList<>();
         filters.add(new FilterCriteria("sender", new User(senderId)));
         filters.add(new FilterCriteria("receiver", new User(receiverId)));
@@ -64,11 +64,16 @@ public class IMessageService implements MessageService {
         filters.add(new FilterCriteria("unread", true));
 
         Optional<Message> optionalMessage = messageDao.findAll(filters, OrderField.DEFAULT).stream().findFirst();
-        if (!optionalMessage.isPresent()) return null;
+        optionalMessage.ifPresent(m -> {
+            m.setAccepted(accepted);
+            Optional<User> sender = userService.findById(senderId);
+            Optional<User> receiver = userService.findById(receiverId);
+            Optional <Project> project = projectService.decMsgCount(projectId);
+            if (!sender.isPresent() || !receiver.isPresent() || !project.isPresent()) return; // TODO this. What happens if not exists one of them
 
-        Message message = optionalMessage.get();
-        message.setAccepted(accepted);
-        projectService.decMsgCount(projectId);
-        return message;
+            emailService.sendOfferAnswer(sender.get(), receiver.get(), project.get(), accepted, baseUri);
+        });
+
+        return optionalMessage;
     }
 }
