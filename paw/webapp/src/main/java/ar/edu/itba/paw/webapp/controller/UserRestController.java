@@ -62,6 +62,7 @@ public class UserRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
         final Optional<User> maybeUser = userService.findById(id);
+        LOGGER.debug("User is anonymous? {} - User is investor? {} - User is entrepreneur? {}", sessionUser.isAnonymous(), sessionUser.isInvestor(), sessionUser.isEntrepreneur());
         if (!maybeUser.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND.getStatusCode()).build();
         }

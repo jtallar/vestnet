@@ -4,6 +4,7 @@ package ar.edu.itba.paw.webapp.config;
 import ar.edu.itba.paw.interfaces.TokenExtractor;
 import ar.edu.itba.paw.webapp.auth.MyCustomLoginSuccessHandler;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.PlainTextBasicAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.auth.jwt.JwtAuthenticationProcessingFilter;
 import ar.edu.itba.paw.webapp.auth.jwt.LoginProcessingFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,42 +90,23 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource resource = resourceLoader.getResource("classpath:public.pem");
         http
-                .csrf().disable()
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .invalidSessionUrl("/welcome")
-                .and().authorizeRequests()
+            .csrf().disable()
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .invalidSessionUrl("/welcome")
+            .and().authorizeRequests()
 //                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                    .antMatchers(permitAllEndpoints).permitAll()
-                    .antMatchers("/admin").hasRole("ADMIN")
-                    .antMatchers("/requests").hasRole("INVESTOR")
-                    .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
-                    .antMatchers("/**").authenticated()
-                .and().formLogin()
-                    .loginPage("/login")
-//                    .successHandler(myAuthenticationSuccessHandler())
-
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                .and().rememberMe()
-                    .rememberMeParameter("remember_me")
-                    .key(asString(resource))
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(TOKEN_DAYS))
-
-
-                .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
-
-                .and()
-                    .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .antMatchers(permitAllEndpoints).permitAll()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/requests").hasRole("INVESTOR")
+                .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
+                .antMatchers("/**").authenticated()
+            .and()
+                .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+//                .exceptionHandling().authenticationEntryPoint(new PlainTextBasicAuthenticationEntryPoint()); // resolves 401 Unauthenticated
     }
-
-    //                .defaultSuccessUrl("/", false)
 
     private LoginProcessingFilter buildLoginFilter() throws Exception {
         LoginProcessingFilter filter = new LoginProcessingFilter(LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper);

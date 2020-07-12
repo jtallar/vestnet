@@ -35,7 +35,10 @@ public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
-        JsonLoginRequest loginRequest = objectMapper.readValue(request.getReader(), JsonLoginRequest.class);
+        JsonLoginRequest loginRequest = null;
+        try {
+            loginRequest = objectMapper.readValue(request.getReader(), JsonLoginRequest.class);
+        } catch (Exception ignored) {}
 
         if (loginRequest == null || StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");
