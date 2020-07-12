@@ -22,4 +22,12 @@ public class LoggedUser extends User {
     public long getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "LoggedUser{" +
+                "id=" + id +
+                "username=" + getUsername() +
+                '}';
+    }
 }
