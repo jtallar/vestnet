@@ -19,7 +19,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Optional<LoggedUser> maybeLoggedUser = tokenHandler.getSessionUser((String) authentication.getCredentials());
         if (!maybeLoggedUser.isPresent()) {
-//            return new JwtAuthenticationToken(null);
             return null;
         }
         LoggedUser loggedUser = maybeLoggedUser.get();

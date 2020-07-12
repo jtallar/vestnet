@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -10,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -32,6 +31,9 @@ public class UserRestController {
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    private SessionUserFacade sessionUser;
 
     @Context
     private UriInfo uriInfo;
@@ -60,8 +62,6 @@ public class UserRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
         final Optional<User> maybeUser = userService.findById(id);
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LOGGER.debug("Logged User: Isnull - {} - {}", authentication.getPrincipal() == null, (authentication.getPrincipal() == null) ? "" : authentication.getPrincipal().toString());
         if (!maybeUser.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND.getStatusCode()).build();
         }

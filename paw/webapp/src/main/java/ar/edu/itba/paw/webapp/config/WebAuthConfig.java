@@ -4,7 +4,7 @@ package ar.edu.itba.paw.webapp.config;
 import ar.edu.itba.paw.interfaces.TokenExtractor;
 import ar.edu.itba.paw.webapp.auth.MyCustomLoginSuccessHandler;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
-import ar.edu.itba.paw.webapp.auth.jwt.JwtTokenAuthenticationProcessingFilter;
+import ar.edu.itba.paw.webapp.auth.jwt.JwtAuthenticationProcessingFilter;
 import ar.edu.itba.paw.webapp.auth.jwt.LoginProcessingFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,18 +132,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    private JwtTokenAuthenticationProcessingFilter buildJwtTokenFilter() throws Exception {
-        JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(new RequestMatcher() {
-            List<String> skipPaths = Arrays.asList(LOGIN_ENTRY_POINT);
-            RequestMatcher matcher = new OrRequestMatcher(skipPaths.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList()));
-
-            @Override
-            public boolean matches(HttpServletRequest request) {
-                return !matcher.matches(request);
-            }
-        }, tokenExtractor, failureHandler);
-        filter.setAuthenticationManager(this.authenticationManager());
-        return filter;
+    private JwtAuthenticationProcessingFilter buildJwtTokenFilter() {
+        return new JwtAuthenticationProcessingFilter(tokenExtractor, authenticationProvider);
     }
 
     @Override

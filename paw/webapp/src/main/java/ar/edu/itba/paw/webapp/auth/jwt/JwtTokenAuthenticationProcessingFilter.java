@@ -1,3 +1,4 @@
+/*
 package ar.edu.itba.paw.webapp.auth.jwt;
 
 import ar.edu.itba.paw.interfaces.TokenExtractor;
@@ -50,3 +51,4 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         failureHandler.onAuthenticationFailure(request, response, failed);
     }
 }
+*/
