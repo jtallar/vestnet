@@ -2,6 +2,8 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.components.LoggedUser;
 
+import java.util.Optional;
+
 public interface TokenHandler {
 
     /**
@@ -23,5 +25,5 @@ public interface TokenHandler {
      * @param token the token
      * @return the session user contained in the token
      */
-    LoggedUser getSessionUser(String token);
+    Optional<LoggedUser> getSessionUser(String token);
 }

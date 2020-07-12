@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     @Autowired
@@ -15,7 +17,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        LoggedUser loggedUser = tokenHandler.getSessionUser((String) authentication.getCredentials());
+        Optional<LoggedUser> maybeLoggedUser = tokenHandler.getSessionUser((String) authentication.getCredentials());
+        if (!maybeLoggedUser.isPresent()) {
+//            return new JwtAuthenticationToken(null);
+            return null;
+        }
+        LoggedUser loggedUser = maybeLoggedUser.get();
         return new JwtAuthenticationToken(loggedUser, loggedUser.getAuthorities());
     }
 

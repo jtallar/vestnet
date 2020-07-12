@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -91,7 +92,7 @@ public class JwtTokenHandler implements TokenHandler {
     }
 
     @Override
-    public LoggedUser getSessionUser(String token) {
+    public Optional<LoggedUser> getSessionUser(String token) {
         Jws<Claims> claimsJws;
         try {
             claimsJws = Jwts.parser()
@@ -99,14 +100,16 @@ public class JwtTokenHandler implements TokenHandler {
                     .parseClaimsJws(token);
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             LOGGER.error("Invalid JWT Token");
-            throw new BadCredentialsException("Invalid JWT token: ", ex);
+//            throw new BadCredentialsException("Invalid JWT token: ", ex);
+            return Optional.empty();
         } catch (ExpiredJwtException ex) {
             LOGGER.error("JWT Token Expired");
-            throw new JwtExpiredTokenException(token, "JWT Token expired", ex);
+//            throw new JwtExpiredTokenException(token, "JWT Token expired", ex);
+            return Optional.empty();
         }
         List<String> authorities = claimsJws.getBody().get("roles", List.class);
-        return new LoggedUser(claimsJws.getBody().get("id", Long.class),
+        return Optional.of(new LoggedUser(claimsJws.getBody().get("id", Long.class),
                 claimsJws.getBody().getSubject(),
-                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())));
     }
 }

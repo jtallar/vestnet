@@ -134,7 +134,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     private JwtTokenAuthenticationProcessingFilter buildJwtTokenFilter() throws Exception {
         JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(new RequestMatcher() {
-            List<String> skipPaths = Arrays.asList(permitAllEndpoints);
+            List<String> skipPaths = Arrays.asList(LOGIN_ENTRY_POINT);
             RequestMatcher matcher = new OrRequestMatcher(skipPaths.stream().map(AntPathRequestMatcher::new).collect(Collectors.toList()));
 
             @Override
