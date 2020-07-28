@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth.jwt;
 
 import ar.edu.itba.paw.interfaces.TokenHandler;
+import ar.edu.itba.paw.model.components.JwtTokenResponse;
 import ar.edu.itba.paw.model.components.LoggedUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,11 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         LoggedUser loggedUser = (LoggedUser) authentication.getPrincipal();
-        Map<String, String> tokenMap = tokenHandler.createTokenMap(loggedUser, ((RememberUsernamePasswordAuthenticationToken) authentication).isRemember());
+        JwtTokenResponse tokenResponse = tokenHandler.createTokenResponse(loggedUser, ((RememberUsernamePasswordAuthenticationToken) authentication).isRemember());
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        mapper.writeValue(response.getWriter(), tokenMap);
+        mapper.writeValue(response.getWriter(), tokenResponse.getResponseMap());
 
         clearAuthenticationAttributes(request);
     }

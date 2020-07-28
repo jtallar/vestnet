@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth.jwt;
 
+import ar.edu.itba.paw.model.components.JwtTokenResponse;
 import ar.edu.itba.paw.model.components.LoggedUser;
 import ar.edu.itba.paw.webapp.exception.jwt.JwtExpiredTokenException;
 import io.jsonwebtoken.*;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenHandler implements TokenHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenHandler.class);
+
+    private static final String ROLES_KEY = "roles", USER_ID_KEY = "userId", EXTENDED_KEY = "extended";
 
     /**
      * JwtToken will expire after this time.
@@ -58,13 +61,14 @@ public class JwtTokenHandler implements TokenHandler {
             throw new IllegalArgumentException("Cannot create JWT Token without any roles");
         }
         Claims claims = Jwts.claims().setSubject(sessionUser.getUsername());
-        claims.put("id", sessionUser.getId());
-        claims.put("roles", sessionUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        claims.put(USER_ID_KEY, sessionUser.getId());
+        claims.put(ROLES_KEY, sessionUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
         final ZonedDateTime now = ZonedDateTime.now();
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(JwtToken.ACCESS_TOKEN.id)
                 .setIssuedAt(Date.from(now.toInstant()))
                 .setExpiration(Date.from(now.plusMinutes(ACCESS_TOKEN_EXP_MINUTES).toInstant()))
                 .signWith(SignatureAlgorithm.HS512, TOKEN_SIGN_KEY)
@@ -79,15 +83,15 @@ public class JwtTokenHandler implements TokenHandler {
         }
 
         Claims claims = Jwts.claims().setSubject(sessionUser.getUsername());
-        claims.put("id", sessionUser.getId());
-        claims.put("roles", sessionUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
-        claims.put("extended", extended);
+        claims.put(USER_ID_KEY, sessionUser.getId());
+        claims.put(ROLES_KEY, sessionUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        claims.put(EXTENDED_KEY, extended);
 
         final ZonedDateTime now = ZonedDateTime.now();
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setId(UUID.randomUUID().toString())
+                .setId(JwtToken.REFRESH_TOKEN.id)
                 .setIssuedAt(Date.from(now.toInstant()))
                 .setExpiration(Date.from(now.plusMinutes(getRefreshTokenExpMinutes(extended)).toInstant()))
                 .signWith(SignatureAlgorithm.HS512, TOKEN_SIGN_KEY)
@@ -95,13 +99,10 @@ public class JwtTokenHandler implements TokenHandler {
     }
 
     @Override
-    public Map<String, String> createTokenMap(LoggedUser loggedUser, boolean extended) {
-        Map<String, String> map = new HashMap<>();
-        map.put("access_token", createAccessToken(loggedUser));
-        map.put("AT_minutes_to_expire", String.valueOf(ACCESS_TOKEN_EXP_MINUTES));
-        map.put("refresh_token", createRefreshToken(loggedUser, extended));
-        map.put("RT_minutes_to_expire", String.valueOf(getRefreshTokenExpMinutes(extended)));
-        return map;
+    public JwtTokenResponse createTokenResponse(LoggedUser loggedUser, boolean extended) {
+        String accessToken = createAccessToken(loggedUser);
+        String refreshToken = createRefreshToken(loggedUser, extended);
+        return new JwtTokenResponse(accessToken, ACCESS_TOKEN_EXP_MINUTES, refreshToken, getRefreshTokenExpMinutes(extended));
     }
 
     private int getRefreshTokenExpMinutes(boolean extended) {
@@ -110,6 +111,33 @@ public class JwtTokenHandler implements TokenHandler {
 
     @Override
     public Optional<LoggedUser> getSessionUser(String token) {
+        Jws<Claims> claimsJws = getClaims(token);
+        if (claimsJws == null) return Optional.empty();
+        List<String> authorities = claimsJws.getBody().get(ROLES_KEY, List.class);
+        return Optional.of(new LoggedUser(claimsJws.getBody().get(USER_ID_KEY, Long.class),
+                claimsJws.getBody().getSubject(),
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())));
+    }
+
+    @Override
+    public JwtTokenResponse refreshTokens(String token) {
+        Jws<Claims> claimsJws = getClaims(token);
+        if (claimsJws == null) return null;
+        if (!claimsJws.getBody().getId().equals(JwtToken.REFRESH_TOKEN.id)) {
+            LOGGER.error("Not a refresh token");
+            return null;
+        }
+
+        boolean extended = claimsJws.getBody().get(EXTENDED_KEY, Boolean.class);
+        List<String> authorities = claimsJws.getBody().get(ROLES_KEY, List.class);
+        LoggedUser user = new LoggedUser(claimsJws.getBody().get(USER_ID_KEY, Long.class),
+                claimsJws.getBody().getSubject(),
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+
+        return createTokenResponse(user, extended);
+    }
+
+    private Jws<Claims> getClaims(String token) {
         Jws<Claims> claimsJws;
         try {
             claimsJws = Jwts.parser()
@@ -118,15 +146,27 @@ public class JwtTokenHandler implements TokenHandler {
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             LOGGER.error("Invalid JWT Token");
 //            throw new BadCredentialsException("Invalid JWT token: ", ex);
-            return Optional.empty();
+            return null;
         } catch (ExpiredJwtException ex) {
             LOGGER.error("JWT Token Expired");
 //            throw new JwtExpiredTokenException(token, "JWT Token expired", ex);
-            return Optional.empty();
+            return null;
         }
-        List<String> authorities = claimsJws.getBody().get("roles", List.class);
-        return Optional.of(new LoggedUser(claimsJws.getBody().get("id", Long.class),
-                claimsJws.getBody().getSubject(),
-                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())));
+        return claimsJws;
+    }
+
+    public enum JwtToken {
+        ACCESS_TOKEN("f7a3e7c662c13fc2833287026631ab1dc08b4fa8"),
+        REFRESH_TOKEN("ee5faf8caf6ee6e602b53152063e8bb46a6f51a1");
+
+        private String id;
+
+        JwtToken(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
     }
 }
