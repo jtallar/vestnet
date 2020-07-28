@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.auth.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,14 +21,17 @@ import java.io.IOException;
 
 public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
+    private final AuthenticationProvider authenticationProvider;
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
 
     private final ObjectMapper objectMapper;
 
-    public LoginProcessingFilter(String defaultFilterProcessesUrl, AuthenticationSuccessHandler successHandler,
-                                 AuthenticationFailureHandler failureHandler, ObjectMapper objectMapper) {
+    public LoginProcessingFilter(String defaultFilterProcessesUrl, AuthenticationProvider authenticationProvider,
+                                 AuthenticationSuccessHandler successHandler, AuthenticationFailureHandler failureHandler,
+                                 ObjectMapper objectMapper) {
         super(defaultFilterProcessesUrl);
+        this.authenticationProvider = authenticationProvider;
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
         this.objectMapper = objectMapper;
@@ -44,8 +48,7 @@ public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilte
             throw new AuthenticationServiceException("Username or Password not provided");
         }
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-        return this.getAuthenticationManager().authenticate(token);
+        return authenticationProvider.authenticate(new RememberUsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword(), loginRequest.isRememberMe()));
     }
 
     @Override

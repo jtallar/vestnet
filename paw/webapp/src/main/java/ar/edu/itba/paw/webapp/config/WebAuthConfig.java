@@ -7,8 +7,10 @@ import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.PlainTextBasicAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.auth.jwt.JwtAuthenticationProcessingFilter;
 import ar.edu.itba.paw.webapp.auth.jwt.LoginProcessingFilter;
+import ar.edu.itba.paw.webapp.auth.jwt.RememberAuthenticationProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -109,9 +111,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     private LoginProcessingFilter buildLoginFilter() throws Exception {
-        LoginProcessingFilter filter = new LoginProcessingFilter(LOGIN_ENTRY_POINT, successHandler, failureHandler, objectMapper);
-        filter.setAuthenticationManager(this.authenticationManager());
-        return filter;
+        return new LoginProcessingFilter(LOGIN_ENTRY_POINT, rememberAuthenticationProvider(), successHandler, failureHandler, objectMapper);
     }
 
     private JwtAuthenticationProcessingFilter buildJwtTokenFilter() {
@@ -131,7 +131,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-
+    @Bean
+    public AuthenticationProvider rememberAuthenticationProvider() throws Exception {
+        RememberAuthenticationProvider rememberAuthenticationProvider = new RememberAuthenticationProvider();
+        rememberAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        rememberAuthenticationProvider.setUserDetailsService(userDetails);
+        return rememberAuthenticationProvider;
+    }
 
     /*@Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
