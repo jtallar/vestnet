@@ -1,22 +1,22 @@
-package ar.edu.itba.paw.webapp.forms;
+package ar.edu.itba.paw.webapp.dto;
 
-import javax.validation.constraints.Size;
+public class OfferDto {
 
-public class MailFields {
-
-    @Size(max = 250)
     private String body;
-
     private int offers;
-
-    @Size(max = 100)
     private String exchange;
-
-    /** Injected */
+    private long senderId;
     private long receiverId;
+    private long projectId;
 
 
-    /** Getters and setters */
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     public int getOffers() {
         return offers;
@@ -34,12 +34,12 @@ public class MailFields {
         this.exchange = exchange;
     }
 
-    public String getBody() {
-        return body;
+    public long getSenderId() {
+        return senderId;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
     }
 
     public long getReceiverId() {
@@ -48,5 +48,13 @@ public class MailFields {
 
     public void setReceiverId(long receiverId) {
         this.receiverId = receiverId;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
     }
 }

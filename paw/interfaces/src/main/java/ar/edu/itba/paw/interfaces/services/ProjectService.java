@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.ProjectImage;
 
@@ -16,12 +17,21 @@ public interface ProjectService {
      * @param summary The project's summary.
      * @param cost The project's total cost.
      * @param ownerId The user id owner of the project.
-     * @param categoriesIds The project's categories ids.
-     * @param image Project portrait image.
-     * @param slideshow Project slideshow images.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, long ownerId, List<Long> categoriesIds, byte[] image, List<byte[]> slideshow);
+    Project create(String name, String summary, long cost, long ownerId);
+
+
+    /**
+     * Updates a project with the given parameters.
+     * @param id Project's unique id.
+     * @param name The project's name.
+     * @param summary The project's summary.
+     * @param cost The project's total cost.
+     * @return operation return.
+     * @return
+     */
+    Optional<Project> update(long id, String name, String summary, long cost);
 
 
     /**
@@ -34,45 +44,75 @@ public interface ProjectService {
 
     /**
      * Finds all projects with the given filter.
-     * @param filters All the filters applied to the search.
+     * @param category Projects category. Null if no category set.
+     * @param minCost Projects min cost. Null if no min cost set.
+     * @param maxCost Projects max cost. Null if no max cost set.
+     * @param keyword Keyword to be matched on search. Null or "" if no search.
+     * @param field The field to search the keyword.
      * @param order The order to order by.
      * @param page The number of page to get the projects.
      * @param pageSize The page size to consider.
      * @return The list of matching projects.
      */
-    Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize);
+    Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize);
 
 
     /**
      * Adds a hit to the given project.
      * @param projectId The unique project id.
-     * @return The modified project, null if not found.
+     * @return The modified optional project.
      */
-    Project addHit(long projectId);
+    Optional<Project> addHit(long projectId);
 
 
     /**
      * Sets a project as funded.
      * @param projectId The unique project id.
-     * @return The project modified, null if not found.
+     * @return The optional project modified.
      */
-    Project setFunded(long projectId);
+    Optional<Project> setFunded(long projectId);
 
 
     /**
      * Ads one more message to the project's message count.
      * @param projectId The unique project id.
-     * @return The updated project.
+     * @return The updated optional project.
      */
-    Project addMsgCount(long projectId);
+    Optional<Project> addMsgCount(long projectId);
 
 
     /**
      * Removes one message to the project's message count.
      * @param projectId The unique project id.
-     * @return The updated project.
+     * @return The updated optional project.
      */
-    Project decMsgCount(long projectId);
+    Optional<Project> decMsgCount(long projectId);
+
+
+    /**
+     * Replaces the projects categories with the given ones.
+     * @param id The unique project's id.
+     * @param categories The list of categories.
+     * @return The modified project if found.
+     */
+    Optional<Project> addCategories(long id, List<Category> categories);
+
+
+    /**
+     * Sets the project portrait image.
+     * @param id The unique project id.
+     * @param image The image to set.
+     * @return The optional modified project.
+     */
+    Optional<Project> setPortraitImage(long id, byte [] image);
+
+    /**
+     * Sets the project slideshow images.
+     * @param id The unique project id.
+     * @param images The images to insert.
+     * @return The optional modified project.
+     */
+    Optional<Project> setSlideshowImages(long id, List<byte []> images);
 
 
     /**
@@ -87,7 +127,7 @@ public interface ProjectService {
      * @param id The unique project id to find its image.
      * @return The main image or default if none is found.
      */
-    byte[] getPortraitImage(long id);
+    Optional<ProjectImage> getPortraitImage(long id);
 
 
     /**
@@ -95,5 +135,5 @@ public interface ProjectService {
      * @param id The unique project id to find its images.
      * @return A list with all the related images.
      */
-    List<byte[]> getSlideshowImages(long id);
+    List<ProjectImage> getSlideshowImages(long id);
 }

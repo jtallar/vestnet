@@ -27,8 +27,8 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public Project create(String name, String summary, long cost, User owner, List<Category> categories) {
-        final Project project = new Project(name, summary, cost, owner, categories);
+    public Project create(String name, String summary, long cost, User owner) {
+        final Project project = new Project(name, summary, cost, owner);
         entityManager.persist(project);
         return project;
     }

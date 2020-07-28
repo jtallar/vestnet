@@ -246,32 +246,8 @@ public class IUserService implements UserService {
     }
 
     @Override
-    public Optional<UserImage> getProfileImageNoDefault(long userId) {
-        Optional<User> userOptional = userDao.findById(userId);
-        if (!userOptional.isPresent()) return Optional.empty();
-
-        User user = userOptional.get();
-        Long imageId = user.getImage_id();
-        if (imageId == null) return Optional.empty();
-
-        return imageDao.findUserImage(imageId);
-    }
-
-    @Override
-    public byte[] getProfileImage(long id) {
-        if (id != 0) {
-            Optional<UserImage> optionalImage = imageDao.findUserImage(id);
-            if (optionalImage.isPresent()) return optionalImage.get().getImage();
-        }
-
-        byte[] image;
-        try {
-            Resource stockImage = new ClassPathResource("userNoImage.png");
-            image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) {
-            return new byte[0];
-        }
-        return image;
+    public Optional<UserImage> getProfileImage(long id) {
+        return imageDao.findUserImage(id);
     }
 
 

@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,15 +35,20 @@ public class IProjectService implements ProjectService {
 
     @Override
     @Transactional
-    public Project create(String name, String summary, long cost, long ownerId,
-                          List<Long> categoriesIds, byte[] image, List<byte[]> slideshow) {
+    public Project create(String name, String summary, long cost, long ownerId) {
+        return projectDao.create(name, summary, cost, new User(ownerId));
+    }
 
-        List<Category> categories = categoriesIds.stream().map(Category::new).collect(Collectors.toList());
-        Project newProject = projectDao.create(name, summary, cost, new User(ownerId), categories);
-        if (image.length > 0) imageDao.create(newProject, image, true);
-        slideshow.removeIf(bytes -> bytes.length == 0);
-        slideshow.forEach(bytes -> imageDao.create(newProject, bytes, false));
-        return newProject;
+
+    @Override
+    @Transactional
+    public Optional<Project> update(long id, String name, String summary, long cost) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        if (!optionalProject.isPresent()) return optionalProject;
+        optionalProject.get().setName(name);
+        optionalProject.get().setSummary(summary);
+        optionalProject.get().setCost(cost);
+        return optionalProject;
     }
 
 
@@ -53,59 +59,89 @@ public class IProjectService implements ProjectService {
 
 
     @Override
-    public Page<Project> findAll(Map<String, Object> filters, String order, Integer page, Integer pageSize) {
-        /** Clean filters and create Criteria list */
-        filters.values().removeIf(value -> (value == null || value.toString().equals("")));
+    public Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize) {
         List<FilterCriteria> params = new ArrayList<>();
-        filters.forEach((key, value) -> params.add(new FilterCriteria(key, value)));
+
+        if (category != null) params.add(new FilterCriteria("category", category));
+        if (minCost != null) params.add(new FilterCriteria("minCost", minCost));
+        if (maxCost != null) params.add(new FilterCriteria("maxCost", maxCost));
+        if (keyword != null && !keyword.equals("")) params.add(new FilterCriteria(String.valueOf(field), keyword));
         params.add(new FilterCriteria("funded", false));
 
-        return projectDao.findAll(params, OrderField.getEnum(order), new PageRequest(page, pageSize));
+        return projectDao.findAll(params, OrderField.getEnum(String.valueOf(order)), new PageRequest(page, pageSize));
     }
 
 
     @Override
     @Transactional
-    public Project addHit(long projectId) {
-        Optional<Project> optionalProject = findById(projectId);
-        if (!optionalProject.isPresent()) return null;
-        Project project = optionalProject.get();
-        project.setHits(project.getHits() + 1);
+    public Optional<Project> addHit(long projectId) {
+        Optional<Project> project = findById(projectId);
+        project.ifPresent(p -> p.setHits(p.getHits() + 1));
         return project;
     }
 
     @Override
     @Transactional
-    public Project setFunded(long projectId) {
+    public Optional<Project> setFunded(long projectId) {
         Optional<Project> optionalProject = findById(projectId);
-        if (!optionalProject.isPresent()) return null;
-        Project project = optionalProject.get();
-        project.setFunded(true);
-        return project;
+        optionalProject.ifPresent(p -> p.setFunded(true));
+        return optionalProject;
     }
 
 
     @Override
     @Transactional
-    public Project addMsgCount(long projectId) {
-        Optional<Project> optionalProject = findById(projectId);
-        if (!optionalProject.isPresent()) return null;
-        Project project = optionalProject.get();
-        project.addMsgCount();
+    public Optional<Project> addMsgCount(long projectId) {
+        Optional<Project> project = findById(projectId);
+        project.ifPresent(Project::addMsgCount);
         return project;
     }
 
 
     @Override
     @Transactional
-    public Project decMsgCount(long projectId) {
-        Optional<Project> optionalProject = findById(projectId);
-        if (!optionalProject.isPresent()) return null;
-        Project project = optionalProject.get();
-        project.decMsgCount();
+    public Optional<Project> decMsgCount(long projectId) {
+        Optional<Project> project = findById(projectId);
+        project.ifPresent(Project::decMsgCount);
         return project;
     }
 
+
+    @Override
+    @Transactional
+    public Optional<Project> addCategories(long id, List<Category> categories) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        optionalProject.ifPresent(p -> p.setCategories(categories));
+        return optionalProject;
+    }
+
+
+    @Override
+    @Transactional
+    public Optional<Project> setPortraitImage(long id, byte[] image) {
+        Optional<Project> project = projectDao.findById(id);
+        project.ifPresent(p -> {
+            List<ProjectImage> images = p.getImages();
+            images.removeIf(ProjectImage::isMain);
+            images.add(new ProjectImage(new Project(id), image, true));
+            p.setImages(images);
+        });
+        return project;
+    }
+
+
+    @Override
+    @Transactional
+    public Optional<Project> setSlideshowImages(long id, List<byte[]> images) {
+        Optional<Project> project = projectDao.findById(id);
+        project.ifPresent(p -> {
+            List<ProjectImage> imageList = new ArrayList<>();
+            images.forEach(i -> imageList.add(new ProjectImage(new Project(id), i, false)));
+            p.getImages().stream().filter(ProjectImage::isMain).findFirst().ifPresent(imageList::add);
+            p.setImages(imageList);
+        });
+        return project;
+    }
 
     @Override
     public List<Category> getAllCategories() {
@@ -114,25 +150,14 @@ public class IProjectService implements ProjectService {
 
 
     @Override
-    public byte[] getPortraitImage(long id) {
-        Optional<ProjectImage> optionalImage = imageDao.findProjectImages(new Project(id), true).stream().findFirst();
-        if (optionalImage.isPresent()) return optionalImage.get().getImage();
-
-        byte[] image;
-        try {
-            Resource stockImage = new ClassPathResource("projectNoImage.png");
-            image = IOUtils.toByteArray(stockImage.getInputStream());
-        } catch (IOException e) {
-            return new byte[0];
-        }
-        return image;
+    public Optional<ProjectImage> getPortraitImage(long id) {
+        return imageDao.findProjectImages(new Project(id), true).stream().findFirst();
     }
 
 
     @Override
-    public List<byte[]> getSlideshowImages(long id) {
-        List<ProjectImage> images = imageDao.findProjectImages(new Project(id), false);
-        return images.stream().map(Image::getImage).collect(Collectors.toList());
+    public List<ProjectImage> getSlideshowImages(long id) {
+        return imageDao.findProjectImages(new Project(id), false);
     }
 
 }

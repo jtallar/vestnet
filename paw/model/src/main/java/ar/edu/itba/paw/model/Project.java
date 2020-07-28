@@ -45,6 +45,9 @@ public class Project {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User owner;
 
+    @Column(name = "owner_id", insertable = false, updatable = false)
+    private long ownerId;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private List<ProjectImage> images;
 
@@ -70,12 +73,11 @@ public class Project {
 
 
 
-    public Project(String name, String summary, long cost, User owner, List<Category> categories) {
+    public Project(String name, String summary, long cost, User owner) {
         this.name = name;
         this.summary = summary;
         this.cost = cost;
         this.owner = owner;
-        this.categories = categories;
         this.hits = 0;
         this.funded = false;
         this.msgCount = 0;
@@ -166,6 +168,14 @@ public class Project {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public List<ProjectImage> getImages() {

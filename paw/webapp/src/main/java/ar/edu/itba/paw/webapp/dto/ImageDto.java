@@ -4,33 +4,33 @@ import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
 
 public class ImageDto {
-    private long imageId;
-    private byte[] image;
 
+    private long id;
+    private byte[] image;
     private boolean main;
 
     public static ImageDto fromUserImage(UserImage userImage) {
         final ImageDto imageDto = new ImageDto();
         if (userImage == null) return imageDto;
-//        imageDto.imageId = userImage.getId();
         imageDto.image = userImage.getImage();
         return imageDto;
     }
 
     public static ImageDto fromProjectImage(ProjectImage projectImage) {
         final ImageDto imageDto = new ImageDto();
-        if (projectImage == null) return imageDto;
-//        imageDto.imageId = projectImage.getId();
         imageDto.image = projectImage.getImage();
+        imageDto.id = projectImage.getId();
+        imageDto.main = projectImage.isMain();
         return imageDto;
     }
 
-    public long getImageId() {
-        return imageId;
+
+    public long getId() {
+        return id;
     }
 
-    public void setImageId(long imageId) {
-        this.imageId = imageId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public byte[] getImage() {

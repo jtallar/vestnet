@@ -1,15 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.webapp.event.PasswordRecoveryEvent;
-import ar.edu.itba.paw.webapp.event.VerificationEvent;
-import ar.edu.itba.paw.webapp.config.WebConfig;
 import ar.edu.itba.paw.webapp.forms.NewPasswordFields;
-import ar.edu.itba.paw.webapp.forms.NewUserFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Controller
@@ -36,77 +29,10 @@ public class SignUpController {
     private UserService userService;
 
     @Autowired
-    private ApplicationEventPublisher eventPublisher;
-
-    @Autowired
     protected AuthenticationManager authenticationManager;
 
     @Autowired
     protected SessionUserFacade sessionUser;
-
-
-    /**
-     * Sign up view page mapping.
-     * @param userFields The for fields to be filled.
-     * @param invalidUser If there is an invalid user error.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/signUp")
-    public ModelAndView signUp(@ModelAttribute("userForm") final NewUserFields userFields,
-                               @RequestParam(name = "invalidUser", defaultValue = "false") boolean invalidUser) {
-
-        if (!sessionUser.isAnonymous()) return new ModelAndView("redirect:/");
-        final ModelAndView mav = new ModelAndView("index/signUp");
-        mav.addObject("maxSize", WebConfig.MAX_UPLOAD_SIZE);
-        mav.addObject("maxYear", LocalDate.now().getYear() - 18);
-        mav.addObject("invalidUser", invalidUser);
-        return mav;
-    }
-
-
-    /**
-     * Maps the submitted form for new user.
-     * @param userFields The completed user fields.
-     * @param errors Errors.
-     * @param request Used for auto login after sign up.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/signUp", method = {RequestMethod.POST})
-    public ModelAndView signUp(@Valid @ModelAttribute("userForm") final NewUserFields userFields,
-                               final BindingResult errors,
-                               HttpServletRequest request)  {
-
-        if(errors.hasErrors()) return logFormErrorsAndReturn(errors, "Sign Up", signUp(userFields, false));
-
-        try {
-            User newUser = userService.create(userFields.getRole(), userFields.getPassword(), userFields.getFirstName(), userFields.getLastName(),
-                    userFields.getRealId(), userFields.getYear(), userFields.getMonth(), userFields.getDay(),
-                    userFields.getCountry(), userFields.getState(),userFields.getCity(),
-                    userFields.getEmail(), userFields.getPhone(), userFields.getLinkedin(), userFields.getProfilePicture().getBytes());
-
-            eventPublisher.publishEvent(new VerificationEvent(newUser, getBaseUrl(request)));
-        } catch (UserAlreadyExistsException e) {
-            LOGGER.error("User already exists with email {} in VestNet", userFields.getEmail());
-            return signUp(userFields, true);
-        } catch (IOException e) {
-            return signUp(userFields, false);
-        }
-        return new ModelAndView("redirect:/login" + "?me=1");
-    }
-
-
-    /**
-     * Gets the view for a password recovery.
-     * @param error If there is no user with such email.
-     * @return Model and view.
-     */
-    @RequestMapping(value = "/requestPassword", method = {RequestMethod.GET})
-    public ModelAndView requestPassword(@RequestParam(name = "error", defaultValue = "false") boolean error ) {
-
-        final ModelAndView mav = new ModelAndView("index/requestPassword");
-        mav.addObject("error", error);
-        return mav;
-    }
 
 
     /**
@@ -119,10 +45,11 @@ public class SignUpController {
     public ModelAndView requestPassword(@RequestParam(name = "username") String email,
                                         HttpServletRequest request) {
 
-        Optional<User> maybeUser = userService.findByUsername(email);
-        if (!maybeUser.isPresent()) return requestPassword(true);
-
-        eventPublisher.publishEvent(new PasswordRecoveryEvent(maybeUser.get(), getBaseUrl(request)));
+        Optional<User> maybeUser = userService.findByUsername(email); // TODO migrate to rest
+        // TODO password event publisher removed. It did:
+        // User user = event.getUser();
+        // String token = userService.createToken(user.getId()).getToken();
+        // emailService.sendPasswordRecovery(user, token, event.getBaseUrl());
         return new ModelAndView("redirect:/login" + "?me=3");
     }
 
@@ -179,7 +106,10 @@ public class SignUpController {
         Optional<Token> optionalToken = userService.findToken(token);
         if (!optionalToken.isPresent()) return new ModelAndView("redirect:/login" + "?me=10");
         if (!optionalToken.get().isValid()) {
-            eventPublisher.publishEvent(new VerificationEvent(optionalToken.get().getUser(), getBaseUrl(request)));
+            // TODO verification vevent publisher removed. It did:
+            // User user = event.getUser();
+            // String token = userService.createToken(user.getId()).getToken();
+            // emailService.sendVerification(user, token, event.getBaseUrl());
             return new ModelAndView("redirect:/login" + "?me=11");
         }
 

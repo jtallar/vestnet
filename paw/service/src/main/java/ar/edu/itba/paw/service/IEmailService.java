@@ -13,11 +13,13 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.Locale;
 
 @Primary
@@ -35,44 +37,48 @@ public class IEmailService implements EmailService {
 
 
     @Override
-    public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, String baseUrl) {
+    @Async
+    public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, URI baseUri) {
         Mail mail = new Mail();
         mail.setFrom(sender.getEmail());
         mail.setTo(receiver.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(receiver.getLocale())));
-        mail.setContent(prepareOfferEmail(mail, sender, receiver, project, content, baseUrl));
+        mail.setContent(prepareOfferEmail(mail, sender, receiver, project, content, baseUri));
         sendEmail(mail);
 
     }
 
 
     @Override
-    public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, String baseUrl) {
+    @Async
+    public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, URI baseUri) {
         Mail mail = new Mail();
         mail.setFrom(sender.getEmail());
         mail.setTo(receiver.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.response", null, Locale.forLanguageTag(receiver.getLocale())));
-        mail.setContent(prepareOfferAnswerEmail(mail, sender, receiver, project, answer, baseUrl));
+        mail.setContent(prepareOfferAnswerEmail(mail, sender, receiver, project, answer, baseUri));
         sendEmail(mail);
     }
 
 
     @Override
-    public void sendPasswordRecovery(User user, String token, String baseUrl) {
+    @Async
+    public void sendPasswordRecovery(User user, String token, URI baseUri) {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.passwordReset", null, Locale.forLanguageTag(user.getLocale())));
-        mail.setContent(prepareTokenMail(mail, user, token, baseUrl, false));
+        mail.setContent(prepareTokenMail(mail, user, token, baseUri, false));
         sendEmail(mail);
     }
 
 
     @Override
-    public void sendVerification(User user, String token, String baseUrl) {
+    @Async
+    public void sendVerification(User user, String token, URI baseUri) {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.verification", null, Locale.forLanguageTag(user.getLocale())));
-        mail.setContent(prepareTokenMail(mail, user, token, baseUrl, true));
+        mail.setContent(prepareTokenMail(mail, user, token, baseUri, true));
         sendEmail(mail);
     }
 
@@ -111,11 +117,11 @@ public class IEmailService implements EmailService {
      * @param receiver The user receiver.
      * @param project The project in matter.
      * @param offer The offer content.
-     * @param baseUrl The base url for the answer.
+     * @param baseUri The base uri for the answer.
      * @return Formatted text in html.
      */
-    private String prepareOfferEmail(Mail mail, User sender, User receiver, Project project, Message.MessageContent offer, String baseUrl) {
-        VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUrl);
+    private String prepareOfferEmail(Mail mail, User sender, User receiver, Project project, Message.MessageContent offer, URI baseUri) {
+        VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUri);
 
         velocityContext.put("sender", sender);
         velocityContext.put("project", project);
@@ -134,11 +140,11 @@ public class IEmailService implements EmailService {
      * @param receiver The user receiver.
      * @param project The project in matter.
      * @param answer The answer of the made offer.
-     * @param baseUrl The base url for the answer.
+     * @param baseUri The base uri for the answer.
      * @return Formatted text in html.
      */
-    private String prepareOfferAnswerEmail(Mail mail, User sender, User receiver, Project project, boolean answer, String baseUrl) {
-        VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUrl);
+    private String prepareOfferAnswerEmail(Mail mail, User sender, User receiver, Project project, boolean answer, URI baseUri) {
+        VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUri);
 
         velocityContext.put("sender", sender);
         velocityContext.put("project", project);
@@ -155,13 +161,13 @@ public class IEmailService implements EmailService {
      * @param mail The mail contents, without the content per se.
      * @param receiver The user receiver model.
      * @param token The generated token.
-     * @param baseUrl The base url for the answer.
+     * @param baseUri The base uri for the answer.
      * @param verification If the mail is verification or password recovery.
      * @return Formatted text in html.
      */
-    private String prepareTokenMail(Mail mail, User receiver, String token, String baseUrl, boolean verification) {
+    private String prepareTokenMail(Mail mail, User receiver, String token, URI baseUri, boolean verification) {
 
-        VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUrl);
+        VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUri);
         velocityContext.put("token", token);
 
         StringWriter stringWriter = new StringWriter();
@@ -176,17 +182,16 @@ public class IEmailService implements EmailService {
      * Creates a default context initialization used by all methods.
      * @param mail The mail contents, without the content per se.
      * @param receiver User receiver.
-     * @param baseUrl The base url for the answer.
+     * @param baseUri The base url for the answer.
      * @return The initialized velocity context.
      */
-    private VelocityContext defaultContextInit(Mail mail, User receiver, String baseUrl) {
+    private VelocityContext defaultContextInit(Mail mail, User receiver, URI baseUri) {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("mail", mail);
         velocityContext.put("receiver", receiver);
-        velocityContext.put("baseUrl", baseUrl);
+        velocityContext.put("baseUrl", baseUri);
         velocityContext.put("messages", this.messageSource);
         velocityContext.put("locale", Locale.forLanguageTag(receiver.getLocale()));
-//        velocityContext.put("header", new )
         return velocityContext;
     }
 
