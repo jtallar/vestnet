@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -26,6 +27,12 @@ public class UserRestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    private SessionUserFacade sessionUser;
 
     @Context
     private UriInfo uriInfo;
@@ -59,6 +66,7 @@ public class UserRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
         final Optional<User> maybeUser = userService.findById(id);
+        LOGGER.debug("User is anonymous? {} - User is investor? {} - User is entrepreneur? {}", sessionUser.isAnonymous(), sessionUser.isInvestor(), sessionUser.isEntrepreneur());
         if (!maybeUser.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND.getStatusCode()).build();
         }
