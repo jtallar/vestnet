@@ -14,8 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 
 @Component
-@Path("/token")
-public class JwtRestController {
+@Path("/auth")
+public class AuthRestController {
     @Autowired
     private TokenExtractor tokenExtractor;
 

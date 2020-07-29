@@ -56,7 +56,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public static final String AUTH_HEADER = "Authorization";
 
-    private static final String LOGIN_ENTRY_POINT = "/login";
+    private static final String LOGIN_ENTRY_POINT = "/auth/login";
 
     private static final int TOKEN_DAYS = 365;
 
@@ -102,7 +102,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(permitAllEndpoints).permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/requests").hasRole("INVESTOR")
-                .antMatchers("/token/refresh").authenticated()
+                .antMatchers("/auth/refresh").authenticated()
                 .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
                 .antMatchers("/**").authenticated()
             .and()

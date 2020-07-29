@@ -155,7 +155,7 @@ public class JwtTokenHandler implements TokenHandler {
         return claimsJws;
     }
 
-    public enum JwtToken {
+    private enum JwtToken {
         ACCESS_TOKEN("f7a3e7c662c13fc2833287026631ab1dc08b4fa8"),
         REFRESH_TOKEN("ee5faf8caf6ee6e602b53152063e8bb46a6f51a1");
 
