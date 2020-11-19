@@ -1,13 +1,37 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.model.Message;
+
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+
 public class OfferDto {
 
     private String body;
-    private int offers;
+    private String offers;
     private String exchange;
-    private long senderId;
-    private long receiverId;
-    private long projectId;
+
+    private long receiverId, senderId, projectId;
+
+    private URI receiver, sender, project;
+
+    public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
+        final OfferDto offerDto = new OfferDto();
+
+        offerDto.body = message.getContent().getMessage();
+        offerDto.offers = message.getContent().getOffer();
+        offerDto.exchange = message.getContent().getInterest();
+
+        offerDto.receiver = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getReceiver_id())).build();
+        offerDto.sender = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getSender_id())).build();
+        offerDto.project = uriInfo.getAbsolutePathBuilder().path("projects").path(String.valueOf(message.getProject_id())).build();
+
+        offerDto.receiverId = message.getReceiver_id();
+        offerDto.senderId = message.getSender_id();
+        offerDto.projectId = message.getProject_id();
+
+        return offerDto;
+    }
 
 
     public String getBody() {
@@ -18,11 +42,11 @@ public class OfferDto {
         this.body = body;
     }
 
-    public int getOffers() {
+    public String getOffers() {
         return offers;
     }
 
-    public void setOffers(int offers) {
+    public void setOffers(String offers) {
         this.offers = offers;
     }
 
@@ -34,12 +58,29 @@ public class OfferDto {
         this.exchange = exchange;
     }
 
-    public long getSenderId() {
-        return senderId;
+
+    public URI getReceiver() {
+        return receiver;
     }
 
-    public void setSenderId(long senderId) {
-        this.senderId = senderId;
+    public void setReceiver(URI receiver) {
+        this.receiver = receiver;
+    }
+
+    public URI getSender() {
+        return sender;
+    }
+
+    public void setSender(URI sender) {
+        this.sender = sender;
+    }
+
+    public URI getProject() {
+        return project;
+    }
+
+    public void setProject(URI project) {
+        this.project = project;
     }
 
     public long getReceiverId() {
@@ -48,6 +89,14 @@ public class OfferDto {
 
     public void setReceiverId(long receiverId) {
         this.receiverId = receiverId;
+    }
+
+    public long getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
     }
 
     public long getProjectId() {

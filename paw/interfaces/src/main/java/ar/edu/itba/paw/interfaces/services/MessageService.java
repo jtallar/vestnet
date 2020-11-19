@@ -20,7 +20,7 @@ public interface MessageService {
      * @param baseUri Base url for replies.
      * @return The optional created message.
      */
-    Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId, URI baseUri);
+    Message create(String message, String offer, String interest, long senderId, long receiverId, long projectId, URI baseUri);
 
 
     /**

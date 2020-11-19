@@ -40,8 +40,8 @@ public class IMessageService implements MessageService {
 
     @Override
     @Transactional
-    public Message create(String message, int offer, String interest, long senderId, long receiverId, long projectId, URI baseUri) {
-        MessageContent content = new MessageContent(message, String.valueOf(offer), interest);
+    public Message create(String message, String offer, String interest, long senderId, long receiverId, long projectId, URI baseUri) {
+        MessageContent content = new MessageContent(message, offer, interest);
         Message finalMessage = messageDao.create(content, new User(senderId), new User(receiverId), new Project(projectId));
 
         Optional<User> sender = userService.findById(senderId);

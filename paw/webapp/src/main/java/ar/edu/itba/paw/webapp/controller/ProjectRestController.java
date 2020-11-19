@@ -143,8 +143,4 @@ public class ProjectRestController {
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-
-
-
-
 }
