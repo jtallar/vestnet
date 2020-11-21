@@ -13,7 +13,7 @@ import java.util.List;
 
 @Primary
 @Service
-public class ILocationService implements LocationService {
+public class LocationServiceImpl implements LocationService {
 
     @Autowired
     LocationDao locationDao;

@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class IProjectService implements ProjectService {
+public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectDao projectDao;

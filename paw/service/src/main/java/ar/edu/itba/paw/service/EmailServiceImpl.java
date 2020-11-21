@@ -24,7 +24,7 @@ import java.util.Locale;
 
 @Primary
 @Service
-public class IEmailService implements EmailService {
+public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private JavaMailSender emailSender;

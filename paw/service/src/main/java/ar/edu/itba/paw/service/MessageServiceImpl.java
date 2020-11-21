@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Primary
 @Service
-public class IMessageService implements MessageService {
+public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageDao messageDao;

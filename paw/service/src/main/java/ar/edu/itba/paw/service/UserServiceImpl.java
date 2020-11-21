@@ -25,7 +25,7 @@ import java.util.*;
 
 @Primary
 @Service
-public class IUserService implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
