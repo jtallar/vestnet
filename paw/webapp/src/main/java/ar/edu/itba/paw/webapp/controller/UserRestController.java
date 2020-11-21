@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
@@ -31,7 +32,7 @@ public class UserRestController {
     private UserService userService;
 
     @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    private EmailService emailService;
 
     @Autowired
     private SessionUserFacade sessionUser;
@@ -50,10 +51,8 @@ public class UserRestController {
                     user.getRealId(), user.getBirthDate(), user.getCountryId(), user.getStateId(), user.getCityId(),
                     user.getEmail(), user.getPhone(), user.getLinkedin(), null);
 
-            // TODO event publisher removed. It did:
-            // User user = event.getUser();
-            // String token = userService.createToken(user.getId()).getToken();
-            // emailService.sendVerification(user, token, event.getBaseUrl());
+            String token = userService.createToken(newUser.getId()).getToken();
+            emailService.sendVerification(newUser, token, uriInfo.getBaseUri());
 
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
@@ -67,12 +66,10 @@ public class UserRestController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
-        final Optional<User> maybeUser = userService.findById(id);
-        LOGGER.debug("User is anonymous? {} - User is investor? {} - User is entrepreneur? {}", sessionUser.isAnonymous(), sessionUser.isInvestor(), sessionUser.isEntrepreneur());
-        if (!maybeUser.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND.getStatusCode()).build();
-        }
-        return Response.ok(maybeUser.map(user -> UserDto.fromUser(user, uriInfo)).get()).build();
+        final Optional<User> optionalUser = userService.findById(id);
+
+        return optionalUser.map(u -> Response.ok(UserDto.fromUser(u, uriInfo)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
     @PUT
