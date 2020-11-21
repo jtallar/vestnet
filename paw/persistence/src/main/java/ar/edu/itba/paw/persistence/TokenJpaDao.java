@@ -46,4 +46,12 @@ public class TokenJpaDao implements TokenDao {
         query.setParameter("now", new Date());
         return query.executeUpdate();
     }
+
+
+    @Override
+    public int deleteUserTokens(User user) {
+        final TypedQuery<Token> query = entityManager.createQuery("delete from Token where user = :user", Token.class);
+        query.setParameter("user", user);
+        return query.executeUpdate();
+    }
 }

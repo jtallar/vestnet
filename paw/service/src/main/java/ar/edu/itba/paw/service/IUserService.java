@@ -103,7 +103,7 @@ public class IUserService implements UserService {
     @Override
     @Transactional
     public void removeUser(long id) {
-//        TODO: ADD TOKEN REMOVAL HERE, ALL OF THOSE WHICH HAVE THIS USER
+        tokenDao.deleteUserTokens(new User(id));
         userDao.removeUser(id);
     }
 
@@ -178,27 +178,19 @@ public class IUserService implements UserService {
 
     @Override
     @Transactional
-    public User deleteFavorite(long userId, long projectId) {
+    public Optional<User> deleteFavorite(long userId, long projectId) {
         Optional<User> userOptional = userDao.findById(userId);
-        if (!userOptional.isPresent()) return null;
-
-        User user = userOptional.get();
-        List<Project> favorites = user.getFavorites();
-        favorites.remove(new Project(projectId));
-        return user;
+        userOptional.ifPresent(u -> u.getFavorites().remove(new Project(projectId)));
+        return userOptional;
     }
 
 
     @Override
     @Transactional
-    public User addFavorite(long userId, long projectId) {
+    public Optional<User> addFavorite(long userId, long projectId) {
         Optional<User> userOptional = userDao.findById(userId);
-        if (!userOptional.isPresent()) return null;
-
-        User user = userOptional.get();
-        List<Project> favorites = user.getFavorites();
-        favorites.add(new Project(projectId));
-        return user;
+        userOptional.ifPresent(u -> u.getFavorites().add(new Project(projectId)));
+        return userOptional;
     }
 
 

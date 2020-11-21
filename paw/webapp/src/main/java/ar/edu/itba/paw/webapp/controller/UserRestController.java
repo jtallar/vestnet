@@ -4,7 +4,10 @@ import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.dto.OfferDto;
+import ar.edu.itba.paw.webapp.dto.ProjectDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +16,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Path("/users")
@@ -88,21 +90,32 @@ public class UserRestController {
         return Response.ok().build();
     }
 
-//    TODO: DELETE THROWS ERROR CAUSE TOKEN STILL REFERENCES USER
-//    @DELETE
-//    @Path("/{id}")
-//    public Response deleteUser(@PathParam("id") final long id) {
-//        userService.removeUser(id);   // TODO: CAMBIAR A BORRADO LOGICO?
-//        return Response.noContent().build();
-//    }
+    @DELETE
+    @Path("/{id}")
+    public Response deleteUser(@PathParam("id") final long id) {
+        userService.removeUser(id);
+        return Response.noContent().build();
+    }
 
+    @GET
+    @Path("/{id}/projects")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response ownedProjects(@PathParam("id") final long userId,
+                                  @QueryParam("funded") @DefaultValue("true") boolean funded) {
+        List<Project> projectsList = userService.getOwnedProjects(userId /*sessionUser.getId()*/, funded);
+        List<ProjectDto> projects = projectsList.stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
+    }
 
-    // TODO getOwnedProjects. Here or in projectRestController?
-    // userService.getOwnedProjects(sessionUser.getId(), funded)
-
-    // TODO addFavorite. Project
-    // userService.addFavorite(sessionUser.getId(), projectId);
-
-    // TODO deleteFavorite. Project
-    // userService.deleteFavorite(sessionUser.getId(), projectId);
+    @PUT
+    @Path("/{id}/favorite")
+    public Response favorites(@PathParam("id") final long userId,
+                                @QueryParam("project") Long projectId,
+                                @QueryParam("add") @DefaultValue("true") boolean add) {
+        Optional<User> optionalUser;
+        if (add) optionalUser = userService.addFavorite(userId /*sessionUser.getId()*/, projectId);
+        else optionalUser = userService.deleteFavorite(userId /*sessionUser.getId()*/, projectId);
+        return optionalUser.map(u -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
 }

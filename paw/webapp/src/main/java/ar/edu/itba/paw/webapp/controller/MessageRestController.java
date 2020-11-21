@@ -6,7 +6,6 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.OfferDto;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

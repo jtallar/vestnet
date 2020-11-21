@@ -104,7 +104,7 @@ public interface UserService {
      * @param projectId The project to remove from favorites.
      * @return The changed user, null if user not exists.
      */
-    User deleteFavorite(long userId, long projectId);
+    Optional<User> deleteFavorite(long userId, long projectId);
 
 
     /**
@@ -113,7 +113,7 @@ public interface UserService {
      * @param projectId The project to add to favorites.
      * @return The changed user, null if user not exists.
      */
-    User addFavorite(long userId, long projectId);
+    Optional<User> addFavorite(long userId, long projectId);
 
 
     /**
