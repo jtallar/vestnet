@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Component
 @Path("/location")
 public class LocationRestController {
+
     @Autowired
     private LocationService locationService;
 

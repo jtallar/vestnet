@@ -73,9 +73,9 @@ public class ProjectRestController {
 
 
     @GET
-    @Path("/{project_id}")
+    @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response project(@PathParam("project_id") long id) {
+    public Response project(@PathParam("id") long id) {
         return projectService.findById(id)
                 .map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -83,9 +83,9 @@ public class ProjectRestController {
 
 
     @PUT
-    @Path("/{project_id}")
+    @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response update(@PathParam("project_id") long id,
+    public Response update(@PathParam("id") long id,
                            final ProjectDto projectDto) {
         return projectService.update(id, projectDto.getName(), projectDto.getSummary(), projectDto.getCost())
                 .map(p -> Response.ok().build())
@@ -94,22 +94,25 @@ public class ProjectRestController {
 
 
     @GET
-    @Path("/{project_id}/categories")
+    @Path("/{id}/categories")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response projectCategories(@PathParam("project_id") long id) {
-        Optional<Project> project = projectService.findById(id);
-        if (!project.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        List<CategoryDto> categoriesDto = project.get().getCategories().stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
+    public Response projectCategories(@PathParam("id") long id) {
+        Optional<Project> optionalProject = projectService.findById(id);
+
+        return optionalProject.map(p -> {
+            List<CategoryDto> categoriesDto = p.getCategories().stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 
     @PUT
-    @Path("/{project_id}/categories")
+    @Path("/{id}/categories")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updateCategories(@PathParam("project_id") long id,
+    public Response updateCategories(@PathParam("id") long id,
                                      final List<CategoryDto> categoriesDto) {
         List<Category> categories = categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+
         return projectService.addCategories(id, categories)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -122,13 +125,14 @@ public class ProjectRestController {
     public Response categories() {
         List<Category> categories = projectService.getAllCategories();
         List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+
         return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
     }
 
 
     @PUT
-    @Path("/{project_id}/hit")
-    public Response addHit(@PathParam("project_id") long id) {
+    @Path("/{id}/hit")
+    public Response addHit(@PathParam("id") long id) {
         return projectService.addHit(id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -136,8 +140,8 @@ public class ProjectRestController {
 
 
     @PUT
-    @Path("/{project_id}/funded")
-    public Response funded(@PathParam("project_id") long id) {
+    @Path("/{id}/funded")
+    public Response funded(@PathParam("id") long id) {
         return projectService.setFunded(id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());

@@ -117,31 +117,4 @@ public class SignUpController {
         return new ModelAndView("redirect:/login" + "?me=2");
     }
 
-
-    /** Auxiliary functions (to reduce code) */
-
-
-    /**
-     * Logs form errors and returns the given model and view
-     * @param errors The errors returned.
-     * @param formName The form name used to generate the string.
-     * @param modelAndView Model and view to return to.
-     * @return To the given model and view.
-     */
-    private ModelAndView logFormErrorsAndReturn(BindingResult errors, String formName, ModelAndView modelAndView) {
-            LOGGER.error(formName + " failed. There are {} errors in form\n", errors.getErrorCount());
-            for (ObjectError error : errors.getAllErrors())
-                LOGGER.error("\nName: {}, Code: {}", error.getDefaultMessage(), error.toString());
-            return modelAndView;
-    }
-
-
-    /**
-     * Creates the base url needed.
-     * @param request The given request to get the base url from.
-     * @return Base url string formatted.
-     */
-    private String getBaseUrl(HttpServletRequest request) {
-        return request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath()));
-    }
 }

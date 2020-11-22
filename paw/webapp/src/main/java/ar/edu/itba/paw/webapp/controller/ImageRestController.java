@@ -33,13 +33,12 @@ public class ImageRestController {
     @Context
     private UriInfo uriInfo;
 
-
-    // TODO: Los errores ya no los debemos capturar, no? Ni debemos mostrar el mensaje de Tomcat
     @GET
     @Path("/users/{user_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getUserImage(@PathParam("user_id") final long userId) {
         Optional<UserImage> profileImage = userService.getProfileImage(userId);
+
         return profileImage.map(userImage -> Response.ok(ImageDto.fromUserImage(userImage)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
@@ -48,11 +47,10 @@ public class ImageRestController {
     @Path("/users/{user_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setUserImage(@PathParam("user_id") final long userId, final ImageDto image) {
-        User updatedUser = userService.updateImage(userId, image.getImage());
-        if (updatedUser == null) {
-            return Response.status(Response.Status.NOT_FOUND.getStatusCode()).build();
-        }
-        return Response.ok().build();
+        Optional<User> optionalUser = userService.updateImage(userId, image.getImage());
+
+        return optionalUser.map(u -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
 
@@ -81,6 +79,7 @@ public class ImageRestController {
     public Response getProjectSlideshow(@PathParam("project_id") final long id) {
         List<ProjectImage> projectImages = projectService.getSlideshowImages(id);
         List<ImageDto> images = projectImages.stream().map(ImageDto::fromProjectImage).collect(Collectors.toList());
+
         return Response.ok(new GenericEntity<List<ImageDto>>(images) {}).build();
     }
 
@@ -90,6 +89,7 @@ public class ImageRestController {
     public Response setProjectSlideshow(@PathParam("project_id") final long id,
                                        final List<ImageDto> images) {
         List<byte []> bytes = images.stream().map(ImageDto::getImage).collect(Collectors.toList());
+
         return projectService.setSlideshowImages(id, bytes)
                 .map(i -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());

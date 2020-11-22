@@ -60,33 +60,33 @@ public interface UserService {
      * Updates a user password.
      * @param mail User's mail.
      * @param password New user's password.
-     * @return The updated user, null if not exist.
+     * @return The optional of the updated user.
      */
-    User updatePassword(String mail, String password);
+    Optional<User> updatePassword(String mail, String password);
 
     /**
      * Update a user image.
      * @param id User's id
      * @param image Image byte array.
-     * @return The updated user, null if not exist.
+     * @return The optional of the updated user.
      */
-    User updateImage(long id, byte[] image);
+    Optional<User> updateImage(long id, byte[] image);
 
     /**
      * Sets a user as verified.
      * @param id User's unique id.
-     * @return The verified user, null if not found.
+     * @return The optional of the verified user.
      */
-    User verifyUser(long id);
+    Optional<User> verifyUser(long id);
 
 
     /**
      * Sets locale and returns found user.
      * @param username User's username.
      * @param locale Locale to set.
-     * @return The modified user.
+     * @return The optional of the modified user.
      */
-    User setLocale(String username, String locale);
+    Optional<User> setLocale(String username, String locale);
 
 
     /**

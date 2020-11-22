@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +33,6 @@ public class UserRestController {
     private UserService userService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private SessionUserFacade sessionUser;
 
     @Context
@@ -45,7 +43,7 @@ public class UserRestController {
     public Response createUser(final UserDto user) {
         LOGGER.debug("\n\nBase URI: {}\n\n", uriInfo.getBaseUri().toString());
 
-        final User newUser;
+        final User newUser; // TODO work with optional? reduces code more
         try {
             newUser = userService.create(UserDto.toUser(user), uriInfo.getBaseUri());
         } catch (UserAlreadyExistsException e) {
@@ -56,23 +54,28 @@ public class UserRestController {
         return Response.created(userUri).build();
     }
 
+
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
         final Optional<User> optionalUser = userService.findById(id);
+
         return optionalUser.map(u -> Response.ok(UserDto.fromUser(u, uriInfo)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
+
 
     @PUT
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateUser(@PathParam("id") final long id, final UserDto user) {
         Optional<User> optionalUser = userService.update(id, UserDto.toUser(user));
+
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
+
 
     @DELETE
     @Path("/{id}")
@@ -81,6 +84,7 @@ public class UserRestController {
         return Response.noContent().build();
     }
 
+
     @GET
     @Path("/{id}/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -88,16 +92,26 @@ public class UserRestController {
                                   @QueryParam("funded") @DefaultValue("true") boolean funded) {
         List<Project> projectsList = userService.getOwnedProjects(userId /*sessionUser.getId()*/, funded);
         List<ProjectDto> projects = projectsList.stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
     }
+
+    // TODO make a GET favorites?
 
     @PUT
     @Path("/{id}/favorite")
     public Response favorites(@PathParam("id") final long userId,
-                                @QueryParam("project") Long projectId,
+                                @QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
                                 @QueryParam("add") @DefaultValue("true") boolean add) {
         Optional<User> optionalUser = userService.favorites(userId /*sessionUser.getId()*/, projectId, add);
+
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
+
+
+
+
 }
+
+

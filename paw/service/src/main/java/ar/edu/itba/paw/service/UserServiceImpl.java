@@ -96,69 +96,60 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updatePassword(String mail, String password) {
-        Optional<User> userOptional = userDao.findByUsername(mail);
-        if (!userOptional.isPresent()) return null;
-
-        User user = userOptional.get();
-        user.setPassword(encoder.encode(password));
-        return user;
+    public Optional<User> updatePassword(String mail, String password) {
+        Optional<User> optionalUser = userDao.findByUsername(mail);
+        optionalUser.ifPresent(u -> u.setPassword(encoder.encode(password)));
+        return optionalUser;
     }
 
     @Override
     @Transactional
-    public User updateImage(long id, byte[] image) {
-        Optional<User> userOptional = userDao.findById(id);
-        if (!userOptional.isPresent()) return null;
+    public Optional<User> updateImage(long id, byte[] image) {
+        Optional<User> optionalUser = userDao.findById(id);
+        optionalUser.ifPresent(u -> {
+            UserImage userImage = null;
+            Optional<UserImage> optionalImage;
+            Long imageId = u.getImage_id();
+            if (imageId == null || !(optionalImage = imageDao.findUserImage(imageId)).isPresent()) {
+                if (image.length > 0) userImage = imageDao.create(image);
+            } else {
+                userImage = optionalImage.get();
+                userImage.setImage(image);
+            }
 
-        UserImage userImage = null;
-        User user = userOptional.get();
-
-        Optional<UserImage> maybeImage;
-        Long imageId = user.getImage_id();
-        if (imageId == null || !(maybeImage = imageDao.findUserImage(imageId)).isPresent()) {
-            if (image.length > 0) userImage = imageDao.create(image);
-        } else {
-            userImage = maybeImage.get();
-            userImage.setImage(image);
-        }
-
-        user.setImage(userImage);
-        return user;
+            u.setImage(userImage);
+        });
+        return optionalUser;
     }
 
     @Override
     @Transactional
-    public User verifyUser(long id) {
-        Optional<User> userOptional = userDao.findById(id);
-        if (!userOptional.isPresent()) return null;
-
-        User user = userOptional.get();
-        user.setVerified(true);
-        return user;
+    public Optional<User> verifyUser(long id) {
+        Optional<User> optionalUser = userDao.findById(id);
+        optionalUser.ifPresent(u -> u.setVerified(true));
+        return optionalUser;
     }
-
 
     @Override
     @Transactional
-    public User setLocale(String username, String locale) {
-        Optional<User> userOptional = userDao.findByUsername(username);
-        if (!userOptional.isPresent()) return null;
-
-        User user = userOptional.get();
-        if (!locale.equals(user.getLocale())) user.setLocale(locale);
-        return user;
+    public Optional<User> setLocale(String username, String locale) {
+        Optional<User> optionalUser = userDao.findByUsername(username);
+        optionalUser.ifPresent(u -> {
+            if (!locale.equals(u.getLocale()))
+                u.setLocale(locale);
+        });
+        return optionalUser;
     }
 
     @Override
     @Transactional
     public Optional<User> favorites(long userId, long projectId, boolean add) {
-        Optional<User> userOptional = userDao.findById(userId);
-        userOptional.ifPresent(u -> {
+        Optional<User> optionalUser = userDao.findById(userId);
+        optionalUser.ifPresent(u -> {
             if (add) u.getFavorites().add(new Project(projectId));
             else u.getFavorites().remove(new Project(projectId));
         });
-        return userOptional;
+        return optionalUser;
     }
 
 
