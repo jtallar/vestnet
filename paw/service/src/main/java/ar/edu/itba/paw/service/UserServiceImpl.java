@@ -98,34 +98,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean updateVerification(String token) {
-        if (token == null || token.isEmpty()) return false;
-
-        Optional<Token> optionalToken = tokenDao.findByToken(token);
-        if (!optionalToken.isPresent()) return false;
-
-        Token realToken = optionalToken.get();
-        User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
-
-        if (!realToken.isValid()) return false;
-        user.setVerified(true);
-        return true;
+        return updateWithToken(token, null, false);
     }
 
 
     @Override
     @Transactional
     public boolean updatePassword(String token, String password) {
-        if (token == null || token.isEmpty()) return false;
-
-        Optional<Token> optionalToken = tokenDao.findByToken(token);
-        if (!optionalToken.isPresent()) return false;
-
-        Token realToken = optionalToken.get();
-        User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
-
-        if (!realToken.isValid()) return false;
-        user.setPassword(encoder.encode(password));
-        return true;
+        return updateWithToken(token, password, true);
     }
 
 
@@ -143,6 +123,7 @@ public class UserServiceImpl implements UserService {
         optionalUser.ifPresent(u -> emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri));
         return optionalUser;
     }
+
 
     @Override
     @Transactional
@@ -235,5 +216,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserImage> getProfileImage(long id) {
         return imageDao.findUserImage(id);
+    }
+
+    /** Auxiliary functions */
+
+    /**
+     * Updates the password or sets as verified.
+     * @param token The necessary token to check its validity.
+     * @param password The password, if given, to update.
+     * @param isPassword If its change of password or verification.
+     * @return True when update is done, false if token corrupted/missing/invalid.
+     */
+    private boolean updateWithToken(String token, String password, boolean isPassword) {
+        if (token == null || token.isEmpty()) return false;
+
+        Optional<Token> optionalToken = tokenDao.findByToken(token);
+        if (!optionalToken.isPresent()) return false;
+
+        Token realToken = optionalToken.get();
+        User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
+
+        if (!realToken.isValid()) return false;
+
+        if (isPassword) user.setPassword(encoder.encode(password)); // TODO should encode or comes encoded
+        else user.setVerified(true);
+        return true;
     }
 }
