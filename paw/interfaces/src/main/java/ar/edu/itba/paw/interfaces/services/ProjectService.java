@@ -59,34 +59,34 @@ public interface ProjectService {
 
     /**
      * Adds a hit to the given project.
-     * @param projectId The unique project id.
+     * @param id The unique project id.
      * @return The modified optional project.
      */
-    Optional<Project> addHit(long projectId);
+    Optional<Project> addHit(long id);
 
 
     /**
      * Sets a project as funded.
-     * @param projectId The unique project id.
+     * @param id The unique project id.
      * @return The optional project modified.
      */
-    Optional<Project> setFunded(long projectId);
+    Optional<Project> setFunded(long id);
 
 
     /**
      * Ads one more message to the project's message count.
-     * @param projectId The unique project id.
+     * @param id The unique project id.
      * @return The updated optional project.
      */
-    Optional<Project> addMsgCount(long projectId);
+    Optional<Project> addMsgCount(long id);
 
 
     /**
      * Removes one message to the project's message count.
-     * @param projectId The unique project id.
+     * @param id The unique project id.
      * @return The updated optional project.
      */
-    Optional<Project> decMsgCount(long projectId);
+    Optional<Project> decMsgCount(long id);
 
 
     /**

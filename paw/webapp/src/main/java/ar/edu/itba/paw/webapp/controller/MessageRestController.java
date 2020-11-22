@@ -48,6 +48,7 @@ public class MessageRestController {
                            @QueryParam("accepted") @DefaultValue("true") boolean accepted) {
         Optional<Message> updatedMessage = messageService.updateMessageStatus(offerDto.getReceiverId(), offerDto.getSenderId(),
                 offerDto.getProjectId(), accepted, uriInfo.getBaseUri());
+
         return updatedMessage.map(message -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
@@ -59,7 +60,6 @@ public class MessageRestController {
                            @PathParam("user_id") final long userId,
                            @QueryParam("last") @DefaultValue("false") boolean last) {
         List<Message> messages = new ArrayList<>();
-
         if (last) userService.getLastProjectOfferMessage(userId /*sessionUser.getId()*/, projectId).ifPresent(messages::add);
         else messages = userService.getProjectUnreadMessages(userId /*sessionUser.getId()*/, projectId);
 
@@ -78,7 +78,6 @@ public class MessageRestController {
         else messagePage = userService.getAcceptedMessages(userId /*sessionUser.getId()*/, page, PAGE_SIZE);
 
         List<OfferDto> messages = messagePage.getContent().stream().map(m -> OfferDto.fromMessage(m, uriInfo)).collect(Collectors.toList());
-
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getEndPage()).build(), "last")

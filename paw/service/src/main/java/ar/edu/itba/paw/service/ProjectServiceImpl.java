@@ -74,16 +74,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> addHit(long projectId) {
-        Optional<Project> project = findById(projectId);
+    public Optional<Project> addHit(long id) {
+        Optional<Project> project = findById(id);
         project.ifPresent(p -> p.setHits(p.getHits() + 1));
         return project;
     }
 
     @Override
     @Transactional
-    public Optional<Project> setFunded(long projectId) {
-        Optional<Project> optionalProject = findById(projectId);
+    public Optional<Project> setFunded(long id) {
+        Optional<Project> optionalProject = findById(id);
         optionalProject.ifPresent(p -> p.setFunded(true));
         return optionalProject;
     }
@@ -91,8 +91,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> addMsgCount(long projectId) {
-        Optional<Project> project = findById(projectId);
+    public Optional<Project> addMsgCount(long id) {
+        Optional<Project> project = findById(id);
         project.ifPresent(Project::addMsgCount);
         return project;
     }
@@ -100,8 +100,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> decMsgCount(long projectId) {
-        Optional<Project> project = findById(projectId);
+    public Optional<Project> decMsgCount(long id) {
+        Optional<Project> project = findById(id);
         project.ifPresent(Project::decMsgCount);
         return project;
     }
