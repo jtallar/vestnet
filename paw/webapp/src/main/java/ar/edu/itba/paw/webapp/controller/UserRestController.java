@@ -61,7 +61,6 @@ public class UserRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
         final Optional<User> optionalUser = userService.findById(id);
-
         return optionalUser.map(u -> Response.ok(UserDto.fromUser(u, uriInfo)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
@@ -70,15 +69,9 @@ public class UserRestController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateUser(@PathParam("id") final long id, final UserDto user) {
-
-        try {
-            userService.update(id, user.getFirstName(), user.getLastName(), user.getRealId(), user.getBirthDate(),
-                    user.getCountryId(), user.getStateId(), user.getCityId(), user.getPhone(), user.getLinkedin());
-        } catch (UserDoesNotExistException e) {
-            LOGGER.error("User with email {} does not exist in VestNet", user.getEmail());
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok().build();
+        Optional<User> optionalUser = userService.update(id, UserDto.toUser(user));
+        return optionalUser.map(u -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
     @DELETE
@@ -103,9 +96,7 @@ public class UserRestController {
     public Response favorites(@PathParam("id") final long userId,
                                 @QueryParam("project") Long projectId,
                                 @QueryParam("add") @DefaultValue("true") boolean add) {
-        Optional<User> optionalUser;
-        if (add) optionalUser = userService.addFavorite(userId /*sessionUser.getId()*/, projectId);
-        else optionalUser = userService.deleteFavorite(userId /*sessionUser.getId()*/, projectId);
+        Optional<User> optionalUser = userService.favorites(userId /*sessionUser.getId()*/, projectId, add);
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }

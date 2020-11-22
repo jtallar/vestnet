@@ -52,37 +52,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User create(User user, URI baseUri) throws UserAlreadyExistsException {
-        User newUser = userDao.create(user);
+    public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException {
+        User newUser = userDao.create(dataUser);
         emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
-
         return newUser;
     }
 
     @Override
     @Transactional
-    public User update (long userId, String firstName, String lastName, String realId, Date birthDate,
-                        Integer countryId, Integer stateId, Integer cityId,
-                        String phone, String linkedin) throws UserDoesNotExistException {
-
-        Optional<User> optionalUser = findById(userId);
-        if (!optionalUser.isPresent()) throw new UserDoesNotExistException();
-        User user = optionalUser.get();
-
-        Country country = new Country(countryId);
-        State state = new State(stateId);
-        City city = new City(cityId);
-        Location location = new Location(country, state, city);
-
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setRealId(realId);
-        user.setBirthDate(birthDate);
-        user.setLocation(location);
-        user.setPhone(phone);
-        user.setLinkedin(linkedin);
-
-        return user;
+    public Optional<User> update(long id, User dataUser) {
+        Optional<User> optionalUser = findById(id);
+        optionalUser.ifPresent(u -> {
+            u.setLocation(dataUser.getLocation());
+            u.setFirstName(dataUser.getFirstName());
+            u.setLastName(dataUser.getLastName());
+            u.setRealId(dataUser.getRealId());
+            u.setBirthDate(dataUser.getBirthDate());
+            u.setLocation(dataUser.getLocation());
+            u.setPhone(dataUser.getPhone());
+            u.setLinkedin(dataUser.getLinkedin());
+        });
+        return optionalUser;
     }
 
     @Override
@@ -160,21 +150,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-
     @Override
     @Transactional
-    public Optional<User> deleteFavorite(long userId, long projectId) {
+    public Optional<User> favorites(long userId, long projectId, boolean add) {
         Optional<User> userOptional = userDao.findById(userId);
-        userOptional.ifPresent(u -> u.getFavorites().remove(new Project(projectId)));
-        return userOptional;
-    }
-
-
-    @Override
-    @Transactional
-    public Optional<User> addFavorite(long userId, long projectId) {
-        Optional<User> userOptional = userDao.findById(userId);
-        userOptional.ifPresent(u -> u.getFavorites().add(new Project(projectId)));
+        userOptional.ifPresent(u -> {
+            if (add) u.getFavorites().add(new Project(projectId));
+            else u.getFavorites().remove(new Project(projectId));
+        });
         return userOptional;
     }
 
@@ -189,7 +172,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Page<Message> getAcceptedMessages(long receiverId, Integer page, Integer pageSize) {
+    public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
         List<FilterCriteria> filters = new ArrayList<>();
         filters.add(new FilterCriteria("receiver", new User(receiverId)));
         filters.add(new FilterCriteria("accepted", true));
@@ -198,7 +181,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Page<Message> getOfferMessages(long senderId, Integer page, Integer pageSize) {
+    public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
         List<FilterCriteria> filters = Collections.singletonList(new FilterCriteria("sender", new User(senderId)));
         return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
     }
@@ -226,14 +209,6 @@ public class UserServiceImpl implements UserService {
     public Optional<UserImage> getProfileImage(long id) {
         return imageDao.findUserImage(id);
     }
-
-
-    @Override
-    @Transactional
-    public Token createToken(long userId) {
-        return tokenDao.create(new User(userId));
-    }
-
 
     @Override
     public Optional<Token> findToken(String token) {

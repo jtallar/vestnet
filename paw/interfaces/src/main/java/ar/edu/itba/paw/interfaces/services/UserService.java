@@ -18,22 +18,21 @@ public interface UserService {
 
     /**
      * Creates a new user given the params, for REST API.
-     * @param user The new user to create.
-     * @param baseUri Base URI for verification porpuoses.
+     * @param dataUser The new user data to create.
+     * @param baseUri Base URI for verification purposes.
      * @return The created User.
      * @throws UserAlreadyExistsException when the username is already taken.
      */
-    User create (User user, URI baseUri) throws UserAlreadyExistsException;
+    User create(User dataUser, URI baseUri) throws UserAlreadyExistsException;
 
 
     /**
      * Updates an existing user given the params.
+     * @param id The id of the user to update its data.
+     * @param dataUser The users data to update
      * @return The created User.
-     * @throws UserDoesNotExistException when the usern does not exist.
      */
-    User update (long userId, String firstName, String lastName, String realId, Date birthDate,
-                        Integer countryId, Integer stateId, Integer cityId,
-                        String phone, String linkedin) throws UserDoesNotExistException;
+    Optional<User> update(long id, User dataUser) ;
 
 
     /**
@@ -91,21 +90,13 @@ public interface UserService {
 
 
     /**
-     * Deletes a favorite from a user.
+     * Adds or deletes a favorite to a user.
      * @param userId The user unique id.
-     * @param projectId The project to remove from favorites.
+     * @param projectId The project to add or delete to favorites.
+     * @param add If true then adds, if not deletes.
      * @return The changed user, null if user not exists.
      */
-    Optional<User> deleteFavorite(long userId, long projectId);
-
-
-    /**
-     * Adds a favorite to a user.
-     * @param userId The user unique id.
-     * @param projectId The project to add to favorites.
-     * @return The changed user, null if user not exists.
-     */
-    Optional<User> addFavorite(long userId, long projectId);
+    Optional<User> favorites(long userId, long projectId, boolean add);
 
 
     /**
@@ -124,7 +115,7 @@ public interface UserService {
      * @param pageSize Page size.
      * @return Messages page with the required data.
      */
-    Page<Message> getAcceptedMessages(long receiverId, Integer page, Integer pageSize);
+    Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize);
 
 
     /**
@@ -134,7 +125,7 @@ public interface UserService {
      * @param pageSize Page size.
      * @return Messages page with the required data.
      */
-    Page<Message> getOfferMessages(long senderId, Integer page, Integer pageSize);
+    Page<Message> getOfferMessages(long senderId, int page, int pageSize);
 
 
     /**
@@ -161,14 +152,6 @@ public interface UserService {
      * @return The user image, default if none found.
      */
     Optional<UserImage> getProfileImage(long id);
-
-
-    /**
-     * Creates a token for a user.
-     * @param userId The unique user id.
-     * @return The created token
-     */
-    Token createToken(long userId);
 
 
     /**
