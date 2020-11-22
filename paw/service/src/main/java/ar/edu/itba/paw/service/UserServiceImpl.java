@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Primary
 @Service
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void removeUser(long id) {
+    public void remove(long id) {
         tokenDao.deleteUserTokens(new User(id));
         userDao.removeUser(id);
     }
@@ -96,9 +97,50 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Optional<User> updatePassword(String mail, String password) {
+    public boolean updateVerification(String token) {
+        if (token == null || token.isEmpty()) return false;
+
+        Optional<Token> optionalToken = tokenDao.findByToken(token);
+        if (!optionalToken.isPresent()) return false;
+
+        Token realToken = optionalToken.get();
+        User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
+
+        if (!realToken.isValid()) return false;
+        user.setVerified(true);
+        return true;
+    }
+
+
+    @Override
+    @Transactional
+    public boolean updatePassword(String token, String password) {
+        if (token == null || token.isEmpty()) return false;
+
+        Optional<Token> optionalToken = tokenDao.findByToken(token);
+        if (!optionalToken.isPresent()) return false;
+
+        Token realToken = optionalToken.get();
+        User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
+
+        if (!realToken.isValid()) return false;
+        user.setPassword(encoder.encode(password));
+        return true;
+    }
+
+
+    @Override
+    public Optional<User> requestPassword(String mail, URI baseUri) {
         Optional<User> optionalUser = userDao.findByUsername(mail);
-        optionalUser.ifPresent(u -> u.setPassword(encoder.encode(password)));
+        optionalUser.ifPresent(u -> emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri));
+        return optionalUser;
+    }
+
+
+    @Override
+    public Optional<User> requestVerification(String mail, URI baseUri) {
+        Optional<User> optionalUser = userDao.findByUsername(mail);
+        optionalUser.ifPresent(u -> emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri));
         return optionalUser;
     }
 
@@ -122,13 +164,6 @@ public class UserServiceImpl implements UserService {
         return optionalUser;
     }
 
-    @Override
-    @Transactional
-    public Optional<User> verifyUser(long id) {
-        Optional<User> optionalUser = userDao.findById(id);
-        optionalUser.ifPresent(u -> u.setVerified(true));
-        return optionalUser;
-    }
 
     @Override
     @Transactional
@@ -140,6 +175,7 @@ public class UserServiceImpl implements UserService {
         });
         return optionalUser;
     }
+
 
     @Override
     @Transactional
@@ -199,10 +235,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserImage> getProfileImage(long id) {
         return imageDao.findUserImage(id);
-    }
-
-    @Override
-    public Optional<Token> findToken(String token) {
-        return tokenDao.findByToken(token);
     }
 }

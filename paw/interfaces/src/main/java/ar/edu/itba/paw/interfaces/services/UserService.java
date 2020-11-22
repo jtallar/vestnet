@@ -54,15 +54,46 @@ public interface UserService {
      * Delete a user given its ID.
      * @param id The unique user's ID
      */
-    void removeUser(long id);
+    void remove(long id);
+
+    /**
+     * Sets a user as verified if the token is valid.
+     * If the token exists but is invalid, resend email.
+     * @param token The token.
+     * @param baseUri The uri to resend the email.
+     * @return True if the verification was successful
+     *          or false if the token did not exist or invalid.
+     */
+    boolean updateVerification(String token);
+
 
     /**
      * Updates a user password.
-     * @param mail User's mail.
+     * @param token The token to check for.
      * @param password New user's password.
-     * @return The optional of the updated user.
+     * @return True if the verification was successful
+     *          or false if the token did not exist or invalid.
      */
-    Optional<User> updatePassword(String mail, String password);
+    boolean updatePassword(String token, String password);
+
+
+    /**
+     * Requests for a password change.
+     * @param mail The users mail to change the password.
+     * @param baseUri Base uri for mail creation.
+     * @return The optional of the found user.
+     */
+    Optional<User> requestPassword(String mail, URI baseUri);
+
+
+    /**
+     * Requests for a verification mail.
+     * @param mail The users mail to send verification.
+     * @param baseUri Base uri for mail creation.
+     * @return The optional of the found user.
+     */
+    Optional<User> requestVerification(String mail, URI baseUri);
+
 
     /**
      * Update a user image.
@@ -71,13 +102,6 @@ public interface UserService {
      * @return The optional of the updated user.
      */
     Optional<User> updateImage(long id, byte[] image);
-
-    /**
-     * Sets a user as verified.
-     * @param id User's unique id.
-     * @return The optional of the verified user.
-     */
-    Optional<User> verifyUser(long id);
 
 
     /**
@@ -152,12 +176,4 @@ public interface UserService {
      * @return The user image, default if none found.
      */
     Optional<UserImage> getProfileImage(long id);
-
-
-    /**
-     * Finds the token for the given string.
-     * @param token The string token to search.
-     * @return Found token, if there is.
-     */
-    Optional<Token> findToken(String token);
 }

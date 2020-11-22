@@ -2,21 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
-import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.webapp.dto.OfferDto;
 import ar.edu.itba.paw.webapp.dto.ProjectDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -80,7 +76,7 @@ public class UserRestController {
     @DELETE
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") final long id) {
-        userService.removeUser(id);
+        userService.remove(id);
         return Response.noContent().build();
     }
 
@@ -110,8 +106,43 @@ public class UserRestController {
     }
 
 
+    @POST
+    @Path("/password")
+    public Response requestPassword(@QueryParam("mail") final String mail) {
+        Optional<User> optionalUser = userService.requestPassword(mail, uriInfo.getBaseUri());
+
+        return optionalUser.map(u -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
 
 
+    @PUT
+    @Path("/password")
+    public Response updatePassword(@QueryParam("token") final String token,
+                             @QueryParam("p") final String password) { // TODO should go encoded right?
+        if (userService.updatePassword(token, password))
+            return Response.ok().build();
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+
+    @POST
+    @Path("/verify")
+    public Response requestVerification(@QueryParam("mail") final String mail) {
+        Optional<User> optionalUser = userService.requestVerification(mail, uriInfo.getBaseUri());
+
+        return optionalUser.map(u -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
+
+
+    @PUT
+    @Path("/verify")
+    public Response updateVerification(@QueryParam("token") final String token) {
+        if (userService.updateVerification(token))
+            return Response.ok().build();
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 }
 
 
