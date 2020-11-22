@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.glassfish.jersey.media:jersey-media-jaxb:3.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-jaxb/3.0-SNAPSHOT/jersey-media-jaxb-3.0-20170329.210646-133.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-jaxb/3.0-SNAPSHOT/jersey-media-jaxb-3.0-20170329.210646-133-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-jaxb/3.0-SNAPSHOT/jersey-media-jaxb-3.0-20170329.210646-133-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.daos.*;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 
 @Primary
@@ -45,33 +47,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private EmailService emailService;
 
     @Override
     @Transactional
-    public User create(String role, String password, String firstName, String lastName, String realId,
-                       Integer birthYear, Integer birthMonth, Integer birthDay,
-                       Integer countryId, Integer stateId, Integer cityId,
-                       String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException {
+    public User create(User user, URI baseUri) throws UserAlreadyExistsException {
+        User newUser = userDao.create(user);
+        emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
 
-        UserImage userImage = null;
-        if (image.length > 0) userImage = imageDao.create(image);
-        Date birthDate = new GregorianCalendar(birthYear, birthMonth, birthDay).getTime();
-
-        return this.create(role, password, firstName, lastName, realId, birthDate, countryId, stateId, cityId, email, phone, linkedin, userImage);
-    }
-
-    @Override
-    @Transactional
-    public User create(String role, String password, String firstName, String lastName, String realId,
-                       Date birthDate, Integer countryId, Integer stateId, Integer cityId,
-                       String email, String phone, String linkedin, UserImage userImage) throws UserAlreadyExistsException {
-
-        Integer roleId = UserRole.getEnum(role).getId();
-        Country country = new Country(countryId);
-        State state = new State(stateId);
-        City city = new City(cityId);
-        Location location = new Location(country, state, city);
-        return userDao.create(roleId, encoder.encode(password), firstName, lastName, realId, birthDate, location, email, phone, linkedin, userImage);
+        return newUser;
     }
 
     @Override

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.glassfish.jersey.ext:jersey-spring4:3.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring4/3.0-SNAPSHOT/jersey-spring4-3.0-20170329.210946-133.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring4/3.0-SNAPSHOT/jersey-spring4-3.0-20170329.210946-133-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring4/3.0-SNAPSHOT/jersey-spring4-3.0-20170329.210946-133-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -25,11 +25,9 @@ public class UserJpaDao implements UserDao {
 
 
     @Override
-    public User create(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,
-                       Location location, String email, String phone, String linkedin, UserImage image) throws UserAlreadyExistsException {
+    public User create(User user) throws UserAlreadyExistsException {
         // TODO make JPA do it by itself
-        if (findByUsername(email).isPresent()) throw new UserAlreadyExistsException();
-        final User user = new User(role, password, firstName, lastName, realId, birthDate, location, email, phone, linkedin, image);
+        if (findByUsername(user.getEmail()).isPresent()) throw new UserAlreadyExistsException();
         entityManager.persist(user);
         return user;
     }

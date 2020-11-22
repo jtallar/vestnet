@@ -66,7 +66,7 @@ public class ProjectRestController {
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response create(final ProjectDto projectDto) {
-        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), /*sessionUser.getId()*/55L);
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), /*sessionUser.getId()*/55L); // TODO fix
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
         return Response.created(projectUri).build();
     }
@@ -80,7 +80,6 @@ public class ProjectRestController {
                 .map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-
 
 
     @PUT

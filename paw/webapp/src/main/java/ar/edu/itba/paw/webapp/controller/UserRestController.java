@@ -47,13 +47,7 @@ public class UserRestController {
 
         final User newUser;
         try {
-            newUser = userService.create(user.getRole(), user.getPassword(), user.getFirstName(), user.getLastName(),
-                    user.getRealId(), user.getBirthDate(), user.getCountryId(), user.getStateId(), user.getCityId(),
-                    user.getEmail(), user.getPhone(), user.getLinkedin(), null);
-
-            String token = userService.createToken(newUser.getId()).getToken();
-            emailService.sendVerification(newUser, token, uriInfo.getBaseUri());
-
+            newUser = userService.create(UserDto.toUser(user), uriInfo.getBaseUri());
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
             return Response.status(Response.Status.CONFLICT).build();

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.glassfish.jersey.core:jersey-common:3.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/core/jersey-common/3.0-SNAPSHOT/jersey-common-3.0-20170329.210233-134.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/core/jersey-common/3.0-SNAPSHOT/jersey-common-3.0-20170329.210233-134-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/core/jersey-common/3.0-SNAPSHOT/jersey-common-3.0-20170329.210233-134-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

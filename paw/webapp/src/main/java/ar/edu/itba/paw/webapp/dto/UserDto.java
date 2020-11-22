@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.UserRole;
+import ar.edu.itba.paw.model.location.City;
+import ar.edu.itba.paw.model.location.Country;
+import ar.edu.itba.paw.model.location.Location;
+import ar.edu.itba.paw.model.location.State;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
@@ -53,6 +57,13 @@ public class UserDto {
         userDto.cityId = user.getLocation().getCity().getId();
 
         return userDto;
+    }
+
+    public static User toUser(UserDto userDto) {
+        return new User(UserRole.getEnum(userDto.getRole()).getId(), userDto.getPassword(),
+                userDto.getFirstName(), userDto.getLastName(), userDto.getRealId(), userDto.getBirthDate(),
+                new Location(new Country(userDto.getCountryId()), new State(userDto.getStateId()), new City(userDto.getCityId())),
+                userDto.getEmail(), userDto.getPhone(), userDto.getLinkedin(), null);
     }
 
     public long getId() {

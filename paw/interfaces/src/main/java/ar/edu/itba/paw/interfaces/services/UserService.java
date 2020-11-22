@@ -9,6 +9,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,23 +17,14 @@ import java.util.Optional;
 public interface UserService {
 
     /**
-     * Creates a new user given the params.
-     * @return The created User.
-     * @throws UserAlreadyExistsException when the username is already taken.
-     */
-    User create (String role, String password, String firstName, String lastName, String realId,
-                 Integer birthYear, Integer birthMonth, Integer birthDay,
-                 Integer countryId, Integer stateId, Integer cityId,
-                 String email, String phone, String linkedin, byte[] image) throws UserAlreadyExistsException;
-
-    /**
      * Creates a new user given the params, for REST API.
+     * @param user The new user to create.
+     * @param baseUri Base URI for verification porpuoses.
      * @return The created User.
      * @throws UserAlreadyExistsException when the username is already taken.
      */
-    User create (String role, String password, String firstName, String lastName, String realId,
-                 Date birthDate, Integer countryId, Integer stateId, Integer cityId,
-                 String email, String phone, String linkedin, UserImage userImage) throws UserAlreadyExistsException;
+    User create (User user, URI baseUri) throws UserAlreadyExistsException;
+
 
     /**
      * Updates an existing user given the params.
