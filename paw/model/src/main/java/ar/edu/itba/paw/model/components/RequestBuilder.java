@@ -5,6 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
+/**
+ * Abstract class to hold the gets of the criteria list and order
+ * for a specific request.
+ */
 public abstract class RequestBuilder {
     protected Set<FilterCriteria> criteriaList;
     protected OrderField order;
