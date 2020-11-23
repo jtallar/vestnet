@@ -29,17 +29,17 @@ public interface ProjectDao {
 
     /**
      * Finds all projects with the given filter.
-     * @param requestBuilder The builder with the parameters of the search.
+     * @param request The builder with the parameters of the search.
      * @param page Page request, with page number and size.
      * @return The list of matching projects.
      */
-    Page<Project> findAll(RequestBuilder requestBuilder, PageRequest page);
+    Page<Project> findAll(RequestBuilder request, PageRequest page);
 
 
     /**
      * Finds all the projects given the filters, ordered not paged.
-     * @param requestBuilder The builder with the parameters of the search.
+     * @param request The builder with the parameters of the search.
      * @return List with the projects.
      */
-    List<Project> findAll(RequestBuilder requestBuilder);
+    List<Project> findAll(RequestBuilder request);
 }

@@ -172,51 +172,51 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Project> getOwnedProjects(long id, boolean funded) {
-        ProjectRequestBuilder builder = new ProjectRequestBuilder()
+        RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(id)
                 .setFunded(funded)
                 .setOrder(OrderField.DEFAULT);
-        return projectDao.findAll(builder);
+        return projectDao.findAll(request);
     }
 
 
     @Override
     public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
-        MessageRequestBuilder builder = new MessageRequestBuilder()
+        RequestBuilder request = new MessageRequestBuilder()
                 .setReceiver(receiverId)
                 .setAccepted(true)
                 .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(builder, new PageRequest(page, pageSize));
+        return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
 
 
     @Override
     public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
-        MessageRequestBuilder builder = new MessageRequestBuilder()
+        RequestBuilder request = new MessageRequestBuilder()
                 .setSender(senderId)
                 .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(builder, new PageRequest(page, pageSize));
+        return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
 
 
     @Override
     public List<Message> getProjectUnreadMessages(long userId, long projectId) {
-        MessageRequestBuilder builder = new MessageRequestBuilder()
+        RequestBuilder request = new MessageRequestBuilder()
                 .setReceiver(userId)
                 .setProject(projectId)
                 .setUnread(true)
                 .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(builder);
+        return messageDao.findAll(request);
     }
 
 
     @Override
     public Optional<Message> getLastProjectOfferMessage(long userId, long projectId) {
-        MessageRequestBuilder builder = new MessageRequestBuilder()
+        RequestBuilder request = new MessageRequestBuilder()
                 .setSender(userId)
                 .setProject(projectId)
                 .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(builder).stream().findFirst();
+        return messageDao.findAll(request).stream().findFirst();
     }
 
     @Override

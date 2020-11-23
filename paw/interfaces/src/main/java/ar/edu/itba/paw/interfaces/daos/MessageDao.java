@@ -22,17 +22,17 @@ public interface MessageDao {
 
     /**
      * Finds all the messages given the filters, ordered and paged.
-     * @param requestBuilder Builder with filters and order.
+     * @param request Builder with filters and order.
      * @param page Page request.
      * @return Page with the messages and pagination data.
      */
-    Page<Message> findAll(RequestBuilder requestBuilder, PageRequest page);
+    Page<Message> findAll(RequestBuilder request, PageRequest page);
 
 
     /**
      * Finds all the messages given the filters, ordered not paged.
-     * @param requestBuilder Filters and order to be applied to the messages.
+     * @param request Filters and order to be applied to the messages.
      * @return List with the messages.
      */
-    List<Message> findAll(RequestBuilder requestBuilder);
+    List<Message> findAll(RequestBuilder request);
 }

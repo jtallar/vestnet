@@ -38,10 +38,10 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public Page<Project> findAll(RequestBuilder requestBuilder, PageRequest page) {
+    public Page<Project> findAll(RequestBuilder request, PageRequest page) {
         /** Disassemble project request builder */
-        List<FilterCriteria> filters = requestBuilder.getCriteriaList();
-        OrderField order = requestBuilder.getOrder();
+        List<FilterCriteria> filters = request.getCriteriaList();
+        OrderField order = request.getOrder();
 
         /** Get to total count of projects with matching criteria */
         Long count = findAllIdsCount(filters);
@@ -60,9 +60,9 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public List<Project> findAll(RequestBuilder requestBuilder) {
+    public List<Project> findAll(RequestBuilder request) {
         /** Finds all avoiding paging and thus 2 unnecessary queries */
-        return findAllNotPaged(requestBuilder.getCriteriaList(), requestBuilder.getOrder());
+        return findAllNotPaged(request.getCriteriaList(), request.getOrder());
     }
 
 

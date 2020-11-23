@@ -161,10 +161,13 @@ public class ProjectJpaDaoTest {
     public void testFindByOwnerDoesntExists() {
         // 1 - Setup - Empty table
         Number userId = createUser();
-        List<FilterCriteria> filters = getFilterList(getOwnerMap(userId));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setOwner(userId.longValue())
+                .setFunded(true)
+                .setOrder(OrderField.DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertTrue(projects.isEmpty());
@@ -177,10 +180,13 @@ public class ProjectJpaDaoTest {
         Number categoryId = createCategory(CATEGORY_NAME);
         Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
         createProjectCategory(projectId, categoryId);
-        List<FilterCriteria> filters = getFilterList(getOwnerMap(userId));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setOwner(userId.longValue())
+                .setFunded(true)
+                .setOrder(OrderField.DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert - Name, Summary, Category
         assertEquals(1, projects.size());
@@ -199,10 +205,12 @@ public class ProjectJpaDaoTest {
         createProjectCategory(projectId, categoryId);
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getCategoryMap(categoryId));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setCategory(categoryId.intValue())
+                .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -220,10 +228,12 @@ public class ProjectJpaDaoTest {
         createProjectCategory(projectId, categoryId);
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getRangeMap(String.valueOf(PROJECT_COST_2), ""));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setCostMin((int) PROJECT_COST_2)
+                .setOrder(OrderField.COST_ASCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.COST_ASCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -241,10 +251,12 @@ public class ProjectJpaDaoTest {
         createProjectCategory(projectId, categoryId);
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getRangeMap("", String.valueOf(PROJECT_COST)));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setCostMax((int) PROJECT_COST)
+                .setOrder(OrderField.COST_ASCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.COST_ASCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -262,10 +274,12 @@ public class ProjectJpaDaoTest {
         createProjectCategory(projectId, categoryId);
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getRangeMap(String.valueOf(PROJECT_COST), String.valueOf(PROJECT_COST_2)));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setCostRange((int) PROJECT_COST, (int) PROJECT_COST_2)
+                .setOrder(OrderField.COST_ASCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.COST_DESCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(2, projects.size());
@@ -283,10 +297,12 @@ public class ProjectJpaDaoTest {
         createProjectCategory(projectId, categoryId);
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getKeywordMap(PROJECT_NAME, SearchField.PROJECT_NAME.getValue()));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setSearch(PROJECT_NAME, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
+                .setOrder(OrderField.DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -304,10 +320,12 @@ public class ProjectJpaDaoTest {
         createProjectCategory(projectId, categoryId);
         Number otherProjectId = createProject(PROJECT_NAME, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getKeywordMap(PROJECT_NAME_2, SearchField.PROJECT_NAME.getValue()));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setSearch(PROJECT_NAME_2, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
+                .setOrder(OrderField.DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(0, projects.size());
@@ -328,14 +346,14 @@ public class ProjectJpaDaoTest {
         Number fourthProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(fourthProjectId, categoryId);
 
-        Map<String, Object> map = new HashMap<>();
-        map.putAll(getCategoryMap(categoryId));
-        map.putAll(getKeywordMap(PROJECT_NAME, SearchField.PROJECT_NAME.getValue()));
-        map.putAll(getRangeMap("", String.valueOf(PROJECT_COST)));
-        List<FilterCriteria> filters = getFilterList(map);
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setCategory(categoryId.intValue())
+                .setCostMax((int) PROJECT_COST)
+                .setSearch(PROJECT_NAME, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
+                .setOrder(OrderField.ALPHABETICAL);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.ALPHABETICAL);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -473,65 +491,5 @@ public class ProjectJpaDaoTest {
         values2.put("category_id", categoryId.longValue());
         values2.put("project_id", projectId.longValue());
         jdbcInsertProjectCategory.execute(values2);
-    }
-
-    /**
-     * Creates filters for searching keyword projects
-     * @param keyword keyword to look for
-     * @param field field to search keyword in
-     * @return The map with the criteria
-     */
-    private Map<String, Object> getKeywordMap(String keyword, String field) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(field, keyword);
-        return map;
-    }
-
-    /**
-     * Creates filters for searching range projects
-     * @param minCost minimun cost
-     * @param maxCost minimun cost
-     * @return The map with the criteria
-     */
-    private Map<String, Object> getRangeMap(String minCost, String maxCost) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("minCost", minCost);
-        map.put("maxCost", maxCost);
-        return map;
-    }
-
-    /**
-     * Creates filters for searching categories projects
-     * @param categoryId Category id.
-     * @return The map with the criteria
-     */
-    private Map<String, Object> getCategoryMap(Number categoryId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("category", categoryId.longValue());
-        return map;
-    }
-
-    /**
-     * Creates filters for searching owner's projects
-     * @param userId Owner user id.
-     * @return The map with the criteria
-     */
-    private Map<String, Object> getOwnerMap(Number userId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("owner", new User(userId.longValue()));
-        map.put("funded", true);
-        return map;
-    }
-
-    /**
-     * Creates filters for searching projects
-     * @param filters Map of filters to apply
-     * @return The list with the criteria
-     */
-    private List<FilterCriteria> getFilterList(Map<String, Object> filters) {
-        filters.values().removeIf(value -> (value == null || value.toString().equals("")));
-        List<FilterCriteria> filterList = new ArrayList<>();
-        filters.forEach((key, value) -> filterList.add(new FilterCriteria(key, value)));
-        return filterList;
     }
 }

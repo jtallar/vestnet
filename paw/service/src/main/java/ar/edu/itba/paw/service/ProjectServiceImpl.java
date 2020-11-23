@@ -60,14 +60,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize) {
-        ProjectRequestBuilder builder = new ProjectRequestBuilder()
+        RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(category)
                 .setCostRange(minCost, maxCost)
                 .setFunded(false)
                 .setSearch(keyword, field)
                 .setOrder(order);
 
-        return projectDao.findAll(builder, new PageRequest(page, pageSize));
+        return projectDao.findAll(request, new PageRequest(page, pageSize));
     }
 
 
