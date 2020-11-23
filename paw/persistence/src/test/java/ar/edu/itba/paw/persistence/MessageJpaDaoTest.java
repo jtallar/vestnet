@@ -3,8 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
+import ar.edu.itba.paw.model.components.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,10 +125,14 @@ public class MessageJpaDaoTest {
         Number investorId = createUser();
         Number entrepreneurId = createUser();
         Number projectId = createProject(entrepreneurId);
-        List<FilterCriteria> filters = fillUnreadFilter(entrepreneurId, projectId);
+        RequestBuilder request = new MessageRequestBuilder()
+                .setReceiver(entrepreneurId.longValue())
+                .setProject(projectId.longValue())
+                .setUnread(true)
+                .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
-        List<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
+        List<Message> messages = messageJpaDao.findAll(request);
 
         // 3 - Assert
         assertTrue(messages.isEmpty());
@@ -142,10 +145,14 @@ public class MessageJpaDaoTest {
         Number entrepreneurId = createUser();
         Number projectId = createProject(entrepreneurId);
         createMessage(investorId, entrepreneurId, projectId, false);
-        List<FilterCriteria> filters = fillUnreadFilter(entrepreneurId, projectId);
+        RequestBuilder request = new MessageRequestBuilder()
+                .setReceiver(entrepreneurId.longValue())
+                .setProject(projectId.longValue())
+                .setUnread(true)
+                .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
-        List<Message> messages = messageJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
+        List<Message> messages = messageJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, messages.size());
@@ -258,20 +265,4 @@ public class MessageJpaDaoTest {
         message.put("project_id", projectId);
         return jdbcInsertMessage.executeAndReturnKey(message);
     }
-
-
-    /**
-     * Creates filters for searching the unread messages.
-     * @param userId The unique user id.
-     * @param projectId The unique project id.
-     * @return The list with the criteria.
-     */
-    private List<FilterCriteria> fillUnreadFilter(Number userId, Number projectId) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(userId.intValue())));
-        filters.add(new FilterCriteria("project", new Project(projectId.intValue())));
-        filters.add(new FilterCriteria("unread", true));
-        return filters;
-    }
-
 }
