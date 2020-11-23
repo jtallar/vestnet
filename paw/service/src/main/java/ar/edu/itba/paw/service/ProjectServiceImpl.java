@@ -42,9 +42,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> update(long id, String name, String summary, long cost) {
+    public Optional<Project> update(long ownerId, long id, String name, String summary, long cost) {
         Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent()) return optionalProject;
+        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+
         optionalProject.get().setName(name);
         optionalProject.get().setSummary(summary);
         optionalProject.get().setCost(cost);
@@ -81,9 +82,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setFunded(long id) {
-        Optional<Project> optionalProject = findById(id);
-        optionalProject.ifPresent(p -> p.setFunded(true));
+    public Optional<Project> setFunded(long ownerId, long id) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+        optionalProject.get().setFunded(true);
         return optionalProject;
     }
 
@@ -108,38 +110,39 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> addCategories(long id, List<Category> categories) {
+    public Optional<Project> addCategories(long ownerId, long id, List<Category> categories) {
         Optional<Project> optionalProject = projectDao.findById(id);
-        optionalProject.ifPresent(p -> p.setCategories(categories));
+        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+        optionalProject.get().setCategories(categories);
         return optionalProject;
     }
 
 
     @Override
     @Transactional
-    public Optional<Project> setPortraitImage(long id, byte[] image) {
-        Optional<Project> project = projectDao.findById(id);
-        project.ifPresent(p -> {
-            List<ProjectImage> images = p.getImages();
-            images.removeIf(ProjectImage::isMain);
-            images.add(new ProjectImage(new Project(id), image, true));
-            p.setImages(images);
-        });
-        return project;
+    public Optional<Project> setPortraitImage(long ownerId, long id, byte[] image) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+
+        List<ProjectImage> images = optionalProject.get().getImages();
+        images.removeIf(ProjectImage::isMain);
+        images.add(new ProjectImage(new Project(id), image, true));
+        optionalProject.get().setImages(images);
+        return optionalProject;
     }
 
 
     @Override
     @Transactional
-    public Optional<Project> setSlideshowImages(long id, List<byte[]> images) {
-        Optional<Project> project = projectDao.findById(id);
-        project.ifPresent(p -> {
-            List<ProjectImage> imageList = new ArrayList<>();
-            images.forEach(i -> imageList.add(new ProjectImage(new Project(id), i, false)));
-            p.getImages().stream().filter(ProjectImage::isMain).findFirst().ifPresent(imageList::add);
-            p.setImages(imageList);
-        });
-        return project;
+    public Optional<Project> setSlideshowImages(long ownerId, long id, List<byte[]> images) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+
+        List<ProjectImage> imageList = new ArrayList<>();
+        images.forEach(i -> imageList.add(new ProjectImage(new Project(id), i, false)));
+        optionalProject.get().getImages().stream().filter(ProjectImage::isMain).findFirst().ifPresent(imageList::add);
+        optionalProject.get().setImages(imageList);
+        return optionalProject;
     }
 
     @Override

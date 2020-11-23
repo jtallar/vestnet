@@ -49,7 +49,7 @@ public class MessageServiceImpl implements MessageService {
         Optional<User> sender = userService.findById(senderId);
         Optional<User> receiver = userService.findById(receiverId);
         Optional<Project> project = projectService.addMsgCount(projectId);
-        if (!sender.isPresent() || !receiver.isPresent() || !project.isPresent()) return null; // TODO this. What happens if not exists one of them
+        if (!sender.isPresent() || !receiver.isPresent() || !project.isPresent()) return null; // should not happen
         emailService.sendOffer(sender.get(), receiver.get(), project.get(), content, baseUri);
 
         return finalMessage;

@@ -24,6 +24,7 @@ public interface ProjectService {
 
     /**
      * Updates a project with the given parameters.
+     * @param ownerId The owner's unique id.
      * @param id Project's unique id.
      * @param name The project's name.
      * @param summary The project's summary.
@@ -31,7 +32,7 @@ public interface ProjectService {
      * @return operation return.
      * @return
      */
-    Optional<Project> update(long id, String name, String summary, long cost);
+    Optional<Project> update(long ownerId, long id, String name, String summary, long cost);
 
 
     /**
@@ -67,10 +68,11 @@ public interface ProjectService {
 
     /**
      * Sets a project as funded.
+     * @param ownerId The owner's unique id.
      * @param id The unique project id.
      * @return The optional project modified.
      */
-    Optional<Project> setFunded(long id);
+    Optional<Project> setFunded(long ownerId, long id);
 
 
     /**
@@ -91,28 +93,32 @@ public interface ProjectService {
 
     /**
      * Replaces the projects categories with the given ones.
+     * @param ownerId The owner's unique id.
      * @param id The unique project's id.
      * @param categories The list of categories.
      * @return The modified project if found.
      */
-    Optional<Project> addCategories(long id, List<Category> categories);
+    Optional<Project> addCategories(long ownerId, long id, List<Category> categories);
 
 
     /**
      * Sets the project portrait image.
+     * @param ownerId The owner's unique id.
      * @param id The unique project id.
      * @param image The image to set.
      * @return The optional modified project.
      */
-    Optional<Project> setPortraitImage(long id, byte [] image);
+    Optional<Project> setPortraitImage(long ownerId, long id, byte [] image);
+
 
     /**
      * Sets the project slideshow images.
+     * @param ownerId The owner's unique id.
      * @param id The unique project id.
      * @param images The images to insert.
      * @return The optional modified project.
      */
-    Optional<Project> setSlideshowImages(long id, List<byte []> images);
+    Optional<Project> setSlideshowImages(long ownerId, long id, List<byte []> images);
 
 
     /**

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.webapp.component.SessionUser;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.ProjectDto;
 import org.slf4j.Logger;
@@ -30,11 +31,14 @@ public class ImageRestController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private SessionUser sessionUser;
+
     @Context
     private UriInfo uriInfo;
 
     @GET
-    @Path("/users/{user_id}")
+    @Path("/user/{user_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getUserImage(@PathParam("user_id") final long userId) {
         Optional<UserImage> profileImage = userService.getProfileImage(userId);
@@ -44,10 +48,10 @@ public class ImageRestController {
     }
 
     @PUT
-    @Path("/users/{user_id}")
+    @Path("/user")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response setUserImage(@PathParam("user_id") final long userId, final ImageDto image) {
-        Optional<User> optionalUser = userService.updateImage(userId, image.getImage());
+    public Response setUserImage(final ImageDto image) {
+        Optional<User> optionalUser = userService.updateImage(sessionUser.getId(), image.getImage());
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -68,7 +72,7 @@ public class ImageRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setProjectPortrait(@PathParam("project_id") final long id,
                                        final ImageDto image) {
-        return projectService.setPortraitImage(id, image.getImage())
+        return projectService.setPortraitImage(sessionUser.getId(), id, image.getImage())
                 .map(i -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
@@ -90,7 +94,7 @@ public class ImageRestController {
                                        final List<ImageDto> images) {
         List<byte []> bytes = images.stream().map(ImageDto::getImage).collect(Collectors.toList());
 
-        return projectService.setSlideshowImages(id, bytes)
+        return projectService.setSlideshowImages(sessionUser.getId(), id, bytes)
                 .map(i -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }

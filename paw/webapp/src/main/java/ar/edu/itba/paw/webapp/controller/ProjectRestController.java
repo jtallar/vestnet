@@ -66,7 +66,7 @@ public class ProjectRestController {
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response create(final ProjectDto projectDto) {
-        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), /*sessionUser.getId()*/55L); // TODO fix
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
         return Response.created(projectUri).build();
     }
@@ -87,8 +87,9 @@ public class ProjectRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
                            final ProjectDto projectDto) {
-        return projectService.update(id, projectDto.getName(), projectDto.getSummary(), projectDto.getCost())
-                .map(p -> Response.ok().build())
+        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(), projectDto.getCost());
+
+        return optionalProject.map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
@@ -113,7 +114,7 @@ public class ProjectRestController {
                                      final List<CategoryDto> categoriesDto) {
         List<Category> categories = categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
 
-        return projectService.addCategories(id, categories)
+        return projectService.addCategories(sessionUser.getId(), id, categories)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
@@ -142,7 +143,7 @@ public class ProjectRestController {
     @PUT
     @Path("/{id}/funded")
     public Response funded(@PathParam("id") long id) {
-        return projectService.setFunded(id)
+        return projectService.setFunded(sessionUser.getId(), id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }

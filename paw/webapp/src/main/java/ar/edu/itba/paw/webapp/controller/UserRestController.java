@@ -51,6 +51,23 @@ public class UserRestController {
     }
 
 
+    @PUT
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response updateUser(final UserDto user) {
+        Optional<User> optionalUser = userService.update(sessionUser.getId(), UserDto.toUser(user));
+
+        return optionalUser.map(u -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
+
+
+    @DELETE
+    public Response deleteUser() {
+        userService.remove(sessionUser.getId());
+        return Response.noContent().build();
+    }
+
+
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -62,31 +79,12 @@ public class UserRestController {
     }
 
 
-    @PUT
-    @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updateUser(@PathParam("id") final long id, final UserDto user) {
-        Optional<User> optionalUser = userService.update(id, UserDto.toUser(user));
-
-        return optionalUser.map(u -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
-    }
-
-
-    @DELETE
-    @Path("/{id}")
-    public Response deleteUser(@PathParam("id") final long id) {
-        userService.remove(id);
-        return Response.noContent().build();
-    }
-
-
     @GET
     @Path("/{id}/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response ownedProjects(@PathParam("id") final long userId,
                                   @QueryParam("funded") @DefaultValue("true") boolean funded) {
-        List<Project> projectsList = userService.getOwnedProjects(userId /*sessionUser.getId()*/, funded);
+        List<Project> projectsList = userService.getOwnedProjects(userId, funded); // TODO should not be necessary put sessionUser.getId()
         List<ProjectDto> projects = projectsList.stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
@@ -95,11 +93,9 @@ public class UserRestController {
     // TODO make a GET favorites?
 
     @PUT
-    @Path("/{id}/favorite")
-    public Response favorites(@PathParam("id") final long userId,
-                                @QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
+    public Response favorites(@QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
                                 @QueryParam("add") @DefaultValue("true") boolean add) {
-        Optional<User> optionalUser = userService.favorites(userId /*sessionUser.getId()*/, projectId, add);
+        Optional<User> optionalUser = userService.favorites(sessionUser.getId(), projectId, add);
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -119,7 +115,7 @@ public class UserRestController {
     @PUT
     @Path("/password")
     public Response updatePassword(@QueryParam("token") final String token,
-                             @QueryParam("p") final String password) { // TODO should go encoded right?
+                             @QueryParam("p") final String password) {
         if (userService.updatePassword(token, password))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
