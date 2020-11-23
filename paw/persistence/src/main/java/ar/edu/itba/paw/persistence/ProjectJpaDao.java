@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.model.components.FilterCriteriaFields.*;
-
 @Repository
 public class ProjectJpaDao implements ProjectDao {
 
@@ -103,7 +101,7 @@ public class ProjectJpaDao implements ProjectDao {
         CriteriaQuery<Project> query = builder.createQuery(Project.class);
 
         Root<Project> root = query.from(Project.class);
-        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria(IDS, ids)));
+        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria("ids", ids)));
         addOrder(query, builder, root, order);
         return entityManager.createQuery(query).getResultList();
     }

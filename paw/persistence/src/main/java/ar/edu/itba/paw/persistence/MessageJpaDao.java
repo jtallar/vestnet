@@ -19,8 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.model.components.FilterCriteriaFields.*;
-
 @Repository
 public class MessageJpaDao implements MessageDao {
 
@@ -98,7 +96,7 @@ public class MessageJpaDao implements MessageDao {
         CriteriaQuery<Message> query = builder.createQuery(Message.class);
 
         Root<Message> root = query.from(Message.class);
-        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria(IDS, ids)));
+        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria("ids", ids)));
         addOrder(query, builder, root, order);
         return entityManager.createQuery(query).getResultList();
     }
