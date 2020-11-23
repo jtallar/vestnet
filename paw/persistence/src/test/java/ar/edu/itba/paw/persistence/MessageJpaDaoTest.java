@@ -128,7 +128,7 @@ public class MessageJpaDaoTest {
         RequestBuilder request = new MessageRequestBuilder()
                 .setReceiver(entrepreneurId.longValue())
                 .setProject(projectId.longValue())
-                .setUnread(true)
+                .setUnread()
                 .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
@@ -148,7 +148,7 @@ public class MessageJpaDaoTest {
         RequestBuilder request = new MessageRequestBuilder()
                 .setReceiver(entrepreneurId.longValue())
                 .setProject(projectId.longValue())
-                .setUnread(true)
+                .setUnread()
                 .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute

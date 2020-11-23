@@ -27,12 +27,13 @@ import java.util.function.Consumer;
     @Override
     public void accept(FilterCriteria param) {
         switch (param.getField()) {
-            case "ids": ids(param.getValue()); break;
-            case "receiver": receiver(param.getValue()); break;
-            case "sender": sender(param.getValue()); break;
-            case "project": project(param.getValue()); break;
-            case "unread": unread(); break;
-            case "accepted": accepted(param.getValue()); break;
+            case IDS: ids(param.getValue()); break;
+            case MESSAGE_RECEIVER: receiver(param.getValue()); break;
+            case MESSAGE_SENDER: sender(param.getValue()); break;
+            case MESSAGE_PROJECT: project(param.getValue()); break;
+            case MESSAGE_UNREAD: unread(); break;
+            case MESSAGE_ACCEPTED: accepted(param.getValue()); break;
+            default: /** should not happen */ break;
         }
     }
 

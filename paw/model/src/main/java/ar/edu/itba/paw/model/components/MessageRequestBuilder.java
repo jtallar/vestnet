@@ -3,6 +3,8 @@ package ar.edu.itba.paw.model.components;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 
+import static ar.edu.itba.paw.model.components.FilterField.*;
+
 /**
  * Creates the list of criteria filter and order for
  * the messages requests.
@@ -20,7 +22,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setReceiver(long id) {
-        criteriaList.add(new FilterCriteria("receiver", new User(id)));
+        criteriaList.add(new FilterCriteria(MESSAGE_RECEIVER, new User(id)));
         return this;
     }
 
@@ -31,7 +33,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setSender(long id) {
-        criteriaList.add(new FilterCriteria("sender", new User(id)));
+        criteriaList.add(new FilterCriteria(MESSAGE_SENDER, new User(id)));
         return this;
     }
 
@@ -42,18 +44,17 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setProject(long id) {
-        criteriaList.add(new FilterCriteria("project", new Project(id)));
+        criteriaList.add(new FilterCriteria(MESSAGE_PROJECT, new Project(id)));
         return this;
     }
 
 
     /**
      * Sets to filter the unread messages.
-     * @param state The read state of the messages.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setUnread(boolean state) {
-        criteriaList.add(new FilterCriteria("unread", state));
+    public MessageRequestBuilder setUnread() {
+        criteriaList.add(new FilterCriteria(MESSAGE_UNREAD, true));
         return this;
     }
 
@@ -64,7 +65,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setAccepted(boolean state) {
-        criteriaList.add(new FilterCriteria("accepted", state));
+        criteriaList.add(new FilterCriteria(MESSAGE_ACCEPTED, state));
         return this;
     }
 

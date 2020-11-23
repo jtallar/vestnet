@@ -33,15 +33,20 @@ import java.util.function.Consumer;
     @Override
     public void accept(FilterCriteria param) {
         switch (param.getField()) {
-            case "minCost": minCost(param.getValue()); break;
-            case "maxCost": maxCost(param.getValue()); break;
-            case "category": category(param.getValue()); break;
-            case "owner": owner(param.getValue()); break;
-            case "funded": funded(param.getValue()); break;
-            case "id": id(param.getValue()); break;
-            case "ids": ids(param.getValue()); break;
+            case PROJECT_MIN_COST: minCost(param.getValue()); break;
+            case PROJECT_MAX_COST: maxCost(param.getValue()); break;
+            case PROJECT_CATEGORY: category(param.getValue()); break;
+            case PROJECT_OWNER: owner(param.getValue()); break;
+            case PROJECT_FUNDED: funded(param.getValue()); break;
+            case IDS: ids(param.getValue()); break;
+
             /** If its not a filter, its a search */
-            default: search(param);
+            case PROJECT_SEARCH_NAME: projectSearch("name", param.getValue()); break;
+            case PROJECT_SEARCH_SUMMARY: projectSearch("summary", param.getValue()); break;
+            case PROJECT_SEARCH_LOCATION: locationSearch(param.getValue()); break;
+            case PROJECT_SEARCH_OWNER_NAME: userNameSearch(param.getValue()); break;
+            case PROJECT_SEARCH_OWNER_MAIL: userSearch(param.getValue()); break;
+            default: /** should not happen */ break;
         }
     }
 
@@ -54,22 +59,6 @@ import java.util.function.Consumer;
 
 
     /** Auxiliary functions */
-
-
-    /**
-     * For search criteria, depending on field, executes action.
-     * @param param The parameters, field and value.
-     */
-    private void search(FilterCriteria param) {
-        String keyword = param.getValue().toString().toLowerCase();
-        switch (SearchField.getEnum(param.getField())) {
-            case PROJECT_NAME: projectSearch("name", keyword); break;
-            case PROJECT_SUMMARY: projectSearch("summary", keyword); break;
-            case PROJECT_LOCATION: locationSearch(keyword); break;
-            case OWNER_NAME: userNameSearch(keyword); break;
-            case OWNER_MAIL: userSearch("email", keyword); break;
-        }
-    }
 
 
     /**
@@ -118,15 +107,6 @@ import java.util.function.Consumer;
 
 
     /**
-     * Filters by min cost.
-     * @param value The min cost.
-     */
-    private void id(Object value) {
-        predicate = builder.equal(root.get("id"), value.toString());
-    }
-
-
-    /**
      * Filters by a list of ids.
      * @param value The list of ids.
      */
@@ -140,19 +120,18 @@ import java.util.function.Consumer;
      * @param column The column to search for matches.
      * @param value The keyword to search.
      */
-    private void projectSearch(String column, String value) {
-        predicate = builder.and(predicate, builder.like(builder.lower(root.get(column)), "%" + value + "%"));
+    private void projectSearch(String column, Object value) {
+        predicate = builder.and(predicate, builder.like(builder.lower(root.get(column)), "%" + value.toString() + "%"));
     }
 
 
     /**
      * Filters by a string in the user owner column.
-     * @param column The column to search for matches.
      * @param value The keyword to search.
      */
-    private void userSearch(String column, String value) {
+    private void userSearch(Object value) {
         Join<Project, User> userJoin = root.join("owner");
-        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get(column)), "%" + value + "%"));
+        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get("mail")), "%" + value.toString() + "%"));
     }
 
 
@@ -160,11 +139,11 @@ import java.util.function.Consumer;
      * Filters by the full name of the user owner.
      * @param value The keyword.
      */
-    private void userNameSearch(String value) {
+    private void userNameSearch(Object value) {
         Join<Project, User> userJoin = root.join("owner");
         predicate = builder.and(predicate,
-                builder.or(builder.like(builder.lower(userJoin.get("firstName")), "%" + value + "%"),
-                builder.like(builder.lower(userJoin.get("lastName")), "%" + value + "%")));
+                builder.or(builder.like(builder.lower(userJoin.get("firstName")), "%" + value.toString() + "%"),
+                builder.like(builder.lower(userJoin.get("lastName")), "%" + value.toString() + "%")));
     }
 
 
@@ -172,7 +151,7 @@ import java.util.function.Consumer;
      * Filters by user owner location.
      * @param value The keyword.
      */
-    private void locationSearch(String value) {
+    private void locationSearch(Object value) {
         Join<Project, User> userJoin = root.join("owner");
         Join<User, Location> locationJoin = userJoin.join("location");
         Join<User, Country> countryJoin = locationJoin.join("country");
@@ -180,9 +159,9 @@ import java.util.function.Consumer;
         Join<User, City> cityJoin = locationJoin.join("city");
 
         predicate = builder.and(predicate,
-                builder.or(builder.like(builder.lower(countryJoin.get("name")), "%" + value + "%"),
-                        builder.like(builder.lower(stateJoin.get("name")), "%" + value + "%"),
-                        builder.like(builder.lower(cityJoin.get("name")), "%" + value + "%")));
+                builder.or(builder.like(builder.lower(countryJoin.get("name")), "%" + value.toString() + "%"),
+                        builder.like(builder.lower(stateJoin.get("name")), "%" + value.toString() + "%"),
+                        builder.like(builder.lower(cityJoin.get("name")), "%" + value.toString() + "%")));
     }
 
 }

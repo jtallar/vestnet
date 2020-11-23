@@ -7,15 +7,15 @@ import java.util.Objects;
  * based on the field, operation, and value.
  */
 public class FilterCriteria {
-    private String field;
+    private FilterField field;
     private Object value;
 
-    public FilterCriteria(String field, Object value) {
+    public FilterCriteria(FilterField field, Object value) {
         this.field = field;
         this.value = value;
     }
 
-    public String getField() {
+    public FilterField getField() {
         return field;
     }
 

@@ -2,6 +2,8 @@ package ar.edu.itba.paw.model.components;
 
 import ar.edu.itba.paw.model.User;
 
+import static ar.edu.itba.paw.model.components.FilterField.*;
+
 /**
  * Creates the list of criteria filter and order for
  * the project requests.
@@ -20,7 +22,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
      */
     public ProjectRequestBuilder setCategory(Integer category) {
         if (category != null)
-            criteriaList.add(new FilterCriteria("category", category));
+            criteriaList.add(new FilterCriteria(PROJECT_CATEGORY, category));
         return this;
     }
 
@@ -32,7 +34,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
      */
     public ProjectRequestBuilder setCostMin(Integer min) {
         if (min != null)
-            criteriaList.add(new FilterCriteria("minCost", min));
+            criteriaList.add(new FilterCriteria(PROJECT_MIN_COST, min));
         return this;
     }
 
@@ -44,7 +46,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
      */
     public ProjectRequestBuilder setCostMax(Integer max) {
         if (max != null)
-            criteriaList.add(new FilterCriteria("maxCost", max));
+            criteriaList.add(new FilterCriteria(PROJECT_MAX_COST, max));
         return this;
     }
 
@@ -67,7 +69,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder.
      */
     public ProjectRequestBuilder setFunded(boolean state) {
-        criteriaList.add(new FilterCriteria("funded", state));
+        criteriaList.add(new FilterCriteria(PROJECT_FUNDED, state));
         return this;
     }
 
@@ -79,8 +81,9 @@ public class ProjectRequestBuilder extends RequestBuilder {
      * @return The Request Builder.
      */
     public ProjectRequestBuilder setSearch(String keyword, int field) {
-        if (keyword != null && !keyword.isEmpty())
-            criteriaList.add(new FilterCriteria(String.valueOf(field), keyword));
+        if (keyword == null || keyword.isEmpty()) return this;
+        FilterField finalField = FilterField.fromSearchField(SearchField.getEnum(String.valueOf(field)));
+        criteriaList.add(new FilterCriteria(finalField, keyword.toLowerCase()));
         return this;
     }
 
@@ -91,7 +94,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder.
      */
     public ProjectRequestBuilder setOwner(long id) {
-        criteriaList.add(new FilterCriteria("owner", new User(id)));
+        criteriaList.add(new FilterCriteria(PROJECT_OWNER, new User(id)));
         return this;
     }
 

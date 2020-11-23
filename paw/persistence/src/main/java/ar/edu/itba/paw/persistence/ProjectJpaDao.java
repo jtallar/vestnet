@@ -101,7 +101,7 @@ public class ProjectJpaDao implements ProjectDao {
         CriteriaQuery<Project> query = builder.createQuery(Project.class);
 
         Root<Project> root = query.from(Project.class);
-        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria("ids", ids)));
+        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria(FilterField.IDS, ids)));
         addOrder(query, builder, root, order);
         return entityManager.createQuery(query).getResultList();
     }

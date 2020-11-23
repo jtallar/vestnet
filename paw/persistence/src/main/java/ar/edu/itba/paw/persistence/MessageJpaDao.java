@@ -96,7 +96,7 @@ public class MessageJpaDao implements MessageDao {
         CriteriaQuery<Message> query = builder.createQuery(Message.class);
 
         Root<Message> root = query.from(Message.class);
-        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria("ids", ids)));
+        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria(FilterField.IDS, ids)));
         addOrder(query, builder, root, order);
         return entityManager.createQuery(query).getResultList();
     }
