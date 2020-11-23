@@ -276,7 +276,7 @@ public class ProjectJpaDaoTest {
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCostRange((int) PROJECT_COST, (int) PROJECT_COST_2)
-                .setOrder(OrderField.COST_ASCENDING);
+                .setOrder(OrderField.COST_DESCENDING);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
