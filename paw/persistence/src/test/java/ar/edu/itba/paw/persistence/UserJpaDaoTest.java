@@ -103,7 +103,8 @@ public class UserJpaDaoTest {
 
         // 2 - Execute
         try {
-            userJdbcDao.create(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
+            User newUser = new User(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
+            userJdbcDao.create(newUser);
         } catch (UserAlreadyExistsException e) {
             fail();
         }

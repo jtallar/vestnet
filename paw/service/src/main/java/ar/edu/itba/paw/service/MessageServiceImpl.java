@@ -10,7 +10,9 @@ import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.FilterCriteria;
+import ar.edu.itba.paw.model.components.MessageRequestBuilder;
 import ar.edu.itba.paw.model.components.OrderField;
+import ar.edu.itba.paw.model.components.RequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -57,13 +59,14 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Optional<Message> updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted, URI baseUri) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("sender", new User(senderId)));
-        filters.add(new FilterCriteria("receiver", new User(receiverId)));
-        filters.add(new FilterCriteria("project", new Project(projectId)));
-        filters.add(new FilterCriteria("unread", true));
+        RequestBuilder request = new MessageRequestBuilder()
+                .setSender(senderId)
+                .setReceiver(receiverId)
+                .setProject(projectId)
+                .setUnread(true)
+                .setOrder(OrderField.DEFAULT);
 
-        Optional<Message> optionalMessage = messageDao.findAll(filters, OrderField.DEFAULT).stream().findFirst();
+        Optional<Message> optionalMessage = messageDao.findAll(request).stream().findFirst();
         optionalMessage.ifPresent(m -> {
             m.setAccepted(accepted);
             Optional<User> sender = userService.findById(senderId);
