@@ -63,7 +63,7 @@ public class MessageServiceImpl implements MessageService {
                 .setSender(senderId)
                 .setReceiver(receiverId)
                 .setProject(projectId)
-                .setUnread(true)
+                .setUnread()
                 .setOrder(OrderField.DEFAULT);
 
         Optional<Message> optionalMessage = messageDao.findAll(request).stream().findFirst();

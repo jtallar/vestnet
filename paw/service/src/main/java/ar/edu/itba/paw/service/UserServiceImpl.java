@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
         RequestBuilder request = new MessageRequestBuilder()
                 .setReceiver(userId)
                 .setProject(projectId)
-                .setUnread(true)
+                .setUnread()
                 .setOrder(OrderField.DATE_DESCENDING);
         return messageDao.findAll(request);
     }

@@ -27,12 +27,12 @@ import java.util.function.Consumer;
     @Override
     public void accept(FilterCriteria param) {
         switch (param.getField()) {
-            case "ids": ids(param.getValue()); break;
-            case "receiver": receiver(param.getValue()); break;
-            case "sender": sender(param.getValue()); break;
-            case "project": project(param.getValue()); break;
-            case "unread": unread(); break;
-            case "accepted": accepted(param.getValue()); break;
+            case IDS: filterInList(param); break;
+            case UNREAD: filterIsNull(param); break;
+            case RECEIVER:
+            case SENDER:
+            case PROJECT:
+            case ACCEPTED: filterEquals(param); break;
         }
     }
 
@@ -46,55 +46,32 @@ import java.util.function.Consumer;
 
     /** Auxiliary functions */
 
+
     /**
-     * Filters by ids.
-     * @param value The list of ids.
+     * Filters if are in list. Generally for IDs.
+     * @param param The Filter Criteria with the list and field.
      */
-    private void ids(Object value) {
-        predicate = root.get("id").in((List) value);
+    private void filterInList(FilterCriteria param) {
+        predicate = root.get(param.getField().getFieldName()).in((List) param.getValue());
     }
 
 
     /**
-     * Filters by the message receiver.
-     * @param value The user receiver.
+     * Filters by the field for those that are null.
+     * @param param The Filter Criteria with the field to be used.
      */
-    private void receiver(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("receiver"), value));
+    private void filterIsNull(FilterCriteria param) {
+        predicate = builder.and(predicate, builder.isNull(root.get(param.getField().getFieldName())));
     }
 
 
     /**
-     * Filters by the message sender.
-     * @param value The user sender.
+     * Filters by Filter Criteria parameters.
+     * Filters those to equal object passed in value.
+     * The field to filter by is passed on the field.
+     * @param param The Filter Criteria parameters.
      */
-    private void sender(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("sender"), value));
-    }
-
-
-    /**
-     * Filters by the message project.
-     * @param value The project.
-     */
-    private void project(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("project"), value));
-    }
-
-
-    /**
-     * Filters unread messages.
-     */
-    private void unread() {
-        predicate = builder.and(predicate, builder.isNull(root.get("accepted")));
-    }
-
-
-    /**
-     * Filters by the accepted status.
-     * @param value The status to be checked.
-     */
-    private void accepted(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("accepted"), value));
+    private void filterEquals(FilterCriteria param) {
+        predicate = builder.and(predicate, builder.equal(root.get(param.getField().getFieldName()), param.getValue()));
     }
 }
