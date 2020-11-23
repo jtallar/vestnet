@@ -39,7 +39,6 @@
           <element id="library" level="project" name="Maven: org.simpleflatmapper:sfm-converter:8.2.2" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:5.1.0.Final" />
           <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.3.0.Final" />
-          <element id="library" level="project" name="Maven: org.javassist:javassist:3.20.0-GA" />
           <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
           <element id="library" level="project" name="Maven: org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1" />
           <element id="library" level="project" name="Maven: org.jboss:jandex:2.0.0.Final" />
@@ -87,6 +86,38 @@
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.7" />
           <element id="library" level="project" name="Maven: org.springframework:spring-orm:4.2.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context-support:4.2.5.RELEASE" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/containers/jersey-container-servlet-core/3.0-SNAPSHOT/jersey-container-servlet-core-3.0-20170329.211328-133.jar" output-file-name="jersey-container-servlet-core-3.0-SNAPSHOT.jar" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:javax.inject:2.5.0-b36" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/core/jersey-common/3.0-SNAPSHOT/jersey-common-3.0-20170329.210233-134.jar" output-file-name="jersey-common-3.0-SNAPSHOT.jar" />
+          <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.1-m05" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring4/3.0-SNAPSHOT/jersey-spring4-3.0-20170329.210946-133.jar" output-file-name="jersey-spring4-3.0-SNAPSHOT.jar" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:spring-bridge:2.5.0-b36" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-utils:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: javax.inject:javax.inject:1" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-api:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:aopalliance-repackaged:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:config-types:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-core:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-config:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.jvnet:tiger-types:1.4" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-locator:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.20.0-GA" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-runlevel:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:class-model:2.5.0-b05" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:asm-all-repackaged:2.5.0-b05" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/core/jersey-server/3.0-SNAPSHOT/jersey-server-3.0-20170329.211349-133.jar" output-file-name="jersey-server-3.0-SNAPSHOT.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/core/jersey-client/3.0-SNAPSHOT/jersey-client-3.0-20170329.211313-133.jar" output-file-name="jersey-client-3.0-SNAPSHOT.jar" />
+          <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.2" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-moxy/3.0-SNAPSHOT/jersey-media-moxy-3.0-20170329.210743-133.jar" output-file-name="jersey-media-moxy-3.0-SNAPSHOT.jar" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-entity-filtering/3.0-SNAPSHOT/jersey-entity-filtering-3.0-20170329.210256-134.jar" output-file-name="jersey-entity-filtering-3.0-SNAPSHOT.jar" />
+          <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.moxy:2.6.4" />
+          <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.core:2.6.4" />
+          <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.asm:2.6.4" />
+          <element id="library" level="project" name="Maven: org.glassfish:javax.json:1.0.4" />
+          <element id="file-copy" path="$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-jaxb/3.0-SNAPSHOT/jersey-media-jaxb-3.0-20170329.210646-133.jar" output-file-name="jersey-media-jaxb-3.0-SNAPSHOT.jar" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:osgi-resource-locator:1.0.1" />
+          <element id="library" level="project" name="Maven: io.jsonwebtoken:jjwt:0.9.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">
