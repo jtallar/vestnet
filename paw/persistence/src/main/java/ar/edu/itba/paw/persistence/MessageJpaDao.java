@@ -4,10 +4,7 @@ import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.components.PageRequest;
+import ar.edu.itba.paw.model.components.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -38,7 +35,11 @@ public class MessageJpaDao implements MessageDao {
 
 
     @Override
-    public Page<Message> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page) {
+    public Page<Message> findAll(RequestBuilder requestBuilder, PageRequest page) {
+        /** Disassemble project request builder */
+        List<FilterCriteria> filters = requestBuilder.getCriteriaList();
+        OrderField order = requestBuilder.getOrder();
+
         /** Get to total count of messages with matching criteria */
         Long count = findAllIdsCount(filters);
         if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
@@ -56,9 +57,9 @@ public class MessageJpaDao implements MessageDao {
 
 
     @Override
-    public List<Message> findAll(List<FilterCriteria> filters, OrderField order) {
+    public List<Message> findAll(RequestBuilder requestBuilder) {
         /** Finds all avoiding paging and thus 2 unnecessary queries */
-        return findAllNotPaged(filters, order);
+        return findAllNotPaged(requestBuilder.getCriteriaList(), requestBuilder.getOrder());
     }
 
 

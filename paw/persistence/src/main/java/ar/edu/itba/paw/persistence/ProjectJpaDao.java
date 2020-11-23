@@ -4,10 +4,7 @@ import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.components.PageRequest;
+import ar.edu.itba.paw.model.components.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -41,7 +38,11 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public Page<Project> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page) {
+    public Page<Project> findAll(RequestBuilder requestBuilder, PageRequest page) {
+        /** Disassemble project request builder */
+        List<FilterCriteria> filters = requestBuilder.getCriteriaList();
+        OrderField order = requestBuilder.getOrder();
+
         /** Get to total count of projects with matching criteria */
         Long count = findAllIdsCount(filters);
         if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
@@ -59,9 +60,9 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public List<Project> findAll(List<FilterCriteria> filters, OrderField order) {
+    public List<Project> findAll(RequestBuilder requestBuilder) {
         /** Finds all avoiding paging and thus 2 unnecessary queries */
-        return findAllNotPaged(filters, order);
+        return findAllNotPaged(requestBuilder.getCriteriaList(), requestBuilder.getOrder());
     }
 
 

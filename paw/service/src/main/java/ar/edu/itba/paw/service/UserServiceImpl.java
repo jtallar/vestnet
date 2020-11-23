@@ -172,45 +172,51 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Project> getOwnedProjects(long id, boolean funded) {
-        List<FilterCriteria> param = new ArrayList<>();
-        param.add(new FilterCriteria("owner", new User(id)));
-        param.add(new FilterCriteria("funded", funded));
-        return projectDao.findAll(param, OrderField.DEFAULT);
+        ProjectRequestBuilder builder = new ProjectRequestBuilder()
+                .setOwner(id)
+                .setFunded(funded)
+                .setOrder(OrderField.DEFAULT);
+        return projectDao.findAll(builder);
     }
 
 
     @Override
     public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(receiverId)));
-        filters.add(new FilterCriteria("accepted", true));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
+        MessageRequestBuilder builder = new MessageRequestBuilder()
+                .setReceiver(receiverId)
+                .setAccepted(true)
+                .setOrder(OrderField.DATE_DESCENDING);
+        return messageDao.findAll(builder, new PageRequest(page, pageSize));
     }
 
 
     @Override
     public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
-        List<FilterCriteria> filters = Collections.singletonList(new FilterCriteria("sender", new User(senderId)));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING, new PageRequest(page, pageSize));
+        MessageRequestBuilder builder = new MessageRequestBuilder()
+                .setSender(senderId)
+                .setOrder(OrderField.DATE_DESCENDING);
+        return messageDao.findAll(builder, new PageRequest(page, pageSize));
     }
 
 
     @Override
     public List<Message> getProjectUnreadMessages(long userId, long projectId) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("receiver", new User(userId)));
-        filters.add(new FilterCriteria("project", new Project(projectId)));
-        filters.add(new FilterCriteria("unread", true));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING);
+        MessageRequestBuilder builder = new MessageRequestBuilder()
+                .setReceiver(userId)
+                .setProject(projectId)
+                .setUnread(true)
+                .setOrder(OrderField.DATE_DESCENDING);
+        return messageDao.findAll(builder);
     }
 
 
     @Override
     public Optional<Message> getLastProjectOfferMessage(long userId, long projectId) {
-        List<FilterCriteria> filters = new ArrayList<>();
-        filters.add(new FilterCriteria("sender", new User(userId)));
-        filters.add(new FilterCriteria("project", new Project(projectId)));
-        return messageDao.findAll(filters, OrderField.DATE_DESCENDING).stream().findFirst();
+        MessageRequestBuilder builder = new MessageRequestBuilder()
+                .setSender(userId)
+                .setProject(projectId)
+                .setOrder(OrderField.DATE_DESCENDING);
+        return messageDao.findAll(builder).stream().findFirst();
     }
 
     @Override

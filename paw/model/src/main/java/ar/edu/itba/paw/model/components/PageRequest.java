@@ -16,8 +16,16 @@ public class PageRequest {
         this.pageSize = Integer.MAX_VALUE;
     }
 
+    public void setPage(int page) {
+        if (page > 0) this.page = page;
+    }
+
     public int getPage() {
         return page;
+    }
+
+    public void setPageSize(int pageSize) {
+        if (pageSize > 0) this.pageSize = pageSize;
     }
 
     public int getPageSize() {

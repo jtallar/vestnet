@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.model.components;
 
+import java.util.Objects;
+
 /**
  * Filter Criteria for filtering repository calls
  * based on the field, operation, and value.
@@ -19,6 +21,19 @@ public class FilterCriteria {
 
     public Object getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FilterCriteria)) return false;
+        FilterCriteria that = (FilterCriteria) o;
+        return field.equals(that.field);
+    }
+
+    @Override
+    public int hashCode() {
+        return field.hashCode();
     }
 
     @Override

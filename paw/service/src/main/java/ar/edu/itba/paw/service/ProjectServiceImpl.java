@@ -60,15 +60,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize) {
-        List<FilterCriteria> params = new ArrayList<>();
+        ProjectRequestBuilder builder = new ProjectRequestBuilder()
+                .setCategory(category)
+                .setCostRange(minCost, maxCost)
+                .setFunded(false)
+                .setSearch(keyword, field)
+                .setOrder(order);
 
-        if (category != null) params.add(new FilterCriteria("category", category));
-        if (minCost != null) params.add(new FilterCriteria("minCost", minCost));
-        if (maxCost != null) params.add(new FilterCriteria("maxCost", maxCost));
-        if (keyword != null && !keyword.equals("")) params.add(new FilterCriteria(String.valueOf(field), keyword));
-        params.add(new FilterCriteria("funded", false));
-
-        return projectDao.findAll(params, OrderField.getEnum(String.valueOf(order)), new PageRequest(page, pageSize));
+        return projectDao.findAll(builder, new PageRequest(page, pageSize));
     }
 
 

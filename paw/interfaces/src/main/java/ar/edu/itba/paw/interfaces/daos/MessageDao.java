@@ -3,10 +3,7 @@ package ar.edu.itba.paw.interfaces.daos;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.components.PageRequest;
+import ar.edu.itba.paw.model.components.*;
 
 import java.util.List;
 
@@ -25,19 +22,17 @@ public interface MessageDao {
 
     /**
      * Finds all the messages given the filters, ordered and paged.
-     * @param filters Filters to be applied to the messages.
-     * @param order Order to bring the messages.
+     * @param requestBuilder Builder with filters and order.
      * @param page Page request.
      * @return Page with the messages and pagination data.
      */
-    Page<Message> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page);
+    Page<Message> findAll(RequestBuilder requestBuilder, PageRequest page);
 
 
     /**
      * Finds all the messages given the filters, ordered not paged.
-     * @param filters Filters to be applied to the messages.
-     * @param order Order to bring the messages.
+     * @param requestBuilder Filters and order to be applied to the messages.
      * @return List with the messages.
      */
-    List<Message> findAll(List<FilterCriteria> filters, OrderField order);
+    List<Message> findAll(RequestBuilder requestBuilder);
 }
