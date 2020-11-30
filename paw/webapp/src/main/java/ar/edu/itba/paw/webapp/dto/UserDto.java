@@ -6,8 +6,10 @@ import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
+import ar.edu.itba.paw.webapp.forms.validators.ValidEnum;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
@@ -17,7 +19,7 @@ import java.net.URI;
 public class UserDto {
     private long id;
 
-    // TODO: Validar rol
+    @ValidEnum(enumClazz = UserRole.class)
     private String role;
 
     @Size(max = 50)
@@ -36,7 +38,7 @@ public class UserDto {
     @NotEmpty
     private String realId;
 
-    // TODO: Validar date?
+    @NotNull // Si el formato no es "2010-06-02T00:00:00-03:00", no lo toma. TODO: Hacemos custom validation?
     private Date birthDate;
 
     @Size(max = 255)
@@ -52,7 +54,6 @@ public class UserDto {
     @Pattern(regexp = "^((http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$)?")
     private String linkedin;
 
-    // TODO: Validar date?
     private Date joinDate;
     private boolean verified;
     private String locale;
