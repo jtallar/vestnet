@@ -6,22 +6,53 @@ import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 import java.net.URI;
 
 public class UserDto {
     private long id;
+
+    // TODO: Validar rol
     private String role;
+
+    @Size(max = 50)
+    @NotEmpty
     private String password;
+
+    @Size(max = 25)
+    @NotEmpty
     private String firstName;
+
+    @Size(max = 25)
+    @NotEmpty
     private String lastName;
+
+    @Size(max = 15)
+    @NotEmpty
     private String realId;
+
+    // TODO: Validar date?
     private Date birthDate;
+
+    @Size(max = 255)
+    @NotEmpty
+    @Pattern(regexp="^([^@]+@[^@]+\\.[a-zA-Z]{2,}$)?")
     private String email;
+
+    @Size(max = 25)
+    @Pattern(regexp = "[0-9]*")
     private String phone;
+
+    @Size(max = 100)
+    @Pattern(regexp = "^((http(s)?://)?(www\\.)?(linkedin\\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*)$)?")
     private String linkedin;
+
+    // TODO: Validar date?
     private Date joinDate;
     private boolean verified;
     private String locale;
