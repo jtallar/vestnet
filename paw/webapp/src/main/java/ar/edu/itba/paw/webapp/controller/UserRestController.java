@@ -70,6 +70,7 @@ public class UserRestController {
     }
 
 
+    // TODO: Por algun motivo, retorna un "type":"fullUserDto" entre los atributos que devuelve, es problema?
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
