@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = {ImageValidator.class, ImageListValidator.class})
 public @interface ImageFile {
-    String message() default "{ar.edu.itba.paw.webapp.forms.validators.ImageValidator}";
+    String message() default "{ar.edu.itba.paw.webapp.forms.validators.ImageFile.message}";
 
     long maxSize();
 

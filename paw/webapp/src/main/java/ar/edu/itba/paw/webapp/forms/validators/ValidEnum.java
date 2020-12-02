@@ -2,21 +2,22 @@ package ar.edu.itba.paw.webapp.forms.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ ElementType.TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = RangeValidator.class)
-public @interface ValidRange {
-    String message() default "{ar.edu.itba.paw.webapp.forms.validators.ValidRange.message}";
+@Target(ElementType.FIELD)
+@Constraint(validatedBy = EnumValidator.class)
+public @interface ValidEnum {
 
-    String minField();
+    Class<? extends Enum<?>> enumClazz();
 
-    String maxField();
+    String message() default "{ar.edu.itba.paw.webapp.forms.validators.ValidEnum.message}";
 
     Class<?>[] groups() default {};
 

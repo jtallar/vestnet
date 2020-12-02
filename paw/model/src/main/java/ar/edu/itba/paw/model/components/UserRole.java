@@ -34,8 +34,9 @@ public enum UserRole {
     }
 
     public static UserRole getEnum(String value) {
+        value = value.toUpperCase();
         for (UserRole role : UserRole.values()) {
-            if (role.getRole().equals(value))
+            if (role.getRole().toUpperCase().equals(value))
                 return role;
         }
         return NOTFOUND;

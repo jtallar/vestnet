@@ -2,10 +2,15 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.webapp.config.WebConfig;
+
+import javax.validation.constraints.Size;
 
 public class ImageDto {
 
     private long id;
+
+    @Size(max = WebConfig.MAX_UPLOAD_SIZE)
     private byte[] image;
     private boolean main;
 
