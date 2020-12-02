@@ -5,14 +5,14 @@ import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.dto.user.*;
 import ar.edu.itba.paw.webapp.dto.ProjectDto;
-import ar.edu.itba.paw.webapp.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -36,12 +36,12 @@ public class UserRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response createUser(final UserDto user) {
+    public Response createUser(@Valid final FullUserWithPasswordDto user) {
         LOGGER.debug("\n\nBase URI: {}\n\n", uriInfo.getBaseUri().toString());
 
         final User newUser; // TODO work with optional? reduces code more
         try {
-            newUser = userService.create(UserDto.toUser(user), uriInfo.getBaseUri());
+            newUser = userService.create(FullUserWithPasswordDto.toUser(user), uriInfo.getBaseUri());
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
             return Response.status(Response.Status.CONFLICT).build();
@@ -51,16 +51,18 @@ public class UserRestController {
     }
 
 
+    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use
     @PUT
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updateUser(final UserDto user) {
-        Optional<User> optionalUser = userService.update(sessionUser.getId(), UserDto.toUser(user));
+    public Response updateUser(@Valid final UpdatableUserDto user) {
+        Optional<User> optionalUser = userService.update(sessionUser.getId(), UpdatableUserDto.toUser(user));
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
 
+    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use
     @DELETE
     public Response deleteUser() {
         userService.remove(sessionUser.getId());
@@ -74,7 +76,7 @@ public class UserRestController {
     public Response userProfile(@PathParam("id") final long id) {
         final Optional<User> optionalUser = userService.findById(id);
 
-        return optionalUser.map(u -> Response.ok(UserDto.fromUser(u, uriInfo)).build())
+        return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
@@ -93,6 +95,7 @@ public class UserRestController {
     // TODO make a GET favorites?
 
     @PUT
+    @Path("/favorites")
     public Response favorites(@QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
                                 @QueryParam("add") @DefaultValue("true") boolean add) {
         Optional<User> optionalUser = userService.favorites(sessionUser.getId(), projectId, add);
@@ -114,9 +117,10 @@ public class UserRestController {
 
     @PUT
     @Path("/password")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updatePassword(@QueryParam("token") final String token,
-                             @QueryParam("p") final String password) {
-        if (userService.updatePassword(token, password))
+                                   @Valid final PasswordDto password) {
+        if (userService.updatePassword(token, password.getPassword()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }

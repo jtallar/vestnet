@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.user;
 
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.UserRole;
@@ -6,45 +6,33 @@ import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
-import ar.edu.itba.paw.webapp.forms.validators.ValidEnum;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.ws.rs.core.UriInfo;
-import java.util.Date;
 import java.net.URI;
+import java.util.Date;
 
-public class UserDto {
+public class UpdatableUserDto {
     private long id;
 
-    @ValidEnum(enumClazz = UserRole.class)
-    private String role;
-
-    @Size(max = 50)
-    @NotEmpty
-    private String password;
-
-    @Size(max = 25)
-    @NotEmpty
+    @Size(min = 1, max = 25)
+    @NotBlank
     private String firstName;
 
-    @Size(max = 25)
-    @NotEmpty
+    @Size(min = 1, max = 25)
+    @NotBlank
     private String lastName;
 
-    @Size(max = 15)
-    @NotEmpty
+    @Size(min = 1, max = 15)
+    @NotBlank
     private String realId;
 
-    @NotNull // Si el formato no es "2010-06-02T00:00:00-03:00", no lo toma. TODO: Hacemos custom validation?
+    // Si el formato no es "2010-06-02T00:00:00-03:00", no lo toma. TODO: Hacemos custom validation?
+    @NotNull
     private Date birthDate;
-
-    @Size(max = 255)
-    @NotEmpty
-    @Pattern(regexp="^([^@]+@[^@]+\\.[a-zA-Z]{2,}$)?")
-    private String email;
 
     @Size(max = 25)
     @Pattern(regexp = "[0-9]*")
@@ -62,40 +50,10 @@ public class UserDto {
 
     private URI location, image, projectList, receivedMessages, sentMessages, favorites;
 
-    public static UserDto fromUser(User user, UriInfo uriInfo) {
-        final UserDto userDto = new UserDto();
-        userDto.id = user.getId();
-        userDto.role = UserRole.valueOf(user.getRole()).getRole();
-        userDto.firstName = user.getFirstName();
-        userDto.lastName = user.getLastName();
-        userDto.realId = user.getRealId();
-        userDto.birthDate = user.getBirthDate();
-        userDto.email = user.getEmail();
-        userDto.phone = user.getPhone();
-        userDto.linkedin = user.getLinkedin();
-        userDto.joinDate = user.getJoinDate();
-        userDto.verified = user.isVerified();
-        userDto.locale = user.getLocale();
-
-        userDto.location = uriInfo.getAbsolutePathBuilder().path("location").build();
-        userDto.image = uriInfo.getAbsolutePathBuilder().path("image").build();
-        userDto.projectList = uriInfo.getAbsolutePathBuilder().path("projects").build();
-        userDto.receivedMessages = uriInfo.getAbsolutePathBuilder().path("received_messages").build();
-        userDto.sentMessages = uriInfo.getAbsolutePathBuilder().path("sent_messages").build();
-        userDto.favorites = uriInfo.getAbsolutePathBuilder().path("favorites").build();
-
-        userDto.countryId = user.getLocation().getCountry().getId();
-        userDto.stateId = user.getLocation().getState().getId();
-        userDto.cityId = user.getLocation().getCity().getId();
-
-        return userDto;
-    }
-
-    public static User toUser(UserDto userDto) {
-        return new User(UserRole.getEnum(userDto.getRole()).getId(), userDto.getPassword(),
-                userDto.getFirstName(), userDto.getLastName(), userDto.getRealId(), userDto.getBirthDate(),
-                new Location(new Country(userDto.getCountryId()), new State(userDto.getStateId()), new City(userDto.getCityId())),
-                userDto.getEmail(), userDto.getPhone(), userDto.getLinkedin(), null);
+    public static User toUser(UpdatableUserDto userDto) {
+        return new User(null, null, userDto.firstName, userDto.lastName, userDto.realId, userDto.birthDate,
+                new Location(new Country(userDto.countryId), new State(userDto.stateId), new City(userDto.cityId)),
+                        null, userDto.phone, userDto.linkedin, null);
     }
 
     public long getId() {
@@ -104,22 +62,6 @@ public class UserDto {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {
@@ -152,14 +94,6 @@ public class UserDto {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPhone() {
@@ -200,6 +134,30 @@ public class UserDto {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    public int getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(int stateId) {
+        this.stateId = stateId;
+    }
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 
     public URI getLocation() {
@@ -248,29 +206,5 @@ public class UserDto {
 
     public void setFavorites(URI favorites) {
         this.favorites = favorites;
-    }
-
-    public int getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
-    }
-
-    public int getStateId() {
-        return stateId;
-    }
-
-    public void setStateId(int stateId) {
-        this.stateId = stateId;
-    }
-
-    public int getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(int cityId) {
-        this.cityId = cityId;
     }
 }

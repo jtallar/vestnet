@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.user;
 
 import ar.edu.itba.paw.webapp.forms.validators.EqualFields;
 import org.hibernate.validator.constraints.NotEmpty;
