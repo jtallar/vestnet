@@ -64,7 +64,6 @@ public class UserServiceImpl implements UserService {
     public Optional<User> update(long id, User dataUser) {
         Optional<User> optionalUser = findById(id);
         optionalUser.ifPresent(u -> {
-            u.setLocation(dataUser.getLocation());
             u.setFirstName(dataUser.getFirstName());
             u.setLastName(dataUser.getLastName());
             u.setRealId(dataUser.getRealId());
