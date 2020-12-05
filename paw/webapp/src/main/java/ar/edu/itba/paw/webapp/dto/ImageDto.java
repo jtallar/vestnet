@@ -6,6 +6,7 @@ import ar.edu.itba.paw.webapp.config.WebConfig;
 
 import javax.validation.constraints.Size;
 
+// TODO: Donde podriamos validar el tipo de archivo recibido? O solo en front?
 public class ImageDto {
 
     private long id;

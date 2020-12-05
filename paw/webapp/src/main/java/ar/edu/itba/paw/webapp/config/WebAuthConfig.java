@@ -121,6 +121,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationProcessingFilter(tokenExtractor, authenticationProvider);
     }
 
+    // TODO: Ver si esto hay que fletarlo, si dejo images aca no puedo usar sessionUser en imageController
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
