@@ -1,14 +1,24 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Message;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class OfferDto {
 
+    @Size(max = 250)
+    @NotBlank
     private String body;
+
+    @Size(max = 100)
+    @NotBlank
     private String offers;
+
+    @Size(max = 100)
+    @NotBlank
     private String exchange;
 
     private long receiverId, senderId, projectId;

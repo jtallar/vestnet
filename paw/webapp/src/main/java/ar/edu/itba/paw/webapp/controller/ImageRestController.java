@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @Component
 @Path("/images")
 public class ImageRestController {
+    // TODO: Ahora no funca lo que tiene sessionUser porque no toma el sessionUser porque esta ignorado en el webAuthConfig
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageRestController.class);
 
     @Autowired
@@ -47,10 +50,12 @@ public class ImageRestController {
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
+    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use.
+    //  O bien chequear que el que haga el update sea el session user
     @PUT
     @Path("/user")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response setUserImage(final ImageDto image) {
+    public Response setUserImage(@Valid final ImageDto image) {
         Optional<User> optionalUser = userService.updateImage(sessionUser.getId(), image.getImage());
 
         return optionalUser.map(u -> Response.ok().build())
@@ -71,7 +76,7 @@ public class ImageRestController {
     @Path("/projects/{project_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setProjectPortrait(@PathParam("project_id") final long id,
-                                       final ImageDto image) {
+                                       @Valid final ImageDto image) {
         return projectService.setPortraitImage(sessionUser.getId(), id, image.getImage())
                 .map(i -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -87,11 +92,14 @@ public class ImageRestController {
         return Response.ok(new GenericEntity<List<ImageDto>>(images) {}).build();
     }
 
+    // TODO: [org.springframework.orm.jpa.JpaSystemException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance:
+    //  ar.edu.itba.paw.model.Project.images; nested exception is org.hibernate.HibernateException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance: ar.edu.itba.paw.model.Project.images]
+    // TODO: Ver si el @Valid ahi va bien
     @PUT
     @Path("/projects/{project_id}/slideshow")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setProjectSlideshow(@PathParam("project_id") final long id,
-                                       final List<ImageDto> images) {
+                                        @Valid final List<ImageDto> images) {
         List<byte []> bytes = images.stream().map(ImageDto::getImage).collect(Collectors.toList());
 
         return projectService.setSlideshowImages(sessionUser.getId(), id, bytes)

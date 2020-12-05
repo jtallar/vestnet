@@ -9,10 +9,17 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.ProjectDto;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
@@ -25,6 +32,7 @@ import java.util.stream.Collectors;
 @Path("projects")
 @Component
 public class ProjectRestController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectRestController.class);
 
     @Autowired
     private UserService userService;
@@ -46,9 +54,9 @@ public class ProjectRestController {
     public Response projects(@QueryParam("p") @DefaultValue("1") int page,
                          @QueryParam("o") @DefaultValue("1") int order,
                          @QueryParam("f") @DefaultValue("1") int field,
-                         @QueryParam("s") String keyword,
-                         @QueryParam("max") Integer maxCost,
-                         @QueryParam("min") Integer minCost,
+                         @Size(max = 50) @QueryParam("s") String keyword,
+                         @Min(0) @QueryParam("max") Integer maxCost,
+                         @Min(0) @QueryParam("min") Integer minCost,
                          @QueryParam("c") Integer category) {
 
         Page<Project> projectPage = projectService.findAll(category, minCost, maxCost, keyword, field, order, page, PAGE_SIZE);
@@ -65,7 +73,7 @@ public class ProjectRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response create(final ProjectDto projectDto) {
+    public Response create(@Valid final ProjectDto projectDto) {
         final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
         return Response.created(projectUri).build();
@@ -86,7 +94,7 @@ public class ProjectRestController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
-                           final ProjectDto projectDto) {
+                           @Valid final ProjectDto projectDto) {
         Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(), projectDto.getCost());
 
         return optionalProject.map(p -> Response.ok().build())
@@ -107,11 +115,12 @@ public class ProjectRestController {
     }
 
 
+    // Recibe lista como -d'[{"id":14,"name":"3D_Printers","parent":1},...]'
     @PUT
     @Path("/{id}/categories")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateCategories(@PathParam("id") long id,
-                                     final List<CategoryDto> categoriesDto) {
+                                     @NotEmpty final List<CategoryDto> categoriesDto) {
         List<Category> categories = categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
 
         return projectService.addCategories(sessionUser.getId(), id, categories)

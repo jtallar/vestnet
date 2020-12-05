@@ -51,7 +51,8 @@ public class UserRestController {
     }
 
 
-    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use
+    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use.
+    //  O bien chequear que el que haga el update sea el session user
     @PUT
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateUser(@Valid final UpdatableUserDto user) {
@@ -63,6 +64,7 @@ public class UserRestController {
 
 
     // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use
+    //  O bien chequear que el que haga el delete sea el session user
     @DELETE
     public Response deleteUser() {
         userService.remove(sessionUser.getId());

@@ -2,7 +2,11 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Project;
 import org.glassfish.jersey.server.Uri;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -11,9 +15,19 @@ import java.util.Date;
 public class ProjectDto {
 
     private long id;
+
+    @Size(min = 5, max = 50)
+    @NotBlank
     private String name;
+
+    @Size(min = 50, max = 250)
+    @NotBlank
     private String summary;
+
+    @Min(1000)
+    @Max(9999999)
     private long cost;
+
     private boolean funded;
     private Date publishDate;
     private Date updateDate;
