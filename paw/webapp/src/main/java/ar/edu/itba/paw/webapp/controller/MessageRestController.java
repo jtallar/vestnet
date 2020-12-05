@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.dto.OfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.security.PublicKey;
@@ -36,10 +37,10 @@ public class MessageRestController {
 
     private static final int PAGE_SIZE = 3; // TODO it's okay the offerDto, idk
 
-
+    // TODO: org.hibernate.TransientPropertyValueException: Not-null property references a transient value - transient instance must be saved before current operation : ar.edu.itba.paw.model.Message.project -> ar.edu.itba.paw.model.Project] with root cause
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response offer(final OfferDto offerDto) {
+    public Response offer(@Valid final OfferDto offerDto) {
         final Message message = messageService.create(offerDto.getBody(), offerDto.getOffers(), offerDto.getExchange(),
                 sessionUser.getId(), offerDto.getReceiverId(), offerDto.getProjectId(), uriInfo.getBaseUri());
 
@@ -66,7 +67,7 @@ public class MessageRestController {
     @PUT
     @Path("/status")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response status(final OfferDto offerDto,
+    public Response status(@Valid final OfferDto offerDto,
                            @QueryParam("accepted") @DefaultValue("true") boolean accepted) {
         final Optional<Message> updatedMessage = messageService.updateMessageStatus(sessionUser.getId(), offerDto.getSenderId(), // TODO if not working, problem here
                 offerDto.getProjectId(), accepted, uriInfo.getBaseUri());
