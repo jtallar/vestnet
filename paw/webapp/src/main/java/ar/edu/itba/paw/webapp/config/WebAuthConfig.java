@@ -90,6 +90,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider);
     }
 
+
+    // TODO: Corregir todos los ant matchers, separando por metodo
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
