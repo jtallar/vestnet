@@ -26,8 +26,7 @@
 hs_err_pid*
 
 # intellij conf
-/.idea
-*/.idea/
+/.idea/
 *.iml
 *.iml.bak
 *.ipr
@@ -38,4 +37,3 @@ target/
 *.project
 /apache-tomcat-7.0.103/
 /jetty-distribution-9.4.27.v20200227/
-/.idea/
