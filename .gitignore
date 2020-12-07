@@ -26,7 +26,6 @@
 hs_err_pid*
 
 # intellij conf
-/.idea/
 */.idea/
 *.iml
 *.iml.bak
@@ -38,11 +37,3 @@ target/
 *.project
 /apache-tomcat-7.0.103/
 /jetty-distribution-9.4.27.v20200227/
-
-# front end npm modules and configurations files
-/paw-front/node_modules/
-/paw-front/.sass-cache/
-/paw-front/.tmp/
-/paw-front/bower_components/
-/paw-front/node/
-/paw-front/dist/
