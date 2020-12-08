@@ -49,21 +49,6 @@ public class WebConfig {
     public static final int MAX_UPLOAD_SIZE = 2097152; // 2 MB
     public static final int MAX_SLIDESHOW_COUNT = 5;
 
-
-    /**
-     * Sets where are the files for the views.
-     * @return The view resolver.
-     */
-    @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/WEB-INF/jsp/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
-
-
     /**
      * Entity manager for Hibernate & JPA factory.
      * @return The created entity manager.

@@ -27,6 +27,7 @@ hs_err_pid*
 
 # intellij conf
 /.idea/
+.idea/
 *.iml
 *.iml.bak
 *.ipr
@@ -37,3 +38,12 @@ target/
 *.project
 /apache-tomcat-7.0.103/
 /jetty-distribution-9.4.27.v20200227/
+
+# angular files (npm and grunt)
+
+/paw/angular/node_modules/
+/paw/angular/bower_components/
+/paw/angular/dist/
+/paw/angular/.tmp/
+/paw/angular/tmp/
+/paw/angular/.sass-cache/
