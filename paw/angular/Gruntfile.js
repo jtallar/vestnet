@@ -6,6 +6,8 @@ module.exports = function (grunt) {
 
   require('time-grunt')(grunt);
 
+  var serveStatic = require('serve-static');
+
   var appConfig = {
     app: 'app',
     dist: 'dist'
@@ -24,9 +26,9 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
-            connect.static('.tmp'),
-            connect().use('/bower_components', connect.static('./bower_components')),
-            connect.static(appConfig.app)
+            serveStatic('.tmp'),
+            connect().use('/bower_components', serveStatic('./bower_components')),
+            serveStatic(appConfig.app)
             ];
           }
         }
