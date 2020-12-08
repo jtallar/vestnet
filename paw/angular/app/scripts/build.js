@@ -71,10 +71,10 @@ if (paths) {
 
 require([
         'angular',
-        'VestNet',
+        'paw2020a',
         'controllers/IndexCtrl'
     ],
     function() {
-        angular.bootstrap(document, ['VestNet']);
+        angular.bootstrap(document, ['paw2020a']);
     }
 );

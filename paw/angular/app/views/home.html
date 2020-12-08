@@ -1,20 +1,56 @@
-<div class="jumbotron">
-	<h1>'Allo, 'Allo!</h1>
-	<p class="lead">
-		<img src="images/yeoman.png" alt="I'm Yeoman"><br />
-		{{'WELCOME_MESSAGE' | translate}}
-	</p>
-	<p><a class="btn btn-lg btn-success" ng-href="#">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
+
+<body ng-controller="HomeCtrl">
+
+<div class="sidenav sidenav-index">
+  <div class="text-center mt-5">
+    <a ng-href="/#/">
+      <img class="logo-img" src="images/logo_bp.png">
+    </a>
+  </div>
 </div>
 
-<div class="row marketing">
-	<h4>Angular-Require-Fullstack Generator contains</h4>
-	<ul>
-		<li>AngularJs</li>
-		<li>RequireJs</li>
-		<li>Bootstrap</li>
-		<li>i18n</li>
-		<li>Grunt</li>
-		<li>File revving</li>
-	</ul>
+<div class="main">
+  <div class="col-md-8">
+    <div class="welcome">
+      <h1>{{'wWelcome' | translate}}<b> VestNet</b></h1>
+      <h2>{{'wSubtitle' | translate}}</h2>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="inv-tab" data-toggle="tab" ng-href="#inv" role="tab"
+             aria-controls="inv" aria-selected="true">{{'investTab' | translate}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="entrep-tab" data-toggle="tab" ng-href="#entrep" role="tab"
+             aria-controls="entrep" aria-selected="false">{{'entrepTab' | translate}}</a>
+        </li>
+      </ul>
+      <div class="tab-content inv-tab" id="myTabContent">
+        <div class="tab-pane fade show active" id="inv" role="tabpanel" aria-labelledby="inv-tab">
+          <h4>{{'wIAsk' | translate}}</h4>
+          <p>{{'wIp1' | translate}}</p>
+          <p>{{'wIp2' | translate}}</p>
+          <p>{{'wIp3' | translate}}</p>
+          <h5>{{'wIRegister' | translate}}</h5>
+          <h4>{{'wBepart' | translate}}</h4>
+          <a ng-href="#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>
+          <a ng-href="#/projects" class="btn btn-outline-dark distance-btn">{{'visitWeb' | translate}}</a>
+        </div>
+        <div class="tab-pane fade" id="entrep" role="tabpanel" aria-labelledby="entrep-tab">
+          <h4>{{'wEAsk' | translate}}</h4>
+          <p>{{'wEp1' | translate}}</p>
+          <p>{{'wEp2' | translate}}</p>
+          <p>{{'wEp3' | translate}}</p>
+          <h5>{{'wERegister' | translate}}</h5>
+          <h4>{{'wBepart' | translate}}</h4>
+          <a ng-href="/#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>
+        </div>
+      </div>
+      <div id="welcome-login">
+        <label>{{'welcomeRegistered' | translate}}</label>
+        <a ng-href="/#/login" class="btn btn-dark">{{'submit' | translate}}</a>
+      </div>
+    </div>
+  </div>
 </div>
+
+</body>

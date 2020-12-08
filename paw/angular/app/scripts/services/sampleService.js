@@ -1,7 +1,7 @@
 'use strict';
-define(['VestNet'], function(VestNet) {
+define(['paw2020a'], function(paw2020a) {
 
-	VestNet.service('SampleService', function() {
+	paw2020a.service('SampleService', function() {
 
 	});
 });

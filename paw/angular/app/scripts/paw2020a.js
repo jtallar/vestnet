@@ -7,11 +7,11 @@ define(['routes',
 	'bootstrap',
 	'angular-translate'],
 	function(config, dependencyResolverFor, i18n) {
-		var VestNet = angular.module('VestNet', [
+		var paw2020a = angular.module('paw2020a', [
 			'ngRoute',
 			'pascalprecht.translate'
 		]);
-		VestNet
+		paw2020a
 			.config(
 				['$routeProvider',
 				'$controllerProvider',
@@ -21,11 +21,11 @@ define(['routes',
 				'$translateProvider',
 				function($routeProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider) {
 
-					VestNet.controller = $controllerProvider.register;
-					VestNet.directive = $compileProvider.directive;
-					VestNet.filter = $filterProvider.register;
-					VestNet.factory = $provide.factory;
-					VestNet.service = $provide.service;
+					paw2020a.controller = $controllerProvider.register;
+					paw2020a.directive = $compileProvider.directive;
+					paw2020a.filter = $filterProvider.register;
+					paw2020a.factory = $provide.factory;
+					paw2020a.service = $provide.service;
 
 					if (config.routes !== undefined) {
 						angular.forEach(config.routes, function(route, path) {
@@ -39,6 +39,15 @@ define(['routes',
 					$translateProvider.translations('preferredLanguage', i18n);
 					$translateProvider.preferredLanguage('preferredLanguage');
 				}]);
-		return VestNet;
+
+    // define Paths service
+    // paw2020a.service('Paths', [
+    //   '$location', '$log',
+    //   function($location, $log) {
+    //     return pathsService($location, $log);
+    //   }
+    // ]);
+
+		return paw2020a;
 	}
 );

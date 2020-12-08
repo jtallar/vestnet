@@ -1,0 +1,88 @@
+
+/*.btn-default{*/
+/*    background-color: #750096;*/
+/*    color: #ffffff;*/
+/*    border: #53006d;*/
+/*}*/
+
+/*.btn-default:hover{*/
+/*    background-color: #53006d;*/
+/*    color: #ffffff;*/
+/*    border: #53006d;*/
+/*}*/
+
+.proj-img{
+  min-width: 100% !important;
+  height: auto !important;
+}
+
+.btn-transp{
+  background-color: Transparent;
+  border: none !important;
+}
+
+.header-white{
+  background-color: white;
+}
+
+/* Container holding the image and the text */
+.container-img {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+/* Centered text */
+.centered-txt {
+  position: absolute;
+  top: 73%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color:white;
+  text-shadow: 2px 2px black;
+  font-size: 30px;
+}
+.bottom-txt{
+  position: absolute;
+  top: 88%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color:white;
+  text-shadow: 2px 2px black;
+  font-size: 18px;
+}
+
+.container-contact{
+  margin:15px;
+}
+
+.contact{
+  margin-right:10%;
+  margin-left:auto;
+  margin-bottom:50px;
+}
+
+.label-header{
+  margin: 15px;
+  font-size:large;
+  text-shadow: 2px 2px #dee2e6;
+  font-weight:400;
+}
+
+.formError {
+  color: red;
+}
+
+.description{
+  /*     margin-left:100px !important; */
+  width:570px !important;
+}
+
+.dropdown-item{
+  padding: 5px 5px 0 15px !important
+}
+
+
+.d-flex .btn-block{
+  margin-bottom:20px
+}

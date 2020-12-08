@@ -1,7 +1,12 @@
 'use strict';
-define(['VestNet'], function(VestNet) {
+var thisPath = window.location.pathname;
+define(['paw2020a', 'directives/headerCtrl', 'directives/footer'], function(paw2020a) {
 
-	VestNet.controller('IndexCtrl', function($scope) {
-		$scope.welcomeText = 'Welcome to your VestNet page';
-	});
+  paw2020a.controller('IndexCtrl', function($scope) {
+    $scope.welcomeText = 'Welcome to your paw2020a page';
+  });
+
 });
+
+// angular.module('paw2020a', ['ui.toggle']);
+

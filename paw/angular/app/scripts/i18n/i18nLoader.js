@@ -1,7 +1,7 @@
 'use strict';
 define(function() {
 	// Add languages here
-	var userLang, listOfSupportedLanguages = ['en'];
+	var userLang, listOfSupportedLanguages = ['en','es'];
 
 	// to avoid being called in non browser environments
 	if (typeof navigator === 'object') {

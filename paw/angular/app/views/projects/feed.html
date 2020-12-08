@@ -1,0 +1,202 @@
+<head>
+    <!-- build:css(.tmp) styles/feed.css -->
+    <link rel="stylesheet" href="styles/feed.css">
+    <!-- endbuild -->
+</head>
+
+<body ng-controller="feedCtrl">
+
+<vnheader></vnheader>
+
+<div class="row">
+  <div class="col-1"></div>
+  <div class="col-11">
+    <ul class="pagination justify-content-center">
+      <li id="li-previous" class="page-item">
+        <a id="li-a-previous" class="page-link" onclick="" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li id="li-next" class="page-item">
+        <a id="li-a-next" class="page-link" onclick="" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="sidenav sidenav-feed">
+  <div class="form-row align-items-center">
+    <ng-form name="filter" ng-submit="">
+      <div class="container">
+
+        <div class="row field">
+          <div class="col-">
+            <img src="images/lupa_bv.png" class="icon-img" width="38px">
+          </div>
+          <div class="col-md">
+<!--            {{ 'search' | translate }}-->
+            <input id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search" ng-model="filterdata.search"/>
+
+            <!-- <form:errors path="keyword" element="p" cssClass="formError"/> -->
+          </div>
+        </div>
+        <div class="row field">
+          <div class="col- icon-img"></div>
+          <div class="col-md">
+            <select id="field" class="custom-select mr-sm-2" >
+                <option value="0">{{'noFilter' | translate}}</option>
+                <option ng-repeat="field in fields">{{field}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <div class="row field">
+          <div class="col-">
+            <img src="images/filter.png" class="icon-img" width="38px">
+          </div>
+          <div class="col-md">
+            <select class="custom-select mr-sm-2" id="category" ng-model="filterdata.category">
+              <option value="">{{'noFilter' | translate}} </option>
+              <option ng-repeat="cat in categories">{{cat}}</option>
+
+            </select>
+          </div>
+
+        </div>
+        <div class="row field">
+          <div class="col-">
+            <img src="images/order.png" class="icon-img">
+          </div>
+          <div class="col-md">
+            <select id="order" class="custom-select mr-sm-2" ng-model="filterdata.order">
+                <option ng-repeat="ord in order"> {{ord}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row field">
+          <label class="range">{{'range' | translate}} </label>
+          <div>
+            <div class="row range-box col-md">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'min' | translate}}</span>
+                </div>
+                <input ng-model="filterdata.minCost" type="number" class="form-control mx-auto mx-auto" placeholder="100" id="filter-form-min"/>
+              </div>
+              <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
+            </div>
+            <div class="row range-box col-md" >
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'max' | translate}}</span>
+                </div>
+                <input ng-model="filterdata.maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="100000"
+                            id="filter-form-max"/>
+              </div>
+              <!-- <form:errors path="maxCost" element="p" cssClass="formError"/>
+              <form:errors cssClass="formError" element="p"/> -->
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 clear-btn">
+            <input class="btn btn-clear pull-left" type="button" value="{{'clear' | translate}}" ng-click="clearFilter()"/>
+          </div>
+          <div class="col-6 apply-btn">
+            <input type="submit" class="btn btn-dark pull-right" value="{{'apply' | translate}}" ng-click="adjustInputs()"/>
+          </div>
+        </div>
+      </div>
+    </ng-form>
+  </div>
+
+<!--  <c:choose>-->
+<!--    <c:when test="${page == endPage && page != startPage}">-->
+<!--      <c:set var="totalFound" value="${projectPage.totalCount % 12}"/>-->
+<!--    </c:when>-->
+<!--    <c:when test="${page == endPage && page == startPage}">-->
+<!--      <c:set var="totalFound" value="${projectPage.totalCount}"/>-->
+<!--    </c:when>-->
+<!--    <c:otherwise>-->
+<!--      <c:set var="totalFound" value="12"/>-->
+<!--    </c:otherwise>-->
+<!--  </c:choose>-->
+  <p class="results">{{'feedSearchPages' | translate : '{found: 54, shown: 12}'}}</p>
+
+</div>
+
+
+<!-- PROJECTS -->
+
+  <div class="body" ng-if="!projects.empty()">
+    <div class="card-deck">
+        <div class="card mb-3" ng-repeat="project in projects">
+          <div class="card-header text-white">
+            <div class="row icon-fav">
+              <div class="col-10">
+                <div class="card-title">
+                  <h5>{{project.name}}</h5>
+                </div>
+              </div>
+              <div class="col-2">
+                <!--
+                <sec:authorize access="hasRole('ROLE_INVESTOR')">
+                  <button onclick="favTap(${project.id})"
+                          class="btn-transp">
+                    <c:choose>
+                      <c:when test="${user.favorites.contains(project)}">
+                        <c:set var="icon_fav" value="${icon_fav_on}"/>
+                      </c:when>
+                      <c:otherwise>
+                        <c:set var="icon_fav" value="${icon_fav_off}"/>
+                      </c:otherwise>
+                    </c:choose>
+                    <img id="favImg_${project.id}" src="${icon_fav}" class="icon-img" alt="${icon_fav}"/>
+                  </button>
+                </sec:authorize>
+                -->
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-5">
+                <img src="{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              </div>
+              <div class="col-7 card-content">
+                <p class="card-text">{{project.summary}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="row">
+              <div class="price-footer col-6">
+                <strong>{{'price' | translate}}</strong>
+                <p>{{'projectCost' | translate : '{cost: project.cost}'}}</p>
+              </div>
+              <div class="col-6">
+                <a href="/#/projects/{{project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+<!-- EMPTY PROJECT CARD -->
+  <div class="card m-2 no-proj-feed" ng-if="projects.empty() == true">
+    <div class="card-header">
+      <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
+    </div>
+  </div>
+
+</body>
+
+<footer>
+  <vnfooter></vnfooter>
+</footer>
+

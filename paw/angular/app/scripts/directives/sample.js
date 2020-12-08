@@ -1,7 +1,7 @@
 'use strict';
-define(['VestNet'], function(VestNet) {
+define(['paw2020a'], function(paw2020a) {
 
-	VestNet.directive('sample', function() {
+	paw2020a.directive('sample', function() {
 		return {
 			restrict: 'E',
 			template: '<span>Sample</span>'

@@ -1,7 +1,8 @@
 'use strict';
-define(['VestNet'], function(VestNet) {
+define(['paw2020a'], function(paw2020a) {
 
-	VestNet.controller('HomeCtrl', function($scope) {
+	paw2020a.controller('HomeCtrl', function($scope) {
 		$scope.homePageText = 'This is your homepage';
 	});
+
 });

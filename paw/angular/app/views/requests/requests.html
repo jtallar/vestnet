@@ -1,0 +1,93 @@
+<head>
+  <!-- build:css(.tmp) styles/userprofile.css -->
+  <link rel="stylesheet" href="styles/userprofile.css">
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/feed.css -->
+  <link rel="stylesheet" href="styles/feed.css">
+  <!-- endbuild -->
+</head>
+
+<vnheader></vnheader>
+
+<div class="row">
+  <div class="col-3 center-vertical">
+    <strong class="tab-title"> {{'reqTitle' | translate}} </strong>
+  </div>
+  <div class="col-6">
+    <ul class="pagination justify-content-center">
+      <li id="li-previous" class="page-item">
+        <a id="li-a-previous" class="page-link" onclick="" aria-label="{{'previous' | translate}}">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <!--      <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">-->
+      <!--        <li class="page-item <c:if test="${pageNumber == page }"> active-item </c:if>">-->
+      <!--        <a class="page-link" onclick="modHref(${pageNumber})">${pageNumber}</a>-->
+      <!--        </li>-->
+      <!--      </c:forEach>-->
+      <li id="li-next" class="page-item">
+        <a id="li-a-next" class="page-link" onclick="" aria-label="{{'next' | translate}}">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-3"></div>
+</div>
+
+<div ng-repeat="message in messages">
+  <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>
+  <div class="container-deal py-3">
+    <div class="card">
+
+      <div class="card-header header-grey">
+        <a ng-href="#/projects/{{message.pid}}" class="btn-link">{{message.project.name}}</a>
+        <a ng-href="#/users/{{message.receiverId}}" class="btn msg-usr pull-right">
+          <!--            TODO: ?back=yes"-->
+          <img class="nav-icon" src="images/user-icon.png" alt="">
+        </a>
+      </div>
+
+      <div class="card-deal row">
+        <div class="col-6">
+          <strong> {{'msgTitleBody' | translate}} </strong>
+          <p> {{message.content.message}}</p>
+        </div>
+        <div class="col-6">
+          <strong>{{'msgTitleOffer' | translate}} </strong>
+          <p>{{message.content.offer}}</p>
+          <strong>{{'msgTitleRequest' | translate}} </strong>
+          <p>{{message.content.interest}}</p>
+        </div>
+      </div>
+
+      <div class="row dr-footer">
+      <div class="col-3" ng-switch="{{message.state}}">
+<!--        <strong>{{'state' | translate}} </strong>-->
+        <div ng-switch-when="1">
+          <h3 class="state text-secondary">{{'pending' | translate}}</h3>
+        </div>
+        <div ng-switch-when="0">
+          <h3 class="state text-success">{{'accepted' | translate}}</h3>
+        </div>
+        <div ng-switch-when="2">
+          <h3 class="state text-danger">{{'rejected' | translate}}</h3>
+        </div>
+      </div>
+        <div class="col-7"></div>
+      <p class="col-2 msg-date">{{message.publishDate}}</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div ng-if="messages.empty()" class="card no-proj-mine">
+  <div class="card-header">
+    <h5 class="card-title text-white centered">{{'noOffers' | translate}}</h5>
+  </div>
+</div>
+
+<footer>
+  <vnfooter></vnfooter>
+</footer>
