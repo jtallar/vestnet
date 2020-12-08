@@ -91,7 +91,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    // TODO: Corregir todos los ant matchers, separando por metodo
+    // TODO: Corregir todos los ant matchers, separando por metodo y agregando el /api/v1/
+    //  Si saco el permitAll, tira 403. Esto se debe a que pasa por aca antes de ir a Angular.
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -106,7 +107,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/requests").hasRole("INVESTOR")
                 .antMatchers("/auth/refresh").authenticated()
                 .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
-                .antMatchers("/**").authenticated()
+                .antMatchers("/**").permitAll()
             .and()
                 .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -389,7 +389,7 @@
       <activation>
         <file>
           <!--puts this in another value if you are developing with jetty so it wont run every time-->
-          <exists>lugbihjopkangular/Gruntfile.js</exists>
+          <exists>./angular/Gruntfile.js</exists>
         </file>
       </activation>
       <build>
