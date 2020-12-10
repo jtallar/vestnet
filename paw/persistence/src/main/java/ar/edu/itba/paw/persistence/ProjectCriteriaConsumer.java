@@ -43,7 +43,7 @@ import java.util.function.Consumer;
             /** If its not a filter, its a search */
             default:
                 /** Escape all the postgres special characters */
-                String searchVal = escapeCharacters(param.getValue().toString(), new String[]{"%", "\\", "."});
+                String searchVal = escapeCharacters(param.getValue().toString(), new String[]{"\\", "%", "_", "\"", "'"});
                 switch (param.getField()) {
                     case PROJECT_SEARCH_NAME: projectSearch("name", searchVal); break;
                     case PROJECT_SEARCH_SUMMARY: projectSearch("summary", searchVal); break;
