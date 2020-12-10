@@ -1,25 +1,29 @@
 'use strict';
 define(['routes',
 	'services/dependencyResolverFor',
-  'services/PathService',
 	'i18n/i18nLoader!',
+  'services/PathService',
 	'angular',
 	'angular-route',
 	'bootstrap',
 	'angular-translate'],
-	function(config, dependencyResolverFor, i18n) {
+	function(config, dependencyResolverFor, i18n, pathService) {
 		var paw2020a = angular.module('paw2020a', [
 			'ngRoute',
 			'restangular',
 			'pascalprecht.translate'
 		]);
 
-		// Configure authentication filter, restangular interceptors
+    paw2020a.service('PathService', ['$location', function ($location) {
+      return pathService($location);
+    }]);
+
+    // Configure authentication filter, restangular interceptors
     // Based on code taken from:
     // https://arthur.gonigberg.com/2013/06/29/angularjs-role-based-auth/
     // https://stackoverflow.com/questions/24088610/restangular-spinner
     // https://stackoverflow.com/questions/28010548/restangular-how-to-override-error-interceptors
-    /*paw2020a.run(['$rootScope', '$location', 'Restangular', 'PathService',
+    paw2020a.run(['$rootScope', '$location', 'Restangular', 'PathService',
       function ($rootScope, $location, Restangular, PathService) {
         var routesWithNoAuth = [PathService.get().login().path];
 
@@ -31,7 +35,7 @@ define(['routes',
         };
 
         // TODO: Uncomment when AuthenticationService is done
-        /!*$rootScope.$on('$routeChangeStart', function (event, next, current) {
+        /*$rootScope.$on('$routeChangeStart', function (event, next, current) {
           // if logged in and trying to access login, redirect to home
           if (Authentication.isLoggedIn() && ($location.url() === Paths.get().login().absolutePath())) {
             Paths.get().go();
@@ -42,7 +46,7 @@ define(['routes',
               // redirect back to login
               PathService.get().login().go();
           }
-        });*!/
+        });*/
 
         var requestsInProgress = 0;
 
@@ -70,7 +74,7 @@ define(['routes',
           }
           return true;
         });
-      }]);*/
+      }]);
 
 		paw2020a
 			.config(

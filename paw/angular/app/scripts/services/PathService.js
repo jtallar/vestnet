@@ -1,51 +1,50 @@
-define(['paw2020a'], function(paw2020a) {
+'use strict';
 
-    'use strict';
-    paw2020a.service('PathService', ['$location', function($location) {
-        var pathService = {};
+define([], function() {
+  return function($location) {
+    var pathService = {};
 
-        pathService.get = function () {
-          var base = {
-            path: '#!'
-          };
+    pathService.get = function () {
+      var base = {
+        path: '#!'
+      };
 
-          var append = function(str) {
-            base.path += str;
-            return base;
-          };
+      var append = function(str) {
+        base.path += str;
+        return base;
+      };
 
-          base.absolutePath = function () {
-            return base.path.replace('#!', '');
-          };
+      base.absolutePath = function () {
+        return base.path.replace('#!', '');
+      };
 
-          base.go = function () {
-            return $location.path(base.absolutePath());
-          };
+      base.go = function () {
+        return $location.path(base.absolutePath());
+      };
 
-          base.index = function () {
-            return append('/');
-          };
+      base.index = function () {
+        return append('/');
+      };
 
-          base.login = function () {
-            return append('/login');
-          };
+      base.login = function () {
+        return append('/login');
+      };
 
-          base.logout = function () {
-            return append('/logout');
-          };
+      base.logout = function () {
+        return append('/logout');
+      };
 
-          base.projects = function () {
-            return append('/projects');
-          };
+      base.projects = function () {
+        return append('/projects');
+      };
 
-          base.notFound = function () {
-            return append('/notFound');
-          };
+      base.notFound = function () {
+        return append('/notFound');
+      };
 
-          return base;
-        };
+      return base;
+    };
 
-        return pathService;
-    }]);
-
+    return pathService;
+  };
 });
