@@ -8,7 +8,7 @@ define([], function() {
 
     pathService.get = function () {
       var base = {
-        path: '#!'
+        path: '' // path: '#!'
       };
 
       var append = function(str) {

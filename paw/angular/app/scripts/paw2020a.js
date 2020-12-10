@@ -30,11 +30,13 @@ define(['routes',
     // https://stackoverflow.com/questions/28010548/restangular-how-to-override-error-interceptors
     paw2020a.run(['$rootScope', '$location', 'Restangular', 'PathService', 'AuthenticationService',
       function ($rootScope, $location, Restangular, PathService, AuthenticationService) {
-        var routesWithNoAuth = [PathService.get().login().path];
+      // TODO: Ver por que empty y / no son lo mismo, como compararlos como igual
+        var routesWithNoAuth = [PathService.get().login().path, PathService.get().index().path];
 
         var routeClean = function (route) {
           return _.find(routesWithNoAuth,
             function (noAuthRoute) {
+              console.log(route + ' comp to ' + noAuthRoute);
               return route === noAuthRoute;
             });
         };
@@ -42,7 +44,8 @@ define(['routes',
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
           // if logged in and trying to access login, redirect to home
           if (AuthenticationService.isLoggedIn() && ($location.url() === PathService.get().login().absolutePath())) {
-            PathService.get().go();
+            // PathService.get().go();
+            console.log('User already logged in');
           }
 
           // if route requires auth and user is not logged in

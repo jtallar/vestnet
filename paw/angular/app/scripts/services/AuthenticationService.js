@@ -54,14 +54,13 @@ define([], function() {
     };
 
     authService.login = function (user) {
-      // TODO: Set RememberMe key if sent here
       console.log(user);
-
-      rest.all('login').post(user);
+      return rest.all('login').post(user);
     };
 
     authService.isLoggedIn = function () {
-      return authService.getToken() !== undefined;
+      // Evaluates as false if undefined or null, in this case null when not logged in
+      return authService.getToken();
     };
 
     return authService;
