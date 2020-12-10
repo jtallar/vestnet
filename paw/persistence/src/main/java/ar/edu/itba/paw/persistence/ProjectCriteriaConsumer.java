@@ -41,15 +41,19 @@ import java.util.function.Consumer;
             case IDS: ids(param.getValue()); break;
 
             /** If its not a filter, its a search */
-            case PROJECT_SEARCH_NAME: projectSearch("name", param.getValue()); break;
-            case PROJECT_SEARCH_SUMMARY: projectSearch("summary", param.getValue()); break;
-            case PROJECT_SEARCH_LOCATION: locationSearch(param.getValue()); break;
-            case PROJECT_SEARCH_OWNER_NAME: userNameSearch(param.getValue()); break;
-            case PROJECT_SEARCH_OWNER_MAIL: userSearch(param.getValue()); break;
-            default: /** should not happen */ break;
+            default:
+                /** Escape all the postgres special characters */
+                String searchVal = escapeCharacters(param.getValue().toString(), new String[]{"%", "\\", "."});
+                switch (param.getField()) {
+                    case PROJECT_SEARCH_NAME: projectSearch("name", searchVal); break;
+                    case PROJECT_SEARCH_SUMMARY: projectSearch("summary", searchVal); break;
+                    case PROJECT_SEARCH_LOCATION: locationSearch(searchVal); break;
+                    case PROJECT_SEARCH_OWNER_NAME: userNameSearch(searchVal); break;
+                    case PROJECT_SEARCH_OWNER_MAIL: userSearch(searchVal); break;
+                    default: /** should not happen */ break;
+                }
         }
     }
-
 
     /** Getters */
 
@@ -116,42 +120,58 @@ import java.util.function.Consumer;
 
 
     /**
+     * Escapes all the characters given on the input string.
+     * @param input The input string to escape all the special characters.
+     * @param specialCharacters The special characters to escape.
+     * @return The new string with special characters escaped.
+     */
+    private static String escapeCharacters(String input, final String[] specialCharacters) {
+        for (String specialCharacter : specialCharacters) {
+            if (input.contains(specialCharacter)) {
+                input = input.replace(specialCharacter, "\\" + specialCharacter);
+            }
+        }
+        return input;
+    }
+
+
+    /**
      * Filters by a string in a project column.
      * @param column The column to search for matches.
-     * @param value The keyword to search.
+     * @param keyword The keyword to search.
      */
-    private void projectSearch(String column, Object value) {
-        predicate = builder.and(predicate, builder.like(builder.lower(root.get(column)), "%" + value.toString() + "%"));
+    private void projectSearch(String column, String keyword) {
+        predicate = builder.and(predicate, builder.like(builder.lower(root.get(column)), "%" + keyword + "%"));
     }
 
 
     /**
      * Filters by a string in the user owner column.
-     * @param value The keyword to search.
+     * @param keyword The keyword to search.
      */
-    private void userSearch(Object value) {
+    private void userSearch(String keyword) {
         Join<Project, User> userJoin = root.join("owner");
-        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get("mail")), "%" + value.toString() + "%"));
+        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get("mail")), "%" + keyword + "%"));
     }
 
 
     /**
      * Filters by the full name of the user owner.
-     * @param value The keyword.
+     * @param keyword The keyword.
      */
-    private void userNameSearch(Object value) {
+    private void userNameSearch(String keyword) {
         Join<Project, User> userJoin = root.join("owner");
         predicate = builder.and(predicate,
-                builder.or(builder.like(builder.lower(userJoin.get("firstName")), "%" + value.toString() + "%"),
-                builder.like(builder.lower(userJoin.get("lastName")), "%" + value.toString() + "%")));
+                builder.or(builder.like(builder.lower(userJoin.get("firstName")), "%" + keyword + "%"),
+                builder.like(builder.lower(userJoin.get("lastName")), "%" + keyword + "%")));
     }
 
 
     /**
      * Filters by user owner location.
-     * @param value The keyword.
+     * @param keyword The keyword.
      */
-    private void locationSearch(Object value) {
+    private void locationSearch(String keyword) {
         Join<Project, User> userJoin = root.join("owner");
         Join<User, Location> locationJoin = userJoin.join("location");
         Join<User, Country> countryJoin = locationJoin.join("country");
@@ -159,9 +179,9 @@ import java.util.function.Consumer;
         Join<User, City> cityJoin = locationJoin.join("city");
 
         predicate = builder.and(predicate,
-                builder.or(builder.like(builder.lower(countryJoin.get("name")), "%" + value.toString() + "%"),
-                        builder.like(builder.lower(stateJoin.get("name")), "%" + value.toString() + "%"),
-                        builder.like(builder.lower(cityJoin.get("name")), "%" + value.toString() + "%")));
+                builder.or(builder.like(builder.lower(countryJoin.get("name")), "%" + keyword + "%"),
+                        builder.like(builder.lower(stateJoin.get("name")), "%" + keyword + "%"),
+                        builder.like(builder.lower(cityJoin.get("name")), "%" + keyword + "%")));
     }
 
 }
