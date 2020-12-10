@@ -22,6 +22,7 @@ public class AuthRestController {
     @Autowired
     private TokenHandler tokenHandler;
 
+    // TODO: Ver si habria que validar algo respecto a cambios de password y eso, evitando robo de password
     @GET
     @Path("/refresh")
     @Produces(value = { MediaType.APPLICATION_JSON })
