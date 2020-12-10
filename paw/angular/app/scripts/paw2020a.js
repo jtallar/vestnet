@@ -41,6 +41,7 @@ define(['routes',
             });
         };
 
+        // TODO: Ver bien como queda esto
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
           // if logged in and trying to access login, redirect to home
           if (AuthenticationService.isLoggedIn() && ($location.url() === PathService.get().login().absolutePath())) {
@@ -51,7 +52,7 @@ define(['routes',
           // if route requires auth and user is not logged in
           if (!routeClean($location.url()) && !AuthenticationService.isLoggedIn()) {
               // redirect back to login
-              PathService.get().login().go();
+              // PathService.get().login().go();
           }
         });
 

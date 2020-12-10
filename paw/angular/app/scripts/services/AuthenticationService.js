@@ -55,7 +55,7 @@ define([], function() {
 
     authService.login = function (user) {
       console.log(user);
-      return rest.all('login').post(user);
+      return rest.one('auth').one('login').post(user);
     };
 
     authService.isLoggedIn = function () {
