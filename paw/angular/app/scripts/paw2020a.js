@@ -105,6 +105,8 @@ define(['routes',
 
 					$translateProvider.translations('preferredLanguage', i18n);
 					$translateProvider.preferredLanguage('preferredLanguage');
+					// TODO: Ver que es esta linea de abajo, que estrategia debemos usar (elimina una warning)
+          $translateProvider.useSanitizeValueStrategy('escape');
 
 					RestangularProvider.setBaseUrl('api/v1/');
 				}]);
