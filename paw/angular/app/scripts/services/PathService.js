@@ -1,6 +1,8 @@
 'use strict';
 
 define([], function() {
+  // This function should be called on paw2020a module initialization
+  // It is defined because it will be used before module acquisition by requireJS
   return function($location) {
     var pathService = {};
 

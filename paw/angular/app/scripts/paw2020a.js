@@ -3,11 +3,12 @@ define(['routes',
 	'services/dependencyResolverFor',
 	'i18n/i18nLoader!',
   'services/PathService',
+  'services/AuthenticationService',
 	'angular',
 	'angular-route',
 	'bootstrap',
 	'angular-translate'],
-	function(config, dependencyResolverFor, i18n, pathService) {
+	function(config, dependencyResolverFor, i18n, pathService, authService) {
 		var paw2020a = angular.module('paw2020a', [
 			'ngRoute',
 			'restangular',
@@ -18,27 +19,30 @@ define(['routes',
       return pathService($location);
     }]);
 
+    paw2020a.service('AuthenticationService', ['Restangular', function (Restangular) {
+      return authService(Restangular);
+    }]);
+
     // Configure authentication filter, restangular interceptors
     // Based on code taken from:
     // https://arthur.gonigberg.com/2013/06/29/angularjs-role-based-auth/
     // https://stackoverflow.com/questions/24088610/restangular-spinner
     // https://stackoverflow.com/questions/28010548/restangular-how-to-override-error-interceptors
-    paw2020a.run(['$rootScope', '$location', 'Restangular', 'PathService',
-      function ($rootScope, $location, Restangular, PathService) {
+    paw2020a.run(['$rootScope', '$location', 'Restangular', 'PathService', 'AuthenticationService',
+      function ($rootScope, $location, Restangular, PathService, AuthenticationService) {
         var routesWithNoAuth = [PathService.get().login().path];
 
         var routeClean = function (route) {
           return _.find(routesWithNoAuth,
             function (noAuthRoute) {
-              return _.str.startsWith(route, noAuthRoute);
+              return route === noAuthRoute;
             });
         };
 
-        // TODO: Uncomment when AuthenticationService is done
-        /*$rootScope.$on('$routeChangeStart', function (event, next, current) {
+        $rootScope.$on('$routeChangeStart', function (event, next, current) {
           // if logged in and trying to access login, redirect to home
-          if (Authentication.isLoggedIn() && ($location.url() === Paths.get().login().absolutePath())) {
-            Paths.get().go();
+          if (AuthenticationService.isLoggedIn() && ($location.url() === PathService.get().login().absolutePath())) {
+            PathService.get().go();
           }
 
           // if route requires auth and user is not logged in
@@ -46,7 +50,7 @@ define(['routes',
               // redirect back to login
               PathService.get().login().go();
           }
-        });*/
+        });
 
         var requestsInProgress = 0;
 
