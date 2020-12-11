@@ -9,18 +9,19 @@ define(['routes',
 	function(config, dependencyResolverFor, i18n) {
 		var paw2020a = angular.module('paw2020a', [
 			'ngRoute',
-			'pascalprecht.translate'
+      'pascalprecht.translate'
 		]);
 		paw2020a
 			.config(
 				['$routeProvider',
+				'$locationProvider',
 				'$controllerProvider',
 				'$compileProvider',
 				'$filterProvider',
 				'$provide',
 				'$translateProvider',
-				function($routeProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider) {
-
+				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider) {
+          $locationProvider.hashPrefix('');
 					paw2020a.controller = $controllerProvider.register;
 					paw2020a.directive = $compileProvider.directive;
 					paw2020a.filter = $filterProvider.register;
@@ -29,7 +30,12 @@ define(['routes',
 
 					if (config.routes !== undefined) {
 						angular.forEach(config.routes, function(route, path) {
-							$routeProvider.when(path, {templateUrl: route.templateUrl, resolve: dependencyResolverFor(['controllers/' + route.controller]), controller: route.controller, gaPageTitle: route.gaPageTitle});
+							$routeProvider.when(path, {
+							  templateUrl: route.templateUrl,
+                resolve: dependencyResolverFor(
+                  ['controllers/' + route.controller]),
+                controller: route.controller,
+                gaPageTitle: route.gaPageTitle});
 						});
 					}
 					if (config.defaultRoutePath !== undefined) {
@@ -38,7 +44,9 @@ define(['routes',
 
 					$translateProvider.translations('preferredLanguage', i18n);
 					$translateProvider.preferredLanguage('preferredLanguage');
-				}]);
+          $translateProvider.useSanitizeValueStrategy('escape');
+
+        }]);
 
     // define Paths service
     // paw2020a.service('Paths', [

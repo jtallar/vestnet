@@ -2,14 +2,14 @@
 
 define([], function() {
     return {
-        defaultRoutePath: '/',
+        defaultRoutePath: '/error',
         routes: {
             '/': {                                // welcome
-                templateUrl: '/views/home.html',
+                templateUrl: 'views/home.html',
                 controller: 'HomeCtrl'
             },
             '/login': {
-                templateUrl: '/views/login/login.html',
+                templateUrl: 'views/login/login.html',
                 controller: 'loginCtrl'
             },
             '/resetPassword': {
@@ -22,13 +22,14 @@ define([], function() {
             },
             '/signUp': {
                 templateUrl: '/views/signUp/signUp.html',
-                controller: 'signUpCtrl'
+                controller: 'signUpCtrl',
+                css: 'styles/signup.css'
             },
             '/projects': {
               templateUrl: '/views/projects/feed.html',
               controller: 'feedCtrl'
             },
-            '/errors': {
+            '/error': {
               templateUrl: '/views/errors/errors.html',
               controller: 'errorCtrl'
             },
