@@ -7,13 +7,23 @@ define([], function() {
   // https://stackoverflow.com/questions/42021076/how-to-implement-remember-me-feature-in-feathers-js-and-jwt
   return function(Restangular) {
     var authService = {};
-    var tokenKey = 'token_id', rememberKey = 'remember_id';
+    var accessTokenKey = 'access_id', refreshTokenKey = 'refresh_id', rememberKey = 'remember_id';
     var shouldPersist = localStorage.getItem(rememberKey) === 't';
 
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
       RestangularConfigurer.addResponseInterceptor(
         function(data, operation, what, url, response, deferred) {
-          return response.headers()['Authorization'];
+          var now = new Date();
+          authService.setShouldPersist(shouldPersist);
+          authService.setToken(JSON.stringify({
+            value: data.accessToken,
+            expiry: now.getTime() + data.accessMinutes * 60000
+          }), false);
+          authService.setToken(JSON.stringify({
+            value: data.refreshToken,
+            expiry: now.getTime() + data.refreshMinutes * 60000
+          }), true);
+          return true;
         }
       );
     });
@@ -27,26 +37,46 @@ define([], function() {
       }
     };
 
-    authService.getToken = function() {
+    authService.getToken = function(refresh) {
+      var key = (refresh) ? refreshTokenKey : accessTokenKey;
+      var token, now = new Date();
       if (shouldPersist) {
-        return localStorage.getItem(tokenKey);
+        token = JSON.parse(localStorage.getItem(key));
+      } else {
+        token = JSON.parse(sessionStorage.getItem(key));
       }
-      return sessionStorage.getItem(tokenKey);
+      if (!token) return null;
+      if (now.getTime() > token.expiry) {
+        authService.removeToken(refresh);
+        return null;
+      }
+      return token.value;
     };
 
-    authService.setToken = function(token) {
+    authService.setToken = function(token, refresh) {
+      var key = (refresh) ? refreshTokenKey : accessTokenKey;
       if (shouldPersist) {
-        return localStorage.setItem(tokenKey, token);
+        return localStorage.setItem(key, token);
       }
-      return sessionStorage.setItem(tokenKey, token);
+      return sessionStorage.setItem(key, token);
+    };
+
+    authService.removeToken = function (refresh) {
+      var key = (refresh) ? refreshTokenKey : accessTokenKey;
+      if (shouldPersist) {
+        return localStorage.removeItem(key);
+      }
+      return sessionStorage.removeItem(key);
     };
 
     authService.logout = function () {
 
       if (shouldPersist) {
-        return localStorage.removeItem(tokenKey);
+        localStorage.removeItem(refreshTokenKey);
+        return localStorage.removeItem(accessTokenKey);
       }
-      return sessionStorage.removeItem(tokenKey);
+      sessionStorage.removeItem(refreshTokenKey);
+      return sessionStorage.removeItem(accessTokenKey);
     };
 
     authService.getHeader = function () {
@@ -54,13 +84,13 @@ define([], function() {
     };
 
     authService.login = function (user) {
-      console.log(user);
-      return rest.one('auth').one('login').post(user);
+      shouldPersist = !!(user.rememberMe);
+      return rest.one('auth').one('login').customPOST(user);
     };
 
     authService.isLoggedIn = function () {
       // Evaluates as false if undefined or null, in this case null when not logged in
-      return authService.getToken();
+      return !!(authService.getToken(true));
     };
 
     return authService;

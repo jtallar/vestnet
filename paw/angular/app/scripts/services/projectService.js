@@ -1,11 +1,11 @@
-define(['paw2020a', 'restangular'], function(paw2020a) {
+define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     'use strict';
-    paw2020a.service('projectService', ['Restangular', function(Restangular) {
+    paw2020a.service('projectService', ['AuthenticatedRestangular', function(AuthenticatedRestangular) {
       var projectService = {};
 
       projectService.getAll = function () {
-        return Restangular.all('projects').getList();
+        return AuthenticatedRestangular.all('projects').getList();
       };
 
       return projectService;

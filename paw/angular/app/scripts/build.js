@@ -26,7 +26,8 @@ require.config({
         transition: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition',
         'bootstrap-sass-official': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap',
         lodash: '../../bower_components/lodash/dist/lodash',
-        restangular: '../../bower_components/restangular/dist/restangular'
+        restangular: '../../bower_components/restangular/dist/restangular',
+        bower: '../../bower_components/bower/atom-full-compiled'
     },
     shim: {
         angular: {
@@ -66,8 +67,8 @@ require.config({
         },
         restangular: {
             deps: [
-              'angular',
-              'lodash'
+                'angular',
+                'lodash'
             ]
         }
     },
