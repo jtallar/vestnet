@@ -118,7 +118,9 @@ define(['routes',
 					// TODO: Ver que es esta linea de abajo, que estrategia debemos usar (elimina una warning)
           $translateProvider.useSanitizeValueStrategy('escape');
 
-					RestangularProvider.setBaseUrl('api/v1/');
+          // TODO: Uncomment in production, comment the one below
+					// RestangularProvider.setBaseUrl('api/v1/');
+          RestangularProvider.setBaseUrl('http://localhost:8080/api/v1/');
 				}]);
 
 		return paw2020a;

@@ -73,6 +73,7 @@ public class UserRestController {
 
 
     // TODO: Por algun motivo, retorna un "type":"fullUserDto" entre los atributos que devuelve, es problema?
+    // FIXME: Tira un error 500 para algunos de los primeros usuarios, que no tenian validaciones. Por ejemplo, el 5 con el phoneNumber
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })

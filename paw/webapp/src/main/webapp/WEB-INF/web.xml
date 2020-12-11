@@ -38,7 +38,6 @@
     <dispatcher>ERROR</dispatcher>
   </filter-mapping>
 
-  <!--TODO: Ver si esto debe ir o no -->
   <filter>
     <filter-name>openEntityManagerInViewFilter</filter-name>
     <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
