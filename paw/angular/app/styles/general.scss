@@ -68,8 +68,11 @@
 }
 
 body{
-  margin-top:90px !important;
   overflow-x: hidden;
+}
+
+.sep-nav{
+  margin-top:90px !important;
 }
 
 //body text, a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
@@ -142,7 +145,7 @@ body{
 /***** FOOTER ******/
 
 footer{
-  margin-top:15%;
+  margin-top:18%;
   background-color: #2d2d2d !important;
   color: white;
 }
