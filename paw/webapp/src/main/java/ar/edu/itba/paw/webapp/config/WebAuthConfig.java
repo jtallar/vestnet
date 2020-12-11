@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.config;
 
 
 import ar.edu.itba.paw.interfaces.TokenExtractor;
+import ar.edu.itba.paw.webapp.auth.CorsFilter;
 import ar.edu.itba.paw.webapp.auth.MyCustomLoginSuccessHandler;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.PlainTextBasicAuthenticationEntryPoint;
@@ -28,6 +29,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -124,6 +126,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").denyAll() // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
 
             .and()
+                .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class) // TODO: Remove in production
                 .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 //                .exceptionHandling().authenticationEntryPoint(new PlainTextBasicAuthenticationEntryPoint()); // resolves 401 Unauthenticated
