@@ -23,6 +23,8 @@ define(['routes',
       return authService(Restangular);
     }]);
 
+
+
     // Configure authentication filter, restangular interceptors
     // Based on code taken from:
     // https://arthur.gonigberg.com/2013/06/29/angularjs-role-based-auth/
@@ -122,3 +124,31 @@ define(['routes',
 		return paw2020a;
 	}
 );
+
+//
+//    'services/userService',
+//   'services/messageService',
+//   'services/locationService',
+//   'services/imageService',
+//   'services/projectService',
+
+
+// paw2020a.service('userService', ['Restangular', function (Restangular) {
+//   return userService(Restangular);
+// }]);
+//
+// paw2020a.service('messageService', ['Restangular', function (Restangular) {
+//   return msgService(Restangular);
+// }]);
+//
+// paw2020a.service('locationService', ['Restangular', function (Restangular) {
+//   return locationService(Restangular);
+// }]);
+//
+// paw2020a.service('imageService', ['Restangular', function (Restangular) {
+//   return imageService(Restangular);
+// }]);
+//
+// paw2020a.service('projectService', ['Restangular', function (Restangular) {
+//   return projectService(Restangular);
+// }]);

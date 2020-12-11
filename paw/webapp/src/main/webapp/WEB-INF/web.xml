@@ -38,15 +38,15 @@
     <dispatcher>ERROR</dispatcher>
   </filter-mapping>
 
-<!--  TODO: Ver si esto debe ir o no -->
-<!--  <filter>-->
-<!--    <filter-name>openEntityManagerInViewFilter</filter-name>-->
-<!--    <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>-->
-<!--  </filter>-->
-<!--  <filter-mapping>-->
-<!--    <filter-name>openEntityManagerInViewFilter</filter-name>-->
-<!--    <url-pattern>/*</url-pattern>-->
-<!--  </filter-mapping>-->
+  <!--TODO: Ver si esto debe ir o no -->
+  <filter>
+    <filter-name>openEntityManagerInViewFilter</filter-name>
+    <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>openEntityManagerInViewFilter</filter-name>
+    <url-pattern>/api/v1/*</url-pattern>
+  </filter-mapping>
 
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>

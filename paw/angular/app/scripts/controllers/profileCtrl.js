@@ -1,7 +1,7 @@
     'use strict';
 
-define(['paw2020a'], function(paw2020a) {
-    paw2020a.controller('profileCtrl', function($scope) {
+    define(['paw2020a', 'services/userService', 'services/PathService'], function(paw2020a) {
+    paw2020a.controller('profileCtrl',['PathService', 'userService', function($scope, userService, PathService) {
       $scope.user = {
         'firstName': 'Pablo',
         'lastName': 'Perez',
@@ -12,6 +12,15 @@ define(['paw2020a'], function(paw2020a) {
         'city': 'Una ciudad de Austria',
         'state': 'Un estado de esa ciudad de Austria'
       };
+
+
+      userService.getUser('5').then(function (user) {
+        console.log(user)
+      })
+
+
+
+
       $scope.projects = [
         {
           'name': 'Vestnet',
@@ -35,6 +44,6 @@ define(['paw2020a'], function(paw2020a) {
           'id': 1
         }
       ];
-    });
+    }]);
 
 });
