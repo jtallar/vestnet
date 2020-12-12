@@ -49,6 +49,7 @@ public class ProjectRestController {
     private static final int PAGE_SIZE = 3;
     private static final int PAGINATION_ITEMS = 5;
 
+    // TODO: Ver si no conviene que reciba tambien el page size para saber cuantos proyectos quiere
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projects(@QueryParam("p") @DefaultValue("1") int page,

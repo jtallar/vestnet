@@ -113,6 +113,11 @@ public class JwtTokenHandler implements TokenHandler {
     public Optional<LoggedUser> getSessionUser(String token) {
         Jws<Claims> claimsJws = getClaims(token);
         if (claimsJws == null) return Optional.empty();
+        if (!claimsJws.getBody().getId().equals(JwtToken.ACCESS_TOKEN.id)) {
+            LOGGER.error("Not an access token");
+            return Optional.empty();
+        }
+
         List<String> authorities = claimsJws.getBody().get(ROLES_KEY, List.class);
         return Optional.of(new LoggedUser(claimsJws.getBody().get(USER_ID_KEY, Long.class),
                 claimsJws.getBody().getSubject(),
@@ -149,8 +154,8 @@ public class JwtTokenHandler implements TokenHandler {
             return null;
         } catch (ExpiredJwtException ex) {
             LOGGER.error("JWT Token Expired");
-//            throw new JwtExpiredTokenException(token, "JWT Token expired", ex);
-            return null;
+            throw new JwtExpiredTokenException(token, "JWT Token expired", ex);
+//            return null;
         }
         return claimsJws;
     }

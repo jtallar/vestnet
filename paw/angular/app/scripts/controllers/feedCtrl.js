@@ -1,7 +1,7 @@
     'use strict';
 
-define(['paw2020a'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', function ($scope) {
+define(['paw2020a', 'services/projectService'], function(paw2020a) {
+    paw2020a.controller('feedCtrl', ['projectService', '$scope', function (projectService, $scope) {
 
       $scope.filterdata = {
         'field': '' ,
@@ -49,6 +49,10 @@ define(['paw2020a'], function(paw2020a) {
           'id': 1
         }];
 
-    });
+      projectService.getAll().then(function (projects) {
+        console.log(projects);
+      });
+
+    }]);
 
 });
