@@ -46,7 +46,7 @@ define([], function() {
         token = JSON.parse(sessionStorage.getItem(key));
       }
       if (!token) return null;
-      if (now.getTime() > token.expiry) {
+      if (refresh && now.getTime() > token.expiry) { // Only remove old refresh tokens
         authService.removeToken(refresh);
         return null;
       }
@@ -79,8 +79,8 @@ define([], function() {
       return sessionStorage.removeItem(accessTokenKey);
     };
 
-    authService.getHeader = function () {
-      return {'Authorization': 'Bearer ' + authService.getToken()};
+    authService.getHeader = function (refresh) {
+      return {'Authorization': 'Bearer ' + authService.getToken(refresh)};
     };
 
     authService.login = function (user) {
@@ -91,6 +91,12 @@ define([], function() {
     authService.isLoggedIn = function () {
       // Evaluates as false if undefined or null, in this case null when not logged in
       return !!(authService.getToken(true));
+    };
+
+    authService.refresh = function () {
+      var token = authService.getToken(true);
+      if (!token) return Promise.reject();
+      return rest.one('auth').one('refresh').get({}, authService.getHeader(true));
     };
 
     return authService;
