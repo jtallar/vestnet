@@ -64,6 +64,14 @@ define([], function() {
             '/newProject': {
                 templateUrl: '/views/newProject/newProject.html',
                 controller: 'newProjectCtrl'
+            },
+            '/editProject': {
+              templateUrl: '/views/edit/editProject.html',
+              controller: 'editProjectCtrl'
+            },
+            '/chat/:id1/:id2': {
+              templateUrl: '/views/dashboard/chat.html',
+              controller: 'chatCtrl'
             }
             /* ===== yeoman hook ===== */
             /* Do not remove these commented lines! Needed for auto-generation */

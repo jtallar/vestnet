@@ -176,6 +176,8 @@ define([], function() {
     footerMail: 'Mail:',
     footerLkdn: 'LinkedIn:',
     footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA',
-    profileTitle: '{{first}} {{last}}\'s info'
+    profileTitle: '{{first}} {{last}}\'s info',
+    lastChat: 'Last message',
+    editProject: 'Edit Project'
   };
 });

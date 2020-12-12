@@ -2,7 +2,7 @@
 
 define(['paw2020a'], function(paw2020a) {
     paw2020a.controller('singleViewCtrl', function($scope) {
-      $scope.sent = false;    // if the mail was sent retreive from url
+      $scope.sent = true;    // if the mail was sent retreive from url
       $scope.userId = 1;      // user id from db
 
       $scope.backAction = function() {

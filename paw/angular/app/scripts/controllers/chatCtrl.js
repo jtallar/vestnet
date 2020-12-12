@@ -2,7 +2,17 @@
 
 define(['paw2020a', 'directives/toggle'], function(paw2020a) {
 
-  paw2020a.controller('dashboardCtrl', function($scope) {
+  paw2020a.controller('chatCtrl', function($scope) {
+
+      $scope.sent = true;    // if the mail was sent retreive from url
+      $scope.backAction = function() {
+        if (this.sent) {
+          history.back();
+        } else {
+          history.back();
+          history.back();
+        }
+      };
 
       $scope.projects = [
         {
