@@ -62,22 +62,32 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
       $scope.projects = []
 
       projectService.getPageNoFilter(page.toString()).then(function (projects) {
+
+
         $scope.projects = projects
 
 
         var map = {}
 
-        for(var i = 0; i < $scope.projects.length; i++){
-            map[$scope.projects[i].id] = i
-            if($scope.projects[i].id != 80) {
-              imageService.getProjectImage(String($scope.projects[i].id), i).then(function (image) {
+        for(var i = 0; i < $scope.projects.length; i++) {
+          map[$scope.projects[i].id] = i
+
+            imageService.getProjectImage(String($scope.projects[i].id), i).then(function (image) {
+
+
                 $scope.projects[map[image.route]].image = image.image
 
-              })
-            }
+            }, function (err) {
+              console.log("No image")
+
+            })
+
+
         }
 
+
         console.log($scope.projects)
+
       })
 
 

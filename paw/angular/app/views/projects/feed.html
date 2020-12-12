@@ -134,7 +134,7 @@
 
   <div class="body" ng-if="!projects.empty()">
     <div class="card-deck">
-        <div class="card mb-3" ng-repeat="project in controller.projects">
+        <div class="card mb-3" ng-repeat="project in projects">
           <div class="card-header text-white">
             <div class="row icon-fav">
               <div class="col-10">
@@ -165,7 +165,12 @@
           <div class="card-body">
             <div class="row">
               <div class="col-5">
-                <img src="{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                <div ng-if="project.image.empty()">
+                  <img src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                </div>
+                <div ng-if="!project.image.empty()">
+                  <img src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                </div>
               </div>
               <div class="col-7 card-content">
                 <p class="card-text">{{project.summary}}</p>
