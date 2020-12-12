@@ -13,6 +13,8 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
         'maxCost': 100000
       };
 
+      var _this = this
+
 
       $scope.order = ['price' , 'date'];
       $scope.fields = ['technology', 'audio'];
@@ -61,16 +63,21 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
 
       projectService.getPageNoFilter(page.toString()).then(function (projects) {
         $scope.projects = projects
-        console.log(projects)
 
 
-        for (var index in $scope.projects){
-            console.log(index)
+        var map = {}
 
-           imageService.getProjectImage(String($scope.projects[index].id)).then(function (image) {
-             $scope.image = image
-           })
+        for(var i = 0; i < $scope.projects.length; i++){
+            map[$scope.projects[i].id] = i
+            if($scope.projects[i].id != 80) {
+              imageService.getProjectImage(String($scope.projects[i].id), i).then(function (image) {
+                $scope.projects[map[image.route]].image = image.image
+
+              })
+            }
         }
+
+        console.log($scope.projects)
       })
 
 
