@@ -156,7 +156,7 @@ define([], function() {
     titleRequired: '*Title',
     titleRequirement: 'Between 5 and 50 characters',
     summaryRequired: '*Summary',
-    descriptionRequirement: 'Between 50 and 250 characters',
+    descriptionRequirement: 'Between 30 and 250 characters',
     projectSummaryPlaceholder: 'Describe your project in less than 250 characters',
     costRequired: '*Cost',
     costRequirement: 'Between U$D1000 and U$D9999999',
