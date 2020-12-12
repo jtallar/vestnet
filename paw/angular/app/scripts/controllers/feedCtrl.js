@@ -49,7 +49,9 @@ define(['paw2020a', 'services/projectService'], function(paw2020a) {
           'id': 1
         }];
 
-      console.log(projectService.getAll());
+      projectService.getAll().then(function (projects) {
+        console.log(projects);
+      });
 
     }]);
 
