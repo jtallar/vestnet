@@ -16,23 +16,9 @@ define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/P
         RestangularConfigurer.setErrorInterceptor(function (response, deferred, responseHandler) {
           if (response.status === 401) {
             AuthenticationService.refresh().then(function () {
-              console.log('post refresh');
               // TODO: Probar si esto funca bien
-              // Restangular.all().customOperation(response.config.method, response.config.url);
-              // $scope.$apply(); // Should not be using scope in service
-              // if (!$rootScope.$$phase) $rootScope.$apply();
-              // $window.location.reload();
-              // $timeout(function () {
-              //   PathService.get().reload();
-              // }, 0);
-              // return $timeout(function() {
-              //   var $http = $injector.get('$http');
-              //   response.config.headers.Authorization = AuthenticationService.getHeaderContent();
-              //   return $http(response.config);
-              // }, 0);
               $route.reload();
             }, function (errorResponse) {
-              console.log('post refresh - error');
               $timeout(function () {
                 PathService.get().login().go();
               }, 0);
@@ -40,11 +26,9 @@ define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/P
             return false;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
-              console.log('logged in, but unauthorized');
               PathService.get().forbidden().go();
               return false;
             } else {
-              console.log('redirecting to login');
               PathService.get().login().go();
               return false;
             }
@@ -52,7 +36,6 @@ define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/P
             PathService.get().notFound().go();
             return false;
           }
-          // 404 should show 404 error page, should be default behaviour
           return true;
         })
       })
