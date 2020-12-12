@@ -8,6 +8,8 @@ define([], function() {
   return function(Restangular) {
     var authService = {};
     var accessTokenKey = 'access_id', refreshTokenKey = 'refresh_id', rememberKey = 'remember_id';
+    // TODO: Check si es correcto almacenar esto en el localStorage/sessionStorage
+    var entrepreneurKey = 'entrepreneur_id', investorKey = 'investor_id';
     var shouldPersist = localStorage.getItem(rememberKey) === 't';
 
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
@@ -23,6 +25,8 @@ define([], function() {
             value: data.refreshToken,
             expiry: now.getTime() + data.refreshMinutes * 60000
           }), true);
+          if (data.roles.includes('ROLE_ENTREPRENEUR')) authService.setRole(false);
+          if (data.roles.includes('ROLE_INVESTOR')) authService.setRole(true);
           return true;
         }
       );
@@ -72,9 +76,13 @@ define([], function() {
     authService.logout = function () {
 
       if (shouldPersist) {
+        localStorage.removeItem(entrepreneurKey);
+        localStorage.removeItem(investorKey);
         localStorage.removeItem(refreshTokenKey);
         return localStorage.removeItem(accessTokenKey);
       }
+      sessionStorage.removeItem(entrepreneurKey);
+      sessionStorage.removeItem(investorKey);
       sessionStorage.removeItem(refreshTokenKey);
       return sessionStorage.removeItem(accessTokenKey);
     };
@@ -97,6 +105,30 @@ define([], function() {
       var token = authService.getToken(true);
       if (!token) return Promise.reject();
       return rest.one('auth').one('refresh').get({}, authService.getHeader(true));
+    };
+
+    authService.setRole = function(investor) {
+      var key = (investor) ? investorKey : entrepreneurKey;
+      if (shouldPersist) {
+        return localStorage.setItem(key, 't');
+      }
+      return sessionStorage.setItem(key, 't');
+    };
+
+    authService.getRole = function(investor) {
+      var key = (investor) ? investorKey : entrepreneurKey;
+      if (shouldPersist) {
+        return localStorage.getItem(key);
+      }
+      return sessionStorage.getItem(key);
+    };
+
+    authService.isInvestor = function () {
+      return authService.getRole(true) === 't';
+    };
+
+    authService.isEntrepreneur = function () {
+      return authService.getRole(false) === 't';
     };
 
     return authService;
