@@ -66,8 +66,8 @@ require.config({
         },
         restangular: {
             deps: [
-              'angular',
-              'lodash'
+                'angular',
+                'lodash'
             ]
         }
     },

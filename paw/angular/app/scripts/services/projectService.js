@@ -11,11 +11,16 @@ define(['paw2020a', 'restangular'], function(paw2020a) {
       };
 
 
+      projectService.getPageNoFilter = function(page){
+        var params = {p:page};
+        return root.get(params)
+      }
 
       projectService.getPage = function(page, order, field, keyWord, maxCost, minCost, cat){
         var params = {p:page, o:order, f:field,s:keyWord,max:maxCost,min:minCost, c:cat};
+
         return root.get(params)
-      }
+      };
 
 
       projectService.create = function (n, summ, c, category) {
@@ -34,7 +39,7 @@ define(['paw2020a', 'restangular'], function(paw2020a) {
 
 
       projectService.getCategories = function () {
-        return root.get('categories')
+        return root.one('categories').get()
       }
 
 
@@ -54,9 +59,10 @@ define(['paw2020a', 'restangular'], function(paw2020a) {
       }
 
 
-
-
       return projectService;
     }]);
+
+
+
 
 });

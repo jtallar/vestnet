@@ -1,8 +1,9 @@
     'use strict';
 
-define(['paw2020a', 'services/projectService'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', ['projectService', '$scope', function (projectService, $scope) {
+define(['paw2020a', 'services/projectService', 'services/imageService'], function(paw2020a) {
+    paw2020a.controller('feedCtrl', ['projectService','imageService', '$scope', function (projectService,imageService, $scope) {
 
+      var page = 1
       $scope.filterdata = {
         'field': '' ,
         'category': '',
@@ -12,13 +13,18 @@ define(['paw2020a', 'services/projectService'], function(paw2020a) {
         'maxCost': 100000
       };
 
+
       $scope.order = ['price' , 'date'];
       $scope.fields = ['technology', 'audio'];
-      $scope.categories = ['research', 'sports'];
+      $scope.categories = [];
+
+      projectService.getCategories().then(function (cats) {
+        $scope.categories = cats
+      })
       $scope.clearFilter = function () {
           this.filterdata.field = '';
           this.filterdata.category = '';
-          this.filterdata.maxCost = 100;
+          this.filterdata.minCost = 100;
           this.filterdata.maxCost = 100000;
           this.filterdata.search = '';
 
@@ -39,17 +45,38 @@ define(['paw2020a', 'services/projectService'], function(paw2020a) {
         if (maxTag.value.length) {
           maxTag.value = Math.round(maxTag.value);
         }
+
+        projectService.getPage(page, $scope.filterdata.order,$scope.filterdata.field, $scope.filterdata.search, $scope.filterdata.maxCost, $scope.filterdata.minCost, $scope.filterdata.category)
       };
 
-      $scope.projects = [{
-          'name': 'Vestnet',
-          'cost': 100000,
-          'image': 'images/projectNoImage.png',
-          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-          'id': 1
-        }];
+      // $scope.projects = [{
+      //     'name': 'Vestnet',
+      //     'cost': 100000,
+      //     'image': 'images/projectNoImage.png',
+      //     'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+      //     'id': 1
+      //   }];
 
-      console.log(projectService.getAll());
+      $scope.projects = []
+
+      projectService.getPageNoFilter(page.toString()).then(function (projects) {
+        $scope.projects = projects
+        console.log(projects)
+
+
+        for (var index in $scope.projects){
+            console.log(index)
+
+           imageService.getProjectImage(String($scope.projects[index].id)).then(function (image) {
+             $scope.image = image
+           })
+        }
+      })
+
+
+
+
+
 
     }]);
 
