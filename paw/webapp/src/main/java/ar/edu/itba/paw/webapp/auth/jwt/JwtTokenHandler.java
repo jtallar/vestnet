@@ -102,7 +102,9 @@ public class JwtTokenHandler implements TokenHandler {
     public JwtTokenResponse createTokenResponse(LoggedUser loggedUser, boolean extended) {
         String accessToken = createAccessToken(loggedUser);
         String refreshToken = createRefreshToken(loggedUser, extended);
-        return new JwtTokenResponse(accessToken, ACCESS_TOKEN_EXP_MINUTES, refreshToken, getRefreshTokenExpMinutes(extended));
+
+        return new JwtTokenResponse(accessToken, ACCESS_TOKEN_EXP_MINUTES, refreshToken, getRefreshTokenExpMinutes(extended),
+                loggedUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
     }
 
     private int getRefreshTokenExpMinutes(boolean extended) {
