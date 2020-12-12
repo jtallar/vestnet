@@ -95,7 +95,7 @@ define(['routes',
 				'$translateProvider',
 				'RestangularProvider',
 				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, RestangularProvider) {
-                    $locationProvider.hashPrefix('');
+          $locationProvider.hashPrefix('');
 					paw2020a.controller = $controllerProvider.register;
 					paw2020a.directive = $compileProvider.directive;
 					paw2020a.filter = $filterProvider.register;
