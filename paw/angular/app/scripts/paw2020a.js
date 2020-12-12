@@ -87,15 +87,15 @@ define(['routes',
 		paw2020a
 			.config(
 				['$routeProvider',
+				'$locationProvider',
 				'$controllerProvider',
 				'$compileProvider',
 				'$filterProvider',
 				'$provide',
 				'$translateProvider',
 				'RestangularProvider',
-				function($routeProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider,
-                 RestangularProvider) {
-
+				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, RestangularProvider) {
+                    $locationProvider.hashPrefix('');
 					paw2020a.controller = $controllerProvider.register;
 					paw2020a.directive = $compileProvider.directive;
 					paw2020a.filter = $filterProvider.register;
@@ -104,7 +104,12 @@ define(['routes',
 
 					if (config.routes !== undefined) {
 						angular.forEach(config.routes, function(route, path) {
-							$routeProvider.when(path, {templateUrl: route.templateUrl, resolve: dependencyResolverFor(['controllers/' + route.controller]), controller: route.controller, gaPageTitle: route.gaPageTitle});
+							$routeProvider.when(path, {
+							  templateUrl: route.templateUrl,
+                resolve: dependencyResolverFor(
+                  ['controllers/' + route.controller]),
+                controller: route.controller,
+                gaPageTitle: route.gaPageTitle});
 						});
 					}
 					if (config.defaultRoutePath !== undefined) {
@@ -113,8 +118,7 @@ define(['routes',
 
 					$translateProvider.translations('preferredLanguage', i18n);
 					$translateProvider.preferredLanguage('preferredLanguage');
-					// TODO: Ver que es esta linea de abajo, que estrategia debemos usar (elimina una warning)
-          $translateProvider.useSanitizeValueStrategy('escape');
+					$translateProvider.useSanitizeValueStrategy('escape');
 
           // TODO: Uncomment in production, comment the one below
 					// RestangularProvider.setBaseUrl('api/v1/');

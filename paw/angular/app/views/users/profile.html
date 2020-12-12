@@ -1,17 +1,17 @@
-<head>
-  <!-- build:css(.tmp) styles/userprofile.css -->
-  <link rel="stylesheet" href="styles/userprofile.css">
-  <!-- endbuild -->
+<!--<head>-->
+<!--  &lt;!&ndash; build:css(.tmp) styles/userprofile.css &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="styles/userprofile.css">-->
+<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
 
-  <!-- build:css(.tmp) styles/feed.css -->
-  <link rel="stylesheet" href="styles/feed.css">
-  <!-- endbuild -->
-</head>
+<!--  &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="styles/feed.css">-->
+<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
+<!--</head>-->
 
 <vnheader></vnheader>
 
 <!--<div class="profile">-->
-<div ng-if="true" class="back">
+<div ng-if="true" class="back sep-nav">
   <button onclick="history.back()" class="btn btn-dark">{{'back' | translate}}</button>
 </div>
 
@@ -33,7 +33,7 @@
 
     <div class="col-md-6">
       <div class="profile-head">
-        <h2 class="bold">{{'profileTitle' | translate : 'first : Pablo, last : Perez'}}</h2>
+        <h2 class="bold">{{'profileTitle' | translate : '{first : "Pablo", last : "Perez"}'}}</h2>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"

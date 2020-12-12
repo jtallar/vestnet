@@ -175,6 +175,7 @@ define([], function() {
     footerPhone: 'Tel.:',
     footerMail: 'Mail:',
     footerLkdn: 'LinkedIn:',
-    footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA'
+    footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA',
+    profileTitle: 'Información de {{first}} {{last}}'
   };
 });
