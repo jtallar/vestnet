@@ -79,6 +79,13 @@ define(['routes',
           if (response.status === 404) {
             PathService.get().notFound().go();
             return false;
+          } else if (response.status === 403) {
+            if (AuthenticationService.isLoggedIn()) {
+              PathService.get().forbidden().go();
+            } else {
+              PathService.get().login().go();
+            }
+            return false;
           }
           return true;
         });

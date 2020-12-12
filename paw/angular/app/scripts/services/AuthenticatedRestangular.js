@@ -24,17 +24,6 @@ define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/P
               }, 0);
             });
             return false;
-          } else if (response.status === 403) {
-            if (AuthenticationService.isLoggedIn()) {
-              PathService.get().forbidden().go();
-              return false;
-            } else {
-              PathService.get().login().go();
-              return false;
-            }
-          } else if (response.status === 404) {
-            PathService.get().notFound().go();
-            return false;
           }
           return true;
         })
