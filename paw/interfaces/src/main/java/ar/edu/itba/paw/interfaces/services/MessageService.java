@@ -31,6 +31,7 @@ public interface MessageService {
      */
     Optional<Message> updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted, URI baseUri);
 
+
     /**
      * Gets the last message for each investor for the project.
      * @param projectId The project unique ID to bring all the last conversations.
@@ -41,6 +42,27 @@ public interface MessageService {
      */
     Page<Message> getProjectInvestors(long projectId, long ownerId, int page, int pageSize);
 
+
+    /**
+     * Gets the last message for each different project inverted by the investor.
+     * @param investorId The investor ID of the request.
+     * @param page The page to return.
+     * @param pageSize The page size (amount of messages from different projects).
+     * @return Paged messages.
+     */
+    Page<Message> getInvestorProjects(long investorId, int page, int pageSize);
+
+
+    /**
+     * Gets all the messages of the conversation of an project with an investor.
+     * @param projectId The unique project ID from which is the conversation about.
+     * @param investorId The unique investor's ID.
+     * @param sessionUserId The session user ID to check valid requests.
+     * @param page The page to return.
+     * @param pageSize The page size (the n amount of last messages).
+     * @return Paged messages.
+     */
+    Page<Message> getConversation(long projectId, long investorId, long sessionUserId, int page, int pageSize);
 
     // Previously user service
 

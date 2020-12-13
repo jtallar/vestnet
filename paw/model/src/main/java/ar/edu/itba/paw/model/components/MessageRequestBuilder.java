@@ -18,7 +18,7 @@ public class MessageRequestBuilder extends RequestBuilder {
 
 
     /**
-     * Sets to filter the receiver.
+     * Sets to filter the owner.
      * @param id The receiver's user id.
      * @return The RequestBuilder
      */
@@ -29,7 +29,18 @@ public class MessageRequestBuilder extends RequestBuilder {
 
 
     /**
-     * Sets to filter the sender.
+     * Sets to filter the owner if the condition is true.
+     * @param id The receiver's user id.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setOwner(long id, boolean condition) {
+        if (condition) criteriaList.add(new FilterCriteria(MESSAGE_RECEIVER, new User(id)));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the investor.
      * @param id The sender's user id.
      * @return The RequestBuilder
      */

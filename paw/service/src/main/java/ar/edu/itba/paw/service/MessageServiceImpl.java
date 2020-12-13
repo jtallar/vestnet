@@ -96,6 +96,7 @@ public class MessageServiceImpl implements MessageService {
         return optionalMessage;
     }
 
+
     @Override
     public Page<Message> getProjectInvestors(long projectId, long ownerId, int page, int pageSize) {
         RequestBuilder request = new MessageRequestBuilder()
@@ -106,6 +107,30 @@ public class MessageServiceImpl implements MessageService {
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
 
+
+    @Override
+    public Page<Message> getInvestorProjects(long investorId, int page, int pageSize) {
+        RequestBuilder request = new MessageRequestBuilder()
+                .setInvestor(investorId)
+                .setOrder(OrderField.DATE_DESCENDING); // TODO add to group by project
+
+        return messageDao.findAll(request, new PageRequest(page, pageSize));
+    }
+
+
+    @Override
+    public Page<Message> getConversation(long projectId, long investorId, long sessionUserId, int page, int pageSize) {
+        RequestBuilder request;
+
+        request = new MessageRequestBuilder()
+                .setProject(projectId)
+                .setInvestor(investorId)
+                /** If session user is the investor then don't need to check project ownership */
+                .setOwner(sessionUserId, (sessionUserId != investorId))
+                .setOrder(OrderField.DATE_DESCENDING);
+
+        return messageDao.findAll(request, new PageRequest(page, pageSize));
+    }
 
     // previously user service impl
 //    @Override

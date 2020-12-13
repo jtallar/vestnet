@@ -105,9 +105,9 @@ public class MessageRestController {
 
 
     @GET
-    @Path("/{project_id}")
+    @Path("/project/{project_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response projectInvestor(@PathParam("project_id") final long projectId,
+    public Response projectChats(@PathParam("project_id") final long projectId,
                                     @QueryParam("p") @DefaultValue("1") int page) {
 
         final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), page, PAGE_SIZE);
@@ -120,20 +120,50 @@ public class MessageRestController {
                 .build();
     }
 
+    @GET
+    @Path("/investor")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response investorChats(@QueryParam("p") @DefaultValue("1") int page) {
+
+        final Page<Message> messagePage = messageService.getInvestorProjects(sessionUser.getId(), page, PAGE_SIZE);
+
+        List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
+                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getStartPage()).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getEndPage()).build(), "last")
+                .build();
+    }
+
+    @GET
+    @Path("/chat/{project_id}/{investor_id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response chat(@PathParam("project_id") final long projectId,
+                         @PathParam("investor_id") final long investorId,
+                         @QueryParam("p") @DefaultValue("1") int page) {
+
+        final Page<Message> messagePage = messageService.getConversation(projectId, investorId, sessionUser.getId(), page, PAGE_SIZE);
+
+        List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
+                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getStartPage()).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getEndPage()).build(), "last")
+                .build();
+    }
 
 
-    // Entrepreneur
-    // TODO: GET last messages from all different investors (project_id) ORDERED + NOT PAGED
 
-    // Investor
-    // TODO: GET last messages from all different projects (investor_id) ORDERED + NOT PAGED
+
 
     // Both
-    // TODO: GET conversation (project_id + investor_id) ORDERED + PAGED
     // TODO: PUT change last message conversation status (project_id + investor_id)
     // TODO: POST offer (project_id, investor_id, offer, who sent it?)
     // Investor only if there is no previous offer + if there is must be at least 5 days old, not his, or rejected
     // Entrepreneur only if there is a previous offer, his offer with at least 5 days old, or rejected, or from investor
+
+
+
 
     // Notification Center
 
