@@ -8,13 +8,13 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
 
     imageService.getProfileImage = function(id){
-      return root.one(id).get()
+      return root.one('users').one(id).get()
     };
 
 
     imageService.setProfileImage = function (im) {
       var body = {image: im};
-      return root.customPUT(body)
+      return root.one('users').customPUT(body)
     };
 
 

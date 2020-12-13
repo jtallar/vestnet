@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @Component
 @Path("/images")
 public class ImageRestController {
-    // TODO: Ahora no funca lo que tiene sessionUser porque no toma el sessionUser porque esta ignorado en el webAuthConfig
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageRestController.class);
 
     @Autowired
@@ -40,8 +38,10 @@ public class ImageRestController {
     @Context
     private UriInfo uriInfo;
 
+    // TODO: Ahora se comporta como users/image_id, deberia recibir user_id y gettear la image desde el image_id en el user
+    //  como hace el update? O lo cambiamos a image_id?
     @GET
-    @Path("/user/{user_id}")
+    @Path("/users/{user_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getUserImage(@PathParam("user_id") final long userId) {
         Optional<UserImage> profileImage = userService.getProfileImage(userId);
@@ -53,7 +53,7 @@ public class ImageRestController {
     // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use.
     //  O bien chequear que el que haga el update sea el session user
     @PUT
-    @Path("/user")
+    @Path("/users")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setUserImage(@Valid final ImageDto image) {
         Optional<User> optionalUser = userService.updateImage(sessionUser.getId(), image.getImage());
