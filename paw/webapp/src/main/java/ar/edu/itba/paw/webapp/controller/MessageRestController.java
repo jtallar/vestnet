@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.webapp.component.SessionUser;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.OfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class MessageRestController {
     private UserService userService;
 
     @Autowired
-    private SessionUser sessionUser;
+    private SessionUserFacade sessionUser;
 
     @Context
     private UriInfo uriInfo;

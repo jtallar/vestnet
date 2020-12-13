@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.webapp.component.SessionUser;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.ProjectDto;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class ImageRestController {
     private ProjectService projectService;
 
     @Autowired
-    private SessionUser sessionUser;
+    private SessionUserFacade sessionUser;
 
     @Context
     private UriInfo uriInfo;

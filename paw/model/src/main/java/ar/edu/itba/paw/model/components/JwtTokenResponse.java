@@ -11,14 +11,17 @@ public class JwtTokenResponse {
     private final int refreshMinutes;
 
     private final Collection<String> userRoles;
+    private final String locale;
 
-    public JwtTokenResponse(String accessToken, int accessMinutes, String refreshToken, int refreshMinutes, Collection<String> userRoles) {
+    public JwtTokenResponse(String accessToken, int accessMinutes, String refreshToken, int refreshMinutes,
+                            Collection<String> userRoles, String locale) {
         this.accessToken = accessToken;
         this.accessMinutes = accessMinutes;
         this.refreshToken = refreshToken;
         this.refreshMinutes = refreshMinutes;
 
         this.userRoles = userRoles;
+        this.locale = locale;
     }
 
     public String getAccessToken() {
@@ -41,6 +44,10 @@ public class JwtTokenResponse {
         return userRoles;
     }
 
+    public String getLocale() {
+        return locale;
+    }
+
     public Map<String, Object> getResponseMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("accessToken", accessToken);
@@ -48,6 +55,7 @@ public class JwtTokenResponse {
         map.put("refreshToken", refreshToken);
         map.put("refreshMinutes", refreshMinutes);
         map.put("roles", userRoles.toArray());
+        map.put("locale", locale);
         return map;
     }
 }
