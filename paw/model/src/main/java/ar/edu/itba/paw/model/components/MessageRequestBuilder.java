@@ -21,7 +21,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @param id The receiver's user id.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setReceiver(long id) {
+    public MessageRequestBuilder setOwner(long id) {
         criteriaList.add(new FilterCriteria(MESSAGE_RECEIVER, new User(id)));
         return this;
     }
@@ -32,7 +32,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @param id The sender's user id.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setSender(long id) {
+    public MessageRequestBuilder setInvestor(long id) {
         criteriaList.add(new FilterCriteria(MESSAGE_SENDER, new User(id)));
         return this;
     }
@@ -48,13 +48,31 @@ public class MessageRequestBuilder extends RequestBuilder {
         return this;
     }
 
+    /**
+     * Sets the direction of the message.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setInvestorToEntrepreneur() {
+        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, true));
+        return this;
+    }
+
+    /**
+     * Sets another direction of the message.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setEntrepreneurToInvestor() {
+        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, false));
+        return this;
+    }
+
 
     /**
      * Sets to filter the unread messages.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setUnread() {
-        criteriaList.add(new FilterCriteria(MESSAGE_UNREAD, true));
+    public MessageRequestBuilder setSeen() {
+        criteriaList.add(new FilterCriteria(MESSAGE_SEEN, true));
         return this;
     }
 

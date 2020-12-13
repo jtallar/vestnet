@@ -15,7 +15,8 @@ public enum FilterField {
     MESSAGE_RECEIVER,
     MESSAGE_SENDER,
     MESSAGE_PROJECT,
-    MESSAGE_UNREAD,
+    MESSAGE_SEEN,
+    MESSAGE_DIRECTION,
     MESSAGE_ACCEPTED;
 
     public static FilterField fromSearchField(SearchField searchField) {
