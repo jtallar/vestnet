@@ -80,7 +80,7 @@ public class UserRestController {
     public Response userProfile(@PathParam("id") final long id) {
         final Optional<User> optionalUser = userService.findById(id);
 
-        return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
+         return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 

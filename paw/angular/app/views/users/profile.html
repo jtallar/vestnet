@@ -11,25 +11,26 @@
 <vnheader></vnheader>
 
 <!--<div class="profile">-->
-<div ng-if="true" class="back sep-nav">
-  <button onclick="history.back()" class="btn btn-dark">{{'back' | translate}}</button>
-</div>
+<div ng-controller="profileCtrl as controller">
+  <div ng-if="true" class="back sep-nav">
+    <button onclick="history.back()" class="btn btn-dark">{{'back' | translate}}</button>
+  </div>
 
-<div class="dropdown-divider"></div>
+  <div class="dropdown-divider"></div>
 
-<div class="container emp-profile">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="profile-img ">
-        <img src="/images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+  <div class="container emp-profile">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="profile-img ">
+          <img src="/images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+        </div>
+        <div ng-if="true" class="text-center my-2">
+          <button href="#" class="btn btn-linkedin">
+            <i class="fa fa-linkedin pull-left"></i>
+            <label>{{'linkedinProfile' | translate}}</label>
+          </button>
+        </div>
       </div>
-      <div ng-if="true" class="text-center my-2">
-        <button href="#" class="btn btn-linkedin">
-          <i class="fa fa-linkedin pull-left"></i>
-          <label>{{'linkedinProfile' | translate}}</label>
-        </button>
-      </div>
-    </div>
 
     <div class="col-md-6">
       <div class="profile-head">
@@ -40,126 +41,127 @@
                aria-controls="home" aria-selected="true">{{'information' | translate}}</a>
           </li>
 
-<!--          <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
-<!--            <c:if test="${session_user_id eq user.id}">-->
-              <li ng-if="true" class="nav-item">
-                <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
-                   aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
-              </li>
-<!--            </c:if>-->
-<!--          </sec:authorize>-->
-        </ul>
-      </div>
-
-      <div class="tab-content profile-tab" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'firstName' | translate}}</label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.firstName}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'lastName' | translate}}</label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.lastName}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'email' | translate}} </label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.email}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'phone' | translate}} </label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.phone}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'birthday' | translate}}</label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.birthday}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'country' | translate}} </label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.country}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'city' | translate}} </label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.city}}</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <label>{{'state' | translate}}</label>
-            </div>
-            <div class="col-md-6">
-              <p>{{user.state}}</p>
-            </div>
-          </div>
+  <!--          <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
+  <!--            <c:if test="${session_user_id eq user.id}">-->
+                <li ng-if="true" class="nav-item">
+                  <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
+                     aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
+                </li>
+  <!--            </c:if>-->
+  <!--          </sec:authorize>-->
+          </ul>
         </div>
 
-<!--        <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
-<!--          <c:if test="${session_user_id eq user.id}">-->
-            <div class="tab-pane" id="favorites" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-content profile-tab" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'firstName' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.firstName}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'lastName' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.lastName}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'email' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.email}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'phone' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.phone}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'birthday' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.birthday}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'country' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.country}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'city' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.city}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'state' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{controller.user.state}}</p>
+              </div>
+            </div>
+          </div>
 
-                <div ng-if="!projects.empty()"  ng-repeat="project in projects">
-                  <div class="card m-2">
-                    <div class="card-header text-white">
-                      <h5 class="card-title">{{project.name}}</h5>
-                    </div>
-                    <div class="card-body favorites">
-                      <p class="card-text">{{project.summary}}</p>
-                      <div class="row">
-                        <div class="col">
-                          <strong>{{'price' | translate}}</strong>
-                          <p>{{'projectCost' | translate : '{cost : project.cost}'}}</p>
-                        </div>
-                        <div class="col">
-                          <a href="#/projects/{{project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>
+  <!--        <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
+  <!--          <c:if test="${session_user_id eq user.id}">-->
+              <div class="tab-pane" id="favorites" role="tabpanel" aria-labelledby="profile-tab">
+
+                  <div ng-if="!projects.empty()"  ng-repeat="project in projects">
+                    <div class="card m-2">
+                      <div class="card-header text-white">
+                        <h5 class="card-title">{{controller.project.name}}</h5>
+                      </div>
+                      <div class="card-body favorites">
+                        <p class="card-text">{{controller.project.summary}}</p>
+                        <div class="row">
+                          <div class="col">
+                            <strong>{{'price' | translate}}</strong>
+                            <p>{{'projectCost' | translate : '{cost : controller.project.cost}'}}</p>
+                          </div>
+                          <div class="col">
+                            <a href="#/projects/{{controller.project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div ng-if="projects.empty()"  class="card m-2">
-                  <div class="card-header">
-                    <h5 class="card-title centered">{{'noProjFound' | translate}}</h5>
+                  <div ng-if="projects.empty()"  class="card m-2">
+                    <div class="card-header">
+                      <h5 class="card-title centered">{{'noProjFound' | translate}}</h5>
+                    </div>
                   </div>
-                </div>
 
-            </div>
-<!--          </c:if>-->
-<!--        </sec:authorize>-->
+              </div>
+  <!--          </c:if>-->
+  <!--        </sec:authorize>-->
+        </div>
       </div>
     </div>
   </div>
+  <!--</div>-->
+
+  <div class="dropdown-divider"></div>
+
+  <footer>
+    <vnfooter></vnfooter>
+  </footer>
 </div>
-<!--</div>-->
-
-<div class="dropdown-divider"></div>
-
-<footer>
-  <vnfooter></vnfooter>
-</footer>

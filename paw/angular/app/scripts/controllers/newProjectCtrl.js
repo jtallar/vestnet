@@ -1,8 +1,11 @@
 'use strict';
 
-define(['paw2020a'], function(paw2020a) {
+define(['paw2020a', 'services/projectService', 'services/imageService'], function(paw2020a) {
 
-    paw2020a.controller('newProjectCtrl', function($scope) {
+    paw2020a.controller('newProjectCtrl',['projectService','imageService','$scope', function(projectService,imageService, $scope) {
+
+      var _this = this
+
 
       $scope.projectInfo = {  //  fetch from db
         'cost': 0,
@@ -17,6 +20,11 @@ define(['paw2020a'], function(paw2020a) {
       $scope.doubleLeft = '>>';
       $scope.doubleRight = '<<';
       $scope.categories = [{'name': 'technology', 'id': 1} , {'name': 'research', 'id': 2}, {'name': 'sports', 'id': 3}, {'name': 'audio', 'id': 4}];
+
+      projectService.getCategories().then(function (cats) {
+        $scope.categories = cats
+
+      })
 
       var fileBox = document.getElementById('customFileProjectPic');
       var maxSizeMsg = document.getElementById('maxSizeErrorMsg');
@@ -96,7 +104,7 @@ define(['paw2020a'], function(paw2020a) {
       };
 
       $scope.adjustInputs = function () {
-        addCategories();
+        $scope.addCategories();
         var titleTag = document.getElementById('new-project-title');
         titleTag.value = titleTag.value.trim();
         var summaryTag = document.getElementById('new-project-summary');
@@ -105,8 +113,11 @@ define(['paw2020a'], function(paw2020a) {
           costTag.value = 0;
         }
         costTag.value = Math.round(costTag.value);
+
+        projectService.create($scope.projectInfo.title,$scope.projectInfo.summary,$scope.projectInfo.cost, $scope.projectInfo.categories)
+
       };
 
-    });
+    }]);
 
 });

@@ -18,153 +18,154 @@
 <!--           data-on="{{'showAccProj' | translate}}" data-off="{{'showCurrProj' | translate}}"-->
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
+<div ng-controller="dashboardCtrl as controller">
+    <toggleswitch name="yesNo" ng-model="yesNo" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
-  <toggleswitch name="yesNo" ng-model="yesNo" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
+    <div class="dashboard">
+    <div class="card-group" ng-repeat="project in controller.projects">
+      <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
+      <div class="container py-3">
+        <div class="card msg">
 
-  <div class="dashboard">
-  <div class="card-group" ng-repeat="project in projects">
-    <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
-    <div class="container py-3">
-      <div class="card msg">
-
-        <div class="row">
-          <div class="col-2">
-            <img src="images/projectNoImage.png" class="p-img"/>
-          </div>
-          <div class="col-md-10">
-            <div class="card-block">
-              <div class="row">
-                <div class="col-9">
-                  <h4 class="card-title msg-title">{{project.name}}</h4>
-                </div>
-                <div class="col-3">
-                  <div ng-if="!project.funded">
-                    <a type="button" class="btn btn-success btn-project pull-right" data-toggle="modal" data-target="#expModal-p{{project.id}}">
-<!--                      {{'stopFunding' | translate}}-->
-                      <img class="nav-icon" src="images/stop-icon.png">
-                    </a>
+          <div class="row">
+            <div class="col-2">
+              <img src="images/projectNoImage.png" class="p-img"/>
+            </div>
+            <div class="col-md-10">
+              <div class="card-block">
+                <div class="row">
+                  <div class="col-9">
+                    <h4 class="card-title msg-title">{{project.name}}</h4>
                   </div>
-                </div>
-              </div>
-
-              <div class="row msg-content">
-                <div class="col-9">
-                  <div class="row msg-content">
-                    <div class="col-"><h5 class="dash-title">{{'cost' | translate}}</h5></div>
-                    <div class="col-5 msg-content">
-                      <p class="card-text dash-text">{{'projectCost' | translate : '{cost : project.cost}' }}</p>
+                  <div class="col-3">
+                    <div ng-if="!project.funded">
+                      <a type="button" class="btn btn-success btn-project pull-right" data-toggle="modal" data-target="#expModal-p{{project.id}}">
+  <!--                      {{'stopFunding' | translate}}-->
+                        <img class="nav-icon" src="images/stop-icon.png">
+                      </a>
                     </div>
                   </div>
-                  <div class="row msg-content">
-                    <div class="col-"><h5 class="dash-title">{{'hits' | translate}}</h5></div>
-                    <div class="col-5 msg-content"><p class="card-text dash-text">{{ project.hits }}</p></div>
-                  </div>
                 </div>
 
-                <!-- Show stop funding confirmation -->
-                <div class="modal fade" id="expModal-p{{project.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog " role="document">
-                    <div class="modal-content mx-auto my-auto">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">
-                          {{'confirmStopFunding' | translate}}
-                        </h5>
+                <div class="row msg-content">
+                  <div class="col-9">
+                    <div class="row msg-content">
+                      <div class="col-"><h5 class="dash-title">{{'cost' | translate}}</h5></div>
+                      <div class="col-5 msg-content">
+                        <p class="card-text dash-text">{{'projectCost' | translate : '{cost : project.cost}' }}</p>
                       </div>
-                      <div class="modal-body">
-                          {{'stopFundingResult' | translate}}
-                      </div>
-                      <div class="modal-footer">
-                        <div class="row">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">
-                            {{'cancel' | translate}}
-                          </button>
-                          <button onclick="" type="button" class="btn btn-success">
-                            {{'confirm' | translate}}
-                          </button>
+                    </div>
+                    <div class="row msg-content">
+                      <div class="col-"><h5 class="dash-title">{{'hits' | translate}}</h5></div>
+                      <div class="col-5 msg-content"><p class="card-text dash-text">{{ project.hits }}</p></div>
+                    </div>
+                  </div>
+
+                  <!-- Show stop funding confirmation -->
+                  <div class="modal fade" id="expModal-p{{project.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog " role="document">
+                      <div class="modal-content mx-auto my-auto">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                            {{'confirmStopFunding' | translate}}
+                          </h5>
+                        </div>
+                        <div class="modal-body">
+                            {{'stopFundingResult' | translate}}
+                        </div>
+                        <div class="modal-footer">
+                          <div class="row">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">
+                              {{'cancel' | translate}}
+                            </button>
+                            <button onclick="" type="button" class="btn btn-success">
+                              {{'confirm' | translate}}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="col-3">
-                  <a ng-href="#/projects/{{project.id}}" class="btn btn-black btn-view pull-right">
-                    <img class="nav-icon" src="images/view-icon.png" alt="">
-                  </a>
-                  <div ng-if="!project.funded">
-                    <a ng-click="" class="btn btn-black btn-project pull-right"  type="button" data-toggle="collapse"
-                            data-target="#collapse{{project.id}}" aria-expanded="false" aria-controls="collapse{{project.id}}">
-                      <div class="notification-icon">
-                        <img class="nav-icon" src="images/msg-icon.png" alt="">
-<!--                        <span>{{'seeMsgs' | translate}}</span>-->
-                        <span ng-if="project.msgCount != 0" class="badge bg-danger">{{project.msgCount}}</span>
-                      </div>
+                  <div class="col-3">
+                    <a ng-href="#/projects/{{project.id}}" class="btn btn-black btn-view pull-right">
+                      <img class="nav-icon" src="images/view-icon.png" alt="">
                     </a>
+                    <div ng-if="!project.funded">
+                      <a ng-click="controller.fetchMsgs(project.id, $index)" class="btn btn-black btn-project pull-right"  type="button" data-toggle="collapse"
+                              data-target="#collapse{{project.id}}" aria-expanded="false" aria-controls="collapse{{project.id}}">
+                        <div class="notification-icon">
+                          <img class="nav-icon" src="images/msg-icon.png" alt="">
+  <!--                        <span>{{'seeMsgs' | translate}}</span>-->
+                          <span ng-if="project.msgCount != 0" class="badge bg-danger">{{project.msgCount}}</span>
+                        </div>
+                      </a>
+                    </div>
                   </div>
+
                 </div>
-
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="collapse" id="collapse{{project.id}}">
-        <div class="card msg msg-collapse" ng-repeat="message in messages[$index]">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <strong>{{'msgTitleBody' | translate}}</strong><br>
-                <p>{{message.body}}</p>
-              </div>
-              <div class="col-6">
-                <strong>{{'msgTitleOffer' | translate}}</strong><br>
-                <p>{{message.offer}}</p>
-                <strong>{{'msgTitleRequest' | translate}}</strong><br>
-                <p>{{message.request}}</p>
-              </div>
-              <div class="col-1">
-                <a ng-href="#/users/{{message.senderId}}" class="btn btn-black msg-icons pull-right">
-                  <img src="/images/user-icon.png">
-<!--                  {{'viewInvProfile' | translate}}-->
-                </a>
-                <button id="accept-message-\{{message.projectId}}-\{{message.senderId}}" class="btn btn-success msg-icons pull-right" ng-click="answer(message.projectId, message.senderId, true)">
-                  <!--                  {{'accept' | translate}}-->
-                  <img src="/images/accept-icon.png">
-                </button>
-                <button id="refuse-message-\{{message.projectId}}-\{{message.senderId}}" class="btn btn-danger msg-icons pull-right" ng-click="answer(message.projectId, message.senderId, false)">
-                  <!--                  {{'reject' | translate}}-->
-                  <img src="/images/reject-icon.png">
-                </button>
+        <div class="collapse" id="collapse{{project.id}}">
+          <div class="card msg msg-collapse" ng-repeat="message in controller.messages[$index]">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-5">
+                  <strong>{{'msgTitleBody' | translate}}</strong><br>
+                  <p>{{message.body}}</p>
+                </div>
+                <div class="col-6">
+                  <strong>{{'msgTitleOffer' | translate}}</strong><br>
+                  <p>{{message.offer}}</p>
+                  <strong>{{'msgTitleRequest' | translate}}</strong><br>
+                  <p>{{message.request}}</p>
+                </div>
+                <div class="col-1">
+                  <a ng-href="#/users/{{message.senderId}}" class="btn btn-black msg-icons pull-right">
+                    <img src="/images/user-icon.png">
+  <!--                  {{'viewInvProfile' | translate}}-->
+                  </a>
+                  <button id="accept-message-\{{message.projectId}}-\{{message.senderId}}" class="btn btn-success msg-icons pull-right" ng-click="controller.answer(message.projectId, message.senderId, true)">
+                    <!--                  {{'accept' | translate}}-->
+                    <img src="/images/accept-icon.png">
+                  </button>
+                  <button id="refuse-message-\{{message.projectId}}-\{{message.senderId}}" class="btn btn-danger msg-icons pull-right" ng-click="controller.answer(message.projectId, message.senderId, false)">
+                    <!--                  {{'reject' | translate}}-->
+                    <img src="/images/reject-icon.png">
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  </div>
+    </div>
 
-  <div ng-if="projects.empty()" class="card no-proj-mine">
-    <div class="card-header text-center">
-      <div ng-switch="true">
-        <div ng-switch-when="true">
-          <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
-        </div>
-        <div ng-switch-when="false">
-          <h5 class="card-title text-white centered">{{'noProjOwned' | translate }}</h5>
+    <div ng-if="projects.empty()" class="card no-proj-mine">
+      <div class="card-header text-center">
+        <div ng-switch="true">
+          <div ng-switch-when="true">
+            <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
+          </div>
+          <div ng-switch-when="false">
+            <h5 class="card-title text-white centered">{{'noProjOwned' | translate }}</h5>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
+  <div class="dropdown-divider" style="margin: auto; width:50%"></div>
+
+  <div class="text-center add-new mt-5 mb-5">
+    <a href="#/newProject" class="btn btn-lg"> {{'addProject' | translate}} </a>
+  </div>
+
+  <footer>
+    <vnfooter></vnfooter>
+  </footer>
 </div>
-
-<div class="dropdown-divider" style="margin: auto; width:50%"></div>
-
-<div class="text-center add-new mt-5 mb-5">
-  <a href="#/newProject" class="btn btn-lg"> {{'addProject' | translate}} </a>
-</div>
-
-<footer>
-  <vnfooter></vnfooter>
-</footer>

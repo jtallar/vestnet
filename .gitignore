@@ -47,3 +47,7 @@ target/
 /paw/angular/.tmp/
 /paw/angular/tmp/
 /paw/angular/.sass-cache/
+
+paw/node_modules/
+
+paw/node_modules 2/
