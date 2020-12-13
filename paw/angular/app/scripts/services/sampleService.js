@@ -1,13 +1,13 @@
 'use strict';
-define(['paw2020a', 'restangular'], function(paw2020a) {
+define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
-	paw2020a.service('sampleService',['Restangular', function(Restangular) {
+	paw2020a.service('sampleService',['AuthenticatedRestangular', function(AuthenticatedRestangular) {
 
-	  var sampleService = {}
+	  var sampleService = {};
 	  
 	  sampleService.get = function (absURL) {
-      return Restangular.oneUrl('routeName', absURL).get()
-    }
+      return AuthenticatedRestangular.oneUrl('routeName', absURL).get();
+    };
 
     return sampleService
 
