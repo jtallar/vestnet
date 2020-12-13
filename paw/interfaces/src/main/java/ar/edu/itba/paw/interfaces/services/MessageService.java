@@ -11,16 +11,12 @@ public interface MessageService {
 
     /**
      * Creates a new message.
-     * @param message Message string.
-     * @param offer Offer string.
-     * @param interest Interest string.
-     * @param senderId Unique user sender id.
-     * @param receiverId Unique user receiver id.
-     * @param projectId Unique project id.
+     * @param messageData The data for the new message to create.
+     * @param sessionUserId The session user id that sent the message.
      * @param baseUri Base url for replies.
-     * @return The optional created message.
+     * @return The optional created message. Empty in case of errors.
      */
-    Message create(String message, String offer, String interest, long senderId, long receiverId, long projectId, URI baseUri);
+    Optional<Message> create(Message messageData, long sessionUserId, URI baseUri);
 
 
     /**
@@ -33,4 +29,14 @@ public interface MessageService {
      * @return The updated message or null if not found.
      */
     Optional<Message> updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted, URI baseUri);
+
+    /**
+     * Gets the last message for each investor for the project.
+     * @param projectId The project unique ID to bring all the last conversations.
+     * @param ownerId The owner ID of the request.
+     * @param page The page to return.
+     * @param pageSize The page size (amount of messages from different investors).
+     * @return Paged messages. Empty if owner is not the real owner of the project.
+     */
+    Page<Message> getProjectInvestors(long projectId, long ownerId, int page, int pageSize);
 }

@@ -126,9 +126,9 @@ public class MessageJpaDaoTest {
         Number entrepreneurId = createUser();
         Number projectId = createProject(entrepreneurId);
         RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(entrepreneurId.longValue())
+                .setOwner(entrepreneurId.longValue())
                 .setProject(projectId.longValue())
-                .setUnread()
+                .setSeen()
                 .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
@@ -146,9 +146,9 @@ public class MessageJpaDaoTest {
         Number projectId = createProject(entrepreneurId);
         createMessage(investorId, entrepreneurId, projectId, false);
         RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(entrepreneurId.longValue())
+                .setOwner(entrepreneurId.longValue())
                 .setProject(projectId.longValue())
-                .setUnread()
+                .setSeen()
                 .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute

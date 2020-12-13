@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
@@ -11,11 +13,11 @@ public class OfferDto {
 
     @Size(max = 250)
     @NotBlank
-    private String body;
+    private String comment;
 
     @Size(max = 100)
     @NotBlank
-    private String offers;
+    private String offer; // TODO change to Integer
 
     @Size(max = 100)
     @NotBlank
@@ -32,8 +34,8 @@ public class OfferDto {
     public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
         final OfferDto offerDto = new OfferDto();
 
-        offerDto.body = message.getContent().getComment();
-        offerDto.offers = message.getContent().getOffer();
+        offerDto.comment = message.getContent().getComment();
+        offerDto.offer = message.getContent().getOffer();
         offerDto.exchange = message.getContent().getInterest();
 
         offerDto.seen = message.getSeen();
@@ -50,29 +52,38 @@ public class OfferDto {
         return offerDto;
     }
 
+    public static Message toMessage(OfferDto offerDto) {
+        final Message.MessageContent content = new Message.MessageContent(offerDto.getComment(), offerDto.getOffer(), offerDto.getExchange());
+        return new Message(content,
+                new User(offerDto.getOwnerId()),
+                new User(offerDto.getInvestorId()),
+                new Project(offerDto.getProjectId()),
+                offerDto.getDirection());
+    }
+
 
     public boolean isSeen() {
         return seen;
     }
 
-    public boolean isDirection() {
+    public boolean getDirection() {
         return direction;
     }
 
-    public String getBody() {
-        return body;
+    public String getComment() {
+        return comment;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getOffers() {
-        return offers;
+    public String getOffer() {
+        return offer;
     }
 
-    public void setOffers(String offers) {
-        this.offers = offers;
+    public void setOffer(String offer) {
+        this.offer = offer;
     }
 
     public String getExchange() {

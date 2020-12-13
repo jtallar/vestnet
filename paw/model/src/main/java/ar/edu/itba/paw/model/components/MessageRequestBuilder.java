@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.model.components;
 
+import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 

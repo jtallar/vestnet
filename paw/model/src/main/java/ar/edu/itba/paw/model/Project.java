@@ -58,8 +58,9 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-    private List<Message> messageList;
+//    TODO commented as its unnecessary, check if can be safe deleted
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+//    private List<Message> messageList;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
     private List<User> favoriteBy;
@@ -194,13 +195,13 @@ public class Project {
         this.categories = categories;
     }
 
-    public List<Message> getMessageList() {
-        return messageList;
-    }
-
-    public void setMessageList(List<Message> messageList) {
-        this.messageList = messageList;
-    }
+//    public List<Message> getMessageList() {
+//        return messageList;
+//    }
+//
+//    public void setMessageList(List<Message> messageList) {
+//        this.messageList = messageList;
+//    }
 
     public List<User> getFavoriteBy() {
         return favoriteBy;

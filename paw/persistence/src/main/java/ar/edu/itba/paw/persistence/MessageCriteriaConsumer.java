@@ -31,7 +31,7 @@ import java.util.function.Consumer;
             case MESSAGE_RECEIVER: receiver(param.getValue()); break;
             case MESSAGE_SENDER: sender(param.getValue()); break;
             case MESSAGE_PROJECT: project(param.getValue()); break;
-            case MESSAGE_UNREAD: unread(); break;
+            case MESSAGE_SEEN: unread(); break;
             case MESSAGE_ACCEPTED: accepted(param.getValue()); break;
             default: /** should not happen */ break;
         }
