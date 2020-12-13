@@ -184,6 +184,8 @@ define([], function() {
     confSendBody: '¿Está seguro? La contraoferta no puede borrarse luego.',
     confSend: 'Confirmar envío de contraoferta',
     confAccept: 'Aceptar trato',
-    confAcceptBody: '¿Está seguro que desea confirmar? La acción no tiene vuelta atrás.'
+    confAcceptBody: '¿Está seguro que desea confirmar? La acción no tiene vuelta atrás.',
+    expire: 'Oferta expira en',
+    days: 'días'
   };
 });

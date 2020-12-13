@@ -32,7 +32,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '200K',
         'exchange': '20%',
         'comment': 'Sisi, me parece una buena idea.',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
       {
         'from': 'Mario',
@@ -41,7 +42,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '200K',
         'exchange': '20%',
         'comment': 'La otra cuestion que queria consultarle es para que fecha tiene estimado conseguir esa lista',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
       {
         'from': 'Me',
@@ -50,7 +52,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '200K',
         'exchange': '20%',
         'comment': 'Es super estimativo pero lo ideal seria para Abril del año entrante',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
       {
         'from': 'Me',
@@ -59,7 +62,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '200K',
         'exchange': '20%',
         'comment': 'Y me gustaría cerrar con ustedes en los próximos días.',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
       {
         'from': 'Mario',
@@ -68,7 +72,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '200K',
         'exchange': '20%',
         'comment': 'Entiendo, intentaré todo de mí... ¿Eres único socio en todo esto, no?',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
       {
         'from': 'Mario',
@@ -77,7 +82,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '200K',
         'exchange': '20%',
         'comment': 'Entiendo, intentaré todo de mí... ¿Eres único socio en todo esto, no?',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
       {
         'from': 'Mario',
@@ -86,7 +92,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '200K',
         'exchange': '20%',
         'comment': 'Entiendo, intentaré todo de mí... ¿Eres único socio en todo esto, no?',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
       {
         'from': 'Me',
@@ -95,7 +102,8 @@ define(['paw2020a'], function(paw2020a) {
         'offer': '220K',
         'exchange': '15%',
         'comment': 'Sí, único socio.',
-        'date': '11:42 | 13/12/2020'
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
       },
     ];
 

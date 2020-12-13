@@ -46,9 +46,15 @@
                   <div ng-if="chat.from != 'Me'">
                     <div class="card chat-card-other">
                       <div class="card-body chat-other">
-                        <div class="msg-offer">
-                          <img src="images/down-arrow.png" alt="">
-                          <strong>{{chat.offer}}</strong>
+                        <div class="row">
+                          <div class="col-6 msg-offer">
+                            <img src="images/down-arrow.png" alt="">
+                            <strong>{{chat.offer}}</strong>
+                          </div>
+                          <div class="col-6 msg-exp-me">
+                            {{'expire' | translate}} {{chat.exp}} {{'days' | translate}}
+                            <img src="images/clock-icon.png" alt="">
+                          </div>
                         </div>
                         <div class="msg-exch">
                           <img src="images/up-arrow.png" alt="">
@@ -67,17 +73,24 @@
                   <div ng-if="chat.from == 'Me'">
                     <div class="card chat-card-me">
                       <div class="card-body chat-me">
-                          <div class="msg-offer">
-                            <strong>{{chat.offer}}</strong>
-                            <img src="images/down-arrow.png" alt="">
+                          <div class="row">
+                            <div class="col-6 msg-exp">
+                              <img src="images/clock-icon.png" alt="">
+                              {{'expire' | translate}} {{chat.exp}} {{'days' | translate}}
+                            </div>
+                            <div class="col-6 msg-offer">
+                              <strong>{{chat.offer}}</strong>
+                              <img src="images/down-arrow.png" alt="">
+                            </div>
                           </div>
                           <div class="msg-exch">
                             <strong> {{chat.exchange}}</strong>
                             <img src="images/up-arrow.png" alt="">
                           </div>
-                          <div class=" msg-comm">
+                          <div class="msg-comm">
                             <strong> {{chat.comment}}</strong>
                           </div>
+
                       </div>
                       <div class="card-footer chat-date-me">
                         {{chat.date}}
@@ -121,11 +134,17 @@
               <div class="card-body offer-body row">
                 <div class="col-11">
                   <div class="row chat-input">
-                    <div class="col-6">
+                    <div class="col-4">
                       <input type="text" class="form-control" placeholder="{{'msgTitleOffer' | translate}}" id="msg-offer-title"/>
                     </div>
-                    <div class="col-6">
+                    <div class="col-5">
                       <input type="text" class="form-control" placeholder="{{'msgTitleRequest' | translate}}" id="msg-req-title"/>
+                    </div>
+                    <div class="col-3">
+                      <select id="expire" class="custom-select mr-sm-2">
+                        <option value="0">{{'expire' | translate}}</option>
+                        <option ng-repeat="x in [].constructor(30) track by $index"> {{$index+1}} days</option>
+                      </select>
                     </div>
                   </div>
                   <div class="row">
