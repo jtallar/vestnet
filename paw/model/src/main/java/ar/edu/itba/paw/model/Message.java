@@ -41,14 +41,14 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Project project;
 
-    @Column(name = "sender_id", insertable = false, updatable = false)
-    private int sender_id;
+    @Column(name = "owner_id", insertable = false, updatable = false)
+    private int ownerId;
 
-    @Column(name = "receiver_id", insertable = false, updatable = false)
-    private int receiver_id;
+    @Column(name = "investor_id", insertable = false, updatable = false)
+    private int investorId;
 
     @Column(name = "project_id", insertable = false, updatable = false)
-    private int project_id;
+    private int projectId;
 
     /** Protected */ Message() {
         /** For hibernate only */
@@ -138,28 +138,28 @@ public class Message {
         this.project = project;
     }
 
-    public int getSender_id() {
-        return sender_id;
+    public int getOwnerId() {
+        return ownerId;
     }
 
-    public void setSender_id(int sender_id) {
-        this.sender_id = sender_id;
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public int getReceiver_id() {
-        return receiver_id;
+    public int getInvestorId() {
+        return investorId;
     }
 
-    public void setReceiver_id(int receiver_id) {
-        this.receiver_id = receiver_id;
+    public void setInvestorId(int investorId) {
+        this.investorId = investorId;
     }
 
-    public int getProject_id() {
-        return project_id;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public void setProject_id(int project_id) {
-        this.project_id = project_id;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
 
@@ -172,9 +172,9 @@ public class Message {
                 ", accepted=" + accepted +
                 ", seen=" + seen +
                 ", investor_to_entrep=" + direction +
-                ", sender_id=" + sender_id +
-                ", receiver_id=" + receiver_id +
-                ", project_id=" + project_id +
+                ", sender_id=" + ownerId +
+                ", receiver_id=" + investorId +
+                ", project_id=" + projectId +
                 '}';
     }
 

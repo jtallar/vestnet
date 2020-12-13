@@ -21,9 +21,13 @@ public class OfferDto {
     @NotBlank
     private String exchange;
 
-    private long receiverId, senderId, projectId;
+    private boolean seen;
 
-    private URI receiver, sender, project;
+    private boolean direction;
+
+    private long investorId, ownerId, projectId;
+
+    private URI investor, owner, project;
 
     public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
         final OfferDto offerDto = new OfferDto();
@@ -32,17 +36,28 @@ public class OfferDto {
         offerDto.offers = message.getContent().getOffer();
         offerDto.exchange = message.getContent().getInterest();
 
-        offerDto.receiver = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getReceiver_id())).build();
-        offerDto.sender = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getSender_id())).build();
-        offerDto.project = uriInfo.getAbsolutePathBuilder().path("projects").path(String.valueOf(message.getProject_id())).build();
+        offerDto.seen = message.getSeen();
+        offerDto.direction = message.getDirection();
 
-        offerDto.receiverId = message.getReceiver_id();
-        offerDto.senderId = message.getSender_id();
-        offerDto.projectId = message.getProject_id();
+        offerDto.investor = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
+        offerDto.owner = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
+        offerDto.project = uriInfo.getAbsolutePathBuilder().path("projects").path(String.valueOf(message.getProjectId())).build();
+
+        offerDto.investorId = message.getInvestorId();
+        offerDto.ownerId = message.getOwnerId();
+        offerDto.projectId = message.getProjectId();
 
         return offerDto;
     }
 
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public boolean isDirection() {
+        return direction;
+    }
 
     public String getBody() {
         return body;
@@ -68,21 +83,20 @@ public class OfferDto {
         this.exchange = exchange;
     }
 
-
-    public URI getReceiver() {
-        return receiver;
+    public URI getInvestor() {
+        return investor;
     }
 
-    public void setReceiver(URI receiver) {
-        this.receiver = receiver;
+    public void setInvestor(URI investor) {
+        this.investor = investor;
     }
 
-    public URI getSender() {
-        return sender;
+    public URI getOwner() {
+        return owner;
     }
 
-    public void setSender(URI sender) {
-        this.sender = sender;
+    public void setOwner(URI owner) {
+        this.owner = owner;
     }
 
     public URI getProject() {
@@ -93,20 +107,20 @@ public class OfferDto {
         this.project = project;
     }
 
-    public long getReceiverId() {
-        return receiverId;
+    public long getInvestorId() {
+        return investorId;
     }
 
-    public void setReceiverId(long receiverId) {
-        this.receiverId = receiverId;
+    public void setInvestorId(long investorId) {
+        this.investorId = investorId;
     }
 
-    public long getSenderId() {
-        return senderId;
+    public long getOwnerId() {
+        return ownerId;
     }
 
-    public void setSenderId(long senderId) {
-        this.senderId = senderId;
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public long getProjectId() {
