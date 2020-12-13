@@ -1,14 +1,14 @@
-<head>
-    <!-- build:css(.tmp) styles/feed.css -->
-    <link rel="stylesheet" href="styles/feed.css">
-    <!-- endbuild -->
-</head>
+<!--<head>-->
+<!--    &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="styles/feed.css">-->
+<!--    &lt;!&ndash; endbuild &ndash;&gt;-->
+<!--</head>-->
 
 <body ng-controller="feedCtrl">
 
 <vnheader></vnheader>
 
-<div class="row">
+<div class="row sep-nav">
   <div class="col-1"></div>
   <div class="col-11">
     <ul class="pagination justify-content-center">
@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <div class="dropdown-divider"></div>
+        <div class="dropdown-divider drop-feed"></div>
 
         <div class="row field">
           <div class="col-">
@@ -132,7 +132,7 @@
 
 <!-- PROJECTS -->
 
-  <div class="body" ng-if="!projects.empty()">
+  <div class="body fid" ng-if="!projects.empty()">
     <div class="card-deck">
         <div class="card mb-3" ng-repeat="project in projects">
           <div class="card-header text-white">

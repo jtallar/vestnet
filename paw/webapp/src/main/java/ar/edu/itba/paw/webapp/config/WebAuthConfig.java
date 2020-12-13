@@ -90,6 +90,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider);
     }
 
+    // TODO: Ver como evitar que tomcat mande su default response para errores 403 y 404
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -118,12 +119,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 //
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/users/**").permitAll()
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/password", API_PREFIX_VERSION + "/users/verify").permitAll()
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**/favorites").permitAll()       //hasRole("INVESTOR")
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").permitAll()       //authenticated()
-                .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").permitAll()  //authenticated()
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").permitAll()        //hasRole("ENTREPRENEUR")
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()                     //authenticated()
-//                .antMatchers("/**").denyAll() // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**/favorites").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers("/**").permitAll() // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
 
             .and()
                 .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class) // TODO: Remove in production

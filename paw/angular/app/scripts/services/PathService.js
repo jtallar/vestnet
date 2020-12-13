@@ -24,6 +24,10 @@ define([], function() {
         return $location.path(base.absolutePath());
       };
 
+      base.current = function () {
+        return $location.url();
+      };
+
       base.index = function () {
         return append('/');
       };
@@ -41,6 +45,11 @@ define([], function() {
       };
 
       base.notFound = function () {
+        return append('/notFound');
+      };
+
+      base.forbidden = function () {
+        // TODO: Go to forbidden custom
         return append('/notFound');
       };
 

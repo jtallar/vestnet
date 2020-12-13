@@ -2,20 +2,21 @@
 
 define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
   function(paw2020a) {
-    paw2020a.controller('loginCtrl', ['PathService', 'AuthenticationService', function(PathService, AuthenticationService) {
+    paw2020a.controller('loginCtrl', ['PathService', 'AuthenticationService', '$scope', '$log', function(PathService, AuthenticationService, $scope, $log) {
 
       this.login = function (user) {
-        console.error('Entro al loginCtrl');
-
+        // TODO: Ver si esta condicion de abajo va
         if (AuthenticationService.isLoggedIn()) {
           PathService.get().index().go();
           return;
         }
         AuthenticationService.login(user).then(function (authToken) {
-          console.log(authToken);
-          // TODO: Set RememberMe key if sent here
+          // TODO: Ver como hacer para que vaya a donde estaba yendo
+          PathService.get().index().go();
         }, function (errorResponse) {
-          console.error(errorResponse);
+          // TODO: Ver que responde si no esta verificado --> $scope.valor = 2;
+          $log.info('Response status: ' + errorResponse.status);
+          $scope.valor = 1;
         })
       }
     }]);

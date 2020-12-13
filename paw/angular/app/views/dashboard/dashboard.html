@@ -1,12 +1,12 @@
-<head>
-  <!-- build:css(.tmp) styles/userprofile.css -->
-  <link rel="stylesheet" href="styles/userprofile.css">
-  <!-- endbuild -->
+<!--<head>-->
+<!--  &lt;!&ndash; build:css(.tmp) styles/userprofile.css &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="styles/userprofile.css">-->
+<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
 
-  <!-- build:css(.tmp) styles/feed.css -->
-  <link rel="stylesheet" href="styles/feed.css">
-  <!-- endbuild -->
-</head>
+<!--  &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="styles/feed.css">-->
+<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
+<!--</head>-->
 
 <vnheader></vnheader>
 
@@ -19,7 +19,7 @@
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
 <div ng-controller="dashboardCtrl as controller">
-    <toggleswitch name="yesNo" ng-model="yesNo" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="wide"></toggleswitch>
+    <toggleswitch name="yesNo" ng-model="yesNo" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
     <div class="dashboard">
     <div class="card-group" ng-repeat="project in controller.projects">

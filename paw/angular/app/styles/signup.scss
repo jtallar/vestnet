@@ -6,9 +6,15 @@
   font-size: 16px;
 }
 
-body{
+.signUp, .welcome-full{
+  padding-bottom: 20%;
   background-image: url("/images/signupBack.png");
-  background-size:100% !important;
+  background-size:100%;
+  background-repeat: repeat;
+}
+
+.login{
+  background: none !important;
 }
 
 .signupCard{

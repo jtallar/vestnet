@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth.jwt.error;
 
+import javax.json.Json;
 import java.util.Date;
 
 public class ErrorResponse {
@@ -23,6 +24,13 @@ public class ErrorResponse {
 
     public static ErrorResponse of(final String message, final ErrorCode errorCode, int status) {
         return new ErrorResponse(message, errorCode, status);
+    }
+
+    public String getJsonResponse() {
+        return Json.createObjectBuilder()
+                .add("errorCode", errorCode.getErrorCode())
+                .add("message", message)
+                .build().toString();
     }
 
     public Integer getStatus() {

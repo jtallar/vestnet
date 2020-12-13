@@ -20,7 +20,7 @@ public class ProjectDto {
     @NotBlank
     private String name;
 
-    @Size(min = 50, max = 250)
+    @Size(min = 30, max = 250)
     @NotBlank
     private String summary;
 
