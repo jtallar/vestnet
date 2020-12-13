@@ -124,9 +124,9 @@ define([], function() {
     firstName: 'First Name',
     lastName: 'Last Name',
     dealsTitle: 'Accepted Deals',
-    msgTitleBody: 'Message:',
-    msgTitleOffer: 'Offer:',
-    msgTitleRequest: 'In exchange:',
+    msgTitleBody: 'Message',
+    msgTitleOffer: 'Offer',
+    msgTitleRequest: 'In exchange',
     noMsg: 'No deals done yet',
     reqTitle: 'Sent Offers',
     pending: 'Pending',
@@ -178,6 +178,8 @@ define([], function() {
     footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA',
     profileTitle: '{{first}} {{last}}\'s info',
     lastChat: 'Last message',
-    editProject: 'Edit Project'
+    editProject: 'Edit Project',
+    comments: 'Comments',
+    counteroffer: 'Send counteroffer'
   };
 });

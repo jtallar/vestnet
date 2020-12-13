@@ -129,9 +129,9 @@ define([], function() {
     firstName: 'Nombre/s',
     lastName: 'Apellido/s',
     dealsTitle: 'Acuerdos Aceptados',
-    msgTitleBody: 'Mensaje:',
-    msgTitleOffer: 'Oferta:',
-    msgTitleRequest: 'A cambio:',
+    msgTitleBody: 'Mensaje',
+    msgTitleOffer: 'Oferta',
+    msgTitleRequest: 'A cambio',
     noDeals: 'Aún no ha realizado acuerdos',
     reqTitle: 'Ofertas enviadas',
     pending: 'Pendiente',
@@ -178,6 +178,8 @@ define([], function() {
     footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA',
     profileTitle: 'Información de {{first}} {{last}}',
     lastChat: 'Ult. mensaje',
-    editProject: 'Editar Proyecto'
+    editProject: 'Editar Proyecto',
+    comments: 'Comentarios',
+    counteroffer: 'Enviar una contraoferta'
   };
 });

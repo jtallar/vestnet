@@ -1,6 +1,6 @@
     'use strict';
 
-define(['paw2020a', 'directives/toggle'], function(paw2020a) {
+define(['paw2020a'], function(paw2020a) {
 
   paw2020a.controller('chatCtrl', function($scope) {
 
@@ -14,55 +14,99 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
         }
       };
 
-      $scope.projects = [
-        {
-          'name': 'Vestnet',
+      $scope.project = {
+          'name': 'Superchero 2.0',
           'cost': 100000,
-          'image': 'images/projectNoImage.png',
+          'image': 'images/mate.jpg',
           'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
           'id': 1,
-          'funded': false,
+          'funded': '53%',
           'hits': 6,
           'msgCount': 2
-        },
-        {
-          'name': 'Vestnet',
-          'cost': 100000,
-          'image': 'images/projectNoImage.png',
-          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-          'id': 2,
-          'funded': false,
-          'hits': 6,
-          'msgCount': 2
-        },
-        {
-          'name': 'Vestnet',
-          'cost': 100000,
-          'image': 'images/projectNoImage.png',
-          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-          'id': 3,
-          'funded': false,
-          'hits': 3,
-          'msgCount': 0
-        }
-      ];
+        };
+    $scope.chats = [
+      {
+        'from': 'Mario Bolo',
+        'to': 'Me',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'Sisi, me parece una buena idea.',
+        'date': '11:42 | 13/12/2020'
+      },
+      {
+        'from': 'Mario',
+        'to': 'Me',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'La otra cuestion que queria consultarle es para que fecha tiene estimado conseguir esa lista',
+        'date': '11:42 | 13/12/2020'
+      },
+      {
+        'from': 'Me',
+        'to': 'Mario',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'Es super estimativo pero lo ideal seria para Abril del año entrante',
+        'date': '11:42 | 13/12/2020'
+      },
+      {
+        'from': 'Me',
+        'to': 'Mario',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'Y me gustaría cerrar con ustedes en los próximos días.',
+        'date': '11:42 | 13/12/2020'
+      },
+      {
+        'from': 'Mario',
+        'to': 'Me',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'Entiendo, intentaré todo de mí... ¿Eres único socio en todo esto, no?',
+        'date': '11:42 | 13/12/2020'
+      },
+      {
+        'from': 'Mario',
+        'to': 'Me',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'Entiendo, intentaré todo de mí... ¿Eres único socio en todo esto, no?',
+        'date': '11:42 | 13/12/2020'
+      },
+      {
+        'from': 'Mario',
+        'to': 'Me',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'Entiendo, intentaré todo de mí... ¿Eres único socio en todo esto, no?',
+        'date': '11:42 | 13/12/2020'
+      },
+      {
+        'from': 'Me',
+        'to': 'Mario',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '200K',
+        'exchange': '20%',
+        'comment': 'Sí, único socio.',
+        'date': '11:42 | 13/12/2020'
+      },
+    ];
 
-      var size = 3;   // it does not get me length of projects we have to fetch it from services later
+    $scope.n_chats = $scope.chats.length;
+    $scope.enabled = true;
+    $scope.onOff = false;
+    $scope.yesNo = true;
+    $scope.disabled = true;
 
-      $scope.state = new Array($scope.projects.length).fill(0);
-
-      $scope.messages = [[{'investor': 'Gabriel','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Mario','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
-        [{'investor': 'Gloria','projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'investor': 'Miriam','projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}], []];
-
-      $scope.answer = function (projectId, senderId, accepted) {
-          console.log(projectId);
-          console.log(senderId);
-      };
-
-      $scope.enabled = true;
-      $scope.onOff = false;
-      $scope.yesNo = true;
-      $scope.disabled = true;
+    // var myDiv = document.getElementById("chatbox-scroll");
+    // myDiv.scrollTop = myDiv.scrollHeight;
 
     });
 });

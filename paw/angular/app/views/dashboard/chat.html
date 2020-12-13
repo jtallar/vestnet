@@ -16,48 +16,139 @@
     </div>
 
     <div class="row" style="margin: 10px">
-      <div class="col-1">
-        <h4>{{projects[0].name}}</h4>
-        <img src="images/projectNoImage.png" class="p-img" alt=""/>
-        <p><i>41% Funded</i></p>
+
+      <div class="col-2 card chat-ficha">
+        <h4 class="chat-p-name">{{project.name}}</h4>
+        <img src="{{project.image}}" class="chat-p-img" alt=""/>
+        <p><i>{{project.summary}}</i></p>
+        <h6><i>{{project.funded}} Funded</i></h6>
       </div>
-      <div class="col-10">
+
+      <div class="col-9">
         <div class="d-flex justify-content-center">
-          <div class="card chatbox mb-3">
-            <div class="card-header">
-              <h5 class="chatbox-header">
-                Gabriel Jesus - {{'entrepreneur' | translate}}
-              </h5>
+          <div class="row">
+            <div class="card chatbox mb-3">
+              <div class="chat-header">
+                <div class="row">
+                  <div class="col-3">
+                    <img src="{{chats[0].picture}}" class="chat-img" alt=""/>
+                  </div>
+                  <div class="center-vertical col-6">
+                    <h5 class="center-vertical chatbox-header">
+                      {{chats[0].from}} - {{'entrepreneur' | translate}}
+                    </h5>
+                  </div>
+                  <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChat' | translate}}: {{chats[n_chats-1].date}}</div>
+                </div>
+              </div>
+              <div class="chatbox-body card-body" id="chatbox-scroll">
+                <div ng-repeat="chat in chats">
+                  <div ng-if="chat.from != 'Me'">
+                    <div class="card chat-card-other">
+                      <div class="card-body chat-other">
+                            <div class="row">
+                                <div class="col-6">
+                                  <strong>{{'msgTitleOffer' | translate}}:</strong> {{chat.offer}}
+                                </div>
+                                <div class="col-6">
+                                  <strong>{{'msgTitleRequest' | translate}}:</strong> {{chat.exchange}}
+                                </div>
+                              </div>
+                            <div class="row">
+                              <div class="col-12">
+                                <strong>{{'comments' | translate}}: </strong>{{chat.comment}}
+                              </div>
+                            </div>
+                      </div>
+                      <div class="card-footer chat-date">
+                        {{chat.date}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div ng-if="chat.from == 'Me'">
+                    <div class="card chat-card-me">
+                      <div class="card-body chat-me">
+                        <div class="row">
+                          <div class="col-6">
+                            <strong>{{'msgTitleOffer' | translate}}:</strong> {{chat.offer}}
+                          </div>
+                          <div class="col-6">
+                            <strong>{{'msgTitleRequest' | translate}}:</strong> {{chat.exchange}}
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <strong>{{'comments' | translate}}: </strong>{{chat.comment}}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer chat-date-me">
+                        {{chat.date}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="chatbox-body card-body">
-              <div class="blockquote-footer">Last message: 03-09-1997</div>
+          </div>
+          </div>
 
-              <h5 class="card-title"><b>{{'categories' | translate}}</b></h5>
-                <li ng-repeat="category in project.categories">{{category}}</li>
-              <br/>
-              <h5 class="card-title"><b>{{'totalCost' | translate}}</b></h5>
+        <div class="row chat-options">
+            <div class="col-6">
+              <a ng-click="" class="btn btn-success btn-project"  type="button">
+                <div class="chat-opt">
+                  <img class="" src="images/accept-icon.png" alt="">
+                </div>
+              </a>
+            </div>
 
-              <p>{{'projectCost' | translate : '{cost: project.cost}'}}</p>
+            <div class="col-6">
+              <a ng-click="" class="btn btn-danger btn-project"  type="button" data-toggle="collapse"
+                 data-target="#newoffer" aria-expanded="false" aria-controls="newoffer">
+                <div class="chat-opt">
+                  <img class="" src="images/reject-icon.png" alt="">
+                </div>
+              </a>
+            </div>
+        </div>
 
-              <h5 class="card-title"><b>{{'contactMail' | translate}}</b></h5>
-              <p>{{project.owner.mail}}</p>
-
-              <h5  ng-if="userId != project.owner.id"><a href="<c:url value='/users/${project.owner.id}?back=yes'/>"
-                         class="btn btn-dark btn-sm">{{'viewProfile' | translate}}</a></h5>
-              <div class="dropdown-divider"></div>
-
-              <p class="card-text"><small class="text-muted">{{'lastUpdate' | translate: '{date : project.updateDate}' }}</small></p>
+        <div class="row">
+          <div class="center-collapse collapse" id="newoffer">
+            <div class="card chat-offer">
+              <div class="card-header">
+                <div class="row">
+                  <img class="nav-icon" src="/images/chat-icon.png" alt="">
+                  <h5>{{'counteroffer' | translate}}</h5>
+                </div>
+              </div>
+              <div class="card-body row">
+                <div class="col-11">
+                  <div class="row chat-input">
+                    <div class="col-6">
+                      <input type="text" class="form-control" placeholder="{{'msgTitleOffer' | translate}}" id="msg-offer-title"/>
+                    </div>
+                    <div class="col-6">
+                      <input type="text" class="form-control" placeholder="{{'msgTitleRequest' | translate}}" id="msg-req-title"/>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <textarea class="chat-text form-control" placeholder="{{'comments' | translate}}" rows="4" id="msg-comment-title"></textarea>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <a ng-href="#/dashboard" class="btn btn-inv pull-right">
+                    <img class="send-icon" src="/images/send-icon.png" alt="">
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
       </div>
 
-      <div class="col-1">
-        <h4>{{projects[0].name}}</h4>
-        <img src="images/projectNoImage.png" class="p-img"/>
-        <p><i>41% Funded</i></p>
-      </div>
+<!--      <div class="col-1"></div>-->
 
     </div>
 </div>

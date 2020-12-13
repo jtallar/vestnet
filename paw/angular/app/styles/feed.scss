@@ -581,13 +581,19 @@ html {
 }
 
 .chatbox{
-  height: 700px;
-  width: 1000px;
+  height: 600px;
+  width: 1100px;
   background-image: url("/images/signupBack.png");
 }
 
 .chatbox-body{
   outline: solid 1px black;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+
+.chatbox-body.chat-card-other.chat-other {
+  scroll-snap-align: end;
 }
 
 .chatbox-header {
@@ -595,4 +601,128 @@ html {
   text-align: center !important;
 }
 
+.chat-header{
+  background-color: #222222 !important;
+  height:90px !important;
+}
 
+.chat-img{
+  width:70px;
+  background-color: #222222;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.mini-text{
+  font-size: small !important;
+}
+
+.chat-me{
+  background-color: rgba(182, 177, 255, 0.74);
+  text-align: right;
+  width: auto;
+  padding: 10px !important;
+  font-family: "Lato", sans-serif;
+  font-size: medium;
+}
+.chat-other{
+  text-align: left;
+  width: auto;
+  padding: 10px !important;
+  font-family: "Lato", sans-serif;
+  font-size: medium;
+}
+
+.chat-card-me{
+  width: 600px;
+  margin-left: auto;
+  margin-bottom: 20px;
+  border: solid rgba(182, 177, 255, 0.74) !important
+}
+.chat-card-other{
+  width: 600px;
+  margin-bottom: 20px;
+}
+.chat-options{
+  text-align: center;
+  margin-left: auto !important;
+  margin-right: auto !important;
+
+  width: 1000px;
+}
+
+.chat-opt{
+  width: 400px;
+}
+.chat-opt > img{
+  width: 50px;
+}
+
+.chat-offer{
+    width: 1100px !important;
+    height: 280px !important;
+    background-color: #f5f5f5 !important;
+    margin: 20px auto !important;
+    padding: 0;
+    min-height:60px !important;
+}
+
+.chat-offer.chat-header{
+  color: white;
+}
+.chat-offer h5{
+  color: white;
+  margin-left: 10px;
+  font-size: x-large;
+}
+
+.send-icon{
+  margin-top: 330% !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.chat-input{
+  margin: 5px
+}
+.chat-text{
+  margin: 15px;
+}
+.chat-date{
+  height: 18px !important;
+  padding: 2px !important;
+  font-size: x-small;
+  color: grey;
+  text-align: right;
+}
+.chat-date-me{
+  height: 18px !important;
+  padding: 2px !important;
+  font-size: x-small;
+  color: #717171;
+  text-align: left;
+  background: rgba(200, 196, 255, 0.74) !important;
+}
+.chat-p-name{
+  font-size: xx-large;
+  margin-left: 5px;
+  margin-top: 10px;
+  font-variant: all-petite-caps;
+}
+.chat-p-img{
+  width:200px;
+  border: solid 2px black;
+  margin: auto;
+}
+.chat-ficha p{
+  font-size: medium;
+  color: #5f5f5f;
+}
+.chat-ficha {
+  height: 600px;
+  padding: 20px;
+  text-align: center;
+}
+.chat-ficha h6{
+  color: #750096;
+}
