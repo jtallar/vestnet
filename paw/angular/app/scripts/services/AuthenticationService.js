@@ -27,6 +27,8 @@ define([], function() {
           }), true);
           if (data.roles.includes('ROLE_ENTREPRENEUR')) authService.setRole(false);
           if (data.roles.includes('ROLE_INVESTOR')) authService.setRole(true);
+          // TODO: Update new locale to data.locale
+          console.log(data.locale);
           return true;
         }
       );

@@ -38,13 +38,12 @@ public class ImageRestController {
     @Context
     private UriInfo uriInfo;
 
-    // TODO: Ahora se comporta como users/image_id, deberia recibir user_id y gettear la image desde el image_id en el user
-    //  como hace el update? O lo cambiamos a image_id?
+    // TODO: deberia recibir user_id y gettear la image desde el image_id en el user como hace el update? O lo cambiamos a image_id?
     @GET
-    @Path("/users/{user_id}")
+    @Path("/users/{image_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getUserImage(@PathParam("user_id") final long userId) {
-        Optional<UserImage> profileImage = userService.getProfileImage(userId);
+    public Response getUserImage(@PathParam("image_id") final long imageId) {
+        Optional<UserImage> profileImage = userService.getProfileImage(imageId);
 
         return profileImage.map(userImage -> Response.ok(ImageDto.fromUserImage(userImage)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
