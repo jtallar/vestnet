@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.image.ProjectImage;
 import org.glassfish.jersey.server.Uri;
 import org.hibernate.validator.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -11,6 +14,11 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ProjectDto {
 
@@ -33,6 +41,8 @@ public class ProjectDto {
     private Date updateDate;
     private long hits;
     private long msgCount;
+
+    private boolean portraitExists, slideshowExists;
 
     private URI categories;
     private URI owner;
@@ -57,8 +67,16 @@ public class ProjectDto {
         projectDto.setCategories(builder.build());
 
         projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
-        projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
-        projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
+
+        final Map<Boolean, Long> imageCount = project.getImages().stream().map(ProjectImage::isMain).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Optional.ofNullable(imageCount.get(true)).ifPresent(aLong -> {
+            projectDto.portraitExists = true;
+            projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
+        });
+        Optional.ofNullable(imageCount.get(false)).ifPresent(aLong -> {
+            projectDto.slideshowExists = true;
+            projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
+        });
 
         return projectDto;
     }
@@ -165,5 +183,21 @@ public class ProjectDto {
 
     public void setSlideshowImages(URI slideshowImages) {
         this.slideshowImages = slideshowImages;
+    }
+
+    public boolean isPortraitExists() {
+        return portraitExists;
+    }
+
+    public void setPortraitExists(boolean portraitExists) {
+        this.portraitExists = portraitExists;
+    }
+
+    public boolean isSlideshowExists() {
+        return slideshowExists;
+    }
+
+    public void setSlideshowExists(boolean slideshowExists) {
+        this.slideshowExists = slideshowExists;
     }
 }

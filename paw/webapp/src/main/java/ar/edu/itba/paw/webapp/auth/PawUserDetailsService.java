@@ -52,7 +52,7 @@ public class PawUserDetailsService implements UserDetailsService {
                 authorities.add(new SimpleGrantedAuthority("ROLE_INVESTOR"));
                 break;
         }
-        return new LoggedUser(user.getId(), username, user.getPassword(), user.isVerified(), true, true, true, authorities);
+        return new LoggedUser(user.getId(), user.getLocale(), username, user.getPassword(), user.isVerified(), true, true, true, authorities);
     }
 
 

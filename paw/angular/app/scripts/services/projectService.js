@@ -11,13 +11,13 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       };
 
 
-      projectService.getPageNoFilter = function(page){
-        var params = {p:page};
+      projectService.getPageNoFilter = function(page, limit){
+        var params = {p:page, l:limit};
         return root.get(params);
       };
 
-      projectService.getPage = function(page, order, field, keyWord, maxCost, minCost, cat){
-        var params = {p:page, o:order, f:field,s:keyWord,max:maxCost,min:minCost, c:cat};
+      projectService.getPage = function(page, order, field, keyWord, maxCost, minCost, cat, limit){
+        var params = {p:page, o:order, f:field,s:keyWord,max:maxCost,min:minCost, c:cat, l:limit};
 
         return root.get(params);
       };
