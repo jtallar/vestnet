@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Date;
 
 public class OfferDto {
 
@@ -23,13 +24,20 @@ public class OfferDto {
     @NotBlank
     private String exchange;
 
+    @Size(max = 31, min = 1)
+    private int expiryDays;
+
+    private Date publishDate;
+
+    private Date expiryDate;
+
     private boolean seen;
 
     private boolean direction;
 
     private long investorId, ownerId, projectId;
 
-    private URI investor, owner, project;
+    private URI investor, owner, project, chat;
 
     public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
         final OfferDto offerDto = new OfferDto();
@@ -38,12 +46,16 @@ public class OfferDto {
         offerDto.offer = message.getContent().getOffer();
         offerDto.exchange = message.getContent().getInterest();
 
+        offerDto.publishDate = message.getPublishDate();
+        offerDto.expiryDate = message.getExpiryDate();
+
         offerDto.seen = message.getSeen();
         offerDto.direction = message.getDirection();
 
         offerDto.investor = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
         offerDto.owner = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
         offerDto.project = uriInfo.getAbsolutePathBuilder().path("projects").path(String.valueOf(message.getProjectId())).build();
+        offerDto.chat = uriInfo.getAbsolutePathBuilder().path("messages").path("chat").path(String.valueOf(message.getProjectId())).path(String.valueOf(message.getInvestorId())).build();
 
         offerDto.investorId = message.getInvestorId();
         offerDto.ownerId = message.getOwnerId();
@@ -58,7 +70,8 @@ public class OfferDto {
                 new User(offerDto.getOwnerId()),
                 new User(offerDto.getInvestorId()),
                 new Project(offerDto.getProjectId()),
-                offerDto.getDirection());
+                offerDto.getDirection(),
+                offerDto.expiryDays);
     }
 
 
@@ -94,6 +107,26 @@ public class OfferDto {
         this.exchange = exchange;
     }
 
+    public int getExpiryDays() {
+        return expiryDays;
+    }
+
+    public void setExpiryDays(int expiryDays) {
+        this.expiryDays = expiryDays;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setDirection(boolean direction) {
+        this.direction = direction;
+    }
+
     public URI getInvestor() {
         return investor;
     }
@@ -116,6 +149,14 @@ public class OfferDto {
 
     public void setProject(URI project) {
         this.project = project;
+    }
+
+    public URI getChat() {
+        return chat;
+    }
+
+    public void setChat(URI chat) {
+        this.chat = chat;
     }
 
     public long getInvestorId() {

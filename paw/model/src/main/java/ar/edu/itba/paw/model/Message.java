@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,6 +24,10 @@ public class Message {
     @Temporal(TemporalType.DATE)
     @Column(name = "publish_date", insertable = false)
     private Date publishDate;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "expiry_date", insertable = false)
+    private Date expiryDate;
 
     @Column(name = "accepted")
     private Boolean accepted;
@@ -54,13 +60,14 @@ public class Message {
         /** For hibernate only */
     }
 
-    public Message(MessageContent content, User owner, User investor, Project project, boolean direction) {
+    public Message(MessageContent content, User owner, User investor, Project project, boolean direction, int expireDays) {
         this.content = content;
         this.owner = owner;
         this.investor = investor;
         this.project = project;
         this.seen = false;
         this.direction = direction;
+        this.expiryDate = calculateExpiryDate(expireDays);
     }
 
 
@@ -88,6 +95,14 @@ public class Message {
 
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public Boolean getAccepted() {
@@ -169,6 +184,7 @@ public class Message {
                 "id=" + id +
                 ", content=" + content +
                 ", publishDate=" + publishDate +
+                ", expiryDate=" + expiryDate +
                 ", accepted=" + accepted +
                 ", seen=" + seen +
                 ", investor_to_entrep=" + direction +
@@ -249,5 +265,20 @@ public class Message {
                     ", interest='" + interest + '\'' +
                     '}';
         }
+    }
+
+    /** Auxiliary functions */
+
+
+    /**
+     * Calculates expiry date given a time.
+     * @param expiryTimeInDays The time given to calculate.
+     * @return Date of expiry.
+     */
+    private Date calculateExpiryDate(int expiryTimeInDays) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        cal.add(Calendar.DAY_OF_YEAR, expiryTimeInDays);
+        return new Date(cal.getTime().getTime());
     }
 }

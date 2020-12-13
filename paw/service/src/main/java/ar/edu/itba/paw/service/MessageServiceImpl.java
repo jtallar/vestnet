@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private ProjectService projectService;
+
+    private static final int OFFER_EXPIRY_DAYS = 5;
 
 
     @Override
@@ -56,14 +61,18 @@ public class MessageServiceImpl implements MessageService {
 
         /** Checks if both users exists */
         Optional<User> owner = userService.findById(messageData.getOwnerId());
-        Optional<User> investor = userService.findById(messageData.getProjectId());
+        Optional<User> investor = userService.findById(messageData.getInvestorId());
         if (!owner.isPresent() || !investor.isPresent()) return Optional.empty();
 
-        /** Adds one message to the project*/
-        project.get().addMsgCount();
+        /** Checks if the user is able to sent message */
+        if (!isPostOfferValid(messageData.getOwnerId(), messageData.getInvestorId(), messageData.getProjectId(), messageData.getDirection()))
+            return Optional.empty();
 
         /** Persists message */
         Message finalMessage = messageDao.create(messageData);
+
+        /** Adds one message to the project*/
+        project.get().addMsgCount();
 
         /** Sends email */
         emailService.sendOffer(owner.get(), investor.get(), project.get(), messageData.getContent(), baseUri);
@@ -171,5 +180,52 @@ public class MessageServiceImpl implements MessageService {
 //                .setOrder(OrderField.DATE_DESCENDING);
 //        return messageDao.findAll(request).stream().findFirst();
 //    }
+
+    /** Auxiliary Methods */
+
+    /**
+     * Checks if the user is able to make the post offer message or not. Based on the last previous message.
+     * @param ownerId The owner's unique ID.
+     * @param investorId The investor's unique ID.
+     * @param projectId The project's unique ID.
+     * @param direction The direction of the conversation given. True for investor to entrepreneur. False otherwise.
+     * @return True if its a valid request, false otherwise.
+     */
+    private boolean isPostOfferValid(long ownerId, long investorId, long projectId, boolean direction) {
+        RequestBuilder request = new MessageRequestBuilder()
+                .setOwner(ownerId)
+                .setInvestor(investorId)
+                .setProject(projectId)
+                .setOrder(OrderField.DATE_DESCENDING);
+
+        Optional<Message> lastMessage = messageDao.findAll(request).stream().findFirst();
+
+        /** Opening of a new negotiation, only the investors  */
+        if (!lastMessage.isPresent())
+            return direction;
+
+        Message message = lastMessage.get();
+
+        /** Middle of negotiation */
+        /** If it's accepted, then only the investor can start a new negotiation */
+        if (message.getAccepted())
+            return direction;
+
+        /** Rejected the last message, both can send a new one */
+        if (!message.getAccepted())
+            return true;
+
+        /** Messages that are not accepted or rejected */
+
+        /** With an expiry date not yet crossed, sent only if not the last one */
+        if (message.getExpiryDate().before(new Date()))
+            return message.getDirection() != direction;
+
+        /** With an expiry date has expired, set the offer as rejected */
+        message.setAccepted(false);
+        // TODO sent mail the offer has expired?
+        return true;
+
+    }
 
 }
