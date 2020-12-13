@@ -11,13 +11,14 @@ public interface MessageDao {
 
     /**
      * Creates a new message.
-     * @param content Message content. Message, offer, interest.
-     * @param sender User sender.
-     * @param receiver User receiver.
+     * @param content Message content. Comment, offer, interest.
+     * @param owner User owner of the project.
+     * @param investor User investor interested on project.
      * @param project Project message topic.
+     * @param direction If true then is from the investor, if false from the entrepreneur.
      * @return The created message.
      */
-    Message create(Message.MessageContent content, User sender, User receiver, Project project);
+    Message create(Message.MessageContent content, User owner, User investor, Project project, boolean direction);
 
 
     /**

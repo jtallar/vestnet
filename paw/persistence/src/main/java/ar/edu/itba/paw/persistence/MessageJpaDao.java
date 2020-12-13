@@ -27,8 +27,8 @@ public class MessageJpaDao implements MessageDao {
 
 
     @Override
-    public Message create(Message.MessageContent content, User sender, User receiver, Project project) {
-        final Message message = new Message(content, sender, receiver, project);
+    public Message create(Message.MessageContent content, User owner, User investor, Project project, boolean direction) {
+        final Message message = new Message(content, owner, investor, project, direction);
         entityManager.persist(message);
         return message;
     }
