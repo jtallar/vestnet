@@ -103,7 +103,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/auth/refresh").permitAll()
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/images/user/**", API_PREFIX_VERSION + "/images/projects/**").permitAll()
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/images/user/**").permitAll()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/images/user/**").authenticated()
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/images/projects/**").hasRole("ENTREPRENEUR")
 //
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/location/**").permitAll()
