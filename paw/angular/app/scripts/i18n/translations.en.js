@@ -180,6 +180,10 @@ define([], function() {
     lastChat: 'Last message',
     editProject: 'Edit Project',
     comments: 'Comments',
-    counteroffer: 'Send counteroffer'
+    counteroffer: 'Send counteroffer',
+    confSendBody: 'You sure? Counteroffer cannot be erased later.',
+    confSend: 'Send counteroffer',
+    confAccept: 'Accept deal',
+    confAcceptBody: 'You sure you wanna confirm? Action cannot be undone.'
   };
 });

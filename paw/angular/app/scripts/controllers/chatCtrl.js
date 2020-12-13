@@ -92,8 +92,8 @@ define(['paw2020a'], function(paw2020a) {
         'from': 'Me',
         'to': 'Mario',
         'picture': 'images/jmv-avatar.jpg',
-        'offer': '200K',
-        'exchange': '20%',
+        'offer': '220K',
+        'exchange': '15%',
         'comment': 'Sí, único socio.',
         'date': '11:42 | 13/12/2020'
       },

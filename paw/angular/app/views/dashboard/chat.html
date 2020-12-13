@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="row" style="margin: 10px">
+    <div class="row" style="margin-top: 10px">
 
       <div class="col-2 card chat-ficha">
         <h4 class="chat-p-name">{{project.name}}</h4>
@@ -24,7 +24,7 @@
         <h6><i>{{project.funded}} Funded</i></h6>
       </div>
 
-      <div class="col-9">
+      <div class="col-8">
         <div class="d-flex justify-content-center">
           <div class="row">
             <div class="card chatbox mb-3">
@@ -46,19 +46,17 @@
                   <div ng-if="chat.from != 'Me'">
                     <div class="card chat-card-other">
                       <div class="card-body chat-other">
-                            <div class="row">
-                                <div class="col-6">
-                                  <strong>{{'msgTitleOffer' | translate}}:</strong> {{chat.offer}}
-                                </div>
-                                <div class="col-6">
-                                  <strong>{{'msgTitleRequest' | translate}}:</strong> {{chat.exchange}}
-                                </div>
-                              </div>
-                            <div class="row">
-                              <div class="col-12">
-                                <strong>{{'comments' | translate}}: </strong>{{chat.comment}}
-                              </div>
-                            </div>
+                        <div class="msg-offer">
+                          <img src="images/down-arrow.png" alt="">
+                          <strong>{{chat.offer}}</strong>
+                        </div>
+                        <div class="msg-exch">
+                          <img src="images/up-arrow.png" alt="">
+                          <strong> {{chat.exchange}}</strong>
+                        </div>
+                        <div class="msg-comm">
+                          <strong> {{chat.comment}}</strong>
+                        </div>
                       </div>
                       <div class="card-footer chat-date">
                         {{chat.date}}
@@ -69,19 +67,17 @@
                   <div ng-if="chat.from == 'Me'">
                     <div class="card chat-card-me">
                       <div class="card-body chat-me">
-                        <div class="row">
-                          <div class="col-6">
-                            <strong>{{'msgTitleOffer' | translate}}:</strong> {{chat.offer}}
+                          <div class="msg-offer">
+                            <strong>{{chat.offer}}</strong>
+                            <img src="images/down-arrow.png" alt="">
                           </div>
-                          <div class="col-6">
-                            <strong>{{'msgTitleRequest' | translate}}:</strong> {{chat.exchange}}
+                          <div class="msg-exch">
+                            <strong> {{chat.exchange}}</strong>
+                            <img src="images/up-arrow.png" alt="">
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-12">
-                            <strong>{{'comments' | translate}}: </strong>{{chat.comment}}
+                          <div class=" msg-comm">
+                            <strong> {{chat.comment}}</strong>
                           </div>
-                        </div>
                       </div>
                       <div class="card-footer chat-date-me">
                         {{chat.date}}
@@ -94,24 +90,24 @@
           </div>
           </div>
 
-        <div class="row chat-options">
-            <div class="col-6">
-              <a ng-click="" class="btn btn-success btn-project"  type="button">
-                <div class="chat-opt">
-                  <img class="" src="images/accept-icon.png" alt="">
-                </div>
-              </a>
-            </div>
+<!--        <div class="row chat-options">-->
+<!--            <div class="col-6">-->
+<!--              <a ng-click="" class="btn btn-success btn-project"  type="button">-->
+<!--                <div class="chat-opt">-->
+<!--                  <img class="" src="images/accept-icon.png" alt="">-->
+<!--                </div>-->
+<!--              </a>-->
+<!--            </div>-->
 
-            <div class="col-6">
-              <a ng-click="" class="btn btn-danger btn-project"  type="button" data-toggle="collapse"
-                 data-target="#newoffer" aria-expanded="false" aria-controls="newoffer">
-                <div class="chat-opt">
-                  <img class="" src="images/reject-icon.png" alt="">
-                </div>
-              </a>
-            </div>
-        </div>
+<!--            <div class="col-6">-->
+<!--              <a ng-click="" class="btn btn-danger btn-project"  type="button" data-toggle="collapse"-->
+<!--                 data-target="#newoffer" aria-expanded="false" aria-controls="newoffer">-->
+<!--                <div class="chat-opt">-->
+<!--                  <img class="" src="images/reject-icon.png" alt="">-->
+<!--                </div>-->
+<!--              </a>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="row">
           <div class="center-collapse collapse" id="newoffer">
@@ -122,7 +118,7 @@
                   <h5>{{'counteroffer' | translate}}</h5>
                 </div>
               </div>
-              <div class="card-body row">
+              <div class="card-body offer-body row">
                 <div class="col-11">
                   <div class="row chat-input">
                     <div class="col-6">
@@ -133,11 +129,11 @@
                     </div>
                   </div>
                   <div class="row">
-                    <textarea class="chat-text form-control" placeholder="{{'comments' | translate}}" rows="4" id="msg-comment-title"></textarea>
+                    <textarea class="chat-text form-control" placeholder="{{'comments' | translate}}" rows="2" id="msg-comment-title"></textarea>
                   </div>
                 </div>
                 <div class="col-1">
-                  <a ng-href="#/dashboard" class="btn btn-inv pull-right">
+                  <a class="btn btn-inv pull-right" data-toggle="modal" data-target="#confirmsend">
                     <img class="send-icon" src="/images/send-icon.png" alt="">
                   </a>
                 </div>
@@ -148,9 +144,82 @@
 
       </div>
 
-<!--      <div class="col-1"></div>-->
+      <div class="col-1">
+
+        <div class="row chat-options">
+          <div class="col-">
+            <a ng-click="" class="btn chat-opt" type="button" data-toggle="modal" data-target="#confirmaccept">
+              <div class="chat-opt">
+                <img class="" src="images/accept-icon.png" alt="">
+              </div>
+            </a>
+          </div>
+          <div class="col-">
+            <a ng-click="" class="btn chat-opt"  type="button" data-toggle="collapse"
+               data-target="#newoffer" aria-expanded="false" aria-controls="newoffer">
+              <div class="chat-opt">
+                <img class="" src="images/reject-icon.png" alt="">
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
 
     </div>
+</div>
+
+
+<div class="modal fade" id="confirmsend" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog popup" role="document">
+    <div class="modal-content mx-auto my-auto">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <strong>{{'confSend' | translate }}</strong>
+        </h5>
+      </div>
+      <div class="modal-body">
+        {{'confSendBody' | translate }}
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            {{'cancel' | translate }}
+          </button>
+          <a onclick="location.href='/#/dashboard'" type="button" class="btn btn-success" data-dismiss="modal" style="color: white">
+            {{'send' | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmaccept" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog popup" role="document">
+    <div class="modal-content mx-auto my-auto">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <strong>{{'confAccept' | translate }}</strong>
+        </h5>
+      </div>
+      <div class="modal-body">
+        {{'confAcceptBody' | translate }}
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            {{'cancel' | translate }}
+          </button>
+          <a onclick="location.href='/#/dashboard'" type="button" class="btn btn-success" data-dismiss="modal" style="color: white">
+            {{'confirm' | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 

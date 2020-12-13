@@ -180,6 +180,10 @@ define([], function() {
     lastChat: 'Ult. mensaje',
     editProject: 'Editar Proyecto',
     comments: 'Comentarios',
-    counteroffer: 'Enviar una contraoferta'
+    counteroffer: 'Enviar una contraoferta',
+    confSendBody: '¿Está seguro? La contraoferta no puede borrarse luego.',
+    confSend: 'Confirmar envío de contraoferta',
+    confAccept: 'Aceptar trato',
+    confAcceptBody: '¿Está seguro que desea confirmar? La acción no tiene vuelta atrás.'
   };
 });
