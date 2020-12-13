@@ -18,11 +18,9 @@ define(['paw2020a', 'restangular'], function(paw2020a) {
     }
 
 
-    imageService.getProjectImage = function (projId, index) {
+    imageService.getProjectImage = function (projId) {
 
       var object = root.one('projects').one(projId).get()
-      object.index = index
-
       return object
     }
 

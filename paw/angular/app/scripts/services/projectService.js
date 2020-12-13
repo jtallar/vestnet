@@ -34,7 +34,7 @@ define(['paw2020a', 'restangular'], function(paw2020a) {
       }
 
       projectService.getCatById = function (id) {
-        return root.one(id).get('categories')
+        return root.one(id).one('categories').get()
       }
 
 
