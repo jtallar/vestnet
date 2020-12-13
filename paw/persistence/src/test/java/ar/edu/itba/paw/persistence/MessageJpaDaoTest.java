@@ -156,7 +156,7 @@ public class MessageJpaDaoTest {
 
         // 3 - Assert
         assertEquals(1, messages.size());
-        assertEquals(MESSAGE, messages.get(0).getContent().getMessage());
+        assertEquals(MESSAGE, messages.get(0).getContent().getComment());
         assertNull(messages.get(0).getAccepted());
     }
 

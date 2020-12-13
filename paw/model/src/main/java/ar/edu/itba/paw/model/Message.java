@@ -2,7 +2,6 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Models a message. Used for communication between users.
@@ -27,11 +26,17 @@ public class Message {
     @Column(name = "accepted")
     private Boolean accepted;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User sender;
+    @Column(name = "seen")
+    private Boolean seen;
+
+    @Column(name = "i_to_e")
+    private Boolean direction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User receiver;
+    private User owner;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private User investor;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Project project;
@@ -49,11 +54,13 @@ public class Message {
         /** For hibernate only */
     }
 
-    public Message(MessageContent content, User sender, User receiver, Project project) {
+    public Message(MessageContent content, User owner, User investor, Project project, boolean direction) {
         this.content = content;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.owner = owner;
+        this.investor = investor;
         this.project = project;
+        this.seen = false;
+        this.direction = direction;
     }
 
 
@@ -91,20 +98,36 @@ public class Message {
         this.accepted = accepted;
     }
 
-    public User getSender() {
-        return sender;
+    public Boolean getSeen() {
+        return seen;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
+    public void setSeen(Boolean seen) {
+        this.seen = seen;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public Boolean getDirection() {
+        return direction;
     }
 
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
+    public void setDirection(Boolean direction) {
+        this.direction = direction;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public User getInvestor() {
+        return investor;
+    }
+
+    public void setInvestor(User investor) {
+        this.investor = investor;
     }
 
     public Project getProject() {
@@ -147,6 +170,8 @@ public class Message {
                 ", content=" + content +
                 ", publishDate=" + publishDate +
                 ", accepted=" + accepted +
+                ", seen=" + seen +
+                ", investor_to_entrep=" + direction +
                 ", sender_id=" + sender_id +
                 ", receiver_id=" + receiver_id +
                 ", project_id=" + project_id +
@@ -174,7 +199,7 @@ public class Message {
     public static class MessageContent {
 
         @Column(name = "content_message", length = 250)
-        private String message;
+        private String comment;
 
         @Column(name = "content_offer", length = 100, nullable = false)
         private String offer;
@@ -186,18 +211,18 @@ public class Message {
             /** For hibernate only */
         }
 
-        public MessageContent(String message, String offer, String interest) {
-            this.message = message;
+        public MessageContent(String comment, String offer, String interest) {
+            this.comment = comment;
             this.offer = offer;
             this.interest = interest;
         }
 
-        public String getMessage() {
-            return message;
+        public String getComment() {
+            return comment;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public void setComment(String comment) {
+            this.comment = comment;
         }
 
         public String getOffer() {
@@ -219,7 +244,7 @@ public class Message {
         @Override
         public String toString() {
             return "MessageContent{" +
-                    "message='" + message + '\'' +
+                    "comment='" + comment + '\'' +
                     ", offer='" + offer + '\'' +
                     ", interest='" + interest + '\'' +
                     '}';

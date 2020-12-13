@@ -28,7 +28,7 @@ public class OfferDto {
     public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
         final OfferDto offerDto = new OfferDto();
 
-        offerDto.body = message.getContent().getMessage();
+        offerDto.body = message.getContent().getComment();
         offerDto.offers = message.getContent().getOffer();
         offerDto.exchange = message.getContent().getInterest();
 
