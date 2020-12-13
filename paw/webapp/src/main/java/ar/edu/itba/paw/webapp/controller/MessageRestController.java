@@ -34,16 +34,6 @@ public class MessageRestController {
 
     private static final int PAGE_SIZE = 5; // TODO it's okay the offerDto, idk
 
-//    // TODO: org.hibernate.TransientPropertyValueException: Not-null property references a transient value - transient instance must be saved before current operation : ar.edu.itba.paw.model.Message.project -> ar.edu.itba.paw.model.Project] with root cause
-//    @POST
-//    @Consumes(value = { MediaType.APPLICATION_JSON })
-//    public Response offer(@Valid final OfferDto offerDto) {
-//        final Message message = messageService.create(offerDto.getBody(), offerDto.getOffers(), offerDto.getExchange(),
-//                sessionUser.getId(), offerDto.getReceiverId(), offerDto.getProjectId(), uriInfo.getBaseUri());
-//
-//        return Response.created(uriInfo.getAbsolutePath()).build(); // TODO what do we do here?
-//    }
-
 
 //    @GET
 //    @Produces(value = { MediaType.APPLICATION_JSON })
@@ -99,7 +89,7 @@ public class MessageRestController {
 
         final Optional<Message> message = messageService.create(OfferDto.toMessage(offerDto), sessionUser.getId(), uriInfo.getBaseUri());
 
-        return message.map(m -> Response.created(uriInfo.getAbsolutePath()).build()) // TODO redirect to chat
+        return message.map(m -> Response.created(uriInfo.getAbsolutePath()).build())
                 .orElse(Response.status(Response.Status.BAD_REQUEST).build());
     }
 
@@ -152,15 +142,16 @@ public class MessageRestController {
                 .build();
     }
 
+    @PUT
+    @Path("/status/{project_id}/{investor_id}")
+    public Response status(@PathParam("project_id") final long projectId,
+                           @PathParam("investor_id") final long investorId,
+                           @QueryParam("p") @DefaultValue("false") boolean accepted) {
+        final Optional<Message> updatedMessage = messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), accepted, uriInfo.getBaseUri());
 
-
-
-
-    // Both
-    // TODO: PUT change last message conversation status (project_id + investor_id)
-    // TODO: POST offer (project_id, investor_id, offer, who sent it?)
-    // Investor only if there is no previous offer + if there is must be at least 5 days old, not his, or rejected
-    // Entrepreneur only if there is a previous offer, his offer with at least 5 days old, or rejected, or from investor
+        return updatedMessage.map(message -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
 
 
 

@@ -38,25 +38,38 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, URI baseUri) {
+    public void sendOffer(User owner, User investor, Project project, Message.MessageContent content, boolean direction, URI baseUri) {
         Mail mail = new Mail();
-        mail.setFrom(sender.getEmail());
-        mail.setTo(receiver.getEmail());
-        mail.setSubject(messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(receiver.getLocale())));
-        mail.setContent(prepareOfferEmail(mail, sender, receiver, project, content, baseUri));
+        if (direction) {
+            mail.setFrom(investor.getEmail());
+            mail.setTo(owner.getEmail());
+            mail.setSubject(messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(owner.getLocale())));
+            mail.setContent(prepareOfferEmail(mail, investor, owner, project, content, baseUri));
+        } else {
+            mail.setFrom(owner.getEmail());
+            mail.setTo(investor.getEmail());
+            mail.setSubject(messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(investor.getLocale())));
+            mail.setContent(prepareOfferEmail(mail, owner, investor, project, content, baseUri));
+        }
         sendEmail(mail);
-
     }
 
 
     @Override
     @Async
-    public void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, URI baseUri) {
+    public void sendOfferAnswer(User owner, User investor, Project project, boolean answer, boolean direction, URI baseUri) {
         Mail mail = new Mail();
-        mail.setFrom(sender.getEmail());
-        mail.setTo(receiver.getEmail());
-        mail.setSubject(messageSource.getMessage("email.subject.response", null, Locale.forLanguageTag(receiver.getLocale())));
-        mail.setContent(prepareOfferAnswerEmail(mail, sender, receiver, project, answer, baseUri));
+        if (direction) {
+            mail.setFrom(investor.getEmail());
+            mail.setTo(owner.getEmail());
+            mail.setSubject(messageSource.getMessage("email.subject.response", null, Locale.forLanguageTag(owner.getLocale())));
+            mail.setContent(prepareOfferAnswerEmail(mail, investor, owner, project, answer, baseUri));
+        } else {
+            mail.setFrom(owner.getEmail());
+            mail.setTo(investor.getEmail());
+            mail.setSubject(messageSource.getMessage("email.subject.response", null, Locale.forLanguageTag(investor.getLocale())));
+            mail.setContent(prepareOfferAnswerEmail(mail, owner, investor, project, answer, baseUri));
+        }
         sendEmail(mail);
     }
 

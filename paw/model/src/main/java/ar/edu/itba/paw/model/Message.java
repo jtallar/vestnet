@@ -178,6 +178,13 @@ public class Message {
     }
 
 
+    /** Useful auxiliary methods */
+
+    public boolean isExpiryDateValid() {
+        return expiryDate.before(new Date());
+    }
+
+
     @Override
     public String toString() {
         return "Message{" +

@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -75,36 +76,22 @@ public class MessageServiceImpl implements MessageService {
         project.get().addMsgCount();
 
         /** Sends email */
-        emailService.sendOffer(owner.get(), investor.get(), project.get(), messageData.getContent(), baseUri);
+        emailService.sendOffer(owner.get(), investor.get(), project.get(), messageData.getContent(), messageData.getDirection(), baseUri);
 
         return Optional.of(finalMessage);
     }
 
 
     @Override
-    @Transactional
-    public Optional<Message> updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted, URI baseUri) {
+    public Optional<Message> getLastChatMessage(long projectId, long investorId, long sessionUserId) {
         RequestBuilder request = new MessageRequestBuilder()
-                .setInvestor(senderId)
-                .setOwner(receiverId)
                 .setProject(projectId)
-                .setSeen()
-                .setOrder(OrderField.DEFAULT);
+                .setInvestor(investorId)
+                .setOwner(sessionUserId, (sessionUserId != investorId))
+                .setOrder(OrderField.DATE_DESCENDING);
 
-        Optional<Message> optionalMessage = messageDao.findAll(request).stream().findFirst();
-        optionalMessage.ifPresent(m -> {
-            m.setAccepted(accepted);
-            Optional<User> sender = userService.findById(senderId);
-            Optional<User> receiver = userService.findById(receiverId);
-            Optional <Project> project = projectService.findById(projectId);
-            if (!sender.isPresent() || !receiver.isPresent() || !project.isPresent()) return; // TODO this. What happens if not exists one of them
-
-            emailService.sendOfferAnswer(sender.get(), receiver.get(), project.get(), accepted, baseUri);
-        });
-
-        return optionalMessage;
+        return messageDao.findAll(request).stream().findFirst();
     }
-
 
     @Override
     public Page<Message> getProjectInvestors(long projectId, long ownerId, int page, int pageSize) {
@@ -129,9 +116,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> getConversation(long projectId, long investorId, long sessionUserId, int page, int pageSize) {
-        RequestBuilder request;
-
-        request = new MessageRequestBuilder()
+        RequestBuilder request = new MessageRequestBuilder()
                 .setProject(projectId)
                 .setInvestor(investorId)
                 /** If session user is the investor then don't need to check project ownership */
@@ -140,6 +125,47 @@ public class MessageServiceImpl implements MessageService {
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
+
+
+    @Override
+    @Transactional
+    public Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri) {
+        Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
+
+        if (!optionalMessage.isPresent()) return Optional.empty();
+        Message message = optionalMessage.get();
+
+
+        Optional <Project> project = projectService.findById(projectId);
+        Optional<User> owner = userService.findById(message.getOwnerId());
+        Optional<User> investor = userService.findById(investorId);
+
+        /** This cannot happen as the message if its on the database, then the owner, investor and project exist */
+        if (!project.isPresent() || !owner.isPresent() || !investor.isPresent()) return Optional.empty();
+
+        /** If the message has expired */
+        if (!message.isExpiryDateValid()) {
+            // TODO send mail offer has expired?
+            message.setAccepted(false);
+            return Optional.empty();
+        }
+
+        /** Valid expire date */
+        /** Is investor, last message cannot be his */
+        if (sessionUserId == investorId && message.getDirection())
+            return Optional.empty();
+
+        /** Is entrepreneur, last message cannot be his */
+        if (sessionUserId == message.getOwnerId() && !message.getDirection())
+            return Optional.empty();
+
+        /** Set message as accepted or not */
+        message.setAccepted(accepted);
+
+        /** Send email */
+        emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
+        return optionalMessage;
+}
 
     // previously user service impl
 //    @Override
@@ -218,7 +244,7 @@ public class MessageServiceImpl implements MessageService {
         /** Messages that are not accepted or rejected */
 
         /** With an expiry date not yet crossed, sent only if not the last one */
-        if (message.getExpiryDate().before(new Date()))
+        if (message.isExpiryDateValid())
             return message.getDirection() != direction;
 
         /** With an expiry date has expired, set the offer as rejected */

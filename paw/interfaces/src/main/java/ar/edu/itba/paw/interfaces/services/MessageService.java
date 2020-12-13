@@ -21,15 +21,13 @@ public interface MessageService {
 
 
     /**
-     * Identifies a message and updates its status.
-     * @param senderId Unique user sender id.
-     * @param receiverId Unique user receiver id.
-     * @param projectId Unique project id.
-     * @param accepted Status to be updated.
-     * @param baseUri Base uri for replies.
-     * @return The updated message or null if not found.
+     * Gets the last message from a specific chat, used for the status change.
+     * @param projectId The unique project ID from which is the conversation about.
+     * @param investorId The unique investor's ID.
+     * @param sessionUserId The session user ID to check valid requests.
+     * @return The optional of the message. Empty if there is none or is a bad request.
      */
-    Optional<Message> updateMessageStatus(long senderId, long receiverId, long projectId, boolean accepted, URI baseUri);
+    Optional<Message> getLastChatMessage(long projectId, long investorId, long sessionUserId);
 
 
     /**
@@ -63,6 +61,18 @@ public interface MessageService {
      * @return Paged messages.
      */
     Page<Message> getConversation(long projectId, long investorId, long sessionUserId, int page, int pageSize);
+
+
+    /**
+     * Identifies a message and updates its status.
+     * @param projectId Unique project id.
+     * @param investorId The investor's unique ID.
+     * @param sessionUserId The session user ID.
+     * @param accepted Status to be updated.
+     * @param baseUri Base uri for replies.
+     * @return The updated message or null if not found.
+     */
+    Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri);
 
     // Previously user service
 

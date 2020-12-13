@@ -15,9 +15,10 @@ public interface EmailService {
      * @param receiver User recipient mail.
      * @param project Project name to contact about
      * @param content Content of the mail.
+     * @param direction The direction of the message, true if from investor, false otherwise.
      * @param baseUri Base URL used to contact.
      */
-    void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, URI baseUri);
+    void sendOffer(User sender, User receiver, Project project, Message.MessageContent content, boolean direction, URI baseUri);
 
 
     /**
@@ -25,9 +26,10 @@ public interface EmailService {
      * @param receiver User mail receiver.
      * @param project Project id to reply about.
      * @param answer True if accepted, false if refused.
+     * @param direction The direction of the message, true if from investor, false otherwise.
      * @param baseUri Base URI used to reply.
      */
-    void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, URI baseUri);
+    void sendOfferAnswer(User sender, User receiver, Project project, boolean answer, boolean direction, URI baseUri);
 
 
     /**
