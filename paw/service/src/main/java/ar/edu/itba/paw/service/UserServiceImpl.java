@@ -27,9 +27,6 @@ public class UserServiceImpl implements UserService {
     private ProjectDao projectDao;
 
     @Autowired
-    private MessageDao messageDao;
-
-    @Autowired
     private ImageDao imageDao;
 
     @Autowired

@@ -165,7 +165,26 @@ public class MessageServiceImpl implements MessageService {
         /** Send email */
         emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
         return optionalMessage;
-}
+    }
+
+    @Override
+    @Transactional
+    public Optional<Message> updateMessageSeen(long projectId, long investorId, long sessionUserId, URI baseUri) {
+        Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
+        optionalMessage.ifPresent(m -> {
+
+            /** Is investor, last message cannot be his */
+            if (sessionUserId == investorId && m.getDirection()) return;
+
+            /** Is entrepreneur, last message cannot be his */
+            if (sessionUserId == m.getOwnerId() && !m.getDirection()) return;
+
+            m.setSeen();
+        });
+
+        return optionalMessage;
+    }
+
 
     // previously user service impl
 //    @Override

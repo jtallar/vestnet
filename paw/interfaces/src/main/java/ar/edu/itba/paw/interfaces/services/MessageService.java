@@ -64,7 +64,7 @@ public interface MessageService {
 
 
     /**
-     * Identifies a message and updates its status.
+     * Identifies a message and updates its accepted/rejected status.
      * @param projectId Unique project id.
      * @param investorId The investor's unique ID.
      * @param sessionUserId The session user ID.
@@ -73,6 +73,17 @@ public interface MessageService {
      * @return The updated message or null if not found.
      */
     Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri);
+
+
+    /**
+     * Identifies a message and updates its seen status.
+     * @param projectId Unique project id.
+     * @param investorId The investor's unique ID.
+     * @param sessionUserId The session user ID.
+     * @param baseUri Base uri for replies.
+     * @return The updated message or null if not found.
+     */
+    Optional<Message> updateMessageSeen(long projectId, long investorId, long sessionUserId, URI baseUri);
 
     // Previously user service
 

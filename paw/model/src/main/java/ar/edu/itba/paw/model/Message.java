@@ -117,8 +117,8 @@ public class Message {
         return seen;
     }
 
-    public void setSeen(Boolean seen) {
-        this.seen = seen;
+    public void setSeen() {
+        this.seen = true;
     }
 
     public Boolean getDirection() {

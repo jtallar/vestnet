@@ -24,9 +24,6 @@ public class MessageRestController {
     private MessageService messageService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private SessionUser sessionUser;
 
     @Context
@@ -147,7 +144,20 @@ public class MessageRestController {
     public Response status(@PathParam("project_id") final long projectId,
                            @PathParam("investor_id") final long investorId,
                            @QueryParam("p") @DefaultValue("false") boolean accepted) {
+
         final Optional<Message> updatedMessage = messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), accepted, uriInfo.getBaseUri());
+
+        return updatedMessage.map(message -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
+
+
+    @PUT
+    @Path("/seen/{project_id}/{investor_id}")
+    public Response seen(@PathParam("project_id") final long projectId,
+                           @PathParam("investor_id") final long investorId) {
+
+        final Optional<Message> updatedMessage = messageService.updateMessageSeen(projectId, investorId, sessionUser.getId(), uriInfo.getBaseUri());
 
         return updatedMessage.map(message -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -172,13 +182,4 @@ public class MessageRestController {
 
     // TODO: GET entrepreneur Notifications (session_user_id)
     // the method above for each project owned
-
-    // TODO: PUT message seen (project_id, investor_id)
-
-
-
-
-
-
-
 }
