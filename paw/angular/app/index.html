@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="no-js">
 <head>
   <meta charset="utf-8">
   <title>Migrating | VestNet</title>
@@ -9,12 +9,41 @@
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild -->
 
-<!--  &lt;!&ndash; build:css(.tmp) styles/general.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/general.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
+  <!-- build:css(.tmp) styles/form.css -->
+  <link rel="stylesheet" href="styles/form.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/signup.css -->
+  <link rel="stylesheet" href="styles/signup.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/feed.css -->
+  <link rel="stylesheet" href="styles/feed.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/404.css -->
+  <link rel="stylesheet" href="styles/404.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/userprofile.css -->
+  <link rel="stylesheet" href="styles/userprofile.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/detail.css -->
+  <link rel="stylesheet" href="styles/detail.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/general.css -->
+  <link rel="stylesheet" href="styles/general.css">
+  <!-- endbuild -->
+
 </head>
 
-<body ng-app="paw2020a" ng-controller="IndexCtrl">
+<body ng-controller="IndexCtrl">
+
+  <!--[if lt IE 7]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
 
   <div ng-view=""></div>
 
@@ -36,12 +65,12 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
           integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
           crossorigin="anonymous"></script>
-
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="application/javascript" src="scripts/paths.js"></script>
+<!--  <script type="application/javascript" src="scripts/paw2020a.js"></script>-->
+  <script type="application/javascript" src="bower_components/requirejs/require.js" data-main="scripts/build.js"></script>
+  <!-- endbuild -->
 
-
-  <script src="/scripts/paths.js"></script>
-  <script src="bower_components/requirejs/require.js" data-main="/scripts/build.js"></script>
 </body>
 </html>
 

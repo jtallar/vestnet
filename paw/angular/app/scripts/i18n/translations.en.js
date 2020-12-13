@@ -10,7 +10,7 @@ define([], function() {
     wIp3: 'You will be able to offer money to cover various resources of an enterprise, or its entirety, acquiring an agreed percentage of the profit.',
     wIRegister: 'Register now. Find the entrepreneurship that is already waiting for you and maximize your economy. Be part of this great community.',
     wEAsk: 'Do you have the idea but not the money?',
-    wEp1: ' We offer you the possibility that your project reaches the hands of those who want to invest in it. You can build your project in an orderly, organized and classified way.',
+    wEp1: ' We offer you the possibility that your project reaches the hands of those who want to invest in it.',
     wEp2: 'We guarantee the security and confidentiality of all your data. Your project will be seen by certified and reliable investors.',
     wEp3: 'You will be able to receive money offers to cover various resources of your entrepreneurship, or its entirety, giving an agreed percentage of profit to whoever offers.',
     wERegister: 'Register now. Register your idea. I got the money and maximize your economy. Be part of this great community.',
@@ -156,7 +156,7 @@ define([], function() {
     titleRequired: '*Title',
     titleRequirement: 'Between 5 and 50 characters',
     summaryRequired: '*Summary',
-    descriptionRequirement: 'Between 50 and 250 characters',
+    descriptionRequirement: 'Between 30 and 250 characters',
     projectSummaryPlaceholder: 'Describe your project in less than 250 characters',
     costRequired: '*Cost',
     costRequirement: 'Between U$D1000 and U$D9999999',
@@ -175,6 +175,7 @@ define([], function() {
     footerPhone: 'Phone:',
     footerMail: 'Mail:',
     footerLkdn: 'LinkedIn:',
-    footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA'
+    footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA',
+    profileTitle: '{{first}} {{last}}\'s info'
   };
 });

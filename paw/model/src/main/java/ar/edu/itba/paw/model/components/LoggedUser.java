@@ -15,7 +15,7 @@ public class LoggedUser extends User {
     }
 
     public LoggedUser(long id, String username, Collection<? extends GrantedAuthority> authorities) {
-        super(username, "", authorities); // TODO: Ver que hacemos ahi en password, hace falta? Es para JWT
+        super(username, "", authorities);
         this.id = id;
     }
 

@@ -136,12 +136,27 @@ html{
 
 .welcome h4{
   margin-top: 20px;
+  font-size: 25px !important;
+}
+.welcome h1{
+  font-size: 40px !important;
+}
+.welcome h2{
+  font-size: 30px !important;
+}
+.welcome h5{
+  font-size: 20px !important;
+}
+.welcome p{
+  font-size: 20px !important;
 }
 
 #welcome-login {
   margin-top: 10px;
 }
-
+#welcome-login label{
+  margin-right: 40px !important;
+}
 
 .mailSent{
   margin-top: auto;
