@@ -64,7 +64,7 @@ public interface UserService {
      * @return True if the verification was successful
      *          or false if the token did not exist or invalid.
      */
-    boolean updateVerification(String token);
+    boolean updateVerification(String token, URI baseUri);
 
 
     /**
@@ -130,44 +130,6 @@ public interface UserService {
      * @return List of all the project for the given user.
      */
     List<Project> getOwnedProjects(long id, boolean funded);
-
-
-    /**
-     * Gets all the user accepted offers.
-     * @param receiverId User in matter unique id.
-     * @param page Page requested.
-     * @param pageSize Page size.
-     * @return Messages page with the required data.
-     */
-    Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize);
-
-
-    /**
-     * Gets all the user made offers.
-     * @param senderId User in matter unique id.
-     * @param page Page requested.
-     * @param pageSize Page size.
-     * @return Messages page with the required data.
-     */
-    Page<Message> getOfferMessages(long senderId, int page, int pageSize);
-
-
-    /**
-     * Gets all the unread messages for an user and a project.
-     * @param userId Unique user id.
-     * @param projectId Unique project id.
-     * @return A list of all the messages that match criteria.
-     */
-    List<Message> getProjectUnreadMessages(long userId, long projectId);
-
-
-    /**
-     * Gets the last sent message.
-     * @param userId Unique user id.
-     * @param projectId Unique project id.
-     * @return An optional for the last sent message.
-     */
-    Optional<Message> getLastProjectOfferMessage(long userId, long projectId);
 
 
     /**

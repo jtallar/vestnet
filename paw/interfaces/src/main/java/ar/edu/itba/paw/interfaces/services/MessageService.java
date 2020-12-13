@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -39,4 +40,45 @@ public interface MessageService {
      * @return Paged messages. Empty if owner is not the real owner of the project.
      */
     Page<Message> getProjectInvestors(long projectId, long ownerId, int page, int pageSize);
+
+
+    // Previously user service
+
+//    /**
+//     * Gets all the user accepted offers.
+//     * @param receiverId User in matter unique id.
+//     * @param page Page requested.
+//     * @param pageSize Page size.
+//     * @return Messages page with the required data.
+//     */
+//    Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize);
+//
+//
+//    /**
+//     * Gets all the user made offers.
+//     * @param senderId User in matter unique id.
+//     * @param page Page requested.
+//     * @param pageSize Page size.
+//     * @return Messages page with the required data.
+//     */
+//    Page<Message> getOfferMessages(long senderId, int page, int pageSize);
+//
+//
+//    /**
+//     * Gets all the unread messages for an user and a project.
+//     * @param userId Unique user id.
+//     * @param projectId Unique project id.
+//     * @return A list of all the messages that match criteria.
+//     */
+//    List<Message> getProjectUnreadMessages(long userId, long projectId);
+//
+//
+//    /**
+//     * Gets the last sent message.
+//     * @param userId Unique user id.
+//     * @param projectId Unique project id.
+//     * @return An optional for the last sent message.
+//     */
+//    Optional<Message> getLastProjectOfferMessage(long userId, long projectId);
+
 }

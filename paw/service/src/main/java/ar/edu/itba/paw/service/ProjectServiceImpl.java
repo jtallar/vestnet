@@ -92,24 +92,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> addMsgCount(long id) {
-        Optional<Project> project = findById(id);
-        project.ifPresent(Project::addMsgCount);
-        return project;
-    }
-
-
-    @Override
-    @Transactional
-    public Optional<Project> decMsgCount(long id) {
-        Optional<Project> project = findById(id);
-        project.ifPresent(Project::decMsgCount);
-        return project;
-    }
-
-
-    @Override
-    @Transactional
     public Optional<Project> addCategories(long ownerId, long id, List<Category> categories) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();

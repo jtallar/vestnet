@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -86,7 +87,7 @@ public class MessageServiceImpl implements MessageService {
             m.setAccepted(accepted);
             Optional<User> sender = userService.findById(senderId);
             Optional<User> receiver = userService.findById(receiverId);
-            Optional <Project> project = projectService.decMsgCount(projectId);
+            Optional <Project> project = projectService.findById(projectId);
             if (!sender.isPresent() || !receiver.isPresent() || !project.isPresent()) return; // TODO this. What happens if not exists one of them
 
             emailService.sendOfferAnswer(sender.get(), receiver.get(), project.get(), accepted, baseUri);
@@ -104,4 +105,46 @@ public class MessageServiceImpl implements MessageService {
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
+
+
+    // previously user service impl
+//    @Override
+//    public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
+//        RequestBuilder request = new MessageRequestBuilder()
+//                .setOwner(receiverId)
+//                .setAccepted(true)
+//                .setOrder(OrderField.DATE_DESCENDING);
+//        return messageDao.findAll(request, new PageRequest(page, pageSize));
+//    }
+//
+//
+//    @Override
+//    public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
+//        RequestBuilder request = new MessageRequestBuilder()
+//                .setInvestor(senderId)
+//                .setOrder(OrderField.DATE_DESCENDING);
+//        return messageDao.findAll(request, new PageRequest(page, pageSize));
+//    }
+//
+//
+//    @Override
+//    public List<Message> getProjectUnreadMessages(long userId, long projectId) {
+//        RequestBuilder request = new MessageRequestBuilder()
+//                .setOwner(userId)
+//                .setProject(projectId)
+//                .setSeen()
+//                .setOrder(OrderField.DATE_DESCENDING);
+//        return messageDao.findAll(request);
+//    }
+//
+//
+//    @Override
+//    public Optional<Message> getLastProjectOfferMessage(long userId, long projectId) {
+//        RequestBuilder request = new MessageRequestBuilder()
+//                .setInvestor(userId)
+//                .setProject(projectId)
+//                .setOrder(OrderField.DATE_DESCENDING);
+//        return messageDao.findAll(request).stream().findFirst();
+//    }
+
 }

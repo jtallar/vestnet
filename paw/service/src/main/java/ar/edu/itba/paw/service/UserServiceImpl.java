@@ -86,8 +86,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean updateVerification(String token) {
+    public boolean updateVerification(String token, URI baseUri) {
         return updateWithToken(token, null, false);
+//        if (!valid) emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri)); TODO resend email
     }
 
 
@@ -170,48 +171,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setOwner(receiverId)
-                .setAccepted(true)
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request, new PageRequest(page, pageSize));
-    }
-
-
-    @Override
-    public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setInvestor(senderId)
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request, new PageRequest(page, pageSize));
-    }
-
-
-    @Override
-    public List<Message> getProjectUnreadMessages(long userId, long projectId) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setOwner(userId)
-                .setProject(projectId)
-                .setSeen()
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request);
-    }
-
-
-    @Override
-    public Optional<Message> getLastProjectOfferMessage(long userId, long projectId) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setInvestor(userId)
-                .setProject(projectId)
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request).stream().findFirst();
-    }
-
-    @Override
     public Optional<UserImage> getProfileImage(long id) {
         return imageDao.findUserImage(id);
     }
+
 
     /** Auxiliary functions */
 

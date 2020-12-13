@@ -76,22 +76,6 @@ public interface ProjectService {
 
 
     /**
-     * Ads one more message to the project's message count.
-     * @param id The unique project id.
-     * @return The updated optional project.
-     */
-    Optional<Project> addMsgCount(long id);
-
-
-    /**
-     * Removes one message to the project's message count.
-     * @param id The unique project id.
-     * @return The updated optional project.
-     */
-    Optional<Project> decMsgCount(long id);
-
-
-    /**
      * Replaces the projects categories with the given ones.
      * @param ownerId The owner's unique id.
      * @param id The unique project's id.
