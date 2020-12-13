@@ -2,29 +2,19 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.*;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
 import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.model.location.City;
-import ar.edu.itba.paw.model.location.Country;
-import ar.edu.itba.paw.model.location.Location;
-import ar.edu.itba.paw.model.location.State;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Primary
 @Service
@@ -182,7 +172,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
         RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(receiverId)
+                .setOwner(receiverId)
                 .setAccepted(true)
                 .setOrder(OrderField.DATE_DESCENDING);
         return messageDao.findAll(request, new PageRequest(page, pageSize));
@@ -192,7 +182,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
         RequestBuilder request = new MessageRequestBuilder()
-                .setSender(senderId)
+                .setInvestor(senderId)
                 .setOrder(OrderField.DATE_DESCENDING);
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
@@ -201,9 +191,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Message> getProjectUnreadMessages(long userId, long projectId) {
         RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(userId)
+                .setOwner(userId)
                 .setProject(projectId)
-                .setUnread()
+                .setSeen()
                 .setOrder(OrderField.DATE_DESCENDING);
         return messageDao.findAll(request);
     }
@@ -212,7 +202,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<Message> getLastProjectOfferMessage(long userId, long projectId) {
         RequestBuilder request = new MessageRequestBuilder()
-                .setSender(userId)
+                .setInvestor(userId)
                 .setProject(projectId)
                 .setOrder(OrderField.DATE_DESCENDING);
         return messageDao.findAll(request).stream().findFirst();
