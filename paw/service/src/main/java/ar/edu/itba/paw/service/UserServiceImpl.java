@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException {
+        dataUser.setPassword(encoder.encode(dataUser.getPassword()));
         User newUser = userDao.create(dataUser);
         emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
         return newUser;
