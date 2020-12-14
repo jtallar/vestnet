@@ -161,7 +161,7 @@ public class UserServiceImpl implements UserService {
     public List<Project> getOwnedProjects(long id, boolean funded) {
         RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(id)
-                .setFunded(funded)
+                .setClosed(funded)
                 .setOrder(OrderField.PROJECT_DEFAULT);
         return projectDao.findAll(request);
     }

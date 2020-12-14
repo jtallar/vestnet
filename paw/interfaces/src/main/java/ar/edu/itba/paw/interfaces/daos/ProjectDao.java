@@ -12,11 +12,11 @@ public interface ProjectDao {
      * Creates a project given its parameters.
      * @param name The project's name.
      * @param summary The project's summary.
-     * @param cost The project's total cost.
+     * @param fundingTarget The project's total funding target.
      * @param owner The user owner of the project.
      * @return The created project.
      */
-    Project create(String name, String summary, long cost, User owner);
+    Project create(String name, String summary, long fundingTarget, User owner);
 
 
     /**

@@ -61,18 +61,18 @@ public class ProjectRequestBuilder extends RequestBuilder {
      * @param max Max value to filter. None if null.
      * @return The RequestBuilder.
      */
-    public ProjectRequestBuilder setCostRange(Integer min, Integer max) {
+    public ProjectRequestBuilder setFundingTargetRange(Integer min, Integer max) {
         setFundingTargetMin(min);
         return setFundingTargetMax(max);
     }
 
 
     /**
-     * Sets to filter by funded or not.
-     * @param state State of funded to filter by.
+     * Sets to filter by closed or not.
+     * @param state State of closed to filter by.
      * @return The RequestBuilder.
      */
-    public ProjectRequestBuilder setFunded(boolean state) {
+    public ProjectRequestBuilder setClosed(boolean state) {
         criteriaList.add(new FilterCriteria(PROJECT_CLOSED, state));
         return this;
     }

@@ -13,11 +13,11 @@ public interface ProjectService {
      * Creates a project given its parameters.
      * @param name The project's name.
      * @param summary The project's summary.
-     * @param cost The project's total cost.
+     * @param fundingTarget The project's total funding target.
      * @param ownerId The user id owner of the project.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, long ownerId);
+    Project create(String name, String summary, long fundingTarget, long ownerId);
 
 
     /**
@@ -26,11 +26,11 @@ public interface ProjectService {
      * @param id Project's unique id.
      * @param name The project's name.
      * @param summary The project's summary.
-     * @param cost The project's total cost.
+     * @param fundingTarget The project's total funding target.
      * @return operation return.
      * @return
      */
-    Optional<Project> update(long ownerId, long id, String name, String summary, long cost);
+    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget);
 
 
     /**
@@ -44,8 +44,8 @@ public interface ProjectService {
     /**
      * Finds all projects with the given filter.
      * @param category Projects category. Null if no category set.
-     * @param minCost Projects min cost. Null if no min cost set.
-     * @param maxCost Projects max cost. Null if no max cost set.
+     * @param minFundingTarget Projects min funding target. Null if empty.
+     * @param maxFundingTarget Projects max funding target. Null if empty.
      * @param keyword Keyword to be matched on search. Null or "" if no search.
      * @param field The field to search the keyword.
      * @param order The order to order by.
@@ -53,7 +53,7 @@ public interface ProjectService {
      * @param pageSize The page size to consider.
      * @return The list of matching projects.
      */
-    Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize);
+    Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize);
 
 
     /**
@@ -65,12 +65,12 @@ public interface ProjectService {
 
 
     /**
-     * Sets a project as funded.
+     * Sets a project as closed.
      * @param ownerId The owner's unique id.
      * @param id The unique project id.
      * @return The optional project modified.
      */
-    Optional<Project> setFunded(long ownerId, long id);
+    Optional<Project> setClosed(long ownerId, long id);
 
 
     /**

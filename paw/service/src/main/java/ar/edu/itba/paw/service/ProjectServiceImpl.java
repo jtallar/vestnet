@@ -28,20 +28,20 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Project create(String name, String summary, long cost, long ownerId) {
-        return projectDao.create(name, summary, cost, new User(ownerId));
+    public Project create(String name, String summary, long fundingTarget, long ownerId) {
+        return projectDao.create(name, summary, fundingTarget, new User(ownerId));
     }
 
 
     @Override
     @Transactional
-    public Optional<Project> update(long ownerId, long id, String name, String summary, long cost) {
+    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
         optionalProject.get().setName(name);
         optionalProject.get().setSummary(summary);
-        optionalProject.get().setFundingTarget(cost);
+        optionalProject.get().setFundingTarget(fundingTarget);
         return optionalProject;
     }
 
@@ -53,11 +53,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize) {
+    public Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize) {
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(category)
-                .setCostRange(minCost, maxCost)
-                .setFunded(false)
+                .setFundingTargetRange(minFundingTarget, maxFundingTarget)
+                .setClosed(false)
                 .setSearch(keyword, field)
                 .setOrder(order);
 
@@ -75,7 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setFunded(long ownerId, long id) {
+    public Optional<Project> setClosed(long ownerId, long id) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
         optionalProject.get().setClosed(true);

@@ -50,11 +50,11 @@ public class ProjectRestController {
                          @QueryParam("o") @DefaultValue("1") int order,
                          @QueryParam("f") @DefaultValue("1") int field,
                          @Size(max = 50) @QueryParam("s") String keyword,
-                         @Min(0) @QueryParam("max") Integer maxCost,
-                         @Min(0) @QueryParam("min") Integer minCost,
+                         @Min(0) @QueryParam("max") Integer maxFundingTarget,
+                         @Min(0) @QueryParam("min") Integer minFundingTarget,
                          @QueryParam("c") Integer category) {
 
-        Page<Project> projectPage = projectService.findAll(category, minCost, maxCost, keyword, field, order, page, PAGE_SIZE);
+        Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, PAGE_SIZE);
         projectPage.setPageRange(PAGINATION_ITEMS);
 
         List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
@@ -145,9 +145,9 @@ public class ProjectRestController {
 
 
     @PUT
-    @Path("/{id}/funded")
-    public Response funded(@PathParam("id") long id) {
-        return projectService.setFunded(sessionUser.getId(), id)
+    @Path("/{id}/close")
+    public Response close(@PathParam("id") long id) {
+        return projectService.setClosed(sessionUser.getId(), id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
