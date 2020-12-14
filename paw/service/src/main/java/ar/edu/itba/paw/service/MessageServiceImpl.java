@@ -99,12 +99,13 @@ public class MessageServiceImpl implements MessageService {
         if (accepted) request = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
-                .setAccepted(true)
+                .setAccepted()
                 .setOrder(OrderField.DATE_DESCENDING);
         else request = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
-                .setOrder(OrderField.DATE_DESCENDING); // TODO add to group by investor
+                .setOrder(OrderField.DATE_DESCENDING)
+                .setGroup(GroupField.INVESTOR); // TODO add to group by investor
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
@@ -115,11 +116,12 @@ public class MessageServiceImpl implements MessageService {
         RequestBuilder request;
         if (accepted) request = new MessageRequestBuilder()
                 .setInvestor(investorId)
-                .setAccepted(true)
+                .setAccepted()
                 .setOrder(OrderField.DATE_DESCENDING);
         else request = new MessageRequestBuilder()
                 .setInvestor(investorId)
-                .setOrder(OrderField.DATE_DESCENDING); // TODO add to group by project
+                .setOrder(OrderField.DATE_DESCENDING)
+                .setGroup(GroupField.PROJECT); // TODO add to group by project
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }

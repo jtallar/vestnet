@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.model.components;
 
-import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 
@@ -23,7 +22,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setOwner(long id) {
-        criteriaList.add(new FilterCriteria(MESSAGE_RECEIVER, new User(id)));
+        criteriaList.add(new FilterCriteria(MESSAGE_ENTREPRENEUR, new User(id)));
         return this;
     }
 
@@ -34,7 +33,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setOwner(long id, boolean condition) {
-        if (condition) criteriaList.add(new FilterCriteria(MESSAGE_RECEIVER, new User(id)));
+        if (condition) criteriaList.add(new FilterCriteria(MESSAGE_ENTREPRENEUR, new User(id)));
         return this;
     }
 
@@ -45,7 +44,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setInvestor(long id) {
-        criteriaList.add(new FilterCriteria(MESSAGE_SENDER, new User(id)));
+        criteriaList.add(new FilterCriteria(MESSAGE_INVESTOR, new User(id)));
         return this;
     }
 
@@ -57,24 +56,6 @@ public class MessageRequestBuilder extends RequestBuilder {
      */
     public MessageRequestBuilder setProject(long id) {
         criteriaList.add(new FilterCriteria(MESSAGE_PROJECT, new Project(id)));
-        return this;
-    }
-
-    /**
-     * Sets the direction of the message.
-     * @return The RequestBuilder
-     */
-    public MessageRequestBuilder setInvestorToEntrepreneur() {
-        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, true));
-        return this;
-    }
-
-    /**
-     * Sets another direction of the message.
-     * @return The RequestBuilder
-     */
-    public MessageRequestBuilder setEntrepreneurToInvestor() {
-        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, false));
         return this;
     }
 
@@ -91,11 +72,10 @@ public class MessageRequestBuilder extends RequestBuilder {
 
     /**
      * Sets to filter the accepted messages.
-     * @param state The accepted state of the messages.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setAccepted(boolean state) {
-        criteriaList.add(new FilterCriteria(MESSAGE_ACCEPTED, state));
+    public MessageRequestBuilder setAccepted() {
+        criteriaList.add(new FilterCriteria(MESSAGE_ACCEPTED, true));
         return this;
     }
 
@@ -118,6 +98,17 @@ public class MessageRequestBuilder extends RequestBuilder {
      */
     public MessageRequestBuilder setOrder(OrderField order) {
         this.order = order;
+        return this;
+    }
+
+
+    /**
+     * Sets the group by clause.
+     * @param group GroupField to set.
+     * @return The RequestBuilder.
+     */
+    public MessageRequestBuilder setGroup(GroupField group) {
+        this.group = group;
         return this;
     }
 

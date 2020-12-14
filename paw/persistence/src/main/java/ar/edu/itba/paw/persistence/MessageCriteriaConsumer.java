@@ -28,11 +28,12 @@ import java.util.function.Consumer;
     public void accept(FilterCriteria param) {
         switch (param.getField()) {
             case IDS: ids(param.getValue()); break;
-            case MESSAGE_RECEIVER: receiver(param.getValue()); break;
-            case MESSAGE_SENDER: sender(param.getValue()); break;
+            case MESSAGE_ENTREPRENEUR: owner(param.getValue()); break;
+            case MESSAGE_INVESTOR: investor(param.getValue()); break;
             case MESSAGE_PROJECT: project(param.getValue()); break;
-            case MESSAGE_SEEN: unread(); break;
+            case MESSAGE_SEEN: seen(); break;
             case MESSAGE_ACCEPTED: accepted(param.getValue()); break;
+            case MESSAGE_DIRECTION: direction(param.getValue()); break;
             default: /** should not happen */ break;
         }
     }
@@ -57,11 +58,11 @@ import java.util.function.Consumer;
 
 
     /**
-     * Filters by the message receiver.
-     * @param value The user receiver.
+     * Filters by the project's owner.
+     * @param value The user owner of of the project.
      */
-    private void receiver(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("receiver"), value));
+    private void owner(Object value) {
+        predicate = builder.and(predicate, builder.equal(root.get("owner"), value));
     }
 
 
@@ -69,8 +70,8 @@ import java.util.function.Consumer;
      * Filters by the message sender.
      * @param value The user sender.
      */
-    private void sender(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("sender"), value));
+    private void investor(Object value) {
+        predicate = builder.and(predicate, builder.equal(root.get("investor"), value));
     }
 
 
@@ -86,8 +87,8 @@ import java.util.function.Consumer;
     /**
      * Filters unread messages.
      */
-    private void unread() {
-        predicate = builder.and(predicate, builder.isNull(root.get("accepted")));
+    private void seen() {
+        predicate = builder.and(predicate, builder.isNull(root.get("seen")));
     }
 
 
@@ -97,5 +98,14 @@ import java.util.function.Consumer;
      */
     private void accepted(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("accepted"), value));
+    }
+
+
+    /**
+     * Filters by the direction status.
+     * @param value The direction to be checked.
+     */
+    private void direction(Object value) {
+        predicate = builder.and(predicate, builder.equal(root.get("direction"), value));
     }
 }

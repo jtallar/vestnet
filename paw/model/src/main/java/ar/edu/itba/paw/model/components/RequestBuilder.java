@@ -13,10 +13,12 @@ import java.util.Set;
 public abstract class RequestBuilder {
     protected Set<FilterCriteria> criteriaList;
     protected OrderField order;
+    protected GroupField group;
 
     public RequestBuilder() {
         criteriaList = new HashSet<>();
         order = OrderField.DEFAULT;
+        group = GroupField.NONE;
     }
 
     public List<FilterCriteria> getCriteriaList() {
