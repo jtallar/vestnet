@@ -6,19 +6,12 @@ import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
-import ar.edu.itba.paw.model.image.Image;
 import ar.edu.itba.paw.model.image.ProjectImage;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -48,7 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         optionalProject.get().setName(name);
         optionalProject.get().setSummary(summary);
-        optionalProject.get().setCost(cost);
+        optionalProject.get().setFundingTarget(cost);
         return optionalProject;
     }
 
@@ -85,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Optional<Project> setFunded(long ownerId, long id) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
-        optionalProject.get().setFunded(true);
+        optionalProject.get().setClosed(true);
         return optionalProject;
     }
 

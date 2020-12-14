@@ -225,7 +225,7 @@ public class Message {
         private String comment;
 
         @Column(name = "content_offer", length = 100, nullable = false)
-        private String offer;
+        private long offer;
 
         @Column(name = "content_interest", length = 100)
         private String interest;
@@ -234,7 +234,7 @@ public class Message {
             /** For hibernate only */
         }
 
-        public MessageContent(String comment, String offer, String interest) {
+        public MessageContent(String comment, long offer, String interest) {
             this.comment = comment;
             this.offer = offer;
             this.interest = interest;
@@ -248,11 +248,11 @@ public class Message {
             this.comment = comment;
         }
 
-        public String getOffer() {
+        public long getOffer() {
             return offer;
         }
 
-        public void setOffer(String offer) {
+        public void setOffer(long offer) {
             this.offer = offer;
         }
 

@@ -40,7 +40,7 @@ public class MessageJpaDaoTest {
 
 
     private static final String MESSAGE = "Message here.";
-    private static final String OFFER = "Offer here.";
+    private static final long OFFER = 5000;
     private static final String INTEREST = "Interest here.";
     private static final boolean DIRECTION = true;
     private static final int EXPIRY = 5;

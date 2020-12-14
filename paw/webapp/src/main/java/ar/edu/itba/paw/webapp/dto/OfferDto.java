@@ -5,6 +5,8 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -16,9 +18,9 @@ public class OfferDto {
     @NotBlank
     private String comment;
 
-    @Size(max = 100)
-    @NotBlank
-    private String offer; // TODO change to Integer
+    @Min(1000)
+    @Max(9999999)
+    private long offer;
 
     @Size(max = 100)
     @NotBlank
@@ -91,11 +93,11 @@ public class OfferDto {
         this.comment = comment;
     }
 
-    public String getOffer() {
+    public long getOffer() {
         return offer;
     }
 
-    public void setOffer(String offer) {
+    public void setOffer(long offer) {
         this.offer = offer;
     }
 

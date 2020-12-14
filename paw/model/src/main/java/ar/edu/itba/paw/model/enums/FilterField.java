@@ -6,11 +6,11 @@ package ar.edu.itba.paw.model.enums;
 public enum FilterField {
     /** Due to complexity of queries this do not have valid field names.
      * The best thing to use would be Metamodel found uin JPA 2.0 */
-    PROJECT_MIN_COST,
-    PROJECT_MAX_COST,
+    PROJECT_MIN_FUNDING_TARGET,
+    PROJECT_MAX_FUNDING_TARGET,
     PROJECT_CATEGORY,
     PROJECT_OWNER,
-    PROJECT_FUNDED,
+    PROJECT_CLOSED,
     PROJECT_SEARCH_NAME,
     PROJECT_SEARCH_SUMMARY,
     PROJECT_SEARCH_LOCATION,

@@ -103,13 +103,15 @@ CREATE TABLE IF NOT EXISTS projects (
     -- TOP INFO
     project_name    VARCHAR(50) NOT NULL,
     summary         VARCHAR(250) NOT NULL,
-    cost            INT DEFAULT 0,
+    funding_target  INT DEFAULT 0,
+    funding_current INT DEFAULT 0,
+
 
     -- EXTRA INFO
     publish_date    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     hits            INT DEFAULT 0,
-    funded          BOOLEAN DEFAULT FALSE,
+    closed          BOOLEAN DEFAULT FALSE,
     message_count   INT DEFAULT 0
 );
 

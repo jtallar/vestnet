@@ -159,12 +159,12 @@ public class ProjectJpaDao implements ProjectDao {
         switch (order) {
             /** Descending order */
             case PROJECT_DEFAULT:
-            case PROJECT_COST_DESCENDING:
+            case PROJECT_FUNDING_TARGET_DESCENDING:
             case DATE_DESCENDING: query.orderBy(builder.desc(root.get(order.getField())), builder.desc(root.get("id"))); break;
 
             /** Ascending order */
             case PROJECT_ALPHABETICAL:
-            case PROJECT_COST_ASCENDING:
+            case PROJECT_FUNDING_TARGET_ASCENDING:
             case DATE_ASCENDING: query.orderBy(builder.asc(root.get(order.getField())), builder.desc(root.get("id"))); break;
         }
     }

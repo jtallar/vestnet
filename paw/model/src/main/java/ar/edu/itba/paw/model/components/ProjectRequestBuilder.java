@@ -32,38 +32,38 @@ public class ProjectRequestBuilder extends RequestBuilder {
 
 
     /**
-     * Sets to filter the min value of cost.
+     * Sets to filter the min value of funding target.
      * @param min Min value to filter. None if null.
      * @return The RequestBuilder.
      */
-    public ProjectRequestBuilder setCostMin(Integer min) {
+    public ProjectRequestBuilder setFundingTargetMin(Integer min) {
         if (min != null)
-            criteriaList.add(new FilterCriteria(PROJECT_MIN_COST, min));
+            criteriaList.add(new FilterCriteria(PROJECT_MIN_FUNDING_TARGET, min));
         return this;
     }
 
 
     /**
-     * Sets to filter the max value of cost.
+     * Sets to filter the max value of funding target.
      * @param max Max value to filter. None if null.
      * @return The RequestBuilder.
      */
-    public ProjectRequestBuilder setCostMax(Integer max) {
+    public ProjectRequestBuilder setFundingTargetMax(Integer max) {
         if (max != null)
-            criteriaList.add(new FilterCriteria(PROJECT_MAX_COST, max));
+            criteriaList.add(new FilterCriteria(PROJECT_MAX_FUNDING_TARGET, max));
         return this;
     }
 
 
     /**
-     * Sets to filter the min value of cost.
+     * Sets to filter the min value of funding target.
      * @param min Min value to filter. None if null.
      * @param max Max value to filter. None if null.
      * @return The RequestBuilder.
      */
     public ProjectRequestBuilder setCostRange(Integer min, Integer max) {
-        setCostMin(min);
-        return setCostMax(max);
+        setFundingTargetMin(min);
+        return setFundingTargetMax(max);
     }
 
 
@@ -73,7 +73,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder.
      */
     public ProjectRequestBuilder setFunded(boolean state) {
-        criteriaList.add(new FilterCriteria(PROJECT_FUNDED, state));
+        criteriaList.add(new FilterCriteria(PROJECT_CLOSED, state));
         return this;
     }
 

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Project;
-import org.glassfish.jersey.server.Uri;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
@@ -26,9 +25,13 @@ public class ProjectDto {
 
     @Min(1000)
     @Max(9999999)
-    private long cost;
+    private long fundingTarget;
 
-    private boolean funded;
+    @Min(1000)
+    @Max(9999999)
+    private long fundingCurrent; // TODO could be more than the actual target
+
+    private boolean closed;
     private Date publishDate;
     private Date updateDate;
     private long hits;
@@ -44,8 +47,9 @@ public class ProjectDto {
         projectDto.setId(project.getId());
         projectDto.setName(project.getName());
         projectDto.setSummary(project.getSummary());
-        projectDto.setCost(project.getCost());
-        projectDto.setFunded(project.isFunded());
+        projectDto.setFundingTarget(project.getFundingTarget());
+        projectDto.setFundingCurrent(project.getFundingCurrent());
+        projectDto.setClosed(project.isClosed());
         projectDto.setPublishDate(project.getPublishDate());
         projectDto.setUpdateDate(project.getUpdateDate());
         projectDto.setHits(project.getHits());
@@ -87,20 +91,28 @@ public class ProjectDto {
         this.summary = summary;
     }
 
-    public long getCost() {
-        return cost;
+    public long getFundingTarget() {
+        return fundingTarget;
     }
 
-    public void setCost(long cost) {
-        this.cost = cost;
+    public void setFundingTarget(long fundingTarget) {
+        this.fundingTarget = fundingTarget;
     }
 
-    public boolean isFunded() {
-        return funded;
+    public long getFundingCurrent() {
+        return fundingCurrent;
     }
 
-    public void setFunded(boolean funded) {
-        this.funded = funded;
+    public void setFundingCurrent(long fundingCurrent) {
+        this.fundingCurrent = fundingCurrent;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public Date getPublishDate() {

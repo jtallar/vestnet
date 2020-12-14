@@ -155,7 +155,7 @@ public class ProjectJpaDaoTest {
         assertTrue(maybeProject.isPresent());
         assertEquals(PROJECT_NAME, maybeProject.get().getName());
         assertEquals(PROJECT_SUMMARY, maybeProject.get().getSummary());
-        assertEquals(PROJECT_COST, maybeProject.get().getCost());
+        assertEquals(PROJECT_COST, maybeProject.get().getFundingTarget());
         assertEquals(categoryId.longValue(), maybeProject.get().getCategories().get(0).getId());
     }
 
@@ -231,8 +231,8 @@ public class ProjectJpaDaoTest {
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setCostMin((int) PROJECT_COST_2)
-                .setOrder(OrderField.PROJECT_COST_ASCENDING);
+                .setFundingTargetMin((int) PROJECT_COST_2)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_ASCENDING);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -254,8 +254,8 @@ public class ProjectJpaDaoTest {
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setCostMax((int) PROJECT_COST)
-                .setOrder(OrderField.PROJECT_COST_ASCENDING);
+                .setFundingTargetMax((int) PROJECT_COST)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_ASCENDING);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -278,7 +278,7 @@ public class ProjectJpaDaoTest {
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCostRange((int) PROJECT_COST, (int) PROJECT_COST_2)
-                .setOrder(OrderField.PROJECT_COST_DESCENDING);
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_DESCENDING);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -350,7 +350,7 @@ public class ProjectJpaDaoTest {
 
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(categoryId.intValue())
-                .setCostMax((int) PROJECT_COST)
+                .setFundingTargetMax((int) PROJECT_COST)
                 .setSearch(PROJECT_NAME, SearchField.PROJECT_NAME)
                 .setOrder(OrderField.PROJECT_ALPHABETICAL);
 
@@ -476,8 +476,9 @@ public class ProjectJpaDaoTest {
         project.put("owner_id", userId.longValue());
         project.put("project_name", name);
         project.put("summary", PROJECT_SUMMARY);
-        project.put("cost", cost);
-        project.put("funded", true);
+        project.put("funding_target", cost);
+        project.put("funding_current", 0);
+        project.put("closed", true);
         project.put("hits", 0);
         project.put("message_count", 0);
         return jdbcInsertProject.executeAndReturnKey(project);
