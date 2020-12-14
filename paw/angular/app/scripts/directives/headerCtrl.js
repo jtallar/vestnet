@@ -13,6 +13,7 @@ define(['paw2020a'], function(paw2020a) {
         $scope.iDropdown = ['requests', 'profile'];
         $scope.gOptions = ['welcome', 'login', 'signUp'];
         $scope.gIcons = ['home-icon', 'login-icon', 'signup-icon'];
+        $scope.notifications = true ;
       }
     };
   });
