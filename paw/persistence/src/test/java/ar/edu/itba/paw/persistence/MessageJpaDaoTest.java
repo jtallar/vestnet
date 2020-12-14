@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.OrderField;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,8 +40,11 @@ public class MessageJpaDaoTest {
 
 
     private static final String MESSAGE = "Message here.";
-    private static final String OFFER = "Offer here.";
+    private static final long OFFER = 5000;
     private static final String INTEREST = "Interest here.";
+    private static final boolean DIRECTION = true;
+    private static final int EXPIRY = 5;
+
 
     private static final int COUNTRY_ID = 1;
     private static final int STATE_ID = 2;
@@ -109,9 +113,11 @@ public class MessageJpaDaoTest {
         Number entrepreneurId = createUser();
         Number projectId = createProject(entrepreneurId);
         Message.MessageContent content = new Message.MessageContent(MESSAGE, OFFER, INTEREST);
+        Message message = new Message(content, new User(entrepreneurId.longValue()), new User(investorId.longValue()), new Project(projectId.longValue()),
+                DIRECTION, EXPIRY);
 
         // 2 - Execute
-        messageJpaDao.create(content, new User(investorId.longValue()), new User(entrepreneurId.longValue()), new Project(projectId.longValue()));
+        messageJpaDao.create(message);
 
 
         // 3 - Assert
@@ -126,9 +132,9 @@ public class MessageJpaDaoTest {
         Number entrepreneurId = createUser();
         Number projectId = createProject(entrepreneurId);
         RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(entrepreneurId.longValue())
+                .setOwner(entrepreneurId.longValue())
                 .setProject(projectId.longValue())
-                .setUnread()
+                .setSeen()
                 .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
@@ -144,11 +150,11 @@ public class MessageJpaDaoTest {
         Number investorId = createUser();
         Number entrepreneurId = createUser();
         Number projectId = createProject(entrepreneurId);
-        createMessage(investorId, entrepreneurId, projectId, false);
+        createMessage(entrepreneurId, investorId, projectId, true);
         RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(entrepreneurId.longValue())
+                .setOwner(entrepreneurId.longValue())
                 .setProject(projectId.longValue())
-                .setUnread()
+                .setUnseen()
                 .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
@@ -156,8 +162,23 @@ public class MessageJpaDaoTest {
 
         // 3 - Assert
         assertEquals(1, messages.size());
-        assertEquals(MESSAGE, messages.get(0).getContent().getMessage());
+        assertEquals(MESSAGE, messages.get(0).getContent().getComment());
         assertNull(messages.get(0).getAccepted());
+    }
+
+    @Test
+    public void testGetUnreadMessagesCount() {
+        // 1 - Setup - Create message tables
+        Number investorId = createUser();
+        Number entrepreneurId = createUser();
+        Number projectId = createProject(entrepreneurId);
+        createMessage(entrepreneurId, investorId, projectId, true);
+
+        // 2 - Execute
+        long count = messageJpaDao.countEntrepreneurNotifications(entrepreneurId.longValue());
+
+        // 3 - Assert
+        assertEquals(1, count);
     }
 
     /**
@@ -249,20 +270,22 @@ public class MessageJpaDaoTest {
 
     /**
      * Creates a message and inserts it.
-     * @param senderId The user sender id.
-     * @param receiverId The user receiver id.
+     * @param ownerId The user owner id.
+     * @param investorId The user investor id.
      * @param projectId The project id.
-     * @param changeOrder Boolean to change order.
+     * @param direction Boolean to change order.
      * @return Created message id.
      */
-    private Number createMessage(Number senderId, Number receiverId, Number projectId, boolean changeOrder) {
+    private Number createMessage(Number ownerId, Number investorId, Number projectId, boolean direction) {
         Map<String, Object> message = new HashMap<>();
-        message.put("content_message", MESSAGE);
+        message.put("content_comment", MESSAGE);
         message.put("content_offer", OFFER);
         message.put("content_interest", INTEREST);
-        message.put("sender_id", changeOrder ? receiverId : senderId);
-        message.put("receiver_id", changeOrder ? senderId : receiverId);
-        message.put("project_id", projectId);
+        message.put("owner_id", ownerId.longValue());
+        message.put("investor_id", investorId.longValue());
+        message.put("project_id", projectId.longValue());
+        message.put("i_to_e", direction);
+        message.put("seen", false);
         return jdbcInsertMessage.executeAndReturnKey(message);
     }
 }

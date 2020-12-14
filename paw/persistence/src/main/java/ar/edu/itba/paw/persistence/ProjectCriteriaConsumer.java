@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
@@ -33,11 +32,11 @@ import java.util.function.Consumer;
     @Override
     public void accept(FilterCriteria param) {
         switch (param.getField()) {
-            case PROJECT_MIN_COST: minCost(param.getValue()); break;
-            case PROJECT_MAX_COST: maxCost(param.getValue()); break;
+            case PROJECT_MIN_FUNDING_TARGET: minFundingTarget(param.getValue()); break;
+            case PROJECT_MAX_FUNDING_TARGET: maxFundingTarget(param.getValue()); break;
             case PROJECT_CATEGORY: category(param.getValue()); break;
             case PROJECT_OWNER: owner(param.getValue()); break;
-            case PROJECT_FUNDED: funded(param.getValue()); break;
+            case PROJECT_CLOSED: closed(param.getValue()); break;
             case IDS: ids(param.getValue()); break;
 
             /** If its not a filter, its a search */
@@ -66,20 +65,20 @@ import java.util.function.Consumer;
 
 
     /**
-     * Filters by min cost.
-     * @param value The min cost.
+     * Filters by min funding target.
+     * @param value The min funding target.
      */
-    private void minCost(Object value) {
-        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get("cost"), value.toString()));
+    private void minFundingTarget(Object value) {
+        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get("fundingTarget"), value.toString()));
     }
 
 
     /**
-     * Filters by max cost.
-     * @param value The max cost.
+     * Filters by max funding target.
+     * @param value The max funding target.
      */
-    private void maxCost(Object value) {
-        predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("cost"), value.toString()));
+    private void maxFundingTarget(Object value) {
+        predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("fundingTarget"), value.toString()));
     }
 
 
@@ -102,11 +101,11 @@ import java.util.function.Consumer;
     }
 
     /**
-     * Filter by project fully founded or not.
-     * @param value Boolean funded.
+     * Filter by project is closed or not.
+     * @param value Boolean closed.
      */
-    private void funded(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("funded"), value));
+    private void closed(Object value) {
+        predicate = builder.and(predicate, builder.equal(root.get("closed"), value));
     }
 
 

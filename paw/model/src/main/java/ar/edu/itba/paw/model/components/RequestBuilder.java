@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.model.components;
 
+import ar.edu.itba.paw.model.enums.GroupField;
+import ar.edu.itba.paw.model.enums.OrderField;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,10 +16,11 @@ import java.util.Set;
 public abstract class RequestBuilder {
     protected Set<FilterCriteria> criteriaList;
     protected OrderField order;
+    protected GroupField group;
 
     public RequestBuilder() {
         criteriaList = new HashSet<>();
-        order = OrderField.DEFAULT;
+        group = GroupField.NONE;
     }
 
     public List<FilterCriteria> getCriteriaList() {
@@ -25,5 +29,9 @@ public abstract class RequestBuilder {
 
     public OrderField getOrder() {
         return order;
+    }
+
+    public GroupField getGroup() {
+        return group;
     }
 }

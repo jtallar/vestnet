@@ -34,13 +34,16 @@ public class ProjectDto {
 
     @Min(1000)
     @Max(9999999)
-    private long cost;
+    private long fundingTarget;
 
-    private boolean funded;
+    @Min(1000)
+    @Max(9999999)
+    private long fundingCurrent; // TODO could be more than the actual target
+
+    private boolean closed;
     private Date publishDate;
     private Date updateDate;
     private long hits;
-    private long msgCount;
 
     private boolean portraitExists, slideshowExists;
 
@@ -54,12 +57,12 @@ public class ProjectDto {
         projectDto.setId(project.getId());
         projectDto.setName(project.getName());
         projectDto.setSummary(project.getSummary());
-        projectDto.setCost(project.getCost());
-        projectDto.setFunded(project.isFunded());
+        projectDto.setFundingTarget(project.getFundingTarget());
+        projectDto.setFundingCurrent(project.getFundingCurrent());
+        projectDto.setClosed(project.isClosed());
         projectDto.setPublishDate(project.getPublishDate());
         projectDto.setUpdateDate(project.getUpdateDate());
         projectDto.setHits(project.getHits());
-        projectDto.setMsgCount(project.getMsgCount());
 
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
@@ -105,20 +108,28 @@ public class ProjectDto {
         this.summary = summary;
     }
 
-    public long getCost() {
-        return cost;
+    public long getFundingTarget() {
+        return fundingTarget;
     }
 
-    public void setCost(long cost) {
-        this.cost = cost;
+    public void setFundingTarget(long fundingTarget) {
+        this.fundingTarget = fundingTarget;
     }
 
-    public boolean isFunded() {
-        return funded;
+    public long getFundingCurrent() {
+        return fundingCurrent;
     }
 
-    public void setFunded(boolean funded) {
-        this.funded = funded;
+    public void setFundingCurrent(long fundingCurrent) {
+        this.fundingCurrent = fundingCurrent;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public Date getPublishDate() {
@@ -143,14 +154,6 @@ public class ProjectDto {
 
     public void setHits(long hits) {
         this.hits = hits;
-    }
-
-    public long getMsgCount() {
-        return msgCount;
-    }
-
-    public void setMsgCount(long msgCount) {
-        this.msgCount = msgCount;
     }
 
     public URI getCategories() {

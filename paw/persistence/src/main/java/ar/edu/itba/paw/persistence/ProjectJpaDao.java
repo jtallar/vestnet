@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
-import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.FilterField;
+import ar.edu.itba.paw.model.enums.OrderField;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -24,8 +25,8 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public Project create(String name, String summary, long cost, User owner) {
-        final Project project = new Project(name, summary, cost, owner);
+    public Project create(String name, String summary, long fundingTarget, User owner) {
+        final Project project = new Project(name, summary, fundingTarget, owner);
         entityManager.persist(project);
         return project;
     }
@@ -48,7 +49,6 @@ public class ProjectJpaDao implements ProjectDao {
         if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
         /** Get all project's ids with matching criteria, order and page  */
-        // TODO check here, should be an exception. Wrong page
         List<Long> ids = findAllIds(filters, order, page);
         if (ids.isEmpty()) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
@@ -157,12 +157,15 @@ public class ProjectJpaDao implements ProjectDao {
      */
     private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Project> root, OrderField order) {
         switch (order) {
-            case DEFAULT:  query.orderBy(builder.desc(root.get("hits")), builder.desc(root.get("id"))); break;
-            case ALPHABETICAL: query.orderBy(builder.asc(root.get("name")), builder.desc(root.get("id"))); break;
-            case COST_ASCENDING: query.orderBy(builder.asc(root.get("cost")), builder.desc(root.get("id"))); break;
-            case COST_DESCENDING: query.orderBy(builder.desc(root.get("cost")), builder.desc(root.get("id"))); break;
-            case DATE_ASCENDING: query.orderBy(builder.asc(root.get("publishDate")), builder.desc(root.get("id"))); break;
-            case DATE_DESCENDING: query.orderBy(builder.desc(root.get("publishDate")), builder.desc(root.get("id"))); break;
+            /** Descending order */
+            case PROJECT_DEFAULT:
+            case PROJECT_FUNDING_TARGET_DESCENDING:
+            case DATE_DESCENDING: query.orderBy(builder.desc(root.get(order.getField())), builder.desc(root.get("id"))); break;
+
+            /** Ascending order */
+            case PROJECT_ALPHABETICAL:
+            case PROJECT_FUNDING_TARGET_ASCENDING:
+            case DATE_ASCENDING: query.orderBy(builder.asc(root.get(order.getField())), builder.desc(root.get("id"))); break;
         }
     }
 

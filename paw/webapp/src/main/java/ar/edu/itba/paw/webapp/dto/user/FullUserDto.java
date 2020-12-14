@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.webapp.dto.user;
 
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.UserRole;
+import ar.edu.itba.paw.model.enums.UserRole;
 import ar.edu.itba.paw.webapp.forms.validators.ValidEnum;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
