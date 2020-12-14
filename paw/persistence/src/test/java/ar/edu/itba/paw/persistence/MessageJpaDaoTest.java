@@ -154,7 +154,7 @@ public class MessageJpaDaoTest {
         RequestBuilder request = new MessageRequestBuilder()
                 .setOwner(entrepreneurId.longValue())
                 .setProject(projectId.longValue())
-                .setSeen()
+                .setUnseen()
                 .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
@@ -164,6 +164,21 @@ public class MessageJpaDaoTest {
         assertEquals(1, messages.size());
         assertEquals(MESSAGE, messages.get(0).getContent().getComment());
         assertNull(messages.get(0).getAccepted());
+    }
+
+    @Test
+    public void testGetUnreadMessagesCount() {
+        // 1 - Setup - Create message tables
+        Number investorId = createUser();
+        Number entrepreneurId = createUser();
+        Number projectId = createProject(entrepreneurId);
+        createMessage(entrepreneurId, investorId, projectId, true);
+
+        // 2 - Execute
+        long count = messageJpaDao.countEntrepreneurNotifications(entrepreneurId.longValue());
+
+        // 3 - Assert
+        assertEquals(1, count);
     }
 
     /**
@@ -270,7 +285,7 @@ public class MessageJpaDaoTest {
         message.put("investor_id", investorId.longValue());
         message.put("project_id", projectId.longValue());
         message.put("i_to_e", direction);
-        message.put("seen", true);
+        message.put("seen", false);
         return jdbcInsertMessage.executeAndReturnKey(message);
     }
 }

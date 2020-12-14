@@ -41,4 +41,12 @@ public interface MessageDao {
      * @return The amount of messages matching the criteria.
      */
     long countAll(RequestBuilder request);
+
+
+    /**
+     * As is a difficult method to generalize and must be fast, has its own method.
+     * @param ownerId The unique user's id.
+     * @return The amount of messages (1 tops per project) not seen.
+     */
+    long countEntrepreneurNotifications(long ownerId);
 }

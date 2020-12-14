@@ -2,10 +2,13 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
 import ar.edu.itba.paw.model.enums.FilterField;
 import ar.edu.itba.paw.model.enums.GroupField;
 import ar.edu.itba.paw.model.enums.OrderField;
+import ar.edu.itba.paw.model.image.ProjectImage;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -61,12 +64,22 @@ public class MessageJpaDao implements MessageDao {
         return findAllNotPaged(request.getCriteriaList(), request.getOrder());
     }
 
+
     @Override
     public long countAll(RequestBuilder request) {
         List<FilterCriteria> filters = request.getCriteriaList();
         GroupField group = request.getGroup();
 
         return findAllIdsCount(filters, group);
+    }
+
+
+    @Override
+    public long countEntrepreneurNotifications(long ownerId) {
+        final TypedQuery<Long> query = entityManager
+                .createQuery("select count(distinct m.project) from Message m where m.project in (select p.id from Project p where p.owner = :owner ) and m.seen = false and m.direction = true", Long.class);
+        query.setParameter("owner", new User(ownerId));
+        return query.getSingleResult();
     }
 
 

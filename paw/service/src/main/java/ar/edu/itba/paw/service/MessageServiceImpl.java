@@ -166,6 +166,7 @@ public class MessageServiceImpl implements MessageService {
 
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
+        message.setSeen();
         project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
         /** Send email */
@@ -185,8 +186,6 @@ public class MessageServiceImpl implements MessageService {
 
             /** Is entrepreneur, last message cannot be his */
             if (sessionUserId == m.getOwnerId() && !m.getDirection()) return;
-
-            // TODO remove notification for this message
 
             m.setSeen();
         });
@@ -221,10 +220,7 @@ public class MessageServiceImpl implements MessageService {
 
             return messageDao.countAll(request);
         }
-
-        /** If the user is an Entrepreneur */
-        // TODO this
-        return 0;
+        return messageDao.countEntrepreneurNotifications(sessionUserId);
     }
 
 
@@ -270,9 +266,6 @@ public class MessageServiceImpl implements MessageService {
 
         /** With an expiry date has expired, set the offer as rejected */
         message.setSeen();
-        // TODO this is here to avoid inconsistencies in one case.
-        //  Sent offer -> Expired -> Sent offer -> Seen by the other one. The count gives +1 because of the first one.
-        //  Should be done only when the second offer is sent
         message.setAccepted(false);
         return true;
 
