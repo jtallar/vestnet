@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.webapp.dto.user;
 
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.UserRole;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -47,6 +45,8 @@ public class UpdatableUserDto {
     private String locale;
 
     private int countryId, stateId, cityId;
+
+    private boolean imageExists;
 
     private URI location, image, projectList, receivedMessages, sentMessages, favorites;
 
@@ -206,5 +206,13 @@ public class UpdatableUserDto {
 
     public void setFavorites(URI favorites) {
         this.favorites = favorites;
+    }
+
+    public boolean isImageExists() {
+        return imageExists;
+    }
+
+    public void setImageExists(boolean imageExists) {
+        this.imageExists = imageExists;
     }
 }

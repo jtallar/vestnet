@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.image.ProjectImage;
 import org.glassfish.jersey.server.Uri;
 import org.hibernate.validator.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -11,6 +14,11 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ProjectDto {
 
@@ -26,13 +34,18 @@ public class ProjectDto {
 
     @Min(1000)
     @Max(9999999)
-    private long cost;
+    private long fundingTarget;
 
-    private boolean funded;
+    @Min(1000)
+    @Max(9999999)
+    private long fundingCurrent; // TODO could be more than the actual target
+
+    private boolean closed;
     private Date publishDate;
     private Date updateDate;
     private long hits;
-    private long msgCount;
+
+    private boolean portraitExists, slideshowExists;
 
     private URI categories;
     private URI owner;
@@ -44,12 +57,12 @@ public class ProjectDto {
         projectDto.setId(project.getId());
         projectDto.setName(project.getName());
         projectDto.setSummary(project.getSummary());
-        projectDto.setCost(project.getCost());
-        projectDto.setFunded(project.isFunded());
+        projectDto.setFundingTarget(project.getFundingTarget());
+        projectDto.setFundingCurrent(project.getFundingCurrent());
+        projectDto.setClosed(project.isClosed());
         projectDto.setPublishDate(project.getPublishDate());
         projectDto.setUpdateDate(project.getUpdateDate());
         projectDto.setHits(project.getHits());
-        projectDto.setMsgCount(project.getMsgCount());
 
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
@@ -57,8 +70,16 @@ public class ProjectDto {
         projectDto.setCategories(builder.build());
 
         projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
-        projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
-        projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
+
+        final Map<Boolean, Long> imageCount = project.getImages().stream().map(ProjectImage::isMain).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Optional.ofNullable(imageCount.get(true)).ifPresent(aLong -> {
+            projectDto.portraitExists = true;
+            projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
+        });
+        Optional.ofNullable(imageCount.get(false)).ifPresent(aLong -> {
+            projectDto.slideshowExists = true;
+            projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
+        });
 
         return projectDto;
     }
@@ -87,20 +108,28 @@ public class ProjectDto {
         this.summary = summary;
     }
 
-    public long getCost() {
-        return cost;
+    public long getFundingTarget() {
+        return fundingTarget;
     }
 
-    public void setCost(long cost) {
-        this.cost = cost;
+    public void setFundingTarget(long fundingTarget) {
+        this.fundingTarget = fundingTarget;
     }
 
-    public boolean isFunded() {
-        return funded;
+    public long getFundingCurrent() {
+        return fundingCurrent;
     }
 
-    public void setFunded(boolean funded) {
-        this.funded = funded;
+    public void setFundingCurrent(long fundingCurrent) {
+        this.fundingCurrent = fundingCurrent;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public Date getPublishDate() {
@@ -125,14 +154,6 @@ public class ProjectDto {
 
     public void setHits(long hits) {
         this.hits = hits;
-    }
-
-    public long getMsgCount() {
-        return msgCount;
-    }
-
-    public void setMsgCount(long msgCount) {
-        this.msgCount = msgCount;
     }
 
     public URI getCategories() {
@@ -165,5 +186,21 @@ public class ProjectDto {
 
     public void setSlideshowImages(URI slideshowImages) {
         this.slideshowImages = slideshowImages;
+    }
+
+    public boolean isPortraitExists() {
+        return portraitExists;
+    }
+
+    public void setPortraitExists(boolean portraitExists) {
+        this.portraitExists = portraitExists;
+    }
+
+    public boolean isSlideshowExists() {
+        return slideshowExists;
+    }
+
+    public void setSlideshowExists(boolean slideshowExists) {
+        this.slideshowExists = slideshowExists;
     }
 }

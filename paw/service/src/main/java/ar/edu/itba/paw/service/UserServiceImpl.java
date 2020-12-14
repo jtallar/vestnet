@@ -2,29 +2,20 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.*;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.OrderField;
 import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.model.location.City;
-import ar.edu.itba.paw.model.location.Country;
-import ar.edu.itba.paw.model.location.Location;
-import ar.edu.itba.paw.model.location.State;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Primary
 @Service
@@ -35,9 +26,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ProjectDao projectDao;
-
-    @Autowired
-    private MessageDao messageDao;
 
     @Autowired
     private ImageDao imageDao;
@@ -54,6 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException {
+        dataUser.setPassword(encoder.encode(dataUser.getPassword()));
         User newUser = userDao.create(dataUser);
         emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
         return newUser;
@@ -96,15 +85,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean updateVerification(String token) {
-        return updateWithToken(token, null, false);
+    public boolean updateVerification(String token, URI baseUri) {
+        return updateWithToken(token, null, false, baseUri);
     }
 
 
     @Override
     @Transactional
     public boolean updatePassword(String token, String password) {
-        return updateWithToken(token, password, true);
+        return updateWithToken(token, password, true, null);
     }
 
 
@@ -170,58 +159,20 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<Project> getOwnedProjects(long id, boolean funded) {
+    public List<Project> getOwnedProjects(long id, boolean closed) {
         RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(id)
-                .setFunded(funded)
-                .setOrder(OrderField.DEFAULT);
+                .setClosed(closed)
+                .setOrder(OrderField.PROJECT_DEFAULT);
         return projectDao.findAll(request);
     }
 
 
     @Override
-    public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(receiverId)
-                .setAccepted(true)
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request, new PageRequest(page, pageSize));
-    }
-
-
-    @Override
-    public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setSender(senderId)
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request, new PageRequest(page, pageSize));
-    }
-
-
-    @Override
-    public List<Message> getProjectUnreadMessages(long userId, long projectId) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setReceiver(userId)
-                .setProject(projectId)
-                .setUnread()
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request);
-    }
-
-
-    @Override
-    public Optional<Message> getLastProjectOfferMessage(long userId, long projectId) {
-        RequestBuilder request = new MessageRequestBuilder()
-                .setSender(userId)
-                .setProject(projectId)
-                .setOrder(OrderField.DATE_DESCENDING);
-        return messageDao.findAll(request).stream().findFirst();
-    }
-
-    @Override
     public Optional<UserImage> getProfileImage(long id) {
         return imageDao.findUserImage(id);
     }
+
 
     /** Auxiliary functions */
 
@@ -230,9 +181,10 @@ public class UserServiceImpl implements UserService {
      * @param token The necessary token to check its validity.
      * @param password The password, if given, to update.
      * @param isPassword If its change of password or verification.
+     * @param baseUri The base uri in case the verification token has expired.
      * @return True when update is done, false if token corrupted/missing/invalid.
      */
-    private boolean updateWithToken(String token, String password, boolean isPassword) {
+    private boolean updateWithToken(String token, String password, boolean isPassword, URI baseUri) {
         if (token == null || token.isEmpty()) return false;
 
         Optional<Token> optionalToken = tokenDao.findByToken(token);
@@ -241,9 +193,13 @@ public class UserServiceImpl implements UserService {
         Token realToken = optionalToken.get();
         User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
 
-        if (!realToken.isValid()) return false;
+        /** Resend in case of an invalid token for verification */
+        if (!realToken.isValid()) {
+            if (!isPassword) emailService.sendVerification(user, tokenDao.create(user).getToken(), baseUri);
+            return false;
+        }
 
-        if (isPassword) user.setPassword(encoder.encode(password)); // TODO should encode or comes encoded
+        if (isPassword) user.setPassword(encoder.encode(password));
         else user.setVerified(true);
         return true;
     }

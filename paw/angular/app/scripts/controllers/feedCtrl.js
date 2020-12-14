@@ -3,6 +3,8 @@
 define(['paw2020a', 'services/projectService', 'services/imageService'], function(paw2020a) {
     paw2020a.controller('feedCtrl', ['projectService','imageService', '$scope', function (projectService,imageService, $scope) {
 
+      var pageSize = 12;
+
       var page = 1
       $scope.filterdata = {
         'field': '' ,
@@ -32,6 +34,8 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
 
       };
 
+      // TODO: Por que esta distinto el NoFilter o con Filter???
+
       $scope.adjustInputs = function () {
         var minTag = document.getElementById('filter-form-min');
         if (minTag.value < 0 || minTag.value > 9999999) {
@@ -48,7 +52,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
           maxTag.value = Math.round(maxTag.value);
         }
 
-        projectService.getPage(page, $scope.filterdata.order,$scope.filterdata.field, $scope.filterdata.search, $scope.filterdata.maxCost, $scope.filterdata.minCost, $scope.filterdata.category)
+        projectService.getPage(page, $scope.filterdata.order,$scope.filterdata.field, $scope.filterdata.search, $scope.filterdata.maxCost, $scope.filterdata.minCost, $scope.filterdata.category, pageSize)
       };
 
       // $scope.projects = [{
@@ -61,7 +65,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
 
       $scope.projects = []
 
-      projectService.getPageNoFilter(page.toString()).then(function (projects) {
+      projectService.getPageNoFilter(page.toString(), pageSize).then(function (projects) {
 
 
         $scope.projects = projects
@@ -70,17 +74,20 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
         var map = {}
 
         for(var i = 0; i < $scope.projects.length; i++) {
-          map[$scope.projects[i].id] = i
-
+          map[$scope.projects[i].id] = i;
+          if ($scope.projects[i].portraitExists) {
+            // TODO: Getear yendo al link que esta en el proyecto
             imageService.getProjectImage(String($scope.projects[i].id), i).then(function (image) {
-
-
-                $scope.projects[map[image.route]].image = image.image
-
+              $scope.projects[map[image.route]].image = image.image
             }, function (err) {
               console.log("No image")
-
             })
+          } else {
+            // TODO: Poner la imagen por default
+            // $scope.projects[map[image.route]].image = 'images/projectNoImage.png';
+          }
+
+
 
 
         }

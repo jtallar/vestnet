@@ -6,19 +6,12 @@ import ar.edu.itba.paw.interfaces.daos.ProjectDao;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
-import ar.edu.itba.paw.model.image.Image;
 import ar.edu.itba.paw.model.image.ProjectImage;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -35,20 +28,20 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Project create(String name, String summary, long cost, long ownerId) {
-        return projectDao.create(name, summary, cost, new User(ownerId));
+    public Project create(String name, String summary, long fundingTarget, long ownerId) {
+        return projectDao.create(name, summary, fundingTarget, new User(ownerId));
     }
 
 
     @Override
     @Transactional
-    public Optional<Project> update(long ownerId, long id, String name, String summary, long cost) {
+    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
         optionalProject.get().setName(name);
         optionalProject.get().setSummary(summary);
-        optionalProject.get().setCost(cost);
+        optionalProject.get().setFundingTarget(fundingTarget);
         return optionalProject;
     }
 
@@ -60,11 +53,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize) {
+    public Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize) {
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(category)
-                .setCostRange(minCost, maxCost)
-                .setFunded(false)
+                .setFundingTargetRange(minFundingTarget, maxFundingTarget)
+                .setClosed(false)
                 .setSearch(keyword, field)
                 .setOrder(order);
 
@@ -80,31 +73,14 @@ public class ProjectServiceImpl implements ProjectService {
         return project;
     }
 
+
     @Override
     @Transactional
-    public Optional<Project> setFunded(long ownerId, long id) {
+    public Optional<Project> setClosed(long ownerId, long id) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
-        optionalProject.get().setFunded(true);
+        optionalProject.get().setClosed(true);
         return optionalProject;
-    }
-
-
-    @Override
-    @Transactional
-    public Optional<Project> addMsgCount(long id) {
-        Optional<Project> project = findById(id);
-        project.ifPresent(Project::addMsgCount);
-        return project;
-    }
-
-
-    @Override
-    @Transactional
-    public Optional<Project> decMsgCount(long id) {
-        Optional<Project> project = findById(id);
-        project.ifPresent(Project::decMsgCount);
-        return project;
     }
 
 

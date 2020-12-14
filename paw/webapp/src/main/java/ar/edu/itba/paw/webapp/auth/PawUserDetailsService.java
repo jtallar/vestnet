@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.components.LoggedUser;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.UserRole;
+import ar.edu.itba.paw.model.enums.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class PawUserDetailsService implements UserDetailsService {
                 authorities.add(new SimpleGrantedAuthority("ROLE_INVESTOR"));
                 break;
         }
-        return new LoggedUser(user.getId(), username, user.getPassword(), user.isVerified(), true, true, true, authorities);
+        return new LoggedUser(user.getId(), user.getLocale(), username, user.getPassword(), user.isVerified(), true, true, true, authorities);
     }
 
 

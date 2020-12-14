@@ -2,8 +2,10 @@ package ar.edu.itba.paw.model.components;
 
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.enums.GroupField;
+import ar.edu.itba.paw.model.enums.OrderField;
 
-import static ar.edu.itba.paw.model.components.FilterField.*;
+import static ar.edu.itba.paw.model.enums.FilterField.*;
 
 /**
  * Creates the list of criteria filter and order for
@@ -13,27 +15,39 @@ public class MessageRequestBuilder extends RequestBuilder {
 
     public MessageRequestBuilder() {
         super();
+        this.order = OrderField.DATE_DESCENDING;
     }
 
 
     /**
-     * Sets to filter the receiver.
+     * Sets to filter the owner.
      * @param id The receiver's user id.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setReceiver(long id) {
-        criteriaList.add(new FilterCriteria(MESSAGE_RECEIVER, new User(id)));
+    public MessageRequestBuilder setOwner(long id) {
+        criteriaList.add(new FilterCriteria(MESSAGE_ENTREPRENEUR, new User(id)));
         return this;
     }
 
 
     /**
-     * Sets to filter the sender.
+     * Sets to filter the owner if the condition is true.
+     * @param id The receiver's user id.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setOwner(long id, boolean condition) {
+        if (condition) criteriaList.add(new FilterCriteria(MESSAGE_ENTREPRENEUR, new User(id)));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the investor.
      * @param id The sender's user id.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setSender(long id) {
-        criteriaList.add(new FilterCriteria(MESSAGE_SENDER, new User(id)));
+    public MessageRequestBuilder setInvestor(long id) {
+        criteriaList.add(new FilterCriteria(MESSAGE_INVESTOR, new User(id)));
         return this;
     }
 
@@ -50,22 +64,51 @@ public class MessageRequestBuilder extends RequestBuilder {
 
 
     /**
+     * Sets to filter the read messages.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setSeen() {
+        criteriaList.add(new FilterCriteria(MESSAGE_SEEN, true));
+        return this;
+    }
+
+
+    /**
      * Sets to filter the unread messages.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setUnread() {
-        criteriaList.add(new FilterCriteria(MESSAGE_UNREAD, true));
+    public MessageRequestBuilder setUnseen() {
+        criteriaList.add(new FilterCriteria(MESSAGE_SEEN, false));
         return this;
     }
 
 
     /**
      * Sets to filter the accepted messages.
-     * @param state The accepted state of the messages.
      * @return The RequestBuilder
      */
-    public MessageRequestBuilder setAccepted(boolean state) {
-        criteriaList.add(new FilterCriteria(MESSAGE_ACCEPTED, state));
+    public MessageRequestBuilder setAccepted() {
+        criteriaList.add(new FilterCriteria(MESSAGE_ACCEPTED, true));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the messages sent from the entrepreneur.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setFromEntrepreneur() {
+        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, false));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the messages sent from the investor.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setFromInvestor() {
+        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, true));
         return this;
     }
 
@@ -76,7 +119,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder.
      */
     public MessageRequestBuilder setOrder(int order) {
-        this.order = OrderField.getEnum(String.valueOf(order));
+        this.order = OrderField.getEnum(order);
         return this;
     }
 
@@ -88,6 +131,17 @@ public class MessageRequestBuilder extends RequestBuilder {
      */
     public MessageRequestBuilder setOrder(OrderField order) {
         this.order = order;
+        return this;
+    }
+
+
+    /**
+     * Sets the group by clause.
+     * @param group GroupField to set.
+     * @return The RequestBuilder.
+     */
+    public MessageRequestBuilder setGroup(GroupField group) {
+        this.group = group;
         return this;
     }
 

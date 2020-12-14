@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
-import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Category;
@@ -13,20 +12,16 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 @Path("projects")
@@ -46,7 +41,7 @@ public class ProjectRestController {
     @Context
     private UriInfo uriInfo;
 
-    private static final int PAGE_SIZE = 3;
+    private static final String DEFAULT_PAGE_SIZE = "3";
     private static final int PAGINATION_ITEMS = 5;
 
     // TODO: Ver si no conviene que reciba tambien el page size para saber cuantos proyectos quiere
@@ -56,11 +51,13 @@ public class ProjectRestController {
                          @QueryParam("o") @DefaultValue("1") int order,
                          @QueryParam("f") @DefaultValue("1") int field,
                          @Size(max = 50) @QueryParam("s") String keyword,
-                         @Min(0) @QueryParam("max") Integer maxCost,
-                         @Min(0) @QueryParam("min") Integer minCost,
-                         @QueryParam("c") Integer category) {
+                         @Min(0) @QueryParam("max") Integer maxFundingTarget,
+                         @Min(0) @QueryParam("min") Integer minFundingTarget,
+                         @QueryParam("c") Integer category,
+                         @QueryParam("l") @DefaultValue(DEFAULT_PAGE_SIZE) int limit) {
 
-        Page<Project> projectPage = projectService.findAll(category, minCost, maxCost, keyword, field, order, page, PAGE_SIZE);
+
+        Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
         projectPage.setPageRange(PAGINATION_ITEMS);
 
         List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
@@ -75,7 +72,7 @@ public class ProjectRestController {
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response create(@Valid final ProjectDto projectDto) {
-        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getCost(), sessionUser.getId());
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
         return Response.created(projectUri).build();
     }
@@ -96,7 +93,7 @@ public class ProjectRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
                            @Valid final ProjectDto projectDto) {
-        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(), projectDto.getCost());
+        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget());
 
         return optionalProject.map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -151,9 +148,9 @@ public class ProjectRestController {
 
 
     @PUT
-    @Path("/{id}/funded")
-    public Response funded(@PathParam("id") long id) {
-        return projectService.setFunded(sessionUser.getId(), id)
+    @Path("/{id}/close")
+    public Response close(@PathParam("id") long id) {
+        return projectService.setClosed(sessionUser.getId(), id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }

@@ -129,8 +129,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class) // TODO: Remove in production
                 .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-//                .exceptionHandling().authenticationEntryPoint(new PlainTextBasicAuthenticationEntryPoint()); // resolves 401 Unauthenticated
+                .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(new PlainTextBasicAuthenticationEntryPoint()); // removes 403 default body from response
     }
 
     private LoginProcessingFilter buildLoginFilter() throws Exception {

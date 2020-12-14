@@ -143,7 +143,7 @@ public class UserRestController {
     @PUT
     @Path("/verify")
     public Response updateVerification(@QueryParam("token") final String token) {
-        if (userService.updateVerification(token))
+        if (userService.updateVerification(token, uriInfo.getBaseUri()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
