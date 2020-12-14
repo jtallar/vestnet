@@ -156,4 +156,15 @@ public class ProjectRestController {
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
+
+    @GET
+    @Path("/{id}/transactions")
+    public Response transactions(@PathParam("id") long id,
+                                 @QueryParam("p") @DefaultValue("1") int page) {
+
+        return Response.status(Response.Status.FOUND)
+                .header(HttpHeaders.LOCATION, uriInfo.getBaseUriBuilder()
+                        .path("messages").path("projects").path(String.valueOf(id)).queryParam("p", page).queryParam("a", true))
+                .build();
+    }
 }
