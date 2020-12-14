@@ -54,5 +54,12 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
       $scope.yesNo = true;
       $scope.disabled = true;
 
+      $scope.extraMessages = [{'investor': 'Kiko','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Lolo','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}];
+
+      $scope.viewMore = function (id) {
+        console.log($scope.messages[id]);
+        $scope.extraMessages.forEach(msg => $scope.messages[id].push(msg));
+      }
+
     });
 });

@@ -15,12 +15,13 @@ define(['paw2020a'], function(paw2020a) {
       };
 
       $scope.project = {
-          'name': 'Superchero 2.0',
-          'cost': 100000,
+          'name': 'Superchero',
+          'target': 1000,
+          'current': 900,
           'image': 'images/mate.jpg',
           'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
           'id': 1,
-          'funded': '53%',
+          'percentage': 90,
           'hits': 6,
           'msgCount': 2
         };
@@ -107,11 +108,46 @@ define(['paw2020a'], function(paw2020a) {
       },
     ];
 
+    $scope.extraChats = [
+      {
+        'from': 'Mario',
+        'to': 'Me',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '350K',
+        'exchange': '55%',
+        'comment': 'Mensajitos nuevoooos',
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
+      },
+      {
+        'from': 'Me',
+        'to': 'Mario',
+        'picture': 'images/jmv-avatar.jpg',
+        'offer': '88K',
+        'exchange': '50%',
+        'comment': 'jajajjajajajja seee buenisimo buenisimo buenisimo. bue ni si mo.',
+        'date': '11:42 | 13/12/2020',
+        'exp': '4'
+      }];
+
     $scope.n_chats = $scope.chats.length;
     $scope.enabled = true;
     $scope.onOff = false;
     $scope.yesNo = true;
     $scope.disabled = true;
+
+    $scope.viewMoreChat = function () {
+      var element = document.getElementById("chatbox-scroll");
+      element.scrollTop = 0;
+      $scope.extraChats.reverse();
+      $scope.extraChats.forEach(msg => $scope.chats.unshift(msg));
+    }
+
+    // TODO: ver si se puede hacer que ande asi arranca al fondo del chat
+    $scope.init = function () {
+      var element = document.getElementById("chatbox-scroll");
+      element.scrollTop = element.scrollHeight;
+    }
 
     // var myDiv = document.getElementById("chatbox-scroll");
     // myDiv.scrollTop = myDiv.scrollHeight;

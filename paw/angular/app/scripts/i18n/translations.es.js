@@ -191,6 +191,7 @@ define([], function() {
     target: 'Objetivo',
     current: 'Obtenido',
     money: '$ {{m}}',
-    contact: 'Enviar mensaje'
+    contact: 'Enviar mensaje',
+    viewmore: 'Ver más...'
   };
 });

@@ -191,6 +191,7 @@ define([], function() {
     target: 'Target',
     current: 'Current',
     money: 'USD {{m}}',
-    contact: 'Send new message'
+    contact: 'Send new message',
+    viewmore: 'View more...'
   };
 });

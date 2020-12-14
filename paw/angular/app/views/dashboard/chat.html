@@ -1,6 +1,6 @@
 
 
-<body ng-controller="chatCtrl">
+<body ng-controller="chatCtrl" onload="init();">
 <vnheader></vnheader>
 
 <!--<div class="row">-->
@@ -21,16 +21,22 @@
         <h4 class="chat-p-name">{{project.name}}</h4>
         <img src="{{project.image}}" class="chat-p-img" alt=""/>
         <p><i>{{project.summary}}</i></p>
-        <h6><i>{{project.funded}} Funded</i></h6>
+        <h6><i>Funded</i></h6>
+        <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
+        </div>
       </div>
 
-      <div class="col-8">
+      <div class="col-8" onload="init();">
         <div class="d-flex justify-content-center">
           <div class="row">
             <div class="card chatbox mb-3">
               <div class="chat-header">
                 <div class="row">
                   <div class="col-3">
+
+<!--                    TODO: HACERLO POR ID DEL USER, NO EN BASE AL PRIMER CHAT OOOOOBVIO -->
+
                     <img src="{{chats[0].picture}}" class="chat-img" alt=""/>
                   </div>
                   <div class="center-vertical col-6">
@@ -41,6 +47,9 @@
                   <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChat' | translate}}: {{chats[n_chats-1].date}}</div>
                 </div>
               </div>
+              <button ng-click="viewMoreChat()" class="btn btn-inv pull-right">
+                <img src="images/up-arrow-wh.png" class="p-img" alt="" style="margin-top: 5px">
+              </button>
               <div class="chatbox-body card-body" id="chatbox-scroll">
                 <div ng-repeat="chat in chats">
                   <div ng-if="chat.from != 'Me'">

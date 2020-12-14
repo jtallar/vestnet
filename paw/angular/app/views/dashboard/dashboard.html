@@ -78,7 +78,7 @@
 
       <div class="center-collapse collapse" id="chatcollapse{{project.id}}">
         <div class="card msg-collapse" ng-repeat="message in messages[$index]">
-          <div class="card-body">
+          <div class="card-body dash-body">
             <div class="row">
               <div class="col-1">
                 <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
@@ -97,11 +97,15 @@
             </div>
           </div>
         </div>
+
+        <button ng-click="viewMore(project.id-1)" class="btn btn-inv pull-right">
+          <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
+        </button>
       </div>
 
       <div class="center-collapse collapse" id="fundcollapse{{project.id}}">
         <div class="card msg-collapse" ng-repeat="message in messages[$index]">
-          <div class="card-body">
+          <div class="card-body dash-body">
             <div class="row">
               <div class="col-1">
                 <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
@@ -122,7 +126,7 @@
 
       <div class="center-collapse collapse" id="statscollapse{{project.id}}">
         <div class="card msg-collapse">
-          <div class="card-body">
+          <div class="card-body dash-body">
             <div class="row">
               <div class="col-1">
                 <img class="nav-icon" src="/images/stats-icon-b.png" alt="">

@@ -604,7 +604,6 @@ html {
 }
 
 .chatbox-body{
-  outline: solid 1px black;
   scroll-behavior: smooth;
   overflow-y: scroll;
 }
@@ -823,4 +822,15 @@ html {
   background-color: black !important;
   border-radius: 50% !important;
   margin: 5px 0 8px 10px !important
+}
+
+.dash-body{
+  padding: 23px !important
+}
+
+.view-more{
+  margin-top: 10px;
+  color: #585858;
+  font-style: italic;
+  font-size: 18px;
 }
