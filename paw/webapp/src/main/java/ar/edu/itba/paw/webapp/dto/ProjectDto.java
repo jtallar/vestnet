@@ -35,7 +35,6 @@ public class ProjectDto {
     private Date publishDate;
     private Date updateDate;
     private long hits;
-    private long msgCount;
 
     private URI categories;
     private URI owner;
@@ -53,7 +52,6 @@ public class ProjectDto {
         projectDto.setPublishDate(project.getPublishDate());
         projectDto.setUpdateDate(project.getUpdateDate());
         projectDto.setHits(project.getHits());
-        projectDto.setMsgCount(project.getMsgCount());
 
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
@@ -137,14 +135,6 @@ public class ProjectDto {
 
     public void setHits(long hits) {
         this.hits = hits;
-    }
-
-    public long getMsgCount() {
-        return msgCount;
-    }
-
-    public void setMsgCount(long msgCount) {
-        this.msgCount = msgCount;
     }
 
     public URI getCategories() {
