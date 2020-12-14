@@ -140,7 +140,10 @@ define(['paw2020a'], function(paw2020a) {
       var element = document.getElementById("chatbox-scroll");
       element.scrollTop = 0;
       $scope.extraChats.reverse();
-      $scope.extraChats.forEach(msg => $scope.chats.unshift(msg));
+      // $scope.extraChats.forEach(msg => $scope.chats.unshift(msg));
+      $scope.extraChats.forEach(function (msg){
+        $scope.chats.unshift(msg);
+      });
     }
 
     // TODO: ver si se puede hacer que ande asi arranca al fondo del chat

@@ -180,14 +180,14 @@
           </div>
           <div class="card-footer feed-footer">
             <div class="row">
-              <div class="price-footer col-6">
+              <div class="price-footer col-8">
                 <h4>{{'funding' | translate}}</h4>
-                <h6>{{project.current}} of <b>{{project.target}}</b></h6>
+                <h6>{{project.current}} of <b>{{'money'| translate}} {{project.target}}</b></h6>
                 <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
                   <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
                 </div>
               </div>
-              <div class="col-5">
+              <div class="col-3">
                 <a href="/#/projects/{{project.id}}" class="btn pull-right more-icon" >
                   <img src="images/view-icon.png" alt="">
                 </a>

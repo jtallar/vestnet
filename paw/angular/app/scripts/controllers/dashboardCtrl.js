@@ -58,7 +58,9 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
 
       $scope.viewMore = function (id) {
         console.log($scope.messages[id]);
-        $scope.extraMessages.forEach(msg => $scope.messages[id].push(msg));
+        $scope.extraMessages.forEach(function(msg){
+          $scope.messages[id].push(msg)
+        });
       }
 
     });
