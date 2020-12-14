@@ -20,7 +20,6 @@ public abstract class RequestBuilder {
 
     public RequestBuilder() {
         criteriaList = new HashSet<>();
-        order = OrderField.DEFAULT;
         group = GroupField.NONE;
     }
 

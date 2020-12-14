@@ -15,6 +15,7 @@ public class MessageRequestBuilder extends RequestBuilder {
 
     public MessageRequestBuilder() {
         super();
+        this.order = OrderField.DATE_DESCENDING;
     }
 
 
@@ -88,7 +89,7 @@ public class MessageRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder.
      */
     public MessageRequestBuilder setOrder(int order) {
-        this.order = OrderField.getEnum(String.valueOf(order));
+        this.order = OrderField.getEnum(order);
         return this;
     }
 

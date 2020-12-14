@@ -156,7 +156,6 @@ public class MessageJpaDao implements MessageDao {
      */
     private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, OrderField order) {
         switch (order) {
-            case DEFAULT:
             case DATE_DESCENDING: query.orderBy(builder.desc(root.get(order.getField())), builder.desc(root.get("id"))); break;
             case DATE_ASCENDING: query.orderBy(builder.asc(root.get(order.getField())), builder.desc(root.get("id"))); break;
             default: /** Do nothing for the rest of them */ break;

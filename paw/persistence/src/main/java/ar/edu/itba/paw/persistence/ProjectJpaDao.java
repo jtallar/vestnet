@@ -158,13 +158,13 @@ public class ProjectJpaDao implements ProjectDao {
     private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Project> root, OrderField order) {
         switch (order) {
             /** Descending order */
-            case DEFAULT:
-            case COST_DESCENDING:
+            case PROJECT_DEFAULT:
+            case PROJECT_COST_DESCENDING:
             case DATE_DESCENDING: query.orderBy(builder.desc(root.get(order.getField())), builder.desc(root.get("id"))); break;
 
             /** Ascending order */
-            case ALPHABETICAL:
-            case COST_ASCENDING:
+            case PROJECT_ALPHABETICAL:
+            case PROJECT_COST_ASCENDING:
             case DATE_ASCENDING: query.orderBy(builder.asc(root.get(order.getField())), builder.desc(root.get("id"))); break;
         }
     }

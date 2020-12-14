@@ -5,45 +5,45 @@ package ar.edu.itba.paw.model.enums;
  * Must match the string for spring message.
  */
 public enum OrderField {
-    DEFAULT("1", "order.recommended", "hits"),
-    DATE_ASCENDING("2", "order.date.asc", "publishDate"),
-    DATE_DESCENDING("3", "order.date.desc", "publishDate"),
-    COST_ASCENDING("4", "order.cost.asc", "cost"),
-    COST_DESCENDING( "5","order.cost.desc", "cost"),
-    ALPHABETICAL( "6","order.alpha", "name");
 
-    private String value;
-    private String message;
+    PROJECT_DEFAULT(1, "hits"),
+    PROJECT_COST_ASCENDING(2, "cost"),
+    PROJECT_COST_DESCENDING(3, "cost"),
+    PROJECT_ALPHABETICAL(4, "name"),
+
+    /** This can be used for project or messages */
+    DATE_ASCENDING(5, "publishDate"),
+    DATE_DESCENDING(5, "publishDate");
+
+
+    private int value;
     private String fieldName;
 
-    OrderField(String value, String message, String fieldName) {
+    OrderField(int value, String fieldName) {
         this.value = value;
-        this.message = message;
         this.fieldName = fieldName;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public String getMessage() {
-        return message;
-    }
 
     public String getField() {
         return fieldName;
     }
 
-    public static OrderField getEnum(String id) {
+    public static OrderField getEnum(int id) {
         for (OrderField value : values())
-            if (value.getValue().equals(id)) return value;
-        return DEFAULT;
+            if (value.getValue() == id) return value;
+        return PROJECT_DEFAULT;
     }
 
     @Override
     public String toString() {
         return "ProjectSort{" +
-                "value='" + value + '\'' +
+                "value=" + value +
+                "field='" + fieldName + '\'' +
                 '}';
     }
 }

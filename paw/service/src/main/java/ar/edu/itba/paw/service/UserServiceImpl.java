@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
         RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(id)
                 .setFunded(funded)
-                .setOrder(OrderField.DEFAULT);
+                .setOrder(OrderField.PROJECT_DEFAULT);
         return projectDao.findAll(request);
     }
 

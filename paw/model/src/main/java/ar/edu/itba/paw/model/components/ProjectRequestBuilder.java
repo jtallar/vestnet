@@ -15,6 +15,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
 
     public ProjectRequestBuilder() {
         super();
+        this.order = OrderField.PROJECT_DEFAULT;
     }
 
 
@@ -108,7 +109,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
      * @return The RequestBuilder.
      */
     public ProjectRequestBuilder setOrder(int order) {
-        this.order = OrderField.getEnum(String.valueOf(order));
+        this.order = OrderField.getEnum(order);
         return this;
     }
 
