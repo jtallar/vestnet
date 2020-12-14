@@ -32,4 +32,13 @@ public interface MessageDao {
      * @return List with the messages.
      */
     List<Message> findAll(RequestBuilder request);
+
+
+    /**
+     * Gets the count of messages that matches the criteria.
+     * Usually used for notification messages.
+     * @param request Filters and order to be applied to the messages.
+     * @return The amount of messages matching the criteria.
+     */
+    long countAll(RequestBuilder request);
 }

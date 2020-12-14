@@ -158,10 +158,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<Project> getOwnedProjects(long id, boolean funded) {
+    public List<Project> getOwnedProjects(long id, boolean closed) {
         RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(id)
-                .setClosed(funded)
+                .setClosed(closed)
                 .setOrder(OrderField.PROJECT_DEFAULT);
         return projectDao.findAll(request);
     }

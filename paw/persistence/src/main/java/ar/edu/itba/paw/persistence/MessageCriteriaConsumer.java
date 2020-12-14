@@ -34,7 +34,8 @@ import java.util.function.Consumer;
             case MESSAGE_INVESTOR:
             case MESSAGE_PROJECT:
             case MESSAGE_SEEN:
-            case MESSAGE_ACCEPTED: equal(filter.getField(), param.getValue()); break;
+            case MESSAGE_ACCEPTED:
+            case MESSAGE_DIRECTION: equal(filter.getField(), param.getValue()); break;
             default: /** should not happen */ break;
         }
     }

@@ -87,43 +87,22 @@ public interface MessageService {
      */
     Optional<Message> updateMessageSeen(long projectId, long investorId, long sessionUserId, URI baseUri);
 
-    // Previously user service
 
-//    /**
-//     * Gets all the user accepted offers.
-//     * @param receiverId User in matter unique id.
-//     * @param page Page requested.
-//     * @param pageSize Page size.
-//     * @return Messages page with the required data.
-//     */
-//    Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize);
-//
-//
-//    /**
-//     * Gets all the user made offers.
-//     * @param senderId User in matter unique id.
-//     * @param page Page requested.
-//     * @param pageSize Page size.
-//     * @return Messages page with the required data.
-//     */
-//    Page<Message> getOfferMessages(long senderId, int page, int pageSize);
-//
-//
-//    /**
-//     * Gets all the unread messages for an user and a project.
-//     * @param userId Unique user id.
-//     * @param projectId Unique project id.
-//     * @return A list of all the messages that match criteria.
-//     */
-//    List<Message> getProjectUnreadMessages(long userId, long projectId);
-//
-//
-//    /**
-//     * Gets the last sent message.
-//     * @param userId Unique user id.
-//     * @param projectId Unique project id.
-//     * @return An optional for the last sent message.
-//     */
-//    Optional<Message> getLastProjectOfferMessage(long userId, long projectId);
+    /**
+     * Returns the amount of unread chats for this specific project.
+     * @param projectId The specific project's unique id.
+     * @param ownerId The owner's unique id.
+     * @return The amount of unread chats.
+     */
+    long projectNotifications(long projectId, long ownerId);
+
+
+    /**
+     * Returns the total amount of unread chats for a specific user.
+     * @param sessionUserId The user to fetch amount of notifications.
+     * @param isInvestor True if is investor, false otherwise.
+     * @return The amount of unread chats.
+     */
+    long userNotifications(long sessionUserId, boolean isInvestor);
 
 }

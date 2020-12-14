@@ -118,22 +118,24 @@ public class MessageRestController {
     }
 
 
+    /** Notifications */
+
+    @GET
+    @Path("/notifications/project/{project_id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response projectNotifications(@PathParam("project_id") final long projectId) {
+
+        long count = messageService.projectNotifications(projectId, sessionUser.getId());
+        return Response.ok(count).build();
+    }
 
 
-    // Notification Center
+    @GET
+    @Path("/notifications")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response projectNotifications() {
 
-    // Investor
-    // TODO: GET investor notifications (session_user_id)
-    // GET last messages from all different projects (investor_id) ORDERED + NOT PAGED +++++ FILTER BY NOT HIS AND NOT SEEN + COUNT (notifications)
-    // Each chat entry would have its own notification based on its last message presented. The query above is for the top bar notification.
-
-    // Entrepreneur
-
-    // TODO: GET project Notification (project_id)
-    // GET last messages from all different investors (project_id) ORDERED + NOT PAGED +++++ FILTER BY NOT HIS AND NOT SEEN + COUNT (notifications)
-    // Notification for each project, inside of it, the chats would have its own notifications based on its last message presented.
-    // The method above is for the notification on the dashboard for each project
-
-    // TODO: GET entrepreneur Notifications (session_user_id)
-    // the method above for each project owned
+        long count = messageService.userNotifications(sessionUser.getId(), sessionUser.isInvestor());
+        return Response.ok(count).build();
+    }
 }

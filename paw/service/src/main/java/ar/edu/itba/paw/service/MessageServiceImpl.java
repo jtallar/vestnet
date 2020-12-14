@@ -68,9 +68,6 @@ public class MessageServiceImpl implements MessageService {
         /** Persists message */
         Message finalMessage = messageDao.create(messageData);
 
-        /** Adds one message to the project*/
-        project.get().addMsgCount();
-
         /** Sends email */
         emailService.sendOffer(owner.get(), investor.get(), project.get(), messageData.getContent(), messageData.getDirection(), baseUri);
 
@@ -101,7 +98,7 @@ public class MessageServiceImpl implements MessageService {
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setOrder(OrderField.DATE_DESCENDING)
-                .setGroup(GroupField.INVESTOR); // TODO add to group by investor
+                .setGroup(GroupField.INVESTOR);
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
@@ -117,7 +114,7 @@ public class MessageServiceImpl implements MessageService {
         else request = new MessageRequestBuilder()
                 .setInvestor(investorId)
                 .setOrder(OrderField.DATE_DESCENDING)
-                .setGroup(GroupField.PROJECT); // TODO add to group by project
+                .setGroup(GroupField.PROJECT);
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
@@ -176,6 +173,7 @@ public class MessageServiceImpl implements MessageService {
         return optionalMessage;
     }
 
+
     @Override
     @Transactional
     public Optional<Message> updateMessageSeen(long projectId, long investorId, long sessionUserId, URI baseUri) {
@@ -188,10 +186,45 @@ public class MessageServiceImpl implements MessageService {
             /** Is entrepreneur, last message cannot be his */
             if (sessionUserId == m.getOwnerId() && !m.getDirection()) return;
 
+            // TODO remove notification for this message
+
             m.setSeen();
         });
 
         return optionalMessage;
+    }
+
+
+    @Override
+    public long projectNotifications(long projectId, long ownerId) {
+        RequestBuilder request = new MessageRequestBuilder()
+                .setOwner(ownerId)
+                .setProject(projectId)
+                .setUnseen()
+                .setFromInvestor()
+                .setOrder(OrderField.DATE_DESCENDING)
+                .setGroup(GroupField.INVESTOR);
+
+        return messageDao.countAll(request);
+    }
+
+    @Override
+    public long userNotifications(long sessionUserId, boolean isInvestor) {
+        /** If the user is an investor */
+        if (isInvestor) {
+            RequestBuilder request = new MessageRequestBuilder()
+                    .setInvestor(sessionUserId)
+                    .setUnseen()
+                    .setFromEntrepreneur()
+                    .setOrder(OrderField.DATE_DESCENDING)
+                    .setGroup(GroupField.PROJECT);
+
+            return messageDao.countAll(request);
+        }
+
+        /** If the user is an Entrepreneur */
+        // TODO this
+        return 0;
     }
 
 
@@ -236,6 +269,10 @@ public class MessageServiceImpl implements MessageService {
             return message.getDirection() != direction;
 
         /** With an expiry date has expired, set the offer as rejected */
+        message.setSeen();
+        // TODO this is here to avoid inconsistencies in one case.
+        //  Sent offer -> Expired -> Sent offer -> Seen by the other one. The count gives +1 because of the first one.
+        //  Should be done only when the second offer is sent
         message.setAccepted(false);
         return true;
 

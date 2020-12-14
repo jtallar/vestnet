@@ -64,11 +64,21 @@ public class MessageRequestBuilder extends RequestBuilder {
 
 
     /**
-     * Sets to filter the unread messages.
+     * Sets to filter the read messages.
      * @return The RequestBuilder
      */
     public MessageRequestBuilder setSeen() {
         criteriaList.add(new FilterCriteria(MESSAGE_SEEN, true));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the unread messages.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setUnseen() {
+        criteriaList.add(new FilterCriteria(MESSAGE_SEEN, false));
         return this;
     }
 
@@ -79,6 +89,26 @@ public class MessageRequestBuilder extends RequestBuilder {
      */
     public MessageRequestBuilder setAccepted() {
         criteriaList.add(new FilterCriteria(MESSAGE_ACCEPTED, true));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the messages sent from the entrepreneur.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setFromEntrepreneur() {
+        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, false));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the messages sent from the investor.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setFromInvestor() {
+        criteriaList.add(new FilterCriteria(MESSAGE_DIRECTION, true));
         return this;
     }
 

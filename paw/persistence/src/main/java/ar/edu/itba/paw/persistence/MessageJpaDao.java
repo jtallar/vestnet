@@ -61,6 +61,13 @@ public class MessageJpaDao implements MessageDao {
         return findAllNotPaged(request.getCriteriaList(), request.getOrder());
     }
 
+    @Override
+    public long countAll(RequestBuilder request) {
+        List<FilterCriteria> filters = request.getCriteriaList();
+        GroupField group = request.getGroup();
+
+        return findAllIdsCount(filters, group);
+    }
 
 
     /** Auxiliary functions */
