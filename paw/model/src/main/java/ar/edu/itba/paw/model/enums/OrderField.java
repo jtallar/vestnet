@@ -5,19 +5,21 @@ package ar.edu.itba.paw.model.enums;
  * Must match the string for spring message.
  */
 public enum OrderField {
-    DEFAULT("1", "order.recommended"),
-    DATE_ASCENDING("2", "order.date.asc"),
-    DATE_DESCENDING("3", "order.date.desc"),
-    COST_ASCENDING("4", "order.cost.asc"),
-    COST_DESCENDING( "5","order.cost.desc"),
-    ALPHABETICAL( "6","order.alpha");
+    DEFAULT("1", "order.recommended", "hits"),
+    DATE_ASCENDING("2", "order.date.asc", "publishDate"),
+    DATE_DESCENDING("3", "order.date.desc", "publishDate"),
+    COST_ASCENDING("4", "order.cost.asc", "cost"),
+    COST_DESCENDING( "5","order.cost.desc", "cost"),
+    ALPHABETICAL( "6","order.alpha", "name");
 
     private String value;
     private String message;
+    private String fieldName;
 
-    OrderField(String value, String message) {
+    OrderField(String value, String message, String fieldName) {
         this.value = value;
         this.message = message;
+        this.fieldName = fieldName;
     }
 
     public String getValue() {
@@ -26,6 +28,10 @@ public enum OrderField {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getField() {
+        return fieldName;
     }
 
     public static OrderField getEnum(String id) {
