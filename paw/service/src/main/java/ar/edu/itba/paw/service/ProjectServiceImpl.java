@@ -73,6 +73,7 @@ public class ProjectServiceImpl implements ProjectService {
         return project;
     }
 
+
     @Override
     @Transactional
     public Optional<Project> setClosed(long ownerId, long id) {

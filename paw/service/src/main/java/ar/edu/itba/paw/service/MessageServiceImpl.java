@@ -167,8 +167,9 @@ public class MessageServiceImpl implements MessageService {
         if (sessionUserId == message.getOwnerId() && !message.getDirection())
             return Optional.empty();
 
-        /** Set message as accepted or not */
+        /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
+        project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
         /** Send email */
         emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
