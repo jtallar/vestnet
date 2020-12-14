@@ -300,7 +300,7 @@ public class ProjectJpaDaoTest {
         Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setSearch(PROJECT_NAME, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
+                .setSearch(PROJECT_NAME, SearchField.PROJECT_NAME)
                 .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
@@ -323,7 +323,7 @@ public class ProjectJpaDaoTest {
         Number otherProjectId = createProject(PROJECT_NAME, userId, PROJECT_COST_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setSearch(PROJECT_NAME_2, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
+                .setSearch(PROJECT_NAME_2, SearchField.PROJECT_NAME)
                 .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
@@ -351,7 +351,7 @@ public class ProjectJpaDaoTest {
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(categoryId.intValue())
                 .setCostMax((int) PROJECT_COST)
-                .setSearch(PROJECT_NAME, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
+                .setSearch(PROJECT_NAME, SearchField.PROJECT_NAME)
                 .setOrder(OrderField.PROJECT_ALPHABETICAL);
 
         // 2 - Execute

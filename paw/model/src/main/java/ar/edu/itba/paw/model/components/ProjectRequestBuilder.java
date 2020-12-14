@@ -86,7 +86,21 @@ public class ProjectRequestBuilder extends RequestBuilder {
      */
     public ProjectRequestBuilder setSearch(String keyword, int field) {
         if (keyword == null || keyword.isEmpty()) return this;
-        FilterField finalField = FilterField.fromSearchField(SearchField.getEnum(String.valueOf(field)));
+        FilterField finalField = FilterField.fromSearchField(SearchField.getEnum(field));
+        criteriaList.add(new FilterCriteria(finalField, keyword.toLowerCase()));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter and search by keyword in a specific field.
+     * @param keyword The keyword to search. None if null or empty.
+     * @param field The field to search.
+     * @return The Request Builder.
+     */
+    public ProjectRequestBuilder setSearch(String keyword, SearchField field) {
+        if (keyword == null || keyword.isEmpty()) return this;
+        FilterField finalField = FilterField.fromSearchField(field);
         criteriaList.add(new FilterCriteria(finalField, keyword.toLowerCase()));
         return this;
     }

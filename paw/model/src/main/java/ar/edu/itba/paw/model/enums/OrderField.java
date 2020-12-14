@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.model.enums;
 
 /**
- * Enum for sort options
- * Must match the string for spring message.
+ * Enum for sort options both for project and messages.
  */
 public enum OrderField {
 
@@ -15,7 +14,6 @@ public enum OrderField {
     DATE_ASCENDING(5, "publishDate"),
     DATE_DESCENDING(5, "publishDate");
 
-
     private int value;
     private String fieldName;
 
@@ -24,15 +22,22 @@ public enum OrderField {
         this.fieldName = fieldName;
     }
 
+    /** Getters */
+
     public int getValue() {
         return value;
     }
-
 
     public String getField() {
         return fieldName;
     }
 
+
+    /**
+     * Gets the OrderField given the id.
+      * @param id The id to search a match for.
+     * @return The order field. PROJECT_DEFAULT when there is no match.
+     */
     public static OrderField getEnum(int id) {
         for (OrderField value : values())
             if (value.getValue() == id) return value;

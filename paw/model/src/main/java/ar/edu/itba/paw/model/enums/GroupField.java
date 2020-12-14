@@ -2,7 +2,6 @@ package ar.edu.itba.paw.model.enums;
 
 /**
  * Group Field specifically for messages.
- * If they are grouped, then
  */
 public enum GroupField {
     NONE("id"),
@@ -11,12 +10,20 @@ public enum GroupField {
 
     private String fieldName;
 
-
     GroupField(String fieldName) {
         this.fieldName = fieldName;
     }
 
+    /** Getters */
+
     public String getField() {
         return fieldName;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupField{" +
+                "fieldName='" + fieldName + '\'' +
+                '}';
     }
 }
