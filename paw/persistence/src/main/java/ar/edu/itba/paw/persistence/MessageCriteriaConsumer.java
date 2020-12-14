@@ -33,7 +33,6 @@ import java.util.function.Consumer;
             case MESSAGE_PROJECT: project(param.getValue()); break;
             case MESSAGE_SEEN: seen(); break;
             case MESSAGE_ACCEPTED: accepted(param.getValue()); break;
-            case MESSAGE_DIRECTION: direction(param.getValue()); break;
             default: /** should not happen */ break;
         }
     }
@@ -85,10 +84,10 @@ import java.util.function.Consumer;
 
 
     /**
-     * Filters unread messages.
+     * Filters unseen messages.
      */
     private void seen() {
-        predicate = builder.and(predicate, builder.isNull(root.get("seen")));
+        predicate = builder.and(predicate, builder.equal(root.get("seen"), true));
     }
 
 
@@ -98,14 +97,5 @@ import java.util.function.Consumer;
      */
     private void accepted(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("accepted"), value));
-    }
-
-
-    /**
-     * Filters by the direction status.
-     * @param value The direction to be checked.
-     */
-    private void direction(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("direction"), value));
     }
 }

@@ -221,7 +221,7 @@ public class Message {
     @Embeddable
     public static class MessageContent {
 
-        @Column(name = "content_message", length = 250)
+        @Column(name = "content_comment", length = 250)
         private String comment;
 
         @Column(name = "content_offer", length = 100, nullable = false)

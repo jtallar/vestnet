@@ -148,16 +148,20 @@ CREATE TABLE IF NOT EXISTS favorites (
 CREATE TABLE IF NOT EXISTS messages (
     id                  INTEGER IDENTITY PRIMARY KEY,
 
-    content_message     VARCHAR(250),
+    content_comment     VARCHAR(250),
     content_offer       VARCHAR(100) NOT NULL,
     content_interest    VARCHAR(100),
 
     publish_date        TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     accepted            BOOLEAN,
 
-    sender_id           INT NOT NULL,
-    receiver_id         INT NOT NULL,
-    project_id          INT NOT NULL
+    owner_id           INT NOT NULL,
+    investor_id         INT NOT NULL,
+    project_id          INT NOT NULL,
+
+    i_to_e              BOOLEAN NOT NULL,
+    seen                BOOLEAN NOT NULL,
+    expiry_date         TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE IF NOT EXISTS project_images (
