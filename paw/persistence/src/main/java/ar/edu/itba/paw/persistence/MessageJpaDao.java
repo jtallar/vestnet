@@ -44,7 +44,6 @@ public class MessageJpaDao implements MessageDao {
         if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
         /** Get all messages's ids with matching criteria, order and page  */
-        // TODO check here, should be an exception. Wrong page
         List<Long> ids = findAllIds(filters, order, page);
         if (ids.isEmpty()) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 

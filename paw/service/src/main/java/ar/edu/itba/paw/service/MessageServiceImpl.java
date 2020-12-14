@@ -158,7 +158,6 @@ public class MessageServiceImpl implements MessageService {
 
         /** If the message has expired */
         if (!message.isExpiryDateValid()) {
-            // TODO send mail offer has expired?
             message.setAccepted(false);
             return Optional.empty();
         }
@@ -241,7 +240,6 @@ public class MessageServiceImpl implements MessageService {
 
         /** With an expiry date has expired, set the offer as rejected */
         message.setAccepted(false);
-        // TODO sent mail the offer has expired?
         return true;
 
     }

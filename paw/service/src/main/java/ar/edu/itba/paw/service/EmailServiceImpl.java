@@ -117,9 +117,7 @@ public class EmailServiceImpl implements EmailService {
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
 
-        } catch (MessagingException e) {
-//            e.printStackTrace(); // TODO should we do something? Retry send?
-        }
+        } catch (MessagingException ignored) {}
     }
 
 

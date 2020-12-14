@@ -84,15 +84,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean updateVerification(String token, URI baseUri) {
-        return updateWithToken(token, null, false);
-//        if (!valid) emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri)); TODO resend email
+        return updateWithToken(token, null, false, baseUri);
     }
 
 
     @Override
     @Transactional
     public boolean updatePassword(String token, String password) {
-        return updateWithToken(token, password, true);
+        return updateWithToken(token, password, true, null);
     }
 
 
@@ -180,9 +179,10 @@ public class UserServiceImpl implements UserService {
      * @param token The necessary token to check its validity.
      * @param password The password, if given, to update.
      * @param isPassword If its change of password or verification.
+     * @param baseUri The base uri in case the verification token has expired.
      * @return True when update is done, false if token corrupted/missing/invalid.
      */
-    private boolean updateWithToken(String token, String password, boolean isPassword) {
+    private boolean updateWithToken(String token, String password, boolean isPassword, URI baseUri) {
         if (token == null || token.isEmpty()) return false;
 
         Optional<Token> optionalToken = tokenDao.findByToken(token);
@@ -191,9 +191,13 @@ public class UserServiceImpl implements UserService {
         Token realToken = optionalToken.get();
         User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
 
-        if (!realToken.isValid()) return false;
+        /** Resend in case of an invalid token for verification */
+        if (!realToken.isValid()) {
+            if (!isPassword) emailService.sendVerification(user, tokenDao.create(user).getToken(), baseUri);
+            return false;
+        }
 
-        if (isPassword) user.setPassword(encoder.encode(password)); // TODO should encode or comes encoded
+        if (isPassword) user.setPassword(encoder.encode(password));
         else user.setVerified(true);
         return true;
     }
