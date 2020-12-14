@@ -29,55 +29,7 @@ public class MessageRestController {
     @Context
     private UriInfo uriInfo;
 
-    private static final int PAGE_SIZE = 5; // TODO it's okay the offerDto, idk
-
-
-//    @GET
-//    @Produces(value = { MediaType.APPLICATION_JSON })
-//    public Response accepted(@QueryParam("offers") @DefaultValue("false") boolean offers,
-//                             @QueryParam("p") @DefaultValue("1") int page) {
-//        Page<Message> messagePage;
-//        if (offers) messagePage = userService.getOfferMessages(sessionUser.getId(), page, PAGE_SIZE);
-//        else messagePage = userService.getAcceptedMessages(sessionUser.getId(), page, PAGE_SIZE);
-//
-//        List<OfferDto> messages = messagePage.getContent().stream().map(m -> OfferDto.fromMessage(m, uriInfo)).collect(Collectors.toList());
-//        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-//                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getStartPage()).build(), "first")
-//                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getEndPage()).build(), "last")
-//                .build();
-//    }
-
-
-
-
-//    @PUT
-//    @Path("/status")
-//    @Consumes(value = { MediaType.APPLICATION_JSON })
-//    public Response status(@Valid final OfferDto offerDto,
-//                           @QueryParam("accepted") @DefaultValue("true") boolean accepted) {
-//        final Optional<Message> updatedMessage = messageService.updateMessageStatus(sessionUser.getId(), offerDto.getOwnerId(), // TODO if not working, problem here
-//                offerDto.getProjectId(), accepted, uriInfo.getBaseUri());
-//
-//        return updatedMessage.map(message -> Response.ok().build())
-//                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
-//    }
-
-//    @GET
-//    @Path("/unread/{project_id}")
-//    @Produces(value = { MediaType.APPLICATION_JSON })
-//    public Response unread(@PathParam("project_id") final long projectId,
-//                           @QueryParam("last") @DefaultValue("false") boolean last) {
-//        List<Message> messages = new ArrayList<>();
-//        if (last) userService.getLastProjectOfferMessage(sessionUser.getId(), projectId).ifPresent(messages::add);
-//        else messages = userService.getProjectUnreadMessages(sessionUser.getId(), projectId);
-//
-//        List<OfferDto> offers = messages.stream().map(m -> OfferDto.fromMessage(m, uriInfo)).collect(Collectors.toList());
-//        return Response.ok(new GenericEntity<List<OfferDto>>(offers) {}).build();
-//    }
-
-
-    /** ALL THE NEW METHODS */
-
+    private static final int PAGE_SIZE = 5;
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
@@ -95,9 +47,10 @@ public class MessageRestController {
     @Path("/project/{project_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projectChats(@PathParam("project_id") final long projectId,
+                                    @QueryParam("a") @DefaultValue("false") boolean accepted,
                                     @QueryParam("p") @DefaultValue("1") int page) {
 
-        final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), page, PAGE_SIZE);
+        final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), accepted, page, PAGE_SIZE);
 
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
@@ -110,9 +63,10 @@ public class MessageRestController {
     @GET
     @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response investorChats(@QueryParam("p") @DefaultValue("1") int page) {
+    public Response investorChats(@QueryParam("a") @DefaultValue("false") boolean accepted,
+                                  @QueryParam("p") @DefaultValue("1") int page) {
 
-        final Page<Message> messagePage = messageService.getInvestorProjects(sessionUser.getId(), page, PAGE_SIZE);
+        final Page<Message> messagePage = messageService.getInvestorProjects(sessionUser.getId(), accepted, page, PAGE_SIZE);
 
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 

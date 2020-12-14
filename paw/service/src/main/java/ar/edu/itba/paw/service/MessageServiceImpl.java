@@ -94,8 +94,14 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Page<Message> getProjectInvestors(long projectId, long ownerId, int page, int pageSize) {
-        RequestBuilder request = new MessageRequestBuilder()
+    public Page<Message> getProjectInvestors(long projectId, long ownerId, boolean accepted, int page, int pageSize) {
+        RequestBuilder request;
+        if (accepted) request = new MessageRequestBuilder()
+                .setOwner(ownerId)
+                .setProject(projectId)
+                .setAccepted(true)
+                .setOrder(OrderField.DATE_DESCENDING);
+        else request = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setOrder(OrderField.DATE_DESCENDING); // TODO add to group by investor
@@ -105,8 +111,13 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    public Page<Message> getInvestorProjects(long investorId, int page, int pageSize) {
-        RequestBuilder request = new MessageRequestBuilder()
+    public Page<Message> getInvestorProjects(long investorId, boolean accepted, int page, int pageSize) {
+        RequestBuilder request;
+        if (accepted) request = new MessageRequestBuilder()
+                .setInvestor(investorId)
+                .setAccepted(true)
+                .setOrder(OrderField.DATE_DESCENDING);
+        else request = new MessageRequestBuilder()
                 .setInvestor(investorId)
                 .setOrder(OrderField.DATE_DESCENDING); // TODO add to group by project
 
@@ -185,46 +196,6 @@ public class MessageServiceImpl implements MessageService {
         return optionalMessage;
     }
 
-
-    // previously user service impl
-//    @Override
-//    public Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize) {
-//        RequestBuilder request = new MessageRequestBuilder()
-//                .setOwner(receiverId)
-//                .setAccepted(true)
-//                .setOrder(OrderField.DATE_DESCENDING);
-//        return messageDao.findAll(request, new PageRequest(page, pageSize));
-//    }
-//
-//
-//    @Override
-//    public Page<Message> getOfferMessages(long senderId, int page, int pageSize) {
-//        RequestBuilder request = new MessageRequestBuilder()
-//                .setInvestor(senderId)
-//                .setOrder(OrderField.DATE_DESCENDING);
-//        return messageDao.findAll(request, new PageRequest(page, pageSize));
-//    }
-//
-//
-//    @Override
-//    public List<Message> getProjectUnreadMessages(long userId, long projectId) {
-//        RequestBuilder request = new MessageRequestBuilder()
-//                .setOwner(userId)
-//                .setProject(projectId)
-//                .setSeen()
-//                .setOrder(OrderField.DATE_DESCENDING);
-//        return messageDao.findAll(request);
-//    }
-//
-//
-//    @Override
-//    public Optional<Message> getLastProjectOfferMessage(long userId, long projectId) {
-//        RequestBuilder request = new MessageRequestBuilder()
-//                .setInvestor(userId)
-//                .setProject(projectId)
-//                .setOrder(OrderField.DATE_DESCENDING);
-//        return messageDao.findAll(request).stream().findFirst();
-//    }
 
     /** Auxiliary Methods */
 

@@ -34,21 +34,23 @@ public interface MessageService {
      * Gets the last message for each investor for the project.
      * @param projectId The project unique ID to bring all the last conversations.
      * @param ownerId The owner ID of the request.
+     * @param accepted True to bring all the accepted transactions.
      * @param page The page to return.
      * @param pageSize The page size (amount of messages from different investors).
      * @return Paged messages. Empty if owner is not the real owner of the project.
      */
-    Page<Message> getProjectInvestors(long projectId, long ownerId, int page, int pageSize);
+    Page<Message> getProjectInvestors(long projectId, long ownerId, boolean accepted, int page, int pageSize);
 
 
     /**
      * Gets the last message for each different project inverted by the investor.
      * @param investorId The investor ID of the request.
+     * @param accepted True to bring all the accepted transactions.
      * @param page The page to return.
      * @param pageSize The page size (amount of messages from different projects).
      * @return Paged messages.
      */
-    Page<Message> getInvestorProjects(long investorId, int page, int pageSize);
+    Page<Message> getInvestorProjects(long investorId, boolean accepted, int page, int pageSize);
 
 
     /**
