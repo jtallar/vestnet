@@ -81,7 +81,7 @@
             </sec:authorize> -->
 
             <!-- Project card -->
-            <div class="card-body">
+            <div class="card-body single-card">
               <h5 class="card-title"><b>{{project.name}}</b></h5>
               <div class="blockquote-footer">by {{project.owner.firstName}}
                 {{project.owner.lastName}}</div>
@@ -90,13 +90,24 @@
               <h5 class="card-title"><b>{{'categories' | translate}}</b></h5>
                 <li ng-repeat="category in project.categories">{{category}}</li>
               <br/>
-              <h5 class="card-title"><b>{{'totalCost' | translate}}</b></h5>
-
-              <p>{{'projectCost' | translate : '{cost: project.cost}'}}</p>
 
               <h5 class="card-title"><b>{{'contactMail' | translate}}</b></h5>
               <p>{{project.owner.mail}}</p>
 
+              <h5 class="card-title"><b>{{'funding' | translate}}</b></h5>
+              <div class="row">
+                <div class="col-1"></div>
+                <div class="col-5">
+                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; &nbsp;&nbsp;{{'money' | translate }} {{project.target}}</h6>
+                </div>
+                <div class="col-6">
+                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; {{'money' | translate}} {{project.current}}</h6>
+                </div>
+              </div>
+
+              <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
+              </div>
               <!--
               <sec:authorize access="isAnonymous()">
                 <h5><a href="" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#expFunding">
@@ -150,6 +161,10 @@
 
         <!-- Contact button -->
         <div class="d-flex justify-content-end">
+            <a href="/#/chat/1/2" class="btn btn-dark contact-btn" >
+              <img src="images/chat-icon.png" class="contact-img">
+              {{'contact' | translate}}
+            </a>
           <!--
           <sec:authorize access="isAnonymous()">
             <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button" data-toggle="modal" data-target="#expFunding">
@@ -251,7 +266,7 @@
     </sec:authorize>
     -->
 </div>
-</div>
+<!--</div>-->
 
 </body>
 

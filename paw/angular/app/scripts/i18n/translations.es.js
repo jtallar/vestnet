@@ -189,6 +189,8 @@ define([], function() {
     days: 'días',
     funding: 'Financiamiento',
     target: 'Objetivo',
-    current: 'Obtenido'
+    current: 'Obtenido',
+    money: '$ {{m}}',
+    contact: 'Enviar mensaje'
   };
 });

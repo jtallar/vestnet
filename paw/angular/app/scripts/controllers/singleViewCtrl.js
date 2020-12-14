@@ -15,14 +15,16 @@ define(['paw2020a'], function(paw2020a) {
       };
 
       $scope.project = {      // project infromation from db
-        'name': 'Vestnet',
-        'cost': 18000,
+        'name': 'Superchero',
+        'target': 1000,
+        'current': 900,
         'image': 'images/filter.png',
         'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país y en todo el mundo',
         'id': 1,
         'owner': {'firstName': 'Grupo', 'lastName': '5', 'mail': 'fchoi@itba.edu.ar', 'id': 1},
         'categories': ['Technology', 'Research'],
-        'updateDate': '15/02/2019'
+        'updateDate': '15/02/2019',
+        'percentage': 90
       };
 
     });

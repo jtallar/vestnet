@@ -189,6 +189,8 @@ define([], function() {
     days: 'days',
     funding: 'Funding',
     target: 'Target',
-    current: 'Current'
+    current: 'Current',
+    money: 'USD {{m}}',
+    contact: 'Send new message'
   };
 });
