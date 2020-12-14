@@ -4,6 +4,8 @@ package ar.edu.itba.paw.model.enums;
  * Filter fields used in filter criteria for JPA Criteria Builder
  */
 public enum FilterField {
+    /** Due to complexity of queries this do not have valid field names.
+     * The best thing to use would be Metamodel found uin JPA 2.0 */
     PROJECT_MIN_COST,
     PROJECT_MAX_COST,
     PROJECT_CATEGORY,
