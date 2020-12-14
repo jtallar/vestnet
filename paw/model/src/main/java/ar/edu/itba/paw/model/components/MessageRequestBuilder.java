@@ -2,8 +2,10 @@ package ar.edu.itba.paw.model.components;
 
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.enums.GroupField;
+import ar.edu.itba.paw.model.enums.OrderField;
 
-import static ar.edu.itba.paw.model.components.FilterField.*;
+import static ar.edu.itba.paw.model.enums.FilterField.*;
 
 /**
  * Creates the list of criteria filter and order for

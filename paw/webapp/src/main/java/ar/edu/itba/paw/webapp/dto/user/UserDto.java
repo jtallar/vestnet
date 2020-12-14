@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.user;
 
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.UserRole;
+import ar.edu.itba.paw.model.enums.UserRole;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;

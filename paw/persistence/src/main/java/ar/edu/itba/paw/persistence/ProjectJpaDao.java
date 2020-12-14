@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
-import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.FilterField;
+import ar.edu.itba.paw.model.enums.OrderField;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

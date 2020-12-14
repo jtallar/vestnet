@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.UserRole;
+import ar.edu.itba.paw.model.enums.UserRole;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
 import org.junit.Before;

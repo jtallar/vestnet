@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.OrderField;
 import ar.edu.itba.paw.model.image.UserImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

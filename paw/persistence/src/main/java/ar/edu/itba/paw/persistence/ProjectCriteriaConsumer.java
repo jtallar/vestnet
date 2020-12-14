@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;

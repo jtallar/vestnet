@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.model.components;
 
+import ar.edu.itba.paw.model.enums.GroupField;
+import ar.edu.itba.paw.model.enums.OrderField;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

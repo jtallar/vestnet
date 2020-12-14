@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.ProjectImage;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface ProjectService {

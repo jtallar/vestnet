@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.model.components;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.enums.FilterField;
+import ar.edu.itba.paw.model.enums.OrderField;
+import ar.edu.itba.paw.model.enums.SearchField;
 
-import static ar.edu.itba.paw.model.components.FilterField.*;
+import static ar.edu.itba.paw.model.enums.FilterField.*;
 
 /**
  * Creates the list of criteria filter and order for

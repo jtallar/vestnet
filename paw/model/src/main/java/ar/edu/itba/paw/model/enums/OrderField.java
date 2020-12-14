@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.model.components;
+package ar.edu.itba.paw.model.enums;
 
 /**
  * Enum for sort options

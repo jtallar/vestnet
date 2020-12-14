@@ -3,6 +3,9 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.FilterField;
+import ar.edu.itba.paw.model.enums.GroupField;
+import ar.edu.itba.paw.model.enums.OrderField;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
