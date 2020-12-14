@@ -2,8 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.model.Message;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +15,6 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class MessageJpaDao implements MessageDao {
@@ -38,13 +35,14 @@ public class MessageJpaDao implements MessageDao {
         /** Disassemble project request builder */
         List<FilterCriteria> filters = request.getCriteriaList();
         OrderField order = request.getOrder();
+        GroupField group = request.getGroup();
 
-        /** Get to total count of messages with matching criteria */
-        Long count = findAllIdsCount(filters);
+        /** Get to total count of messages with matching criteria grouping accordingly */
+        Long count = findAllIdsCount(filters, group);
         if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
-        /** Get all messages's ids with matching criteria, order and page  */
-        List<Long> ids = findAllIds(filters, order, page);
+        /** Get all messages's ids with matching criteria, order, group and  page  */
+        List<Long> ids = findAllIds(filters, order, group, page);
         if (ids.isEmpty()) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
         /** Gets all the corresponding messages in order */
@@ -69,7 +67,7 @@ public class MessageJpaDao implements MessageDao {
      * Finds all ids of messages given a filter and order.
      * @param filters The filters to apply.
      * @param order The order to order by.
-     * @return List of all unique ids.
+     * @return List of all matching messages.
      */
     private List<Message> findAllNotPaged(List<FilterCriteria> filters, OrderField order) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -103,14 +101,15 @@ public class MessageJpaDao implements MessageDao {
     /**
      * Counts how many messages match criteria.
      * @param filters Filter criteria to apply.
+     * @param group The group by field. If none, then the standard field 'id' is counted.
      * @return Count.
      */
-    private Long findAllIdsCount(List<FilterCriteria> filters) {
+    private Long findAllIdsCount(List<FilterCriteria> filters, GroupField group) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
 
         Root<Message> root = query.from(Message.class);
-        query.select(builder.countDistinct(root.get("id")));
+        query.select(builder.countDistinct(root.get(group.getField())));
         addPredicates(query, builder,root, filters);
         return entityManager.createQuery(query).getSingleResult();
     }
@@ -120,18 +119,22 @@ public class MessageJpaDao implements MessageDao {
      * Finds all ids of messages given a filter, order and page.
      * @param filters The filters to apply.
      * @param order The order to order by.
+     * @param group The group by field. If none, then the standard field 'id' is counted.
      * @param page The page requested.
      * @return List of all unique ids.
      */
-    private List<Long> findAllIds(List<FilterCriteria> filters, OrderField order, PageRequest page) {
+    private List<Long> findAllIds(List<FilterCriteria> filters, OrderField order, GroupField group, PageRequest page) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
 
         Root<Message> root = query.from(Message.class);
-        query.select(root.get("id"));
+
+        /** The max from the id field gets us the latest messages for each grouping
+         * In case there is grouping by ID (GroupField.NONE) returns distinct IDs */
+        query.select(builder.max(root.get("id")));
         addPredicates(query, builder, root, filters);
         addOrder(query, builder, root, order);
-        query.groupBy(root.get("id"));
+        query.groupBy(root.get(group.getField()));
 
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult(page.getFirstResult());

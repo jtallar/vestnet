@@ -1,7 +1,22 @@
 package ar.edu.itba.paw.model.components;
 
+/**
+ * Group Field specifically for messages.
+ * If they are grouped, then
+ */
 public enum GroupField {
-    NONE,
-    PROJECT,
-    INVESTOR
+    NONE("id"),
+    PROJECT("project"),
+    INVESTOR("investor");
+
+    private String fieldName;
+
+
+    GroupField(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public String getField() {
+        return fieldName;
+    }
 }

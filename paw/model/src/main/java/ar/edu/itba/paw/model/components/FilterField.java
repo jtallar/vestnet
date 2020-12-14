@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.model.components;
 
+/**
+ * Filter fields used in filter criteria for JPA Criteria Builder
+ */
 public enum FilterField {
     PROJECT_MIN_COST,
     PROJECT_MAX_COST,

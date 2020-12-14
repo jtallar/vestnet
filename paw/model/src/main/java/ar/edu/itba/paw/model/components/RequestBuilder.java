@@ -28,4 +28,8 @@ public abstract class RequestBuilder {
     public OrderField getOrder() {
         return order;
     }
+
+    public GroupField getGroup() {
+        return group;
+    }
 }
