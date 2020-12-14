@@ -156,7 +156,7 @@ define([], function() {
     titleRequired: '*Título',
     titleRequirement: 'Entre 5 y 50 caracteres',
     summaryRequired: '*Descripción',
-    descriptionRequirement: 'Entre 50 y 250 caracteres',
+    descriptionRequirement: 'Entre 30 y 250 caracteres',
     projectSummaryPlaceholder: 'Describe tu proyecto en no más de 250 caracteres...',
     costRequired: '*Costo',
     costRequirement: 'Entre U$D1000 y U$D9999999',
@@ -175,6 +175,7 @@ define([], function() {
     footerPhone: 'Tel.:',
     footerMail: 'Mail:',
     footerLkdn: 'LinkedIn:',
-    footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA'
+    footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA',
+    profileTitle: 'Información de {{first}} {{last}}'
   };
 });

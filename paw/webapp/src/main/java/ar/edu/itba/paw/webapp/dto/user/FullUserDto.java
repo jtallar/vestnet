@@ -4,12 +4,16 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.enums.UserRole;
 import ar.edu.itba.paw.webapp.forms.validators.ValidEnum;
 import org.hibernate.validator.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 
 public class FullUserDto extends UpdatableUserDto {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FullUserDto.class);
+
     @ValidEnum(enumClazz = UserRole.class)
     private String role;
 
@@ -34,11 +38,15 @@ public class FullUserDto extends UpdatableUserDto {
         userDto.setLocale(user.getLocale());
 
         userDto.setLocation(uriInfo.getAbsolutePathBuilder().path("location").build());
-        userDto.setImage(uriInfo.getAbsolutePathBuilder().path("image").build());
         userDto.setProjectList(uriInfo.getAbsolutePathBuilder().path("projects").build());
         userDto.setReceivedMessages(uriInfo.getAbsolutePathBuilder().path("received_messages").build());
         userDto.setSentMessages(uriInfo.getAbsolutePathBuilder().path("sent_messages").build());
         userDto.setFavorites(uriInfo.getAbsolutePathBuilder().path("favorites").build());
+
+        if (user.getImage_id() != null) {
+            userDto.setImageExists(true);
+            userDto.setImage(uriInfo.getBaseUriBuilder().path("/images/users").path(String.valueOf(user.getImage_id())).build());
+        }
 
         userDto.setCountryId(user.getLocation().getCountry().getId());
         userDto.setStateId(user.getLocation().getState().getId());

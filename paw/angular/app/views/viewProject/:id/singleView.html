@@ -1,13 +1,13 @@
-<head>
-  <!-- build:css(.tmp) styles/detail.css -->
-  <link rel="stylesheet" href="styles/detail.css">
-  <!-- endbuild -->
+<!--<head>-->
+<!--  &lt;!&ndash; build:css(.tmp) styles/detail.css &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="styles/detail.css">-->
+<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
 
-  <!-- build:css(.tmp) styles/feed.css -->
-  <link rel="stylesheet" href="styles/feed.css">
-  <!-- endbuild -->
+<!--  &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="styles/feed.css">-->
+<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
 
-</head>
+<!--</head>-->
 
 <vnheader></vnheader>
 
@@ -25,7 +25,7 @@
 -->
 
 <!-- Message and Back logic -->
-<div class="container" style="margin-top: 20px">
+<div class="container sep-nav" style="margin-top: 20px">
     <div class="d-flex justify-content-between align-self-center" style="margin-right:6%">
       <div class="p-2 mx-3 my-1">
         <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
@@ -43,9 +43,14 @@
 
           <div class="carousel-inner">
             <div id="carousel-items">
-              <div class="carousel-item active">
-                <img src="/images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              <div ng-if="project.image.empty()">
+                <img src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
               </div>
+              <div ng-if="!project.image.empty()">
+                <img src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+
+              </div>
+            </div>
             </div>
           </div>
           <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">

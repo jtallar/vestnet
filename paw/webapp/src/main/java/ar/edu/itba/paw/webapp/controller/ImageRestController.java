@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.webapp.component.SessionUser;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.dto.ProjectDto;
 import org.slf4j.Logger;
@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @Component
 @Path("/images")
 public class ImageRestController {
-    // TODO: Ahora no funca lo que tiene sessionUser porque no toma el sessionUser porque esta ignorado en el webAuthConfig
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageRestController.class);
 
     @Autowired
@@ -35,16 +33,17 @@ public class ImageRestController {
     private ProjectService projectService;
 
     @Autowired
-    private SessionUser sessionUser;
+    private SessionUserFacade sessionUser;
 
     @Context
     private UriInfo uriInfo;
 
+    // TODO: deberia recibir user_id y gettear la image desde el image_id en el user como hace el update? O lo cambiamos a image_id?
     @GET
-    @Path("/user/{user_id}")
+    @Path("/users/{image_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getUserImage(@PathParam("user_id") final long userId) {
-        Optional<UserImage> profileImage = userService.getProfileImage(userId);
+    public Response getUserImage(@PathParam("image_id") final long imageId) {
+        Optional<UserImage> profileImage = userService.getProfileImage(imageId);
 
         return profileImage.map(userImage -> Response.ok(ImageDto.fromUserImage(userImage)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -53,7 +52,7 @@ public class ImageRestController {
     // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use.
     //  O bien chequear que el que haga el update sea el session user
     @PUT
-    @Path("/user")
+    @Path("/users")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setUserImage(@Valid final ImageDto image) {
         Optional<User> optionalUser = userService.updateImage(sessionUser.getId(), image.getImage());

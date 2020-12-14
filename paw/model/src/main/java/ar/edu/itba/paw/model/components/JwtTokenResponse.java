@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.model.components;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +10,18 @@ public class JwtTokenResponse {
     private final String refreshToken;
     private final int refreshMinutes;
 
-    public JwtTokenResponse(String accessToken, int accessMinutes, String refreshToken, int refreshMinutes) {
+    private final Collection<String> userRoles;
+    private final String locale;
+
+    public JwtTokenResponse(String accessToken, int accessMinutes, String refreshToken, int refreshMinutes,
+                            Collection<String> userRoles, String locale) {
         this.accessToken = accessToken;
         this.accessMinutes = accessMinutes;
         this.refreshToken = refreshToken;
         this.refreshMinutes = refreshMinutes;
+
+        this.userRoles = userRoles;
+        this.locale = locale;
     }
 
     public String getAccessToken() {
@@ -32,12 +40,22 @@ public class JwtTokenResponse {
         return refreshMinutes;
     }
 
+    public Collection<String> getUserRoles() {
+        return userRoles;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
     public Map<String, Object> getResponseMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("accessToken", accessToken);
         map.put("accessMinutes", accessMinutes);
         map.put("refreshToken", refreshToken);
         map.put("refreshMinutes", refreshMinutes);
+        map.put("roles", userRoles.toArray());
+        map.put("locale", locale);
         return map;
     }
 }

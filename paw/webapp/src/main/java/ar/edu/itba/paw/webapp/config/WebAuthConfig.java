@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.config;
 
 
 import ar.edu.itba.paw.interfaces.TokenExtractor;
+import ar.edu.itba.paw.webapp.auth.CorsFilter;
 import ar.edu.itba.paw.webapp.auth.MyCustomLoginSuccessHandler;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.PlainTextBasicAuthenticationEntryPoint;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -27,6 +29,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -52,11 +55,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan({"ar.edu.itba.paw.webapp.auth"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.config"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public static final String AUTH_HEADER = "Authorization";
 
-    private static final String LOGIN_ENTRY_POINT = "/auth/login";
+    private static final String API_PREFIX_VERSION = "/api/v1";
+    private static final String LOGIN_ENTRY_POINT = API_PREFIX_VERSION + "/auth/login";
 
     private static final int TOKEN_DAYS = 365;
 
@@ -75,10 +79,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
-    private final String[] permitAllEndpoints = {LOGIN_ENTRY_POINT, "/signUp", "/projects", "/welcome", "/",
-            "/requestPassword", "/resetPassword", "/verify", "/projects/**", "/addHit/**"
-            , "/users/**"};
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -90,28 +90,47 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider);
     }
 
-
-    // TODO: Corregir todos los ant matchers, separando por metodo y agregando el /api/v1/
-    //  Si saco el permitAll, tira 403. Esto se debe a que pasa por aca antes de ir a Angular.
+    // TODO: Ver como evitar que tomcat mande su default response para errores 403 y 404
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .invalidSessionUrl("/welcome")
+
             .and().authorizeRequests()
-//                .antMatchers("/login","/signUp", "/location/**").anonymous()
-                .antMatchers(permitAllEndpoints).permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/requests").hasRole("INVESTOR")
-                .antMatchers("/auth/refresh").authenticated()
-                .antMatchers("/newProject", "/deals", "/dashboard", "/**", "/stopFunding").hasRole("ENTREPRENEUR")
-                .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.POST, LOGIN_ENTRY_POINT).permitAll()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/auth/refresh").permitAll()
+
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/images/user/**", API_PREFIX_VERSION + "/images/projects/**").permitAll()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/images/user/**").authenticated()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/images/projects/**").hasRole("ENTREPRENEUR")
+
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/location/**").permitAll()
+
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/**").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/**").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/**").hasRole("ENTREPRENEUR")
+
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/projects/**").permitAll()
+                .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/projects/**").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/projects/**/hit").permitAll()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/projects/**").hasRole("ENTREPRENEUR")
+
+                .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/users/**").permitAll()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/password", API_PREFIX_VERSION + "/users/verify").permitAll()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**/favorites").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers("/**").permitAll() // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
+
             .and()
+                .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class) // TODO: Remove in production
                 .addFilterBefore(buildLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-//                .exceptionHandling().authenticationEntryPoint(new PlainTextBasicAuthenticationEntryPoint()); // resolves 401 Unauthenticated
+                .addFilterBefore(buildJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(new PlainTextBasicAuthenticationEntryPoint()); // removes 403 default body from response
     }
 
     private LoginProcessingFilter buildLoginFilter() throws Exception {
@@ -122,12 +141,17 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationProcessingFilter(tokenExtractor, authenticationProvider);
     }
 
-    // TODO: Ver si esto hay que fletarlo, si dejo images aca no puedo usar sessionUser en imageController
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/css/**", "/images/**", "/errors/**", "/favicon.ico",
-                        "/location/**", "/imageController/**");
+                .antMatchers(
+                        "/views/**",
+                        "/styles/**",
+                        "/scripts/**",
+                        "/images/**",
+                        "/bower_components/**",
+                        "/favicon.ico",
+                        "/index.html");
     }
 
     @Bean

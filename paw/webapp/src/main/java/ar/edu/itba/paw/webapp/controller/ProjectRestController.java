@@ -41,9 +41,10 @@ public class ProjectRestController {
     @Context
     private UriInfo uriInfo;
 
-    private static final int PAGE_SIZE = 3;
+    private static final String DEFAULT_PAGE_SIZE = "3";
     private static final int PAGINATION_ITEMS = 5;
 
+    // TODO: Ver si no conviene que reciba tambien el page size para saber cuantos proyectos quiere
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projects(@QueryParam("p") @DefaultValue("1") int page,
@@ -52,9 +53,11 @@ public class ProjectRestController {
                          @Size(max = 50) @QueryParam("s") String keyword,
                          @Min(0) @QueryParam("max") Integer maxFundingTarget,
                          @Min(0) @QueryParam("min") Integer minFundingTarget,
-                         @QueryParam("c") Integer category) {
+                         @QueryParam("c") Integer category,
+                         @QueryParam("l") @DefaultValue(DEFAULT_PAGE_SIZE) int limit) {
 
-        Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, PAGE_SIZE);
+
+        Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
         projectPage.setPageRange(PAGINATION_ITEMS);
 
         List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());

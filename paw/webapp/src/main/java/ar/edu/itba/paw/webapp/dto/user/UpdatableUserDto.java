@@ -46,6 +46,8 @@ public class UpdatableUserDto {
 
     private int countryId, stateId, cityId;
 
+    private boolean imageExists;
+
     private URI location, image, projectList, receivedMessages, sentMessages, favorites;
 
     public static User toUser(UpdatableUserDto userDto) {
@@ -204,5 +206,13 @@ public class UpdatableUserDto {
 
     public void setFavorites(URI favorites) {
         this.favorites = favorites;
+    }
+
+    public boolean isImageExists() {
+        return imageExists;
+    }
+
+    public void setImageExists(boolean imageExists) {
+        this.imageExists = imageExists;
     }
 }
