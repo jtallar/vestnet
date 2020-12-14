@@ -186,6 +186,9 @@ define([], function() {
     confAccept: 'Accept deal',
     confAcceptBody: 'You sure you wanna confirm? Action cannot be undone.',
     expire: 'Offer expires in',
-    days: 'days'
+    days: 'days',
+    funding: 'Funding',
+    target: 'Target',
+    current: 'Current'
   };
 });

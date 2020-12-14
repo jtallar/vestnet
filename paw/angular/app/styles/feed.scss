@@ -258,7 +258,7 @@ html {
 }
 
 .card-body{
-  padding: 15px 15px 20px;
+  padding: 10px !important;
 }
 
 .card-text{
@@ -372,6 +372,14 @@ html {
   max-height: 80px
 }
 
+.feed-footer{
+  padding: 5px !important;
+}
+
+.feed-footer .btn{
+  margin-top: 8px !important;
+}
+
 .btn-deal{
   margin-right: 25px;
 }
@@ -387,12 +395,20 @@ html {
 }
 
 .price-footer{
-  font-size:18px;
+  margin-left: 10px;
+  margin-right: 0;
 }
 
-.card-footer .btn{
-  font-size: 18px !important;
-  margin-right: 0 !important
+.price-footer h4{
+  font-size:18px;
+  font-variant: all-petite-caps;
+  font-weight: bold;
+  margin: 0 8px !important;
+}
+.price-footer h6{
+  font-size:15px;
+  color: #474747;
+  margin: 0 35px !important;
 }
 
 .icon-fav{
@@ -792,4 +808,19 @@ html {
 .popup strong{
   font-variant: all-petite-caps;
   font-size: 35px
+}
+
+.my-bar{
+  background-color: #750096 !important;
+}
+
+.more-icon > img{
+  width: 28px;
+  height: 28px;
+}
+
+.more-icon{
+  background-color: black !important;
+  border-radius: 50% !important;
+  margin: 5px 0 8px 10px !important
 }

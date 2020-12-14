@@ -186,6 +186,9 @@ define([], function() {
     confAccept: 'Aceptar trato',
     confAcceptBody: '¿Está seguro que desea confirmar? La acción no tiene vuelta atrás.',
     expire: 'Oferta expira en',
-    days: 'días'
+    days: 'días',
+    funding: 'Financiamiento',
+    target: 'Objetivo',
+    current: 'Obtenido'
   };
 });
