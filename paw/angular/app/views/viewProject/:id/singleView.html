@@ -60,7 +60,7 @@
       </div>
 
       <!-- Favorite icon logic -->
-      <div class="col-6">
+      <div class="col-7">
         <div class="d-flex justify-content-center">
           <div class="card description mb-3">
             <!--
@@ -160,7 +160,7 @@
         </div>
 
         <!-- Contact button -->
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-center">
             <a href="/#/chat/1/2" class="btn btn-dark contact-btn" >
               <img src="images/chat-icon.png" class="contact-img">
               {{'contact' | translate}}
@@ -265,6 +265,49 @@
       </div>
     </sec:authorize>
     -->
+
+  <div class="progress my-bar-steps0">
+    <div class="progress-bar progress-bar-striped progress-bar-animated
+        {{project.stage==1?'bar-red':(project.stage==2?'bar-orange':(project.stage==3?'bar-yellow':(project.stage==4?'bar-cyan':'bar-green')))}}"
+         role="progressbar" style="width: {{project.stage*20}}%" aria-valuenow="{{project.stage}}" aria-valuemin="0" aria-valuemax="5"></div>
+  </div>
+
+  <div class="card-group history-group">
+
+    <div class="{{project.stage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 class="card-title">Stage 1</h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      </div>
+    </div>
+    <div class="{{project.stage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
+        <div class="card-body h-step-b">
+          <h5 class="card-title">Stage 2</h5>
+          <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+        </div>
+    </div>
+    <div class="{{project.stage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 class="card-title" >Stage 3</h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      </div>
+    </div>
+    <div class="{{project.stage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 class="card-title">Stage 4</h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      </div>
+    </div>
+    <div class="{{project.stage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 class="card-title">Stage 5</h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      </div>
+    </div>
+  </div>
+
+
+
 </div>
 <!--</div>-->
 
@@ -273,4 +316,5 @@
 <footer>
   <vnfooter></vnfooter>
 </footer>
+
 

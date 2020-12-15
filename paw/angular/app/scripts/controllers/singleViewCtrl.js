@@ -24,7 +24,8 @@ define(['paw2020a'], function(paw2020a) {
         'owner': {'firstName': 'Grupo', 'lastName': '5', 'mail': 'fchoi@itba.edu.ar', 'id': 1},
         'categories': ['Technology', 'Research'],
         'updateDate': '15/02/2019',
-        'percentage': 90
+        'percentage': 90,
+        'stage' : 3
       };
 
     });
