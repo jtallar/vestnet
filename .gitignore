@@ -49,5 +49,7 @@ target/
 /paw/angular/.sass-cache/
 
 paw/node_modules/
-
 paw/node_modules 2/
+
+# configuration file
+/paw/webapp/src/main/resources/application.properties

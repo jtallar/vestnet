@@ -3,19 +3,19 @@ package ar.edu.itba.paw.webapp.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -26,12 +26,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -46,11 +42,21 @@ import java.util.Properties;
 @EnableCaching
 @EnableAsync
 @EnableTransactionManagement
+@PropertySources({
+    @PropertySource(value = "file:${user.home}/.vestnet.properties", ignoreResourceNotFound = true),
+    /** Path: /paw/webapp/src/main/resources/application.properties. Only used for production. Has highest priority than previous source. */
+    @PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true)
+})
 public class WebConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
     public static final int MAX_UPLOAD_SIZE = 2097152; // 2 MB
     public static final int MAX_SLIDESHOW_COUNT = 5;
+
+
+    @Autowired
+    private Environment env;
+
 
     /**
      * Entity manager for Hibernate & JPA factory.
@@ -142,9 +148,8 @@ public class WebConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(env.getProperty("mail.host"));
         mailSender.setPort(Integer.parseInt(env.getProperty("mail.port")));
-
-        mailSender.setUsername(env.getProperty("mail.username"));
-        mailSender.setPassword(env.getProperty("mail.password"));
+        mailSender.setUsername(env.getProperty("postgres.username"));
+        mailSender.setPassword(env.getProperty("postgres.password"));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
