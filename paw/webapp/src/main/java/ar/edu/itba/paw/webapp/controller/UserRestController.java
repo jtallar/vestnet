@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.model.Favorite;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.dto.user.*;
@@ -16,8 +17,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -96,11 +96,22 @@ public class UserRestController {
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
     }
 
-    // TODO make a GET favorites?
+    @GET
+    @Path("/favorites")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getFavorites() {
+        Optional<User> optionalUser = userService.findById(sessionUser.getId());
+        Set<Long> favoriteIds = new HashSet<>();
+
+        if (optionalUser.isPresent())
+            favoriteIds = optionalUser.get().getFavorites().stream().map(Favorite::getProjectId).collect(Collectors.toSet());
+
+        return Response.ok(favoriteIds).build();
+    }
 
     @PUT
     @Path("/favorites")
-    public Response favorites(@QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
+    public Response setFavorite(@QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
                                 @QueryParam("add") @DefaultValue("true") boolean add) {
         Optional<User> optionalUser = userService.favorites(sessionUser.getId(), projectId, add);
 

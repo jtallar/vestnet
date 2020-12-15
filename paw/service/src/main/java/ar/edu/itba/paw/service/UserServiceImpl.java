@@ -151,8 +151,8 @@ public class UserServiceImpl implements UserService {
     public Optional<User> favorites(long userId, long projectId, boolean add) {
         Optional<User> optionalUser = userDao.findById(userId);
         optionalUser.ifPresent(u -> {
-            if (add) u.getFavorites().add(new Project(projectId));
-            else u.getFavorites().remove(new Project(projectId));
+            if (add) u.getFavorites().add(new Favorite(new User(userId), new Project(projectId)));
+            else u.getFavorites().remove(new Favorite(new User(userId), new Project(projectId)));
         });
         return optionalUser;
     }

@@ -9,11 +9,11 @@ public class Favorite implements Serializable {
 
     @Id
     @Column(name = "user_id", insertable = false, updatable = false)
-    private int userId;
+    private long userId;
 
     @Id
     @Column(name = "project_id", insertable = false, updatable = false)
-    private int projectId;
+    private long projectId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
@@ -30,11 +30,11 @@ public class Favorite implements Serializable {
         this.project = project;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public int getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
@@ -68,7 +68,7 @@ public class Favorite implements Serializable {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(userId) ^ Integer.hashCode(projectId);
+        return Long.hashCode(userId) ^ Long.hashCode(projectId);
     }
 
     @Override
