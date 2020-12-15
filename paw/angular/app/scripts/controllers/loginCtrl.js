@@ -4,7 +4,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
   function(paw2020a) {
     paw2020a.controller('loginCtrl', ['PathService', 'AuthenticationService', '$scope', '$log', function(PathService, AuthenticationService, $scope, $log) {
 
-      this.login = function (user) {
+      $scope.login = function (user) {
         // TODO: Ver si esta condicion de abajo va
         if (AuthenticationService.isLoggedIn()) {
           PathService.get().index().go();

@@ -7,7 +7,8 @@ import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
-import ar.edu.itba.paw.webapp.dto.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectWithCategoryDto;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,9 +72,12 @@ public class ProjectRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response create(@Valid final ProjectDto projectDto) {
+    public Response create(@Valid final ProjectWithCategoryDto projectDto) {
         final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), sessionUser.getId());
+        List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+        project.setCategories(categories);
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
+        // TODO: Move set categories to service + see how to get created uri
         return Response.created(projectUri).build();
     }
 

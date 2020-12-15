@@ -1,11 +1,8 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.project;
 
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.image.ProjectImage;
-import org.glassfish.jersey.server.Uri;
 import org.hibernate.validator.constraints.NotBlank;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -16,7 +13,6 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,8 +32,6 @@ public class ProjectDto {
     @Max(9999999)
     private long fundingTarget;
 
-    @Min(1000)
-    @Max(9999999)
     private long fundingCurrent; // TODO could be more than the actual target
 
     private boolean closed;

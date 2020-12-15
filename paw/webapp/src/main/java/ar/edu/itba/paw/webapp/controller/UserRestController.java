@@ -6,7 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.dto.user.*;
-import ar.edu.itba.paw.webapp.dto.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
