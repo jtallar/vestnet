@@ -42,11 +42,7 @@ import java.util.Properties;
 @EnableCaching
 @EnableAsync
 @EnableTransactionManagement
-@PropertySources({
-    @PropertySource(value = "file:${user.home}/.vestnet.properties", ignoreResourceNotFound = true),
-    /** Path: /paw/webapp/src/main/resources/application.properties. Only used for production. Has highest priority than previous source. */
-    @PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true)
-})
+@PropertySource(value = "classpath:application.properties")
 public class WebConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
@@ -148,8 +144,8 @@ public class WebConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(env.getProperty("mail.host"));
         mailSender.setPort(Integer.parseInt(env.getProperty("mail.port")));
-        mailSender.setUsername(env.getProperty("postgres.username"));
-        mailSender.setPassword(env.getProperty("postgres.password"));
+        mailSender.setUsername(env.getProperty("mail.username"));
+        mailSender.setPassword(env.getProperty("mail.password"));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
