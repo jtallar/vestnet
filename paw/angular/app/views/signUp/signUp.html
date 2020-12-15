@@ -12,7 +12,7 @@
     <div class="row h-100">
       <div class="col-sm-10 my-auto mx-auto">
         <div class="signupCard card rounded-lg px-4 py-3">
-          <ng-form name="signUpForm">
+          <ng-form name="signUpForm" enctype="multipart/form-data">
             <div class="row justify-content-left">
               <div class="col-1 text-left">
                 <a onclick="history.back()" class="white-text btn btn-dark pull-left">{{'back' | translate}}</a>
@@ -29,20 +29,22 @@
 
             <div class="container">
               <div class="row">
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.firstName.$touched && signUpForm.firstName.$invalid}">
                   <div class="form-group">
                     <label>{{'firstNameRequired' | translate}} </label>
-                    <input type="text" class="form-control"
-                           placeholder="{{'enterFirstName' | translate}}" id="sign-up-first-name"/>
-                    <!--                  <form:errors path="firstName" element="p" cssClass="formError"/>-->
+                    <p class="form-requirement">{{'firstNameRequirement' | translate}}</p>
+                    <input name="firstName" ng-model="controller.user.firstName" type="text" class="form-control"
+                           placeholder="{{'enterFirstName' | translate}}" id="sign-up-first-name"
+                           required ng-maxlength="25"/>
                   </div>
                 </div>
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.lastName.$touched && signUpForm.lastName.$invalid}">
                   <div class="form-group">
                     <label>{{'lastNameRequired' | translate}} </label>
-                    <input type="text" class="form-control"
-                           placeholder="{{'enterLastName' | translate}}" id="sign-up-last-name"/>
-                    <!--                  <form:errors path="lastName" cssClass="formError" element="p"/>-->
+                    <p class="form-requirement">{{'lastNameRequirement' | translate}}</p>
+                    <input name="lastName" ng-model="controller.user.lastName" type="text" class="form-control"
+                           placeholder="{{'enterLastName' | translate}}" id="sign-up-last-name"
+                           required ng-maxlength="25"/>
                   </div>
                 </div>
               </div>
@@ -51,20 +53,21 @@
             <!--Real ID and phone form-->
             <div class="container">
               <div class="row">
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.realId.$touched && signUpForm.realId.$invalid}">
                   <div class="form-group">
                     <label> {{'realIdRequired' | translate}} </label>
-                    <input type="text" class="form-control"
-                           placeholder="{{'enterRealId' | translate}}" id="sign-up-real-id"/>
-                    <!--                  <form:errors path="realId" cssClass="formError" element="p"/>-->
+                    <p class="form-requirement">{{'realIdRequirement' | translate}}</p>
+                    <input name="realId" ng-model="controller.user.realId" type="text" class="form-control"
+                           placeholder="{{'enterRealId' | translate}}" id="sign-up-real-id"
+                           required ng-maxlength="15"/>
                   </div>
                 </div>
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.phone.$touched && signUpForm.phone.$invalid}">
                   <div class="form-group">
                     <label> {{'phone' | translate}} </label>
-                    <input type="text" class="form-control"
-                           placeholder="{{'enterPhone' | translate}}"/>
-                    <!--                  <form:errors path="phone" cssClass="formError" element="p"/>-->
+                    <p class="form-requirement">{{'phoneRequirement' | translate}}</p>
+                    <input name="phone" ng-model="controller.user.phone" type="text" class="form-control"
+                           placeholder="{{'enterPhone' | translate}}" ng-maxlength="25" ng-pattern="/^[0-9]*$/"/>
                   </div>
                 </div>
               </div>
@@ -75,18 +78,17 @@
             <!-- Mail form -->
             <div class="container">
               <div class="row">
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.email.$touched && signUpForm.email.$invalid}">
                   <div class="form-group">
                     <label>{{'emailRequired' | translate}} </label>
-                    <input type="text" class="form-control"
-                           placeholder="{{'enterEmail' | translate}}"/>
-                    <!--                  <form:errors path="email" cssClass="formError" element="p"/>-->
+                    <input name="email" ng-model="controller.user.email" type="email" class="form-control"
+                           placeholder="{{'enterEmail' | translate}}" required ng-maxlength="255"/>
                   </div>
                 </div>
                 <div class="col-md">
                   <div class="form-group">
                     <label>{{'role' | translate}} </label>
-                    <select class="custom-select mr-sm-2">
+                    <select class="custom-select mr-sm-2" ng-model="controller.user.role">
                       <option value="Investor">{{'investor' | translate}}</option>
                       <option value="Entrepreneur">{{'entrepreneur' | translate}}</option>
                     </select>
@@ -98,20 +100,21 @@
             <!--Password form-->
             <div class="container">
               <div class="row">
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.password.$touched && signUpForm.password.$invalid}">
                   <div class="form-group">
                     <label> {{'passwordRequired' | translate}} </label>
-                    <input type="password" class="form-control"
-                           placeholder="{{'enterPassword' | translate}}" id="sign-up-password"/>
-                    <!--                  <form:errors path="password" element="p" cssClass="formError"/>-->
+                    <p class="form-requirement">{{'passwordRequirement' | translate}}</p>
+                    <input name="password" ng-model="controller.user.password" type="password" class="form-control"
+                           placeholder="{{'enterPassword' | translate}}" id="sign-up-password"
+                           required ng-maxlength="50"/>
                   </div>
                 </div>
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.repeatPassword.$touched && signUpForm.repeatPassword.$invalid}">
                   <div class="form-group">
                     <label>{{'repeatPasswordRequired' | translate}}</label>
-                    <input type="password" class="form-control"
-                           placeholder="{{'enterRepeatPassword' | translate}}" id="sign-up-repeat-password"/>
-                    <!--                  <form:errors cssClass="formError" element="p"/>-->
+                    <input name="repeatPassword" ng-model="controller.user.repeatPassword" type="password" class="form-control"
+                           placeholder="{{'enterRepeatPassword' | translate}}" id="sign-up-repeat-password"
+                           required ng-maxlength="50" ng-pattern="controller.user.password"/>
                   </div>
                 </div>
               </div>
@@ -122,26 +125,27 @@
             <!--Linkedin and profile picture-->
             <div class="container">
               <div class="row">
-                <div class="col-md">
+                <div class="col-md" ng-class="{'has-error': signUpForm.linkedin.$touched && signUpForm.linkedin.$invalid}">
                   <div class="form-group">
                     <label>{{'linkedin' | translate}}</label>
                     <p class="form-requirement">{{'linkedinRequirement' | translate}}</p>
-                    <input type="text" class="form-control"
-                           placeholder="{{'enterLinkedin' | translate}}"/>
-                    <!--                  <form:errors path="linkedin" cssClass="formError" element="p"/>-->
+                    <input name="linkedin" ng-model="controller.user.linkedin" type="text" class="form-control"
+                           placeholder="{{'enterLinkedin' | translate}}" ng-maxlength="100"
+                           ng-pattern="/^((http(s)?://)?(www\.)?(linkedin\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*))?$/"/>
                   </div>
                 </div>
                 <div class="col-md">
                   <label> {{'userPicture' | translate}} </label>
                   <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
                   <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFileProfilePic"/>
+                    <input ng-model="controller.user.image" type="file" class="custom-file-input"
+                           custom-on-change="fileboxChange" accept="image/*" id="customFileProfilePic"/>
                     <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel">
                       {{'chooseFile' | translate}}</label>
                     <br>
                     <!--                  <form:errors path="profilePicture" cssClass="formError" element="p" id="fileErrorFormTag"/>-->
                   </div>
-                  <label class="formError" id="maxSizeErrorMsg" hidden>{{'imageMaxSize' | translate}}</label>
+                  <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
                 </div>
               </div>
             </div>
@@ -158,33 +162,22 @@
                       <label class="date">{{'day' | translate}}</label>
                     </div>
                     <div class="col-md">
-                      <select class="custom-select mr-sm-2">
-                        <div ng-repeat="n in [] | range:31">
-                          <option value="{{$index}}">{{$index}}</option>
-                        </div>
-                      </select>
+                      <select ng-model="controller.user.birthday.day" class="custom-select mr-sm-2"
+                              ng-options="label for label in dayArray"></select>
                     </div>
                     <div class="col-">
                       <label class="date"> {{'month' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select class="custom-select mr-sm-2">
-                        <div ng-repeat="n in [] | range:12">
-                          <option value="{{$index}}">{{$index}}</option>
-                        </div>
-                      </select>
+                      <select ng-model="controller.user.birthday.month" class="custom-select mr-sm-2"
+                              ng-options="label for label in monthArray"></select>
                     </div>
                     <div class="col-">
                       <label class="date"> {{'year' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select class="custom-select mr-sm-2">
-                        <div ng-repeat="n in [] | range:12">
-                          <option value="{{$index}}">{{$index}}</option>
-                          <!--  TODO: RESOLVER  -->
-
-                        </div>
-                      </select>
+                      <select ng-model="controller.user.birthday.year" class="custom-select mr-sm-2"
+                              ng-options="label for label in yearArray"></select>
                     </div>
                   </div>
                 </div>
@@ -200,19 +193,27 @@
                       <label>{{'country' | translate}}</label>
                     </div>
                     <div class="col-md">
-                      <select id="country-select" class="custom-select mr-sm-2" onchange=""/>
+                      <select id="country-select" class="custom-select mr-sm-2" ng-model="controller.user.country"
+                              ng-options="option as option.name | translate for option in countries track by option.id"
+                              custom-on-change="countryChange">
+                      </select>
                     </div>
                     <div class="col-">
                       <label>{{'state' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select id="state-select" class="custom-select mr-sm-2" onchange=""/>
+                      <select id="state-select" class="custom-select mr-sm-2" ng-model="controller.user.state"
+                              ng-options="option as option.name | translate for option in states track by option.id"
+                              custom-on-change="stateChange">
+                      </select>
                     </div>
                     <div class="col-">
                       <label> {{'city' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select id="city-select" class="custom-select mr-sm-2"/>
+                      <select id="city-select" class="custom-select mr-sm-2" ng-model="controller.user.city"
+                              ng-options="option as option.name | translate for option in cities track by option.id">
+                      </select>
                     </div>
                   </div>
 
@@ -225,10 +226,14 @@
 
         <!-- Invalid user error -->
         <div class="text-right">
-          <div ng-if="false">
+          <div ng-if="userExistsError">
             <h4 class="big-error">{{'userAlreadyExists' | translate}}</h4>
           </div>
-          <input type="submit" class=" signup-btn btn btn-dark pull-right" value="{{'signUp' | translate}}" onclick=""/>
+          <div ng-if="serverFormErrors">
+            <h4 class="big-error">{{'serverFormErrors' | translate}}</h4>
+          </div>
+          <input type="submit" class="signup-btn btn btn-dark pull-right" value="{{'signUp' | translate}}"
+                 ng-click="createUser(controller.user)" ng-disabled="signUpForm.$invalid"/>
         </div>
 
         </ng-form>

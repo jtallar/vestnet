@@ -88,6 +88,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
         }
       };
 
+      // TODO: Put image and slideshow
       $scope.createProject = function (project) {
         if (selectedCategories.length === 0) {
           $scope.categoryCountError = true;
