@@ -28,6 +28,13 @@ define(['paw2020a'], function(paw2020a) {
         'stage' : 3
       };
 
+      $scope.upStage = function (){
+        $scope.project.stage++;
+      }
+      $scope.downStage = function (){
+        $scope.project.stage--;
+      }
+
     });
 
 });
