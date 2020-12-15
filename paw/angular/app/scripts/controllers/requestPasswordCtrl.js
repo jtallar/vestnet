@@ -11,7 +11,7 @@ define(['paw2020a', 'services/userService', 'services/PathService'], function(pa
         // TODO: Ver como le pasamos este valor a login
         $scope.valor = 9;
       }, function (errorResponse) {
-        if (errorResponse.status === 404) {
+        if (errorResponse.status === 404 || errorResponse.status === 400) {
           $scope.invalidEmail = true;
           return;
         }
