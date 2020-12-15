@@ -100,6 +100,9 @@ public class WebConfig {
         dataSource.setUrl(env.getProperty("postgres.url"));
         dataSource.setUsername(env.getProperty("postgres.username"));
         dataSource.setPassword(env.getProperty("postgres.password"));
+
+        LOGGER.debug("Connecting to database at {} with user {}", dataSource.getUrl(), dataSource.getUsername());
+
         return dataSource;
     }
 
