@@ -133,7 +133,7 @@ define([], function() {
     msgTitleOffer: 'Oferta',
     msgTitleRequest: 'A cambio',
     noDeals: 'Aún no ha realizado acuerdos',
-    reqTitle: 'Ofertas enviadas',
+    reqTitle: 'Mis Inversiones',
     pending: 'Pendiente',
     accepted: 'Aceptado',
     rejected: 'Rechazado',
@@ -192,6 +192,7 @@ define([], function() {
     current: 'Obtenido',
     money: '$ {{m}}',
     contact: 'Enviar mensaje',
-    viewmore: 'Ver más...'
+    viewmore: 'Ver más...',
+    totalinv: 'Total Invertido'
   };
 });

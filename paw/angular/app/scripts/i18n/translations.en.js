@@ -128,7 +128,7 @@ define([], function() {
     msgTitleOffer: 'Offer',
     msgTitleRequest: 'In exchange',
     noMsg: 'No deals done yet',
-    reqTitle: 'Sent Offers',
+    reqTitle: 'My Investments',
     pending: 'Pending',
     accepted: 'Accepted',
     rejected: 'Rejected',
@@ -192,6 +192,7 @@ define([], function() {
     current: 'Current',
     money: 'USD {{m}}',
     contact: 'Send new message',
-    viewmore: 'View more...'
+    viewmore: 'View more...',
+    totalinv: 'Total Invested'
   };
 });

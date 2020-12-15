@@ -146,11 +146,12 @@ define(['paw2020a'], function(paw2020a) {
       });
     }
 
-    // TODO: ver si se puede hacer que ande asi arranca al fondo del chat
-    $scope.init = function () {
-      var element = document.getElementById("chatbox-scroll");
-      element.scrollTop = element.scrollHeight;
-    }
+    $scope.$on('$viewContentLoaded', function() {
+      const element = document.getElementById("chatbox-scroll");
+      setTimeout(function(){
+        element.scrollTop = element.scrollHeight;
+        },50);
+    });
 
     // var myDiv = document.getElementById("chatbox-scroll");
     // myDiv.scrollTop = myDiv.scrollHeight;
