@@ -109,9 +109,10 @@ public class UserRestController {
     }
 
 
+    // TODO: El link del mail esta mal, tengo que recibir la base url con /resetPassword?
     @POST
     @Path("/password")
-    public Response requestPassword(final MailDto mailDto) {
+    public Response requestPassword(@Valid final MailDto mailDto) {
         Optional<User> optionalUser = userService.requestPassword(mailDto.getMail(), uriInfo.getBaseUri());
 
         return optionalUser.map(u -> Response.ok().build())
@@ -122,9 +123,8 @@ public class UserRestController {
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@QueryParam("token") final String token,
-                                   @Valid final PasswordDto password) {
-        if (userService.updatePassword(token, password.getPassword()))
+    public Response updatePassword(@Valid final PasswordDto passwordDto) {
+        if (userService.updatePassword(passwordDto.getToken(), passwordDto.getPassword()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -132,7 +132,7 @@ public class UserRestController {
 
     @POST
     @Path("/verify")
-    public Response requestVerification(final MailDto mailDto) {
+    public Response requestVerification(@Valid final MailDto mailDto) {
         Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), uriInfo.getBaseUri());
 
         return optionalUser.map(u -> Response.ok().build())
@@ -142,8 +142,8 @@ public class UserRestController {
 
     @PUT
     @Path("/verify")
-    public Response updateVerification(@QueryParam("token") final String token) {
-        if (userService.updateVerification(token, uriInfo.getBaseUri()))
+    public Response updateVerification(@Valid final TokenDto tokenDto) {
+        if (userService.updateVerification(tokenDto.getToken(), uriInfo.getBaseUri()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
