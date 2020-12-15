@@ -22,6 +22,7 @@ define([], function() {
     welcomeRegistered: 'Ya tienes una cuenta?',
     submit: 'Acceder',
     home: 'Inicio',
+    verifyTitle: 'Verificando cuenta',
     resetPasswordTitle: 'Reestablecer contraseña',
     resetPasswordSubtitle: 'Ingrese su nueva contraseña',
     password: 'Contraseña',

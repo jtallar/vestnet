@@ -45,9 +45,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('password').customPOST(body);
     };
 
-    userService.verifyPassword = function (pass) {
-      var body = {password: pass};
-      return root.one('verify').customPOST(body)
+    userService.verifyPassword = function (token) {
+      var body = {token: token};
+      return root.one('verify').customPUT(body)
     };
 
     userService.resetPassword = function (passwordBlock) {

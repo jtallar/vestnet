@@ -131,14 +131,14 @@ public class UserRestController {
     }
 
 
-    @POST
-    @Path("/verify")
-    public Response requestVerification(@Valid final MailDto mailDto) {
-        Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
-
-        return optionalUser.map(u -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
-    }
+//    @POST
+//    @Path("/verify")
+//    public Response requestVerification(@Valid final MailDto mailDto) {
+//        Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
+//
+//        return optionalUser.map(u -> Response.ok().build())
+//                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+//    }
 
 
     @PUT
