@@ -6,7 +6,6 @@ define(['paw2020a'], function(paw2020a) {
       $scope.pages = 1;
 
       $scope.animate = function (id, start, end, duration) {
-        console.log('animate llamado');
         if (start === end) return;
         var range = end - start;
         var current = start;
@@ -15,15 +14,22 @@ define(['paw2020a'], function(paw2020a) {
         var obj = document.getElementById(id);
         var timer = setInterval(function() {
           current += increment;
-          obj.innerHTML = current;
-          if (current === end) {
+          obj.innerHTML = parseInt(current);
+          if (current >= end) {
             clearInterval(timer);
+            obj.innerHTML = end;
           }
         }, stepTime);
       }
 
       $scope.$on('$viewContentLoaded', function() {
-        $scope.animate("invested", 0, 2500, 5000);
+        var total = 0;
+        $scope.messages.forEach(function (msg){
+          // console.log(msg.project.offer)
+          total += msg.content.offer;
+        });
+        console.log(total)
+        $scope.animate("invested", 0, total, 5000);
       });
 
       $scope.messages = [
@@ -34,7 +40,7 @@ define(['paw2020a'], function(paw2020a) {
           },
           'content': {
             'message': 'Mensaje de prueba',
-            'offer': '220K',
+            'offer': 220,
             'interest': '33% de todo'
           },
           'publishDate': '22/08/2020',
@@ -49,7 +55,7 @@ define(['paw2020a'], function(paw2020a) {
           },
           'content': {
             'message': 'Mensaje de prueba',
-            'offer': '3000K',
+            'offer': 3000,
             'interest': '10% de la empresa'
           },
           'publishDate': '03/09/2020',
@@ -64,7 +70,7 @@ define(['paw2020a'], function(paw2020a) {
           },
           'content': {
             'message': 'Mensaje de prueba',
-            'offer': '500K',
+            'offer': 500,
             'interest': '100K mensuales'
           },
           'publishDate': '31/04/2020',
@@ -94,7 +100,7 @@ define(['paw2020a'], function(paw2020a) {
           },
           'content': {
             'message': 'Mensaje de prueba',
-            'offer': 5000,
+            'offer': 8,
             'interest': '33% de todo'
           },
           'publishDate': '31/04/2020',
