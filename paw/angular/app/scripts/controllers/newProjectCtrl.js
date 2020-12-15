@@ -1,8 +1,9 @@
 'use strict';
 
-define(['paw2020a', 'services/projectService', 'services/imageService', 'directives/customOnChange', 'directives/noFloat'], function(paw2020a) {
+define(['paw2020a', 'services/projectService', 'services/imageService', 'directives/customOnChange', 'directives/noFloat', 'services/PathService'],
+  function(paw2020a) {
 
-    paw2020a.controller('newProjectCtrl',['projectService','imageService','$scope', function(projectService,imageService, $scope) {
+    paw2020a.controller('newProjectCtrl',['projectService','imageService', 'PathService', '$scope', function(projectService, imageService, PathService, $scope) {
 
       var maxImageSize = 2097152, maxSlideshowCount = 5;
       var selectedCategories = [];
@@ -13,7 +14,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       $scope.serverFormErrors = false;
 
       projectService.getCategories().then(function (cats) {
-        $scope.categories = cats;
+        $scope.categories = cats.data;
         $scope.initCategory = $scope.categories[0];
       });
 
@@ -95,8 +96,8 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
         project.categories = selectedCategories;
         $scope.serverFormErrors = false;
         projectService.create(project).then(function (response) {
-          // TODO: Como obtengo la created url
-          console.log(response);
+          var location = response.headers().location;
+          PathService.get().singleProject(location.substring(location.lastIndexOf('/') + 1)).go();
         }, function (errorResponse) {
           if (errorResponse.status === 400) {
             $scope.serverFormErrors = true;

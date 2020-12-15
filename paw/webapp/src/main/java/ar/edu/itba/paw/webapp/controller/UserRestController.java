@@ -47,7 +47,7 @@ public class UserRestController {
             return Response.status(Response.Status.CONFLICT).build();
         }
         final URI userUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(newUser.getId())).build();
-        return Response.created(userUri).build();
+        return Response.created(userUri).header("Access-Control-Expose-Headers", "Location").build();
     }
 
 

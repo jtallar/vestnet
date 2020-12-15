@@ -44,6 +44,10 @@ define([], function() {
         return append('/projects');
       };
 
+      base.singleProject = function (id) {
+        return append('/projects/' + id);
+      };
+
       base.notFound = function () {
         return append('/notFound');
       };

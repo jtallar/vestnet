@@ -26,7 +26,7 @@ define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/P
             return false;
           }
           return true;
-        })
+        });
       })
         
     }]);

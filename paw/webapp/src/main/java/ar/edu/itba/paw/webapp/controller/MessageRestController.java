@@ -37,7 +37,7 @@ public class MessageRestController {
 
         final Optional<Message> message = messageService.create(OfferDto.toMessage(offerDto), sessionUser.getId(), uriInfo.getBaseUri());
 
-        return message.map(m -> Response.created(uriInfo.getAbsolutePath()).build())
+        return message.map(m -> Response.created(uriInfo.getAbsolutePath()).header("Access-Control-Expose-Headers", "Location").build())
                 .orElse(Response.status(Response.Status.BAD_REQUEST).build());
     }
 

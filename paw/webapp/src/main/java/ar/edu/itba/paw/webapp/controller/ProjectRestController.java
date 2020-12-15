@@ -76,7 +76,7 @@ public class ProjectRestController {
         List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
         final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories, sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
-        return Response.created(projectUri).build();
+        return Response.created(projectUri).header("Access-Control-Expose-Headers", "Location").build();
     }
 
 
