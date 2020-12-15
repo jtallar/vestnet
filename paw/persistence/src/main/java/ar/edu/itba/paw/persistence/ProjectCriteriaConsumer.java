@@ -7,10 +7,7 @@ import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -108,6 +105,14 @@ import java.util.function.Consumer;
         predicate = builder.and(predicate, builder.equal(root.get("closed"), value));
     }
 
+    /**
+     * Adds Favorite param in the same query.
+     * @param value User to search the favorites to.
+     */
+    private void favorites(Object value) {
+        Join<Project, User> favoritesJoin = root.join("favoriteBy", JoinType.LEFT);
+        predicate = builder.and(predicate, builder.equal(favoritesJoin.get("user"), value));
+    }
 
     /**
      * Filters by a list of ids.
