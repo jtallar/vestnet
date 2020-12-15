@@ -43,6 +43,7 @@ public class ProjectJpaDaoTest {
     private static final String CATEGORIES_TABLE = "categories";
     private static final String PROJECT_CATEGORY_TABLE = "project_categories";
     private static final String LOCATIONS_TABLE = "user_location";
+    private static final String FAVORITES_TABLE = "favorites";
 
     private static final int COUNTRY_ID = 1;
     private static final int STATE_ID = 2;
@@ -75,7 +76,7 @@ public class ProjectJpaDaoTest {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertProject, jdbcInsertUser, jdbcInsertCategory, jdbcInsertProjectCategory;
-    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation;
+    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation, jdbcInsertFavorites;
 
     @Before
     public void setUp() {
@@ -102,6 +103,8 @@ public class ProjectJpaDaoTest {
         jdbcInsertLocation = new SimpleJdbcInsert(dataSource)
                 .usingGeneratedKeyColumns("id")
                 .withTableName(LOCATIONS_TABLE);
+        jdbcInsertFavorites = new SimpleJdbcInsert(dataSource)
+                .withTableName(FAVORITES_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_CATEGORY_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
@@ -112,6 +115,7 @@ public class ProjectJpaDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, FAVORITES_TABLE);
 
         createLocation();
         createRole();
@@ -364,6 +368,40 @@ public class ProjectJpaDaoTest {
     }
 
 
+    @Test
+    public void testFindByMultipleFavorites() {
+        // 1 - Setup - Create 4 different projects
+        Number userId = createUser();
+        Number categoryId = createCategory(CATEGORY_NAME);
+        Number otherCategoryId = createCategory(CATEGORY_NAME_2);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
+        createProjectCategory(projectId, categoryId);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
+        createProjectCategory(otherProjectId, otherCategoryId);
+        Number thirdProjectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET_2);
+        createProjectCategory(thirdProjectId, categoryId);
+        Number fourthProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
+        createProjectCategory(fourthProjectId, categoryId);
+        addFavorite(projectId, userId);
+        addFavorite(otherProjectId, userId);
+
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setOrder(OrderField.PROJECT_ALPHABETICAL)
+                ;
+//                .addFavorites();
+
+        // 2 - Execute
+        List<Project> projects = projectJpaDao.findAll(request);
+
+        for (Project p: projects) {
+            System.out.println("FAVORITES: " + p.getFavorites());
+        }
+
+        // 3 - Assert
+        assertEquals(4, projects.size());
+    }
+
+
     /**
      * Auxiliary functions
      */
@@ -450,6 +488,7 @@ public class ProjectJpaDaoTest {
         user.put("email", EMAIL);
         user.put("location_id", createUserLocation().longValue());
         user.put("locale", LOCALE);
+        user.put("verified", true);
 
         return jdbcInsertUser.executeAndReturnKey(user);
     }
@@ -462,6 +501,18 @@ public class ProjectJpaDaoTest {
         Map<String, String> category = new HashMap<>();
         category.put("category", name);
         return jdbcInsertCategory.executeAndReturnKey(category);
+    }
+
+    /**
+     * Creates a favorite.
+     * @param projectId The project to make favorite
+     * @param userId The user to give a favorite
+     */
+    private void addFavorite(Number projectId, Number userId) {
+        Map<String, Object> category = new HashMap<>();
+        category.put("project_id", projectId.longValue());
+        category.put("user_id", userId.longValue());
+        jdbcInsertFavorites.execute(category);
     }
 
     /**

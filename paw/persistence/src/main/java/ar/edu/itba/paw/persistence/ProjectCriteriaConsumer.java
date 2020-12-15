@@ -34,6 +34,7 @@ import java.util.function.Consumer;
             case PROJECT_CATEGORY: category(param.getValue()); break;
             case PROJECT_OWNER: owner(param.getValue()); break;
             case PROJECT_CLOSED: closed(param.getValue()); break;
+            case PROJECT_ADD_FAVORITES: favorites(); break;
             case IDS: ids(param.getValue()); break;
 
             /** If its not a filter, its a search */
@@ -107,11 +108,9 @@ import java.util.function.Consumer;
 
     /**
      * Adds Favorite param in the same query.
-     * @param value User to search the favorites to.
      */
-    private void favorites(Object value) {
+    private void favorites() {
         Join<Project, User> favoritesJoin = root.join("favoriteBy", JoinType.LEFT);
-        predicate = builder.and(predicate, builder.equal(favoritesJoin.get("user"), value));
     }
 
     /**

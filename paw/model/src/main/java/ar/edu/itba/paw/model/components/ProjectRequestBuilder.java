@@ -137,4 +137,9 @@ public class ProjectRequestBuilder extends RequestBuilder {
         this.order = order;
         return this;
     }
+
+    public ProjectRequestBuilder addFavorites() {
+        criteriaList.add(new FilterCriteria(PROJECT_ADD_FAVORITES, "empty"));
+        return this;
+    }
 }

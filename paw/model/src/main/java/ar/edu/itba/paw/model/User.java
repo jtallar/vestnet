@@ -68,12 +68,8 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
     private List<Project> projectList;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "favorites",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "project_id"))
-    private List<Project> favorites;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private List<Favorite> favorites;
 
     /** Package */ User() {
         /** For Hibernate only */
@@ -232,11 +228,11 @@ public class User {
     }
 
 
-    public List<Project> getFavorites() {
+    public List<Favorite> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(List<Project> favorites) {
+    public void setFavorites(List<Favorite> favorites) {
         this.favorites = favorites;
     }
 

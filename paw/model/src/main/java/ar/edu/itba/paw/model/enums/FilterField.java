@@ -16,6 +16,7 @@ public enum FilterField {
     PROJECT_SEARCH_LOCATION,
     PROJECT_SEARCH_OWNER_NAME,
     PROJECT_SEARCH_OWNER_MAIL,
+    PROJECT_ADD_FAVORITES,
 
     /** Valid field names */
     IDS("id"),
