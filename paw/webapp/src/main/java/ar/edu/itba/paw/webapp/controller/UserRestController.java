@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.component.UriInfoUtils;
 import ar.edu.itba.paw.webapp.dto.user.*;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +43,7 @@ public class UserRestController {
 
         final User newUser; // TODO work with optional? reduces code more
         try {
-            newUser = userService.create(FullUserWithPasswordDto.toUser(user), uriInfo.getBaseUri());
+            newUser = userService.create(FullUserWithPasswordDto.toUser(user), UriInfoUtils.getBaseURI(uriInfo));
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
             return Response.status(Response.Status.CONFLICT).build();
@@ -111,8 +113,8 @@ public class UserRestController {
 
     @POST
     @Path("/password")
-    public Response requestPassword(@QueryParam("mail") final String mail) {
-        Optional<User> optionalUser = userService.requestPassword(mail, uriInfo.getBaseUri());
+    public Response requestPassword(@Valid final MailDto mailDto) {
+        Optional<User> optionalUser = userService.requestPassword(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -122,28 +124,27 @@ public class UserRestController {
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@QueryParam("token") final String token,
-                                   @Valid final PasswordDto password) {
-        if (userService.updatePassword(token, password.getPassword()))
+    public Response updatePassword(@Valid final PasswordDto passwordDto) {
+        if (userService.updatePassword(passwordDto.getToken(), passwordDto.getPassword()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 
-    @POST
-    @Path("/verify")
-    public Response requestVerification(@QueryParam("mail") final String mail) {
-        Optional<User> optionalUser = userService.requestVerification(mail, uriInfo.getBaseUri());
-
-        return optionalUser.map(u -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
-    }
+//    @POST
+//    @Path("/verify")
+//    public Response requestVerification(@Valid final MailDto mailDto) {
+//        Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
+//
+//        return optionalUser.map(u -> Response.ok().build())
+//                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+//    }
 
 
     @PUT
     @Path("/verify")
-    public Response updateVerification(@QueryParam("token") final String token) {
-        if (userService.updateVerification(token, uriInfo.getBaseUri()))
+    public Response updateVerification(@Valid final TokenDto tokenDto) {
+        if (userService.updateVerification(tokenDto.getToken(), UriInfoUtils.getBaseURI(uriInfo)))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }

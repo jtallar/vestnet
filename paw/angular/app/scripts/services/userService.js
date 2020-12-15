@@ -40,19 +40,19 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('favorites').get()
     };
 
-    userService.password = function (pass) {
-      var body = {password: pass};
-      return root.one('password').customPOST(body)
+    userService.requestPassword = function (mail) {
+      var body = {mail: mail};
+      return root.one('password').customPOST(body);
     };
 
-    userService.verifyPassword = function (pass) {
-      var body = {password: pass};
-      return root.one('verify').customPOST(body)
+    userService.verifyPassword = function (token) {
+      var body = {token: token};
+      return root.one('verify').customPUT(body)
     };
 
-    //put password must be done through mail
-
-
+    userService.resetPassword = function (passwordBlock) {
+      return root.one('password').customPUT(passwordBlock);
+    };
 
     return userService;
   }]);
