@@ -73,11 +73,9 @@ public class ProjectRestController {
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response create(@Valid final ProjectWithCategoryDto projectDto) {
-        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), sessionUser.getId());
         List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
-        project.setCategories(categories);
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories, sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
-        // TODO: Move set categories to service + see how to get created uri
         return Response.created(projectUri).build();
     }
 

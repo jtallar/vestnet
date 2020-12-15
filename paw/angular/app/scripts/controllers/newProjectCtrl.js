@@ -95,6 +95,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
         project.categories = selectedCategories;
         $scope.serverFormErrors = false;
         projectService.create(project).then(function (response) {
+          // TODO: Como obtengo la created url
           console.log(response);
         }, function (errorResponse) {
           if (errorResponse.status === 400) {
