@@ -10,7 +10,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
           PathService.get().index().go();
           return;
         }
-        AuthenticationService.login(user).then(function (authToken) {
+        AuthenticationService.login(user).then(function () {
           // TODO: Ver como hacer para que vaya a donde estaba yendo
           PathService.get().index().go();
         }, function (errorResponse) {
