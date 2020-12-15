@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<div class="main" ng-controller="loginCtrl as controller">
+<div class="main">
   <div class="col-md-8">
     <div class="login-form">
       <ng-form name="myForm">
@@ -31,7 +31,7 @@
         </div>
         <div class="row ">
           <div class="col-2 text-left">
-            <input type="submit" class="btn btn-dark" value="{{'submit' | translate}}" ng-click="controller.login(controller.user)">
+            <input type="submit" class="btn btn-dark" value="{{'submit' | translate}}" ng-click="login(controller.user)">
           </div>
           <div ng-if="valor > 0 && valor < 3">
             <div class="col mailError text-right">

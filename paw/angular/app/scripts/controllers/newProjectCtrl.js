@@ -1,121 +1,110 @@
 'use strict';
 
-define(['paw2020a', 'services/projectService', 'services/imageService'], function(paw2020a) {
+define(['paw2020a', 'services/projectService', 'services/imageService', 'directives/customOnChange', 'directives/noFloat', 'services/PathService'],
+  function(paw2020a) {
 
-    paw2020a.controller('newProjectCtrl',['projectService','imageService','$scope', function(projectService,imageService, $scope) {
+    paw2020a.controller('newProjectCtrl',['projectService','imageService', 'PathService', '$scope', function(projectService, imageService, PathService, $scope) {
 
-      var _this = this
+      var maxImageSize = 2097152, maxSlideshowCount = 5;
+      var selectedCategories = [];
+      var _this = this;
 
-
-      $scope.projectInfo = {  //  fetch from db
-        'cost': 0,
-        'title': '',
-        'summary': '',
-        'categories': [],
-        'image': '',
-        'slideshow': ''
-      };
-      $scope.maxSlideshowCount = 5; //  fetch from webapp
-      $scope.maxSize = 2; //  fectch from webapp
-      $scope.doubleLeft = '>>';
-      $scope.doubleRight = '<<';
-      $scope.categories = [{'name': 'technology', 'id': 1} , {'name': 'research', 'id': 2}, {'name': 'sports', 'id': 3}, {'name': 'audio', 'id': 4}];
+      $scope.imageSizeError = false; $scope.slideshowSizeError = false;
+      $scope.slideshowCountError = false; $scope.categoryCountError = false;
+      $scope.serverFormErrors = false;
 
       projectService.getCategories().then(function (cats) {
-        $scope.categories = cats
+        $scope.categories = cats.data;
+        $scope.initCategory = $scope.categories[0];
+      });
 
-      })
-
-      var fileBox = document.getElementById('customFileProjectPic');
-      var maxSizeMsg = document.getElementById('maxSizeErrorMsg');
-      var errorTag = document.getElementById('fileErrorFormTag');
-
-      $scope.fileboxChange = function () {
-        if (!(fileBox.files.length === 0) && fileBox.files[0].size >= this.maxSize) {
-          fileBox.value = null;
-          if (errorTag !== null) {
-            errorTag.hidden = true;
-          }
-          maxSizeMsg.hidden = false;
+      $scope.fileboxChange = function (event) {
+        if (!(event.target.files.length === 0) && event.target.files[0].size >= maxImageSize) {
+          event.target.value = null;
+          $scope.$apply(function () {
+            $scope.imageSizeError = true;
+          });
         } else {
-          maxSizeMsg.hidden = true;
+          $scope.$apply(function () {
+            $scope.imageSizeError = false;
+          });
         }
       };
 
-      var multipleFileBox = document.getElementById('customMultipleFileProjectPic');
-      var maxSizeMsgMultiple = document.getElementById('maxSizeErrorMsgMultiple');
-      var maxCountMsgMultiple = document.getElementById('maxCountErrorMsgMultiple');
-      var errorTagMultiple = document.getElementById('multipleFileErrorFormTag');
-
-      $scope.multipleFileBoxChange = function () {
+      $scope.multipleFileBoxChange = function (event) {
         var index = 0, error = 0;
-        if (multipleFileBox.files.length > this.maxSlideshowCount) {
+        if (event.target.files.length > maxSlideshowCount) {
           error = 1;
-          maxSizeMsgMultiple.hidden = true;
-          maxCountMsgMultiple.hidden = false;
-        } else if (!(multipleFileBox.files.length === 0)) {
-          for (index = 0; index < multipleFileBox.files.length; index++) {
-            if (multipleFileBox.files[index].size >= this.maxSize) {
+          $scope.$apply(function () {
+            $scope.slideshowSizeError = false;
+            $scope.slideshowCountError = true;
+          });
+        } else if (!(event.target.files.length === 0)) {
+          for (index = 0; index < event.target.files.length; index++) {
+            if (event.target.files[index].size >= maxImageSize) {
               error = 1;
-              maxSizeMsgMultiple.hidden = false;
-              maxCountMsgMultiple.hidden = true;
+              $scope.$apply(function () {
+                $scope.slideshowSizeError = true;
+                $scope.slideshowCountError = false;
+              });
               break;
             }
           }
         }
         if (error === 0) {
-          maxSizeMsgMultiple.hidden = true;
-          maxCountMsgMultiple.hidden = true;
+          $scope.$apply(function () {
+            $scope.slideshowSizeError = false;
+            $scope.slideshowCountError = false;
+          });
         } else {
-          multipleFileBox.value = null;
-          if (errorTagMultiple !== null) {
-            errorTagMultiple.hidden = true;
-          }
+          event.target.value = null;
         }
       };
 
-      var costTag = document.getElementById('new-project-cost');
-
-      $scope.costKeypress = function () {
-        if (costTag.value.length > 6) {
-          costTag.value = costTag.value.slice(0, 6);
-        }
+      this.objectFromOption = function (option) {
+        return {
+          id: parseInt(option.value)
+        };
       };
 
       $scope.addCategory = function () {
         var cat = document.getElementById('all-categories');
+        var sel = document.getElementById('final-categories');
         if (cat.selectedIndex !== -1) {
-          document.getElementById('final-categories').appendChild(cat.options[cat.selectedIndex]);
+          $scope.categoryCountError = false;
+          var op = cat.options[cat.selectedIndex];
+          selectedCategories.push(_this.objectFromOption(op));
+          sel.appendChild(op);
         }
       };
 
       $scope.delCategory = function () {
-        var cat = document.getElementById('final-categories');
-        if (cat.selectedIndex !== -1) {
-          document.getElementById('all-categories').appendChild(cat.options[cat.selectedIndex]);
+        var cat = document.getElementById('all-categories');
+        var sel = document.getElementById('final-categories');
+        if (sel.selectedIndex !== -1) {
+          var op = sel.options[sel.selectedIndex], opId = _this.objectFromOption(op).id;
+          _.remove(selectedCategories, function(n) { return n.id === opId;});
+          cat.appendChild(op);
         }
       };
 
-      $scope.addCategories = function () {
-        var cat = document.getElementById('final-categories');
-        for (var i = 0; i < cat.options.length; i++) {
-          cat[i].selected = true;
+      $scope.createProject = function (project) {
+        if (selectedCategories.length === 0) {
+          $scope.categoryCountError = true;
+          return;
         }
-      };
-
-      $scope.adjustInputs = function () {
-        $scope.addCategories();
-        var titleTag = document.getElementById('new-project-title');
-        titleTag.value = titleTag.value.trim();
-        var summaryTag = document.getElementById('new-project-summary');
-        summaryTag.value = summaryTag.value.trim();
-        if (costTag.value.length === 0 || costTag.value < 0) {
-          costTag.value = 0;
-        }
-        costTag.value = Math.round(costTag.value);
-
-        projectService.create($scope.projectInfo.title,$scope.projectInfo.summary,$scope.projectInfo.cost, $scope.projectInfo.categories)
-
+        project.categories = selectedCategories;
+        $scope.serverFormErrors = false;
+        projectService.create(project).then(function (response) {
+          var location = response.headers().location;
+          PathService.get().singleProject(location.substring(location.lastIndexOf('/') + 1)).go();
+        }, function (errorResponse) {
+          if (errorResponse.status === 400) {
+            $scope.serverFormErrors = true;
+            return;
+          }
+          console.error(errorResponse);
+        });
       };
 
     }]);
