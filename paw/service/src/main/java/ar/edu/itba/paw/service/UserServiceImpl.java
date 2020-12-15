@@ -98,6 +98,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public Optional<User> requestPassword(String mail, URI baseUri) {
         Optional<User> optionalUser = userDao.findByUsername(mail);
         optionalUser.ifPresent(u -> emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri));

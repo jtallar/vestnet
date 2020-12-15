@@ -111,8 +111,8 @@ public class UserRestController {
 
     @POST
     @Path("/password")
-    public Response requestPassword(@QueryParam("mail") final String mail) {
-        Optional<User> optionalUser = userService.requestPassword(mail, uriInfo.getBaseUri());
+    public Response requestPassword(final MailDto mailDto) {
+        Optional<User> optionalUser = userService.requestPassword(mailDto.getMail(), uriInfo.getBaseUri());
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -132,8 +132,8 @@ public class UserRestController {
 
     @POST
     @Path("/verify")
-    public Response requestVerification(@QueryParam("mail") final String mail) {
-        Optional<User> optionalUser = userService.requestVerification(mail, uriInfo.getBaseUri());
+    public Response requestVerification(final MailDto mailDto) {
+        Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), uriInfo.getBaseUri());
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
