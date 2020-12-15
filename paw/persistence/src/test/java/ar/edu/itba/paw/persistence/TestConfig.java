@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import com.sun.org.slf4j.internal.Logger;
+import com.sun.org.slf4j.internal.LoggerFactory;
 import org.hsqldb.jdbc.JDBCDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @Configuration
 public class TestConfig {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestConfig.class);
 
     @Value("classpath:schema.sql")
     private Resource schemaSql;
@@ -62,11 +65,13 @@ public class TestConfig {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-//        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
-//        properties.setProperty("format_sql", "true"); // TODO same as above
+
+        if (isDevelopmentMode()) {
+            properties.setProperty("hibernate.show_sql", "true");
+            properties.setProperty("format_sql", "true");
+        }
 
         factoryBean.setJpaProperties(properties);
-
         return factoryBean;
     }
 
@@ -105,5 +110,17 @@ public class TestConfig {
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
         return dbp;
+    }
+
+
+    /** Auxiliary Method */
+
+
+    /**
+     * Use LOGGER debug mode for switching development/production mode respectively.
+     * @return True for development mode, false if production.
+     */
+    private boolean isDevelopmentMode() {
+        return LOGGER.isDebugEnabled();
     }
 }

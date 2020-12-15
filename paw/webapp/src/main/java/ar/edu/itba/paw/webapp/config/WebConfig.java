@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.slf4j.internal.Logger;
+import com.sun.org.slf4j.internal.LoggerFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
 import org.springframework.cache.CacheManager;
@@ -45,6 +47,7 @@ import java.util.Properties;
 @EnableAsync
 @EnableTransactionManagement
 public class WebConfig {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
     public static final int MAX_UPLOAD_SIZE = 2097152; // 2 MB
     public static final int MAX_SLIDESHOW_COUNT = 5;
@@ -65,8 +68,11 @@ public class WebConfig {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
-        properties.setProperty("format_sql", "true"); // TODO same as above
+        if (isDevelopmentMode()) {
+            properties.setProperty("hibernate.show_sql", "true");
+            properties.setProperty("format_sql", "true");
+        }
+
         factoryBean.setJpaProperties(properties);
         return factoryBean;
     }
@@ -141,7 +147,7 @@ public class WebConfig {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.debug", "true"); // TODO remove later. For development
+        if (isDevelopmentMode()) props.put("mail.debug", "true");
 
         return mailSender;
     }
@@ -177,6 +183,11 @@ public class WebConfig {
         return cacheManager;
     }
 
+
+    /**
+     * The object mapper for data binding.
+     * @return The created object mapper.
+     */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
@@ -184,5 +195,17 @@ public class WebConfig {
         mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
 
         return mapper;
+    }
+
+
+    /** Auxiliary Method */
+
+
+    /**
+     * Use LOGGER debug mode for switching development/production mode respectively.
+     * @return True for development mode, false if production.
+     */
+    private boolean isDevelopmentMode() {
+        return LOGGER.isDebugEnabled();
     }
 }
