@@ -28,8 +28,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Project create(String name, String summary, long fundingTarget, long ownerId) {
-        return projectDao.create(name, summary, fundingTarget, new User(ownerId));
+    public Project create(String name, String summary, long fundingTarget, List<Category> categories, long ownerId) {
+        final Project project = projectDao.create(name, summary, fundingTarget, new User(ownerId));
+        project.setCategories(categories);
+        return project;
     }
 
 

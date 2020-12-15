@@ -6,14 +6,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @EqualFields({"password", "repeatPassword"})
-public class PasswordDto {
+public class PasswordDto extends TokenDto {
     @Size(max = 50)
     @NotEmpty
     private String password;
 
     private String repeatPassword;
-
-    // TODO: Ver si recibimos por aca tambien el token
 
     public String getPassword() {
         return password;

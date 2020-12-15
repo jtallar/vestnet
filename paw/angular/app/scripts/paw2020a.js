@@ -66,6 +66,7 @@ define(['routes',
           return element;
         });
 
+        // TODO: Ver si esto arruina alguna response
         Restangular.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
           requestsInProgress--;
           if (requestsInProgress === 0) {
@@ -77,8 +78,9 @@ define(['routes',
         // TODO: Add all error codes wanted
         Restangular.setErrorInterceptor(function (response, deferred, responseHandler) {
           if (response.status === 404) {
-            PathService.get().notFound().go();
-            return false;
+            // PathService.get().notFound().go();
+            console.error("404 que tenes que manejar");
+            return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
               PathService.get().forbidden().go();
@@ -130,6 +132,9 @@ define(['routes',
           // TODO: Uncomment in production, comment the one below
 					// RestangularProvider.setBaseUrl('api/v1/');
           RestangularProvider.setBaseUrl('http://localhost:8080/api/v1/');
+
+          // TODO: Siempre que interpretamos la response como response nomas, solo datos, habria que cambiarlo a response.data
+          RestangularProvider.setFullResponse(true);
 				}]);
 
 		return paw2020a;

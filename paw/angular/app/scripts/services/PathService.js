@@ -3,6 +3,7 @@
 define([], function() {
   // This function should be called on paw2020a module initialization
   // It is defined because it will be used before module acquisition by requireJS
+  // TODO: Clear query params when changing URL? O ver bien cuando no
   return function($location) {
     var pathService = {};
 
@@ -42,6 +43,10 @@ define([], function() {
 
       base.projects = function () {
         return append('/projects');
+      };
+
+      base.singleProject = function (id) {
+        return append('/projects/' + id);
       };
 
       base.notFound = function () {

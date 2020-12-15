@@ -38,14 +38,14 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
 
       $scope.adjustInputs = function () {
         var minTag = document.getElementById('filter-form-min');
-        if (minTag.value < 0 || minTag.value > 9999999) {
+        if (minTag.value < 0 || minTag.value > 2000000000) {
           minTag.value = '';
         }
         if (minTag.value.length) {
           minTag.value = Math.round(minTag.value);
         }
         var maxTag = document.getElementById('filter-form-max');
-        if (maxTag.value < 0 || maxTag.value > 9999999) {
+        if (maxTag.value < 0 || maxTag.value > 2000000000) {
           maxTag.value = '';
         }
         if (maxTag.value.length) {
