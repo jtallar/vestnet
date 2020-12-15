@@ -26,7 +26,8 @@ public class OfferDto {
     @NotBlank
     private String exchange;
 
-    @Size(max = 31, min = 1)
+    @Min(1)
+    @Max(31)
     private int expiryDays;
 
     private Date publishDate;
