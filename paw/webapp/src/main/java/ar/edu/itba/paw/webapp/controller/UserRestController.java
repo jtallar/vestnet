@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Optional;
