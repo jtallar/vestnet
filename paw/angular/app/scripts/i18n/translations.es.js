@@ -186,7 +186,7 @@ define([], function() {
     confSend: 'Confirmar envío de contraoferta',
     confAccept: 'Aceptar trato',
     confAcceptBody: '¿Está seguro que desea confirmar? La acción no tiene vuelta atrás.',
-    expire: 'Oferta expira en',
+    expire: 'Expira en (días)',
     days: 'días',
     funding: 'Financiamiento',
     target: 'Objetivo',

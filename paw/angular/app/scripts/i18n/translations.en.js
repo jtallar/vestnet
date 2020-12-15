@@ -186,7 +186,7 @@ define([], function() {
     confSend: 'Send counteroffer',
     confAccept: 'Accept deal',
     confAcceptBody: 'You sure you wanna confirm? Action cannot be undone.',
-    expire: 'Offer expires in',
+    expire: 'Expires in (days)',
     days: 'days',
     funding: 'Funding',
     target: 'Target',

@@ -150,10 +150,11 @@
                       <input type="text" class="form-control" placeholder="{{'msgTitleRequest' | translate}}" id="msg-req-title"/>
                     </div>
                     <div class="col-3">
-                      <select id="expire" class="custom-select mr-sm-2">
-                        <option value="0">{{'expire' | translate}}</option>
-                        <option ng-repeat="x in [].constructor(30) track by $index"> {{$index+1}} days</option>
-                      </select>
+                      <input type="number" class="form-control" placeholder="{{'expire' | translate}}" id="msg-days-title"/>
+                      <!--                      <select id="expire" class="custom-select mr-sm-2">-->
+<!--                        <option value="0">{{'expire' | translate}}</option>-->
+<!--                        <option ng-repeat="x in [].constructor(30) track by $index"> {{$index+1}} days</option>-->
+<!--                      </select>-->
                     </div>
                   </div>
                   <div class="row">
