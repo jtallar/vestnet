@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.webapp.component.UriInfoUtils;
 import ar.edu.itba.paw.webapp.dto.user.*;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +43,7 @@ public class UserRestController {
 
         final User newUser; // TODO work with optional? reduces code more
         try {
-            newUser = userService.create(FullUserWithPasswordDto.toUser(user), uriInfo.getBaseUri());
+            newUser = userService.create(FullUserWithPasswordDto.toUser(user), UriInfoUtils.getBaseURI(uriInfo));
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
             return Response.status(Response.Status.CONFLICT).build();
@@ -109,11 +111,10 @@ public class UserRestController {
     }
 
 
-    // TODO: El link del mail esta mal, tengo que recibir la base url con /resetPassword?
     @POST
     @Path("/password")
     public Response requestPassword(@Valid final MailDto mailDto) {
-        Optional<User> optionalUser = userService.requestPassword(mailDto.getMail(), uriInfo.getBaseUri());
+        Optional<User> optionalUser = userService.requestPassword(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -133,7 +134,7 @@ public class UserRestController {
     @POST
     @Path("/verify")
     public Response requestVerification(@Valid final MailDto mailDto) {
-        Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), uriInfo.getBaseUri());
+        Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -143,7 +144,7 @@ public class UserRestController {
     @PUT
     @Path("/verify")
     public Response updateVerification(@Valid final TokenDto tokenDto) {
-        if (userService.updateVerification(tokenDto.getToken(), uriInfo.getBaseUri()))
+        if (userService.updateVerification(tokenDto.getToken(), UriInfoUtils.getBaseURI(uriInfo)))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
