@@ -7,7 +7,8 @@ import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
-import ar.edu.itba.paw.webapp.dto.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectWithCategoryDto;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,10 +72,11 @@ public class ProjectRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response create(@Valid final ProjectDto projectDto) {
-        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), sessionUser.getId());
+    public Response create(@Valid final ProjectWithCategoryDto projectDto) {
+        List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories, sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
-        return Response.created(projectUri).build();
+        return Response.created(projectUri).header("Access-Control-Expose-Headers", "Location").build();
     }
 
 

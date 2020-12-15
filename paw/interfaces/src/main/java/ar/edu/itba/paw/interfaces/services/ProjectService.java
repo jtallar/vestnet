@@ -14,10 +14,11 @@ public interface ProjectService {
      * @param name The project's name.
      * @param summary The project's summary.
      * @param fundingTarget The project's total funding target.
+     * @param categories The project's categories
      * @param ownerId The user id owner of the project.
      * @return operation return.
      */
-    Project create(String name, String summary, long fundingTarget, long ownerId);
+    Project create(String name, String summary, long fundingTarget, List<Category> categories, long ownerId);
 
 
     /**

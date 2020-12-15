@@ -23,9 +23,8 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       };
 
 
-      projectService.create = function (n, summ, c, category) {
-        var body = {name: n, summary: summ, cost: c, cat: category};
-        return root.customPOST(body)
+      projectService.create = function (project) {
+        return root.customPOST(project);
       };
 
 
