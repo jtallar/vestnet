@@ -193,9 +193,7 @@ public class MessageServiceImpl implements MessageService {
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setUnseen()
-                .setFromInvestor()
-                .setOrder(OrderField.DATE_DESCENDING)
-                .setGroup(GroupField.INVESTOR);
+                .setFromInvestor();
 
         return messageDao.countAll(request);
     }
@@ -203,15 +201,15 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public long userNotifications(long sessionUserId, boolean isInvestor) {
         /** If the user is an entrepreneur */
-        if (!isInvestor)
-            return messageDao.countEntrepreneurNotifications(sessionUserId);
-
-        RequestBuilder request = new MessageRequestBuilder()
+        RequestBuilder request;
+        if (isInvestor)request = new MessageRequestBuilder()
                 .setInvestor(sessionUserId)
                 .setUnseen()
-                .setFromEntrepreneur()
-                .setOrder(OrderField.DATE_DESCENDING)
-                .setGroup(GroupField.PROJECT);
+                .setFromEntrepreneur();
+        else request = new MessageRequestBuilder()
+                .setOwner(sessionUserId)
+                .setUnseen()
+                .setFromInvestor();
 
         return messageDao.countAll(request);
     }

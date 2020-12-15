@@ -74,15 +74,6 @@ public class MessageJpaDao implements MessageDao {
     }
 
 
-    @Override
-    public long countEntrepreneurNotifications(long ownerId) {
-        final TypedQuery<Long> query = entityManager
-                .createQuery("select count(distinct m.project) from Message m where m.project in (select p.id from Project p where p.owner = :owner ) and m.seen = false and m.direction = true", Long.class);
-        query.setParameter("owner", new User(ownerId));
-        return query.getSingleResult();
-    }
-
-
     /** Auxiliary functions */
 
 
