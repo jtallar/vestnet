@@ -448,6 +448,22 @@ html {
   color: black !important;
 }
 
+.btn-link3{
+  color: rgba(99, 99, 99, 0.74) !important;
+}
+.btn-link3:hover{
+  color: black !important;
+  text-decoration: underline;
+}
+
+.btn-link4{
+  color:#750096bd !important;
+}
+.btn-link4:hover{
+  color: black !important;
+  text-decoration: underline;
+}
+
 .results{
   font-size:14px;
   color:#750096bd;
@@ -850,21 +866,35 @@ html {
   object-fit: cover;
 }
 
-//.invest-offer{
-//  font-size: 45px !important;
-//  color: #cb6800;
-//}
-//.invest-offer > img {
-//  margin-bottom: 5px;
-//  width: 20px;
-//  height: 20px;
-//}
-//.invest-exch{
-//  font-size: 45px !important;
-//  color: #10668d;
-//}
-//.invest-exch > img {
-//  margin-bottom: 5px;
-//  width: 20px;
-//  height: 20px;
-//}
+.ww-img {
+  border-radius: 50%;
+  width: 90px;
+  border: solid 0.5px #b7b7b7;
+}
+
+.ww{
+  padding: 10px 30px 10px 10px !important;
+  width: 100% !important
+}
+
+.ww-content{
+  padding: 0 10px 10px 5px !important;
+  margin: auto !important
+}
+
+.ww-last{
+  margin: auto !important;
+}
+.ww-last p{
+  font-size: 20px;
+  color: grey;
+  font-style: italic;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+.ww-last h6{
+  font-size: 12px;
+  color: #b3b3b3;
+}

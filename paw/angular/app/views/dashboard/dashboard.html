@@ -1,12 +1,4 @@
-<!--<head>-->
-<!--  &lt;!&ndash; build:css(.tmp) styles/userprofile.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/userprofile.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-
-<!--  &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/feed.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--</head>-->
+<body ng-controller="dashboardCtrl">
 
 <vnheader></vnheader>
 
@@ -19,17 +11,17 @@
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
 
-  <toggleswitch name="yesNo" ng-model="yesNo" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
+  <toggleswitch name="funded" ng-model="funded" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
   <div class="dashboard">
-  <div class="card-group" ng-repeat="project in projects">
+  <div class="card-group" ng-repeat="project in getList()">
     <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
     <div class="container py-3">
       <div class="card msg">
 
         <div class="row">
           <div class="col-1">
-            <img src="images/projectNoImage.png" class="p-img"/>
+            <img src="{{project.image}}" class="p-img"/>
           </div>
           <div class="col-md-11">
             <div class="card-block">
@@ -159,13 +151,13 @@
     </div>
   </div>
 
-</div>
 
 <div class="dropdown-divider" style="margin: auto; width:50%"></div>
 
 <div class="text-center add-new mt-5 mb-5">
   <a href="#/newProject" class="btn btn-lg"> {{'addProject' | translate}} </a>
 </div>
+</body>
 
 <footer>
   <vnfooter></vnfooter>

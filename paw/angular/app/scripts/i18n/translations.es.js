@@ -107,6 +107,7 @@ define([], function() {
     hdashboard: 'Mis Proyectos',
     hdeals: 'Acuerdos',
     hprofile: 'Mi Perfil',
+    hmessages: 'Mensajes',
     hnewProject: 'Nuevo Proyecto',
     hrequests: 'Ofertas Enviadas',
     hwelcome: 'Bienvenido',
@@ -193,6 +194,7 @@ define([], function() {
     money: '$ {{m}}',
     contact: 'Enviar mensaje',
     viewmore: 'Ver más...',
-    totalinv: 'Total Invertido'
+    totalinv: 'Total Invertido',
+    from: 'de'
   };
 });

@@ -108,6 +108,7 @@ define([], function() {
     hdashboard: 'Dashboard',
     hdeals: 'Deals',
     hprofile: 'My Profile',
+    hmessages: 'Messages',
     hnewProject: 'New Project',
     hrequests: 'Offers submitted',
     hwelcome: 'Welcome',
@@ -193,6 +194,7 @@ define([], function() {
     money: 'USD {{m}}',
     contact: 'Send new message',
     viewmore: 'View more...',
-    totalinv: 'Total Invested'
+    totalinv: 'Total Invested',
+    from: 'from'
   };
 });

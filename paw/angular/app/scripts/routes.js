@@ -61,6 +61,10 @@ define([], function() {
                 templateUrl: '/views/dashboard/dashboard.html',
                 controller: 'dashboardCtrl'
             },
+            '/messages': {
+              templateUrl: '/views/requests/messages.html',
+              controller: 'messagesCtrl'
+            },
             '/newProject': {
                 templateUrl: '/views/newProject/newProject.html',
                 controller: 'newProjectCtrl'

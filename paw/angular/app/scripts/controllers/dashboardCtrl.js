@@ -37,6 +37,19 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
         }
       ];
 
+    $scope.fundedProjects = [
+      {
+        'name': 'Mateico',
+        'cost': 100000,
+        'image': 'images/mate.jpg',
+        'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+        'id': 1,
+        'funded': true,
+        'hits': 6,
+        'msgCount': 2
+      }
+    ];
+
       var size = 3;   // it does not get me length of projects we have to fetch it from services later
 
       $scope.state = new Array($scope.projects.length).fill(0);
@@ -51,7 +64,7 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
 
       $scope.enabled = true;
       $scope.onOff = false;
-      $scope.yesNo = true;
+      $scope.funded = true;
       $scope.disabled = true;
 
       $scope.extraMessages = [{'investor': 'Kiko','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Lolo','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}];
@@ -61,6 +74,11 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
         $scope.extraMessages.forEach(function(msg){
           $scope.messages[id].push(msg)
         });
+      }
+
+      $scope.getList = function () {
+        if($scope.funded === true) return $scope.fundedProjects;
+        else return $scope.projects;
       }
 
     });
