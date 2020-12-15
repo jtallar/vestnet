@@ -159,7 +159,7 @@ define([], function() {
     descriptionRequirement: 'Entre 30 y 250 caracteres',
     projectSummaryPlaceholder: 'Describe tu proyecto en no más de 250 caracteres...',
     costRequired: '*Objetivo de Financiación',
-    costRequirement: 'Entre U$D1000 y U$D9999999',
+    costRequirement: 'Entre U$D1000 y U$D2000000000',
     currency: '$USD',
     projectCategoriesSubtitle: 'Agregue todas las categorías que describen tu proyecto (al menos una). Estas serán usadas para matchear con un inversor más rápido.',
     allCategories: 'Categorías Posibles',

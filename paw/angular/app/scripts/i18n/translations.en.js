@@ -159,7 +159,7 @@ define([], function() {
     descriptionRequirement: 'Between 30 and 250 characters',
     projectSummaryPlaceholder: 'Describe your project in less than 250 characters',
     costRequired: '*Funding Target',
-    costRequirement: 'Between U$D1000 and U$D9999999',
+    costRequirement: 'Between U$D1000 and U$D2000000000',
     currency: '$USD',
     projectCategoriesSubtitle: 'Add all the categories that match with your project (at least one). They will be used to match with a potential investor faster',
     allCategories: 'Possible Categories',

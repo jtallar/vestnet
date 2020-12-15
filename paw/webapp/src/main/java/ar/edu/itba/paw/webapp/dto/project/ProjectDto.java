@@ -29,9 +29,10 @@ public class ProjectDto {
     private String summary;
 
     @Min(1000)
-    @Max(9999999)
+    @Max(2000000000)
     private long fundingTarget;
 
+    @Max(2000000000)
     private long fundingCurrent; // TODO could be more than the actual target
 
     private boolean closed;
