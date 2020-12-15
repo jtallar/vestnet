@@ -34,7 +34,6 @@ import java.util.function.Consumer;
             case PROJECT_CATEGORY: category(param.getValue()); break;
             case PROJECT_OWNER: owner(param.getValue()); break;
             case PROJECT_CLOSED: closed(param.getValue()); break;
-            case PROJECT_ADD_FAVORITES: favorites(); break;
             case IDS: ids(param.getValue()); break;
 
             /** If its not a filter, its a search */
@@ -98,6 +97,7 @@ import java.util.function.Consumer;
         predicate = builder.and(predicate, builder.equal(root.get("owner"), value));
     }
 
+
     /**
      * Filter by project is closed or not.
      * @param value Boolean closed.
@@ -106,12 +106,6 @@ import java.util.function.Consumer;
         predicate = builder.and(predicate, builder.equal(root.get("closed"), value));
     }
 
-    /**
-     * Adds Favorite param in the same query.
-     */
-    private void favorites() {
-        Join<Project, User> favoritesJoin = root.join("favoriteBy", JoinType.LEFT);
-    }
 
     /**
      * Filters by a list of ids.

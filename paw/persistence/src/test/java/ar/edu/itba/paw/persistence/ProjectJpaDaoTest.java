@@ -368,40 +368,6 @@ public class ProjectJpaDaoTest {
     }
 
 
-    @Test
-    public void testFindByMultipleFavorites() {
-        // 1 - Setup - Create 4 different projects
-        Number userId = createUser();
-        Number categoryId = createCategory(CATEGORY_NAME);
-        Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
-        createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
-        createProjectCategory(otherProjectId, otherCategoryId);
-        Number thirdProjectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET_2);
-        createProjectCategory(thirdProjectId, categoryId);
-        Number fourthProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
-        createProjectCategory(fourthProjectId, categoryId);
-        addFavorite(projectId, userId);
-        addFavorite(otherProjectId, userId);
-
-        RequestBuilder request = new ProjectRequestBuilder()
-                .setOrder(OrderField.PROJECT_ALPHABETICAL)
-                ;
-//                .addFavorites();
-
-        // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(request);
-
-        for (Project p: projects) {
-            System.out.println("FAVORITES: " + p.getFavorites());
-        }
-
-        // 3 - Assert
-        assertEquals(4, projects.size());
-    }
-
-
     /**
      * Auxiliary functions
      */

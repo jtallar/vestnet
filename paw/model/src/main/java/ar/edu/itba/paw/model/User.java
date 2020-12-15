@@ -66,10 +66,10 @@ public class User {
     private Long image_id;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
-    private List<Project> projectList;
+    private Set<Project> ownedProjects;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-    private List<Favorite> favorites;
+    private Set<Favorite> favorites;
 
     /** Package */ User() {
         /** For Hibernate only */
@@ -219,20 +219,20 @@ public class User {
         this.image_id = image_id;
     }
 
-    public List<Project> getProjectList() {
-        return projectList;
+    public Set<Project> getOwnedProjects() {
+        return ownedProjects;
     }
 
-    public void setProjectList(List<Project> projectList) {
-        this.projectList = projectList;
+    public void setOwnedProjects(Set<Project> ownedProjects) {
+        this.ownedProjects = ownedProjects;
     }
 
 
-    public List<Favorite> getFavorites() {
+    public Set<Favorite> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(List<Favorite> favorites) {
+    public void setFavorites(Set<Favorite> favorites) {
         this.favorites = favorites;
     }
 

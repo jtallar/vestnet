@@ -100,7 +100,7 @@ public class ProjectServiceImpl implements ProjectService {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
-        List<ProjectImage> images = optionalProject.get().getImages();
+        Set<ProjectImage> images = optionalProject.get().getImages();
         images.removeIf(ProjectImage::isMain);
         images.add(new ProjectImage(new Project(id), image, true));
         optionalProject.get().setImages(images);
@@ -114,7 +114,7 @@ public class ProjectServiceImpl implements ProjectService {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
-        List<ProjectImage> imageList = new ArrayList<>();
+        Set<ProjectImage> imageList = new HashSet<>();
         images.forEach(i -> imageList.add(new ProjectImage(new Project(id), i, false)));
         optionalProject.get().getImages().stream().filter(ProjectImage::isMain).findFirst().ifPresent(imageList::add);
         optionalProject.get().setImages(imageList);
