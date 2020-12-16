@@ -8,6 +8,8 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectStagesDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectStatsDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectWithCategoryDto;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -42,21 +44,60 @@ public class ProjectRestController {
     @Context
     private UriInfo uriInfo;
 
-    private static final String DEFAULT_PAGE_SIZE = "3";
     private static final int PAGINATION_ITEMS = 5;
 
-    // TODO: Ver si no conviene que reciba tambien el page size para saber cuantos proyectos quiere
+    /** General endpoints for projects */
+
+    @POST
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response create(@Valid final ProjectWithCategoryDto projectDto) {
+
+        List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+
+        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories, sessionUser.getId());
+        final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
+
+        return Response.created(projectUri).header("Access-Control-Expose-Headers", "Location").build();
+    }
+
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response project(@PathParam("id") long id) {
+
+        return projectService.findById(id)
+                .map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+
+    @PUT
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response update(@PathParam("id") long id,
+                           @Valid final ProjectDto projectDto) {
+
+        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id,
+                projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget());
+
+        return optionalProject.map(p -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+
+    /** Search project endpoint */
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projects(@QueryParam("p") @DefaultValue("1") int page,
-                         @QueryParam("o") @DefaultValue("1") int order,
-                         @QueryParam("f") @DefaultValue("1") int field,
-                         @Size(max = 50) @QueryParam("s") String keyword,
-                         @Min(0) @QueryParam("max") Integer maxFundingTarget,
-                         @Min(0) @QueryParam("min") Integer minFundingTarget,
-                         @QueryParam("c") Integer category,
-                         @QueryParam("l") @DefaultValue(DEFAULT_PAGE_SIZE) int limit) {
-
+                             @QueryParam("o") @DefaultValue("1") int order,
+                             @QueryParam("f") @DefaultValue("1") int field,
+                             @Size(max = 50) @QueryParam("s") String keyword,
+                             @Min(0) @QueryParam("max") Integer maxFundingTarget,
+                             @Min(0) @QueryParam("min") Integer minFundingTarget,
+                             @QueryParam("c") Integer category,
+                             @QueryParam("l") @DefaultValue("3") int limit) {
 
         Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
         projectPage.setPageRange(PAGINATION_ITEMS);
@@ -69,43 +110,13 @@ public class ProjectRestController {
                 .build();
     }
 
-
-    @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response create(@Valid final ProjectWithCategoryDto projectDto) {
-        List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
-        final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories, sessionUser.getId());
-        final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
-        return Response.created(projectUri).header("Access-Control-Expose-Headers", "Location").build();
-    }
-
-
-    @GET
-    @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response project(@PathParam("id") long id) {
-        return projectService.findById(id)
-                .map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
-    }
-
-
-    @PUT
-    @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response update(@PathParam("id") long id,
-                           @Valid final ProjectDto projectDto) {
-        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget());
-
-        return optionalProject.map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
-    }
-
+    /** Extra data for projects */
 
     @GET
     @Path("/{id}/categories")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projectCategories(@PathParam("id") long id) {
+
         Optional<Project> optionalProject = projectService.findById(id);
 
         return optionalProject.map(p -> {
@@ -121,6 +132,7 @@ public class ProjectRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateCategories(@PathParam("id") long id,
                                      @NotEmpty final List<CategoryDto> categoriesDto) {
+
         List<Category> categories = categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
 
         return projectService.addCategories(sessionUser.getId(), id, categories)
@@ -130,30 +142,85 @@ public class ProjectRestController {
 
 
     @GET
-    @Path("/categories")
+    @Path("/{id}/stats")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response categories() {
-        List<Category> categories = projectService.getAllCategories();
-        List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+    public Response getStats(@PathParam("id") long id) {
 
-        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
+//      TODO implement on stats
+//        Optional<Project> optionalProject = projectService.findById(id);
+//        return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())))
+//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
 
     @PUT
-    @Path("/{id}/hit")
-    public Response addHit(@PathParam("id") long id) {
-        return projectService.addHit(id)
-                .map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    @Path("/{id}/stats")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response setStats(@PathParam("id") long id,
+                             @Valid final ProjectStatsDto statsDto) {
+
+//        TODO implement on stats
+//          return projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(), statsDto.getContactClicks() == 1)
+//                .map(p -> Response.ok().build())
+//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+
+    @GET
+    @Path("/{id}/stages")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getStages(@PathParam("id") long id) {
+
+//      TODO implement on stages
+//        Optional<Project> optionalProject = projectService.findById(id);
+//        return optionalProject.map(p -> {
+//            List<ProjectStagesDto> stagesDto = p.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
+//            return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
+//        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+
+    @PUT
+    @Path("/{id}/stages")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response setStages(@PathParam("id") long id,
+                              @Valid final ProjectStagesDto stagesDto) {
+
+//        TODO implement on stages
+//          return projectService.setStage(id, stagesDto.getComment())
+//                .map(p -> Response.ok().build())
+//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
 
     @PUT
     @Path("/{id}/close")
     public Response close(@PathParam("id") long id) {
+
         return projectService.setClosed(sessionUser.getId(), id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+
+    /** Get all the available categories */
+
+    @GET
+    @Path("/categories")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response categories() {
+
+        List<Category> categories = projectService.getAllCategories();
+        List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
     }
 }

@@ -88,17 +88,13 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> getProjectInvestors(long projectId, long ownerId, boolean accepted, int page, int pageSize) {
-        RequestBuilder request;
-        if (accepted) request = new MessageRequestBuilder()
+        MessageRequestBuilder request = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
-                .setAccepted()
                 .setOrder(OrderField.DATE_DESCENDING);
-        else request = new MessageRequestBuilder()
-                .setOwner(ownerId)
-                .setProject(projectId)
-                .setOrder(OrderField.DATE_DESCENDING)
-                .setGroup(GroupField.INVESTOR);
+
+        if (accepted) request.setAccepted();
+        else request.setGroup(GroupField.INVESTOR);
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
@@ -106,15 +102,12 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> getInvestorProjects(long investorId, boolean accepted, int page, int pageSize) {
-        RequestBuilder request;
-        if (accepted) request = new MessageRequestBuilder()
+        MessageRequestBuilder request = new MessageRequestBuilder()
                 .setInvestor(investorId)
-                .setAccepted()
                 .setOrder(OrderField.DATE_DESCENDING);
-        else request = new MessageRequestBuilder()
-                .setInvestor(investorId)
-                .setOrder(OrderField.DATE_DESCENDING)
-                .setGroup(GroupField.PROJECT);
+
+        if (accepted) request.setAccepted();
+        else request.setGroup(GroupField.PROJECT);
 
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
@@ -200,27 +193,25 @@ public class MessageServiceImpl implements MessageService {
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setUnseen()
-                .setFromInvestor()
-                .setOrder(OrderField.DATE_DESCENDING)
-                .setGroup(GroupField.INVESTOR);
+                .setFromInvestor();
 
         return messageDao.countAll(request);
     }
 
     @Override
     public long userNotifications(long sessionUserId, boolean isInvestor) {
-        /** If the user is an investor */
-        if (isInvestor) {
-            RequestBuilder request = new MessageRequestBuilder()
-                    .setInvestor(sessionUserId)
-                    .setUnseen()
-                    .setFromEntrepreneur()
-                    .setOrder(OrderField.DATE_DESCENDING)
-                    .setGroup(GroupField.PROJECT);
+        /** If the user is an entrepreneur */
+        RequestBuilder request;
+        if (isInvestor)request = new MessageRequestBuilder()
+                .setInvestor(sessionUserId)
+                .setUnseen()
+                .setFromEntrepreneur();
+        else request = new MessageRequestBuilder()
+                .setOwner(sessionUserId)
+                .setUnseen()
+                .setFromInvestor();
 
-            return messageDao.countAll(request);
-        }
-        return messageDao.countEntrepreneurNotifications(sessionUserId);
+        return messageDao.countAll(request);
     }
 
 

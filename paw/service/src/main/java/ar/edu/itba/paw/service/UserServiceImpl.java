@@ -65,12 +65,14 @@ public class UserServiceImpl implements UserService {
         return optionalUser;
     }
 
+
     @Override
     @Transactional
     public void remove(long id) {
         tokenDao.deleteUserTokens(new User(id));
         userDao.removeUser(id);
     }
+
 
     @Override
     public Optional<User> findByUsername(String username) {
@@ -86,8 +88,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean updateVerification(String token, URI baseUri) {
-        return updateWithToken(token, null, false, baseUri);
+    public Optional<User> addFavorites(long userId, long projectId, boolean add) {
+        Optional<User> optionalUser = userDao.findById(userId);
+        optionalUser.ifPresent(u -> {
+            if (add) u.getFavorites().add(new Favorite(new User(userId), new Project(projectId)));
+            else u.getFavorites().remove(new Favorite(new User(userId), new Project(projectId)));
+        });
+        return optionalUser;
+    }
+
+
+    @Override
+    public List<Project> getOwnedProjects(long id, boolean closed) {
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setOwner(id)
+                .setClosed(closed)
+                .setOrder(OrderField.PROJECT_DEFAULT);
+        return projectDao.findAll(request);
+    }
+
+
+    @Override
+    @Transactional
+    public Optional<User> requestPassword(String mail, URI baseUri) {
+        Optional<User> optionalUser = userDao.findByUsername(mail);
+        optionalUser.ifPresent(u -> emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri));
+        return optionalUser;
     }
 
 
@@ -99,24 +125,21 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Optional<User> requestPassword(String mail, URI baseUri) {
-        Optional<User> optionalUser = userDao.findByUsername(mail);
-        optionalUser.ifPresent(u -> emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri));
-        return optionalUser;
+    @Transactional
+    public boolean updateVerification(String token, URI baseUri) {
+        return updateWithToken(token, null, false, baseUri);
     }
 
 
     @Override
-    public Optional<User> requestVerification(String mail, URI baseUri) {
-        Optional<User> optionalUser = userDao.findByUsername(mail);
-        optionalUser.ifPresent(u -> emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri));
-        return optionalUser;
+    public Optional<UserImage> getImage(long id) {
+        return imageDao.findUserImage(id);
     }
 
 
     @Override
     @Transactional
-    public Optional<User> updateImage(long id, byte[] image) {
+    public Optional<User> setImage(long id, byte[] image) {
         Optional<User> optionalUser = userDao.findById(id);
         optionalUser.ifPresent(u -> {
             UserImage userImage = null;
@@ -147,32 +170,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    @Transactional
-    public Optional<User> favorites(long userId, long projectId, boolean add) {
-        Optional<User> optionalUser = userDao.findById(userId);
-        optionalUser.ifPresent(u -> {
-            if (add) u.getFavorites().add(new Project(projectId));
-            else u.getFavorites().remove(new Project(projectId));
-        });
-        return optionalUser;
-    }
 
 
-    @Override
-    public List<Project> getOwnedProjects(long id, boolean closed) {
-        RequestBuilder request = new ProjectRequestBuilder()
-                .setOwner(id)
-                .setClosed(closed)
-                .setOrder(OrderField.PROJECT_DEFAULT);
-        return projectDao.findAll(request);
-    }
 
-
-    @Override
-    public Optional<UserImage> getProfileImage(long id) {
-        return imageDao.findUserImage(id);
-    }
 
 
     /** Auxiliary functions */
