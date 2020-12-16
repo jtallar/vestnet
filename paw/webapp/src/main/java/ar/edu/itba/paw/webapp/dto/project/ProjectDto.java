@@ -32,7 +32,6 @@ public class ProjectDto {
     @Max(2000000000)
     private long fundingTarget;
 
-    @Min(1000)
     @Max(2000000000)
     private long fundingCurrent;
 
