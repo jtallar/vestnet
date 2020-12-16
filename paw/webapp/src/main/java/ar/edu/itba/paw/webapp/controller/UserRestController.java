@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.Favorite;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.component.UriInfoUtils;
+import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.user.*;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import org.slf4j.Logger;
@@ -38,12 +39,15 @@ public class UserRestController {
     @Context
     private UriInfo uriInfo;
 
+    /** General user endpoints */
+
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response createUser(@Valid final FullUserWithPasswordDto user) {
+
         LOGGER.debug("\n\nBase URI: {}\n\n", uriInfo.getBaseUri().toString());
 
-        final User newUser; // TODO work with optional? reduces code more
+        final User newUser;
         try {
             newUser = userService.create(FullUserWithPasswordDto.toUser(user), UriInfoUtils.getBaseURI(uriInfo));
         } catch (UserAlreadyExistsException e) {
@@ -55,11 +59,10 @@ public class UserRestController {
     }
 
 
-    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use.
-    //  O bien chequear que el que haga el update sea el session user
     @PUT
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateUser(@Valid final UpdatableUserDto user) {
+
         Optional<User> optionalUser = userService.update(sessionUser.getId(), UpdatableUserDto.toUser(user));
 
         return optionalUser.map(u -> Response.ok().build())
@@ -67,10 +70,9 @@ public class UserRestController {
     }
 
 
-    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use
-    //  O bien chequear que el que haga el delete sea el session user
     @DELETE
     public Response deleteUser() {
+
         userService.remove(sessionUser.getId());
         return Response.noContent().build();
     }
@@ -82,6 +84,7 @@ public class UserRestController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
+
         final Optional<User> optionalUser = userService.findById(id);
 
         return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
@@ -89,40 +92,48 @@ public class UserRestController {
     }
 
 
+    /** Extra user data endpoints */
+
     @GET
     @Path("/{id}/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response ownedProjects(@PathParam("id") final long userId,
                                   @QueryParam("funded") @DefaultValue("true") boolean funded) {
-        List<Project> projectsList = userService.getOwnedProjects(userId, funded); // TODO should not be necessary put sessionUser.getId()
+
+        List<Project> projectsList = userService.getOwnedProjects(userId, funded);
         List<ProjectDto> projects = projectsList.stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
     }
 
+
     @GET
     @Path("/favorites")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getFavorites() {
+
         Optional<User> optionalUser = userService.findById(sessionUser.getId());
-        Set<Long> favoriteIds = new HashSet<>();
 
-        if (optionalUser.isPresent())
-            favoriteIds = optionalUser.get().getFavorites().stream().map(Favorite::getProjectId).collect(Collectors.toSet());
+        return optionalUser.map(u -> {
+            List<FavoriteDto> favorites = u.getFavorites().stream().map(FavoriteDto::fromFavorite).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<FavoriteDto>>(favorites) {}).build();
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+   }
 
-        return Response.ok(favoriteIds).build();
-    }
 
     @PUT
     @Path("/favorites")
-    public Response setFavorite(@QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
-                                @QueryParam("add") @DefaultValue("true") boolean add) {
-        Optional<User> optionalUser = userService.favorites(sessionUser.getId(), projectId, add);
+    public Response addFavorite(@QueryParam("add") @DefaultValue("true") boolean add,
+                                @Valid final FavoriteDto favoriteDto) {
+
+        Optional<User> optionalUser = userService.addFavorites(sessionUser.getId(), favoriteDto.getProjectId(), add);
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
+
+    /** User password and verification endpoints */
 
     @POST
     @Path("/password")
@@ -138,25 +149,17 @@ public class UserRestController {
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updatePassword(@Valid final PasswordDto passwordDto) {
+
         if (userService.updatePassword(passwordDto.getToken(), passwordDto.getPassword()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
 
-//    @POST
-//    @Path("/verify")
-//    public Response requestVerification(@Valid final MailDto mailDto) {
-//        Optional<User> optionalUser = userService.requestVerification(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
-//
-//        return optionalUser.map(u -> Response.ok().build())
-//                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
-//    }
-
-
     @PUT
     @Path("/verify")
     public Response updateVerification(@Valid final TokenDto tokenDto) {
+
         if (userService.updateVerification(tokenDto.getToken(), UriInfoUtils.getBaseURI(uriInfo)))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();

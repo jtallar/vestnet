@@ -50,9 +50,12 @@ public class ProjectRestController {
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response create(@Valid final ProjectWithCategoryDto projectDto) {
+
         List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+
         final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories, sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
+
         return Response.created(projectUri).header("Access-Control-Expose-Headers", "Location").build();
     }
 
@@ -61,6 +64,7 @@ public class ProjectRestController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response project(@PathParam("id") long id) {
+
         return projectService.findById(id)
                 .map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -72,7 +76,9 @@ public class ProjectRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
                            @Valid final ProjectDto projectDto) {
-        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget());
+
+        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id,
+                projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget());
 
         return optionalProject.map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -92,7 +98,6 @@ public class ProjectRestController {
                              @QueryParam("c") Integer category,
                              @QueryParam("l") @DefaultValue("3") int limit) {
 
-
         Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
         projectPage.setPageRange(PAGINATION_ITEMS);
 
@@ -110,6 +115,7 @@ public class ProjectRestController {
     @Path("/{id}/categories")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projectCategories(@PathParam("id") long id) {
+
         Optional<Project> optionalProject = projectService.findById(id);
 
         return optionalProject.map(p -> {
@@ -125,6 +131,7 @@ public class ProjectRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateCategories(@PathParam("id") long id,
                                      @NotEmpty final List<CategoryDto> categoriesDto) {
+
         List<Category> categories = categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
 
         return projectService.addCategories(sessionUser.getId(), id, categories)
@@ -139,7 +146,7 @@ public class ProjectRestController {
     public Response getStats(@PathParam("id") long id) {
 
 //      TODO implement on stats
-//        Optional<Project> optionalProject = projectService.findById(id);
+//      Optional<Project> optionalProject = projectService.findById(id);
 //      return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())))
 //                .orElse(Response.status(Response.Status.NOT_FOUND).build());
 
@@ -165,6 +172,7 @@ public class ProjectRestController {
     @PUT
     @Path("/{id}/close")
     public Response close(@PathParam("id") long id) {
+
         return projectService.setClosed(sessionUser.getId(), id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
@@ -177,6 +185,7 @@ public class ProjectRestController {
     @Path("/categories")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response categories() {
+
         List<Category> categories = projectService.getAllCategories();
         List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
 
