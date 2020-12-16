@@ -146,18 +146,15 @@ public class ProjectServiceImpl implements ProjectService {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
-        Set<ProjectImage> imageList = new HashSet<>();
+        Set<ProjectImage> projectImages = optionalProject.get().getImages();
 
         /** Checks if there is a Portrait, main image. If not, returns optional empty */
-        Optional<ProjectImage> optionalPortrait = optionalProject.get().getImages().stream().filter(ProjectImage::isMain).findFirst();
-        if (optionalPortrait.isPresent()) imageList.add(optionalPortrait.get());
-        else return Optional.empty();
+        if (projectImages.stream().noneMatch(ProjectImage::isMain)) return Optional.empty();
 
         /** If there is a main image, add all the new slideshow images to the project */
-        images.forEach(i -> imageList.add(new ProjectImage(new Project(id), i, false)));
+        projectImages.removeIf(ProjectImage::isNotMain);
+        images.forEach(i -> projectImages.add(new ProjectImage(new Project(id), i, false)));
 
-        /** Persist the project */
-        optionalProject.get().setImages(imageList);
         return optionalProject;
     }
 
