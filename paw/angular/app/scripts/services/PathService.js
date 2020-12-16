@@ -21,7 +21,10 @@ define([], function() {
         return base.path.replace('#!', '');
       };
 
-      base.go = function () {
+      base.go = function (paramsObject) {
+        // Clear current search params
+        $location.url($location.path());
+        if (paramsObject) return $location.path(base.absolutePath()).search(paramsObject);
         return $location.path(base.absolutePath());
       };
 

@@ -14,7 +14,6 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
           // TODO: Ver como hacer para que vaya a donde estaba yendo
           PathService.get().index().go();
         }, function (errorResponse) {
-          // TODO: Ver que responde si no esta verificado --> $scope.valor = 2;
           $log.info('Response status: ' + errorResponse.status);
           $scope.valor = 1;
         })

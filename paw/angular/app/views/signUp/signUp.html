@@ -138,7 +138,7 @@
                   <label> {{'userPicture' | translate}} </label>
                   <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
                   <div class="custom-file">
-                    <input ng-model="controller.user.image" type="file" class="custom-file-input"
+                    <input type="file" class="custom-file-input"
                            custom-on-change="fileboxChange" accept="image/*" id="customFileProfilePic"/>
                     <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel">
                       {{fileLabel || 'chooseFile' | translate}}</label>
