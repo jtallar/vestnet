@@ -2,7 +2,9 @@
 
 define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
   function(paw2020a) {
-    paw2020a.controller('loginCtrl', ['PathService', 'AuthenticationService', '$scope', '$log', function(PathService, AuthenticationService, $scope, $log) {
+    paw2020a.controller('loginCtrl', ['PathService', 'AuthenticationService', '$scope', '$routeParams', '$log', function(PathService, AuthenticationService, $scope, $routeParams, $log) {
+      var code = $routeParams.code;
+      $scope.code = (code === undefined) ? 0 : code;
 
       $scope.login = function (user) {
         // TODO: Ver si esta condicion de abajo va
@@ -15,7 +17,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
           PathService.get().index().go();
         }, function (errorResponse) {
           $log.info('Response status: ' + errorResponse.status);
-          $scope.valor = 1;
+          $scope.code = 1;
         })
       }
     }]);

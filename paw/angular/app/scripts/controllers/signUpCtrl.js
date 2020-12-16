@@ -113,9 +113,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
           user.cityId = $scope.citySelected.id;
           user.role = $scope.roleSelected;
           userService.createUser(user).then(function (response) {
-            PathService.get().login().go();
-            // TODO: Ver como le pasamos este valor a login
-            $scope.valor = 7;
+            PathService.get().login().go({code: 7});
           }, function (errorResponse) {
             if (errorResponse.status === 400) {
               $scope.serverFormErrors = true;

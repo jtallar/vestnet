@@ -34,17 +34,17 @@
           <div class="col-2 text-left">
             <input type="submit" class="btn btn-dark" value="{{'submit' | translate}}" ng-click="login(controller.user)" ng-disabled="loginForm.$invalid">
           </div>
-          <div ng-if="valor > 0 && valor < 3">
+          <div ng-if="code > 0 && code < 3">
             <div class="col mailError text-right">
-              <div ng-switch="valor">
+              <div ng-switch="code">
                 <div ng-switch-when="1"><p class="mailError">{{'loginError' | translate}}</p></div>
                 <div ng-switch-when="2"><p class="mailError">{{'loginVerificationError' | translate}}</p></div>
               </div>
             </div>
           </div>
-          <div ng-if="valor >= 3 && valor <= 6">
+          <div ng-if="code >= 3 && code <= 6">
             <div class="col mailError text-right">
-              <div ng-switch="valor">
+              <div ng-switch="code">
                 <div ng-switch-when="3"><p class="mailError">{{'verificationInvalid' | translate}}</p></div>
                 <div ng-switch-when="4"><p class="mailError">{{'verificationTokenExpired' | translate}}</p></div>
                 <div ng-switch-when="5"><p class="mailError">{{'passwordInvalidToken' | translate}}</p></div>
@@ -52,9 +52,9 @@
               </div>
             </div>
           </div>
-          <div ng-if="valor >= 7 && valor <= 10">
+          <div ng-if="code >= 7 && code <= 10">
             <div class="col mailSent text-right">
-              <div ng-switch="valor">
+              <div ng-switch="code">
                 <div ng-switch-when="7"><p class="mailSent">{{'verificationMessageSent' | translate}}</p></div>
                 <div ng-switch-when="8"><p class="mailSent">{{'verificationMade' | translate}}</p></div>
                 <div ng-switch-when="9"><p class="mailSent">{{'passwordRecoverySent' | translate}}</p></div>
@@ -69,9 +69,6 @@
         <label>{{'noReg' | translate}}</label>
         <a ng-href="/#/signUp" class="btn btn-outline-dark">{{'signUp' | translate}}</a>
       </div>
-
-      <input ng-model="valor">
-
 
     </div>
   </div>
