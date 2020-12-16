@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @EqualFields({"password", "repeatPassword"})
-public class FullUserWithPasswordDto extends FullUserDto {
+public class    FullUserWithPasswordDto extends FullUserDto {
     @Size(min = 1, max = 50)
     @NotBlank
     private String password;

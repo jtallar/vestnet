@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
 import ar.edu.itba.paw.model.enums.OrderField;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -203,4 +204,15 @@ public class UserServiceImpl implements UserService {
         else user.setVerified(true);
         return true;
     }
+
+
+    /**
+     * Finds a user location by user ID
+     * @param id The unique user's ID
+     * @return The users location
+     */
+//    @Override
+//    public Optional<Location> findLocationById(Long id) {
+//        return userDao.findLocationById(id);
+//    }
 }

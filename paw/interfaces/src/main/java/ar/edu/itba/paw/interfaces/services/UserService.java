@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.Location;
 
 import java.net.URI;
 import java.util.Date;

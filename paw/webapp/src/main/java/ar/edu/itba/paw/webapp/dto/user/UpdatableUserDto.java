@@ -208,6 +208,7 @@ public class UpdatableUserDto {
         this.favorites = favorites;
     }
 
+
     public boolean isImageExists() {
         return imageExists;
     }

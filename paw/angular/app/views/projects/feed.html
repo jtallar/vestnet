@@ -165,11 +165,11 @@
           <div class="card-body">
             <div class="row">
               <div class="col-5">
-                <div ng-if="project.image.empty()">
-                  <img src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                <div ng-if="!project.portraitExists">
+                  <img ng-src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
                 </div>
-                <div ng-if="!project.image.empty()">
-                  <img src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                <div ng-if="project.portraitExists">
+                  <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
                 </div>
               </div>
               <div class="col-7 card-content">
