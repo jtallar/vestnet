@@ -51,6 +51,4 @@ public class ProjectImage extends Image {
     public void setMain(boolean main) {
         this.main = main;
     }
-
-
 }

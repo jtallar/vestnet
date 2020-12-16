@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -32,7 +31,8 @@ public class TestConfig {
     private Resource schemaSql;
 
     /**
-     * Data source creator.
+     * Data source creator. Stored in memory, does not bring
+     * up a real database connection.
      * @return The created data source.
      */
     @Bean
@@ -62,11 +62,11 @@ public class TestConfig {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-//        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
-//        properties.setProperty("format_sql", "true"); // TODO same as above
+
+//        properties.setProperty("hibernate.show_sql", "true");
+//        properties.setProperty("format_sql", "true");
 
         factoryBean.setJpaProperties(properties);
-
         return factoryBean;
     }
 

@@ -11,7 +11,6 @@
 <vnheader></vnheader>
 
 <!--<div class="profile">-->
-<div ng-controller="profileCtrl as controller">
   <div ng-if="true" class="back sep-nav">
     <button onclick="history.back()" class="btn btn-dark">{{'back' | translate}}</button>
   </div>
@@ -22,7 +21,12 @@
     <div class="row">
       <div class="col-md-4">
         <div class="profile-img ">
-          <img src="/images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          <div ng-if="user.imageExists">
+            <img ng-src="data:image/JPEG;base64,{{user.image}}" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          </div>
+          <div ng-if="!user.imageExists">
+            <img ng-src="/images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          </div>
         </div>
         <div ng-if="true" class="text-center my-2">
           <button href="#" class="btn btn-linkedin">
@@ -34,7 +38,7 @@
 
     <div class="col-md-6">
       <div class="profile-head">
-        <h2 class="bold">{{'profileTitle' | translate : '{first : "Pablo", last : "Perez"}'}}</h2>
+        <h2 class="bold">{{'profileTitle' | translate : '{first : user.firstName, last : user.lastName}'}}</h2>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
@@ -59,7 +63,7 @@
                 <label>{{'firstName' | translate}}</label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.firstName}}</p>
+                <p>{{user.firstName}}</p>
               </div>
             </div>
             <div class="row">
@@ -67,7 +71,7 @@
                 <label>{{'lastName' | translate}}</label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.lastName}}</p>
+                <p>{{user.lastName}}</p>
               </div>
             </div>
             <div class="row">
@@ -75,7 +79,7 @@
                 <label>{{'email' | translate}} </label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.email}}</p>
+                <p>{{user.email}}</p>
               </div>
             </div>
             <div class="row">
@@ -83,7 +87,7 @@
                 <label>{{'phone' | translate}} </label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.phone}}</p>
+                <p>{{user.phone}}</p>
               </div>
             </div>
             <div class="row">
@@ -91,7 +95,7 @@
                 <label>{{'birthday' | translate}}</label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.birthday}}</p>
+                <p>{{user.birthday}}</p>
               </div>
             </div>
             <div class="row">
@@ -99,7 +103,7 @@
                 <label>{{'country' | translate}} </label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.country}}</p>
+                <p>{{user.country}}</p>
               </div>
             </div>
             <div class="row">
@@ -107,7 +111,7 @@
                 <label>{{'city' | translate}} </label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.city}}</p>
+                <p>{{user.city}}</p>
               </div>
             </div>
             <div class="row">
@@ -115,7 +119,7 @@
                 <label>{{'state' | translate}}</label>
               </div>
               <div class="col-md-6">
-                <p>{{controller.user.state}}</p>
+                <p>{{user.state}}</p>
               </div>
             </div>
           </div>
@@ -127,17 +131,17 @@
                   <div ng-if="!projects.empty()"  ng-repeat="project in projects">
                     <div class="card m-2">
                       <div class="card-header text-white">
-                        <h5 class="card-title">{{controller.project.name}}</h5>
+                        <h5 class="card-title">{{project.name}}</h5>
                       </div>
                       <div class="card-body favorites">
-                        <p class="card-text">{{controller.project.summary}}</p>
+                        <p class="card-text">{{project.summary}}</p>
                         <div class="row">
                           <div class="col">
                             <strong>{{'price' | translate}}</strong>
-                            <p>{{'projectCost' | translate : '{cost : controller.project.cost}'}}</p>
+                            <p>{{'projectCost' | translate : '{cost : project.cost}'}}</p>
                           </div>
                           <div class="col">
-                            <a href="#/projects/{{controller.project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>
+                            <a href="#/projects/{{project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>
                           </div>
                         </div>
                       </div>
@@ -164,4 +168,3 @@
   <footer>
     <vnfooter></vnfooter>
   </footer>
-</div>

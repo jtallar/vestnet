@@ -42,7 +42,7 @@ public class ImageRestController {
     @Path("/users/{image_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getUserImage(@PathParam("image_id") final long imageId) {
-        Optional<UserImage> profileImage = userService.getProfileImage(imageId);
+        Optional<UserImage> profileImage = userService.getImage(imageId);
 
         return profileImage.map(userImage -> Response.ok(ImageDto.fromUserImage(userImage)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -54,7 +54,7 @@ public class ImageRestController {
     @Path("/users")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setUserImage(@Valid final ImageDto image) {
-        Optional<User> optionalUser = userService.updateImage(sessionUser.getId(), image.getImage());
+        Optional<User> optionalUser = userService.setImage(sessionUser.getId(), image.getImage());
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());

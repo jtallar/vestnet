@@ -19,7 +19,7 @@ public class OfferDto {
     private String comment;
 
     @Min(1000)
-    @Max(9999999)
+    @Max(1000000000)
     private long offer;
 
     @Size(max = 100)

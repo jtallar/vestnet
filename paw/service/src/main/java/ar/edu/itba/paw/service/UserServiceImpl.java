@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
 import ar.edu.itba.paw.model.enums.OrderField;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,12 +65,14 @@ public class UserServiceImpl implements UserService {
         return optionalUser;
     }
 
+
     @Override
     @Transactional
     public void remove(long id) {
         tokenDao.deleteUserTokens(new User(id));
         userDao.removeUser(id);
     }
+
 
     @Override
     public Optional<User> findByUsername(String username) {
@@ -85,15 +88,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean updateVerification(String token, URI baseUri) {
-        return updateWithToken(token, null, false, baseUri);
+    public Optional<User> addFavorites(long userId, long projectId, boolean add) {
+        Optional<User> optionalUser = userDao.findById(userId);
+        optionalUser.ifPresent(u -> {
+            if (add) u.getFavorites().add(new Favorite(new User(userId), new Project(projectId)));
+            else u.getFavorites().remove(new Favorite(new User(userId), new Project(projectId)));
+        });
+        return optionalUser;
     }
 
 
     @Override
-    @Transactional
-    public boolean updatePassword(String token, String password) {
-        return updateWithToken(token, password, true, null);
+    public List<Project> getOwnedProjects(long id, boolean closed) {
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setOwner(id)
+                .setClosed(closed)
+                .setOrder(OrderField.PROJECT_DEFAULT);
+        return projectDao.findAll(request);
     }
 
 
@@ -107,16 +118,28 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Optional<User> requestVerification(String mail, URI baseUri) {
-        Optional<User> optionalUser = userDao.findByUsername(mail);
-        optionalUser.ifPresent(u -> emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri));
-        return optionalUser;
+    @Transactional
+    public boolean updatePassword(String token, String password) {
+        return updateWithToken(token, password, true, null);
     }
 
 
     @Override
     @Transactional
-    public Optional<User> updateImage(long id, byte[] image) {
+    public boolean updateVerification(String token, URI baseUri) {
+        return updateWithToken(token, null, false, baseUri);
+    }
+
+
+    @Override
+    public Optional<UserImage> getImage(long id) {
+        return imageDao.findUserImage(id);
+    }
+
+
+    @Override
+    @Transactional
+    public Optional<User> setImage(long id, byte[] image) {
         Optional<User> optionalUser = userDao.findById(id);
         optionalUser.ifPresent(u -> {
             UserImage userImage = null;
@@ -147,32 +170,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    @Transactional
-    public Optional<User> favorites(long userId, long projectId, boolean add) {
-        Optional<User> optionalUser = userDao.findById(userId);
-        optionalUser.ifPresent(u -> {
-            if (add) u.getFavorites().add(new Project(projectId));
-            else u.getFavorites().remove(new Project(projectId));
-        });
-        return optionalUser;
-    }
 
 
-    @Override
-    public List<Project> getOwnedProjects(long id, boolean closed) {
-        RequestBuilder request = new ProjectRequestBuilder()
-                .setOwner(id)
-                .setClosed(closed)
-                .setOrder(OrderField.PROJECT_DEFAULT);
-        return projectDao.findAll(request);
-    }
 
-
-    @Override
-    public Optional<UserImage> getProfileImage(long id) {
-        return imageDao.findUserImage(id);
-    }
 
 
     /** Auxiliary functions */
@@ -204,4 +204,15 @@ public class UserServiceImpl implements UserService {
         else user.setVerified(true);
         return true;
     }
+
+
+    /**
+     * Finds a user location by user ID
+     * @param id The unique user's ID
+     * @return The users location
+     */
+//    @Override
+//    public Optional<Location> findLocationById(Long id) {
+//        return userDao.findLocationById(id);
+//    }
 }

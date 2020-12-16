@@ -3,17 +3,19 @@ package ar.edu.itba.paw.webapp.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -24,12 +26,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -44,10 +42,17 @@ import java.util.Properties;
 @EnableCaching
 @EnableAsync
 @EnableTransactionManagement
+@PropertySource(value = "classpath:application.properties")
 public class WebConfig {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
     public static final int MAX_UPLOAD_SIZE = 2097152; // 2 MB
     public static final int MAX_SLIDESHOW_COUNT = 5;
+
+
+    @Autowired
+    private Environment env;
+
 
     /**
      * Entity manager for Hibernate & JPA factory.
@@ -65,8 +70,11 @@ public class WebConfig {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-        properties.setProperty("hibernate.show_sql", "true"); // TODO remove for production
-        properties.setProperty("format_sql", "true"); // TODO same as above
+        if (isDevelopmentMode()) {
+            properties.setProperty("hibernate.show_sql", "true");
+            properties.setProperty("format_sql", "true");
+        }
+
         factoryBean.setJpaProperties(properties);
         return factoryBean;
     }
@@ -94,6 +102,9 @@ public class WebConfig {
         dataSource.setUrl(env.getProperty("postgres.url"));
         dataSource.setUsername(env.getProperty("postgres.username"));
         dataSource.setPassword(env.getProperty("postgres.password"));
+
+        LOGGER.debug("Connecting to database at {} with user {}", dataSource.getUrl(), dataSource.getUsername());
+
         return dataSource;
     }
 
@@ -133,7 +144,6 @@ public class WebConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(env.getProperty("mail.host"));
         mailSender.setPort(Integer.parseInt(env.getProperty("mail.port")));
-
         mailSender.setUsername(env.getProperty("mail.username"));
         mailSender.setPassword(env.getProperty("mail.password"));
 
@@ -141,7 +151,7 @@ public class WebConfig {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.debug", "true"); // TODO remove later. For development
+        if (isDevelopmentMode()) props.put("mail.debug", "true");
 
         return mailSender;
     }
@@ -177,6 +187,11 @@ public class WebConfig {
         return cacheManager;
     }
 
+
+    /**
+     * The object mapper for data binding.
+     * @return The created object mapper.
+     */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
@@ -184,5 +199,17 @@ public class WebConfig {
         mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
 
         return mapper;
+    }
+
+
+    /** Auxiliary Method */
+
+
+    /**
+     * Use LOGGER debug mode for switching development/production mode respectively.
+     * @return True for development mode, false if production.
+     */
+    private boolean isDevelopmentMode() {
+        return LOGGER.isDebugEnabled();
     }
 }

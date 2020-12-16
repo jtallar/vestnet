@@ -173,9 +173,13 @@ public class MessageJpaDaoTest {
         Number entrepreneurId = createUser();
         Number projectId = createProject(entrepreneurId);
         createMessage(entrepreneurId, investorId, projectId, true);
+        RequestBuilder request = new MessageRequestBuilder()
+                .setOwner(entrepreneurId.longValue())
+                .setUnseen()
+                .setFromInvestor();
 
         // 2 - Execute
-        long count = messageJpaDao.countEntrepreneurNotifications(entrepreneurId.longValue());
+        long count = messageJpaDao.countAll(request);
 
         // 3 - Assert
         assertEquals(1, count);
