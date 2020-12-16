@@ -88,8 +88,8 @@
                 <div class="col-md">
                   <div class="form-group">
                     <label>{{'role' | translate}} </label>
-                    <select class="custom-select mr-sm-2" ng-model="controller.user.role">
-                      <option value="Investor">{{'investor' | translate}}</option>
+                    <select class="custom-select mr-sm-2" ng-model="roleSelected">
+                      <option value="Investor" selected="selected">{{'investor' | translate}}</option>
                       <option value="Entrepreneur">{{'entrepreneur' | translate}}</option>
                     </select>
                   </div>
@@ -141,7 +141,7 @@
                     <input ng-model="controller.user.image" type="file" class="custom-file-input"
                            custom-on-change="fileboxChange" accept="image/*" id="customFileProfilePic"/>
                     <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel">
-                      {{'chooseFile' | translate}}</label>
+                      {{fileLabel || 'chooseFile' | translate}}</label>
                     <br>
                     <!--                  <form:errors path="profilePicture" cssClass="formError" element="p" id="fileErrorFormTag"/>-->
                   </div>
@@ -159,25 +159,26 @@
                 <div class="container">
                   <div class="row">
                     <div class="col-">
-                      <label class="date">{{'day' | translate}}</label>
+                      <label class="date"> {{'year' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select ng-model="controller.user.birthday.day" class="custom-select mr-sm-2"
-                              ng-options="label for label in dayArray"></select>
+                      <select ng-model="yearSelected" class="custom-select mr-sm-2"
+                              ng-options="label for label in yearsArray" ng-change="updateDate('year')" required></select>
                     </div>
                     <div class="col-">
                       <label class="date"> {{'month' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select ng-model="controller.user.birthday.month" class="custom-select mr-sm-2"
-                              ng-options="label for label in monthArray"></select>
+                      <select ng-model="monthSelected" class="custom-select mr-sm-2"
+                              ng-options="m.name for m in monthsArray | validMonths:yearSelected" ng-change="updateDate('month')" required></select>
                     </div>
                     <div class="col-">
-                      <label class="date"> {{'year' | translate}} </label>
+                      <label class="date">{{'day' | translate}}</label>
                     </div>
                     <div class="col-md">
-                      <select ng-model="controller.user.birthday.year" class="custom-select mr-sm-2"
-                              ng-options="label for label in yearArray"></select>
+                      <select ng-model="daySelected" class="custom-select mr-sm-2"
+                              ng-options="label for label in daysArray | daysInMonth:yearSelected:monthSelected | validDays:yearSelected:monthSelected"
+                              ng-change="updateDate('day')" required></select>
                     </div>
                   </div>
                 </div>
@@ -193,8 +194,8 @@
                       <label>{{'country' | translate}}</label>
                     </div>
                     <div class="col-md">
-                      <select id="country-select" class="custom-select mr-sm-2" ng-model="controller.user.country"
-                              ng-options="option as option.name | translate for option in countries track by option.id"
+                      <select id="country-select" class="custom-select mr-sm-2" ng-model="countrySelected"
+                              ng-options="option as option.name | translate for option in countriesArray track by option.id"
                               custom-on-change="countryChange">
                       </select>
                     </div>
@@ -202,8 +203,8 @@
                       <label>{{'state' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select id="state-select" class="custom-select mr-sm-2" ng-model="controller.user.state"
-                              ng-options="option as option.name | translate for option in states track by option.id"
+                      <select id="state-select" class="custom-select mr-sm-2" ng-model="stateSelected"
+                              ng-options="option as option.name | translate for option in statesArray track by option.id"
                               custom-on-change="stateChange">
                       </select>
                     </div>
@@ -211,8 +212,8 @@
                       <label> {{'city' | translate}} </label>
                     </div>
                     <div class="col-md">
-                      <select id="city-select" class="custom-select mr-sm-2" ng-model="controller.user.city"
-                              ng-options="option as option.name | translate for option in cities track by option.id">
+                      <select id="city-select" class="custom-select mr-sm-2" ng-model="citySelected"
+                              ng-options="option as option.name | translate for option in citiesArray track by option.id">
                       </select>
                     </div>
                   </div>
