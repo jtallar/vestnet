@@ -24,12 +24,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     };
 
 
-    imageService.setProjectImage = function (projId, im) {
-
-      var body = {image : im};
-
+    imageService.setProjectImage = function (projId, imageArrayBuffer) {
+      var body = {image : btoa(String.fromCharCode.apply(null, new Uint8Array(imageArrayBuffer)))};
       return root.one('projects').one(projId).customPUT(body)
-
     };
 
 
