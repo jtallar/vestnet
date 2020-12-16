@@ -7,10 +7,7 @@ import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -99,6 +96,7 @@ import java.util.function.Consumer;
     private void owner(Object value) {
         predicate = builder.and(predicate, builder.equal(root.get("owner"), value));
     }
+
 
     /**
      * Filter by project is closed or not.

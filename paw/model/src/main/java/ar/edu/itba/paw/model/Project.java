@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.image.ProjectImage;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Models a project with all its properties.
@@ -52,7 +53,7 @@ public class Project {
     private long ownerId;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-    private List<ProjectImage> images;
+    private Set<ProjectImage> images;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -61,8 +62,9 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
-    private List<User> favoriteBy;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private Set<Favorite> favorites;
+
 
     /** Protected */ Project() {
         /** For hibernate only */
@@ -173,11 +175,11 @@ public class Project {
         this.ownerId = ownerId;
     }
 
-    public List<ProjectImage> getImages() {
+    public Set<ProjectImage> getImages() {
         return images;
     }
 
-    public void setImages(List<ProjectImage> images) {
+    public void setImages(Set<ProjectImage> images) {
         this.images = images;
     }
 
@@ -189,12 +191,12 @@ public class Project {
         this.categories = categories;
     }
 
-    public List<User> getFavoriteBy() {
-        return favoriteBy;
+    public Set<Favorite> getFavorites() {
+        return favorites;
     }
 
-    public void setFavoriteBy(List<User> favoriteBy) {
-        this.favoriteBy = favoriteBy;
+    public void setFavorites(Set<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
 

@@ -78,8 +78,9 @@ define(['routes',
         // TODO: Add all error codes wanted
         Restangular.setErrorInterceptor(function (response, deferred, responseHandler) {
           if (response.status === 404) {
-            PathService.get().notFound().go();
-            return false;
+            // PathService.get().notFound().go();
+            console.error("404 que tenes que manejar");
+            return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
               PathService.get().forbidden().go();
