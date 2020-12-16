@@ -26,6 +26,7 @@
   </div>
 </div>
 
+
 <div class="sidenav sidenav-feed">
   <div class="form-row align-items-center">
     <ng-form name="filter" ng-submit="">
@@ -125,7 +126,12 @@
 <!--      <c:set var="totalFound" value="12"/>-->
 <!--    </c:otherwise>-->
 <!--  </c:choose>-->
-  <p class="results">{{'feedSearchPages' | translate : '{found: 54, shown: 12}'}}</p>
+
+<!--  <div class="progress">-->
+<!--    <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="200" style="width: 10%">20%</div>-->
+<!--  </div>-->
+
+  <p class="results">{{'feedSearchPages' | translate : {found: 54, shown: 12} }}</p>
 
 </div>
 
@@ -177,14 +183,19 @@
               </div>
             </div>
           </div>
-          <div class="card-footer">
+          <div class="card-footer feed-footer">
             <div class="row">
-              <div class="price-footer col-6">
-                <strong>{{'price' | translate}}</strong>
-                <p>{{'projectCost' | translate : '{cost: project.cost}'}}</p>
+              <div class="price-footer col-8">
+                <h4>{{'funding' | translate}}</h4>
+                <h6>{{'of' | translate : {of : project.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : project.fundingTarget} }}</b></h6>
+                <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
+                </div>
               </div>
-              <div class="col-6">
-                <a href="/#/projects/{{project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>
+              <div class="col-3">
+                <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >
+                  <img src="images/view-icon-b.png" alt="">
+                </a>
               </div>
             </div>
           </div>

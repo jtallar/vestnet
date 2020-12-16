@@ -13,7 +13,7 @@
   <div class="col-3 center-vertical">
     <strong class="tab-title"> {{'reqTitle' | translate}} </strong>
   </div>
-  <div class="col-6">
+  <div class="col-6" ng-if="pages != 1">
     <ul class="pagination justify-content-center">
       <li id="li-previous" class="page-item">
         <a id="li-a-previous" class="page-link" onclick="" aria-label="{{'previous' | translate}}">
@@ -35,11 +35,69 @@
   <div class="col-3"></div>
 </div>
 
-<div ng-repeat="message in messages">
-  <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>
-  <div class="container-deal py-3">
-    <div class="card">
+<!--<div ng-repeat="message in messages">-->
+<!--  <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>-->
+<!--  <div class="container-deal py-3">-->
+<!--    <div class="card">-->
 
+<!--      <div class="card-header header-grey">-->
+<!--        <a ng-href="#/projects/{{message.pid}}" class="btn-link">{{message.project.name}}</a>-->
+<!--        <a ng-href="#/users/{{message.receiverId}}" class="btn msg-usr pull-right">-->
+<!--          &lt;!&ndash;            TODO: ?back=yes"&ndash;&gt;-->
+<!--          <img class="nav-icon" src="images/user-icon.png" alt="">-->
+<!--        </a>-->
+<!--      </div>-->
+
+<!--      <div class="card-deal row">-->
+<!--        <div class="col-6">-->
+<!--          <strong> {{'msgTitleBody' | translate}} </strong>-->
+<!--          <p> {{message.content.message}}</p>-->
+<!--        </div>-->
+<!--        <div class="col-6">-->
+<!--          <strong>{{'msgTitleOffer' | translate}} </strong>-->
+<!--          <p>{{message.content.offer}}</p>-->
+<!--          <strong>{{'msgTitleRequest' | translate}} </strong>-->
+<!--          <p>{{message.content.interest}}</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="row dr-footer">-->
+<!--      <div class="col-3" ng-switch="{{message.state}}">-->
+<!--&lt;!&ndash;        <strong>{{'state' | translate}} </strong>&ndash;&gt;-->
+<!--        <div ng-switch-when="1">-->
+<!--          <h3 class="state text-secondary">{{'pending' | translate}}</h3>-->
+<!--        </div>-->
+<!--        <div ng-switch-when="0">-->
+<!--          <h3 class="state text-success">{{'accepted' | translate}}</h3>-->
+<!--        </div>-->
+<!--        <div ng-switch-when="2">-->
+<!--          <h3 class="state text-danger">{{'rejected' | translate}}</h3>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--        <div class="col-7"></div>-->
+<!--      <p class="col-2 msg-date">{{message.publishDate}}</p>-->
+<!--      </div>-->
+
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+  <div class="row text-center">
+    <div class="col">
+      <div class="counter">
+<!--        <i class="fa fa-usd fa-2x"></i>-->
+        <img src="images/invest-icon.png" style="width: 50px; height: auto">
+        <h2 class="timer count-title count-number" data-to="100" data-speed="1500"><div id="invested">0</div></h2>
+        <p class="count-text ">{{'totalinv' | translate}}</p>
+      </div>
+    </div>
+  </div>
+
+<!--<button ng-click="animate('invested', 0, 2500, 1000)">TRIAL</button>-->
+
+<!--  <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>-->
+  <div class="card-deck group-invest">
+    <div class="card card-invest" ng-repeat="message in messages" ng-if="message.state == 0">
       <div class="card-header header-grey">
         <a ng-href="#/projects/{{message.pid}}" class="btn-link">{{message.project.name}}</a>
         <a ng-href="#/users/{{message.receiverId}}" class="btn msg-usr pull-right">
@@ -47,35 +105,20 @@
           <img class="nav-icon" src="images/user-icon.png" alt="">
         </a>
       </div>
-
+      <img class="img-invest" src="images/mate.jpg">
       <div class="card-deal row">
-        <div class="col-6">
-          <strong> {{'msgTitleBody' | translate}} </strong>
-          <p> {{message.content.message}}</p>
+        <div class="col-4 msg-offer">
+          <img src="images/down-arrow.png" alt="">
+          <strong>{{message.content.offer}}K</strong>
         </div>
-        <div class="col-6">
-          <strong>{{'msgTitleOffer' | translate}} </strong>
-          <p>{{message.content.offer}}</p>
-          <strong>{{'msgTitleRequest' | translate}} </strong>
-          <p>{{message.content.interest}}</p>
+        <div class="col-8 msg-exch">
+          <img src="images/up-arrow.png" alt="">
+          <strong> {{message.content.interest}}</strong>
         </div>
       </div>
 
-      <div class="row dr-footer">
-      <div class="col-3" ng-switch="{{message.state}}">
-<!--        <strong>{{'state' | translate}} </strong>-->
-        <div ng-switch-when="1">
-          <h3 class="state text-secondary">{{'pending' | translate}}</h3>
-        </div>
-        <div ng-switch-when="0">
-          <h3 class="state text-success">{{'accepted' | translate}}</h3>
-        </div>
-        <div ng-switch-when="2">
-          <h3 class="state text-danger">{{'rejected' | translate}}</h3>
-        </div>
-      </div>
-        <div class="col-7"></div>
-      <p class="col-2 msg-date">{{message.publishDate}}</p>
+      <div class="dr-footer">
+        <p class="msg-date pull-right">{{message.publishDate}}</p>
       </div>
 
     </div>

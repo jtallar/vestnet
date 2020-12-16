@@ -61,6 +61,10 @@ define([], function() {
                 templateUrl: '/views/dashboard/dashboard.html',
                 controller: 'dashboardCtrl'
             },
+            '/messages': {
+              templateUrl: '/views/requests/messages.html',
+              controller: 'messagesCtrl'
+            },
             '/newProject': {
                 templateUrl: '/views/newProject/newProject.html',
                 controller: 'newProjectCtrl'
@@ -68,6 +72,14 @@ define([], function() {
             '/verify': {
                 templateUrl: 'views/verify/verify.html',
                 controller: 'verifyCtrl'
+            },
+            '/editProject': {
+              templateUrl: '/views/edit/editProject.html',
+              controller: 'editProjectCtrl'
+            },
+            '/chat/:id1/:id2': {
+              templateUrl: '/views/dashboard/chat.html',
+              controller: 'chatCtrl'
             }
             /* ===== yeoman hook ===== */
             /* Do not remove these commented lines! Needed for auto-generation */

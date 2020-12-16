@@ -25,18 +25,25 @@
 
 .msg{
   //min-width: 100% !important;
-  width: 900px !important;
-  height: 200px !important;
-  padding: 20px;
+  width: 1000px !important;
+  height: 110px !important;
+  padding: 15px;
   margin-left:auto !important;
   margin-right:auto !important;
 }
 
 .msg-collapse{
+  width: 1000px !important;
+  height: 60px !important;
   background-color: #f5f5f5 !important;
-  margin-top: 10px !important;
+  margin: 4px auto !important;
   padding: 0;
-  min-height:210px
+  min-height:60px !important;
+}
+
+.center-collapse{
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .card-header{
@@ -216,13 +223,13 @@ html {
 
 .card-deal{
   min-width: 100% !important;
-  padding:20px 5px 0 20px;
+  padding: 10px 10px 0 20px;
   margin-left:auto !important;
   margin-right:auto !important;
 }
 
 .card-deal strong, .card-deal p{
-  font-size:16px
+  font-size:20px
 }
 
 .card-deal h3{
@@ -251,7 +258,7 @@ html {
 }
 
 .card-body{
-  padding: 15px 15px 20px;
+  padding: 10px !important;
 }
 
 .card-text{
@@ -274,7 +281,7 @@ html {
 .btn-project{
   padding: 8px !important;
   font-size: 18px !important;
-  min-width: 80px !important;
+  min-width: 60px !important;
 }
 
 .btn-view{
@@ -292,7 +299,7 @@ html {
 }
 
 .p-img{
-  width:150px
+  width:80px
 }
 
 .active-page-deals {
@@ -365,6 +372,14 @@ html {
   max-height: 80px
 }
 
+.feed-footer{
+  padding: 5px !important;
+}
+
+.feed-footer .btn{
+  margin-top: 8px !important;
+}
+
 .btn-deal{
   margin-right: 25px;
 }
@@ -380,12 +395,20 @@ html {
 }
 
 .price-footer{
-  font-size:18px;
+  margin-left: 10px;
+  margin-right: 0;
 }
 
-.card-footer .btn{
-  font-size: 18px !important;
-  margin-right: 0 !important
+.price-footer h4{
+  font-size:18px;
+  font-variant: all-petite-caps;
+  font-weight: bold;
+  margin: 0 8px !important;
+}
+.price-footer h6{
+  font-size:15px;
+  color: #474747;
+  margin: 0 20px !important;
 }
 
 .icon-fav{
@@ -415,6 +438,30 @@ html {
 
 .btn-link:hover{
   color: white !important;
+}
+
+.btn-link2{
+  color:#750096bd !important;
+  text-decoration:underline;
+}
+.btn-link2:hover{
+  color: black !important;
+}
+
+.btn-link3{
+  color: rgba(99, 99, 99, 0.74) !important;
+}
+.btn-link3:hover{
+  color: black !important;
+  text-decoration: underline;
+}
+
+.btn-link4{
+  color:#750096bd !important;
+}
+.btn-link4:hover{
+  color: black !important;
+  text-decoration: underline;
 }
 
 .results{
@@ -452,6 +499,8 @@ html {
 
 .dashboard .card-block {
   margin-left: 40px !important;
+  margin-top: 12px !important;
+  //margin-bottom: auto !important;
 }
 
 .dashboard .btn-success:hover {
@@ -553,4 +602,299 @@ html {
 
 .switch.checked .on {
   display: block;
+}
+
+
+
+/****** CHAT ******/
+
+.chatscreen{
+  margin:0 100px 100px 100px;
+}
+
+.chatbox{
+  height: 500px;
+  width: 1100px;
+  margin-left: 100px;
+  background-image: url("/images/signupBack.png");
+}
+
+.chatbox-body{
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+
+.chatbox-body.chat-card-other.chat-other {
+  scroll-snap-align: end;
+}
+
+.chatbox-header {
+  color: #ffffff !important;
+  text-align: center !important;
+}
+
+.chat-header{
+  background-color: #222222 !important;
+  height:90px !important;
+}
+
+.chat-img{
+  width:70px;
+  background-color: #222222;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.mini-text{
+  font-size: small !important;
+}
+
+.chat-me{
+  background-color: rgba(182, 177, 255, 0.74);
+  text-align: right;
+  width: auto;
+  padding: 10px !important;
+  font-family: "Lato", sans-serif;
+  font-size: medium;
+}
+.chat-other{
+  text-align: left;
+  width: auto;
+  padding: 10px !important;
+  font-family: "Lato", sans-serif;
+  font-size: medium;
+}
+
+.chat-card-me{
+  width: 400px;
+  margin-left: auto;
+  margin-bottom: 20px;
+  border: solid rgba(182, 177, 255, 0.74) !important
+}
+.chat-card-other{
+  width: 400px;
+  margin-bottom: 20px;
+}
+.chat-options{
+  text-align: center;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 160px;
+  width: auto;
+}
+.chat-opt{
+  margin-left: 20px;
+  width: 50px;
+  border-radius: 50% !important;
+}
+.chat-opt > img{
+  margin-left: 20px;
+  width: 80px;
+  border-radius: 50% !important;
+}
+
+.chat-offer{
+    width: 1100px !important;
+    height: 180px !important;
+    background-color: #f5f5f5 !important;
+    margin: 20px auto auto 4.5% !important;
+    padding: 0;
+    min-height:60px !important;
+}
+
+.chat-offer .card-header{
+  color: white;
+  height: 30px;
+  padding: 2px !important;
+}
+.chat-offer img{
+  margin-left: 20px;
+  width: 20px;
+  height: 20px;
+}
+.chat-offer h5{
+  color: white;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.send-icon{
+  margin-right: 10px !important;
+  margin-top: 125% !important;
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.chat-input{
+  margin: 5px
+}
+.chat-text{
+  margin: 15px;
+}
+.chat-date{
+  height: 18px !important;
+  padding: 2px !important;
+  font-size: x-small;
+  color: grey;
+  text-align: right;
+}
+.chat-date-me{
+  height: 18px !important;
+  padding: 2px !important;
+  font-size: x-small;
+  color: #717171;
+  text-align: left;
+  background: rgba(200, 196, 255, 0.74) !important;
+}
+.chat-p-name{
+  font-size: xx-large;
+  margin-left: 5px;
+  margin-top: 10px;
+  font-variant: all-petite-caps;
+}
+.chat-p-img{
+  width:200px;
+  border: solid 2px black;
+  margin: auto;
+}
+
+.chat-ficha {
+   height: 500px;
+   padding: 20px;
+   text-align: center;
+   margin-left:2.5%
+ }
+.chat-ficha p{
+  font-size: medium;
+  color: #5f5f5f;
+}
+
+.chat-ficha h6{
+  color: #750096;
+}
+
+.offer-body{
+  padding: 10px !important
+}
+
+.msg-offer{
+  font-size: 25px !important;
+  color: #cb6800;
+}
+.msg-offer > img {
+  margin-bottom: 5px;
+  width: 20px;
+  height: 20px;
+}
+.msg-exch{
+  font-size: 25px !important;
+  color: #10668d;
+}
+.msg-exch > img {
+  margin-bottom: 5px;
+  width: 20px;
+  height: 20px;
+}
+.msg-comm{
+  font-size: 15px;
+  font-style: italic;
+}
+.msg-exp{
+  font-size: 11px;
+  font-style: italic;
+  text-align: left;
+}
+.msg-exp > img {
+  margin-bottom: 2px;
+  width: 10px;
+}
+.msg-exp-me{
+  font-size: 11px;
+  font-style: italic;
+  text-align: right;
+}
+.msg-exp-me > img {
+  margin-bottom: 2px;
+  width: 10px;
+}
+.popup{
+  margin-top:20% !important;
+}
+.popup strong{
+  font-variant: all-petite-caps;
+  font-size: 35px
+}
+
+.my-bar{
+  background-color: #750096 !important;
+}
+
+.more-icon > img {
+  width: 40px;
+  height: 40px;
+}
+
+.more-icon {
+  border-radius: 50% !important;
+  margin: 10px 0 15px 0 !important;
+}
+
+.dash-body{
+  padding: 16px !important;
+  font-size: 18px !important;
+}
+
+.view-more{
+  margin-top: 10px;
+  color: #585858;
+  font-style: italic;
+  font-size: 18px;
+}
+
+.group-invest {
+  margin: 20px 100px 0 200px !important;
+}
+
+.card-invest {
+  min-width: 30% !important;
+  max-width: 30% !important;
+  border-color: #cecece !important;
+}
+.img-invest{
+  height: 80px;
+  width: auto;
+  object-fit: cover;
+}
+
+.ww-img {
+  border-radius: 50%;
+  width: 90px;
+  border: solid 0.5px #b7b7b7;
+}
+
+.ww{
+  padding: 10px 30px 10px 10px !important;
+  width: 100% !important
+}
+
+.ww-content{
+  padding: 0 10px 10px 5px !important;
+  margin: auto !important
+}
+
+.ww-last{
+  margin: auto !important;
+}
+.ww-last p{
+  font-size: 20px;
+  color: grey;
+  font-style: italic;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+.ww-last h6{
+  font-size: 12px;
+  color: #b3b3b3;
 }

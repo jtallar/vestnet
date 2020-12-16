@@ -86,3 +86,101 @@
 .d-flex .btn-block{
   margin-bottom:20px
 }
+
+.contact-btn{
+  width: 92% !important;
+  background-color: #313131 !important;
+  color: white !important;
+  font-variant: all-petite-caps;
+  font-size: 30px !important;
+  font-weight: bold !important;
+}
+
+.contact-img{
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+}
+
+.single-card{
+  padding: 25px !important
+}
+
+.history-group{
+  margin: 10px auto 0 auto;
+  width: 93%;
+}
+
+.h-step{
+  height: 50px;
+  border-radius: 10px 10px 0 0;
+}
+.h-step h5{
+  color: #000000;
+  font-variant: all-petite-caps;
+  text-align: center;
+}
+.bg-orange{
+  background-color: orange !important;
+}
+.border-orange{
+  background-color: white !important;
+  border: solid 1px orange !important;
+}
+.bg-cyan{
+  background-color: #c7de2b !important;
+}
+.border-cyan{
+  background-color: white !important;
+  border: solid 1px #c7de2b !important;
+}
+.my-bar-steps{
+  background-color: #b9b9b9 !important;
+}
+
+.bar-red{
+  background-color: #dc4545 !important;
+
+}
+.bar-orange{
+  background-color: orange !important;
+
+}
+.bar-yellow{
+  background-color: #fbc129 !important;
+}
+.bar-cyan{
+  background-color: #c7de2b !important;
+}
+.bar-green{
+  background-color: #4fa845 !important;
+}
+.my-bar-steps0{
+  height: 9px !important;
+  margin: 47px auto 0 auto;
+  width: 93%;
+}
+
+.stage-name {
+  border: none !important;
+  font-variant:all-petite-caps;
+  font-size: 20px !important;
+  text-align: center !important
+}
+.stage-body{
+  padding: 0 !important;
+}
+.stage-body .card-title{
+  margin-top: 10px
+}
+.stage-body input{
+  color: #000000;
+  font-variant: all-petite-caps;
+  text-align: center;
+  margin-bottom:10px !important
+}
+
+.stage-body .card-text{
+  min-height: 109px
+}
+
