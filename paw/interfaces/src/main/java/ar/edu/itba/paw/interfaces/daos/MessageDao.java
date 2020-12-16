@@ -11,13 +11,10 @@ public interface MessageDao {
 
     /**
      * Creates a new message.
-     * @param content Message content. Message, offer, interest.
-     * @param sender User sender.
-     * @param receiver User receiver.
-     * @param project Project message topic.
+     * @param messageData The new message data ready to be commited.
      * @return The created message.
      */
-    Message create(Message.MessageContent content, User sender, User receiver, Project project);
+    Message create(Message messageData);
 
 
     /**
@@ -35,4 +32,13 @@ public interface MessageDao {
      * @return List with the messages.
      */
     List<Message> findAll(RequestBuilder request);
+
+
+    /**
+     * Gets the count of messages that matches the criteria.
+     * Usually used for notification messages.
+     * @param request Filters and order to be applied to the messages.
+     * @return The amount of messages matching the criteria.
+     */
+    long countAll(RequestBuilder request);
 }

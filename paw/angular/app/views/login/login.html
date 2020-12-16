@@ -1,11 +1,6 @@
 <!--<head>-->
 
-<!--  &lt;!&ndash; build:css(.tmp) styles/signin.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/signin.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--</head>-->
-
-<body ng-controller="loginCtrl" class="login">
+<body class="login">
 
 <div class="sidenav sidenav-index">
   <div class="text-center mt-5">
@@ -18,25 +13,26 @@
 <div class="main">
   <div class="col-md-8">
     <div class="login-form">
-      <ng-form name="myForm">
-        <div class="form-group">
+      <ng-form name="loginForm">
+        <div class="form-group" ng-class="{'has-error': loginForm.username.$touched && loginForm.username.$invalid}">
           <label>{{'email' | translate}}</label>
-          <input name="username" class="form-control" placeholder="{{'enterEmail' | translate}}"/>
+          <input name="username" class="form-control" placeholder="{{'enterEmail' | translate}}" ng-model="controller.user.username"
+                 type="email" required/>
         </div>
         <div class="form-group">
           <label>{{'password' | translate}}</label>
-          <input name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}"/>
+          <input name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}" ng-model="controller.user.password"/>
           <a ng-href="/#/requestPassword">{{'forgotPassword' | translate}}</a>
         </div>
         <div class="form-group">
           <label>
-            <input name="remember_me" type="checkbox"/>
+            <input name="remember_me" type="checkbox" ng-model="controller.user.rememberMe"/>
             {{'rememberMe' | translate}}
           </label>
         </div>
         <div class="row ">
           <div class="col-2 text-left">
-            <input type="submit" class="btn btn-dark" value="{{'submit' | translate}}">
+            <input type="submit" class="btn btn-dark" value="{{'submit' | translate}}" ng-click="login(controller.user)" ng-disabled="loginForm.$invalid">
           </div>
           <div ng-if="valor > 0 && valor < 3">
             <div class="col mailError text-right">

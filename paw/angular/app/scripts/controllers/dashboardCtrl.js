@@ -1,8 +1,8 @@
     'use strict';
 
-define(['paw2020a', 'directives/toggle'], function(paw2020a) {
+define(['paw2020a',  'services/projectService', 'services/messageService'], function(paw2020a) {
 
-  paw2020a.controller('dashboardCtrl', function($scope) {
+  paw2020a.controller('dashboardCtrl',['projectService', 'messageService', function(projectService, messageService) {
 
       $scope.projects = [
         {
@@ -37,6 +37,16 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
         }
       ];
 
+    var _this = this
+    var filter = {
+      page : '',
+      order: '',
+      field: '',
+      keyWord: '',
+      maxCost: '',
+      minCost: '',
+      cat: ''
+    }
     $scope.fundedProjects = [
       {
         'name': 'Mateico',
@@ -52,30 +62,61 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
 
       var size = 3;   // it does not get me length of projects we have to fetch it from services later
 
-      $scope.state = new Array($scope.projects.length).fill(0);
+    _this.messages = []
 
+    var myID = 1 //session
       $scope.messages = [
         [{'investor': 'Gabriel','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Mario','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
         [{'investor': 'Gloria','projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'investor': 'Miriam','projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}],
         []
       ];
 
-      // $scope.collapseOthers = function (type, id){
-      //   switch (type) {
-      //     case 0:
-      //       // var id = '';
-      //       console.log($('#fundcollapse1'))
-      //       $('#fundcollapse1').collapse("hide");
-      //       $('#statscollapse1').collapse("hide");
-      //       break;
-      //     case 1:
-      //       break;
-      //     case 2:
-      //       break;
-      //   }
-      // }
+    projectService.getById(myID.toString()).then(function (projectsApi) {
+      console.log(projectsApi)
+      _this.projects = projectsApi
 
-      $scope.answer = function (projectId, senderId, accepted) {
+      _this.state = new Array(_this.projects.length).fill(0);
+    })
+
+      // $scope.projects = [
+      //   {
+      //     'name': 'Vestnet',
+      //     'cost': 100000,
+      //     'image': 'images/projectNoImage.png',
+      //     'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+      //     'id': 1,
+      //     'funded': false,
+      //     'hits': 6,
+      //     'msgCount': 2
+      //   },
+      //   {
+      //     'name': 'Vestnet',
+      //     'cost': 100000,
+      //     'image': 'images/projectNoImage.png',
+      //     'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+      //     'id': 2,
+      //     'funded': false,
+      //     'hits': 6,
+      //     'msgCount': 2
+      //   },
+      //   {
+      //     'name': 'Vestnet',
+      //     'cost': 100000,
+      //     'image': 'images/projectNoImage.png',
+      //     'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+      //     'id': 1,
+      //     'funded': false,
+      //     'hits': 3,
+      //     'msgCount': 0
+      //   }
+      // ];
+
+
+
+      // _this.messages = [[{'projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
+      //   [{'projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}], []];
+
+      _this.answer = function (projectId, senderId, accepted) {
           console.log(projectId);
           console.log(senderId);
       };
@@ -84,6 +125,13 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
       $scope.onOff = false;
       $scope.funded = false;
       $scope.disabled = true;
+
+      _this.fetchMsgs = function(projectId, index) {
+        messageService.unread(projectId.toString(), false).then(function (msgsApi) {
+          _this.messages[index] = msgsApi
+
+        })
+      }
 
       $scope.extraMessages = [{'investor': 'Kiko','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Lolo','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}];
 

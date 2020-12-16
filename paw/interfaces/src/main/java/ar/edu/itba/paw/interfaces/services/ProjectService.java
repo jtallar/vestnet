@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.components.OrderField;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.ProjectImage;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface ProjectService {
@@ -15,11 +13,12 @@ public interface ProjectService {
      * Creates a project given its parameters.
      * @param name The project's name.
      * @param summary The project's summary.
-     * @param cost The project's total cost.
+     * @param fundingTarget The project's total funding target.
+     * @param categories The project's categories
      * @param ownerId The user id owner of the project.
      * @return operation return.
      */
-    Project create(String name, String summary, long cost, long ownerId);
+    Project create(String name, String summary, long fundingTarget, List<Category> categories, long ownerId);
 
 
     /**
@@ -28,11 +27,11 @@ public interface ProjectService {
      * @param id Project's unique id.
      * @param name The project's name.
      * @param summary The project's summary.
-     * @param cost The project's total cost.
+     * @param fundingTarget The project's total funding target.
      * @return operation return.
      * @return
      */
-    Optional<Project> update(long ownerId, long id, String name, String summary, long cost);
+    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget);
 
 
     /**
@@ -46,8 +45,8 @@ public interface ProjectService {
     /**
      * Finds all projects with the given filter.
      * @param category Projects category. Null if no category set.
-     * @param minCost Projects min cost. Null if no min cost set.
-     * @param maxCost Projects max cost. Null if no max cost set.
+     * @param minFundingTarget Projects min funding target. Null if empty.
+     * @param maxFundingTarget Projects max funding target. Null if empty.
      * @param keyword Keyword to be matched on search. Null or "" if no search.
      * @param field The field to search the keyword.
      * @param order The order to order by.
@@ -55,40 +54,16 @@ public interface ProjectService {
      * @param pageSize The page size to consider.
      * @return The list of matching projects.
      */
-    Page<Project> findAll(Integer category, Integer minCost, Integer maxCost, String keyword, int field, int order, int page, int pageSize);
+    Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize);
 
 
     /**
-     * Adds a hit to the given project.
-     * @param id The unique project id.
-     * @return The modified optional project.
-     */
-    Optional<Project> addHit(long id);
-
-
-    /**
-     * Sets a project as funded.
+     * Sets a project as closed.
      * @param ownerId The owner's unique id.
      * @param id The unique project id.
      * @return The optional project modified.
      */
-    Optional<Project> setFunded(long ownerId, long id);
-
-
-    /**
-     * Ads one more message to the project's message count.
-     * @param id The unique project id.
-     * @return The updated optional project.
-     */
-    Optional<Project> addMsgCount(long id);
-
-
-    /**
-     * Removes one message to the project's message count.
-     * @param id The unique project id.
-     * @return The updated optional project.
-     */
-    Optional<Project> decMsgCount(long id);
+    Optional<Project> setClosed(long ownerId, long id);
 
 
     /**
@@ -102,6 +77,35 @@ public interface ProjectService {
 
 
     /**
+     * Updates the stats of the project given its received values.
+     * @param id The unique project's id.
+     * @param seconds The seconds the user spent on the page.
+     * @param clicks The amount of clicks made on the page.
+     * @param investor If the user was an investor.
+     * @param contact If the user pressed the contact button.
+     * @return
+     */
+    Optional<Project> addStats(long id, long seconds, long clicks, boolean investor, boolean contact);
+
+
+    /**
+     * Set the last not completed stage as completed
+     * @param id The unique project's id.
+     * @param comment The comment on stage completion.
+     * @return The optional project, modified if found.
+     */
+    Optional<Project> setStage(long id, String comment);
+
+
+    /**
+     * Finds project main profile image.
+     * @param id The unique project id to find its image.
+     * @return The main image or default if none is found.
+     */
+    Optional<ProjectImage> getPortraitImage(long id);
+
+
+    /**
      * Sets the project portrait image.
      * @param ownerId The owner's unique id.
      * @param id The unique project id.
@@ -109,6 +113,14 @@ public interface ProjectService {
      * @return The optional modified project.
      */
     Optional<Project> setPortraitImage(long ownerId, long id, byte [] image);
+
+
+    /**
+     * Finds all slideshow images.
+     * @param id The unique project id to find its images.
+     * @return A list with all the related images.
+     */
+    List<ProjectImage> getSlideshowImages(long id);
 
 
     /**
@@ -126,20 +138,4 @@ public interface ProjectService {
      * @return List of all the categories.
      */
     List<Category> getAllCategories();
-
-
-    /**
-     * Finds project main profile image.
-     * @param id The unique project id to find its image.
-     * @return The main image or default if none is found.
-     */
-    Optional<ProjectImage> getPortraitImage(long id);
-
-
-    /**
-     * Finds all slideshow images.
-     * @param id The unique project id to find its images.
-     * @return A list with all the related images.
-     */
-    List<ProjectImage> getSlideshowImages(long id);
 }

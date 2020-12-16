@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.image.ProjectImage;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Models a project with all its properties.
@@ -25,11 +26,14 @@ public class Project {
     @Column(name = "summary", length = 250, nullable = false)
     private String summary;
 
-    @Column(name = "cost", nullable = false)
-    private long cost;
+    @Column(name = "funding_target", nullable = false)
+    private long fundingTarget;
 
-    @Column(name = "funded", nullable = false)
-    private boolean funded;
+    @Column(name = "funding_current", nullable = false)
+    private long fundingCurrent;
+
+    @Column(name = "closed", nullable = false)
+    private boolean closed;
 
     @Temporal(value = TemporalType.DATE)
     @Column(name = "publish_date", insertable = false)
@@ -49,7 +53,7 @@ public class Project {
     private long ownerId;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-    private List<ProjectImage> images;
+    private Set<ProjectImage> images;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -59,40 +63,25 @@ public class Project {
     private List<Category> categories;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-    private List<Message> messageList;
+    private Set<Favorite> favorites;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
-    private List<User> favoriteBy;
-
-    @Column(name = "message_count" , nullable = false)
-    private Integer msgCount;
 
     /** Protected */ Project() {
         /** For hibernate only */
     }
 
 
-
-    public Project(String name, String summary, long cost, User owner) {
+    public Project(String name, String summary, long target, User owner) {
         this.name = name;
         this.summary = summary;
-        this.cost = cost;
+        this.fundingTarget = target;
         this.owner = owner;
         this.hits = 0;
-        this.funded = false;
-        this.msgCount = 0;
+        this.closed = false;
     }
 
 
     /** Getters and setters */
-
-    public Integer getMsgCount() {
-        return msgCount;
-    }
-
-    public void setMsgCount(Integer msgCount) {
-        this.msgCount = msgCount;
-    }
 
     public Project(long id) {
         this.id = id;
@@ -122,20 +111,28 @@ public class Project {
         this.summary = summary;
     }
 
-    public long getCost() {
-        return cost;
+    public long getFundingTarget() {
+        return fundingTarget;
     }
 
-    public void setCost(long cost) {
-        this.cost = cost;
+    public void setFundingTarget(long fundingTarget) {
+        this.fundingTarget = fundingTarget;
     }
 
-    public boolean isFunded() {
-        return funded;
+    public long getFundingCurrent() {
+        return fundingCurrent;
     }
 
-    public void setFunded(boolean funded) {
-        this.funded = funded;
+    public void setFundingCurrent(long fundingCurrent) {
+        this.fundingCurrent = fundingCurrent;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public Date getPublishDate() {
@@ -178,11 +175,11 @@ public class Project {
         this.ownerId = ownerId;
     }
 
-    public List<ProjectImage> getImages() {
+    public Set<ProjectImage> getImages() {
         return images;
     }
 
-    public void setImages(List<ProjectImage> images) {
+    public void setImages(Set<ProjectImage> images) {
         this.images = images;
     }
 
@@ -194,29 +191,12 @@ public class Project {
         this.categories = categories;
     }
 
-    public List<Message> getMessageList() {
-        return messageList;
+    public Set<Favorite> getFavorites() {
+        return favorites;
     }
 
-    public void setMessageList(List<Message> messageList) {
-        this.messageList = messageList;
-    }
-
-    public List<User> getFavoriteBy() {
-        return favoriteBy;
-    }
-
-    public void setFavoriteBy(List<User> favoriteBy) {
-        this.favoriteBy = favoriteBy;
-    }
-
-
-    public void addMsgCount(){
-        this.msgCount += 1;
-    }
-
-    public void decMsgCount(){
-        this.msgCount -= 1;
+    public void setFavorites(Set<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
 
@@ -226,7 +206,7 @@ public class Project {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", summary='" + summary + '\'' +
-                ", cost=" + cost +
+                ", target=" + fundingTarget +
                 ", publishDate=" + publishDate +
                 ", updateDate=" + updateDate +
                 ", hits=" + hits +

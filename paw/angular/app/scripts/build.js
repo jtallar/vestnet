@@ -25,7 +25,7 @@ require.config({
         tooltip: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip',
         transition: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition',
         'bootstrap-sass-official': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap',
-        bower: '../../bower_components/bower/atom-full-compiled',
+        // bower: '../../bower_components/bower/atom-full-compiled',
         lodash: '../../bower_components/lodash/lodash',
         restangular: '../../bower_components/restangular/dist/restangular'
     },
@@ -33,7 +33,8 @@ require.config({
         angular: {
             deps: [
                 'jquery'
-            ]
+            ],
+            exports: 'angular'
         },
         'angular-route': {
             deps: [
@@ -60,6 +61,15 @@ require.config({
             deps: [
                 'angular'
             ]
+        },
+        lodash: {
+            exports: '_'
+        },
+        restangular: {
+            deps: [
+                'angular',
+                'lodash'
+            ]
         }
     },
     packages: [
@@ -75,6 +85,7 @@ if (paths) {
 
 require([
         'angular',
+        'restangular',
         'paw2020a',
         'controllers/IndexCtrl'
     ],

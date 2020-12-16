@@ -1,63 +1,105 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.User;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Date;
 
 public class OfferDto {
 
     @Size(max = 250)
     @NotBlank
-    private String body;
+    private String comment;
 
-    @Size(max = 100)
-    @NotBlank
-    private String offers;
+    @Min(1000)
+    @Max(1000000000)
+    private long offer;
 
     @Size(max = 100)
     @NotBlank
     private String exchange;
 
-    private long receiverId, senderId, projectId;
+    @Min(1)
+    @Max(31)
+    private int expiryDays;
 
-    private URI receiver, sender, project;
+    private Date publishDate;
+
+    private Date expiryDate;
+
+    private boolean seen;
+
+    private boolean direction;
+
+    private long investorId, ownerId, projectId;
+
+    private URI investor, owner, project, chat;
 
     public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
         final OfferDto offerDto = new OfferDto();
 
-        offerDto.body = message.getContent().getMessage();
-        offerDto.offers = message.getContent().getOffer();
+        offerDto.comment = message.getContent().getComment();
+        offerDto.offer = message.getContent().getOffer();
         offerDto.exchange = message.getContent().getInterest();
 
-        offerDto.receiver = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getReceiver_id())).build();
-        offerDto.sender = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getSender_id())).build();
-        offerDto.project = uriInfo.getAbsolutePathBuilder().path("projects").path(String.valueOf(message.getProject_id())).build();
+        offerDto.publishDate = message.getPublishDate();
+        offerDto.expiryDate = message.getExpiryDate();
 
-        offerDto.receiverId = message.getReceiver_id();
-        offerDto.senderId = message.getSender_id();
-        offerDto.projectId = message.getProject_id();
+        offerDto.seen = message.getSeen();
+        offerDto.direction = message.getDirection();
+
+        offerDto.investor = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
+        offerDto.owner = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
+        offerDto.project = uriInfo.getAbsolutePathBuilder().path("projects").path(String.valueOf(message.getProjectId())).build();
+        offerDto.chat = uriInfo.getAbsolutePathBuilder().path("messages").path("chat").path(String.valueOf(message.getProjectId())).path(String.valueOf(message.getInvestorId())).build();
+
+        offerDto.investorId = message.getInvestorId();
+        offerDto.ownerId = message.getOwnerId();
+        offerDto.projectId = message.getProjectId();
 
         return offerDto;
     }
 
-
-    public String getBody() {
-        return body;
+    public static Message toMessage(OfferDto offerDto) {
+        final Message.MessageContent content = new Message.MessageContent(offerDto.getComment(), offerDto.getOffer(), offerDto.getExchange());
+        return new Message(content,
+                new User(offerDto.getOwnerId()),
+                new User(offerDto.getInvestorId()),
+                new Project(offerDto.getProjectId()),
+                offerDto.getDirection(),
+                offerDto.expiryDays);
     }
 
-    public void setBody(String body) {
-        this.body = body;
+
+    public boolean isSeen() {
+        return seen;
     }
 
-    public String getOffers() {
-        return offers;
+    public boolean getDirection() {
+        return direction;
     }
 
-    public void setOffers(String offers) {
-        this.offers = offers;
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public long getOffer() {
+        return offer;
+    }
+
+    public void setOffer(long offer) {
+        this.offer = offer;
     }
 
     public String getExchange() {
@@ -68,21 +110,40 @@ public class OfferDto {
         this.exchange = exchange;
     }
 
-
-    public URI getReceiver() {
-        return receiver;
+    public int getExpiryDays() {
+        return expiryDays;
     }
 
-    public void setReceiver(URI receiver) {
-        this.receiver = receiver;
+    public void setExpiryDays(int expiryDays) {
+        this.expiryDays = expiryDays;
     }
 
-    public URI getSender() {
-        return sender;
+    public Date getPublishDate() {
+        return publishDate;
     }
 
-    public void setSender(URI sender) {
-        this.sender = sender;
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setDirection(boolean direction) {
+        this.direction = direction;
+    }
+
+    public URI getInvestor() {
+        return investor;
+    }
+
+    public void setInvestor(URI investor) {
+        this.investor = investor;
+    }
+
+    public URI getOwner() {
+        return owner;
+    }
+
+    public void setOwner(URI owner) {
+        this.owner = owner;
     }
 
     public URI getProject() {
@@ -93,20 +154,28 @@ public class OfferDto {
         this.project = project;
     }
 
-    public long getReceiverId() {
-        return receiverId;
+    public URI getChat() {
+        return chat;
     }
 
-    public void setReceiverId(long receiverId) {
-        this.receiverId = receiverId;
+    public void setChat(URI chat) {
+        this.chat = chat;
     }
 
-    public long getSenderId() {
-        return senderId;
+    public long getInvestorId() {
+        return investorId;
     }
 
-    public void setSenderId(long senderId) {
-        this.senderId = senderId;
+    public void setInvestorId(long investorId) {
+        this.investorId = investorId;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public long getProjectId() {

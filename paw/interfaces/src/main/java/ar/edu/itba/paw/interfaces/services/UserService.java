@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.Location;
 
 import java.net.URI;
 import java.util.Date;
@@ -50,21 +51,40 @@ public interface UserService {
      */
     Optional<User> findById(long id);
 
+
     /**
      * Delete a user given its ID.
      * @param id The unique user's ID
      */
     void remove(long id);
 
+
     /**
-     * Sets a user as verified if the token is valid.
-     * If the token exists but is invalid, resend email.
-     * @param token The token.
-     * @param baseUri The uri to resend the email.
-     * @return True if the verification was successful
-     *          or false if the token did not exist or invalid.
+     * Adds or deletes a favorite to a user.
+     * @param userId The user unique id.
+     * @param projectId The project to add or delete to favorites.
+     * @param add If true then adds, if not deletes.
+     * @return The changed user, null if user not exists.
      */
-    boolean updateVerification(String token);
+    Optional<User> addFavorites(long userId, long projectId, boolean add);
+
+
+    /**
+     * Finds the projects owned by the user.
+     * @param id Unique user id.
+     * @param closed Distinguishes from founded project from the ones not.
+     * @return List of all the project for the given user.
+     */
+    List<Project> getOwnedProjects(long id, boolean closed);
+
+
+    /**
+     * Requests for a password change.
+     * @param mail The users mail to change the password.
+     * @param baseUri Base uri for mail creation.
+     * @return The optional of the found user.
+     */
+    Optional<User> requestPassword(String mail, URI baseUri);
 
 
     /**
@@ -78,21 +98,22 @@ public interface UserService {
 
 
     /**
-     * Requests for a password change.
-     * @param mail The users mail to change the password.
-     * @param baseUri Base uri for mail creation.
-     * @return The optional of the found user.
+     * Sets a user as verified if the token is valid.
+     * If the token exists but is invalid, resend email.
+     * @param token The token.
+     * @param baseUri The uri to resend the email.
+     * @return True if the verification was successful
+     *          or false if the token did not exist or invalid.
      */
-    Optional<User> requestPassword(String mail, URI baseUri);
+    boolean updateVerification(String token, URI baseUri);
 
 
     /**
-     * Requests for a verification mail.
-     * @param mail The users mail to send verification.
-     * @param baseUri Base uri for mail creation.
-     * @return The optional of the found user.
+     * Finds user only profile image.
+     * @param id The image unique id to find it.
+     * @return The user image, default if none found.
      */
-    Optional<User> requestVerification(String mail, URI baseUri);
+    Optional<UserImage> getImage(long id);
 
 
     /**
@@ -101,7 +122,7 @@ public interface UserService {
      * @param image Image byte array.
      * @return The optional of the updated user.
      */
-    Optional<User> updateImage(long id, byte[] image);
+    Optional<User> setImage(long id, byte[] image);
 
 
     /**
@@ -112,68 +133,4 @@ public interface UserService {
      */
     Optional<User> setLocale(String username, String locale);
 
-
-    /**
-     * Adds or deletes a favorite to a user.
-     * @param userId The user unique id.
-     * @param projectId The project to add or delete to favorites.
-     * @param add If true then adds, if not deletes.
-     * @return The changed user, null if user not exists.
-     */
-    Optional<User> favorites(long userId, long projectId, boolean add);
-
-
-    /**
-     * Finds the projects owned by the user.
-     * @param id Unique user id.
-     * @param funded Distinguishes from founded project from the ones not.
-     * @return List of all the project for the given user.
-     */
-    List<Project> getOwnedProjects(long id, boolean funded);
-
-
-    /**
-     * Gets all the user accepted offers.
-     * @param receiverId User in matter unique id.
-     * @param page Page requested.
-     * @param pageSize Page size.
-     * @return Messages page with the required data.
-     */
-    Page<Message> getAcceptedMessages(long receiverId, int page, int pageSize);
-
-
-    /**
-     * Gets all the user made offers.
-     * @param senderId User in matter unique id.
-     * @param page Page requested.
-     * @param pageSize Page size.
-     * @return Messages page with the required data.
-     */
-    Page<Message> getOfferMessages(long senderId, int page, int pageSize);
-
-
-    /**
-     * Gets all the unread messages for an user and a project.
-     * @param userId Unique user id.
-     * @param projectId Unique project id.
-     * @return A list of all the messages that match criteria.
-     */
-    List<Message> getProjectUnreadMessages(long userId, long projectId);
-
-
-    /**
-     * Gets the last sent message.
-     * @param userId Unique user id.
-     * @param projectId Unique project id.
-     * @return An optional for the last sent message.
-     */
-    Optional<Message> getLastProjectOfferMessage(long userId, long projectId);
-
-
-    /**
-     * Finds user only profile image.
-     * @param id The image unique id to find it.
-     * @return The user image, default if none found.
-     */
-    Optional<UserImage> getProfileImage(long id);
 }

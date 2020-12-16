@@ -2,11 +2,15 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.components.JwtTokenResponse;
 
+import java.util.Collection;
+
 public class JwtTokenDto {
     private String accessToken;
     private int accessMinutes;
     private String refreshToken;
     private int refreshMinutes;
+    private Collection<String> roles;
+    private String locale;
 
     public static JwtTokenDto fromJwtTokenResponse(JwtTokenResponse jwtTokenResponse) {
         final JwtTokenDto jwtTokenDto = new JwtTokenDto();
@@ -14,6 +18,8 @@ public class JwtTokenDto {
         jwtTokenDto.accessMinutes = jwtTokenResponse.getAccessTokenExpMinutes();
         jwtTokenDto.refreshToken = jwtTokenResponse.getRefreshToken();
         jwtTokenDto.refreshMinutes = jwtTokenResponse.getRefreshTokenExpMinutes();
+        jwtTokenDto.roles = jwtTokenResponse.getUserRoles();
+        jwtTokenDto.locale = jwtTokenResponse.getLocale();
 
         return jwtTokenDto;
     }
@@ -48,5 +54,21 @@ public class JwtTokenDto {
 
     public void setRefreshMinutes(int refreshMinutes) {
         this.refreshMinutes = refreshMinutes;
+    }
+
+    public Collection<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

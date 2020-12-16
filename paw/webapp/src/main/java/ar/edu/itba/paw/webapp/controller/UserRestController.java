@@ -3,20 +3,28 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.model.Favorite;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.location.Location;
+import ar.edu.itba.paw.webapp.dto.location.LocationDto;
+import ar.edu.itba.paw.webapp.component.UriInfoUtils;
+import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.user.*;
-import ar.edu.itba.paw.webapp.dto.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,28 +42,30 @@ public class UserRestController {
     @Context
     private UriInfo uriInfo;
 
+    /** General user endpoints */
+
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response createUser(@Valid final FullUserWithPasswordDto user) {
+
         LOGGER.debug("\n\nBase URI: {}\n\n", uriInfo.getBaseUri().toString());
 
-        final User newUser; // TODO work with optional? reduces code more
+        final User newUser;
         try {
-            newUser = userService.create(FullUserWithPasswordDto.toUser(user), uriInfo.getBaseUri());
+            newUser = userService.create(FullUserWithPasswordDto.toUser(user), UriInfoUtils.getBaseURI(uriInfo));
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
             return Response.status(Response.Status.CONFLICT).build();
         }
         final URI userUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(newUser.getId())).build();
-        return Response.created(userUri).build();
+        return Response.created(userUri).header("Access-Control-Expose-Headers", "Location").build();
     }
 
 
-    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use.
-    //  O bien chequear que el que haga el update sea el session user
     @PUT
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateUser(@Valid final UpdatableUserDto user) {
+
         Optional<User> optionalUser = userService.update(sessionUser.getId(), UpdatableUserDto.toUser(user));
 
         return optionalUser.map(u -> Response.ok().build())
@@ -63,20 +73,21 @@ public class UserRestController {
     }
 
 
-    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use
-    //  O bien chequear que el que haga el delete sea el session user
     @DELETE
     public Response deleteUser() {
+
         userService.remove(sessionUser.getId());
         return Response.noContent().build();
     }
 
 
     // TODO: Por algun motivo, retorna un "type":"fullUserDto" entre los atributos que devuelve, es problema?
+    // FIXME: Tira un error 500 para algunos de los primeros usuarios, que no tenian validaciones. Por ejemplo, el 5 con el phoneNumber
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) {
+
         final Optional<User> optionalUser = userService.findById(id);
 
         return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
@@ -84,34 +95,53 @@ public class UserRestController {
     }
 
 
+    /** Extra user data endpoints */
+
     @GET
     @Path("/{id}/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response ownedProjects(@PathParam("id") final long userId,
                                   @QueryParam("funded") @DefaultValue("true") boolean funded) {
-        List<Project> projectsList = userService.getOwnedProjects(userId, funded); // TODO should not be necessary put sessionUser.getId()
+
+        List<Project> projectsList = userService.getOwnedProjects(userId, funded);
         List<ProjectDto> projects = projectsList.stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
     }
 
-    // TODO make a GET favorites?
+
+    @GET
+    @Path("/favorites")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getFavorites() {
+
+        Optional<User> optionalUser = userService.findById(sessionUser.getId());
+
+        return optionalUser.map(u -> {
+            List<FavoriteDto> favorites = u.getFavorites().stream().map(FavoriteDto::fromFavorite).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<FavoriteDto>>(favorites) {}).build();
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+   }
+
 
     @PUT
     @Path("/favorites")
-    public Response favorites(@QueryParam("project") @DefaultValue("-1") long projectId, // TODO do something here
-                                @QueryParam("add") @DefaultValue("true") boolean add) {
-        Optional<User> optionalUser = userService.favorites(sessionUser.getId(), projectId, add);
+    public Response addFavorite(@QueryParam("add") @DefaultValue("true") boolean add,
+                                @Valid final FavoriteDto favoriteDto) {
+
+        Optional<User> optionalUser = userService.addFavorites(sessionUser.getId(), favoriteDto.getProjectId(), add);
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
 
+    /** User password and verification endpoints */
+
     @POST
     @Path("/password")
-    public Response requestPassword(@QueryParam("mail") final String mail) {
-        Optional<User> optionalUser = userService.requestPassword(mail, uriInfo.getBaseUri());
+    public Response requestPassword(@Valid final MailDto mailDto) {
+        Optional<User> optionalUser = userService.requestPassword(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
@@ -121,30 +151,33 @@ public class UserRestController {
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@QueryParam("token") final String token,
-                                   @Valid final PasswordDto password) {
-        if (userService.updatePassword(token, password.getPassword()))
+    public Response updatePassword(@Valid final PasswordDto passwordDto) {
+
+        if (userService.updatePassword(passwordDto.getToken(), passwordDto.getPassword()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-
-    @POST
-    @Path("/verify")
-    public Response requestVerification(@QueryParam("mail") final String mail) {
-        Optional<User> optionalUser = userService.requestVerification(mail, uriInfo.getBaseUri());
-
-        return optionalUser.map(u -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
 
     @PUT
     @Path("/verify")
-    public Response updateVerification(@QueryParam("token") final String token) {
-        if (userService.updateVerification(token))
+    public Response updateVerification(@Valid final TokenDto tokenDto) {
+
+        if (userService.updateVerification(tokenDto.getToken(), UriInfoUtils.getBaseURI(uriInfo)))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+
+    @GET
+    @Path("/{id}/location")
+    public Response getUserLocation(@PathParam("id") final long userId){
+        Optional<Location> location = Optional.ofNullable(userService.findById(userId).get().getLocation());
+
+
+        return location.map(l -> Response.ok(LocationDto.fromLocation(l)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+
     }
 }
 

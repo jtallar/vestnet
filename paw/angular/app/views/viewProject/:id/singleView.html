@@ -43,9 +43,22 @@
 
           <div class="carousel-inner">
             <div id="carousel-items">
-              <div class="carousel-item active">
-                <img src="/images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              <div ng-if="!project.imageExists">
+                <img ng-src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+
               </div>
+              <div ng-if="project.imageExists">
+                <div class="carrousel-item active">
+                  <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                </div>
+                <div  ng-if="project.slideshowExists">
+                  <div class="carousel-item" ng-repeat="image in project.slideshow">
+                    <img ng-src="data:image/JPEG;base64,{{image}}"class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                  </div>
+                </div>
+
+              </div>
+            </div>
             </div>
           </div>
           <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">

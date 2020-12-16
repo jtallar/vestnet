@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.model.components;
 
-import java.util.Objects;
+import ar.edu.itba.paw.model.enums.FilterField;
 
 /**
  * Filter Criteria for filtering repository calls

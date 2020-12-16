@@ -10,6 +10,8 @@
 <!--           data-on="{{'showAccProj' | translate}}" data-off="{{'showCurrProj' | translate}}"-->
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
+<div ng-controller="dashboardCtrl as controller">
+    <toggleswitch name="yesNo" ng-model="yesNo" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
   <toggleswitch name="funded" ng-model="funded" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
@@ -168,30 +170,30 @@
       </div>
 
     </div>
-  </div>
-  </div>
+    </div>
 
-  <div ng-if="projects.empty()" class="card no-proj-mine">
-    <div class="card-header text-center">
-      <div ng-switch="true">
-        <div ng-switch-when="true">
-          <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
-        </div>
-        <div ng-switch-when="false">
-          <h5 class="card-title text-white centered">{{'noProjOwned' | translate }}</h5>
+    <div ng-if="projects.empty()" class="card no-proj-mine">
+      <div class="card-header text-center">
+        <div ng-switch="true">
+          <div ng-switch-when="true">
+            <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
+          </div>
+          <div ng-switch-when="false">
+            <h5 class="card-title text-white centered">{{'noProjOwned' | translate }}</h5>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
 
-<div class="dropdown-divider" style="margin: auto; width:50%"></div>
+  <div class="text-center add-new mt-5 mb-5">
+    <a href="#/newProject" class="btn btn-lg"> {{'addProject' | translate}} </a>
+  </div>
 
-<div class="text-center add-new mt-5 mb-5">
-  <a href="#/newProject" class="btn btn-lg"> {{'addProject' | translate}} </a>
+  <footer>
+    <vnfooter></vnfooter>
+  </footer>
 </div>
 </body>
-
-<footer>
-  <vnfooter></vnfooter>
-</footer>

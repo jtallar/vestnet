@@ -2,9 +2,12 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.Category;
 
+import javax.validation.constraints.NotNull;
+
 public class CategoryDto {
 
-    private long id;
+    @NotNull
+    private Long id;
     private String name;
     private Long parent;
 

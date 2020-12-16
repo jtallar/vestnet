@@ -3,6 +3,9 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.OrderField;
+import ar.edu.itba.paw.model.enums.SearchField;
+import ar.edu.itba.paw.model.enums.UserRole;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
@@ -13,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
@@ -41,6 +43,7 @@ public class ProjectJpaDaoTest {
     private static final String CATEGORIES_TABLE = "categories";
     private static final String PROJECT_CATEGORY_TABLE = "project_categories";
     private static final String LOCATIONS_TABLE = "user_location";
+    private static final String FAVORITES_TABLE = "favorites";
 
     private static final int COUNTRY_ID = 1;
     private static final int STATE_ID = 2;
@@ -55,11 +58,11 @@ public class ProjectJpaDaoTest {
     private static final String LOCALE = "en";
 
     private static final String PROJECT_NAME = "Project Name.", PROJECT_SUMMARY = "Project Summary.";
-    private static final long PROJECT_COST = 1200;
+    private static final long PROJECT_FUNDING_TARGET = 1200;
     private static final String CATEGORY_NAME = "Technology";
 
     private static final String PROJECT_NAME_2 = "Project 2";
-    private static final long PROJECT_COST_2 = 9200;
+    private static final long PROJECT_FUNDING_TARGET_2 = 9200;
     private static final String CATEGORY_NAME_2 = "Software";
 
     @PersistenceContext
@@ -73,7 +76,7 @@ public class ProjectJpaDaoTest {
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert jdbcInsertProject, jdbcInsertUser, jdbcInsertCategory, jdbcInsertProjectCategory;
-    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation;
+    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation, jdbcInsertFavorites;
 
     @Before
     public void setUp() {
@@ -100,6 +103,8 @@ public class ProjectJpaDaoTest {
         jdbcInsertLocation = new SimpleJdbcInsert(dataSource)
                 .usingGeneratedKeyColumns("id")
                 .withTableName(LOCATIONS_TABLE);
+        jdbcInsertFavorites = new SimpleJdbcInsert(dataSource)
+                .withTableName(FAVORITES_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_CATEGORY_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
@@ -110,6 +115,7 @@ public class ProjectJpaDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, FAVORITES_TABLE);
 
         createLocation();
         createRole();
@@ -122,7 +128,7 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
 
         // 2 - Execute
-        projectJpaDao.create(PROJECT_NAME, PROJECT_SUMMARY, PROJECT_COST, new User(userId.longValue()));
+        projectJpaDao.create(PROJECT_NAME, PROJECT_SUMMARY, PROJECT_FUNDING_TARGET, new User(userId.longValue()));
 
         // 3 - Assert
         assertEquals(1, TestUtils.countRowsInTable(entityManager, PROJECTS_TABLE));
@@ -143,7 +149,7 @@ public class ProjectJpaDaoTest {
     public void testFindByIdProjectExists() {
         // 1 - Setup - Create a project with a category
         Number categoryId = createCategory(CATEGORY_NAME);
-        Number projectId = createProject(PROJECT_NAME, createUser(), PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, createUser(), PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
 
         // 2 - Execute
@@ -153,7 +159,7 @@ public class ProjectJpaDaoTest {
         assertTrue(maybeProject.isPresent());
         assertEquals(PROJECT_NAME, maybeProject.get().getName());
         assertEquals(PROJECT_SUMMARY, maybeProject.get().getSummary());
-        assertEquals(PROJECT_COST, maybeProject.get().getCost());
+        assertEquals(PROJECT_FUNDING_TARGET, maybeProject.get().getFundingTarget());
         assertEquals(categoryId.longValue(), maybeProject.get().getCategories().get(0).getId());
     }
 
@@ -163,8 +169,8 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(userId.longValue())
-                .setFunded(true)
-                .setOrder(OrderField.DEFAULT);
+                .setClosed(true)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -178,12 +184,12 @@ public class ProjectJpaDaoTest {
         // 1 - Setup - Create a project with a category
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
         RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(userId.longValue())
-                .setFunded(true)
-                .setOrder(OrderField.DEFAULT);
+                .setClosed(true)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -201,9 +207,9 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(categoryId.intValue())
@@ -224,13 +230,13 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setCostMin((int) PROJECT_COST_2)
-                .setOrder(OrderField.COST_ASCENDING);
+                .setFundingTargetMin((int) PROJECT_FUNDING_TARGET_2)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_ASCENDING);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -247,13 +253,13 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setCostMax((int) PROJECT_COST)
-                .setOrder(OrderField.COST_ASCENDING);
+                .setFundingTargetMax((int) PROJECT_FUNDING_TARGET)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_ASCENDING);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -270,13 +276,13 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setCostRange((int) PROJECT_COST, (int) PROJECT_COST_2)
-                .setOrder(OrderField.COST_DESCENDING);
+                .setFundingTargetRange((int) PROJECT_FUNDING_TARGET, (int) PROJECT_FUNDING_TARGET_2)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_DESCENDING);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -293,13 +299,13 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setSearch(PROJECT_NAME, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
-                .setOrder(OrderField.DEFAULT);
+                .setSearch(PROJECT_NAME, SearchField.PROJECT_NAME)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -316,13 +322,13 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
         RequestBuilder request = new ProjectRequestBuilder()
-                .setSearch(PROJECT_NAME_2, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
-                .setOrder(OrderField.DEFAULT);
+                .setSearch(PROJECT_NAME_2, SearchField.PROJECT_NAME)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -337,20 +343,20 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        Number thirdProjectId = createProject(PROJECT_NAME, userId, PROJECT_COST_2);
+        Number thirdProjectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(thirdProjectId, categoryId);
-        Number fourthProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number fourthProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(fourthProjectId, categoryId);
 
         RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(categoryId.intValue())
-                .setCostMax((int) PROJECT_COST)
-                .setSearch(PROJECT_NAME, Integer.parseInt(SearchField.PROJECT_NAME.getValue()))
-                .setOrder(OrderField.ALPHABETICAL);
+                .setFundingTargetMax((int) PROJECT_FUNDING_TARGET)
+                .setSearch(PROJECT_NAME, SearchField.PROJECT_NAME)
+                .setOrder(OrderField.PROJECT_ALPHABETICAL);
 
         // 2 - Execute
         List<Project> projects = projectJpaDao.findAll(request);
@@ -448,6 +454,7 @@ public class ProjectJpaDaoTest {
         user.put("email", EMAIL);
         user.put("location_id", createUserLocation().longValue());
         user.put("locale", LOCALE);
+        user.put("verified", true);
 
         return jdbcInsertUser.executeAndReturnKey(user);
     }
@@ -463,19 +470,32 @@ public class ProjectJpaDaoTest {
     }
 
     /**
-     * Creates a project given its name, owner id and cost
+     * Creates a favorite.
+     * @param projectId The project to make favorite
+     * @param userId The user to give a favorite
+     */
+    private void addFavorite(Number projectId, Number userId) {
+        Map<String, Object> category = new HashMap<>();
+        category.put("project_id", projectId.longValue());
+        category.put("user_id", userId.longValue());
+        jdbcInsertFavorites.execute(category);
+    }
+
+    /**
+     * Creates a project given its name, owner id and funding target
      * @param name Project name
      * @param userId Owner user id.
-     * @param cost Project cost
+     * @param fundingTarget Project fundingTarget
      * @return The unique project id.
      */
-    private Number createProject(String name, Number userId, long cost) {
+    private Number createProject(String name, Number userId, long fundingTarget) {
         Map<String, Object> project = new HashMap<>();
         project.put("owner_id", userId.longValue());
         project.put("project_name", name);
         project.put("summary", PROJECT_SUMMARY);
-        project.put("cost", cost);
-        project.put("funded", true);
+        project.put("funding_target", fundingTarget);
+        project.put("funding_current", 0);
+        project.put("closed", true);
         project.put("hits", 0);
         project.put("message_count", 0);
         return jdbcInsertProject.executeAndReturnKey(project);
