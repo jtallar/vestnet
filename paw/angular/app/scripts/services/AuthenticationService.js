@@ -9,7 +9,7 @@ define([], function() {
     var authService = {};
     var accessTokenKey = 'access_id', refreshTokenKey = 'refresh_id', rememberKey = 'remember_id';
     // TODO: Check si es correcto almacenar esto en el localStorage/sessionStorage
-    var entrepreneurKey = 'entrepreneur_id', investorKey = 'investor_id';
+    var entrepreneurKey = 'entrepreneur_id', investorKey = 'investor_id', userIdKey = 'user_id_key';
     var shouldPersist = localStorage.getItem(rememberKey) === 't';
 
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
@@ -27,12 +27,27 @@ define([], function() {
           }), true);
           if (data.roles.includes('ROLE_ENTREPRENEUR')) authService.setRole(false);
           if (data.roles.includes('ROLE_INVESTOR')) authService.setRole(true);
+          authService.setStorage(userIdKey, data.userId);
           // TODO: Update new locale to data.locale O CHEQUEAR SI FUNCA BIEN SIN ESTO (front en es, mails en es)
           console.log(data.locale);
           return true;
         }
       );
     });
+
+    authService.setStorage = function (key, value) {
+      if (shouldPersist) {
+        return localStorage.setItem(key, value);
+      }
+      return sessionStorage.setItem(key, value);
+    };
+
+    authService.getStorage = function (key) {
+      if (shouldPersist) {
+        return localStorage.getItem(key);
+      }
+      return sessionStorage.getItem(key);
+    };
 
     authService.setShouldPersist = function(persist) {
       shouldPersist = !! persist;
@@ -46,11 +61,7 @@ define([], function() {
     authService.getToken = function(refresh) {
       var key = (refresh) ? refreshTokenKey : accessTokenKey;
       var token, now = new Date();
-      if (shouldPersist) {
-        token = JSON.parse(localStorage.getItem(key));
-      } else {
-        token = JSON.parse(sessionStorage.getItem(key));
-      }
+      token = JSON.parse(authService.getStorage(key));
       if (!token) return null;
       if (refresh && now.getTime() > token.expiry) { // Only remove old refresh tokens
         authService.removeToken(refresh);
@@ -61,10 +72,7 @@ define([], function() {
 
     authService.setToken = function(token, refresh) {
       var key = (refresh) ? refreshTokenKey : accessTokenKey;
-      if (shouldPersist) {
-        return localStorage.setItem(key, token);
-      }
-      return sessionStorage.setItem(key, token);
+      return authService.setStorage(key, token);
     };
 
     authService.removeToken = function (refresh) {
@@ -78,11 +86,13 @@ define([], function() {
     authService.logout = function () {
 
       if (shouldPersist) {
+        localStorage.removeItem(userIdKey);
         localStorage.removeItem(entrepreneurKey);
         localStorage.removeItem(investorKey);
         localStorage.removeItem(refreshTokenKey);
         return localStorage.removeItem(accessTokenKey);
       }
+      sessionStorage.removeItem(userIdKey);
       sessionStorage.removeItem(entrepreneurKey);
       sessionStorage.removeItem(investorKey);
       sessionStorage.removeItem(refreshTokenKey);
@@ -111,18 +121,12 @@ define([], function() {
 
     authService.setRole = function(investor) {
       var key = (investor) ? investorKey : entrepreneurKey;
-      if (shouldPersist) {
-        return localStorage.setItem(key, 't');
-      }
-      return sessionStorage.setItem(key, 't');
+      return authService.setStorage(key, 't');
     };
 
     authService.getRole = function(investor) {
       var key = (investor) ? investorKey : entrepreneurKey;
-      if (shouldPersist) {
-        return localStorage.getItem(key);
-      }
-      return sessionStorage.getItem(key);
+      return authService.getStorage(key);
     };
 
     authService.isInvestor = function () {
@@ -131,6 +135,10 @@ define([], function() {
 
     authService.isEntrepreneur = function () {
       return authService.getRole(false) === 't';
+    };
+
+    authService.getUserId = function () {
+      return authService.getStorage(userIdKey);
     };
 
     return authService;
