@@ -23,19 +23,24 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('projects').one(projId).get();
     };
 
+    imageService.blobToBase64 = function (blob) {
+      return btoa(new Uint8Array(blob).reduce(function (data, byte) {
+        return data + String.fromCharCode(byte);
+      }, ''));
+    };
 
     imageService.setProjectImage = function (projId, imageArrayBuffer) {
-      var body = {image : btoa(String.fromCharCode.apply(null, new Uint8Array(imageArrayBuffer)))};
+      var body = {image : imageService.blobToBase64(imageArrayBuffer)};
       return root.one('projects').one(projId).customPUT(body)
     };
 
 
     imageService.setProjectSlideshow = function (projId, imgs) {
-
-      var body = {images : imgs};
-
+      imgs = imgs.map(function (elem) {
+        return {image: imageService.blobToBase64(elem)}
+      });
+      var body = {slideshow : imgs};
       return root.one('projects').one(projId).one('slideshow').customPUT(body)
-
     };
 
 

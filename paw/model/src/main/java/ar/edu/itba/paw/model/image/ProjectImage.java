@@ -44,6 +44,10 @@ public class ProjectImage extends Image {
         return main;
     }
 
+    public boolean isNotMain() {
+        return !main;
+    }
+
     public void setMain(boolean main) {
         this.main = main;
     }
