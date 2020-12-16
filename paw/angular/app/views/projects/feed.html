@@ -131,7 +131,7 @@
 <!--    <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="200" style="width: 10%">20%</div>-->
 <!--  </div>-->
 
-  <p class="results">{{'feedSearchPages' | translate : '{found: 54, shown: 12}'}}</p>
+  <p class="results">{{'feedSearchPages' | translate : {found: 54, shown: 12} }}</p>
 
 </div>
 
@@ -182,7 +182,7 @@
             <div class="row">
               <div class="price-footer col-8">
                 <h4>{{'funding' | translate}}</h4>
-                <h6>{{project.current}} of <b>{{'money'| translate}} {{project.target}}</b></h6>
+                <h6>{{'of' | translate : {of : project.current} }} <b>{{'moneyarg'| translate : {m : project.target} }}</b></h6>
                 <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
                   <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
                 </div>

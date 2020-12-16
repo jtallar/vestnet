@@ -54,8 +54,26 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
 
       $scope.state = new Array($scope.projects.length).fill(0);
 
-      $scope.messages = [[{'investor': 'Gabriel','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Mario','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
-        [{'investor': 'Gloria','projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'investor': 'Miriam','projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}], []];
+      $scope.messages = [
+        [{'investor': 'Gabriel','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Mario','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
+        [{'investor': 'Gloria','projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'investor': 'Miriam','projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}],
+        []
+      ];
+
+      // $scope.collapseOthers = function (type, id){
+      //   switch (type) {
+      //     case 0:
+      //       // var id = '';
+      //       console.log($('#fundcollapse1'))
+      //       $('#fundcollapse1').collapse("hide");
+      //       $('#statscollapse1').collapse("hide");
+      //       break;
+      //     case 1:
+      //       break;
+      //     case 2:
+      //       break;
+      //   }
+      // }
 
       $scope.answer = function (projectId, senderId, accepted) {
           console.log(projectId);
@@ -64,7 +82,7 @@ define(['paw2020a', 'directives/toggle'], function(paw2020a) {
 
       $scope.enabled = true;
       $scope.onOff = false;
-      $scope.funded = true;
+      $scope.funded = false;
       $scope.disabled = true;
 
       $scope.extraMessages = [{'investor': 'Kiko','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Lolo','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}];

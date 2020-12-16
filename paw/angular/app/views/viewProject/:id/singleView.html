@@ -31,7 +31,7 @@
         <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
       </div>
       <div class="p-2 ml-8" id="mail-feedback" ng-if="sent == true">
-        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'successfullContact' | translate : '{name : project.owner.firstName}'}} </h5>
+        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'successfullContact' | translate : {name : project.owner.firstName} }} </h5>
       </div>
     </div>
 
@@ -98,10 +98,10 @@
               <div class="row">
                 <div class="col-1"></div>
                 <div class="col-5">
-                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; &nbsp;&nbsp;{{'money' | translate }} {{project.target}}</h6>
+                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; &nbsp;&nbsp; {{'moneyarg' | translate : {m: project.target} }}</h6>
                 </div>
                 <div class="col-6">
-                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; {{'money' | translate}} {{project.current}}</h6>
+                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; {{'moneyarg' | translate : {m: project.current} }}</h6>
                 </div>
               </div>
 
@@ -154,7 +154,7 @@
                          class="btn btn-dark btn-sm">{{'viewProfile' | translate}}</a></h5>
               <div class="dropdown-divider"></div>
 
-              <p class="card-text"><small class="text-muted">{{'lastUpdate' | translate: '{date : project.updateDate}' }}</small></p>
+              <p class="card-text"><small class="text-muted">{{'lastUpdate' | translate : { date : project.updateDate } }}</small></p>
             </div>
           </div>
         </div>
@@ -272,47 +272,117 @@
          role="progressbar" style="width: {{project.stage*20}}%" aria-valuenow="{{project.stage}}" aria-valuemin="0" aria-valuemax="5"></div>
   </div>
 
-  <div class="card-group history-group">
-
+  <div ng-if="owner===false" class="card-group history-group">
     <div class="{{project.stage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
       <div class="card-body h-step-b">
-        <h5 class="card-title">Stage 1</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        <h5 class="card-title">{{project.stages[0].name}}</h5>
+        <p class="card-text">{{project.stages[0].comment}}</p>
       </div>
     </div>
     <div class="{{project.stage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
-        <div class="card-body h-step-b">
-          <h5 class="card-title">Stage 2</h5>
-          <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-        </div>
+      <div class="card-body h-step-b">
+        <h5 class="card-title">{{project.stages[1].name}}</h5>
+        <p class="card-text">{{project.stages[1].comment}}</p>
+      </div>
     </div>
     <div class="{{project.stage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
       <div class="card-body h-step-b">
-        <h5 class="card-title" >Stage 3</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+        <h5 class="card-title">{{project.stages[2].name}}</h5>
+        <p class="card-text">{{project.stages[2].comment}}</p>
       </div>
     </div>
     <div class="{{project.stage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
       <div class="card-body h-step-b">
-        <h5 class="card-title">Stage 4</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+        <h5 class="card-title">{{project.stages[3].name}}</h5>
+        <p class="card-text">{{project.stages[3].comment}}</p>
       </div>
     </div>
     <div class="{{project.stage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
       <div class="card-body h-step-b">
-        <h5 class="card-title">Stage 5</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+        <h5 class="card-title">{{project.stages[4].name}}</h5>
+        <p class="card-text">{{project.stages[4].comment}}</p>
       </div>
     </div>
   </div>
 
-  <button class="btn-inv" ng-click="downStage()"> &lt; </button>
-  <button class="btn-inv" ng-click="upStage()"> &gt; </button>
+  <div ng-if="owner===true" class="card-group history-group">
+    <div class="{{project.stage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="project.stage>=1" class="card-title">{{project.stages[0].name}}</h5>
+        <p ng-if="project.stage>=1" class="card-text">{{project.stages[0].comment}}</p>
+        <input ng-if="project.stage==0" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s1i"/>
+        <textarea ng-if="project.stage==0" ng-model="new.comment" maxlength="140" class="border-danger form-control" placeholder="{{'comments' | translate}}" rows="5" id="s1"></textarea>
+        <button ng-if="project.stage==0" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="img-invest">
+        </button>
+        <button ng-if="project.stage==1" class="btn btn-inv text-center" ng-click="deleteStage(1)" style="margin-left:40%; margin-top:10px">
+          <img src="images/delete-icon.png" alt="" class="img-invest">
+        </button>
+      </div>
+    </div>
+    <div class="{{project.stage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="project.stage>=2" class="card-title">{{project.stages[1].name}}</h5>
+        <p ng-if="project.stage>=2" class="card-text">{{project.stages[1].comment}}</p>
+        <input ng-if="project.stage==1" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s2i"/>
+        <textarea ng-if="project.stage==1" ng-model="new.comment" maxlength="140" class="border-orange form-control" placeholder="{{'comments' | translate}}" rows="5" id="s2"></textarea>
+        <button ng-if="project.stage==1" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="img-invest">
+        </button>
+        <button ng-if="project.stage==2" class="btn btn-inv text-center" ng-click="deleteStage(2)" style="margin-left:40%; margin-top:10px">
+          <img src="images/delete-icon.png" alt="" class="img-invest">
+        </button>
+      </div>
+    </div>
+    <div class="{{project.stage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="project.stage>=3" class="card-title">{{project.stages[2].name}}</h5>
+        <p ng-if="project.stage>=3" class="card-text">{{project.stages[2].comment}}</p>
+        <input ng-if="project.stage==2" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s3i"/>
+        <textarea ng-if="project.stage==2" ng-model="new.comment" maxlength="140" class="border-warning form-control" placeholder="{{'comments' | translate}}" rows="5" id="s3"></textarea>
+        <button ng-if="project.stage==2" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="img-invest">
+        </button>
+        <button ng-if="project.stage==3" class="btn btn-inv text-center" ng-click="deleteStage(3)" style="margin-left:40%; margin-top:10px">
+          <img src="images/delete-icon.png" alt="" class="img-invest">
+        </button>
+      </div>
+    </div>
+    <div class="{{project.stage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="project.stage>=4" class="card-title">{{project.stages[3].name}}</h5>
+        <p ng-if="project.stage>=4" class="card-text">{{project.stages[3].comment}}</p>
+        <input ng-if="project.stage==3" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s4i"/>
+        <textarea ng-if="project.stage==3" ng-model="new.comment" maxlength="140" class="border-cyan form-control" placeholder="{{'comments' | translate}}" rows="5" id="s4"></textarea>
+        <button ng-if="project.stage==3" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="img-invest">
+        </button>
+        <button ng-if="project.stage==4" class="btn btn-inv text-center" ng-click="deleteStage(4)" style="margin-left:40%; margin-top:10px">
+          <img src="images/delete-icon.png" alt="" class="img-invest">
+        </button>
+      </div>
+    </div>
+    <div class="{{project.stage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="project.stage>=5" class="card-title">{{project.stages[4].name}}</h5>
+        <p ng-if="project.stage>=5" class="card-text">{{project.stages[4].comment}}</p>
+        <input ng-if="project.stage==4" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s5i"/>
+        <textarea ng-if="project.stage==4" ng-model="new.comment" maxlength="140" class="border-success form-control" placeholder="{{'comments' | translate}}" rows="5" id="s5"></textarea>
+        <button ng-if="project.stage==4" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="img-invest">
+        </button>
+        <button ng-if="project.stage==5" class="btn btn-inv text-center" ng-click="deleteStage(5)" style="margin-left:40%; margin-top:10px">
+          <img src="images/delete-icon.png" alt="" class="img-invest">
+        </button>
+      </div>
+    </div>
+  </div>
 
 </div>
 <!--</div>-->
 
 </body>
+
 
 <footer>
   <vnfooter></vnfooter>

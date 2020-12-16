@@ -69,47 +69,80 @@
       </div>
 
       <div class="center-collapse collapse" id="chatcollapse{{project.id}}">
-        <div class="card msg-collapse" ng-repeat="message in messages[$index]">
-          <div class="card-body dash-body">
-            <div class="row">
-              <div class="col-1">
-                <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
+        <div ng-if="messages[$index].length > 0">
+          <div class="card msg-collapse" ng-repeat="message in messages[$index]">
+            <div class="card-body dash-body">
+              <div class="row">
+                <div class="col-1">
+                  <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
+                </div>
+                <div class="col-3">
+                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                </div>
+                <div class="col-7">
+                  <strong>{{'lastChat' | translate}}:</strong>
+                  <i>Sure. What i wanna know is if...</i>
+                </div>
+                <div class="col-1">
+                  <a ng-href="#/chat/1/2" class="btn btn-inv pull-right">
+                    <img src="/images/black-arrow.png" alt="">
+                  </a>
+                </div>
               </div>
-              <div class="col-3">
-                <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
-              </div>
-              <div class="col-7">
-                <strong>{{'lastChat' | translate}}:</strong>  Sure. What i wanna know is if...
-              </div>
-              <div class="col-1">
-                <a ng-href="#/chat/1/2" class="btn btn-inv pull-right">
-                  <img src="/images/black-arrow.png" alt="">
-                </a>
+            </div>
+          </div>
+          <button ng-click="viewMore(project.id-1)" class="btn btn-inv pull-right">
+            <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
+          </button>
+        </div>
+        <div ng-if="messages[$index].length == 0">
+          <div class="card msg-collapse">
+            <div class="card-body dash-body">
+              <div class="row">
+                <div class="col-1">
+                  <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
+                </div>
+                <div class="col-3">
+                  <strong>No messages</strong>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <button ng-click="viewMore(project.id-1)" class="btn btn-inv pull-right">
-          <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
-        </button>
       </div>
 
+
       <div class="center-collapse collapse" id="fundcollapse{{project.id}}">
-        <div class="card msg-collapse" ng-repeat="message in messages[$index]">
-          <div class="card-body dash-body">
-            <div class="row">
-              <div class="col-1">
-                <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
+        <div ng-if="messages[$index].length > 0">
+          <div class="card msg-collapse" ng-repeat="message in messages[$index]">
+            <div class="card-body dash-body">
+              <div class="row">
+                <div class="col-1">
+                  <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
+                </div>
+                <div class="col-3">
+                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                </div>
+                <div class="col-4">
+                  <strong>{{'msgTitleOffer' | translate}}</strong> {{message.offer}}
+                </div>
+                <div class="col-4">
+                  <strong>{{'msgTitleRequest' | translate}}</strong> {{message.request}}
+                </div>
               </div>
-              <div class="col-3">
-                <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
-              </div>
-              <div class="col-4">
-                <strong>{{'msgTitleOffer' | translate}}</strong> {{message.offer}}
-              </div>
-              <div class="col-4">
-                <strong>{{'msgTitleRequest' | translate}}</strong> {{message.request}}
+            </div>
+          </div>
+        </div>
+        <div ng-if="messages[$index].length == 0">
+          <div class="card msg-collapse">
+            <div class="card-body dash-body">
+              <div class="row">
+                <div class="col-1">
+                  <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
+                </div>
+                <div class="col-3">
+                  <strong>{{'nooffers' | translate}}</strong>
+                </div>
               </div>
             </div>
           </div>

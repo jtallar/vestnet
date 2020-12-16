@@ -160,3 +160,27 @@
   margin: 47px auto 0 auto;
   width: 93%;
 }
+
+.stage-name {
+  border: none !important;
+  font-variant:all-petite-caps;
+  font-size: 20px !important;
+  text-align: center !important
+}
+.stage-body{
+  padding: 0 !important;
+}
+.stage-body .card-title{
+  margin-top: 10px
+}
+.stage-body input{
+  color: #000000;
+  font-variant: all-petite-caps;
+  text-align: center;
+  margin-bottom:10px !important
+}
+
+.stage-body .card-text{
+  min-height: 109px
+}
+

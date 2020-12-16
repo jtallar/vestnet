@@ -191,10 +191,15 @@ define([], function() {
     funding: 'Financiamiento',
     target: 'Objetivo',
     current: 'Obtenido',
-    money: '$ {{m}}',
+    money: '$',
+    moneyarg: '{{m}} $',
+    of:'{{of}} de',
     contact: 'Enviar mensaje',
     viewmore: 'Ver más...',
     totalinv: 'Total Invertido',
-    from: 'de'
+    from: 'de',
+    stage: 'Nombre de etapa',
+    nooffers: 'No hay ofertas',
+    nomessages: 'No hay mensajes'
   };
 });
