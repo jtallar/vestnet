@@ -32,7 +32,7 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     userService.getUserProjects = function(id, fund){
 
       var param = {funded: fund};
-      return root.one(id).get(param)
+      return root.one(id).one('projects').get(param)
     };
 
 
@@ -49,6 +49,11 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       var body = {password: pass};
       return root.one('verify').customPOST(body)
     };
+
+
+    userService.getLocation = function (id) {
+      return root.one(id).one('location').get()
+    }
 
     //put password must be done through mail
 

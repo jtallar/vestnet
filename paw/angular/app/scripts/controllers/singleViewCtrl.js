@@ -3,8 +3,7 @@
 define(['paw2020a','services/projectService', 'services/sampleService'], function(paw2020a) {
     paw2020a.controller('singleViewCtrl',['projectService','sampleService','$scope', function(projectService,sampleService, $scope) {
       $scope.sent = false;    // if the mail was sent retreive from url
-      $scope.userId = 1;      // user id from db
-      $scope.id = 82;
+      $scope.id = 108;
 
       $scope.backAction = function() {
         if (this.sent) {
@@ -18,50 +17,59 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
       $scope.project= {};
 
       projectService.getById($scope.id.toString()).then(function (project) {
-
+        console.log(project)
         $scope.project = {      // project infromation from db
-          'name': project.name,
-          'cost': project.cost,
-          'summary': project.summary,
-          'id': project.id,
-          'ownerURL': project.owner,
+          'name': project.data.name,
+          'cost': project.data.cost,
+          'summary': project.data.summary,
+          'id': project.data.id,
+          'ownerURL': project.data.owner,
           'owner': {},
-          'updateDate': project.updateDate,
-          'catsURL': project.categories,
-          'imageURL': project.portraitImage,
-          'slideshowURL': project.slideshow
-
+          'updateDate': project.data.updateDate,
+          'catsURL': project.data.categories,
+          'imageExists': project.data.portraitExists,
+          'slideshowExists': project.data.slideshowExists
         };
 
 
-        console.log($scope.project.imageURL);
 
 
-        sampleService.get($scope.project.ownerURL).then(function (owner) {
+          sampleService.get($scope.project.ownerURL).then(function (owner) {
 
-          $scope.project.owner.firstName = owner.firstName;
-          $scope.project.owner.lastName = owner.lastName;
-          $scope.project.owner.mail = owner.email;
-          $scope.project.owner.id = owner.id
-        });
+            $scope.project.owner.firstName = owner.data.firstName;
+            $scope.project.owner.lastName = owner.data.lastName;
+            $scope.project.owner.mail = owner.data.email;
+            $scope.project.owner.id = owner.data.id
+          });
+
 
 
         sampleService.get($scope.project.catsURL).then(function (categories) {
           var cats = [];
-          for (var i = 0; i < categories.length ;i++){
-            cats.push(categories[i].name)
+          for (var i = 0; i < categories.data.length ;i++){
+            cats.push(categories.data[i].name)
           }
           $scope.project.categories = cats
 
         });
 
+        if($scope.project.imageExists === true) {
+          sampleService.get(project.data.portraitImage).then(function (image) {
+            $scope.project.image = image.data.image
+          })
+        }
 
-        sampleService.get($scope.project.imageURL).then(function (image) {
-          $scope.project.image = image.image
-        })
+        if($scope.project.slideshowExists === true) {
+          sampleService.get(project.data.slideshowImages).then(function (response) {
+
+            $scope.project.slideshow = []
+            for (var i = 0; i < response.data.length ;i++){
+              $scope.project.slideshow.push(response.data[i].image)
+            }
 
 
-
+          })
+        }
 
 
 

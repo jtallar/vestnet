@@ -1,26 +1,55 @@
     'use strict';
 
-    define(['paw2020a', 'services/userService'], function(paw2020a) {
-    paw2020a.controller('profileCtrl',['userService', function(userService) {
+    define(['paw2020a', 'services/userService', 'services/sampleService'], function(paw2020a) {
+    paw2020a.controller('profileCtrl',['userService','sampleService','$scope', function(userService,sampleService, $scope) {
 
-      var _this = this
+      var id = '16'
 
-      userService.getUser('8').then(function (userApi) {
-        _this.user = {
-          'firstName': userApi.firstName,
-          'lastName': userApi.lastName,
-          'email': userApi.email,
-          'phone': userApi.phone,
-          'birthday': userApi.birthDate,
-          'country': 'Austria', // TODO
-          'city': 'Una ciudad de Austria',
-          'state': 'Un estado de esa ciudad de Austria'
+      userService.getUser(id).then(function (userApi) {
+        $scope.user = {
+          'firstName': userApi.data.firstName,
+          'lastName': userApi.data.lastName,
+          'email': userApi.data.email,
+          'phone': userApi.data.phone,
+          'birthday': userApi.data.birthDate,
+          'locationURL': userApi.data.location,
+          'favoritesURL': userApi.data.favorites,
+          'linkedin': userApi.data.linkedin,
+          'imageExists': userApi.data.imageExists
+
         };
+
+        sampleService.get($scope.user.locationURL).then(function (response) {
+          $scope.user.country = response.data.country;
+          $scope.user.city = response.data.city;
+          $scope.user.state = response.data.state
+
+        })
+
+        if($scope.user.imageExists === true){
+          sampleService.get(userApi.data.image).then(function (response) {
+            $scope.user.image = response.data.image
+          })
+        }
+
+
+        // sampleService.get($scope.user.favoritesURL).then(function (response) {
+        //   console.log(response)
+        // })
+
+
+
 
 
       })
 
-    //TODO projects
+
+      //
+      // userService.getUserProjects(id).then(function (response) {
+      //   console.log(response)
+      // })
+
+    //TODO favs projects
 
       //
       // $scope.projects = [

@@ -52,4 +52,15 @@ public class UserJpaDao implements UserDao {
     public Optional<User> findById(Long id) {
         return Optional.ofNullable(entityManager.find(User.class, id));
     }
+
+//    @Override
+//    public Optional<Location> findLocationById(Long id){
+//        Optional <User> optionalUser = Optional.ofNullable(entityManager.find(User.class, id));
+//        if(optionalUser.isPresent()){
+//            return  Optional.ofNullable(optionalUser.get().getLocation());
+//        }
+//        else {
+//            return Optional.empty();
+//        }
+//    }
 }

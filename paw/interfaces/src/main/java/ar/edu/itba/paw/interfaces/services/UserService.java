@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.Location;
 
 import java.net.URI;
 import java.util.Date;
@@ -138,4 +139,13 @@ public interface UserService {
      * @return The user image, default if none found.
      */
     Optional<UserImage> getProfileImage(long id);
+
+//
+//    /**
+//     * Finds a user location by user ID
+//     * @param id The unique user's ID
+//     * @return The users location
+//     */
+//
+//    Optional<Location> findLocationById(Long id);
 }

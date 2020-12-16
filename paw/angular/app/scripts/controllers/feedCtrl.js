@@ -1,7 +1,7 @@
     'use strict';
 
-define(['paw2020a', 'services/projectService', 'services/imageService'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', ['projectService','imageService', '$scope', function (projectService,imageService, $scope) {
+define(['paw2020a', 'services/projectService', 'services/imageService','services/sampleService'], function(paw2020a) {
+    paw2020a.controller('feedCtrl', ['projectService','imageService','sampleService', '$scope', function (projectService,imageService,sampleService, $scope) {
 
       var pageSize = 12;
 
@@ -66,19 +66,16 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
       $scope.projects = []
 
       projectService.getPageNoFilter(page.toString(), pageSize).then(function (projects) {
-
-
-        $scope.projects = projects
-
-
+        $scope.projects = projects.data
         var map = {}
 
         for(var i = 0; i < $scope.projects.length; i++) {
           map[$scope.projects[i].id] = i;
-          if ($scope.projects[i].portraitExists) {
+
+          if ($scope.projects[i].portraitExists === true) {
             // TODO: Getear yendo al link que esta en el proyecto
-            imageService.getProjectImage(String($scope.projects[i].id), i).then(function (image) {
-              $scope.projects[map[image.route]].image = image.image
+            imageService.getProjectImage($scope.projects[i].id.toString()).then(function (image) {
+              $scope.projects[map[image.data.route]].image = image.data.image
             }, function (err) {
               console.log("No image")
             })
@@ -87,13 +84,13 @@ define(['paw2020a', 'services/projectService', 'services/imageService'], functio
             // $scope.projects[map[image.route]].image = 'images/projectNoImage.png';
           }
 
+          console.log($scope.projects)
+
 
 
 
         }
 
-
-        console.log($scope.projects)
 
       })
 

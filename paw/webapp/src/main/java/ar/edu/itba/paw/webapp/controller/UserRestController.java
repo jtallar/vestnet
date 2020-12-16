@@ -5,12 +5,15 @@ import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.location.Location;
+import ar.edu.itba.paw.webapp.dto.location.LocationDto;
 import ar.edu.itba.paw.webapp.dto.user.*;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -146,6 +149,18 @@ public class UserRestController {
         if (userService.updateVerification(token, uriInfo.getBaseUri()))
             return Response.ok().build();
         return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+
+    @GET
+    @Path("/{id}/location")
+    public Response getUserLocation(@PathParam("id") final long userId){
+        Optional<Location> location = Optional.ofNullable(userService.findById(userId).get().getLocation());
+
+
+        return location.map(l -> Response.ok(LocationDto.fromLocation(l)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+
     }
 }
 
