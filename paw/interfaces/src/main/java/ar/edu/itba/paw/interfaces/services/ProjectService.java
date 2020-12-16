@@ -89,6 +89,15 @@ public interface ProjectService {
 
 
     /**
+     * Set the last not completed stage as completed
+     * @param id The unique project's id.
+     * @param comment The comment on stage completion.
+     * @return The optional project, modified if found.
+     */
+    Optional<Project> setStage(long id, String comment);
+
+
+    /**
      * Finds project main profile image.
      * @param id The unique project id to find its image.
      * @return The main image or default if none is found.

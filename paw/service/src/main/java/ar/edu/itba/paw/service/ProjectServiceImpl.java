@@ -98,6 +98,21 @@ public class ProjectServiceImpl implements ProjectService {
         return optionalProject;
     }
 
+
+    @Override
+    @Transactional
+    public Optional<Project> setStage(long id, String comment) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        optionalProject.ifPresent(p -> {
+//            TODO implement on stages
+//            Get the last not completed stage and apply the things bellow
+//            p.getStages().setCompleted();
+//            p.getStages().setComment(comment);
+        });
+        return optionalProject;
+    }
+
+
     @Override
     public Optional<ProjectImage> getPortraitImage(long id) {
         return imageDao.findProjectImages(new Project(id), true).stream().findFirst();

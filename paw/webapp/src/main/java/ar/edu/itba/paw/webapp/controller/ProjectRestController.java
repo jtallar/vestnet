@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectStagesDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectStatsDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectWithCategoryDto;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -146,8 +147,8 @@ public class ProjectRestController {
     public Response getStats(@PathParam("id") long id) {
 
 //      TODO implement on stats
-//      Optional<Project> optionalProject = projectService.findById(id);
-//      return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())))
+//        Optional<Project> optionalProject = projectService.findById(id);
+//        return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())))
 //                .orElse(Response.status(Response.Status.NOT_FOUND).build());
 
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
@@ -161,7 +162,38 @@ public class ProjectRestController {
                              @Valid final ProjectStatsDto statsDto) {
 
 //        TODO implement on stats
-//        return projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(), statsDto.getContactClicks() == 1)
+//          return projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(), statsDto.getContactClicks() == 1)
+//                .map(p -> Response.ok().build())
+//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+
+    @GET
+    @Path("/{id}/stages")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getStages(@PathParam("id") long id) {
+
+//      TODO implement on stages
+//        Optional<Project> optionalProject = projectService.findById(id);
+//        return optionalProject.map(p -> {
+//            List<ProjectStagesDto> stagesDto = p.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
+//            return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
+//        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+    }
+
+
+    @PUT
+    @Path("/{id}/stages")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response setStages(@PathParam("id") long id,
+                              @Valid final ProjectStagesDto stagesDto) {
+
+//        TODO implement on stages
+//          return projectService.setStage(id, stagesDto.getComment())
 //                .map(p -> Response.ok().build())
 //                .orElse(Response.status(Response.Status.NOT_FOUND).build());
 
