@@ -28,6 +28,9 @@ public class ProjectStats {
 //    @Column(name = "contact_clicks")
     private long contactClicks;
 
+    //    @Column(name = "investors_seen")
+    private long investorsSeen;
+
 //    @Temporal(TemporalType.DATE)
 //    @Column(name = "last_seen")
     private Date lastSeen;
@@ -41,6 +44,7 @@ public class ProjectStats {
         this.secondsAvg = 0;
         this.clicksAvg = 0;
         this.contactClicks = 0;
+        this.investorsSeen = 0;
         this.lastSeen = new Date();
     }
 
@@ -94,6 +98,14 @@ public class ProjectStats {
         this.contactClicks = contactClicks;
     }
 
+    public long getInvestorsSeen() {
+        return investorsSeen;
+    }
+
+    public void setInvestorsSeen(long investorsSeen) {
+        this.investorsSeen = investorsSeen;
+    }
+
     public Date getLastSeen() {
         return lastSeen;
     }
@@ -102,8 +114,9 @@ public class ProjectStats {
         this.lastSeen = lastSeen;
     }
 
-    public void setNewSeen(long seconds, long clicks, boolean contact) {
+    public void setNewSeen(long seconds, long clicks, boolean investor, boolean contact) {
         if (contact) contactClicks++;
+        if (investor) investorsSeen++;
         secondsAvg = (secondsAvg * seen + seconds) / (seen + 1);
         clicksAvg = (clicksAvg * seen + clicks) / (seen + 1);
         seen++;

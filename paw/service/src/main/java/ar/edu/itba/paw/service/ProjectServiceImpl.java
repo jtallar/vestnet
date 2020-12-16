@@ -69,15 +69,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> addHit(long id) {
-        Optional<Project> project = findById(id);
-        project.ifPresent(p -> p.setHits(p.getHits() + 1));
-        return project;
-    }
-
-
-    @Override
-    @Transactional
     public Optional<Project> setClosed(long ownerId, long id) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
@@ -98,6 +89,23 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
+    public Optional<Project> addStats(long id, long seconds, long clicks, boolean investor, boolean contact) {
+        Optional<Project> optionalProject = projectDao.findById(id);
+        optionalProject.ifPresent(p -> {
+//            TODO implement on stats
+//            p.getStats().setNewSeen(seconds, clicks, investor, contact);
+        });
+        return optionalProject;
+    }
+
+    @Override
+    public Optional<ProjectImage> getPortraitImage(long id) {
+        return imageDao.findProjectImages(new Project(id), true).stream().findFirst();
+    }
+
+
+    @Override
+    @Transactional
     public Optional<Project> setPortraitImage(long ownerId, long id, byte[] image) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
@@ -107,6 +115,12 @@ public class ProjectServiceImpl implements ProjectService {
         images.add(new ProjectImage(new Project(id), image, true));
         optionalProject.get().setImages(images);
         return optionalProject;
+    }
+
+
+    @Override
+    public List<ProjectImage> getSlideshowImages(long id) {
+        return imageDao.findProjectImages(new Project(id), false);
     }
 
 
@@ -123,22 +137,10 @@ public class ProjectServiceImpl implements ProjectService {
         return optionalProject;
     }
 
+
     @Override
     public List<Category> getAllCategories() {
         return categoryDao.findAllCategories();
     }
-
-
-    @Override
-    public Optional<ProjectImage> getPortraitImage(long id) {
-        return imageDao.findProjectImages(new Project(id), true).stream().findFirst();
-    }
-
-
-    @Override
-    public List<ProjectImage> getSlideshowImages(long id) {
-        return imageDao.findProjectImages(new Project(id), false);
-    }
-
 }
 

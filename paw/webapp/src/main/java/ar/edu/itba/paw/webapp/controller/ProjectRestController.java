@@ -8,6 +8,7 @@ import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
+import ar.edu.itba.paw.webapp.dto.project.ProjectStatsDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectWithCategoryDto;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -44,29 +45,7 @@ public class ProjectRestController {
 
     private static final int PAGINATION_ITEMS = 5;
 
-    @GET
-    @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response projects(@QueryParam("p") @DefaultValue("1") int page,
-                         @QueryParam("o") @DefaultValue("1") int order,
-                         @QueryParam("f") @DefaultValue("1") int field,
-                         @Size(max = 50) @QueryParam("s") String keyword,
-                         @Min(0) @QueryParam("max") Integer maxFundingTarget,
-                         @Min(0) @QueryParam("min") Integer minFundingTarget,
-                         @QueryParam("c") Integer category,
-                         @QueryParam("l") @DefaultValue("3") int limit) {
-
-
-        Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
-        projectPage.setPageRange(PAGINATION_ITEMS);
-
-        List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
-
-        return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getEndPage()).build(), "last")
-                .build();
-    }
-
+    /** General endpoints for projects */
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
@@ -100,6 +79,33 @@ public class ProjectRestController {
     }
 
 
+    /** Search project endpoint */
+
+    @GET
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response projects(@QueryParam("p") @DefaultValue("1") int page,
+                             @QueryParam("o") @DefaultValue("1") int order,
+                             @QueryParam("f") @DefaultValue("1") int field,
+                             @Size(max = 50) @QueryParam("s") String keyword,
+                             @Min(0) @QueryParam("max") Integer maxFundingTarget,
+                             @Min(0) @QueryParam("min") Integer minFundingTarget,
+                             @QueryParam("c") Integer category,
+                             @QueryParam("l") @DefaultValue("3") int limit) {
+
+
+        Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
+        projectPage.setPageRange(PAGINATION_ITEMS);
+
+        List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
+                .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getStartPage()).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().queryParam("p", projectPage.getEndPage()).build(), "last")
+                .build();
+    }
+
+    /** Extra data for projects */
+
     @GET
     @Path("/{id}/categories")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -128,22 +134,31 @@ public class ProjectRestController {
 
 
     @GET
-    @Path("/categories")
+    @Path("/{id}/stats")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response categories() {
-        List<Category> categories = projectService.getAllCategories();
-        List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+    public Response getStats(@PathParam("id") long id) {
 
-        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
+//      TODO implement on stats
+//        Optional<Project> optionalProject = projectService.findById(id);
+//      return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())))
+//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
 
     @PUT
-    @Path("/{id}/hit")
-    public Response addHit(@PathParam("id") long id) {
-        return projectService.addHit(id)
-                .map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    @Path("/{id}/stats")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response setStats(@PathParam("id") long id,
+                             @Valid final ProjectStatsDto statsDto) {
+
+//        TODO implement on stats
+//        return projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(), statsDto.getContactClicks() == 1)
+//                .map(p -> Response.ok().build())
+//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
 
@@ -153,5 +168,18 @@ public class ProjectRestController {
         return projectService.setClosed(sessionUser.getId(), id)
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+
+    /** Get all the available categories */
+
+    @GET
+    @Path("/categories")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response categories() {
+        List<Category> categories = projectService.getAllCategories();
+        List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
     }
 }

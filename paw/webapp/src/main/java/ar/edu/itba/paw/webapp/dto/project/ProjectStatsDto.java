@@ -19,6 +19,9 @@ public class ProjectStatsDto {
     @Min(0)
     private long contactClicks;
 
+    @Min(0)
+    private long investorsSeen;
+
     private Date lastSeen;
 
     public static ProjectStatsDto fromProjectStats(ProjectStats projectStats) {
@@ -27,6 +30,7 @@ public class ProjectStatsDto {
         statsDto.setSecondsAvg(projectStats.getSecondsAvg());
         statsDto.setSeen(projectStats.getSeen());
         statsDto.setContactClicks(projectStats.getContactClicks());
+        statsDto.setInvestorsSeen(projectStats.getInvestorsSeen());
         statsDto.setLastSeen(projectStats.getLastSeen());
         return statsDto;
     }
@@ -62,6 +66,14 @@ public class ProjectStatsDto {
 
     public void setContactClicks(long contactClicks) {
         this.contactClicks = contactClicks;
+    }
+
+    public long getInvestorsSeen() {
+        return investorsSeen;
+    }
+
+    public void setInvestorsSeen(long investorsSeen) {
+        this.investorsSeen = investorsSeen;
     }
 
     public Date getLastSeen() {
