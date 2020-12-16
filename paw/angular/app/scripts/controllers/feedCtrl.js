@@ -83,9 +83,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
             // TODO: Poner la imagen por default
             // $scope.projects[map[image.route]].image = 'images/projectNoImage.png';
           }
-
-          console.log($scope.projects)
-
+          
 
 
 
