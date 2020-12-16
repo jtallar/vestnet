@@ -38,13 +38,4 @@ public interface UserDao {
      * @return The user optional.
      */
      Optional<User> findById(Long id);
-
-
-//    /**
-//     * Finds a user location by user ID
-//     * @param id The unique user's ID
-//     * @return The users location
-//     */
-//
-//    Optional<Location> findLocationById(Long id);
 }
