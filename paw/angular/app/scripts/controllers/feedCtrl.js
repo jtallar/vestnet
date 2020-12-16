@@ -130,9 +130,14 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
             // TODO: Poner la imagen por default
             // $scope.projects[map[image.route]].image = 'images/projectNoImage.png';
           }
-          
+
         }
       })
+
+      $scope.toInt = function (num){
+        return parseInt(num);
+      }
+
     }]);
 
 });

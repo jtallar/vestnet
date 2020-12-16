@@ -111,15 +111,15 @@
               <div class="row">
                 <div class="col-1"></div>
                 <div class="col-5">
-                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; &nbsp;&nbsp; {{'moneyarg' | translate : {m: project.target} }}</h6>
+                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; &nbsp;&nbsp; {{'moneyarg' | translate : {m: project.fundingCurrent} }}</h6>
                 </div>
                 <div class="col-6">
-                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; {{'moneyarg' | translate : {m: project.current} }}</h6>
+                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; {{'moneyarg' | translate : {m: project.fundingTarget} }}</h6>
                 </div>
               </div>
 
               <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
-                <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width:{{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
               </div>
               <!--
               <sec:authorize access="isAnonymous()">
