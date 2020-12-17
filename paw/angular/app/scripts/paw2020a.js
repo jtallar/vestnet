@@ -41,7 +41,7 @@ define(['routes',
             });
         };
 
-        // TODO: Ver bien como queda esto
+        // TODO: Ver bien como queda esto, tomar el url sin params
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
           // if logged in and trying to access login, redirect to home
           if (AuthenticationService.isLoggedIn() && ($location.url() === PathService.get().login().absolutePath())) {
@@ -93,7 +93,22 @@ define(['routes',
         });
       }]);
 
-		paw2020a
+
+    paw2020a.run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+      var original = $location.path;
+      $location.pathReload = function (path, reload) {
+        if (reload === false) {
+          var lastRoute = $route.current;
+          var un = $rootScope.$on('$locationChangeSuccess', function () {
+            $route.current = lastRoute;
+            un();
+          });
+        }
+        return original.apply($location, [path]);
+      };
+    }]);
+
+    paw2020a
 			.config(
 				['$routeProvider',
 				'$locationProvider',

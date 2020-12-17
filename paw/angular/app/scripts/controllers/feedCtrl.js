@@ -1,138 +1,110 @@
 'use strict';
 
-define(['paw2020a', 'services/projectService', 'services/imageService','services/sampleService'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', ['projectService','imageService','sampleService', '$scope', function (projectService,imageService,sampleService, $scope) {
 
-      var pageSize = 12;
+// TODO: Pagination, Show page number in "showing page ... from ... pages
+define(['paw2020a', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat',
+  'services/PathService'], function(paw2020a) {
+    paw2020a.controller('feedCtrl', ['projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (projectService,imageService,sampleService,PathService,$scope,$routeParams) {
+      var _this = this;
+      var pageSize = 12, page = 1, param, aux;
+      var emptyCategory = {id:null, name:'noFilter'};
+      $scope.noProjectsFound = false;
 
-      var page = 1
-      $scope.filterdata = {
-        'field': '' ,
-        'category': '',
-        'order': '',
-        'search': '',
-        'minCost': 100,
-        'maxCost': 100000
-      };
+      param = parseInt($routeParams.p);
+      if (isNaN(param) || param <= 0) param = 1;
+      page = param;
 
-      var _this = this
-
-      $scope.order = ['price' , 'date'];
-      $scope.fields = ['technology', 'audio'];
-      $scope.categories = [];
+      $scope.searchField = $routeParams.s;
+      $scope.fields = [{id: 1, name:'projectNameSearch'}, {id: 2, name:'projectDescSearch'}, {id: 3, name:'ownerNameSearch'}, {id: 4, name:'ownerEmailSearch'}, {id: 5, name:'locationSearch'}];
+      param = parseInt($routeParams.f);
+      if (isNaN(param)) {
+        $scope.selectedField = $scope.fields[0];
+      } else {
+        aux = $scope.fields.filter(function (el) { return el.id === param; });
+        (aux.length !== 0) ? $scope.selectedField = aux[0] : $scope.selectedField = $scope.fields[0];
+      }
+      $scope.orders = [{id: 1, name:'recommendedOrder'}, {id: 6, name:'oldestOrder'}, {id: 5, name:'newestOrder'}, {id: 2, name:'costAscendingOrder'}, {id: 3, name:'costDescendingOrder'}, {id: 4, name:'alphabeticalOrder'}];
+      param = parseInt($routeParams.o);
+      if (isNaN(param)) {
+        $scope.selectedOrder = $scope.orders[0];
+      } else {
+        aux = $scope.orders.filter(function (el) { return el.id === param; });
+        (aux.length !== 0) ? $scope.selectedOrder = aux[0] : $scope.selectedOrder = $scope.fields[0];
+      }
+      $scope.categories = [emptyCategory];
+      $scope.selectedCategory = emptyCategory;
+      param = parseInt($routeParams.min);
+      $scope.minCost = (isNaN(param)) ? undefined : param;
+      param = parseInt($routeParams.max);
+      $scope.maxCost = (isNaN(param)) ? undefined : param;
+      $scope.costRangeError = false;
 
       projectService.getCategories().then(function (cats) {
-        $scope.categories = cats
-      })
-      $scope.clearFilter = function () {
-          this.filterdata.field = '';
-          this.filterdata.category = '';
-          this.filterdata.minCost = 100;
-          this.filterdata.maxCost = 100000;
-          this.filterdata.search = '';
+        $scope.categories = $scope.categories.concat(cats.data);
+        param = parseInt($routeParams.c);
+        if (!isNaN(param)) {
+          aux = $scope.categories.filter(function (el) { return el.id === param; });
+          if (aux.length !== 0) $scope.selectedCategory = aux[0];
+        }
+      });
 
+      this.setPathParams = function () {
+        PathService.get().setParamsInUrl({p:page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id});
       };
 
-      // TODO: Por que esta distinto el NoFilter o con Filter???
-
-      $scope.adjustInputs = function () {
-        var minTag = document.getElementById('filter-form-min');
-        if (minTag.value < 0 || minTag.value > 2000000000) {
-          minTag.value = '';
-        }
-        if (minTag.value.length) {
-          minTag.value = Math.round(minTag.value);
-        }
-        var maxTag = document.getElementById('filter-form-max');
-        if (maxTag.value < 0 || maxTag.value > 2000000000) {
-          maxTag.value = '';
-        }
-        if (maxTag.value.length) {
-          maxTag.value = Math.round(maxTag.value);
-        }
-
-        projectService.getPage(page, $scope.filterdata.order,$scope.filterdata.field, $scope.filterdata.search, $scope.filterdata.maxCost, $scope.filterdata.minCost, $scope.filterdata.category, pageSize)
+      this.filterObject = function () {
+        return {p:page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id};
       };
 
-      /* $scope.projects = [{
-          'name': 'Vestnet',
-          'target': 1000,
-          'current': 750,
-          'image': 'images/projectNoImage.png',
-          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-          'id': 1,
-          'percentage': 75
-        },
-        {
-          'name': 'Superchero',
-          'target': 1000,
-          'current': 900,
-          'image': 'images/projectNoImage.png',
-          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-          'id': 1,
-          'percentage': 90
-        },
-        {
-          'name': 'Mate Electrico',
-          'target': 1000,
-          'current': 200,
-          'image': 'images/mate.jpg',
-          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-          'id': 1,
-          'percentage': 20
-        },
-        {
-          'name': 'Cerberus',
-          'target': 1000,
-          'current': 660,
-          'image': 'images/yeoman.png',
-          'summary': 'Es un proyecto super pedorro',
-          'id': 1,
-          'percentage': 66
-        },
-        {
-          'name': 'BED',
-          'target': 1000,
-          'current': 20,
-          'image': 'images/projectNoImage.png',
-          'summary': 'jaja una tablet para tarados jaja',
-          'id': 1,
-          'percentage': 2
-        },
-        {
-          'name': 'Otros',
-          'target': 1000,
-          'current': 880,
-          'image': 'images/projectNoImage.png',
-          'summary': 'bla',
-          'id': 1,
-          'percentage': 88
+      this.showProjects = function (projects) {
+        if (projects.length === 0) {
+          $scope.noProjectsFound = true;
+          return;
         }
-      ];
-*/
-      $scope.projects = []
-
-      projectService.getPageNoFilter(page.toString(), pageSize).then(function (projects) {
-        $scope.projects = projects.data
-        var map = {}
-
+        $scope.projects = projects;
+        var map = {};
         for(var i = 0; i < $scope.projects.length; i++) {
           map[$scope.projects[i].id] = i;
-
-          if ($scope.projects[i].portraitExists === true) {
-            // TODO: Getear yendo al link que esta en el proyecto
-            imageService.getProjectImage($scope.projects[i].id.toString()).then(function (image) {
+          if ($scope.projects[i].portraitExists) {
+            sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
               $scope.projects[map[image.data.route]].image = image.data.image
             }, function (err) {
               console.log("No image")
-            })
-          } else {
-            // TODO: Poner la imagen por default
-            // $scope.projects[map[image.route]].image = 'images/projectNoImage.png';
+            });
           }
-
         }
-      })
+      };
+
+      $scope.clearFilter = function () {
+        $scope.selectedField = $scope.fields[0];
+        $scope.selectedOrder = $scope.orders[0];
+        $scope.selectedCategory = emptyCategory;
+        $scope.minCost = undefined;
+        $scope.maxCost = undefined;
+        $scope.searchField = undefined;
+      };
+
+      $scope.applyFilter = function () {
+        if ($scope.minCost && $scope.maxCost && $scope.minCost > $scope.maxCost) {
+          $scope.costRangeError = true;
+          return;
+        }
+        $scope.projects = [];
+        $scope.noProjectsFound = false;
+        _this.setPathParams();
+        projectService.getPage(_this.filterObject()).then(function (projects) {
+          _this.showProjects(projects.data);
+        }, function (errorResponse) {
+          console.error(errorResponse);
+        });
+      };
+
+      $scope.projects = [];
+      projectService.getPage(_this.filterObject()).then(function (projects) {
+        _this.showProjects(projects.data);
+      }, function (errorResponse) {
+        console.error(errorResponse);
+      });
 
       $scope.toInt = function (num){
         return parseInt(num);

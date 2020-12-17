@@ -41,14 +41,14 @@ define([], function() {
                 templateUrl: '/views/viewProject/:id/singleView.html',
                 controller: 'singleViewCtrl'
             },
-            '/users/1': {
-                templateUrl: '/views/users/profile.html',
+            '/users/:id': {
+                templateUrl: '/views/users/:id/profile.html',
                 controller: 'profileCtrl'
             },
-            '/profile': {
-              templateUrl: '/views/users/profile.html',
-              controller: 'profileCtrl'
-            },
+            // '/profile/:id': {
+            //   templateUrl: '/views/users/:id/profile.html',
+            //   controller: 'profileCtrl'
+            // },
             '/deals': {
                 templateUrl: '/views/deals/deals.html',
                 controller: 'dealsCtrl'
