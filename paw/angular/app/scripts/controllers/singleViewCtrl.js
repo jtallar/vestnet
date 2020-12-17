@@ -5,7 +5,7 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
 
       $scope.sent = false;    // if the mail was sent retreive from url
       $scope.id = 108;
-      $scope.owner = true;
+      $scope.owner = false;
 
       $scope.backAction = function() {
         if (this.sent) {
@@ -61,8 +61,8 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
             {'name': 'Stage 1', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'},
             {'name': 'Stage 2', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.'},
             {'name': 'Stage 3', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'},
-            {'name': '', 'comment': ''},
-            {'name': '', 'comment': ''}
+            {'name': 'Stage 4', 'comment': ''},
+            {'name': 'Stage 5', 'comment': ''}
           ]
         };
       });
