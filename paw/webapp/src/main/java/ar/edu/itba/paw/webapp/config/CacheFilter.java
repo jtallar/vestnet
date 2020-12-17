@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -8,7 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class FilterCacheConfig extends OncePerRequestFilter {
+@Component
+public class CacheFilter extends OncePerRequestFilter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CacheFilter.class);
+
 
     /**
      * Same contract as for {@code doFilter}, but guaranteed to be
@@ -19,7 +25,7 @@ public class FilterCacheConfig extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                     final FilterChain chain) throws ServletException, IOException {
-        response.setHeader("Cache-Control", "public, max-age=31536000");
+        response.setHeader("Cache-Control", "max-age=31556926, public");
         response.setHeader("Connection", "Keep-Alive");
         chain.doFilter(request, response);
     }
