@@ -249,6 +249,7 @@ define([], function() {
     from: 'from',
     stage: 'Stage name',
     nooffers: 'No offers',
-    nomessages: 'No messages'
+    nomessages: 'No messages',
+    you: 'You'
   };
 });

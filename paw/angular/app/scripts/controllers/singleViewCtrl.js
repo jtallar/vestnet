@@ -7,6 +7,8 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
       $scope.id = 108;
       $scope.owner = false;
 
+      $scope.userId = 2;
+
       $scope.backAction = function() {
         if (this.sent) {
           history.back();
@@ -46,7 +48,12 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
           'summary': project.data.summary,
           'id': project.data.id,
           'ownerURL': project.data.owner,
-          'owner': {},
+          'owner': {
+            'firstName':'Claudio',
+            'lastName':'Caniggia',
+            'mail':'claudiopaul@gmail.com',
+            'id': 2
+          },
           'updateDate': project.data.updateDate,
           'catsURL': project.data.categories,
           'imageExists': project.data.portraitExists,
