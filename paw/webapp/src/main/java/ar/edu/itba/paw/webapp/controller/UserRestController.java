@@ -172,10 +172,9 @@ public class UserRestController {
     @GET
     @Path("/{id}/location")
     public Response getUserLocation(@PathParam("id") final long userId){
-        Optional<Location> location = Optional.ofNullable(userService.findById(userId).get().getLocation());
+        final Optional<User> user = userService.findById(userId);
 
-
-        return location.map(l -> Response.ok(LocationDto.fromLocation(l)).build())
+        return user.map(User::getLocation).map(l -> Response.ok(LocationDto.fromLocation(l)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
 
     }

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.image.ProjectImage;
 import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
+import ar.edu.itba.paw.webapp.dto.SlideshowDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,8 +97,8 @@ public class ImageRestController {
     @Path("/projects/{project_id}/slideshow")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setProjectSlideshow(@PathParam("project_id") final long id,
-                                        @Valid final List<ImageDto> images) {
-        List<byte []> bytes = images.stream().map(ImageDto::getImage).collect(Collectors.toList());
+                                        @Valid final SlideshowDto slideshowDto) {
+        List<byte []> bytes = slideshowDto.getSlideshow().stream().map(ImageDto::getImage).collect(Collectors.toList());
 
         return projectService.setSlideshowImages(sessionUser.getId(), id, bytes)
                 .map(i -> Response.ok().build())
