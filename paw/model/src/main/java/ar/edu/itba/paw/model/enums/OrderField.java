@@ -12,7 +12,7 @@ public enum OrderField {
 
     /** This can be used for project or messages */
     DATE_ASCENDING(5, "publishDate"),
-    DATE_DESCENDING(5, "publishDate");
+    DATE_DESCENDING(6, "publishDate");
 
     private int value;
     private String fieldName;
