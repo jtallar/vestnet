@@ -112,6 +112,7 @@
                 <div class="col-md" ng-class="{'has-error': signUpForm.repeatPassword.$touched && signUpForm.repeatPassword.$invalid}">
                   <div class="form-group">
                     <label>{{'repeatPasswordRequired' | translate}}</label>
+                    <p class="form-requirement"> </p>
                     <input name="repeatPassword" ng-model="controller.user.repeatPassword" type="password" class="form-control"
                            placeholder="{{'enterRepeatPassword' | translate}}" id="sign-up-repeat-password"
                            required ng-maxlength="50" ng-pattern="controller.user.password"/>
@@ -136,47 +137,20 @@
                 </div>
 <!--                TODO: Sacar la imagen de este form, se sube directamente en tu perfil-->
                 <div class="col-md">
-                  <label> {{'userPicture' | translate}} </label>
-                  <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input"
-                           custom-on-change="fileboxChange" accept="image/*" id="customFileProfilePic"/>
-                    <label class="custom-file-label" for="customFileProfilePic" id="customFileProfilePicLabel">
-                      {{fileLabel || 'chooseFile' | translate}}</label>
-                    <br>
-                    <!--                  <form:errors path="profilePicture" cssClass="formError" element="p" id="fileErrorFormTag"/>-->
-                  </div>
-                  <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="dropdown-divider"></div>
-
-            <!-- Birth date form-->
-            <div class="container">
-              <div class="form-group">
-                <label>{{'birthday' | translate}} </label>
-                <div class="container">
+                  <label class="birth-title">{{'birthday' | translate}} </label>
                   <div class="row">
-                    <div class="col-">
-                      <label class="date"> {{'year' | translate}} </label>
-                    </div>
                     <div class="col-md">
+                      <label class="date"> {{'year' | translate}} </label>
                       <select ng-model="yearSelected" class="custom-select mr-sm-2"
                               ng-options="label for label in yearsArray" ng-change="updateDate('year')" required></select>
                     </div>
-                    <div class="col-">
-                      <label class="date"> {{'month' | translate}} </label>
-                    </div>
                     <div class="col-md">
+                      <label class="date"> {{'month' | translate}} </label>
                       <select ng-model="monthSelected" class="custom-select mr-sm-2"
                               ng-options="m.name for m in monthsArray | validMonths:yearSelected" ng-change="updateDate('month')" required></select>
                     </div>
-                    <div class="col-">
-                      <label class="date">{{'day' | translate}}</label>
-                    </div>
                     <div class="col-md">
+                      <label class="date">{{'day' | translate}}</label>
                       <select ng-model="daySelected" class="custom-select mr-sm-2"
                               ng-options="label for label in daysArray | daysInMonth:yearSelected:monthSelected | validDays:yearSelected:monthSelected"
                               ng-change="updateDate('day')" required></select>
@@ -186,10 +160,13 @@
               </div>
             </div>
 
+            <div class="dropdown-divider"></div>
+
             <!-- Location form -->
             <div class="container">
               <div class="form-group">
                 <div class="container">
+<!--                  <label>{{'location' | translate}}</label>-->
                   <div class="row">
                     <div class="col-">
                       <label>{{'country' | translate}}</label>
@@ -222,7 +199,6 @@
                 </div>
               </div>
             </div>
-        </div>
 
         <div class="dropdown-divider"></div>
 
@@ -236,6 +212,7 @@
           </div>
           <input type="submit" class="signup-btn btn btn-dark pull-right" value="{{'signUp' | translate}}"
                  ng-click="createUser(controller.user)" ng-disabled="signUpForm.$invalid"/>
+        </div>
         </div>
 
         </ng-form>

@@ -10,6 +10,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       var portraitImage = undefined, slideshowImages = undefined;
       var _this = this;
 
+      $scope.loading = false;
       $scope.imageSizeError = false; $scope.slideshowSizeError = false;
       $scope.slideshowCountError = false; $scope.categoryCountError = false;
       $scope.serverFormErrors = false; $scope.disableSlideshow = true;
@@ -170,8 +171,10 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       };
 
       $scope.createProject = function (project) {
+        $scope.loading = true;
         if (selectedCategories.length === 0) {
           $scope.categoryCountError = true;
+          $scope.loading = false;
           return;
         }
         project.categories = selectedCategories;
@@ -182,8 +185,10 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
         }, function (errorResponse) {
           if (errorResponse.status === 400) {
             $scope.serverFormErrors = true;
+            $scope.loading = false;
             return;
           }
+          $scope.loading = false;
           console.error(errorResponse);
         });
       };

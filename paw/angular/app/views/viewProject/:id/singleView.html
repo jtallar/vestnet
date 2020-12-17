@@ -95,8 +95,9 @@
             <!-- Project card -->
             <div class="card-body single-card">
               <h5 class="card-title"><b>{{project.name}}</b></h5>
-              <div class="blockquote-footer">by {{project.owner.firstName}}
-                {{project.owner.lastName}}</div>
+              <div ng-if="userId == project.owner.id" class="blockquote-footer">{{'you' | translate}}</div>
+              <div ng-if="userId != project.owner.id" class="blockquote-footer">by <a ng-href="#/users/{{project.owner.id}}">{{project.owner.firstName}} {{project.owner.lastName}}</a></div>
+
               <p class="card-text">{{project.summary}}</p>
 
               <h5 class="card-title"><b>{{'categories' | translate}}</b></h5>
@@ -110,10 +111,10 @@
               <div class="row">
                 <div class="col-1"></div>
                 <div class="col-5">
-                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; &nbsp;&nbsp; {{'moneyarg' | translate : {m: project.fundingCurrent} }}</h6>
+                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; &nbsp;&nbsp; {{'moneyarg' | translate : {m: project.fundingCurrent} }}</h6>
                 </div>
                 <div class="col-6">
-                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; {{'moneyarg' | translate : {m: project.fundingTarget} }}</h6>
+                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; {{'moneyarg' | translate : {m: project.fundingTarget} }}</h6>
                 </div>
               </div>
 
@@ -162,8 +163,6 @@
               </div>
               -->
 
-              <h5  ng-if="userId != project.owner.id"><a href="<c:url value='/users/${project.owner.id}?back=yes'/>"
-                         class="btn btn-dark btn-sm">{{'viewProfile' | translate}}</a></h5>
               <div class="dropdown-divider"></div>
 
               <p class="card-text"><small class="text-muted">{{'lastUpdate' | translate : { date : project.updateDate } }}</small></p>

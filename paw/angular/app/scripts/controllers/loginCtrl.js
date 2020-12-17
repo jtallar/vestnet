@@ -5,8 +5,10 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
     paw2020a.controller('loginCtrl', ['PathService', 'AuthenticationService', '$scope', '$routeParams', '$log', function(PathService, AuthenticationService, $scope, $routeParams, $log) {
       var code = $routeParams.code;
       $scope.code = (code === undefined) ? 0 : code;
+      $scope.loading = false;
 
       $scope.login = function (user) {
+        $scope.loading = true;
         // TODO: Ver si esta condicion de abajo va
         if (AuthenticationService.isLoggedIn()) {
           PathService.get().index().go();
@@ -18,6 +20,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
         }, function (errorResponse) {
           $log.info('Response status: ' + errorResponse.status);
           $scope.code = 1;
+          $scope.loading = false;
         })
       }
     }]);

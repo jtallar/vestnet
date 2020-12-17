@@ -168,7 +168,7 @@
               </div>
             </div>
           </div>
-          <div class="card-body">
+          <div class="card-body feed-body">
             <div class="row">
               <div class="col-5">
                 <div ng-if="!project.portraitExists">
@@ -185,14 +185,14 @@
           </div>
           <div class="card-footer feed-footer">
             <div class="row">
-              <div class="price-footer col-8">
-                <h4>{{'funding' | translate}}</h4>
-                <h6>{{'of' | translate : {of : project.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : project.fundingTarget} }}</b></h6>
+              <div class="price-footer col-9">
+                <h4 style="text-align: center">
+                {{'of' | translate : {of : project.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : project.fundingTarget} }}</b></h4>
                 <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
                   <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
                 </div>
               </div>
-              <div class="col-3">
+              <div class="col-2">
                 <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >
                   <img src="images/view-icon-b.png" alt="">
                 </a>
