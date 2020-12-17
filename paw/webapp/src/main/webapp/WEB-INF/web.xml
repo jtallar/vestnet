@@ -36,6 +36,16 @@
   </filter-mapping>
 
   <filter>
+    <filter-name>LocaleFilter</filter-name>
+    <filter-class>ar.edu.itba.paw.webapp.config.LocaleFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>LocaleFilter</filter-name>
+    <url-pattern>/api/v1/auth/login</url-pattern>
+  </filter-mapping>
+
+  <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
   </filter>

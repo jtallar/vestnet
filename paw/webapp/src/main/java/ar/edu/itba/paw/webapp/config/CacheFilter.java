@@ -15,7 +15,6 @@ import java.io.IOException;
 public class CacheFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheFilter.class);
 
-
     /**
      * Same contract as for {@code doFilter}, but guaranteed to be
      * just invoked once per request within a single request thread.
