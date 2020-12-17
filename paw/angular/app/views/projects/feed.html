@@ -131,7 +131,7 @@
 
 <!-- PROJECTS -->
 
-  <div class="body fid" ng-if="!projects.empty()">
+  <div class="body fid" ng-if="!noProjectsFound">
     <div class="card-deck">
         <div class="card mb-3" ng-repeat="project in projects">
           <div class="card-header text-white">
@@ -197,7 +197,7 @@
   </div>
 
 <!-- EMPTY PROJECT CARD -->
-  <div class="card m-2 no-proj-feed" ng-if="projects.empty() == true">
+  <div class="card m-2 no-proj-feed" ng-if="noProjectsFound">
     <div class="card-header">
       <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
     </div>

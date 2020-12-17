@@ -1,13 +1,14 @@
 'use strict';
 
 
-// TODO: Apply con Enter, Empty projects, pagination, Show page number
+// TODO: Pagination, Show page number in "showing page ... from ... pages
 define(['paw2020a', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat',
   'services/PathService'], function(paw2020a) {
     paw2020a.controller('feedCtrl', ['projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (projectService,imageService,sampleService,PathService,$scope,$routeParams) {
       var _this = this;
       var pageSize = 12, page = 1, param, aux;
       var emptyCategory = {id:null, name:'noFilter'};
+      $scope.noProjectsFound = false;
 
       param = parseInt($routeParams.p);
       if (isNaN(param) || param <= 0) param = 1;
@@ -48,7 +49,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
       });
 
       this.setPathParams = function () {
-        PathService.get().projects().go({p:page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id});
+        PathService.get().setParamsInUrl({p:page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id});
       };
 
       this.filterObject = function () {
@@ -56,6 +57,10 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
       };
 
       this.showProjects = function (projects) {
+        if (projects.length === 0) {
+          $scope.noProjectsFound = true;
+          return;
+        }
         $scope.projects = projects;
         var map = {};
         for(var i = 0; i < $scope.projects.length; i++) {
@@ -85,6 +90,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
           return;
         }
         $scope.projects = [];
+        $scope.noProjectsFound = false;
         _this.setPathParams();
         projectService.getPage(_this.filterObject()).then(function (projects) {
           _this.showProjects(projects.data);

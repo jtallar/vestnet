@@ -27,6 +27,11 @@ define([], function() {
         return $location.path(base.absolutePath());
       };
 
+      base.setParamsInUrl = function (paramsObject) {
+        if (!paramsObject) return;
+        $location.pathReload($location.path().split('?')[0], false).search(paramsObject);
+      };
+
       base.current = function () {
         base.path = $location.url();
         return base;
