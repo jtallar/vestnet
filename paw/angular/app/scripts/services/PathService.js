@@ -28,7 +28,8 @@ define([], function() {
       };
 
       base.current = function () {
-        return $location.url();
+        base.path = $location.url();
+        return base;
       };
 
       base.index = function () {
