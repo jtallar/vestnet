@@ -109,7 +109,8 @@ public class JwtTokenHandler implements TokenHandler {
         String refreshToken = createRefreshToken(loggedUser, extended);
 
         return new JwtTokenResponse(accessToken, ACCESS_TOKEN_EXP_MINUTES, refreshToken, getRefreshTokenExpMinutes(extended),
-                loggedUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()), loggedUser.getLocale());
+                loggedUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()), loggedUser.getLocale(),
+                loggedUser.getId());
     }
 
     private int getRefreshTokenExpMinutes(boolean extended) {

@@ -6,11 +6,8 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     var root = AuthenticatedRestangular.one('users');
 
-    userService.createUser = function (fName, lName,rId,ph,em,rl,pass,ln, bday,count, st, c) { //password solve
-
-      var body = {firstName: fName, lastName: lName, realId: rId, phone: ph, email:em, role:rl, password: pass, linkedin: ln, birthday:bday, country:count, state:st, city: c};
-      return root.customPOST(body)
-
+    userService.createUser = function (user) {
+      return root.customPOST(user);
     };
 
 

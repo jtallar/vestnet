@@ -204,15 +204,4 @@ public class UserServiceImpl implements UserService {
         else user.setVerified(true);
         return true;
     }
-
-
-    /**
-     * Finds a user location by user ID
-     * @param id The unique user's ID
-     * @return The users location
-     */
-//    @Override
-//    public Optional<Location> findLocationById(Long id) {
-//        return userDao.findLocationById(id);
-//    }
 }

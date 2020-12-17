@@ -7,9 +7,7 @@ define(['paw2020a', 'services/userService', 'services/PathService'], function(pa
     $scope.requestNewPassword = function (mail) {
       $scope.invalidEmail = false;
       userService.requestPassword(mail).then(function () {
-        PathService.get().login().go();
-        // TODO: Ver como le pasamos este valor a login
-        $scope.valor = 9;
+        PathService.get().login().go({code: 9});
       }, function (errorResponse) {
         if (errorResponse.status === 404 || errorResponse.status === 400) {
           $scope.invalidEmail = true;
