@@ -13,3 +13,9 @@ vestnet
 `http://pawserver.it.itba.edu.ar/paw-2020a-5/`
 #### Logs File
 `http://pawserver.it.itba.edu.ar/logs/paw2020a-vestnet.%d{yyyy-MM-dd}.log`
+
+
+#### Configuration File
+To build accordingly the JAR file, it is needed to add a config file called
+`application.properties` at `paw/webapp/src/main/resources/application.properties`
+
