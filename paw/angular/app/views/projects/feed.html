@@ -4,8 +4,6 @@
 <!--    &lt;!&ndash; endbuild &ndash;&gt;-->
 <!--</head>-->
 
-<body ng-controller="feedCtrl">
-
 <vnheader></vnheader>
 
 <div class="row sep-nav">
@@ -29,16 +27,17 @@
 
 <div class="sidenav sidenav-feed">
   <div class="form-row align-items-center">
-    <ng-form name="filter" ng-submit="">
+    <ng-form name="filterForm">
       <div class="container">
 
         <div class="row field">
           <div class="col-">
             <img src="images/lupa_bv.png" class="icon-img" width="38px">
           </div>
-          <div class="col-md">
+          <div class="col-md" ng-class="{'has-error': filterForm.search.$touched && filterForm.search.$invalid}">
 <!--            {{ 'search' | translate }}-->
-            <input id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search" ng-model="filterdata.search"/>
+            <input name="search" id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search"
+                   ng-model="searchField" ng-maxlength="50"/>
 
             <!-- <form:errors path="keyword" element="p" cssClass="formError"/> -->
           </div>
@@ -46,10 +45,8 @@
         <div class="row field">
           <div class="col- icon-img"></div>
           <div class="col-md">
-            <select id="field" class="custom-select mr-sm-2" >
-                <option value="0">{{'noFilter' | translate}}</option>
-                <option ng-repeat="field in fields">{{field}}</option>
-            </select>
+            <select ng-model="selectedField" class="custom-select mr-sm-2"
+                    ng-options="option as option.name | translate for option in fields track by option.id"></select>
           </div>
         </div>
 
@@ -60,11 +57,8 @@
             <img src="images/filter.png" class="icon-img" width="38px">
           </div>
           <div class="col-md">
-            <select class="custom-select mr-sm-2" id="category" ng-model="filterdata.category">
-              <option value="">{{'noFilter' | translate}} </option>
-              <option ng-repeat="cat in categories">{{cat}}</option>
-
-            </select>
+            <select ng-model="selectedCategory" class="custom-select mr-sm-2"
+                    ng-options="option as option.name | translate for option in categories track by option.id"></select>
           </div>
 
         </div>
@@ -73,33 +67,32 @@
             <img src="images/order.png" class="icon-img">
           </div>
           <div class="col-md">
-            <select id="order" class="custom-select mr-sm-2" ng-model="filterdata.order">
-                <option ng-repeat="ord in order"> {{ord}}</option>
-            </select>
+            <select ng-model="selectedOrder" class="custom-select mr-sm-2"
+                    ng-options="option as option.name | translate for option in orders track by option.id"></select>
           </div>
         </div>
         <div class="row field">
           <label class="range">{{'range' | translate}} </label>
           <div>
-            <div class="row range-box col-md">
+            <div class="row range-box col-md" ng-class="{'has-error': filterForm.minCost.$touched && filterForm.minCost.$invalid}">
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'min' | translate}}</span>
                 </div>
-                <input ng-model="filterdata.minCost" type="number" class="form-control mx-auto mx-auto" placeholder="100" id="filter-form-min"/>
+                <input name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="1000" id="filter-form-min"
+                       max="2000000000" step="1" no-float/>
               </div>
               <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
             </div>
-            <div class="row range-box col-md" >
+            <div class="row range-box col-md" ng-class="{'has-error': filterForm.maxCost.$touched && filterForm.maxCost.$invalid}">
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'max' | translate}}</span>
                 </div>
-                <input ng-model="filterdata.maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="100000"
-                            id="filter-form-max"/>
+                <input name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
+                            id="filter-form-max" max="2000000000" step="1" no-float/>
               </div>
-              <!-- <form:errors path="maxCost" element="p" cssClass="formError"/>
-              <form:errors cssClass="formError" element="p"/> -->
+              <label class="formError" ng-if="costRangeError" id="categoryCountError" >{{'costRangeRequirement' | translate}}</label>
             </div>
           </div>
         </div>
@@ -108,7 +101,7 @@
             <input class="btn btn-clear pull-left" type="button" value="{{'clear' | translate}}" ng-click="clearFilter()"/>
           </div>
           <div class="col-6 apply-btn">
-            <input type="submit" class="btn btn-dark pull-right" value="{{'apply' | translate}}" ng-click="adjustInputs()"/>
+            <input type="submit" class="btn btn-dark pull-right" value="{{'apply' | translate}}" ng-click="applyFilter()"/>
           </div>
         </div>
       </div>
@@ -138,7 +131,7 @@
 
 <!-- PROJECTS -->
 
-  <div class="body fid" ng-if="!projects.empty()">
+  <div class="body fid" ng-if="!noProjectsFound">
     <div class="card-deck">
         <div class="card mb-3" ng-repeat="project in projects">
           <div class="card-header text-white">
@@ -204,7 +197,7 @@
   </div>
 
 <!-- EMPTY PROJECT CARD -->
-  <div class="card m-2 no-proj-feed" ng-if="projects.empty() == true">
+  <div class="card m-2 no-proj-feed" ng-if="noProjectsFound">
     <div class="card-header">
       <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
     </div>
