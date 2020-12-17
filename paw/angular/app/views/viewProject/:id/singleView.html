@@ -25,7 +25,7 @@
 -->
 
 <!-- Message and Back logic -->
-<div class="container sep-nav" style="margin-top: 20px">
+  <div class="container sep-nav" style="margin-top: 20px">
     <div class="d-flex justify-content-between align-self-center" style="margin-right:6%">
       <div class="p-2 mx-3 my-1">
         <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
@@ -45,7 +45,6 @@
             <div id="carousel-items">
               <div ng-if="!project.imageExists">
                 <img ng-src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
-
               </div>
               <div ng-if="project.imageExists">
                 <div class="carrousel-item active">
@@ -53,7 +52,7 @@
                 </div>
                 <div  ng-if="project.slideshowExists">
                   <div class="carousel-item" ng-repeat="image in project.slideshow">
-                    <img ng-src="data:image/JPEG;base64,{{image}}"class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                    <img ng-src="data:image/JPEG;base64,{{image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
                   </div>
                 </div>
 
@@ -203,7 +202,10 @@
           -->
         </div>
       </div>
-    </div>
+
+<!--    </div>-->
+<!--    ESTE ES EL QUE SAQUE PORQUE ROMPE-->
+
     <!--
     <sec:authorize access="hasRole('ROLE_INVESTOR')">
       <div class="collapse" id="contact">
