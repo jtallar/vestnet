@@ -21,14 +21,20 @@
   <div class="container emp-profile">
     <div class="row">
       <div class="col-md-4">
-        <div class="profile-img ">
+
+        <div class="profile-img">
           <div ng-if="user.imageExists">
             <img ng-src="data:image/JPEG;base64,{{user.image}}" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
           </div>
           <div ng-if="!user.imageExists">
-            <img ng-src="/images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+            <img ng-src="/images/jmv-avatar.jpg" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
           </div>
+          <label for="customFileProfilePic">
+            <i class="fa fa-pencil fa-2x" style="color: black"></i>
+          </label>
+          <input hidden type="file" class="custom-file-input" id="customFileProfilePic"/>
         </div>
+
         <div ng-if="true" class="text-center my-2">
           <button href="#" class="btn btn-linkedin">
             <i class="fa fa-linkedin pull-left"></i>

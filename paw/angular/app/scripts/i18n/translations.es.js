@@ -249,6 +249,7 @@ define([], function() {
     from: 'de',
     stage: 'Nombre de etapa',
     nooffers: 'No hay ofertas',
-    nomessages: 'No hay mensajes'
+    nomessages: 'No hay mensajes',
+    you: 'Tú'
   };
 });
