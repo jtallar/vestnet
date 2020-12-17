@@ -100,8 +100,19 @@ html{
 }
 
 .btn-black{
+  outline: solid 1px white;
   background-color: #000 !important;
   color: #fff;
+}
+
+.btn-inv{
+  background: transparent none;
+  margin-bottom: 10px;
+  padding: 0 !important;
+}
+.btn-inv img{
+  width: 30px;
+  height: 30px;
 }
 
 .nav-tabs{
