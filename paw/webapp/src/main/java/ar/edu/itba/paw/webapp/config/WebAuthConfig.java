@@ -226,6 +226,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
      * @return True for development mode, false if production.
      */
     private boolean isDevelopmentMode() {
-        return LOGGER.isDebugEnabled();
+        //return LOGGER.isDebugEnabled();
+        return true;
     }
 }

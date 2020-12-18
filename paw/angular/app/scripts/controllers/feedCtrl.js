@@ -7,7 +7,13 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
     paw2020a.controller('feedCtrl', ['projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (projectService,imageService,sampleService,PathService,$scope,$routeParams) {
       var _this = this;
       var pageSize = 12, page = 1, param, aux;
+      $scope.page = 1
+
       var emptyCategory = {id:null, name:'noFilter'};
+
+      $scope.firstPage = 0
+      $scope.lastPage = 0
+
       $scope.noProjectsFound = false;
 
       param = parseInt($routeParams.p);
@@ -48,13 +54,53 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
         }
       });
 
+
+
+      $scope.getToPage = function (page) {
+        $scope.page = page
+
+        var params = _this.filterObject()
+        params.p = page
+        projectService.getPage(params).then(function (projects) {
+          _this.getArgs(projects.headers().link)
+          _this.showProjects(projects.data);
+        }, function (errorResponse) {
+          console.error(errorResponse);
+        });
+      };
+
       this.setPathParams = function () {
+        console.log(page)
         PathService.get().setParamsInUrl({p:page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id});
       };
 
       this.filterObject = function () {
         return {p:page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id};
       };
+
+      this.getArgs = function (string) {
+
+
+        var firstLinkStart = string.indexOf("<")
+        var firstLinkFinish = string.indexOf(">")
+        var secondLinkStart = string.indexOf("<", firstLinkStart + 1)
+        var secondLinkFinish = string.indexOf(">", secondLinkStart + 1)
+
+
+
+        var firstLink = string.substr(firstLinkStart + 1, firstLinkFinish - firstLinkStart - 1)
+
+        var secondLink = string.substr( secondLinkStart + 1, secondLinkFinish - secondLinkStart - 1)
+
+
+        //console.log(secondLink)
+
+        var firstPageSplit = firstLink.split("p=")
+        var lastPageSplit = secondLink.split("p=")
+
+        $scope.firstPage = firstPageSplit[2]
+        $scope.lastPage = lastPageSplit[2]
+      }
 
       this.showProjects = function (projects) {
         if (projects.length === 0) {
@@ -89,10 +135,14 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
           $scope.costRangeError = true;
           return;
         }
+
+        $scope.page = 1
+
         $scope.projects = [];
         $scope.noProjectsFound = false;
         _this.setPathParams();
         projectService.getPage(_this.filterObject()).then(function (projects) {
+          _this.getArgs(projects.headers().link)
           _this.showProjects(projects.data);
         }, function (errorResponse) {
           console.error(errorResponse);
@@ -101,6 +151,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
 
       $scope.projects = [];
       projectService.getPage(_this.filterObject()).then(function (projects) {
+        _this.getArgs(projects.headers().link)
         _this.showProjects(projects.data);
       }, function (errorResponse) {
         console.error(errorResponse);
@@ -110,6 +161,15 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
         return parseInt(num);
       }
 
+
+
+
+
+
     }]);
+
+
+
+
 
 });
