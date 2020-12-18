@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.webapp.dto.NotificationDto;
 import ar.edu.itba.paw.webapp.dto.OfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,6 @@ public class MessageRestController {
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response offer(@Valid final OfferDto offerDto) {
-        if (sessionUser.isAnonymous()) return Response.status(Response.Status.FORBIDDEN).build();
 
         final Optional<Message> message = messageService.create(OfferDto.toMessage(offerDto), sessionUser.getId(), uriInfo.getBaseUri());
 
@@ -54,8 +54,8 @@ public class MessageRestController {
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
                 .build();
     }
 
@@ -70,8 +70,8 @@ public class MessageRestController {
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
                 .build();
     }
 
@@ -87,8 +87,8 @@ public class MessageRestController {
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().queryParam("p", messagePage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
                 .build();
     }
 
@@ -125,7 +125,7 @@ public class MessageRestController {
     public Response projectNotifications(@PathParam("project_id") final long projectId) {
 
         long count = messageService.projectNotifications(projectId, sessionUser.getId());
-        return Response.ok(count).build();
+        return Response.ok(NotificationDto.fromNumber(count)).build();
     }
 
 
@@ -135,6 +135,6 @@ public class MessageRestController {
     public Response projectNotifications() {
 
         long count = messageService.userNotifications(sessionUser.getId(), sessionUser.isInvestor());
-        return Response.ok(count).build();
+        return Response.ok(NotificationDto.fromNumber(count)).build();
     }
 }

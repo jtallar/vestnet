@@ -41,6 +41,7 @@
 
 <body ng-controller="IndexCtrl">
 
+  <vnheader ng-show="showHeader.value"></vnheader>
   <div ng-view=""></div>
 
   <!-- build:js(.) scripts/oldieshim.js -->
@@ -69,5 +70,9 @@
   <!-- endbuild -->
 
 </body>
+
+<footer ng-show="showHeader.value">
+  <vnfooter></vnfooter>
+</footer>
 </html>
 
