@@ -25,10 +25,8 @@ public class CacheFilter extends OncePerRequestFilter {
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
                                     final FilterChain chain) throws ServletException, IOException {
 
-        /** All the requests to the API */
-        if(request.getRequestURI().matches(".*/api/.*")) response.setHeader("Cache-Control", "max-age=120, public"); // 2 minutes
-        /** All the requests not to the API (front files) */
-        else  response.setHeader("Cache-Control", "max-age=31536000, public"); // 1 year
+        /** All the requests not to the API (front files mostly) */
+        if(!request.getRequestURI().matches(".*/api/.*")) response.setHeader("Cache-Control", "max-age=31536000, public"); // 1 year
 
         response.setHeader("Connection", "Keep-Alive");
         chain.doFilter(request, response);
