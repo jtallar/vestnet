@@ -1,10 +1,16 @@
 'use strict';
 
-define(['paw2020a','services/projectService', 'services/sampleService'], function(paw2020a) {
-    paw2020a.controller('singleViewCtrl',['projectService','sampleService', '$scope', function(projectService,sampleService, $scope) {
+define(['paw2020a','services/projectService', 'services/sampleService', 'services/PathService'], function(paw2020a) {
+    paw2020a.controller('singleViewCtrl',['projectService','sampleService', 'PathService', '$scope', '$routeParams', function(projectService,sampleService, PathService, $scope, $routeParams) {
+
+      var param = parseInt($routeParams.id);
+      if (isNaN(param) || param <= 0) {
+        PathService.get().error().go();
+        return;
+      }
+      $scope.id = param;
 
       $scope.sent = false;    // if the mail was sent retreive from url
-      $scope.id = 108;
       $scope.owner = false;
 
       $scope.userId = 2;

@@ -7,11 +7,11 @@ define([], function() {
     var pathService = {};
 
     // /\/users\/.*/
-    pathService.noAuthRoutesRE = [/\//, /\/login/, /\/welcome/, /\/signUp/, /\/resetPassword/, /\/requestPassword/, /\/verify/];
-    pathService.freeRoutesRE = [/\/projects\/.*/, /\/error/];
-    pathService.investorRoutesRE = [/\/requests/, /\/messages/];
-    pathService.entrepreneurRoutesRE = [/\/dashboard/, /\/editProject/, /\/newProject/];
-    pathService.authRoutesRE = [/\/users\/.*/, /\/chat\/.*/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
+    pathService.noAuthRoutesRE = [/^\/$/, /^\/login$/, /^\/welcome$/, /^\/signUp$/, /^\/resetPassword$/, /^\/requestPassword$/, /^\/verify$/];
+    pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
+    pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/];
+    pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject$/, /^\/newProject$/];
+    pathService.authRoutesRE = [/^\/users\/.*$/, /^\/chat\/.*$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
 
     pathService.get = function () {
       var base = {
