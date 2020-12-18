@@ -82,7 +82,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider);
     }
 
-    // TODO: Ver como evitar que tomcat mande su default response para errores 403 y 404
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -225,7 +224,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
      * @return True for development mode, false if production.
      */
     private boolean isDevelopmentMode() {
-        //return LOGGER.isDebugEnabled();
-        return true;
+        return LOGGER.isDebugEnabled();
     }
 }

@@ -8,7 +8,6 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
       scope: {},
       templateUrl: 'views/directives/header.html',
       controller: function ($scope, $rootScope) {
-        console.log("controller header");
         $scope.eDropdown = ['dashboard', 'users'];
         // $scope.eIcons = ['home-icon', 'user-icon'];
         $scope.iDropdown = ['requests', 'messages', 'users'];
@@ -17,9 +16,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
         $scope.notifications = false;
         $scope.userid = 2;
 
-        // TODO: Check if this works
         var checkNotif = function() {
-          console.log('entrando a checkNotif');
           if ($scope.valor === 2) return;
           messageService.notificationCount().then(function (response) {
             $scope.notifications = (response.data.unread !== 0);
