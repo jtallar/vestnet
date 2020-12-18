@@ -54,10 +54,12 @@
 
   <!--          <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
   <!--            <c:if test="${session_user_id eq user.id}">-->
+          <div ng-if="id == loggedId">
                 <li ng-if="true" class="nav-item">
                   <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
                      aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
                 </li>
+          </div>
   <!--            </c:if>-->
   <!--          </sec:authorize>-->
           </ul>
