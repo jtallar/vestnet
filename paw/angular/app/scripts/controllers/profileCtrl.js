@@ -1,20 +1,11 @@
     'use strict';
 
-    define(['paw2020a', 'services/userService', 'services/sampleService','services/AuthenticationService','services/projectService'], function(paw2020a) {
-    paw2020a.controller('profileCtrl',['userService','sampleService','AuthenticationService','projectService','$scope','$routeParams', function(userService,sampleService,AuthenticationService,projectService, $scope, $routeParams) {
+    define(['paw2020a', 'services/userService', 'services/sampleService'], function(paw2020a) {
+    paw2020a.controller('profileCtrl',['userService','sampleService','$scope', function(userService,sampleService, $scope) {
 
+      var id = '16';
 
-      $scope.id = parseInt($routeParams.id);
-      if (isNaN($scope.id) || $scope.id <= 0) {
-        PathService.get().error().go();
-        return;
-      }
-
-
-      $scope.loggedId = AuthenticationService.getUserId()
-
-
-      userService.getUser($scope.id.toString()).then(function (userApi) {
+      userService.getUser(id).then(function (userApi) {
         $scope.user = {
           'firstName': userApi.data.firstName,
           'lastName': userApi.data.lastName,
@@ -49,43 +40,29 @@
       //   console.log(response)
       // })
 
-      if($scope.loggedId == $scope.id) {
-        $scope.favs = []
-        userService.getFavorites().then(function (response) {
-          for (var i = 0; i < response.data.length; i++) {
-            projectService.getById(response.data[i].projectId.toString()).then(function (response) {
-              $scope.favs.push(response.data)
-            })
-          }
-
-        })
-      }
-
-
-
-      // $scope.favs = [
-      //   {
-      //     'name': 'Vestnet',
-      //     'cost': 100000,
-      //     'image': 'images/projectNoImage.png',
-      //     'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-      //     'id': 1
-      //   },
-      //   {
-      //     'name': 'Vestnet',
-      //     'cost': 100000,
-      //     'image': 'images/projectNoImage.png',
-      //     'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-      //     'id': 1
-      //   },
-      //   {
-      //     'name': 'Vestnet',
-      //     'cost': 100000,
-      //     'image': 'images/projectNoImage.png',
-      //     'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
-      //     'id': 1
-      //   }
-      // ];
+      $scope.favs = [
+        {
+          'name': 'Vestnet',
+          'cost': 100000,
+          'image': 'images/projectNoImage.png',
+          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+          'id': 1
+        },
+        {
+          'name': 'Vestnet',
+          'cost': 100000,
+          'image': 'images/projectNoImage.png',
+          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+          'id': 1
+        },
+        {
+          'name': 'Vestnet',
+          'cost': 100000,
+          'image': 'images/projectNoImage.png',
+          'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país',
+          'id': 1
+        }
+      ];
 
       //TODO favs projects
 
