@@ -248,6 +248,7 @@ define([], function() {
     totalinv: 'Total Invested',
     from: 'from',
     stage: 'Stage name',
+    stageN: 'Stage {{n}}',
     nooffers: 'No offers',
     nomessages: 'No messages',
     you: 'You'
