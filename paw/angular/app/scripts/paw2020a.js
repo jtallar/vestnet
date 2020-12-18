@@ -136,8 +136,9 @@ define(['routes',
 				'$filterProvider',
 				'$provide',
 				'$translateProvider',
-				'RestangularProvider',
-				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, RestangularProvider) {
+        '$httpProvider',
+        'RestangularProvider',
+				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, $httpProvider, RestangularProvider) {
           $locationProvider.hashPrefix('');
 					paw2020a.controller = $controllerProvider.register;
 					paw2020a.directive = $compileProvider.directive;
@@ -169,6 +170,8 @@ define(['routes',
 
           // TODO: Siempre que interpretamos la response como response nomas, solo datos, habria que cambiarlo a response.data
           RestangularProvider.setFullResponse(true);
+
+          $httpProvider.defaults.headers.common["Accept-Language"] = navigator.language;
 				}]);
 
 		return paw2020a;
