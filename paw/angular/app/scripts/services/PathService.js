@@ -6,6 +6,13 @@ define([], function() {
   return function($location) {
     var pathService = {};
 
+    // /\/users\/.*/
+    pathService.noAuthRoutesRE = [/^\/$/, /^\/login$/, /^\/welcome$/, /^\/signUp$/, /^\/resetPassword$/, /^\/requestPassword$/, /^\/verify$/];
+    pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
+    pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/];
+    pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject$/, /^\/newProject$/];
+    pathService.authRoutesRE = [/^\/users\/.*$/, /^\/chat\/.*$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
+
     pathService.get = function () {
       var base = {
         path: '' // path: '#!'
@@ -41,12 +48,28 @@ define([], function() {
         return append('/');
       };
 
+      base.welcome = function () {
+        return append('/welcome');
+      };
+
       base.login = function () {
         return append('/login');
       };
 
       base.logout = function () {
         return append('/logout');
+      };
+
+      base.resetPassword = function () {
+        return append('/resetPassword');
+      };
+
+      base.requestPassword = function () {
+        return append('/requestPassword');
+      };
+
+      base.signUp = function () {
+        return append('/signUp');
       };
 
       base.projects = function () {
@@ -57,13 +80,40 @@ define([], function() {
         return append('/projects/' + id);
       };
 
-      base.notFound = function () {
-        return append('/notFound');
+      base.user = function (id) {
+        return append('/users/' + id);
       };
 
-      base.forbidden = function () {
-        // TODO: Go to forbidden custom
-        return append('/notFound');
+      base.requests = function () {
+        return append('/requests');
+      };
+
+      base.dashboard = function () {
+        return append('/dashboard');
+      };
+
+      base.messages = function () {
+        return append('/messages');
+      };
+
+      base.newProject = function () {
+        return append('/newProject');
+      };
+
+      base.verify = function () {
+        return append('/verify');
+      };
+
+      base.editProject = function () {
+        return append('/editProject');
+      };
+
+      base.chat= function (id1, id2) {
+        return append('/chat/' + id1 + '/' + id2);
+      };
+
+      base.error = function () {
+        return append('/error');
       };
 
       return base;

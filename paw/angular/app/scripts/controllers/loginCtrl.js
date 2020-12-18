@@ -9,14 +9,9 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'],
 
       $scope.login = function (user) {
         $scope.loading = true;
-        // TODO: Ver si esta condicion de abajo va
-        if (AuthenticationService.isLoggedIn()) {
-          PathService.get().index().go();
-          return;
-        }
         AuthenticationService.login(user).then(function () {
           // TODO: Ver como hacer para que vaya a donde estaba yendo
-          PathService.get().index().go();
+          PathService.get().projects().go();
         }, function (errorResponse) {
           $log.info('Response status: ' + errorResponse.status);
           $scope.code = 1;

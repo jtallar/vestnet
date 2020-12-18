@@ -30,29 +30,25 @@ define(['routes',
     // https://stackoverflow.com/questions/28010548/restangular-how-to-override-error-interceptors
     paw2020a.run(['$rootScope', '$location', 'Restangular', 'PathService', 'AuthenticationService',
       function ($rootScope, $location, Restangular, PathService, AuthenticationService) {
-      // TODO: Ver por que empty y / no son lo mismo, como compararlos como igual
-        var routesWithNoAuth = [PathService.get().login().path, PathService.get().index().path];
-
-        var routeClean = function (route) {
-          return _.find(routesWithNoAuth,
-            function (noAuthRoute) {
-              console.log(route + ' comp to ' + noAuthRoute);
-              return route === noAuthRoute;
-            });
+        var routeMatches = function (route, routeRE) {
+          for (var i = 0; i < routeRE.length; i++) {
+            if (routeRE[i].test(route.split('?')[0])) return true;
+          }
+          return false;
         };
 
-        // TODO: Ver bien como queda esto, tomar el url sin params
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
-          // if logged in and trying to access login, redirect to home
-          if (AuthenticationService.isLoggedIn() && ($location.url() === PathService.get().login().absolutePath())) {
-            // PathService.get().go();
-            console.log('User already logged in');
-          }
-
-          // if route requires auth and user is not logged in
-          if (!routeClean($location.url()) && !AuthenticationService.isLoggedIn()) {
-              // redirect back to login
-              // PathService.get().login().go();
+          var logged = AuthenticationService.isLoggedIn(), url = $location.url();
+          if (logged && routeMatches(url, PathService.noAuthRoutesRE)) {
+            // if logged in and trying to access no auth routes, redirect to projects
+            PathService.get().projects().go();
+          } else if (!logged && routeMatches(url, PathService.authRoutesRE)) {
+            // if not logged in and trying to access auth routes, redirect to login
+            PathService.get().login().go();
+          } else if ((!AuthenticationService.isInvestor() && routeMatches(url, PathService.investorRoutesRE)) ||
+              (!AuthenticationService.isEntrepreneur() && routeMatches(url, PathService.entrepreneurRoutesRE))) {
+            // if logged in and trying to access something they shouldnt, redirect to 403
+            PathService.get().error().go({code:403});
           }
         });
 
@@ -78,12 +74,12 @@ define(['routes',
         // TODO: Add all error codes wanted
         Restangular.setErrorInterceptor(function (response, deferred, responseHandler) {
           if (response.status === 404) {
-            // PathService.get().notFound().go();
+            // PathService.get().error().go({code:404});
             console.error("404 que tenes que manejar");
             return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
-              PathService.get().forbidden().go();
+              PathService.get().error().go({code:403});
             } else {
               PathService.get().login().go();
             }
@@ -117,8 +113,9 @@ define(['routes',
 				'$filterProvider',
 				'$provide',
 				'$translateProvider',
-				'RestangularProvider',
-				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, RestangularProvider) {
+        '$httpProvider',
+        'RestangularProvider',
+				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, $httpProvider, RestangularProvider) {
           $locationProvider.hashPrefix('');
 					paw2020a.controller = $controllerProvider.register;
 					paw2020a.directive = $compileProvider.directive;
@@ -150,6 +147,8 @@ define(['routes',
 
           // TODO: Siempre que interpretamos la response como response nomas, solo datos, habria que cambiarlo a response.data
           RestangularProvider.setFullResponse(true);
+
+          $httpProvider.defaults.headers.common["Accept-Language"] = navigator.language;
 				}]);
 
 		return paw2020a;
