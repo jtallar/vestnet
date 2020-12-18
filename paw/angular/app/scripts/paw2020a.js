@@ -37,19 +37,42 @@ define(['routes',
           return false;
         };
 
+        var credentialChange = function () {
+          var logged = AuthenticationService.isLoggedIn(),
+            investor = AuthenticationService.isInvestor(),
+            entrep = AuthenticationService.isEntrepreneur();
+
+          if (logged && investor) {
+            $rootScope.role = {value: 0};
+          } else if (logged && entrep) {
+            $rootScope.role = {value: 1};
+          } else {
+            $rootScope.role = {value: 2};
+          }
+        };
+        credentialChange();
+
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
           var logged = AuthenticationService.isLoggedIn(), url = $location.url();
-          if (logged && routeMatches(url, PathService.noAuthRoutesRE)) {
+          var notAuthUrl = routeMatches(url, PathService.noAuthRoutesRE);
+
+          $rootScope.showHeader = {value: !notAuthUrl};
+
+          if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
             PathService.get().projects().go();
           } else if (!logged && routeMatches(url, PathService.authRoutesRE)) {
             // if not logged in and trying to access auth routes, redirect to login
-            PathService.get().login().go();
+            PathService.get().login().go({url: url});
           } else if ((!AuthenticationService.isInvestor() && routeMatches(url, PathService.investorRoutesRE)) ||
               (!AuthenticationService.isEntrepreneur() && routeMatches(url, PathService.entrepreneurRoutesRE))) {
             // if logged in and trying to access something they shouldnt, redirect to 403
             PathService.get().error().go({code:403});
           }
+        });
+
+        $rootScope.$on('credentialsChanged', function (event) {
+          credentialChange();
         });
 
         var requestsInProgress = 0;
@@ -113,8 +136,9 @@ define(['routes',
 				'$filterProvider',
 				'$provide',
 				'$translateProvider',
-				'RestangularProvider',
-				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, RestangularProvider) {
+        '$httpProvider',
+        'RestangularProvider',
+				function($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, $httpProvider, RestangularProvider) {
           $locationProvider.hashPrefix('');
 					paw2020a.controller = $controllerProvider.register;
 					paw2020a.directive = $compileProvider.directive;
@@ -146,6 +170,8 @@ define(['routes',
 
           // TODO: Siempre que interpretamos la response como response nomas, solo datos, habria que cambiarlo a response.data
           RestangularProvider.setFullResponse(true);
+
+          $httpProvider.defaults.headers.common["Accept-Language"] = navigator.language;
 				}]);
 
 		return paw2020a;

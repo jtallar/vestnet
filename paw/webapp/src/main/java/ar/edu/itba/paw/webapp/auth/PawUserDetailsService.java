@@ -29,7 +29,7 @@ public class PawUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        final Optional<User> optionalUser =  this.userService.setLocale(username, LocaleContextHolder.getLocale().toString());
+        final Optional<User> optionalUser =  this.userService.setLocale(username, LocaleContextHolder.getLocale().toLanguageTag());
         if (!optionalUser.isPresent()) throw new UsernameNotFoundException(username + "not found");
 
         final User user = optionalUser.get();

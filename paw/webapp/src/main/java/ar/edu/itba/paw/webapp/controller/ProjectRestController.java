@@ -107,6 +107,7 @@ public class ProjectRestController {
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getEndPage()).build(), "last")
+                .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
 

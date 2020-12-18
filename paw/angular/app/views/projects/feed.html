@@ -4,22 +4,39 @@
 <!--    &lt;!&ndash; endbuild &ndash;&gt;-->
 <!--</head>-->
 
-<vnheader></vnheader>
+<!--<vnheader></vnheader>-->
 
 <div class="row sep-nav">
   <div class="col-1"></div>
   <div class="col-11">
     <ul class="pagination justify-content-center">
-      <li id="li-previous" class="page-item">
-        <a id="li-a-previous" class="page-link" onclick="" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
+      <div ng-if="(page - 1) >= firstPage">
+        <li id="li-previous" class="page-item">
+          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      </div>
+      <div ng-if="(page - 1) >= firstPage">
+        <li id="li-previous-num" class="page-item">
+          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="Previous">{{page -1}}</a>
+        </li>
+      </div>
+      <li id="li-now" class="page-item">
+        <a id="li-a-now" class="page-link" onclick="">{{page}}</a>
       </li>
-      <li id="li-next" class="page-item">
-        <a id="li-a-next" class="page-link" onclick="" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
+      <div ng-if="(page + 1) <= lastPage">
+        <li id="li-next-num" class="page-item">
+          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)">{{page + 1}}</a>
+        </li>
+      </div>
+      <div ng-if="(page + 1) <= lastPage">
+        <li id="li-next" class="page-item">
+          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </div>
     </ul>
   </div>
 </div>
@@ -207,7 +224,7 @@
 
 </body>
 
-<footer>
-  <vnfooter></vnfooter>
-</footer>
+<!--<footer>-->
+<!--  <vnfooter></vnfooter>-->
+<!--</footer>-->
 

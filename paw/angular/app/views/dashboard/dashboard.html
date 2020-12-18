@@ -1,6 +1,6 @@
 <body ng-controller="dashboardCtrl">
 
-<vnheader></vnheader>
+<!--<vnheader></vnheader>-->
 
 <!--  <div class="col-1"></div>-->
 <!--  <div class="col-4"><strong class="tab-title2">{{'myProjects' | translate}}</strong></div>-->
@@ -21,7 +21,12 @@
 
         <div class="row">
           <div class="col-1">
-            <img src="{{project.image}}" class="p-img"/>
+            <div ng-if="project.portraitExists">
+              <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
+            </div>
+            <div ng-if="!project.portraitExists">
+              <img ng-src="images/projectNoImage.png" class="p-img"/>
+            </div>
           </div>
           <div class="col-md-11">
             <div class="card-block">
@@ -37,7 +42,7 @@
                   </a>
                 </div>
                 <div class="col-1">
-                  <a ng-click="" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
+                  <a ng-click="fetchMessage(project.id)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
                      data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
                     <div class="notification-icon">
                         <img class="nav-icon" src="images/chat-icon-b.png" alt="">
@@ -190,8 +195,8 @@
     <a href="#/newProject" class="btn btn-lg"> {{'addProject' | translate}} </a>
   </div>
 
-  <footer>
-    <vnfooter></vnfooter>
-  </footer>
+<!--  <footer>-->
+<!--    <vnfooter></vnfooter>-->
+<!--  </footer>-->
 
 </body>

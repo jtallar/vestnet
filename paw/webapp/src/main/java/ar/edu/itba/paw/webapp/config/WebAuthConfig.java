@@ -82,7 +82,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider);
     }
 
-    // TODO: Ver como evitar que tomcat mande su default response para errores 403 y 404
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -100,14 +99,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/location/**").permitAll()
 
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/**").hasRole("ENTREPRENEUR")
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/projects/**").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/**").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications").authenticated()
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/**").authenticated()
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/**").authenticated()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/status/**").authenticated()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/seen/**").permitAll()
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/projects/**").permitAll()
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/projects/**").hasRole("ENTREPRENEUR")
@@ -120,7 +119,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").permitAll()
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users").authenticated()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()
                 .antMatchers("/**").permitAll(); // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
 
         if (isDevelopmentMode()) http

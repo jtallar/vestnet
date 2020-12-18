@@ -44,6 +44,11 @@ define([], function() {
         return base;
       };
 
+      base.setFullUrl = function (url) {
+        base.path = url;
+        return base;
+      };
+
       base.index = function () {
         return append('/');
       };
