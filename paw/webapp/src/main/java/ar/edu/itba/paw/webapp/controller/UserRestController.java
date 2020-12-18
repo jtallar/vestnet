@@ -81,6 +81,17 @@ public class UserRestController {
     }
 
 
+    @GET
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response personalProfile() {
+
+        final Optional<User> optionalUser = userService.findById(sessionUser.getId());
+
+        return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
+
+
     // TODO: Por algun motivo, retorna un "type":"fullUserDto" entre los atributos que devuelve, es problema?
     // FIXME: Tira un error 500 para algunos de los primeros usuarios, que no tenian validaciones. Por ejemplo, el 5 con el phoneNumber
     @GET

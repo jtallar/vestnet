@@ -119,7 +119,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").permitAll()
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").authenticated()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users").authenticated()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()
                 .antMatchers("/**").permitAll(); // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
 
         if (isDevelopmentMode()) http
