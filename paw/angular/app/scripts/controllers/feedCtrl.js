@@ -9,6 +9,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
       var pageSize = 12, page = 1, param, aux;
       var emptyCategory = {id:null, name:'noFilter'};
       $scope.noProjectsFound = false;
+      $scope.loading = true;
 
       param = parseInt($routeParams.p);
       if (isNaN(param) || param <= 0) param = 1;
@@ -59,6 +60,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
       this.showProjects = function (projects) {
         if (projects.length === 0) {
           $scope.noProjectsFound = true;
+          $scope.loading = false;
           return;
         }
         $scope.projects = projects;
@@ -73,6 +75,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
             });
           }
         }
+        $scope.loading = false;
       };
 
       $scope.clearFilter = function () {
