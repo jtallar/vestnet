@@ -89,7 +89,7 @@ public class MessageJpaDao implements MessageDao {
 
         Root<Message> root = query.from(Message.class);
         addPredicates(query, builder, root, filters);
-        addOrder(query, builder, root, order);
+        addOrder(query, builder, root, order, false);
 
         return entityManager.createQuery(query).getResultList();
     }
@@ -107,7 +107,7 @@ public class MessageJpaDao implements MessageDao {
 
         Root<Message> root = query.from(Message.class);
         addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria(FilterField.IDS, ids)));
-        addOrder(query, builder, root, order);
+        addOrder(query, builder, root, order, false);
         return entityManager.createQuery(query).getResultList();
     }
 
@@ -147,7 +147,7 @@ public class MessageJpaDao implements MessageDao {
          * In case there is grouping by ID (GroupField.NONE) returns distinct IDs */
         query.select(builder.max(root.get("id")));
         addPredicates(query, builder, root, filters);
-        addOrder(query, builder, root, order);
+        addOrder(query, builder, root, order, group.isGrouped());
         query.groupBy(root.get(group.getField()));
 
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);
@@ -164,11 +164,12 @@ public class MessageJpaDao implements MessageDao {
      * @param builder Criteria query builder;
      * @param root Query message root.
      * @param order The order to be applied.
+     * @param isGrouped If its grouped then the parameter to ask is different.
      */
-    private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, OrderField order) {
+    private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, OrderField order, boolean isGrouped) {
         switch (order) {
-            case DATE_DESCENDING: query.orderBy(builder.desc(root.get(order.getField())), builder.desc(root.get("id"))); break;
-            case DATE_ASCENDING: query.orderBy(builder.asc(root.get(order.getField())), builder.desc(root.get("id"))); break;
+            case DATE_DESCENDING: query.orderBy(builder.desc((isGrouped) ? builder.max(root.get("id")) : root.get("id"))); break;
+            case DATE_ASCENDING: query.orderBy(builder.asc((isGrouped) ? builder.max(root.get("id")) : root.get("id"))); break;
             default: /** Do nothing for the rest of them */ break;
         }
     }

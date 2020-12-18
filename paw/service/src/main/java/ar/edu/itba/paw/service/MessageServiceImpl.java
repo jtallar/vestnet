@@ -95,7 +95,6 @@ public class MessageServiceImpl implements MessageService {
 
         if (accepted) request.setAccepted();
         else request.setGroup(GroupField.INVESTOR);
-
         return messageDao.findAll(request, new PageRequest(page, pageSize));
     }
 

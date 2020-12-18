@@ -20,6 +20,10 @@ public enum GroupField {
         return fieldName;
     }
 
+    public boolean isGrouped() {
+        return this != NONE;
+    }
+
     @Override
     public String toString() {
         return "GroupField{" +
