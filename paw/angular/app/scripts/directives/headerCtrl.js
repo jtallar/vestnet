@@ -20,7 +20,6 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
           if ($scope.valor === 2) return;
           messageService.notificationCount().then(function (response) {
             $scope.notifications = (response.data.unread !== 0);
-            console.log($scope.notifications);
           }, function (errorResponse) {
             console.error(errorResponse);
           })
