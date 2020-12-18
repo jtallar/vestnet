@@ -100,8 +100,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/location/**").permitAll()
 
-                // TODO: corregir estos ant matchers de messages
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/projects/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/**").authenticated()
