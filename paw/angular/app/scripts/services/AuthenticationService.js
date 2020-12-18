@@ -103,8 +103,12 @@ define([], function() {
       return sessionStorage.removeItem(accessTokenKey);
     };
 
+    authService.getHeaderContent = function (refresh) {
+      return 'Bearer ' + authService.getToken(refresh);
+    };
+
     authService.getHeader = function (refresh) {
-      return {'Authorization': 'Bearer ' + authService.getToken(refresh)};
+      return {'Authorization': authService.getHeaderContent(refresh)};
     };
 
     authService.login = function (user) {
