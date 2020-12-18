@@ -184,3 +184,11 @@
   min-height: 109px
 }
 
+.blockquote-footer a{
+  color: #750096;
+  text-underline: none;
+}
+.blockquote-footer a:hover{
+  color: black;
+  text-decoration: underline;
+}

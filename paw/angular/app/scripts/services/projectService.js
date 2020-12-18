@@ -10,18 +10,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
         return AuthenticatedRestangular.all('projects').getList();
       };
 
-
-      projectService.getPageNoFilter = function(page, limit){
-        var params = {p:page, l:limit};
+      projectService.getPage = function(params) {
         return root.get(params);
       };
-
-      projectService.getPage = function(page, order, field, keyWord, maxCost, minCost, cat, limit){
-        var params = {p:page, o:order, f:field,s:keyWord,max:maxCost,min:minCost, c:cat, l:limit};
-
-        return root.get(params);
-      };
-
 
       projectService.create = function (project) {
         return root.customPOST(project);
