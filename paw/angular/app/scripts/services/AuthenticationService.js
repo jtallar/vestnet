@@ -7,9 +7,13 @@ define([], function() {
   // https://stackoverflow.com/questions/42021076/how-to-implement-remember-me-feature-in-feathers-js-and-jwt
   return function(Restangular) {
     var authService = {};
-    var accessTokenKey = 'access_id', refreshTokenKey = 'refresh_id', rememberKey = 'remember_id';
+    var accessTokenKey = 'c091fd4c2ff1277a66e2c0bff4d3efb11e89c1f3',
+        refreshTokenKey = '68da4ce1c82076ff4749c2cfde06a4b51956b140',
+        rememberKey = 'd4e9a0f8f4609bb34d2aee6486444db48044e4f9';
     // TODO: Check si es correcto almacenar esto en el localStorage/sessionStorage
-    var entrepreneurKey = 'entrepreneur_id', investorKey = 'investor_id', userIdKey = 'user_id_key';
+    var entrepreneurKey = '85f61433041f941dbf9cda260b0a82f9cccfc1d4',
+        investorKey = '1d8e6dc7a8959ecab4b983da1f5be041ec44ffc6',
+        userIdKey = '9da3e5f0db07686c8b3550e0b2c71a40ffb4126b';
     var shouldPersist = localStorage.getItem(rememberKey) === 't';
 
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
