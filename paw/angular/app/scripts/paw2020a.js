@@ -37,6 +37,21 @@ define(['routes',
           return false;
         };
 
+        var credentialChange = function () {
+          var logged = AuthenticationService.isLoggedIn(),
+            investor = AuthenticationService.isInvestor(),
+            entrep = AuthenticationService.isEntrepreneur();
+
+          if (logged && investor) {
+            $rootScope.role = {value: 0};
+          } else if (logged && entrep) {
+            $rootScope.role = {value: 1};
+          } else {
+            $rootScope.role = {value: 2};
+          }
+        };
+        credentialChange();
+
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
           var logged = AuthenticationService.isLoggedIn(), url = $location.url();
           var notAuthUrl = routeMatches(url, PathService.noAuthRoutesRE);
@@ -54,6 +69,10 @@ define(['routes',
             // if logged in and trying to access something they shouldnt, redirect to 403
             PathService.get().error().go({code:403});
           }
+        });
+
+        $rootScope.$on('credentialsChanged', function (event) {
+          credentialChange();
         });
 
         var requestsInProgress = 0;
