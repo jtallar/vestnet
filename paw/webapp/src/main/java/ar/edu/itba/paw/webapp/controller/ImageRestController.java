@@ -80,6 +80,7 @@ public class ImageRestController {
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
+    // TODO: deberiamos devolver algun not found?
     @GET
     @Path("/projects/{project_id}/slideshow")
     @Produces(value = { MediaType.APPLICATION_JSON })

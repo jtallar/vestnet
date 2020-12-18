@@ -1,10 +1,16 @@
 'use strict';
 
-define(['paw2020a','services/projectService', 'services/sampleService'], function(paw2020a) {
-    paw2020a.controller('singleViewCtrl',['projectService','sampleService', '$scope', function(projectService,sampleService, $scope) {
+define(['paw2020a','services/projectService', 'services/sampleService', 'services/PathService'], function(paw2020a) {
+    paw2020a.controller('singleViewCtrl',['projectService','sampleService', 'PathService', '$scope', '$routeParams', function(projectService,sampleService, PathService, $scope, $routeParams) {
+
+      var param = parseInt($routeParams.id);
+      if (isNaN(param) || param <= 0) {
+        PathService.get().error().go();
+        return;
+      }
+      $scope.id = param;
 
       $scope.sent = false;    // if the mail was sent retreive from url
-      $scope.id = 108;
       $scope.owner = false;
 
       $scope.userId = 2;
@@ -72,6 +78,36 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
             {'name': 'Stage 5', 'comment': ''}
           ]
         };
+
+
+        sampleService.get($scope.project.ownerURL).then(function (owner) {
+          $scope.project.owner.firstName = owner.data.firstName;
+          $scope.project.owner.lastName = owner.data.lastName;
+          $scope.project.owner.mail = owner.data.email;
+          $scope.project.owner.id = owner.data.id
+        });
+        sampleService.get($scope.project.catsURL).then(function (categories) {
+          var cats = [];
+          for (var i = 0; i < categories.data.length ;i++){
+            cats.push(categories.data[i].name)
+          }
+          $scope.project.categories = cats
+        });
+        if($scope.project.imageExists === true) {
+          sampleService.get(project.data.portraitImage).then(function (image) {
+            $scope.project.image = image.data.image
+          },function (error) {
+            console.log(error)
+          })
+        }
+        if($scope.project.slideshowExists === true) {
+          sampleService.get(project.data.slideshowImages).then(function (response) {
+            $scope.project.slideshow = []
+            for (var i = 0; i < response.data.length ;i++){
+              $scope.project.slideshow.push(response.data[i].image)
+            }
+          })
+        }
       });
 
       /*$scope.project = {      // project infromation from db
@@ -84,6 +120,7 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
         'categories': ['Technology', 'Research'],
         'updateDate': '15/02/2019'
       };*/
+
 
       $scope.new = {'name':'', 'comment':''};
       $scope.addStage = function (name, comment) {
@@ -104,32 +141,7 @@ define(['paw2020a','services/projectService', 'services/sampleService'], functio
         return parseInt(num);
       }
 
-      sampleService.get($scope.project.ownerURL).then(function (owner) {
-        $scope.project.owner.firstName = owner.data.firstName;
-        $scope.project.owner.lastName = owner.data.lastName;
-        $scope.project.owner.mail = owner.data.email;
-        $scope.project.owner.id = owner.data.id
-      });
-      sampleService.get($scope.project.catsURL).then(function (categories) {
-        var cats = [];
-        for (var i = 0; i < categories.data.length ;i++){
-          cats.push(categories.data[i].name)
-        }
-        $scope.project.categories = cats
-      });
-      if($scope.project.imageExists === true) {
-        sampleService.get(project.data.portraitImage).then(function (image) {
-          $scope.project.image = image.data.image
-        })
-      }
-      if($scope.project.slideshowExists === true) {
-        sampleService.get(project.data.slideshowImages).then(function (response) {
-          $scope.project.slideshow = []
-          for (var i = 0; i < response.data.length ;i++){
-            $scope.project.slideshow.push(response.data[i].image)
-          }
-        })
-      }
+
 
     }]);
 });
