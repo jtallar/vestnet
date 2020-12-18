@@ -14,9 +14,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     };
 
 
-    messageService.getOffers = function (off, page) {
-      var params = {offers: off, p: page};
-      return root.get(params)
+    messageService.getOffers = function (off,acc, page) {
+      var params = {a: acc, p: page};
+      return root.one('project').one(off).get(params)
 
     };
 
