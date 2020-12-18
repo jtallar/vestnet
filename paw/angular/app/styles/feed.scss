@@ -373,6 +373,19 @@ html {
   max-height: 80px
 }
 
+.card-feed{
+  max-height: 300px !important
+}
+
+.card-content .card-text {
+  font-size: 14px !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .feed-footer{
   padding: 5px !important;
   max-height: 60px !important;
@@ -383,7 +396,7 @@ html {
 }
 
 .feed-body{
-  padding: 10px 2px 0 10px !important;
+  padding: 10px 8px 0 10px !important;
 }
 
 .btn-deal{

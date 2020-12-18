@@ -64,11 +64,11 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
           'catsURL': project.data.categories,
           'imageExists': project.data.portraitExists,
           'slideshowExists': project.data.slideshowExists,
+          'slideshow' : [],
           'fundingCurrent' : project.data.fundingCurrent,
           'fundingTarget' : project.data.fundingTarget,
 
           /** PARA PROBAR **/
-          'image' : 'images/mate.jpg',
           'stage' : 3,
           'stages': [
             {'name': 'Stage 1', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'},
