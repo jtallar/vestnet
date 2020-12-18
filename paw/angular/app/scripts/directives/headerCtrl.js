@@ -13,6 +13,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService'], f
         $scope.iDropdown = ['requests', 'messages', 'users'];
         $scope.gOptions = ['welcome', 'login', 'signUp'];
         $scope.gIcons = ['home-icon', 'login-icon', 'signup-icon'];
+        // TODO: Update notifications periodically
         $scope.notifications = true ;
         $scope.userid = 2;
 
