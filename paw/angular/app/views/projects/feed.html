@@ -149,8 +149,10 @@
 <!-- PROJECTS -->
 
   <div class="body fid" ng-if="!noProjectsFound">
+    <div ng-if="loading" class="spinner-grow text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 5rem; height: 5rem;"></div>
+
     <div class="card-deck">
-        <div class="card mb-3" ng-repeat="project in projects">
+        <div class="card mb-3 card-feed" ng-repeat="project in projects">
           <div class="card-header text-white">
             <div class="row icon-fav">
               <div class="col-10">
