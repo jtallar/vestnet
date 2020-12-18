@@ -63,7 +63,7 @@ define(['routes',
             PathService.get().projects().go();
           } else if (!logged && routeMatches(url, PathService.authRoutesRE)) {
             // if not logged in and trying to access auth routes, redirect to login
-            PathService.get().login().go();
+            PathService.get().login().go({url: url});
           } else if ((!AuthenticationService.isInvestor() && routeMatches(url, PathService.investorRoutesRE)) ||
               (!AuthenticationService.isEntrepreneur() && routeMatches(url, PathService.entrepreneurRoutesRE))) {
             // if logged in and trying to access something they shouldnt, redirect to 403
