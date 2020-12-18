@@ -107,7 +107,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications").authenticated()
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/**").authenticated()
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/**").authenticated()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/status/**").authenticated()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/seen/**").permitAll()
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/projects/**").permitAll()
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/projects/**").hasRole("ENTREPRENEUR")
