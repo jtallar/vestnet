@@ -101,13 +101,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setStage(long id, String comment) {
+    public Optional<Project> setStage(long id, String name, String comment) {
         Optional<Project> optionalProject = projectDao.findById(id);
         optionalProject.ifPresent(p -> {
-//            TODO implement on stages
-//            Get the last not completed stage and apply the things bellow
-//            p.getStages().setCompleted();
-//            p.getStages().setComment(comment);
+            Set<ProjectStages> stages = p.getStages();
+            if (stages.size() < Project.MAX_STAGES)
+                stages.add(new ProjectStages(name, stages.size() + 1, comment, p));
         });
         return optionalProject;
     }
