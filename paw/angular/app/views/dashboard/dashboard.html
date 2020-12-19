@@ -42,7 +42,7 @@
                   </a>
                 </div>
                 <div class="col-1">
-                  <a ng-click="fetchMessage(project.id)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
+                  <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
                      data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
                     <div class="notification-icon">
                         <img class="nav-icon" src="images/chat-icon-b.png" alt="">
@@ -86,7 +86,7 @@
                 </div>
                 <div class="col-7">
                   <strong>{{'lastChat' | translate}}:</strong>
-                  <i>Sure. What i wanna know is if...</i>
+                  <i>{{message.body}}</i>
                 </div>
                 <div class="col-1">
                   <a ng-href="#/chat/1/2" class="btn btn-inv pull-right">

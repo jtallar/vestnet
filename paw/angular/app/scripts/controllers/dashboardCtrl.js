@@ -5,6 +5,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
 
     $scope.id = AuthenticationService.getUserId()
+    $scope.messages = []
 
     var map = {};
     userService.getUserProjects($scope.id, false).then(function (response) {
@@ -43,15 +44,14 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     var size = 3;   // it does not get me length of projects we have to fetch it from services later
 
-    $scope.messages = [];
 
     var myID = 1; //session
 
-    $scope.messages = [
-      [{'investor': 'Gabriel','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Mario','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
-      [{'investor': 'Gloria','projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'investor': 'Miriam','projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}],
-      []
-    ];
+    // $scope.messages = [
+    //   [{'investor': 'Gabriel','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Mario','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
+    //   [{'investor': 'Gloria','projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'investor': 'Miriam','projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}],
+    //   []
+    // ];
 
 
 
@@ -71,13 +71,42 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       };
 
 
-      $scope.fetchMessage = function(id){
+      $scope.fetchMessage = function(id, index){
+        $scope.messages[index] = []
+        console.log(index)
         messageService.getOffers(id.toString(), 'false', 1).then(function (response) {
           console.log(response.data)
+          var messageMap = []
+          for (var i = 0; i < response.data.length; i++) {
+            messageMap[response.data[i].investorId] = i
+            $scope.messages[index][i] = {
+              'senderId':response.data[i].investorId,
+              'body': '',
+              'offer': '',
+              'request' : '',
+              'investor': ''
+            }
+            sampleService.get(response.data[i].chat, response.data[i].investorId).then(function (chat) {
+              console.log(chat)
+              $scope.messages[index][messageMap[chat.data.route]].body = chat.data[chat.data.length - 1].comment
+            }, function (error) {
+              console.log(error)
+            })
+
+            sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
+              $scope.messages[index][messageMap[inv.data.route]].investor = inv.data.firstName
+              $scope.messages[index][messageMap[inv.data.route]].lastName = inv.data.lastName
+            }, function (error) {
+              console.log(error)
+            })
+          }
         }, function (error) {
           console.log(error)
         })
       }
+
+
+
 
       $scope.enabled = true;
       $scope.onOff = false;
