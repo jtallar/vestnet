@@ -5,7 +5,7 @@ package ar.edu.itba.paw.model.enums;
  */
 public enum OrderField {
 
-    PROJECT_DEFAULT(1, "hits"),
+    PROJECT_DEFAULT(1, "relevance"),
     PROJECT_FUNDING_TARGET_ASCENDING(2, "fundingTarget"),
     PROJECT_FUNDING_TARGET_DESCENDING(3, "fundingTarget"),
     PROJECT_ALPHABETICAL(4, "name"),

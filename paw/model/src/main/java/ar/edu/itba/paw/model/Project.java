@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.model;
 
 import ar.edu.itba.paw.model.image.ProjectImage;
-import ar.edu.itba.paw.model.location.Location;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -45,8 +44,8 @@ public class Project {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @Column(name = "hits", nullable = false)
-    private long hits;
+    @Column(name = "relevance", nullable = false)
+    private long relevance;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User owner;
@@ -88,7 +87,7 @@ public class Project {
         this.summary = summary;
         this.fundingTarget = target;
         this.owner = owner;
-        this.hits = 0;
+        this.relevance = 0;
         this.closed = false;
         this.stats = new ProjectStats(true);
     }
@@ -164,12 +163,12 @@ public class Project {
         this.updateDate = updateDate;
     }
 
-    public long getHits() {
-        return hits;
+    public long getRelevance() {
+        return relevance;
     }
 
-    public void setHits(long hits) {
-        this.hits = hits;
+    public void setRelevance(long relevance) {
+        this.relevance = relevance;
     }
 
     public User getOwner() {
@@ -245,7 +244,7 @@ public class Project {
                 ", target=" + fundingTarget +
                 ", publishDate=" + publishDate +
                 ", updateDate=" + updateDate +
-                ", hits=" + hits +
+                ", hits=" + relevance +
                 '}';
     }
 
