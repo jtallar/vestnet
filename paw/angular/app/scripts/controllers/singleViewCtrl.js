@@ -20,8 +20,17 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     $scope.pressContact = false;
 
     $scope.$on("$destroy", function(){
-      // TODO PUT STATS
-      console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+      projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
+        .then(function (response) {
+          console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+        }, function (errorResponse) {
+        if (errorResponse.status === 404) {
+          $scope.addStatError = true;
+          return;
+        }
+        console.error(errorResponse);
+      });
+      // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
     });
     /** ********* **/
 
@@ -57,7 +66,6 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
           maxStage++;
         }
       });
-      console.log(maxStage);
       return maxStage;
     };
 
@@ -85,7 +93,7 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     };*/
 
     projectService.getById($scope.id.toString()).then(function (project) {
-      console.log(project);
+      // console.log(project.data.projectStages);
       $scope.project = {      // project infromation from db
         'name': project.data.name,
         'cost': project.data.cost,
@@ -102,9 +110,11 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
         'catsURL': project.data.categories,
         'imageExists': project.data.portraitExists,
         'slideshowExists': project.data.slideshowExists,
-        'slideshow' : [],
-        'fundingCurrent' : project.data.fundingCurrent,
-        'fundingTarget' : project.data.fundingTarget,
+        'slideshow': [],
+        'fundingCurrent': project.data.fundingCurrent,
+        'fundingTarget': project.data.fundingTarget,
+        'stagesURL': project.data.projectStages,
+        'getByOwner': project.data.getByOwner,
 
         /** PARA PROBAR **/
         'stages': [
@@ -123,21 +133,36 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
 
       $scope.projectstage = $scope.getMaxStage($scope.project.stages);
 
-      // $scope.maxStage = getMaxStage($scope.project.stages)
-
-      /** STAGES --- COMENTADO PARA QUE NO ROMPA **/
-      /* sampleService.get(project.data.stages).then(function (response) {       // private URI stages;   -> en ProjectDto
-        $scope.project.stages = [];
+      sampleService.get($scope.project.stagesURL).then(function (response) {       // private URI stages;   -> en ProjectDto
+        console.log('owner', $scope.project.getByOwner)
+        console.log('GETTEANDO STAGES')
         var i = 0;
         response.data.forEach(function (data){
-          $scope.project.stages[i].number = data.stage.number;
-          $scope.project.stages[i].comment = data.stage.name;
-          $scope.project.stages[i].name = data.stage.name;
-          $scope.project.stages[i].completed = data.stage.completed;
-          $scope.project.stages[i].completedDate = data.stage.completedDate;
-          i++;
+          if(data.stage !== undefined){
+            $scope.project.stages[i].number = data.stage.number;
+            console.log('adentroooo ', data.stage.number)
+            $scope.project.stages[i].comment = data.stage.comment;
+            $scope.project.stages[i].name = data.stage.name;
+            $scope.project.stages[i].completed = data.stage.completed;
+            $scope.project.stages[i].completedDate = data.stage.completedDate;
+            console.log(i, $scope.project.stages[i])
+            i++;
+          }
         })
-      })*/
+        console.log('adentroooo aorx')
+        $scope.project.stages[0].comment = 'ejemplardo';
+        $scope.project.stages[0].name = 'ejemplardo';
+        $scope.project.stages[0].completed = true;
+        $scope.project.stages[0].completedDate = '';
+        console.log(i, $scope.project.stages[0])
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            $scope.addStatError = true;
+            return;
+          }
+          console.error(errorResponse);
+        }
+      );
 
       sampleService.get($scope.project.ownerURL).then(function (owner) {
         $scope.project.owner.firstName = owner.data.firstName;
@@ -194,6 +219,16 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
       $scope.project.stages[s].completedDate = $scope.getDate();
       /** llamada a set stage **/
       //  setStage($scope.project.id, $scope.project.stages[s])
+      projectService.addStage($scope.project.id, s+1, name, comment, true, $scope.getDate())
+        .then(function (response) {
+          console.log($scope.project.id, s+1, name, comment, true, $scope.getDate());
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            $scope.addStageError = true;
+            return;
+          }
+          console.error(errorResponse);
+        });
       $scope.projectstage++;
       $scope.new.name = '';
       $scope.new.comment = '';

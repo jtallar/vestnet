@@ -227,7 +227,7 @@
          role="progressbar" style="width: {{projectstage*20}}%" aria-valuenow="{{projectstage}}" aria-valuemin="0" aria-valuemax="5"></div>
   </div>
 
-  <div ng-if="!owner" class="card-group history-group">
+  <div ng-if="!project.getByOwner" class="card-group history-group">
     <div class="{{projectstage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
       <div class="card-body h-step-b">
         <h5 ng-if="project.stages[0].completed" class="card-title">{{project.stages[0].name}}</h5>
@@ -270,7 +270,7 @@
     </div>
   </div>
 
-  <div ng-if="owner" class="card-group history-group">
+  <div ng-if="project.getByOwner" class="card-group history-group">
     <div class="{{projectstage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
       <div class="card-body stage-body h-step-b">
         <h5 ng-if="projectstage>0" class="card-title">{{project.stages[0].name}}</h5>
