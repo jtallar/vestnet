@@ -276,6 +276,12 @@ define([], function() {
     profile: 'Perfil - {{p}}',
     singleView: '{{p}}',
     welcome: 'Bienvenidos a VestNet',
-    imgfav : 'botón de favoritos'
+    imgfav : 'botón de favoritos',
+    clicksAvg: 'Promedio de clicks: {{p}}',
+    secondsAvg: 'Promedio de segundos transcurridos: {{p}}',
+    seen: 'Visto por {{p}}',
+    contactClicks: 'Contactados: {{p}}',
+    investorsSeen: 'Visto por {{p}} inversores',
+    lastSeen: 'Última vez visto {{p}}'
   };
 });

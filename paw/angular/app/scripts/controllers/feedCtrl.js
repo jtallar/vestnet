@@ -29,7 +29,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.favTap = function(id){
         if($scope.containsFav(id)){
-          $scope.favs.remove(id)
+          var index = $scope.favs.indexOf(id)
+          $scope.favs.splice(index,1)
           userService.putFavorite(id, false).then(function () {
 
           },function (error) {
