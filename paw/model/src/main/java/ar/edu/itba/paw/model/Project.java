@@ -65,6 +65,9 @@ public class Project {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<Favorite> favorites;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private Set<ProjectStages> stages;
+
 
     /** Protected */ Project() {
         /** For hibernate only */
@@ -199,6 +202,13 @@ public class Project {
         this.favorites = favorites;
     }
 
+    public Set<ProjectStages> getStages() {
+        return stages;
+    }
+
+    public void setStages(Set<ProjectStages> stages) {
+        this.stages = stages;
+    }
 
     @Override
     public String toString() {
