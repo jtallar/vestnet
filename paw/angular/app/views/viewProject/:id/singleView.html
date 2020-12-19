@@ -113,7 +113,7 @@
 
         <!-- Contact button -->
         <div class="d-flex justify-content-center">
-            <a href="/#/chat/1/2" ng-click="contact()" class="btn btn-dark contact-btn" >
+            <a href="/#/chat/1/2" ng-click="pressContact = true" class="btn btn-dark contact-btn" >
               <img src="images/chat-icon.png" class="contact-img">
               {{'contact' | translate}}
             </a>
@@ -220,8 +220,6 @@
       </div>
     </sec:authorize>
     -->
-
-    <button class="btn btn-danger" ng-click="stop()">STOP</button>
 
   <div class="progress my-bar-steps0">
     <div class="progress-bar progress-bar-striped progress-bar-animated

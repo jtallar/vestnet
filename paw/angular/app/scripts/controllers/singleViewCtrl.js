@@ -3,21 +3,27 @@
 define(['paw2020a','services/projectService', 'services/sampleService', 'services/PathService'], function(paw2020a) {
   paw2020a.controller('singleViewCtrl',['projectService','sampleService', 'PathService', '$scope', '$routeParams', function(projectService,sampleService, PathService, $scope, $routeParams) {
 
+    /*** STATS ***/
     $scope.$on('$viewContentLoaded', function() {
         $scope.start = new Date();
         $scope.clicks = 0;
     });
-
     $scope.timeHere = function(){
       return new Date().getTime() - $scope.start.getTime();
     };
     $scope.clicksHere = function (){
       return $scope.clicks;
     };
-
     document.getElementById('all').addEventListener('click', function(event) {
       $scope.clicks++;
     }, false);
+    $scope.pressContact = false;
+
+    $scope.$on("$destroy", function(){
+      // TODO PUT STATS
+      console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+    });
+    /** ********* **/
 
     var param = parseInt($routeParams.id);
     if (isNaN(param) || param <= 0) {
@@ -25,25 +31,17 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
       return;
     }
     $scope.id = param;
-
     $scope.sent = false;    // if the mail was sent retreive from url
     $scope.owner = true;
-
     $scope.userId = 2;
 
     $scope.backAction = function() {
-      /** PUT STATS **/
-      console.log($scope.timeHere(), $scope.clicksHere(), false);
-      if (this.sent) {
+      // if (this.sent) {
         history.back();
-      } else {
-        history.back();
-        history.back();
-      }
-    };
-
-    $scope.contact = function (){
-      console.log($scope.timeHere(), $scope.clicksHere(), true);
+      // } else {
+      //   history.back();
+      //   history.back();
+      // }
     };
 
     /**    QUEDA ASI ???  **/
@@ -62,7 +60,6 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
       console.log(maxStage);
       return maxStage;
     };
-
 
     $scope.project = {};
 
@@ -201,18 +198,6 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
       $scope.new.name = '';
       $scope.new.comment = '';
     };
-
-    // $scope.deleteStage = function (stage){
-    //   $scope.project.stages[s-1].name = '';
-    //   $scope.project.stages[s-1].comment = '';
-    //   $scope.project.stages[s-1].number = s;
-    //   $scope.project.stages[s-1].completed = false;
-    //   $scope.project.stages[s-1].completedDate = '';
-    //   /** llamada a delete stage **/
-    //   //  deleteStage($scope.project.id, $scope.project.stages[s])    o
-    //   //  deleteStage($scope.project.id, $scope.project.stages[s].number)
-    //   $scope.project.stage--;
-    // }
 
     $scope.toInt = function (num){
       return parseInt(num);
