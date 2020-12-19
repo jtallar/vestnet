@@ -43,26 +43,26 @@ public class MessageServiceImpl implements MessageService {
     public Optional<Message> create(Message messageData, long sessionUserId, URI baseUri) {
 
         /** Checks it the session user id is from one of the two users negotiating, and sets direction of message */
-        if (sessionUserId == messageData.getInvestorId())
+        if (sessionUserId == messageData.getInvestor().getId())
             messageData.setDirection(true);
-        else if (sessionUserId == messageData.getOwnerId())
+        else if (sessionUserId == messageData.getOwner().getId())
             messageData.setDirection(false);
         else return Optional.empty();
 
         /** Should be two different users */
-        if (messageData.getInvestorId() == messageData.getOwnerId()) return Optional.empty();
+        if (messageData.getInvestor().getId() == messageData.getOwner().getId()) return Optional.empty();
 
         /** Checks for the existence of the project and the owner ID is the right one */
-        Optional<Project> project = projectService.findById(messageData.getProjectId());
-        if (!project.isPresent() || project.get().getOwnerId() != messageData.getOwnerId()) return Optional.empty();
+        Optional<Project> project = projectService.findById(messageData.getProject().getId());
+        if (!project.isPresent() || project.get().getOwnerId() != messageData.getOwner().getId()) return Optional.empty();
 
         /** Checks if both users exists */
-        Optional<User> owner = userService.findById(messageData.getOwnerId());
-        Optional<User> investor = userService.findById(messageData.getInvestorId());
+        Optional<User> owner = userService.findById(messageData.getOwner().getId());
+        Optional<User> investor = userService.findById(messageData.getInvestor().getId());
         if (!owner.isPresent() || !investor.isPresent()) return Optional.empty();
 
         /** Checks if the user is able to sent message */
-        if (!isPostOfferValid(messageData.getOwnerId(), messageData.getInvestorId(), messageData.getProjectId(), messageData.getDirection()))
+        if (!isPostOfferValid(messageData.getOwner().getId(), messageData.getInvestor().getId(), messageData.getProject().getId(), messageData.getDirection()))
             return Optional.empty();
 
         /** Persists message */

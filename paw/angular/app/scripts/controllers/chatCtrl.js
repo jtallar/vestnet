@@ -61,6 +61,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       }, function (errorResponse) {
         if (errorResponse.status === 404) {
           PathService.get().error().go();
+          return;
         }
         console.error(errorResponse);
       });
@@ -73,6 +74,13 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
           PathService.get().error().go();
         })
       }
+
+      this.scrollToBottom = function() {
+        var element = document.getElementById("chatbox-scroll");
+        setTimeout(function(){
+          element.scrollTop = element.scrollHeight;
+        },50);
+      };
 
       $scope.offerEnabled = false; $scope.responseEnabled = false;
 
@@ -115,6 +123,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       messageService.getChat(projectId.toString(), investorId.toString(), page).then(function (response) {
         _this.setMaxPage(response.headers().link);
         _this.handleChatResponse(response.data);
+        _this.scrollToBottom();
       }, function (errorResponse) {
         if (errorResponse.status === 403) {
           PathService.get().error().go({code: 403});
@@ -123,21 +132,41 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         console.error(errorResponse);
       });
 
-      // TODO: DO accept, reject + correct send offer + testing
+      // TODO: DO accept, reject + testing
       $scope.rejectOffer = function () {
         console.log("rejecting offer");
-        $scope.offerEnabled = true;
+        messageService.setStatus(projectId.toString(), investorId.toString(), false).then(function (response) {
+          $scope.responseEnabled = false;
+          $scope.offerEnabled = true;
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            PathService.get().error().go();
+            return;
+          }
+          console.error(errorResponse);
+        })
       };
 
       $scope.acceptOffer = function () {
         console.log("Accepting offer");
-        // Vamos al dashboard??
+        messageService.setStatus(projectId.toString(), investorId.toString(), true).then(function (response) {
+          $scope.responseEnabled = false;
+          $scope.offerEnabled = (role === investor);
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            PathService.get().error().go();
+            return;
+          }
+          console.error(errorResponse);
+        })
       };
 
       this.addOfferToChat = function (offer) {
         var now = new Date();
         offer.publishDate = now.toISOString();
-        offer.expiryDate = (now + offer.expiryDays * oneDayMs).toISOString();
+        offer.expiryDate = new Date(now.getTime() + offer.expiryDays * oneDayMs).toISOString();
+        offer.expInDays = Math.ceil((new Date(offer.expiryDate) - now) / oneDayMs);
+        offer.incoming = false;
         $scope.chats.push(offer);
       };
 
@@ -151,6 +180,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         console.log(offer);
         messageService.offer(offer).then(function (response) {
           _this.addOfferToChat(offer);
+          _this.scrollToBottom();
           $scope.responseEnabled = false;
           $scope.offerEnabled = false;
         }, function (errorResponse) {
@@ -160,7 +190,6 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
           }
           console.error(errorResponse);
         })
-        // vamos al dashboard?
       };
 
       $scope.viewMoreChat = function () {
@@ -182,15 +211,5 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         });
       };
 
-      $scope.$on('$viewContentLoaded', function() {
-        var element = document.getElementById("chatbox-scroll");
-        setTimeout(function(){
-          element.scrollTop = element.scrollHeight;
-          },50);
-      });
-
-      // var myDiv = document.getElementById("chatbox-scroll");
-      // myDiv.scrollTop = myDiv.scrollHeight;
-
-      }]);
+    }]);
 });
