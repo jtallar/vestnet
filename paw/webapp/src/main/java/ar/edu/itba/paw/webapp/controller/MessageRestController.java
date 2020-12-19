@@ -97,7 +97,7 @@ public class MessageRestController {
 
 
     @GET
-    @Path("/chat/{project_id}/{investor_id}")
+    @Path("/chat/{project_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response chat(@PathParam("project_id") final long projectId,
                          @QueryParam("p") @DefaultValue("1") int page) {
