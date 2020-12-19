@@ -40,7 +40,7 @@ public class ProjectDto {
     private Date updateDate;
     private long hits;
 
-    private boolean portraitExists, slideshowExists;
+    private boolean portraitExists, slideshowExists, getByOwner;
 
     private URI categories;
     private URI owner;
@@ -76,6 +76,7 @@ public class ProjectDto {
             projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
         });
 
+        projectDto.setNotGetByOwner();
         return projectDto;
     }
 
@@ -197,5 +198,17 @@ public class ProjectDto {
 
     public void setSlideshowExists(boolean slideshowExists) {
         this.slideshowExists = slideshowExists;
+    }
+
+    public boolean isGetByOwner() {
+        return getByOwner;
+    }
+
+    public void setGetByOwner() {
+        this.getByOwner = true;
+    }
+
+    public void setNotGetByOwner() {
+        this.getByOwner = false;
     }
 }
