@@ -63,6 +63,9 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
+    private List<User> favoriteBy;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<Favorite> favorites;
 
@@ -193,6 +196,14 @@ public class Project {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public List<User> getFavoriteBy() {
+        return favoriteBy;
+    }
+
+    public void setFavoriteBy(List<User> favoriteBy) {
+        this.favoriteBy = favoriteBy;
     }
 
     public Set<Favorite> getFavorites() {
