@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import ar.edu.itba.paw.model.image.ProjectImage;
+import ar.edu.itba.paw.model.location.Location;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "projects")
 public class Project {
+    public static final int MAX_STAGES = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_id_seq")
@@ -62,8 +64,18 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favoriteProjects")
+    private List<User> favoriteBy;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<Favorite> favorites;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private Set<ProjectStages> stages;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @JoinColumn(name = "stats_id")
+    private ProjectStats stats;
 
 
     /** Protected */ Project() {
@@ -78,6 +90,7 @@ public class Project {
         this.owner = owner;
         this.hits = 0;
         this.closed = false;
+        this.stats = new ProjectStats(true);
     }
 
 
@@ -191,6 +204,14 @@ public class Project {
         this.categories = categories;
     }
 
+    public List<User> getFavoriteBy() {
+        return favoriteBy;
+    }
+
+    public void setFavoriteBy(List<User> favoriteBy) {
+        this.favoriteBy = favoriteBy;
+    }
+
     public Set<Favorite> getFavorites() {
         return favorites;
     }
@@ -199,6 +220,13 @@ public class Project {
         this.favorites = favorites;
     }
 
+    public Set<ProjectStages> getStages() {
+        return stages;
+    }
+
+    public void setStages(Set<ProjectStages> stages) {
+        this.stages = stages;
+    }
 
     @Override
     public String toString() {

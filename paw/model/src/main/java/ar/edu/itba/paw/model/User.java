@@ -68,6 +68,13 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
     private Set<Project> ownedProjects;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
+    private List<Project> favoriteProjects;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private Set<Favorite> favorites;
 
@@ -227,6 +234,13 @@ public class User {
         this.ownedProjects = ownedProjects;
     }
 
+    public List<Project> getFavoriteProjects() {
+        return favoriteProjects;
+    }
+
+    public void setFavoriteProjects(List<Project> favoriteProjects) {
+        this.favoriteProjects = favoriteProjects;
+    }
 
     public Set<Favorite> getFavorites() {
         return favorites;
