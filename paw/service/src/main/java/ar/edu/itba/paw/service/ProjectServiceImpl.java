@@ -92,8 +92,8 @@ public class ProjectServiceImpl implements ProjectService {
     public Optional<Project> addStats(long id, long seconds, long clicks, boolean investor, boolean contact) {
         Optional<Project> optionalProject = projectDao.findById(id);
         optionalProject.ifPresent(p -> {
-//            TODO implement on stats
-//            p.getStats().setNewSeen(seconds, clicks, investor, contact);
+            if (p.getStats() == null) p.setStats(new ProjectStats(true));
+            p.getStats().setNewSeen(seconds, clicks, investor, contact);
         });
         return optionalProject;
     }

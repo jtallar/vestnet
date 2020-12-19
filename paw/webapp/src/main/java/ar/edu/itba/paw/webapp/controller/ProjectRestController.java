@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
+import ar.edu.itba.paw.model.ProjectStats;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
@@ -150,12 +151,14 @@ public class ProjectRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getStats(@PathParam("id") long id) {
 
-//      TODO implement on stats
-//        Optional<Project> optionalProject = projectService.findById(id);
-//        return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())))
-//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        Optional<Project> optionalProject = projectService.findById(id);
 
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        return optionalProject.map(p -> {
+            ProjectStats stats = p.getStats();
+            if (stats == null) return Response.ok(ProjectStatsDto.fromProjectStats(new ProjectStats(true))).build();
+            return Response.ok(ProjectStatsDto.fromProjectStats(stats)).build();
+        })
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 
@@ -165,12 +168,9 @@ public class ProjectRestController {
     public Response setStats(@PathParam("id") long id,
                              @Valid final ProjectStatsDto statsDto) {
 
-//        TODO implement on stats
-//          return projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(), statsDto.getContactClicks() == 1)
-//                .map(p -> Response.ok().build())
-//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
-
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        return projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(), statsDto.getContactClicks() >= 1)
+                .map(p -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 

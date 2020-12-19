@@ -73,7 +73,7 @@ public class Project {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<ProjectStages> stages;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "stats_id")
     private ProjectStats stats;
 
@@ -226,6 +226,14 @@ public class Project {
 
     public void setStages(Set<ProjectStages> stages) {
         this.stages = stages;
+    }
+
+    public ProjectStats getStats() {
+        return stats;
+    }
+
+    public void setStats(ProjectStats stats) {
+        this.stats = stats;
     }
 
     @Override

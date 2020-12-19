@@ -25,7 +25,7 @@ public class Message {
     @Column(name = "publish_date", insertable = false)
     private Date publishDate;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "expiry_date", insertable = false)
     private Date expiryDate;
 
