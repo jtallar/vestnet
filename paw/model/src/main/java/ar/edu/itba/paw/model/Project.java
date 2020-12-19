@@ -37,12 +37,12 @@ public class Project {
     @Column(name = "closed", nullable = false)
     private boolean closed;
 
-    @Temporal(value = TemporalType.DATE)
+    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "publish_date", insertable = false)
     private Date publishDate;
 
-    @Temporal(value = TemporalType.DATE)
-    @Column(name = "update_date", insertable = false)
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "update_date")
     private Date updateDate;
 
     @Column(name = "hits", nullable = false)
@@ -73,7 +73,7 @@ public class Project {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<ProjectStages> stages;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "stats_id")
     private ProjectStats stats;
 
@@ -226,6 +226,14 @@ public class Project {
 
     public void setStages(Set<ProjectStages> stages) {
         this.stages = stages;
+    }
+
+    public ProjectStats getStats() {
+        return stats;
+    }
+
+    public void setStats(ProjectStats stats) {
+        this.stats = stats;
     }
 
     @Override

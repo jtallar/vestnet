@@ -26,7 +26,7 @@ public class ProjectStages {
     @Column(name = "completed")
     private boolean completed;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "completed_date")
     private Date completedDate;
 

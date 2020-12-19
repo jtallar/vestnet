@@ -8,7 +8,6 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
 import ar.edu.itba.paw.model.enums.OrderField;
 import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.model.location.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -144,7 +143,7 @@ public class UserServiceImpl implements UserService {
         optionalUser.ifPresent(u -> {
             UserImage userImage = null;
             Optional<UserImage> optionalImage;
-            Long imageId = u.getImage_id();
+            Long imageId = u.getImageId();
             if (imageId == null || !(optionalImage = imageDao.findUserImage(imageId)).isPresent()) {
                 if (image.length > 0) userImage = imageDao.create(image);
             } else {
