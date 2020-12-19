@@ -126,9 +126,10 @@ public class MessageRestController {
 
     @PUT
     @Path("/status/{project_id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response status(@PathParam("project_id") final long projectId,
-                           @QueryParam("p") @DefaultValue("false") boolean accepted) {
-        return status(projectId, sessionUser.getId(), accepted);
+                           final OfferStatusDto offerStatusDto) {
+        return status(projectId, sessionUser.getId(), offerStatusDto);
     }
 
 

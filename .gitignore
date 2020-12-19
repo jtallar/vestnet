@@ -54,4 +54,3 @@ paw/node_modules 2/
 # configuration file
 /paw/webapp/src/main/resources/application.properties
 
-paw/webapp/src/main/java/ar/edu/itba/paw/webapp/config/WebAuthConfig.java
