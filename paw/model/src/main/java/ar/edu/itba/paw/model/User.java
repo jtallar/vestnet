@@ -48,7 +48,7 @@ public class User {
     @Column(name = "linkedin", length = 100)
     private String linkedin;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "join_date", insertable = false)
     private Date joinDate;
 
