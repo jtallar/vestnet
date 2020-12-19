@@ -20,8 +20,17 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     $scope.pressContact = false;
 
     $scope.$on("$destroy", function(){
-      // TODO PUT STATS
-      console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+      projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
+        .then(function (response) {
+          console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+        }, function (errorResponse) {
+        if (errorResponse.status === 404) {
+          $scope.addStatError = true;
+          return;
+        }
+        console.error(errorResponse);
+      });
+      // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
     });
     /** ********* **/
 
@@ -57,7 +66,6 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
           maxStage++;
         }
       });
-      console.log(maxStage);
       return maxStage;
     };
 
@@ -85,7 +93,7 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     };*/
 
     projectService.getById($scope.id.toString()).then(function (project) {
-      console.log(project);
+      // console.log(project);
       $scope.project = {      // project infromation from db
         'name': project.data.name,
         'cost': project.data.cost,

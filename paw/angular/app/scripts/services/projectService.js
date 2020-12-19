@@ -43,6 +43,10 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
         return root.one(id).one('hit').customPUT()
       };
 
+      projectService.addStat = function (pid, time, clicks, cont, inv, date){
+        var body = {secondsAvg : time, clicksAvg: clicks, contactClicks: cont, investorsSeen: inv, lastSeen: date};
+        return root.one(pid.toString()).one('stats').customPUT(body)
+      };
 
       projectService.funded = function (id) {
         return root.one(id).one('funded').customPUT()
