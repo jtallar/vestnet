@@ -201,9 +201,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         $scope.lastMessage = offer;
       };
 
-      $scope.serverFormErrors = false;
       $scope.sendOffer = function (offer) {
-        $scope.serverFormErrors = false;
         offer.direction = (role === investor);
         messageService.offer(projectId, investorId, offer).then(function (response) {
           _this.addOfferToChat(offer);
