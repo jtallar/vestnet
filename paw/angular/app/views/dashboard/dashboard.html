@@ -53,7 +53,7 @@
                   </a>
                 </div>
                 <div class="col-1">
-                  <a ng-click="" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                  <a ng-click="fetchOffers(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
                      data-target="#fundcollapse{{project.id}}" aria-expanded="false" aria-controls="fundcollapse{{project.id}}">
                     <div class="notification-icon">
                       <img class="nav-icon" src="images/pig-icon-b.png" alt="">
@@ -98,9 +98,11 @@
               </div>
             </div>
           </div>
-          <button ng-click="viewMore(project.id-1)" class="btn btn-inv pull-right">
-            <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
-          </button>
+          <div ng-if="project.msgPage < project.maxPage">
+            <button ng-click="viewMore(project.id, $index)" class="btn btn-inv pull-right">
+              <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
+            </button>
+          </div>
         </div>
         <div ng-if="messages[$index].length == 0">
           <div class="card msg-collapse">
@@ -120,8 +122,8 @@
 
 
       <div class="center-collapse collapse" id="fundcollapse{{project.id}}">
-        <div ng-if="messages[$index].length > 0">
-          <div class="card msg-collapse" ng-repeat="message in messages[$index]">
+        <div ng-if="fundedMsgs[$index].length > 0">
+          <div class="card msg-collapse" ng-repeat="message in fundedMsgs[$index]">
             <div class="card-body dash-body">
               <div class="row">
                 <div class="col-1">
@@ -134,13 +136,18 @@
                   <strong>{{'msgTitleOffer' | translate}}</strong> {{message.offer}}
                 </div>
                 <div class="col-4">
-                  <strong>{{'msgTitleRequest' | translate}}</strong> {{message.request}}
+                  <strong>{{'msgTitleRequest' | translate}}</strong> {{message.exchange}}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div ng-if="messages[$index].length == 0">
+        <div ng-if="project.offerPage < project.maxPageOffer">
+          <button ng-click="viewMoreOffers(project.id, $index)" class="btn btn-inv pull-right">
+            <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
+          </button>
+        </div>
+        <div ng-if="fundedMsgs[$index].length == 0">
           <div class="card msg-collapse">
             <div class="card-body dash-body">
               <div class="row">
