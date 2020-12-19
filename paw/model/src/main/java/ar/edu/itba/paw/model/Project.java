@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import ar.edu.itba.paw.model.image.ProjectImage;
+import ar.edu.itba.paw.model.location.Location;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -36,12 +37,12 @@ public class Project {
     @Column(name = "closed", nullable = false)
     private boolean closed;
 
-    @Temporal(value = TemporalType.DATE)
+    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "publish_date", insertable = false)
     private Date publishDate;
 
-    @Temporal(value = TemporalType.DATE)
-    @Column(name = "update_date", insertable = false)
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "update_date")
     private Date updateDate;
 
     @Column(name = "hits", nullable = false)
@@ -63,11 +64,18 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favoriteProjects")
+    private List<User> favoriteBy;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<Favorite> favorites;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<ProjectStages> stages;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "stats_id")
+    private ProjectStats stats;
 
 
     /** Protected */ Project() {
@@ -82,6 +90,7 @@ public class Project {
         this.owner = owner;
         this.hits = 0;
         this.closed = false;
+        this.stats = new ProjectStats(true);
     }
 
 
@@ -195,6 +204,14 @@ public class Project {
         this.categories = categories;
     }
 
+    public List<User> getFavoriteBy() {
+        return favoriteBy;
+    }
+
+    public void setFavoriteBy(List<User> favoriteBy) {
+        this.favoriteBy = favoriteBy;
+    }
+
     public Set<Favorite> getFavorites() {
         return favorites;
     }
@@ -209,6 +226,14 @@ public class Project {
 
     public void setStages(Set<ProjectStages> stages) {
         this.stages = stages;
+    }
+
+    public ProjectStats getStats() {
+        return stats;
+    }
+
+    public void setStats(ProjectStats stats) {
+        this.stats = stats;
     }
 
     @Override

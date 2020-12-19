@@ -1,38 +1,39 @@
 package ar.edu.itba.paw.model;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
-//@Entity
-//@Table(name = "project_stats")
+@Entity
+@Table(name = "project_stats")
 public class ProjectStats {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_stats_id_seq")
-//    @SequenceGenerator(sequenceName = "project_stats_id_seq", name = "project_stats_id_seq", allocationSize = 1)
-//    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_stats_id_seq")
+    @SequenceGenerator(sequenceName = "project_stats_id_seq", name = "project_stats_id_seq", allocationSize = 1)
+    @Column(name = "id")
     private long id;
 
-//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "stats")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "stats")
     private Project project;
 
-//    @Column(name = "seen")
+    @Column(name = "seen")
     private long seen;
 
-//    @Column(name = "seconds_avg")
+    @Column(name = "seconds_avg")
     private long secondsAvg;
 
-//    @Column(name = "clicks_avg")
+    @Column(name = "clicks_avg")
     private long clicksAvg;
 
-//    @Column(name = "contact_clicks")
+    @Column(name = "contact_clicks")
     private long contactClicks;
 
-    //    @Column(name = "investors_seen")
+    @Column(name = "investors_seen")
     private long investorsSeen;
 
-//    @Temporal(TemporalType.DATE)
-//    @Column(name = "last_seen")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_seen")
     private Date lastSeen;
 
     /** Protected */ ProjectStats() {

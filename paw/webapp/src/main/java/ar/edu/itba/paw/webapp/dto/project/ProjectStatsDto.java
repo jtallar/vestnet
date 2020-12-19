@@ -7,19 +7,17 @@ import java.util.Date;
 
 public class ProjectStatsDto {
 
-    @Min(1)
     private long seen;
 
-    @Min(1)
+    @Min(0)
     private long secondsAvg;
 
-    @Min(1)
+    @Min(0)
     private long clicksAvg;
 
     @Min(0)
     private long contactClicks;
 
-    @Min(0)
     private long investorsSeen;
 
     private Date lastSeen;

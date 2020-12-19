@@ -60,6 +60,7 @@ public class MessageRestController {
                 .build();
     }
 
+
     @GET
     @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -75,6 +76,7 @@ public class MessageRestController {
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
                 .build();
     }
+
 
     @GET
     @Path("/chat/{project_id}/{investor_id}")
@@ -93,6 +95,16 @@ public class MessageRestController {
                 .build();
     }
 
+
+    @GET
+    @Path("/chat/{project_id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response chat(@PathParam("project_id") final long projectId,
+                         @QueryParam("p") @DefaultValue("1") int page) {
+        return chat(projectId, sessionUser.getId(), page);
+    }
+
+
     @PUT
     @Path("/status/{project_id}/{investor_id}")
     public Response status(@PathParam("project_id") final long projectId,
@@ -107,6 +119,14 @@ public class MessageRestController {
 
 
     @PUT
+    @Path("/status/{project_id}")
+    public Response status(@PathParam("project_id") final long projectId,
+                           @QueryParam("p") @DefaultValue("false") boolean accepted) {
+        return status(projectId, sessionUser.getId(), accepted);
+    }
+
+
+    @PUT
     @Path("/seen/{project_id}/{investor_id}")
     public Response seen(@PathParam("project_id") final long projectId,
                            @PathParam("investor_id") final long investorId) {
@@ -115,6 +135,13 @@ public class MessageRestController {
 
         return updatedMessage.map(message -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+    }
+
+
+    @PUT
+    @Path("/seen/{project_id}")
+    public Response seen(@PathParam("project_id") final long projectId) {
+        return seen(projectId, sessionUser.getId());
     }
 
 

@@ -48,7 +48,7 @@ public class User {
     @Column(name = "linkedin", length = 100)
     private String linkedin;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "join_date", insertable = false)
     private Date joinDate;
 
@@ -63,10 +63,17 @@ public class User {
     private UserImage image;
 
     @Column(name = "image_id", insertable = false, updatable = false)
-    private Long image_id;
+    private Long imageId;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
     private Set<Project> ownedProjects;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
+    private List<Project> favoriteProjects;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private Set<Favorite> favorites;
@@ -211,12 +218,12 @@ public class User {
         this.image = image;
     }
 
-    public Long getImage_id() {
-        return image_id;
+    public Long getImageId() {
+        return imageId;
     }
 
-    public void setImage_id(Long image_id) {
-        this.image_id = image_id;
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
     public Set<Project> getOwnedProjects() {
@@ -227,6 +234,13 @@ public class User {
         this.ownedProjects = ownedProjects;
     }
 
+    public List<Project> getFavoriteProjects() {
+        return favoriteProjects;
+    }
+
+    public void setFavoriteProjects(List<Project> favoriteProjects) {
+        this.favoriteProjects = favoriteProjects;
+    }
 
     public Set<Favorite> getFavorites() {
         return favorites;
