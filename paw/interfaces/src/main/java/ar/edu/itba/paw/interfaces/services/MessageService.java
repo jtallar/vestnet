@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.model.Message;
+import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.components.Page;
 
 import java.net.URI;
@@ -12,12 +13,15 @@ public interface MessageService {
 
     /**
      * Creates a new message.
-     * @param messageData The data for the new message to create.
+     * @param projectId The project's id on which the offer is being made.
+     * @param investorId The investor id making or receiving the offer.
      * @param sessionUserId The session user id that sent the message.
+     * @param content The data for the new message to create.
+     * @param expiryDays The amount of days until the offer expires.
      * @param baseUri Base url for replies.
      * @return The optional created message. Empty in case of errors.
      */
-    Optional<Message> create(Message messageData, long sessionUserId, URI baseUri);
+    Optional<Message> create(long projectId, long investorId, long sessionUserId, MessageContent content, int expiryDays, URI baseUri);
 
 
     /**

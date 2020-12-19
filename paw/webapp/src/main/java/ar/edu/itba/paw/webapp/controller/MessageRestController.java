@@ -32,13 +32,27 @@ public class MessageRestController {
     private static final int PAGE_SIZE = 5;
 
     @POST
+    @Path("/{project_id}/{investor_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response offer(@Valid final OfferDto offerDto) {
+    public Response offer(@PathParam("project_id") final long projectId,
+                          @PathParam("investor_id") final long investorId,
+                          @Valid final OfferDto offerDto) {
 
-        final Optional<Message> message = messageService.create(OfferDto.toMessage(offerDto), sessionUser.getId(), uriInfo.getBaseUri());
+        final Optional<Message> message = messageService.create(projectId, investorId, sessionUser.getId(),
+                OfferDto.toMessageContent(offerDto), offerDto.getExpiryDays(), uriInfo.getBaseUri());
 
         return message.map(m -> Response.created(uriInfo.getAbsolutePath()).header("Access-Control-Expose-Headers", "Location").build())
                 .orElse(Response.status(Response.Status.BAD_REQUEST).build());
+    }
+
+
+    @POST
+    @Path("/{project_id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response offer(@PathParam("project_id") final long projectId,
+                          @Valid final OfferDto offerDto) {
+
+        return offer(projectId, sessionUser.getId(), offerDto);
     }
 
 
