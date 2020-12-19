@@ -77,6 +77,10 @@ define([], function() {
               templateUrl: '/views/edit/editProject.html',
               controller: 'editProjectCtrl'
             },
+            '/chat/:id1': {
+              templateUrl: '/views/dashboard/chat.html',
+              controller: 'chatCtrl'
+            },
             '/chat/:id1/:id2': {
               templateUrl: '/views/dashboard/chat.html',
               controller: 'chatCtrl'

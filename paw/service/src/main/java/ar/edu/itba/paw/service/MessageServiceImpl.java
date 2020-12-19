@@ -40,30 +40,32 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public Optional<Message> create(Message messageData, long sessionUserId, URI baseUri) {
-
-        /** Checks it the session user id is from one of the two users negotiating, and sets direction of message */
-        if (sessionUserId == messageData.getInvestorId())
-            messageData.setDirection(true);
-        else if (sessionUserId == messageData.getOwnerId())
-            messageData.setDirection(false);
-        else return Optional.empty();
-
-        /** Should be two different users */
-        if (messageData.getInvestorId() == messageData.getOwnerId()) return Optional.empty();
+    public Optional<Message> create(long projectId, long investorId, long sessionUserId, Message.MessageContent content, int expiryDays, URI baseUri) {
 
         /** Checks for the existence of the project and the owner ID is the right one */
-        Optional<Project> project = projectService.findById(messageData.getProjectId());
-        if (!project.isPresent() || project.get().getOwnerId() != messageData.getOwnerId()) return Optional.empty();
+        Optional<Project> project = projectService.findById(projectId);
+        if (!project.isPresent()) return Optional.empty();
+
+        /** Checks it the session user id is from one of the two users negotiating, and sets direction of message */
+        boolean direction;
+        if (sessionUserId == investorId)
+            direction = true;
+        else if (sessionUserId == project.get().getOwnerId())
+            direction = false;
+        else return Optional.empty();
 
         /** Checks if both users exists */
-        Optional<User> owner = userService.findById(messageData.getOwnerId());
-        Optional<User> investor = userService.findById(messageData.getInvestorId());
+        Optional<User> owner = userService.findById(project.get().getOwnerId());
+        Optional<User> investor = userService.findById(investorId);
         if (!owner.isPresent() || !investor.isPresent()) return Optional.empty();
 
         /** Checks if the user is able to sent message */
-        if (!isPostOfferValid(messageData.getOwnerId(), messageData.getInvestorId(), messageData.getProjectId(), messageData.getDirection()))
+        if (!isPostOfferValid(owner.get().getId(), investorId, projectId, direction))
             return Optional.empty();
+
+        /** Creates the message data to persist */
+        Message messageData = new Message(content, new User(project.get().getOwnerId()),
+                new User(investorId), new Project(projectId), direction, expiryDays);
 
         /** Persists message */
         Message finalMessage = messageDao.create(messageData);
@@ -159,7 +161,8 @@ public class MessageServiceImpl implements MessageService {
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
         message.setSeen();
-        project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
+        if (accepted)
+            project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
         /** Send email */
         emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
@@ -241,7 +244,7 @@ public class MessageServiceImpl implements MessageService {
 
         /** Middle of negotiation */
         /** If it's accepted, then only the investor can start a new negotiation */
-        if (message.getAccepted())
+        if (message.getAccepted() == null || message.getAccepted())
             return direction;
 
         /** Rejected the last message, both can send a new one */

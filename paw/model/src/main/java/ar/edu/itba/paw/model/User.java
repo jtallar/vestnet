@@ -73,7 +73,7 @@ public class User {
             name = "favorites",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))
-    private List<Project> favoriteProjects;
+    private Set<Project> favoriteProjects;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private Set<Favorite> favorites;
@@ -234,11 +234,11 @@ public class User {
         this.ownedProjects = ownedProjects;
     }
 
-    public List<Project> getFavoriteProjects() {
+    public Set<Project> getFavoriteProjects() {
         return favoriteProjects;
     }
 
-    public void setFavoriteProjects(List<Project> favoriteProjects) {
+    public void setFavoriteProjects(Set<Project> favoriteProjects) {
         this.favoriteProjects = favoriteProjects;
     }
 
