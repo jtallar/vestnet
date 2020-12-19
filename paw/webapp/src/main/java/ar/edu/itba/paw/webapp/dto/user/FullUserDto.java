@@ -44,9 +44,9 @@ public class FullUserDto extends UpdatableUserDto {
         userDto.setFavorites(uriInfo.getAbsolutePathBuilder().path("favorites").build());
         userDto.setLocation(uriInfo.getAbsolutePathBuilder().path("location").build());
 
-        if (user.getImage_id() != null) {
+        if (user.getImageId() != null) {
             userDto.setImageExists(true);
-            userDto.setImage(uriInfo.getBaseUriBuilder().path("/images/users").path(String.valueOf(user.getImage_id())).build());
+            userDto.setImage(uriInfo.getBaseUriBuilder().path("/images/users").path(String.valueOf(user.getImageId())).build());
         }
 
         return userDto;

@@ -99,8 +99,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/location/**").permitAll()
 
-
-
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications/project/**").hasRole("ENTREPRENEUR")
@@ -116,15 +114,17 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/projects/**").permitAll()
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/projects/**").hasRole("ENTREPRENEUR")
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/projects/stats").permitAll()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/projects/**/stats").permitAll()
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/projects/**").hasRole("ENTREPRENEUR")
 
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/users/**").permitAll()
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/password", API_PREFIX_VERSION + "/users/verify").permitAll()
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/favorites").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/favorites/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").permitAll()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()
                 .antMatchers("/**").permitAll(); // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
