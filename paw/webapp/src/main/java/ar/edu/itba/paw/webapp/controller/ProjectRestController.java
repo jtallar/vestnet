@@ -65,9 +65,12 @@ public class ProjectRestController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response project(@PathParam("id") long id) {
-
         return projectService.findById(id)
-                .map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build())
+                .map(p -> {
+                    ProjectDto projectDto = ProjectDto.fromProject(p, uriInfo);
+                    if (sessionUser.getId() == p.getOwnerId()) projectDto.setGetByOwner();
+                    return Response.ok(projectDto).build();
+                })
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
