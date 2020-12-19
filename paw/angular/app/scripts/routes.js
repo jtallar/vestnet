@@ -49,10 +49,6 @@ define([], function() {
             //   templateUrl: '/views/users/:id/profile.html',
             //   controller: 'profileCtrl'
             // },
-            '/deals': {
-                templateUrl: '/views/deals/deals.html',
-                controller: 'dealsCtrl'
-            },
             '/requests': {
                 templateUrl: '/views/requests/requests.html',
                 controller: 'requestsCtrl'
