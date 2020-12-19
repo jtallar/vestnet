@@ -18,7 +18,7 @@ public class OfferDto {
     @NotBlank
     private String comment;
 
-    @Min(1000)
+    @Min(100)
     @Max(1000000000)
     private long offer;
 
@@ -38,6 +38,8 @@ public class OfferDto {
 
     private boolean direction;
 
+    private Boolean accepted;
+
     private long investorId, ownerId, projectId;
 
     private URI investor, owner, project, chat;
@@ -54,6 +56,7 @@ public class OfferDto {
 
         offerDto.seen = message.getSeen();
         offerDto.direction = message.getDirection();
+        offerDto.accepted = message.getAccepted();
 
         offerDto.investor = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
         offerDto.owner = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
@@ -74,6 +77,10 @@ public class OfferDto {
 
     public boolean isSeen() {
         return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 
     public boolean getDirection() {
@@ -116,8 +123,16 @@ public class OfferDto {
         return publishDate;
     }
 
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
     public Date getExpiryDate() {
         return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public void setDirection(boolean direction) {
@@ -178,5 +193,13 @@ public class OfferDto {
 
     public void setProjectId(long projectId) {
         this.projectId = projectId;
+    }
+
+    public Boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
     }
 }
