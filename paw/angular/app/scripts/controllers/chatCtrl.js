@@ -15,7 +15,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       else if (AuthenticationService.isEntrepreneur()) role = entrepreneur;
       else PathService.get().logout().go();
 
-      if (isNaN(projectId) || isNaN(investorId)) {
+      if (isNaN(projectId) || (isNaN(investorId) && role === entrepreneur)) {
         PathService.get().error().go();
       }
 
@@ -41,6 +41,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       projectService.getById(projectId.toString()).then(function (response) {
+        console.log(response.data);
         $scope.project = response.data;
         $scope.project.percentage = $scope.project.fundingCurrent * 100 / $scope.project.fundingTarget;
         if ($scope.project.portraitExists) {
@@ -204,8 +205,9 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       $scope.sendOffer = function (offer) {
         $scope.serverFormErrors = false;
         offer.projectId = projectId;
-        offer.investorId = investorId;
+        offer.investorId = investorId; // TODO: COMO HAGO??
         offer.ownerId = (role === entrepreneur) ? AuthenticationService.getUserId() : $scope.user.id;
+        console.log(AuthenticationService.getUserId(), $scope.user.id);
         offer.direction = (role === investor);
         messageService.offer(offer).then(function (response) {
           _this.addOfferToChat(offer);
