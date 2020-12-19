@@ -101,13 +101,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setStage(long id, String name, String comment) {
+    public Optional<Project> setStage(long ownerId, long id, String name, String comment) {
         Optional<Project> optionalProject = projectDao.findById(id);
-        optionalProject.ifPresent(p -> {
-            Set<ProjectStages> stages = p.getStages();
-            if (stages.size() < Project.MAX_STAGES)
-                stages.add(new ProjectStages(name, stages.size() + 1, comment, p));
-        });
+        if (!optionalProject.isPresent()) return optionalProject;
+
+        Project project = optionalProject.get();
+        /** Entrepreneur not the owner */
+        if (project.getOwnerId() != ownerId) return Optional.empty();
+
+        /** Adds the new stage if there are less than 5 */
+        Set<ProjectStages> stages = project.getStages();
+        if (stages.size() < Project.MAX_STAGES)
+            stages.add(new ProjectStages(name, stages.size() + 1, comment, project));
         return optionalProject;
     }
 
