@@ -59,10 +59,10 @@ public class OfferDto {
         offerDto.direction = message.getDirection();
         offerDto.accepted = message.getAccepted();
 
-        offerDto.investor = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
-        offerDto.owner = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
-        offerDto.project = uriInfo.getAbsolutePathBuilder().path("projects").path(String.valueOf(message.getProjectId())).build();
-        offerDto.chat = uriInfo.getAbsolutePathBuilder().path("messages").path("chat").path(String.valueOf(message.getProjectId())).path(String.valueOf(message.getInvestorId())).build();
+        offerDto.investor = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
+        offerDto.owner = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
+        offerDto.project = uriInfo.getBaseUriBuilder().path("projects").path(String.valueOf(message.getProjectId())).build();
+        offerDto.chat = uriInfo.getBaseUriBuilder().path("messages").path("chat").path(String.valueOf(message.getProjectId())).path(String.valueOf(message.getInvestorId())).build();
 
         offerDto.investorId = message.getInvestorId();
         offerDto.ownerId = message.getOwnerId();

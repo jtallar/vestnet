@@ -15,6 +15,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
       $scope.lastPage = 0
 
       $scope.noProjectsFound = false;
+      $scope.loading = true;
 
       param = parseInt($routeParams.p);
       if (isNaN(param) || param <= 0) param = 1;
@@ -105,6 +106,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
       this.showProjects = function (projects) {
         if (projects.length === 0) {
           $scope.noProjectsFound = true;
+          $scope.loading = false;
           return;
         }
         $scope.projects = projects;
@@ -119,6 +121,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
             });
           }
         }
+        $scope.loading = false;
       };
 
       $scope.clearFilter = function () {

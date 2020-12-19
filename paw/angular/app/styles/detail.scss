@@ -181,7 +181,7 @@
 }
 
 .stage-body .card-text{
-  min-height: 109px
+  min-height: 140px
 }
 
 .blockquote-footer a{
@@ -191,4 +191,10 @@
 .blockquote-footer a:hover{
   color: black;
   text-decoration: underline;
+}
+
+.soon-img{
+  margin: 30px 25px !important;
+  width: auto;
+  height: 60px;
 }

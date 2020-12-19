@@ -65,9 +65,12 @@ public class ProjectRestController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response project(@PathParam("id") long id) {
-
         return projectService.findById(id)
-                .map(p -> Response.ok(ProjectDto.fromProject(p, uriInfo)).build())
+                .map(p -> {
+                    ProjectDto projectDto = ProjectDto.fromProject(p, uriInfo);
+                    if (sessionUser.getId() == p.getOwnerId()) projectDto.setGetByOwner();
+                    return Response.ok(projectDto).build();
+                })
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
@@ -176,29 +179,24 @@ public class ProjectRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getStages(@PathParam("id") long id) {
 
-//      TODO implement on stages
-//        Optional<Project> optionalProject = projectService.findById(id);
-//        return optionalProject.map(p -> {
-//            List<ProjectStagesDto> stagesDto = p.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
-//            return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
-//        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        Optional<Project> optionalProject = projectService.findById(id);
 
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        return optionalProject.map(p -> {
+            List<ProjectStagesDto> stagesDto = p.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 
     @PUT
     @Path("/{id}/stages")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response setStages(@PathParam("id") long id,
+    public Response addStages(@PathParam("id") long id,
                               @Valid final ProjectStagesDto stagesDto) {
 
-//        TODO implement on stages
-//          return projectService.setStage(id, stagesDto.getComment())
-//                .map(p -> Response.ok().build())
-//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
-
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        return projectService.setStage(sessionUser.getId(), id, stagesDto.getName(), stagesDto.getComment())
+                .map(p -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 

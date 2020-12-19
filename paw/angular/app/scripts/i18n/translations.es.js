@@ -252,7 +252,7 @@ define([], function() {
     current: 'Obtenido',
     money: '$',
     moneyarg: '{{m}} $',
-    of:'{{of}} de',
+    of: ' {{of}} de',
     contact: 'Enviar mensaje',
     viewmore: 'Ver más...',
     totalinv: 'Total Invertido',
@@ -260,6 +260,21 @@ define([], function() {
     stage: 'Nombre de etapa',
     nooffers: 'No hay ofertas',
     nomessages: 'No hay mensajes',
-    you: 'Tú'
+    you: 'Tú',
+    dashboard: 'Tablero',
+    messages: 'Mensajes',
+    edit: 'Editar Proyecto',
+    error: 'Error',
+    login: 'Acceder',
+    newProject: 'Nuevo Proyecto',
+    feed: 'Inicio',
+    reqPassword: 'Solicitud de Contraseña',
+    myinvestments: 'Mis Inversiones',
+    wppweb: 'Menu de Mensajes',
+    resetPassword: 'Cambiar Contraseña',
+    signup: 'Registro',
+    profile: 'Perfil - {{p}}',
+    singleView: 'Proyecto - {{p}}',
+    welcome: 'Bienvenidos a VestNet'
   };
 });
