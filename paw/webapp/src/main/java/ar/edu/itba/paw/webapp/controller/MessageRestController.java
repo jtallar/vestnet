@@ -6,6 +6,8 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.NotificationDto;
 import ar.edu.itba.paw.webapp.dto.OfferDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Path("messages")
 @Component
 public class MessageRestController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageRestController.class);
 
     @Autowired
     private MessageService messageService;
@@ -89,6 +92,7 @@ public class MessageRestController {
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+                .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
 

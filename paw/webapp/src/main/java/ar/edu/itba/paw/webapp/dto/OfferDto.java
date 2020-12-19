@@ -18,6 +18,7 @@ public class OfferDto {
     @NotBlank
     private String comment;
 
+    // TODO: Ver si tiene minimo la offer
     @Min(1000)
     @Max(1000000000)
     private long offer;
@@ -122,8 +123,16 @@ public class OfferDto {
         return publishDate;
     }
 
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
     public Date getExpiryDate() {
         return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public void setDirection(boolean direction) {

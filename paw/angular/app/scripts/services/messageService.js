@@ -7,10 +7,8 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     var root = AuthenticatedRestangular.one('messages');
     
     
-    messageService.offer = function (pId, sId, cont, c, off) {
-      var body = {content: cont, cost: c, offers: off, projId: pId, senderId: sId}; //cannot send receiver id need a new api call to do this or maybe i do have it inside the object
-
-      return root.customPOST(body);
+    messageService.offer = function (offerBody) {
+      return root.customPOST(offerBody);
     };
 
 
@@ -34,6 +32,11 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     messageService.notificationCount = function () {
       return root.one('notifications').get();
+    };
+
+    messageService.getChat = function(projectId, investorId, pageNum) {
+      if (!pageNum) pageNum = 1;
+      return root.one('chat').one(projectId).one(investorId).get({p: pageNum});
     };
 
     return messageService;
