@@ -77,6 +77,14 @@ public interface ProjectService {
 
 
     /**
+     * Gets the stats of the project.
+     * @param id The unique project's id.
+     * @return
+     */
+    Optional<Project> getStats(long id);
+
+
+    /**
      * Updates the stats of the project given its received values.
      * @param id The unique project's id.
      * @param seconds The seconds the user spent on the page.

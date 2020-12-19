@@ -39,31 +39,32 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
-    @Transactional
-    public Optional<Message> create(Message messageData, long sessionUserId, URI baseUri) {
-
-        /** Checks it the session user id is from one of the two users negotiating, and sets direction of message */
-        if (sessionUserId == messageData.getInvestor().getId())
-            messageData.setDirection(true);
-        else if (sessionUserId == messageData.getOwner().getId())
-            messageData.setDirection(false);
-        else return Optional.empty();
-
-        /** Should be two different users */
-        if (messageData.getInvestor().getId() == messageData.getOwner().getId()) return Optional.empty();
+    public Optional<Message> create(long projectId, long investorId, long sessionUserId, Message.MessageContent content, int expiryDays, URI baseUri) {
 
         /** Checks for the existence of the project and the owner ID is the right one */
-        Optional<Project> project = projectService.findById(messageData.getProject().getId());
-        if (!project.isPresent() || project.get().getOwnerId() != messageData.getOwner().getId()) return Optional.empty();
+        Optional<Project> project = projectService.findById(projectId);
+        if (!project.isPresent()) return Optional.empty();
+
+        /** Checks it the session user id is from one of the two users negotiating, and sets direction of message */
+        boolean direction;
+        if (sessionUserId == investorId)
+            direction = true;
+        else if (sessionUserId == project.get().getOwnerId())
+            direction = false;
+        else return Optional.empty();
 
         /** Checks if both users exists */
-        Optional<User> owner = userService.findById(messageData.getOwner().getId());
-        Optional<User> investor = userService.findById(messageData.getInvestor().getId());
+        Optional<User> owner = userService.findById(project.get().getOwnerId());
+        Optional<User> investor = userService.findById(investorId);
         if (!owner.isPresent() || !investor.isPresent()) return Optional.empty();
 
         /** Checks if the user is able to sent message */
-        if (!isPostOfferValid(messageData.getOwner().getId(), messageData.getInvestor().getId(), messageData.getProject().getId(), messageData.getDirection()))
+        if (!isPostOfferValid(owner.get().getId(), investorId, projectId, direction))
             return Optional.empty();
+
+        /** Creates the message data to persist */
+        Message messageData = new Message(content, new User(project.get().getOwnerId()),
+                new User(investorId), new Project(projectId), direction, expiryDays);
 
         /** Persists message */
         Message finalMessage = messageDao.create(messageData);

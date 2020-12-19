@@ -71,14 +71,8 @@ public class OfferDto {
         return offerDto;
     }
 
-    public static Message toMessage(OfferDto offerDto) {
-        final Message.MessageContent content = new Message.MessageContent(offerDto.getComment(), offerDto.getOffer(), offerDto.getExchange());
-        return new Message(content,
-                new User(offerDto.getOwnerId()),
-                new User(offerDto.getInvestorId()),
-                new Project(offerDto.getProjectId()),
-                offerDto.getDirection(),
-                offerDto.expiryDays);
+    public static Message.MessageContent toMessageContent(OfferDto offerDto) {
+        return new Message.MessageContent(offerDto.getComment(), offerDto.getOffer(), offerDto.getExchange());
     }
 
 

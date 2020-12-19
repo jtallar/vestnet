@@ -274,7 +274,7 @@ define([], function() {
     resetPassword: 'Cambiar Contraseña',
     signup: 'Registro',
     profile: 'Perfil - {{p}}',
-    singleView: 'Proyecto - {{p}}',
+    singleView: '{{p}}',
     welcome: 'Bienvenidos a VestNet'
   };
 });

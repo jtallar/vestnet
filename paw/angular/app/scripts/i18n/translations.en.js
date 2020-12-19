@@ -276,7 +276,7 @@ define([], function() {
     resetPassword: 'Reset Password',
     signup: 'Sign Up {{a}}',
     profile: 'Profile - {{f}} {{l}}',
-    singleView: 'Project - {{p}}',
+    singleView: '{{p}}',
     welcome: 'Welcome to VestNet'
 	};
 });
