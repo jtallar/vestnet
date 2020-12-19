@@ -3,6 +3,7 @@ package ar.edu.itba.paw.model;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 @Table(name = "project_stats")
@@ -122,6 +123,13 @@ public class ProjectStats {
         clicksAvg = (clicksAvg * seen + clicks) / (seen + 1);
         seen++;
         lastSeen = new Date();
+    }
+
+    public long getRelevance() {
+        long millis = Math.abs(new Date().getTime() - lastSeen.getTime());
+        long days = TimeUnit.DAYS.convert(millis, TimeUnit.MILLISECONDS);
+        long relevance = (seen - days * 10) * 100 + secondsAvg + clicksAvg;
+        return (relevance > 0) ? relevance : 0;
     }
 
 

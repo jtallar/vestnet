@@ -106,6 +106,7 @@ public class ProjectServiceImpl implements ProjectService {
         optionalProject.ifPresent(p -> {
             if (p.getStats() == null) p.setStats(new ProjectStats(true));
             p.getStats().setNewSeen(seconds, clicks, investor, contact);
+            p.setRelevance(p.getStats().getRelevance());
         });
         return optionalProject;
     }

@@ -7,10 +7,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     var root = AuthenticatedRestangular.one('messages');
     
     
-    messageService.offer = function (pId, sId, cont, c, off) {
-      var body = {content: cont, cost: c, offers: off, projId: pId, senderId: sId}; //cannot send receiver id need a new api call to do this or maybe i do have it inside the object
-
-      return root.customPOST(body);
+    messageService.offer = function (projectId, investorId, offerBody) {
+      if (isNaN(investorId)) return root.one(projectId.toString()).customPOST(offerBody);     // role === Investor
+      return root.one(projectId.toString()).one(investorId.toString()).customPOST(offerBody); // role === Entrepreneur
     };
 
 
@@ -20,11 +19,17 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     };
 
-    messageService.setStatus = function (accepted, projId, senderId) {
-      var body = {accepted: accepted, projId : projId, senderId: senderId};
-      return root.one('status').customPUT(body)
+    messageService.setStatus = function (projectId, investorId, accepted) {
+      if (!accepted) accepted = false;
+      var body = {accepted: accepted};
+      if (isNaN(investorId)) return root.one('status').one(projectId.toString()).customPUT(body);     // role === Investor
+      return root.one('status').one(projectId.toString()).one(investorId.toString()).customPUT(body); // role === Entrepreneur
     };
 
+    messageService.setSeen = function (projectId, investorId) {
+      if (isNaN(investorId)) return root.one('seen').one(projectId.toString()).customPUT();     // role === Investor
+      return root.one('seen').one(projectId.toString()).one(investorId.toString()).customPUT(); // role === Entrepreneur
+    };
 
     messageService.unread = function (projId,last) {
       var param = {last: last};
@@ -34,6 +39,12 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     messageService.notificationCount = function () {
       return root.one('notifications').get();
+    };
+
+    messageService.getChat = function(projectId, investorId, pageNum) {
+      if (!pageNum) pageNum = 1;
+      if (isNaN(investorId)) return root.one('chat').one(projectId.toString()).get({p: pageNum});     // role === Investor
+      return root.one('chat').one(projectId.toString()).one(investorId.toString()).get({p: pageNum}); // role === Entrepreneur
     };
 
     return messageService;

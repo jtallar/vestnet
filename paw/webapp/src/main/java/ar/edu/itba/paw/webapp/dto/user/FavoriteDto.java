@@ -9,6 +9,16 @@ public class FavoriteDto {
     @NotNull
     private Long projectId;
 
+    private Boolean add;
+
+    public Boolean getAdd() {
+        return add;
+    }
+
+    public void setAdd(Boolean add) {
+        this.add = add;
+    }
+
     public static FavoriteDto fromFavorite(Favorite favorite) {
         FavoriteDto favoriteDto = new FavoriteDto();
         favoriteDto.setProjectId(favorite.getProjectId());

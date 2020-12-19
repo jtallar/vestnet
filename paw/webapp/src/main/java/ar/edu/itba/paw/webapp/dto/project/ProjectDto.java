@@ -58,7 +58,7 @@ public class ProjectDto {
         projectDto.setClosed(project.isClosed());
         projectDto.setPublishDate(project.getPublishDate());
         projectDto.setUpdateDate(project.getUpdateDate());
-        projectDto.setHits(project.getHits());
+        projectDto.setHits(project.getRelevance());
 
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
