@@ -181,7 +181,7 @@ public class Message {
     /** Useful auxiliary methods */
 
     public boolean isExpiryDateValid() {
-        return expiryDate.before(new Date());
+        return expiryDate.after(new Date());
     }
 
 

@@ -18,11 +18,15 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     };
 
-    messageService.setStatus = function (accepted, projId, senderId) {
-      var body = {accepted: accepted, projId : projId, senderId: senderId};
-      return root.one('status').customPUT(body)
+    messageService.setStatus = function (projectId, investorId, accepted) {
+      if (!accepted) accepted = false;
+      var body = {accepted: accepted};
+      return root.one('status').one(projectId).one(investorId).customPUT(body);
     };
 
+    messageService.setSeen = function (projectId, investorId) {
+      return root.one('seen').one(projectId).one(investorId).customPUT();
+    };
 
     messageService.unread = function (projId,last) {
       var param = {last: last};

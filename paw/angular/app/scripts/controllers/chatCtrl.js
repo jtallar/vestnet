@@ -84,30 +84,58 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       $scope.offerEnabled = false; $scope.responseEnabled = false;
 
+      this.setChatAsSeen = function (lastMessage) {
+        if (!lastMessage.incoming || lastMessage.seen) return;
+        // TODO: Ver que funque esto
+        messageService.setSeen(projectId.toString(), investorId.toString()).then(function (response) {
+          console.log(response);
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            console.log('Message already seen!');
+            return;
+          }
+          console.error(errorResponse);
+        })
+      };
+
       this.handleChatResponse = function (chats) {
-        console.log(chats);
         $scope.chats = chats.reverse();
         // Empty chat && Entrepreneur --> 404
-        if (chats.length === 0 && role === entrepreneur) {
-          PathService.get().error().go();
-          return;
+        // Empty chat && Investor --> only send new offer
+        if (chats.length === 0) {
+          if (role === entrepreneur) {
+            PathService.get().error().go();
+            return;
+          } else {
+            $scope.responseEnabled = false;
+            $scope.offerEnabled = true;
+            return;
+          }
         }
         var now = new Date();
         $scope.chats.forEach(function (value) {
-          var aux = Math.ceil((new Date(value.expiryDate) - now) / oneDayMs);
-          value.expInDays = (aux <= 0) ? 0 : aux;
+          if (value.hasOwnProperty('accepted')) {
+            value.expInDays = 0;
+            value.answered = true;
+          } else {
+            var aux = Math.ceil((new Date(value.expiryDate) - now) / oneDayMs);
+            value.expInDays = (aux <= 0) ? 0 : aux;
+            value.answered = false;
+          }
           value.incoming = (!value.direction && role === investor) || (value.direction && role === entrepreneur);
         });
-        var lastMessage = chats[chats.length - 1];
-        $scope.lastMessageDate = lastMessage.publishDate;
-        // (Empty chat && Investor) || Last expired --> only send new offer
-        if (chats.length === 0 || lastMessage.expInDays === 0) {
+        $scope.lastMessage = chats[chats.length - 1];
+        this.setChatAsSeen($scope.lastMessage);
+
+        // Last expired --> only send new offer
+        // Except you are an investor and last was answered
+        if ($scope.lastMessage.expInDays === 0) {
           $scope.responseEnabled = false;
-          $scope.offerEnabled = true;
+          $scope.offerEnabled = (!$scope.lastMessage.answered) ? true : !$scope.lastMessage.accepted || (role === investor);
           return;
         }
         // Last did not expire, if incoming enable response
-        $scope.responseEnabled = !!lastMessage.incoming;
+        $scope.responseEnabled = !!$scope.lastMessage.incoming;
         $scope.offerEnabled = false;
       };
 
@@ -132,12 +160,11 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         console.error(errorResponse);
       });
 
-      // TODO: DO accept, reject + testing
       $scope.rejectOffer = function () {
-        console.log("rejecting offer");
         messageService.setStatus(projectId.toString(), investorId.toString(), false).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = true;
+          $scope.lastMessage.accepted = false;
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
             PathService.get().error().go();
@@ -148,10 +175,12 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.acceptOffer = function () {
-        console.log("Accepting offer");
         messageService.setStatus(projectId.toString(), investorId.toString(), true).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = (role === investor);
+          $scope.lastMessage.accepted = true;
+          $scope.project.fundingCurrent += $scope.lastMessage.offer;
+          $scope.project.percentage = $scope.project.fundingCurrent * 100 / $scope.project.fundingTarget;
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
             PathService.get().error().go();
@@ -168,6 +197,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         offer.expInDays = Math.ceil((new Date(offer.expiryDate) - now) / oneDayMs);
         offer.incoming = false;
         $scope.chats.push(offer);
+        $scope.lastMessage = offer;
       };
 
       $scope.serverFormErrors = false;
@@ -177,7 +207,6 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         offer.investorId = investorId;
         offer.ownerId = (role === entrepreneur) ? AuthenticationService.getUserId() : $scope.user.id;
         offer.direction = (role === investor);
-        console.log(offer);
         messageService.offer(offer).then(function (response) {
           _this.addOfferToChat(offer);
           _this.scrollToBottom();

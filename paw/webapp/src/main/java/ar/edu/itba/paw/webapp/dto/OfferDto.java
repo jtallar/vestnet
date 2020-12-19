@@ -39,6 +39,8 @@ public class OfferDto {
 
     private boolean direction;
 
+    private Boolean accepted;
+
     private long investorId, ownerId, projectId;
 
     private URI investor, owner, project, chat;
@@ -55,6 +57,7 @@ public class OfferDto {
 
         offerDto.seen = message.getSeen();
         offerDto.direction = message.getDirection();
+        offerDto.accepted = message.getAccepted();
 
         offerDto.investor = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
         offerDto.owner = uriInfo.getAbsolutePathBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
@@ -81,6 +84,10 @@ public class OfferDto {
 
     public boolean isSeen() {
         return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 
     public boolean getDirection() {
@@ -193,5 +200,13 @@ public class OfferDto {
 
     public void setProjectId(long projectId) {
         this.projectId = projectId;
+    }
+
+    public Boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
     }
 }

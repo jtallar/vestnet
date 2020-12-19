@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.NotificationDto;
 import ar.edu.itba.paw.webapp.dto.OfferDto;
+import ar.edu.itba.paw.webapp.dto.OfferStatusDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,11 +99,12 @@ public class MessageRestController {
 
     @PUT
     @Path("/status/{project_id}/{investor_id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response status(@PathParam("project_id") final long projectId,
                            @PathParam("investor_id") final long investorId,
-                           @QueryParam("p") @DefaultValue("false") boolean accepted) {
+                           final OfferStatusDto offerStatusDto) {
 
-        final Optional<Message> updatedMessage = messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), accepted, uriInfo.getBaseUri());
+        final Optional<Message> updatedMessage = messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), offerStatusDto.isAccepted(), uriInfo.getBaseUri());
 
         return updatedMessage.map(message -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());

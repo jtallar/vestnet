@@ -159,7 +159,8 @@ public class MessageServiceImpl implements MessageService {
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
         message.setSeen();
-        project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
+        if (accepted)
+            project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
         /** Send email */
         emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
