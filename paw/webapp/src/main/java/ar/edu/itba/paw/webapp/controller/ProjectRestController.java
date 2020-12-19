@@ -176,29 +176,24 @@ public class ProjectRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getStages(@PathParam("id") long id) {
 
-//      TODO implement on stages
-//        Optional<Project> optionalProject = projectService.findById(id);
-//        return optionalProject.map(p -> {
-//            List<ProjectStagesDto> stagesDto = p.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
-//            return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
-//        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        Optional<Project> optionalProject = projectService.findById(id);
 
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        return optionalProject.map(p -> {
+            List<ProjectStagesDto> stagesDto = p.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 
     @PUT
     @Path("/{id}/stages")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response setStages(@PathParam("id") long id,
+    public Response addStages(@PathParam("id") long id,
                               @Valid final ProjectStagesDto stagesDto) {
 
-//        TODO implement on stages
-//          return projectService.setStage(id, stagesDto.getComment())
-//                .map(p -> Response.ok().build())
-//                .orElse(Response.status(Response.Status.NOT_FOUND).build());
-
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+        return projectService.setStage(id, stagesDto.getName(), stagesDto.getComment())
+                .map(p -> Response.ok().build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
 

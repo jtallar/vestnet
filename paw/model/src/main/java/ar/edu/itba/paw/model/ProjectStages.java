@@ -37,11 +37,13 @@ public class ProjectStages {
         /** For hibernate only */
     }
 
-    public ProjectStages(String name, long number, long projectId) {
+    public ProjectStages(String name, long number, String comment, Project project) {
         this.name = name;
         this. number = number;
-        this.project = new Project(projectId);
-        this.completed = false;
+        this.project = project;
+        this.completed = true;
+        this.comment = comment;
+        this.completedDate = new Date();
     }
 
     /** Getters and Setters */
@@ -82,9 +84,8 @@ public class ProjectStages {
         return completed;
     }
 
-    public void setCompleted() {
-        this.completed = true;
-        this.completedDate = new Date();
+    public boolean isNotCompleted() {
+        return !completed;
     }
 
     public Date getCompletedDate() {

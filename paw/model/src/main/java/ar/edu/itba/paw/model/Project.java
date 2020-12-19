@@ -13,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "projects")
 public class Project {
+    public static final int MAX_STAGES = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_id_seq")
