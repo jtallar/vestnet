@@ -191,7 +191,7 @@ public class ProjectRestController {
     public Response addStages(@PathParam("id") long id,
                               @Valid final ProjectStagesDto stagesDto) {
 
-        return projectService.setStage(id, stagesDto.getName(), stagesDto.getComment())
+        return projectService.setStage(sessionUser.getId(), id, stagesDto.getName(), stagesDto.getComment())
                 .map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }

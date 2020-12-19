@@ -90,12 +90,13 @@ public interface ProjectService {
 
     /**
      * Set the last not completed stage as completed
+     * @param ownerId The owner's unique id.
      * @param id The unique project's id.
      * @param name The name of the the stage completed.
      * @param comment The comment on the new completed stage.
      * @return The optional project, modified if found.
      */
-    Optional<Project> setStage(long id, String name, String comment);
+    Optional<Project> setStage(long ownerId, long id, String name, String comment);
 
 
     /**
