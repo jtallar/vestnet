@@ -99,14 +99,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/location/**").permitAll()
 
+
+
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor").hasRole("INVESTOR")
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/**").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications").authenticated()
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/**/**").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/**").authenticated()
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/status/**").authenticated()
-                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/seen/**").permitAll()
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/status/**/**").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/status/**").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/seen/**/**").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/seen/**").hasRole("INVESTOR")
+
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/projects/**").permitAll()
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/projects/**").hasRole("ENTREPRENEUR")

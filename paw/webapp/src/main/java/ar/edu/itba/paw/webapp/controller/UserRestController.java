@@ -84,11 +84,7 @@ public class UserRestController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response personalProfile() {
-
-        final Optional<User> optionalUser = userService.findById(sessionUser.getId());
-
-        return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+        return userProfile(sessionUser.getId());
     }
 
 
