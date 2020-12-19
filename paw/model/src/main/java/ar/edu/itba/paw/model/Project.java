@@ -13,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "projects")
 public class Project {
+    public static final int MAX_STAGES = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_id_seq")
@@ -64,6 +65,9 @@ public class Project {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<Favorite> favorites;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
+    private Set<ProjectStages> stages;
 
 
     /** Protected */ Project() {
@@ -199,6 +203,13 @@ public class Project {
         this.favorites = favorites;
     }
 
+    public Set<ProjectStages> getStages() {
+        return stages;
+    }
+
+    public void setStages(Set<ProjectStages> stages) {
+        this.stages = stages;
+    }
 
     @Override
     public String toString() {
