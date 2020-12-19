@@ -46,6 +46,7 @@ public class ProjectDto {
     private URI owner;
     private URI portraitImage;
     private URI slideshowImages;
+    private URI projectStages;
 
     public static ProjectDto fromProject(Project project, UriInfo uriInfo) {
         final ProjectDto projectDto = new ProjectDto();
@@ -75,6 +76,8 @@ public class ProjectDto {
             projectDto.slideshowExists = true;
             projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
         });
+
+        projectDto.setProjectStages(uriInfo.getBaseUriBuilder().path("/projects").path(String.valueOf(project.getId())).path("/stages").build());
 
         projectDto.setNotGetByOwner();
         return projectDto;
@@ -184,6 +187,14 @@ public class ProjectDto {
         this.slideshowImages = slideshowImages;
     }
 
+    public URI getProjectStages() {
+        return projectStages;
+    }
+
+    public void setProjectStages(URI projectStages) {
+        this.projectStages = projectStages;
+    }
+
     public boolean isPortraitExists() {
         return portraitExists;
     }
@@ -202,6 +213,10 @@ public class ProjectDto {
 
     public boolean isGetByOwner() {
         return getByOwner;
+    }
+
+    public void setGetByOwner(boolean getByOwner) {
+        this.getByOwner = getByOwner;
     }
 
     public void setGetByOwner() {

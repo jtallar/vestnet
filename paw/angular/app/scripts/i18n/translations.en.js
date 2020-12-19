@@ -265,7 +265,7 @@ define([], function() {
     wppweb: 'Messages Menu',
     resetPassword: 'Reset Password',
     signup: 'Sign Up {{a}}',
-    profile: 'Profile - {{f}} {{l}}',
+    profile: '{{f}} {{l}}',
     singleView: '{{p}}',
     welcome: 'Welcome to VestNet'
 	};
