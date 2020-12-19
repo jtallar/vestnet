@@ -1,12 +1,6 @@
-<!--<head>-->
-<!--  &lt;!&ndash; build:css(.tmp) styles/userprofile.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/userprofile.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
 
-<!--  &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/feed.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--</head>-->
+<head><title> {{ 'profile' | translate : {f : user.firstName, l: user.lastName} } | VestNet</title></head>
+
 <body ng-controller="profileCtrl">
 
 <!--<vnheader></vnheader>-->
