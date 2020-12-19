@@ -120,20 +120,30 @@ public class UserRestController {
     @GET
     @Path("/favorites")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getFavorites(@QueryParam("ids") @DefaultValue("true") boolean ids) {
+    public Response getFavoritesIds() {
 
         Optional<User> optionalUser = userService.findById(sessionUser.getId());
 
-        if (!optionalUser.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-
-        if (ids) {
+        return optionalUser.map(u -> {
             List<FavoriteDto> favorites = optionalUser.get().getFavorites().stream().map(FavoriteDto::fromFavorite).collect(Collectors.toList());
             return Response.ok(new GenericEntity<List<FavoriteDto>>(favorites) {}).build();
-        }
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
 
-        List<ProjectDto> favorites = optionalUser.get().getFavoriteProjects().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<ProjectDto>>(favorites) {}).build();
    }
+
+
+    @GET
+    @Path("/favorites/profile")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getFavorites() {
+
+        Optional<User> optionalUser = userService.findById(sessionUser.getId());
+
+        return optionalUser.map(u -> {
+            List<ProjectDto> favorites = optionalUser.get().getFavoriteProjects().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<ProjectDto>>(favorites) {}).build();
+        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
 
 
     @PUT

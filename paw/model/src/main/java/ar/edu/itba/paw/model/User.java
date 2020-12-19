@@ -63,7 +63,7 @@ public class User {
     private UserImage image;
 
     @Column(name = "image_id", insertable = false, updatable = false)
-    private Long image_id;
+    private Long imageId;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
     private Set<Project> ownedProjects;
@@ -218,12 +218,12 @@ public class User {
         this.image = image;
     }
 
-    public Long getImage_id() {
-        return image_id;
+    public Long getImageId() {
+        return imageId;
     }
 
-    public void setImage_id(Long image_id) {
-        this.image_id = image_id;
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
     public Set<Project> getOwnedProjects() {
