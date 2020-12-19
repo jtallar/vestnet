@@ -3,8 +3,8 @@
 define(['paw2020a', 'services/projectService', 'services/sampleService', 'services/messageService', 'services/userService',
   'services/PathService', 'services/AuthenticationService', 'directives/noFloat'], function(paw2020a) {
 
-  paw2020a.controller('chatCtrl', ['projectService', 'sampleService', 'messageService', 'userService', 'PathService', 'AuthenticationService', '$scope', '$routeParams',
-    function(projectService, sampleService, messageService, userService, PathService, AuthenticationService, $scope, $routeParams) {
+  paw2020a.controller('chatCtrl', ['projectService', 'sampleService', 'messageService', 'userService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', '$route',
+    function(projectService, sampleService, messageService, userService, PathService, AuthenticationService, $scope, $routeParams, $route) {
 
       var _this = this;
       var projectId = parseInt($routeParams.id1), investorId = parseInt($routeParams.id2);
@@ -32,7 +32,6 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       this.setUser = function (user) {
         $scope.user = user;
-        console.log(AuthenticationService.getUserId(), $scope.user.id);
         if ($scope.user.imageExists) {
           sampleService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
@@ -43,7 +42,6 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       projectService.getById(projectId.toString()).then(function (response) {
-        console.log(response.data);
         $scope.project = response.data;
         $scope.project.percentage = $scope.project.fundingCurrent * 100 / $scope.project.fundingTarget;
         if ($scope.project.portraitExists) {
@@ -90,8 +88,8 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       this.setChatAsSeen = function (lastMessage) {
         if (!lastMessage.incoming || lastMessage.seen) return;
         // TODO: Ver que funque esto
-        messageService.setSeen(projectId.toString(), investorId.toString()).then(function (response) {
-          console.log(response);
+        messageService.setSeen(projectId, investorId).then(function (response) {
+          // console.log(response);
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
             console.log('Message already seen!');
@@ -151,7 +149,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.chats = [];
-      messageService.getChat(projectId.toString(), investorId.toString(), page).then(function (response) {
+      messageService.getChat(projectId, investorId, page).then(function (response) {
         _this.setMaxPage(response.headers().link);
         _this.handleChatResponse(response.data);
         _this.scrollToBottom();
@@ -164,7 +162,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       });
 
       $scope.rejectOffer = function () {
-        messageService.setStatus(projectId.toString(), investorId.toString(), false).then(function (response) {
+        messageService.setStatus(projectId, investorId, false).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = true;
           $scope.lastMessage.accepted = false;
@@ -178,7 +176,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.acceptOffer = function () {
-        messageService.setStatus(projectId.toString(), investorId.toString(), true).then(function (response) {
+        messageService.setStatus(projectId, investorId, true).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = (role === investor);
           $scope.lastMessage.accepted = true;
@@ -206,19 +204,15 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       $scope.serverFormErrors = false;
       $scope.sendOffer = function (offer) {
         $scope.serverFormErrors = false;
-        offer.projectId = projectId;
-        offer.investorId = investorId; // TODO: COMO HAGO??
-        offer.ownerId = (role === entrepreneur) ? AuthenticationService.getUserId() : $scope.user.id;
-        console.log(AuthenticationService.getUserId(), $scope.user.id);
         offer.direction = (role === investor);
-        messageService.offer(offer).then(function (response) {
+        messageService.offer(projectId, investorId, offer).then(function (response) {
           _this.addOfferToChat(offer);
           _this.scrollToBottom();
           $scope.responseEnabled = false;
           $scope.offerEnabled = false;
         }, function (errorResponse) {
           if (errorResponse.status === 400) {
-            $scope.serverFormErrors = true;
+            $route.reload();
             return;
           }
           console.error(errorResponse);
@@ -230,7 +224,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         page++; $scope.viewMoreEnabled = (page !== maxPage);
 
         var element = document.getElementById("chatbox-scroll");
-        messageService.getChat(projectId.toString(), investorId.toString(), page).then(function (response) {
+        messageService.getChat(projectId, investorId, page).then(function (response) {
           if (response.data.length === 0) return;
           element.scrollTop = 0;
           response.data.reverse();

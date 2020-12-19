@@ -242,7 +242,7 @@ define([], function() {
     expire: 'Expires in (days)',
     expireWithDays: 'Expires in {{days}} days',
     days: 'days',
-    offerRequirement: 'Between U$D1000 and U$D1000000000',
+    offerRequirement: 'Between U$D100 and U$D1000000000',
     exchangeRequirement: 'Not blank, up to 100 characters',
     daysRequirement: 'Between 1 and 31 days',
     commentRequirement: 'Not blank, up to 250 characters',

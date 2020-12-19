@@ -18,8 +18,7 @@ public class OfferDto {
     @NotBlank
     private String comment;
 
-    // TODO: Ver si tiene minimo la offer
-    @Min(1000)
+    @Min(100)
     @Max(1000000000)
     private long offer;
 

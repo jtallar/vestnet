@@ -7,8 +7,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     var root = AuthenticatedRestangular.one('messages');
     
     
-    messageService.offer = function (offerBody) {
-      return root.customPOST(offerBody);
+    messageService.offer = function (projectId, investorId, offerBody) {
+      if (isNaN(investorId)) return root.one(projectId.toString()).customPOST(offerBody);     // role === Investor
+      return root.one(projectId.toString()).one(investorId.toString()).customPOST(offerBody); // role === Entrepreneur
     };
 
 
@@ -21,11 +22,13 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     messageService.setStatus = function (projectId, investorId, accepted) {
       if (!accepted) accepted = false;
       var body = {accepted: accepted};
-      return root.one('status').one(projectId).one(investorId).customPUT(body);
+      if (isNaN(investorId)) return root.one('status').one(projectId.toString()).customPUT(body);     // role === Investor
+      return root.one('status').one(projectId.toString()).one(investorId.toString()).customPUT(body); // role === Entrepreneur
     };
 
     messageService.setSeen = function (projectId, investorId) {
-      return root.one('seen').one(projectId).one(investorId).customPUT();
+      if (isNaN(investorId)) return root.one('seen').one(projectId.toString()).customPUT();     // role === Investor
+      return root.one('seen').one(projectId.toString()).one(investorId.toString()).customPUT(); // role === Entrepreneur
     };
 
     messageService.unread = function (projId,last) {
@@ -40,7 +43,8 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     messageService.getChat = function(projectId, investorId, pageNum) {
       if (!pageNum) pageNum = 1;
-      return root.one('chat').one(projectId).one(investorId).get({p: pageNum});
+      if (isNaN(investorId)) return root.one('chat').one(projectId.toString()).get({p: pageNum});     // role === Investor
+      return root.one('chat').one(projectId.toString()).one(investorId.toString()).get({p: pageNum}); // role === Entrepreneur
     };
 
     return messageService;

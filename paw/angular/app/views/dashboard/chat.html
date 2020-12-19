@@ -82,8 +82,11 @@
                       </div>
 <!--                     TODO: Ajustar esto de abajo -->
                       <div class="row">
-                        <div class="col-2 chat-opt-mini" ng-show="chat.accepted">
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && chat.accepted">
                           <img class="" src="images/accept-icon.png" alt="">
+                        </div>
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && !chat.accepted">
+                          <img class="" src="images/reject-icon.png" alt="">
                         </div>
                         <div class="col-10 card-footer chat-date">
                           {{chat.publishDate}}
@@ -119,8 +122,11 @@
                         <div class="col-10 card-footer chat-date-me">
                           {{chat.publishDate}}
                         </div>
-                        <div class="col-2 chat-opt-mini" ng-show="chat.accepted">
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && chat.accepted">
                           <img class="" src="images/accept-icon.png" alt="">
+                        </div>
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && !chat.accepted">
+                          <img class="" src="images/reject-icon.png" alt="">
                         </div>
                       </div>
                     </div>
@@ -166,7 +172,7 @@
                       <div class="col-4" ng-class="{'has-error': sendOfferForm.offer.$touched && sendOfferForm.offer.$invalid}">
                         <p class="form-requirement">{{'offerRequirement' | translate}}</p>
                         <input name="offer" ng-model="controller.offerForm.offer" type="number" class="form-control" placeholder="{{'msgTitleOffer' | translate}}" id="msg-offer-title"
-                               required min="1000" max="1000000000" step="1" no-float/>
+                               required min="100" max="1000000000" step="1" no-float/>
                       </div>
                       <div class="col-5" ng-class="{'has-error': sendOfferForm.exchange.$touched && sendOfferForm.exchange.$invalid}">
                         <p class="form-requirement">{{'exchangeRequirement' | translate}}</p>
