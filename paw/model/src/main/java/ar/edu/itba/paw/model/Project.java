@@ -64,10 +64,7 @@ public class Project {
     private List<Category> categories;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favoriteProjects")
-    private List<User> favoriteBy;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-    private Set<Favorite> favorites;
+    private Set<User> favoriteBy;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
     private Set<ProjectStages> stages;
@@ -203,20 +200,12 @@ public class Project {
         this.categories = categories;
     }
 
-    public List<User> getFavoriteBy() {
+    public Set<User> getFavoriteBy() {
         return favoriteBy;
     }
 
-    public void setFavoriteBy(List<User> favoriteBy) {
+    public void setFavoriteBy(Set<User> favoriteBy) {
         this.favoriteBy = favoriteBy;
-    }
-
-    public Set<Favorite> getFavorites() {
-        return favorites;
-    }
-
-    public void setFavorites(Set<Favorite> favorites) {
-        this.favorites = favorites;
     }
 
     public Set<ProjectStages> getStages() {
