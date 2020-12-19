@@ -17,6 +17,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       if (isNaN(projectId) || (isNaN(investorId) && role === entrepreneur)) {
         PathService.get().error().go();
+        return;
       }
 
       $scope.sent = true;    // if the mail was sent retreive from url
@@ -31,6 +32,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       this.setUser = function (user) {
         $scope.user = user;
+        console.log(AuthenticationService.getUserId(), $scope.user.id);
         if ($scope.user.imageExists) {
           sampleService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
