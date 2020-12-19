@@ -44,6 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
         optionalProject.get().setName(name);
         optionalProject.get().setSummary(summary);
         optionalProject.get().setFundingTarget(fundingTarget);
+        optionalProject.get().setUpdateDate(new Date());
         return optionalProject;
     }
 

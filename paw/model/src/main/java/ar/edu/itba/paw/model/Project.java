@@ -38,11 +38,11 @@ public class Project {
     private boolean closed;
 
     @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "publish_date")
+    @Column(name = "publish_date", insertable = false)
     private Date publishDate;
 
     @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "update_date", insertable = false)
+    @Column(name = "update_date")
     private Date updateDate;
 
     @Column(name = "hits", nullable = false)
@@ -90,7 +90,6 @@ public class Project {
         this.owner = owner;
         this.hits = 0;
         this.closed = false;
-        this.publishDate = new Date();
         this.stats = new ProjectStats(true);
     }
 
