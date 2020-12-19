@@ -39,6 +39,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     @Override
+    @Transactional
     public Optional<Message> create(long projectId, long investorId, long sessionUserId, Message.MessageContent content, int expiryDays, URI baseUri) {
 
         /** Checks for the existence of the project and the owner ID is the right one */
@@ -160,7 +161,8 @@ public class MessageServiceImpl implements MessageService {
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
         message.setSeen();
-        project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
+        if (accepted)
+            project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
         /** Send email */
         emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
@@ -242,7 +244,7 @@ public class MessageServiceImpl implements MessageService {
 
         /** Middle of negotiation */
         /** If it's accepted, then only the investor can start a new negotiation */
-        if (message.getAccepted())
+        if (message.getAccepted() == null || message.getAccepted())
             return direction;
 
         /** Rejected the last message, both can send a new one */

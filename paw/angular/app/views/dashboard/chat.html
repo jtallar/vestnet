@@ -19,7 +19,12 @@
 
       <div class="col-2 card chat-ficha">
         <h4 class="chat-p-name">{{project.name}}</h4>
-        <img src="{{project.image}}" class="chat-p-img" alt=""/>
+        <div ng-if="!project.portraitExists">
+          <img ng-src="images/projectNoImage.png" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        </div>
+        <div ng-if="project.portraitExists">
+          <img ng-src="data:image/JPEG;base64,{{project.image}}" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        </div>
         <p><i>{{project.summary}}</i></p>
         <h6><i>Funded</i></h6>
         <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
@@ -34,62 +39,73 @@
               <div class="chat-header">
                 <div class="row">
                   <div class="col-3">
-
-<!--                    TODO: HACERLO POR ID DEL USER, NO EN BASE AL PRIMER CHAT OOOOOBVIO -->
-
-                    <img src="{{chats[0].picture}}" class="chat-img" alt=""/>
+                    <div ng-if="!user.imageExists">
+                      <img ng-src="images/userNoImage.png" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+                    </div>
+                    <div ng-if="user.imageExists">
+                      <img ng-src="data:image/JPEG;base64,{{user.image}}" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+                    </div>
                   </div>
                   <div class="center-vertical col-6">
                     <h5 class="center-vertical chatbox-header">
-                      {{chats[0].from}} - {{'entrepreneur' | translate}}
+                      {{'fullName' | translate : { firstName: user.firstName, lastName: user.lastName } }} - {{ user.role | translate }}
                     </h5>
                   </div>
-                  <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChat' | translate}}: {{chats[n_chats-1].date}}</div>
+                  <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChatWithDate' | translate : { date: lastMessage.publishDate } }}</div>
                 </div>
               </div>
-              <button ng-click="viewMoreChat()" class="btn btn-inv pull-right">
+              <button ng-show="viewMoreEnabled" ng-click="viewMoreChat()" class="btn btn-inv pull-right">
                 <img src="images/up-arrow-wh.png" class="p-img" alt="" style="margin-top: 5px">
               </button>
               <div class="chatbox-body card-body" id="chatbox-scroll">
                 <div ng-repeat="chat in chats">
-                  <div ng-if="chat.from != 'Me'">
+                  <div ng-if="chat.incoming">
                     <div class="card chat-card-other">
                       <div class="card-body chat-other">
                         <div class="row">
                           <div class="col-6 msg-offer">
-                            <img src="images/down-arrow.png" alt="">
+                            <img src="images/down-arrow.png" alt="{{'msgTitleOffer' | translate}}">
                             <strong>{{chat.offer}}</strong>
                           </div>
                           <div class="col-6 msg-exp-me">
-                            {{'expire' | translate}} {{chat.exp}} {{'days' | translate}}
+                            {{'expireWithDays' | translate : { days: chat.expInDays } }}
                             <img src="images/clock-icon.png" alt="">
                           </div>
                         </div>
                         <div class="msg-exch">
-                          <img src="images/up-arrow.png" alt="">
+                          <img src="images/up-arrow.png" alt="{{'msgTitleRequest' | translate}}">
                           <strong> {{chat.exchange}}</strong>
                         </div>
                         <div class="msg-comm">
                           <strong> {{chat.comment}}</strong>
                         </div>
                       </div>
-                      <div class="card-footer chat-date">
-                        {{chat.date}}
+<!--                     TODO: Ajustar esto de abajo -->
+                      <div class="row">
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && chat.accepted">
+                          <img class="" src="images/accept-icon.png" alt="">
+                        </div>
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && !chat.accepted">
+                          <img class="" src="images/reject-icon.png" alt="">
+                        </div>
+                        <div class="col-10 card-footer chat-date">
+                          {{chat.publishDate}}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div ng-if="chat.from == 'Me'">
+                  <div ng-if="!chat.incoming">
                     <div class="card chat-card-me">
                       <div class="card-body chat-me">
                           <div class="row">
                             <div class="col-6 msg-exp">
-                              <img src="images/clock-icon.png" alt="">
-                              {{'expire' | translate}} {{chat.exp}} {{'days' | translate}}
+                              <img src="images/clock-icon.png" alt="{{'msgTitleRequest' | translate}}">
+                              {{'expireWithDays' | translate : { days: chat.expInDays } }}
                             </div>
                             <div class="col-6 msg-offer">
                               <strong>{{chat.offer}}</strong>
-                              <img src="images/down-arrow.png" alt="">
+                              <img src="images/down-arrow.png" alt="{{'msgTitleOffer' | translate}}">
                             </div>
                           </div>
                           <div class="msg-exch">
@@ -101,8 +117,17 @@
                           </div>
 
                       </div>
-                      <div class="card-footer chat-date-me">
-                        {{chat.date}}
+                      <!--                     TODO: Ajustar esto de abajo -->
+                      <div class="row">
+                        <div class="col-10 card-footer chat-date-me">
+                          {{chat.publishDate}}
+                        </div>
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && chat.accepted">
+                          <img class="" src="images/accept-icon.png" alt="">
+                        </div>
+                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && !chat.accepted">
+                          <img class="" src="images/reject-icon.png" alt="">
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -132,59 +157,70 @@
 <!--        </div>-->
 
         <div class="row">
-          <div class="center-collapse collapse" id="newoffer">
-            <div class="card chat-offer">
-              <div class="card-header">
-                <div class="row">
-                  <img class="nav-icon" src="/images/chat-icon.png" alt="">
-                  <h5>{{'counteroffer' | translate}}</h5>
-                </div>
-              </div>
-              <div class="card-body offer-body row">
-                <div class="col-11">
-                  <div class="row chat-input">
-                    <div class="col-4">
-                      <input type="text" class="form-control" placeholder="{{'msgTitleOffer' | translate}}" id="msg-offer-title"/>
-                    </div>
-                    <div class="col-5">
-                      <input type="text" class="form-control" placeholder="{{'msgTitleRequest' | translate}}" id="msg-req-title"/>
-                    </div>
-                    <div class="col-3">
-                      <input type="number" class="form-control" placeholder="{{'expire' | translate}}" id="msg-days-title"/>
-                      <!--                      <select id="expire" class="custom-select mr-sm-2">-->
-<!--                        <option value="0">{{'expire' | translate}}</option>-->
-<!--                        <option ng-repeat="x in [].constructor(30) track by $index"> {{$index+1}} days</option>-->
-<!--                      </select>-->
-                    </div>
-                  </div>
+          <div class="center-collapse" id="newoffer" ng-show="offerEnabled">
+            <ng-form name="sendOfferForm">
+              <div class="card chat-offer">
+                <div class="card-header">
                   <div class="row">
-                    <textarea class="chat-text form-control" placeholder="{{'comments' | translate}}" rows="2" id="msg-comment-title"></textarea>
+                    <img class="nav-icon" src="/images/chat-icon.png" alt="">
+                    <h5>{{ 'sendoffer' | translate }}</h5>
                   </div>
                 </div>
-                <div class="col-1">
-                  <a class="btn btn-inv pull-right" data-toggle="modal" data-target="#confirmsend">
-                    <img class="send-icon" src="/images/send-icon.png" alt="">
-                  </a>
+                <div class="card-body offer-body row">
+                  <div class="col-11">
+                    <div class="row chat-input">
+                      <div class="col-4" ng-class="{'has-error': sendOfferForm.offer.$touched && sendOfferForm.offer.$invalid}">
+                        <p class="form-requirement">{{'offerRequirement' | translate}}</p>
+                        <input name="offer" ng-model="controller.offerForm.offer" type="number" class="form-control" placeholder="{{'msgTitleOffer' | translate}}" id="msg-offer-title"
+                               required min="100" max="1000000000" step="1" no-float/>
+                      </div>
+                      <div class="col-5" ng-class="{'has-error': sendOfferForm.exchange.$touched && sendOfferForm.exchange.$invalid}">
+                        <p class="form-requirement">{{'exchangeRequirement' | translate}}</p>
+                        <input name="exchange" ng-model="controller.offerForm.exchange" type="text" class="form-control" placeholder="{{'msgTitleRequest' | translate}}" id="msg-req-title"
+                               required ng-maxlength="100"/>
+                      </div>
+                      <div class="col-3" ng-class="{'has-error': sendOfferForm.expDays.$touched && sendOfferForm.expDays.$invalid}">
+                        <p class="form-requirement">{{'daysRequirement' | translate}}</p>
+                        <input name="expDays" ng-model="controller.offerForm.expiryDays" type="number" class="form-control" placeholder="{{'expire' | translate}}" id="msg-days-title"
+                               required min="1" max="31" step="1" no-float/>
+                        <!--                      <select id="expire" class="custom-select mr-sm-2">-->
+  <!--                        <option value="0">{{'expire' | translate}}</option>-->
+  <!--                        <option ng-repeat="x in [].constructor(30) track by $index"> {{$index+1}} days</option>-->
+  <!--                      </select>-->
+                      </div>
+                    </div>
+<!--                    TODO: Ajustar css de comentario y de serverFormErrors message, que quede bien la cajita-->
+                    <div class="row" ng-class="{'has-error': sendOfferForm.comment.$touched && sendOfferForm.comment.$invalid}">
+                      <p class="form-requirement chat-text">{{'commentRequirement' | translate}}</p>
+                      <textarea name="comment" ng-model="controller.offerForm.comment" class="chat-text form-control" placeholder="{{'comments' | translate}}" rows="2" id="msg-comment-title"
+                                required ng-maxlength="250"></textarea>
+                      <label class="big-error chat-text" ng-if="serverFormErrors" id="serverFromError" >{{'serverFormErrors' | translate}}</label>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <a class="btn btn-inv pull-right" data-toggle="modal" data-target="#confirmsend" ng-class="{disabled: sendOfferForm.$invalid}">
+                      <img class="send-icon" src="/images/send-icon.png" alt="">
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
+            </ng-form>
           </div>
         </div>
-
       </div>
 
       <div class="col-1">
 
-        <div class="row chat-options">
+        <div class="row chat-options" ng-show="responseEnabled">
           <div class="col-">
-            <a ng-click="" class="btn chat-opt" type="button" data-toggle="modal" data-target="#confirmaccept">
+            <a class="btn chat-opt" type="button" data-toggle="modal" data-target="#confirmaccept">
               <div class="chat-opt">
                 <img class="" src="images/accept-icon.png" alt="">
               </div>
             </a>
           </div>
           <div class="col-">
-            <a ng-click="" class="btn chat-opt"  type="button" data-toggle="collapse"
+            <a ng-click="rejectOffer()" class="btn chat-opt"  type="button" data-toggle="collapse"
                data-target="#newoffer" aria-expanded="false" aria-controls="newoffer">
               <div class="chat-opt">
                 <img class="" src="images/reject-icon.png" alt="">
@@ -205,7 +241,7 @@
     <div class="modal-content mx-auto my-auto">
       <div class="modal-header">
         <h5 class="modal-title">
-          <strong>{{'confSend' | translate }}</strong>
+          <strong>{{'confSend' | translate : { days: chat.expInDays } }}</strong>
         </h5>
       </div>
       <div class="modal-body">
@@ -216,7 +252,7 @@
           <button type="button" class="btn btn-danger" data-dismiss="modal">
             {{'cancel' | translate }}
           </button>
-          <a onclick="location.href='/#/dashboard'" type="button" class="btn btn-success" data-dismiss="modal" style="color: white">
+          <a ng-click="sendOffer(controller.offerForm)" type="button" class="btn btn-success" data-dismiss="modal" style="color: white">
             {{'send' | translate }}
           </a>
         </div>
@@ -242,7 +278,7 @@
           <button type="button" class="btn btn-danger" data-dismiss="modal">
             {{'cancel' | translate }}
           </button>
-          <a onclick="location.href='/#/dashboard'" type="button" class="btn btn-success" data-dismiss="modal" style="color: white">
+          <a ng-click="acceptOffer()" type="button" class="btn btn-success" data-dismiss="modal" style="color: white">
             {{'confirm' | translate }}
           </a>
         </div>
