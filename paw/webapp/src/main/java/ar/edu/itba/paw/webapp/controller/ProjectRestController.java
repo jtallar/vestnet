@@ -151,13 +151,9 @@ public class ProjectRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getStats(@PathParam("id") long id) {
 
-        Optional<Project> optionalProject = projectService.findById(id);
+        Optional<Project> optionalProject = projectService.getStats(id);
 
-        return optionalProject.map(p -> {
-            ProjectStats stats = p.getStats();
-            if (stats == null) return Response.ok(ProjectStatsDto.fromProjectStats(new ProjectStats(true))).build();
-            return Response.ok(ProjectStatsDto.fromProjectStats(stats)).build();
-        })
+        return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
