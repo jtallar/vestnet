@@ -49,6 +49,11 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       };
 
 
+      projectService.getStats = function (id) {
+        return root.one(id).one('stats').get()
+      }
+
+
       return projectService;
     }]);
 

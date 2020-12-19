@@ -151,6 +151,19 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       }
 
 
+      $scope.fetchStats = function(id, index){
+
+        projectService.getStats(id.toString()).then(function (response) {
+          $scope.projects[index].clicksAvg = response.data.clicksAvg
+          $scope.projects[index].secondsAvg = response.data.responseAvg
+          $scope.projects[index].seen = response.data.seen
+          $scope.projects[index].contactClicks = response.data.contactClicks
+          $scope.projects[index].investorsSeen = response.data.investorsSeen
+          $scope.projects[index].lastSeen = response.data.lastSeen
+        })
+      }
+
+
 
 
       $scope.enabled = true;
@@ -158,16 +171,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.funded = false;
       $scope.disabled = true;
 
-      // $scope.fetchMsgs = function(projectId, index) {
-      //   messageService.unread(projectId.toString(), false).then(function (msgsApi) {
-      //     _this.messages[index] = msgsApi
-      //   })
-      // }
 
-      $scope.extraMessages = [
-        {'investor': 'Kiko','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1},
-        {'investor': 'Lolo','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}
-        ];
 
       $scope.viewMore = function (id, index) {
         var length = $scope.messages[index].length
