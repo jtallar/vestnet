@@ -56,6 +56,7 @@ public class MessageRestController {
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+                .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
 
