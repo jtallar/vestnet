@@ -277,6 +277,7 @@ define([], function() {
     signup: 'Sign Up {{a}}',
     profile: 'Profile - {{f}} {{l}}',
     singleView: '{{p}}',
-    welcome: 'Welcome to VestNet'
+    welcome: 'Welcome to VestNet',
+    imgFav: 'Favorites button'
 	};
 });

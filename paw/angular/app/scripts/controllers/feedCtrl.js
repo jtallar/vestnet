@@ -2,16 +2,54 @@
 
 
 // TODO: Pagination, Show page number in "showing page ... from ... pages
-define(['paw2020a', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat',
+define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat',
   'services/PathService'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', ['projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (projectService,imageService,sampleService,PathService,$scope,$routeParams) {
+    paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams) {
       var _this = this;
       var pageSize = 12, page = 1, param, aux;
       $scope.page = 1
 
       var emptyCategory = {id:null, name:'noFilter'};
 
-      $scope.firstPage = 0
+      $scope.isInvestor = AuthenticationService.isInvestor()
+
+      $scope.favs = []
+      if($scope.isInvestor == true){
+        userService.getFavorites().then(function (response) {
+          for(var i = 0; i < response.data.length;i++){
+            $scope.favs.push(response.data[i].projectId)
+          }
+        })
+      }
+
+
+      $scope.containsFav = function(id){
+        return $scope.favs.includes(id)
+      }
+
+      $scope.favTap = function(id){
+        if($scope.containsFav(id)){
+          $scope.favs.remove(id)
+          userService.putFavorite(id, false).then(function () {
+
+          },function (error) {
+            console.log(error)
+          })
+        }
+        else {
+          $scope.favs.push(id)
+          userService.putFavorite(id, true).then(function () {
+
+          },function (error) {
+            console.log(error)
+          })
+
+        }
+        console.log(id)
+      }
+
+
+
       $scope.lastPage = 0
 
       $scope.noProjectsFound = false;
@@ -81,26 +119,10 @@ define(['paw2020a', 'services/projectService', 'services/imageService','services
 
       this.getArgs = function (string) {
 
-
-        var firstLinkStart = string.indexOf("<")
-        var firstLinkFinish = string.indexOf(">")
-        var secondLinkStart = string.indexOf("<", firstLinkStart + 1)
-        var secondLinkFinish = string.indexOf(">", secondLinkStart + 1)
-
-
-
-        var firstLink = string.substr(firstLinkStart + 1, firstLinkFinish - firstLinkStart - 1)
-
-        var secondLink = string.substr( secondLinkStart + 1, secondLinkFinish - secondLinkStart - 1)
-
-
-        //console.log(secondLink)
-
-        var firstPageSplit = firstLink.split("p=")
-        var lastPageSplit = secondLink.split("p=")
-
-        $scope.firstPage = firstPageSplit[2]
-        $scope.lastPage = lastPageSplit[2]
+        var lastLink = string.split(',').filter(function (el) {
+          return el.includes('last');
+        });
+        $scope.lastPage = parseInt(lastLink[0].split('p=')[1][0]);
       }
 
       this.showProjects = function (projects) {
