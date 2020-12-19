@@ -15,6 +15,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         map[$scope.projects[i].id] = i;
         $scope.projects[i].msgPage = 1
         $scope.projects[i].offerPage = 1
+        $scope.projects[i].firstFecthed = false
+        $scope.projects[i].firstFecthedOffers = false
         if ($scope.projects[i].portraitExists) {
           sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
             $scope.projects[map[image.data.route]].image = image.data.image
@@ -74,67 +76,31 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       };
 
     $scope.fetchOffers = function(id, index){
-      $scope.fundedMsgs[index] = []
-      messageService.getOffers(id.toString(), 'true', 1).then(function (response) {
-        var lastLink = response.headers().link.split(',').filter(function (el) { return el.includes('last'); });
-        $scope.projects[index].maxPageOffer = parseInt(lastLink[0].split('p=')[1][0]);
-        console.log($scope.projects[index].maxPageOffer)
-        var messageMap = []
-        for (var i = 0; i < response.data.length; i++) {
-          messageMap[response.data[i].investorId] = i
-          $scope.fundedMsgs[index][i] = {
-            'senderId':response.data[i].investorId,
-            'body': '',
-            'offer': '',
-            'request' : '',
-            'investor': ''
-          }
-          sampleService.get(response.data[i].chat, response.data[i].investorId).then(function (chat) {
-            console.log(chat.data)
-            $scope.fundedMsgs[index][messageMap[chat.data.route]].body = chat.data[chat.data.length - 1].comment
-            $scope.fundedMsgs[index][messageMap[chat.data.route]].offer = chat.data[chat.data.length - 1].offer
-            $scope.fundedMsgs[index][messageMap[chat.data.route]].exchange = chat.data[chat.data.length - 1].exchange
-          }, function (error) {
-            console.log(error)
-          })
-
-          sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
-            $scope.fundedMsgs[index][messageMap[inv.data.route]].investor = inv.data.firstName
-            $scope.fundedMsgs[index][messageMap[inv.data.route]].lastName = inv.data.lastName
-          }, function (error) {
-            console.log(error)
-          })
-        }
-      }, function (error) {
-        console.log(error)
-      })
-    }
-
-
-      $scope.fetchMessage = function(id, index){
-        $scope.messages[index] = []
-        messageService.getOffers(id.toString(), 'false', 1).then(function (response) {
-          var lastLink = response.headers().link.split(',').filter(function (el) { return el.includes('last'); });
-          $scope.projects[index].maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+      if($scope.projects[index].firstFecthedOffers == false) {
+        $scope.projects[index].firstFecthedOffers = true
+        $scope.fundedMsgs[index] = []
+        messageService.getOffers(id.toString(), true, 1).then(function (response) {
+          var lastLink = response.headers().link.split(',').filter(function (el) {
+            return el.includes('last');
+          });
+          $scope.projects[index].maxPageOffer = parseInt(lastLink[0].split('p=')[1][0]);
           var messageMap = []
+          console.log(response)
           for (var i = 0; i < response.data.length; i++) {
             messageMap[response.data[i].investorId] = i
-            $scope.messages[index][i] = {
-              'senderId':response.data[i].investorId,
+            $scope.fundedMsgs[index][i] = {
+              'senderId': response.data[i].investorId,
               'body': '',
-              'offer': '',
-              'request' : '',
-              'investor': ''
+              'offer': response.data[i].offer,
+              'request': response.data[i].request,
+              'investor': '',
+              'exchange': response.data[i].exchange
             }
-            sampleService.get(response.data[i].chat, response.data[i].investorId).then(function (chat) {
-              $scope.messages[index][messageMap[chat.data.route]].body = chat.data[chat.data.length - 1].comment
-            }, function (error) {
-              console.log(error)
-            })
 
-            sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
-              $scope.messages[index][messageMap[inv.data.route]].investor = inv.data.firstName
-              $scope.messages[index][messageMap[inv.data.route]].lastName = inv.data.lastName
+
+            sampleService.get(response.data[i].investor, i.toString()).then(function (inv) {
+              $scope.fundedMsgs[index][parseInt(inv.data.route)].investor = inv.data.firstName
+              $scope.fundedMsgs[index][parseInt(inv.data.route)].lastName = inv.data.lastName
             }, function (error) {
               console.log(error)
             })
@@ -142,6 +108,46 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         }, function (error) {
           console.log(error)
         })
+      }
+    }
+
+
+      $scope.fetchMessage = function(id, index){
+      if($scope.projects[index].firstFecthed == false) {
+          $scope.projects[index].firstFecthed = true
+          $scope.messages[index] = []
+          messageService.getOffers(id.toString(), false, 1).then(function (response) {
+            var lastLink = response.headers().link.split(',').filter(function (el) {
+              return el.includes('last');
+            });
+            $scope.projects[index].maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+            var messageMap = []
+            for (var i = 0; i < response.data.length; i++) {
+              messageMap[response.data[i].investorId] = i
+              $scope.messages[index][i] = {
+                'senderId': response.data[i].investorId,
+                'body': '',
+                'offer': '',
+                'request': '',
+                'investor': ''
+              }
+              sampleService.get(response.data[i].chat, i.toString()).then(function (chat) {
+                $scope.messages[index][parseInt(chat.data.route)].body = chat.data[0].comment
+              }, function (error) {
+                console.log(error)
+              })
+
+              sampleService.get(response.data[i].investor, i.toString()).then(function (inv) {
+                $scope.messages[index][inv.data.route].investor = inv.data.firstName
+                $scope.messages[index][inv.data.route].lastName = inv.data.lastName
+              }, function (error) {
+                console.log(error)
+              })
+            }
+          }, function (error) {
+            console.log(error)
+          })
+       }
       }
 
 
@@ -178,7 +184,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
               'investor': ''
             }
             sampleService.get(response.data[i].chat, response.data[i].investorId).then(function (chat) {
-              $scope.messages[index][messageMap[chat.data.route]].body = chat.data[chat.data.length - 1].comment
+              $scope.messages[index][messageMap[chat.data.route]].body = chat.data[0].comment
 
             }, function (error) {
               console.log(error)
@@ -201,24 +207,17 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       var length = $scope.fundedMsgs[index].length
       $scope.projects[index].offerPage += 1
       var messageMap = []
-      messageService.getOffers(id.toString(), false, $scope.projects[index].offerPage).then(function (response) {
+      messageService.getOffers(id.toString(), true, $scope.projects[index].offerPage).then(function (response) {
         for (var i = 0; i < response.data.length; i++) {
           messageMap[response.data[i].investorId] = length + i
           $scope.fundedMsgs[index][i + length] = {
             'senderId':response.data[i].investorId,
             'body': '',
-            'offer': '',
+            'offer': response.data[i].offer,
             'request' : '',
-            'investor': ''
+            'investor': '',
+            'exchange': response.data[i].exchange
           }
-          sampleService.get(response.data[i].chat, response.data[i].investorId).then(function (chat) {
-            $scope.fundedMsgs[index][messageMap[chat.data.route]].body = chat.data[chat.data.length - 1].comment
-            $scope.fundedMsgs[index][messageMap[chat.data.route]].offer = chat.data[chat.data.length - 1].offer
-            $scope.fundedMsgs[index][messageMap[chat.data.route]].exchange = chat.data[chat.data.length - 1].exchange
-          }, function (error) {
-            console.log(error)
-          })
-
           sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
             $scope.fundedMsgs[index][messageMap[inv.data.route]].investor = inv.data.firstName
             $scope.fundedMsgs[index][messageMap[inv.data.route]].lastName = inv.data.lastName
