@@ -1,29 +1,10 @@
-<!--<head>-->
-<!--  &lt;!&ndash; build:css(.tmp) styles/detail.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/detail.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-
-<!--  &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/feed.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-
-<!--</head>-->
+<head><title> {{ 'singleView' | translate : {p : project.name} }} | VestNet</title></head>
 
 <!--<vnheader></vnheader>-->
 
-<body ng-controller="singleViewCtrl">
-<!-- Set used variables -->
-<!--
-<sec:authorize access="isAuthenticated()">
-  <sec:authentication var="session_user_id" property="principal.id"/>
-  <sec:authentication var="session_user_mail" property="principal.username"/>
-</sec:authorize>
+<body ng-controller="singleViewCtrl" >
 
-<sec:authorize access="!isAuthenticated()">
-  <c:set var="session_user_id" value="0"/>
-</sec:authorize>
--->
-
+<div id="all">
 <!-- Message and Back logic -->
   <div class="container sep-nav" style="margin-top: 20px">
     <div class="d-flex justify-content-between align-self-center" style="margin-right:6%">
@@ -132,7 +113,7 @@
 
         <!-- Contact button -->
         <div class="d-flex justify-content-center">
-            <a href="/#/chat/1/2" class="btn btn-dark contact-btn" >
+            <a href="/#/chat/1/2" ng-click="contact()" class="btn btn-dark contact-btn" >
               <img src="images/chat-icon.png" class="contact-img">
               {{'contact' | translate}}
             </a>
@@ -239,6 +220,8 @@
       </div>
     </sec:authorize>
     -->
+
+    <button class="btn btn-danger" ng-click="stop()">STOP</button>
 
   <div class="progress my-bar-steps0">
     <div class="progress-bar progress-bar-striped progress-bar-animated
@@ -359,6 +342,7 @@
 
 </div>
 <!--</div>-->
+</div>
 
 </body>
 
