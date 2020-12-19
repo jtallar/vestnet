@@ -148,10 +148,10 @@ public class UserRestController {
 
     @PUT
     @Path("/favorites")
-    public Response addFavorite(@QueryParam("add") @DefaultValue("true") boolean add,
-                                @Valid final FavoriteDto favoriteDto) {
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    public Response addFavorite(@Valid final FavoriteDto favoriteDto) {
 
-        Optional<User> optionalUser = userService.addFavorites(sessionUser.getId(), favoriteDto.getProjectId(), add);
+        Optional<User> optionalUser = userService.addFavorites(sessionUser.getId(), favoriteDto.getProjectId(), favoriteDto.getAdd());
 
         return optionalUser.map(u -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());

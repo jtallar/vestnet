@@ -11,14 +11,14 @@
   <div class="col-1"></div>
   <div class="col-11">
     <ul class="pagination justify-content-center">
-      <div ng-if="(page - 1) >= firstPage">
+      <div ng-if="(page - 1) >= 1">
         <li id="li-previous" class="page-item">
           <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
       </div>
-      <div ng-if="(page - 1) >= firstPage">
+      <div ng-if="(page - 1) >= 1">
         <li id="li-previous-num" class="page-item">
           <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="Previous">{{page -1}}</a>
         </li>
@@ -162,22 +162,27 @@
                 </div>
               </div>
               <div class="col-2">
-                <!--
-                <sec:authorize access="hasRole('ROLE_INVESTOR')">
-                  <button onclick="favTap(${project.id})"
+
+                <div ng-if="isInvestor">
+                  <button ng-click="favTap(project.id)"
                           class="btn-transp">
-                    <c:choose>
-                      <c:when test="${user.favorites.contains(project)}">
-                        <c:set var="icon_fav" value="${icon_fav_on}"/>
-                      </c:when>
-                      <c:otherwise>
-                        <c:set var="icon_fav" value="${icon_fav_off}"/>
-                      </c:otherwise>
-                    </c:choose>
-                    <img id="favImg_${project.id}" src="${icon_fav}" class="icon-img" alt="${icon_fav}"/>
+                    <!--<c:choose>-->
+                      <!--<c:when test="${user.favorites.contains(project)}">-->
+                        <!--<c:set var="icon_fav" value="${icon_fav_on}"/>-->
+                      <!--</c:when>-->
+                      <!--<c:otherwise>-->
+                        <!--<c:set var="icon_fav" value="${icon_fav_off}"/>-->
+                      <!--</c:otherwise>-->
+                    <!--</c:choose>-->
+                    <div ng-if="containsFav(project.id)">
+                      <img ng-src="images/bookmarkOnB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                    </div>
+                    <div ng-if="!containsFav(project.id)">
+                      <img  ng-src="images/bookmarkOffB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                    </div>
+
                   </button>
-                </sec:authorize>
-                -->
+                </div>
               </div>
             </div>
           </div>

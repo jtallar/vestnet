@@ -69,7 +69,7 @@ public class ProjectRestController {
         return projectService.findById(id)
                 .map(p -> {
                     ProjectDto projectDto = ProjectDto.fromProject(p, uriInfo);
-                    if (sessionUser.getId() == p.getOwnerId()) projectDto.setGetByOwner();
+                    if (!sessionUser.isAnonymous() && sessionUser.getId() == p.getOwnerId()) projectDto.setGetByOwner();
                     return Response.ok(projectDto).build();
                 })
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
