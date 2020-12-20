@@ -21,8 +21,7 @@ define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/P
               return false;
             }, function (errorResponse) {
               $timeout(function () {
-                AuthenticationService.logout();
-                PathService.get().login().go();
+                PathService.get().logout().go();
               }, 0);
             });
             return false;

@@ -33,9 +33,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
         $interval(checkNotif, 5 * 60000);
 
         $scope.logout = function () {
-          AuthenticationService.logout();
-          PathService.get().index().go();
-          $rootScope.$emit('credentialsChanged');
+          PathService.get().logout().go();
         }
       }
     };

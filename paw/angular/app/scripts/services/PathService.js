@@ -8,6 +8,7 @@ define([], function() {
 
     // /\/users\/.*/
     pathService.noAuthRoutesRE = [/^\/$/, /^\/login$/, /^\/welcome$/, /^\/signUp$/, /^\/resetPassword$/, /^\/requestPassword$/, /^\/verify$/];
+    pathService.logoutRE = [/^\/logout$/];
     pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
     pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/, /^\/chat\/[^\/]*$/];
     pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];

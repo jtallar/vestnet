@@ -54,13 +54,15 @@ define(['routes',
 
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
           var logged = AuthenticationService.isLoggedIn(), url = $location.url();
-          var notAuthUrl = routeMatches(url, PathService.noAuthRoutesRE);
+          var notAuthUrl = routeMatches(url, PathService.noAuthRoutesRE), logoutUrl = routeMatches(url, PathService.logoutRE);
 
-          $rootScope.showHeader = {value: !notAuthUrl};
+          $rootScope.showHeader = {value: !(notAuthUrl || logoutUrl)};
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
             PathService.get().projects().go();
+          } else if (!logged && logoutUrl) {
+            PathService.get().index().go();
           } else if (!logged && routeMatches(url, PathService.authRoutesRE)) {
             // if not logged in and trying to access auth routes, redirect to login
             PathService.get().login().go({url: url});
