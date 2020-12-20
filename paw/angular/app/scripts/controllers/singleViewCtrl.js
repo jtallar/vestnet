@@ -118,11 +118,11 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
 
         /** PARA PROBAR **/
         'stages': [
-          {'number': 1, 'name': ' 1', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
+          {'number': 1, 'name': 'Stage 1', 'comment': '',
             'completed': false, 'completedDate': '02/05/2021'},
-          {'number': 2, 'name': 'Stage 2', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.',
+          {'number': 2, 'name': 'Stage 2', 'comment': '',
             'completed': false, 'completedDate': '02/05/2021'},
-          {'number': 3, 'name': 'Stage 3', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
+          {'number': 3, 'name': 'Stage 3', 'comment': '',
             'completed': false, 'completedDate': '02/05/2021'},
           {'number': 4, 'name': 'Stage 4', 'comment': '',
             'completed': false, 'completedDate': ''},
@@ -131,30 +131,23 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
         ]
       };
 
-      $scope.projectstage = $scope.getMaxStage($scope.project.stages);
 
-      sampleService.get($scope.project.stagesURL).then(function (response) {       // private URI stages;   -> en ProjectDto
-        console.log('owner', $scope.project.getByOwner)
-        console.log('GETTEANDO STAGES')
+      // sampleService.get($scope.project.stagesURL).then(function (response) {       // private URI stages;   -> en ProjectDto
+      projectService.getStages($scope.project.id).then(function (response) {       // private URI stages;   -> en ProjectDto
         var i = 0;
+        console.log(response.data)
         response.data.forEach(function (data){
-          if(data.stage !== undefined){
-            $scope.project.stages[i].number = data.stage.number;
-            console.log('adentroooo ', data.stage.number)
-            $scope.project.stages[i].comment = data.stage.comment;
-            $scope.project.stages[i].name = data.stage.name;
-            $scope.project.stages[i].completed = data.stage.completed;
-            $scope.project.stages[i].completedDate = data.stage.completedDate;
+          if(data !== undefined){
+            $scope.project.stages[i].number = data.number;
+            $scope.project.stages[i].comment = data.comment;
+            $scope.project.stages[i].name = data.name;
+            $scope.project.stages[i].completed = data.completed;
+            $scope.project.stages[i].completedDate = data.completedDate;
             console.log(i, $scope.project.stages[i])
             i++;
           }
         })
-        console.log('adentroooo aorx')
-        $scope.project.stages[0].comment = 'ejemplardo';
-        $scope.project.stages[0].name = 'ejemplardo';
-        $scope.project.stages[0].completed = true;
-        $scope.project.stages[0].completedDate = '';
-        console.log(i, $scope.project.stages[0])
+        $scope.projectstage = $scope.getMaxStage($scope.project.stages);
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
             $scope.addStatError = true;
