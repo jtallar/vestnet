@@ -165,6 +165,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         messageService.setStatus(projectId, investorId, false).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = true;
+          $scope.lastMessage.answered = true;
           $scope.lastMessage.accepted = false;
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
@@ -179,6 +180,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         messageService.setStatus(projectId, investorId, true).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = (role === investor);
+          $scope.lastMessage.answered = true;
           $scope.lastMessage.accepted = true;
           $scope.project.fundingCurrent += $scope.lastMessage.offer;
           $scope.project.percentage = $scope.project.fundingCurrent * 100 / $scope.project.fundingTarget;
