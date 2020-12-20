@@ -1,9 +1,9 @@
     'use strict';
 
-define(['paw2020a'], function(paw2020a) {
-    paw2020a.controller('requestsCtrl', function($scope) {
+define(['paw2020a', 'services/messageService', 'services/userService', 'services/PathService'], function(paw2020a) {
+    paw2020a.controller('requestsCtrl', ['messageService', 'userService', 'PathService', '$scope', function(messageService, userService, PathService, $scope) {
 
-      $scope.pages = 1;
+      $scope.page = 1; $scope.lastPage = 1;
 
       $scope.animate = function (id, start, end, duration) {
         if (start === end) return;
@@ -20,7 +20,7 @@ define(['paw2020a'], function(paw2020a) {
             obj.innerHTML = end;
           }
         }, stepTime);
-      }
+      };
 
       $scope.$on('$viewContentLoaded', function() {
         var total = 0;
@@ -31,6 +31,8 @@ define(['paw2020a'], function(paw2020a) {
         console.log(total)
         $scope.animate("invested", 0, total, 5000);
       });
+
+
 
       $scope.messages = [
         {
@@ -110,6 +112,13 @@ define(['paw2020a'], function(paw2020a) {
         }
       ];
 
-    });
+      messageService.getInvestorDeals($scope.page, true).then(function (response) {
+        // $scope.messages = response.data;
+        console.log(response.data);
+      }, function (errorResponse) {
+        console.error(errorResponse);
+      })
+
+    }]);
 
 });

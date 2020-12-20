@@ -79,6 +79,7 @@ public class MessageRestController {
                 .build();
     }
 
+    // TODO: Es muy costoso agregar el nombre del proyecto, no? Me falta el nombre y el link de la portrait (de tener)
     @GET
     @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })

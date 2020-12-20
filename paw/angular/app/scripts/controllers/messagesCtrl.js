@@ -50,7 +50,7 @@ define(['paw2020a', 'services/messageService', 'services/userService', 'services
       $scope.disabled = true;
 
       $scope.page = 1;
-      messageService.getInvestorContacts($scope.page, true).then(function (response) {
+      messageService.getInvestorDeals($scope.page, true).then(function (response) {
         console.log(response.data);
       }, function (errorResponse) {
         console.error(errorResponse);
