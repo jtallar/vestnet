@@ -33,6 +33,7 @@ public class MessageRestController {
     @Context
     private UriInfo uriInfo;
 
+    // TODO: Puedo poner PAGE_SIZE en 6 para el /investor? Se muestran en filas de 3 columnas
     private static final int PAGE_SIZE = 5;
 
     @POST
@@ -78,7 +79,6 @@ public class MessageRestController {
                 .build();
     }
 
-    // TODO: Este metodo que onda, para que sirve??
     @GET
     @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })
