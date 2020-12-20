@@ -168,7 +168,7 @@ define([], function() {
     confLogoutBody: 'You sure? Logging out will erase unsaved data.',
     cancel: 'Cancel',
     confirm: 'Confirm',
-    feedSearchPages: 'Showing {{shown}} projects out of {{found}} found',
+    feedSearchPages: 'Showing page {{shown}} out of {{found}}',
     linkedinProfile: 'LinkedIn Profile',
     information: 'Information',
     favorites: 'Favorites',

@@ -167,7 +167,7 @@ define([], function() {
     confLogoutBody: '¿Está seguro? Cerrar la sesión implicará el borrado de todo lo que no haya guardado.',
     cancel: 'Cancelar',
     confirm: 'Confirmar',
-    feedSearchPages: 'Mostrando {{shown}} proyectos de {{found}} encontrados',
+    feedSearchPages: 'Mostrando página {{shown}} de {{found}}',
     successfullContact: 'Contactado correctamente con {{name}}',
     categories: 'Categorías',
     totalCost: 'Costo total',
