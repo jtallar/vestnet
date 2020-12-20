@@ -164,51 +164,47 @@
       </div>
 
       <div class="center-collapse collapse" id="statscollapse{{project.id}}">
-        <div class="card msg-collapse">
+        <div class="card msg-collapse-stats">
           <div class="card-body dash-body">
             <div class="row">
               <div class="col-1">
                 <img class="nav-icon" src="/images/stats-icon-b.png" alt="">
               </div>
-              <div class="col-3">
-                <strong>{{'clicksAvg' | translate: {p : project.clicksAvg} }}</strong>
+              <div class="col-2">
+                <strong>{{'clicksAvg' | translate}}</strong>
               </div>
-              <div class="col-4">
-                <strong>{{'secondsAvg' | translate: {p : project.secondsAvg} }}</strong>
+              <div class="col-2">{{project.clicksAvg}}</div>
+              <div class="col-2">
+                <strong>{{'secondsAvg' | translate}}</strong>
               </div>
+              <div class="col-">{{project.secondsAvg}}</div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-2">
+                <strong>{{'seen' | translate}}</strong>
+              </div>
+              <div class="col-2">{{project.seen}}</div>
+              <div class="col-2">
+                <strong>{{'contactClicks' | translate}}</strong>
+              </div>
+              <div class="col-">{{project.contactClicks}}</div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-2">
+                <strong>{{'investorsSeen' | translate}}</strong>
+              </div>
+              <div class="col-2">{{project.investorsSeen}}</div>
+              <div class="col-2">
+                <strong>{{'lastSeen' | translate}}</strong>
+              </div>
+              <div class="col-">{{project.lastSeen}}</div>
             </div>
           </div>
         </div>
-        <div class="card msg-collapse">
-          <div class="card-body dash-body">
-              <div class="row">
-                <div class="col-1">
-                  <img class="nav-icon" src="/images/stats-icon-b.png" alt="">
-                </div>
-                <div class="col-3">
-                  <strong>{{'seen' | translate: {p : project.seen} }}</strong>
-                </div>
-                <div class="col-4">
-                  <strong>{{'contactClicks' | translate: {p : project.contactClicks} }}</strong>
-                </div>
-          </div>
-        </div>
-        </div>
-        <div class="card msg-collapse">
-          <div class="card-body dash-body">
-              <div class="row">
-                <div class="col-1">
-                  <img class="nav-icon" src="/images/stats-icon-b.png" alt="">
-                </div>
-                <div class="col-3">
-                  <strong>{{'investorsSeen' | translate: {p : project.investorsSeen} }}</strong>
-                </div>
-                <div class="col-4">
-                  <strong>{{'lastSeen' | translate: {p : project.lastSeen} }}</strong>
-                </div>
-              </div>
-            </div>
-        </div>
+
+
       </div>
 
     </div>
