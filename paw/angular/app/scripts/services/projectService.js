@@ -43,6 +43,10 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
         return root.one(id).one('hit').customPUT()
       };
 
+      projectService.getStages = function (id){
+        return root.one(id.toString()).one('stages').get();
+      }
+
       projectService.addStage = function (pid, n, name, comm, comp, date) {
         var body = {number : n, name: name, comment: comm, completed: comp, completedDate: date};
         return root.one(pid.toString()).one('stages').customPUT(body)
