@@ -155,7 +155,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
         projectService.getStats(id.toString()).then(function (response) {
           $scope.projects[index].clicksAvg = response.data.clicksAvg
-          $scope.projects[index].secondsAvg = response.data.responseAvg
+          $scope.projects[index].secondsAvg = response.data.secondsAvg
           $scope.projects[index].seen = response.data.seen
           $scope.projects[index].contactClicks = response.data.contactClicks
           $scope.projects[index].investorsSeen = response.data.investorsSeen

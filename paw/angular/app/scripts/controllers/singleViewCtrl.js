@@ -17,7 +17,7 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     document.getElementById('all').addEventListener('click', function(event) {
       $scope.clicks++;
     }, false);
-    $scope.pressContact = false;
+    $scope.pressContact = 0;
 
     $scope.$on("$destroy", function(){
       projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
@@ -30,7 +30,6 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
         }
         console.error(errorResponse);
       });
-      // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
     });
     /** ********* **/
 
@@ -45,18 +44,15 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     $scope.userId = 2;
 
     $scope.backAction = function() {
-      // if (this.sent) {
         history.back();
-      // } else {
-      //   history.back();
-      //   history.back();
-      // }
     };
 
-    /**    QUEDA ASI ???  **/
-    $scope.getDate = function(){
+    $scope.getDate = function(date){
+      if(date !== undefined)
+        return date.toString().match(/.+?(?=T)/);
+
       var today = new Date();
-      return (today.getDate() + '/' + today.getMonth() + '/' + today.getFullYear());
+      return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
     };
 
     $scope.getMaxStage = function (stages){
@@ -70,27 +66,6 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     };
 
     $scope.project = {};
-
-    /* $scope.project = {      // project infromation from db
-      'name': 'Superchero',
-      'target': 1000,
-      'current': 900,
-      'image': 'images/filter.png',
-      'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país y en todo el mundo',
-      'id': 1,
-      'owner': {'firstName': 'Grupo', 'lastName': '5', 'mail': 'fchoi@itba.edu.ar', 'id': 1},
-      'categories': ['Technology', 'Research'],
-      'updateDate': '15/02/2019',
-      'percentage': 90,
-      'stage' : 3,
-      'stages': [
-        {'name': 'Stage 1', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'},
-        {'name': 'Stage 2', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.'},
-        {'name': 'Stage 3', 'comment': 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'},
-        {'name': '', 'comment': ''},
-        {'name': '', 'comment': ''}
-        ]
-    };*/
 
     projectService.getById($scope.id.toString()).then(function (project) {
       // console.log(project.data.projectStages);
@@ -142,8 +117,9 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
             $scope.project.stages[i].comment = data.comment;
             $scope.project.stages[i].name = data.name;
             $scope.project.stages[i].completed = data.completed;
-            $scope.project.stages[i].completedDate = data.completedDate;
+            $scope.project.stages[i].completedDate = $scope.getDate(data.completedDate)[0];
             console.log(i, $scope.project.stages[i])
+            console.log($scope.getDate(data.completedDate))
             i++;
           }
         })
@@ -213,9 +189,7 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
       /** llamada a set stage **/
       //  setStage($scope.project.id, $scope.project.stages[s])
       projectService.addStage($scope.project.id, s+1, name, comment, true, $scope.getDate())
-        .then(function (response) {
-          console.log($scope.project.id, s+1, name, comment, true, $scope.getDate());
-        }, function (errorResponse) {
+        .then(function () {}, function (errorResponse) {
           if (errorResponse.status === 404) {
             $scope.addStageError = true;
             return;

@@ -279,11 +279,11 @@ define([], function() {
     singleView: '{{p}}',
     welcome: 'Welcome to VestNet',
     imgFav: 'Favorites button',
-    clicksAvg: 'Clicks Average: {{p}}',
-    secondsAvg: 'Seconds Average: {{p}}',
-    seen: 'Seen by {{p}}',
-    contactClicks: 'Contact Clicks: {{p}}',
-    investorsSeen: 'Investors Seen: {{p}}',
-    lastSeen: 'Last seen {{p}}'
+    clicksAvg: 'Clicks Average',
+    secondsAvg: 'Seconds Average',
+    seen: 'Seen by',
+    contactClicks: 'Contact Clicks',
+    investorsSeen: 'Investors Seen',
+    lastSeen: 'Last seen'
 	};
 });
