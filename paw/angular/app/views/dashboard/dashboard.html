@@ -61,7 +61,7 @@
                   </a>
                 </div>
                 <div class="col-1">
-                  <a ng-click="" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                  <a ng-click="fetchStats(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
                      data-target="#statscollapse{{project.id}}" aria-expanded="false" aria-controls="statscollapse{{project.id}}">
                     <div class="notification-icon">
                       <img class="nav-icon" src="images/stats-icon-b.png" alt="">
@@ -171,13 +171,43 @@
                 <img class="nav-icon" src="/images/stats-icon-b.png" alt="">
               </div>
               <div class="col-3">
-                <strong>{{'hits' | translate}}:</strong>  {{project.hits}}
+                <strong>{{'clicksAvg' | translate: {p : project.clicksAvg} }}</strong>
               </div>
               <div class="col-4">
-                <strong>Another stat: </strong> <i>value</i>
+                <strong>{{'secondsAvg' | translate: {p : project.secondsAvg} }}</strong>
               </div>
             </div>
           </div>
+        </div>
+        <div class="card msg-collapse">
+          <div class="card-body dash-body">
+              <div class="row">
+                <div class="col-1">
+                  <img class="nav-icon" src="/images/stats-icon-b.png" alt="">
+                </div>
+                <div class="col-3">
+                  <strong>{{'seen' | translate: {p : project.seen} }}</strong>
+                </div>
+                <div class="col-4">
+                  <strong>{{'contactClicks' | translate: {p : project.contactClicks} }}</strong>
+                </div>
+          </div>
+        </div>
+        </div>
+        <div class="card msg-collapse">
+          <div class="card-body dash-body">
+              <div class="row">
+                <div class="col-1">
+                  <img class="nav-icon" src="/images/stats-icon-b.png" alt="">
+                </div>
+                <div class="col-3">
+                  <strong>{{'investorsSeen' | translate: {p : project.investorsSeen} }}</strong>
+                </div>
+                <div class="col-4">
+                  <strong>{{'lastSeen' | translate: {p : project.lastSeen} }}</strong>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
 

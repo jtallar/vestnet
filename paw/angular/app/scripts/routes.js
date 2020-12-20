@@ -49,10 +49,6 @@ define([], function() {
             //   templateUrl: '/views/users/:id/profile.html',
             //   controller: 'profileCtrl'
             // },
-            '/deals': {
-                templateUrl: '/views/deals/deals.html',
-                controller: 'dealsCtrl'
-            },
             '/requests': {
                 templateUrl: '/views/requests/requests.html',
                 controller: 'requestsCtrl'
@@ -76,6 +72,10 @@ define([], function() {
             '/editProject': {
               templateUrl: '/views/edit/editProject.html',
               controller: 'editProjectCtrl'
+            },
+            '/chat/:id1': {
+              templateUrl: '/views/dashboard/chat.html',
+              controller: 'chatCtrl'
             },
             '/chat/:id1/:id2': {
               templateUrl: '/views/dashboard/chat.html',
