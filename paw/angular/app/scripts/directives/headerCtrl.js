@@ -13,13 +13,13 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
         $scope.iDropdown = ['requests', 'messages', 'users'];
         $scope.gOptions = ['welcome', 'login', 'signUp'];
         $scope.gIcons = ['home-icon', 'login-icon', 'signup-icon'];
-        $scope.notifications = false;
+        $scope.notifications = 0;
         $scope.userid = 2;
 
         var checkNotif = function() {
           if ($scope.valor === 2) return;
           messageService.notificationCount().then(function (response) {
-            $scope.notifications = (response.data.unread !== 0);
+            $scope.notifications = response.data.unread;
           }, function (errorResponse) {
             console.error(errorResponse);
           })
@@ -33,9 +33,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
         $interval(checkNotif, 5 * 60000);
 
         $scope.logout = function () {
-          AuthenticationService.logout();
-          PathService.get().index().go();
-          $rootScope.$emit('credentialsChanged');
+          PathService.get().logout().go();
         }
       }
     };

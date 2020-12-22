@@ -6,8 +6,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
   'services/PathService'], function(paw2020a) {
     paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams) {
       var _this = this;
-      var pageSize = 12, page = 1, param, aux;
-      $scope.page = 1
+      var pageSize = 12, param, aux;
+      $scope.page = 1;
 
       var emptyCategory = {id:null, name:'noFilter'};
 
@@ -58,7 +58,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       param = parseInt($routeParams.p);
       if (isNaN(param) || param <= 0) param = 1;
-      page = param;
+      $scope.page = param;
 
       $scope.searchField = $routeParams.s;
       $scope.fields = [{id: 1, name:'projectNameSearch'}, {id: 2, name:'projectDescSearch'}, {id: 3, name:'ownerNameSearch'}, {id: 4, name:'ownerEmailSearch'}, {id: 5, name:'locationSearch'}];
@@ -97,12 +97,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
 
       $scope.getToPage = function (page) {
-        $scope.page = page
-
-        var params = _this.filterObject()
-        params.p = page
-        projectService.getPage(params).then(function (projects) {
-          _this.getArgs(projects.headers().link)
+        $scope.page = page;
+        _this.setPathParams();
+        projectService.getPage(_this.filterObject()).then(function (projects) {
+          _this.getArgs(projects.headers().link);
           _this.showProjects(projects.data);
         }, function (errorResponse) {
           console.error(errorResponse);
@@ -110,12 +108,11 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       this.setPathParams = function () {
-        console.log(page)
-        PathService.get().setParamsInUrl({p:page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id});
+        PathService.get().setParamsInUrl({p:$scope.page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id});
       };
 
       this.filterObject = function () {
-        return {p:page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id};
+        return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id};
       };
 
       this.getArgs = function (string) {
@@ -124,7 +121,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           return el.includes('last');
         });
         $scope.lastPage = parseInt(lastLink[0].split('p=')[1][0]);
-      }
+        console.log($scope.lastPage);
+      };
 
       this.showProjects = function (projects) {
         if (projects.length === 0) {
@@ -162,13 +160,12 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           return;
         }
 
-        $scope.page = 1
-
+        $scope.page = 1;
         $scope.projects = [];
         $scope.noProjectsFound = false;
         _this.setPathParams();
         projectService.getPage(_this.filterObject()).then(function (projects) {
-          _this.getArgs(projects.headers().link)
+          _this.getArgs(projects.headers().link);
           _this.showProjects(projects.data);
         }, function (errorResponse) {
           console.error(errorResponse);
@@ -177,7 +174,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.projects = [];
       projectService.getPage(_this.filterObject()).then(function (projects) {
-        _this.getArgs(projects.headers().link)
+        _this.getArgs(projects.headers().link);
         _this.showProjects(projects.data);
       }, function (errorResponse) {
         console.error(errorResponse);

@@ -1,8 +1,9 @@
     'use strict';
 
-define(['paw2020a'], function(paw2020a) {
+define(['paw2020a', 'services/messageService', 'services/userService', 'services/PathService'],
+  function(paw2020a) {
 
-  paw2020a.controller('messagesCtrl', function($scope) {
+  paw2020a.controller('messagesCtrl', ['messageService', 'userService', 'PathService', '$scope', function(messageService, userService, PathService, $scope) {
 
       $scope.messages = [
         {
@@ -48,5 +49,12 @@ define(['paw2020a'], function(paw2020a) {
       $scope.yesNo = true;
       $scope.disabled = true;
 
-    });
+      $scope.page = 1;
+      messageService.getInvestorChatList($scope.page).then(function (response) {
+        console.log(response.data);
+      }, function (errorResponse) {
+        console.error(errorResponse);
+      })
+
+    }]);
 });

@@ -33,6 +33,7 @@ public class MessageRestController {
     @Context
     private UriInfo uriInfo;
 
+    // TODO: Puedo poner PAGE_SIZE en 6 para el /investor? Se muestran en filas de 3 columnas
     private static final int PAGE_SIZE = 5;
 
     @POST
@@ -78,7 +79,8 @@ public class MessageRestController {
                 .build();
     }
 
-
+    // TODO: Es muy costoso agregar el nombre del proyecto, no? Me falta el nombre y el link de la portrait (de tener)
+    // TODO: Deberia devolverme metadata ademas de la lista de OfferDto, con datos como Sumatoria de plata invertida
     @GET
     @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -92,6 +94,7 @@ public class MessageRestController {
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+                .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
 

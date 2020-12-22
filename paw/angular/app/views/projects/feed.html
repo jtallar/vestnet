@@ -13,27 +13,27 @@
     <ul class="pagination justify-content-center">
       <div ng-if="(page - 1) >= 1">
         <li id="li-previous" class="page-item">
-          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="Previous">
+          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'previousPage' | translate}}">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
       </div>
       <div ng-if="(page - 1) >= 1">
         <li id="li-previous-num" class="page-item">
-          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="Previous">{{page -1}}</a>
+          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'pageNumber' | translate : {p: page - 1} }}">{{page -1}}</a>
         </li>
       </div>
       <li id="li-now" class="page-item">
-        <a id="li-a-now" class="page-link" onclick="">{{page}}</a>
+        <a id="li-a-now" class="page-link" onclick="" aria-label="{{'pageNumber' | translate : {p: page} }}">{{page}}</a>
       </li>
       <div ng-if="(page + 1) <= lastPage">
         <li id="li-next-num" class="page-item">
-          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)">{{page + 1}}</a>
+          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'pageNumber' | translate : {p: page + 1} }}">{{page + 1}}</a>
         </li>
       </div>
       <div ng-if="(page + 1) <= lastPage">
         <li id="li-next" class="page-item">
-          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)" aria-label="Next">
+          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)"  aria-label="{{'nextPage' | translate}}">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -142,7 +142,7 @@
 <!--    <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="200" style="width: 10%">20%</div>-->
 <!--  </div>-->
 
-  <p class="results">{{'feedSearchPages' | translate : {found: 54, shown: 12} }}</p>
+  <p class="results">{{'feedSearchPages' | translate : {found: lastPage, shown: page} }}</p>
 
 </div>
 

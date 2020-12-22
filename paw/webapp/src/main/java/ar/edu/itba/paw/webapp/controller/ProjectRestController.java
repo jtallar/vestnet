@@ -92,6 +92,7 @@ public class ProjectRestController {
 
     /** Search project endpoint */
 
+    // TODO: el Last que devuelve aca es el del rango de arriba (5), no la cantidad maxima de paginas. Es correcto?
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projects(@QueryParam("p") @DefaultValue("1") int page,
