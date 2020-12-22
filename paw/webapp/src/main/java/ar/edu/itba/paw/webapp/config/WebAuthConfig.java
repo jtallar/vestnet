@@ -47,7 +47,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebAuthConfig.class);
 
     public static final String AUTH_HEADER = "Authorization";
-    private static final String API_PREFIX_VERSION = "/api/v1";
+    private static final String API_PREFIX_VERSION = "/api";
     private static final String LOGIN_ENTRY_POINT = API_PREFIX_VERSION + "/auth/login";
 
     private static final int TOKEN_DAYS = 365;

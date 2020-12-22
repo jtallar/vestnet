@@ -42,7 +42,7 @@
 
   <filter-mapping>
     <filter-name>LocaleFilter</filter-name>
-    <url-pattern>/api/v1/auth/login</url-pattern>
+    <url-pattern>/api/auth/login</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -64,12 +64,12 @@
 
   <filter-mapping>
     <filter-name>openEntityManagerInViewFilter</filter-name>
-    <url-pattern>/api/v1/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
 
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>
-    <url-pattern>/api/v1/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 
   <context-param>

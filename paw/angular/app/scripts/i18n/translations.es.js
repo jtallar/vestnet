@@ -276,15 +276,15 @@ define([], function() {
     verify: 'Verificar Cuenta',
     logout: 'Cerrar Sesión',
     signup: 'Registro',
-    profile: 'Perfil - {{p}}',
+    profile: '{{f}} {{l}}',
     singleView: '{{p}}',
     welcome: 'Bienvenidos a VestNet',
     imgfav : 'botón de favoritos',
-    clicksAvg: 'Promedio de clicks: {{p}}',
-    secondsAvg: 'Promedio de segundos transcurridos: {{p}}',
-    seen: 'Visto por {{p}}',
-    contactClicks: 'Contactados: {{p}}',
-    investorsSeen: 'Visto por {{p}} inversores',
-    lastSeen: 'Última vez visto {{p}}'
+    clicksAvg: 'Promedio de clicks',
+    secondsAvg: 'Promedio de segundos transcurridos',
+    seen: 'Visto por',
+    contactClicks: 'Contactados',
+    investorsSeen: 'Inversores que visitaron ',
+    lastSeen: 'Última vez visto'
   };
 });
