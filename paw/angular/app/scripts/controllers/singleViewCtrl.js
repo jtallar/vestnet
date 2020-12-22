@@ -90,8 +90,9 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
         'fundingTarget': project.data.fundingTarget,
         'stagesURL': project.data.projectStages,
         'getByOwner': project.data.getByOwner,
+        'chatUrl': PathService.get().chat(project.data.id).path,
 
-        /** PARA PROBAR **/
+        /** TODO: PARA PROBAR **/
         'stages': [
           {'number': 1, 'name': 'Stage 1', 'comment': '',
             'completed': false, 'completedDate': '02/05/2021'},

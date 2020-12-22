@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.Date;
 
 public class OfferDto {
+    private long id;
 
     @Size(max = 250)
     @NotBlank
@@ -47,6 +48,8 @@ public class OfferDto {
     public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
         final OfferDto offerDto = new OfferDto();
 
+        offerDto.id = message.getId();
+
         offerDto.comment = message.getContent().getComment();
         offerDto.offer = message.getContent().getOffer();
         offerDto.exchange = message.getContent().getInterest();
@@ -74,6 +77,13 @@ public class OfferDto {
         return new Message.MessageContent(offerDto.getComment(), offerDto.getOffer(), offerDto.getExchange());
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public boolean isSeen() {
         return seen;

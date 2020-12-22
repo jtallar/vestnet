@@ -114,7 +114,8 @@ define([], function() {
         return append('/editProject');
       };
 
-      base.chat= function (id1, id2) {
+      base.chat = function (id1, id2) {
+        if (!id2) return append('/chat/' + id1);
         return append('/chat/' + id1 + '/' + id2);
       };
 

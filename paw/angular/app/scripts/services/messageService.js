@@ -47,10 +47,14 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('chat').one(projectId.toString()).one(investorId.toString()).get({p: pageNum}); // role === Entrepreneur
     };
 
-    messageService.getInvestorDeals = function (page, accepted) {
-      if (!accepted) accepted = false;
+    messageService.getInvestorChatList = function (page) {
       if (!page) page = 1;
-      return root.one('investor').get({a: accepted, p: page});
+      return root.one('investor').get({a: false, p: page});
+    };
+
+    messageService.getInvestorDeals = function (page) {
+      if (!page) page = 1;
+      return root.one('investor').get({a: true, p: page});
     };
 
     return messageService;

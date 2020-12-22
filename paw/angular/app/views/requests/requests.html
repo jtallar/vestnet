@@ -16,21 +16,33 @@
   </div>
   <div class="col-6" ng-if="lastPage !== 1">
     <ul class="pagination justify-content-center">
-      <li id="li-previous" class="page-item">
-        <a id="li-a-previous" class="page-link" onclick="" aria-label="{{'previous' | translate}}">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
+      <div ng-if="(page - 1) >= 1">
+        <li id="li-previous" class="page-item">
+          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'previousPage' | translate}}">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      </div>
+      <div ng-if="(page - 1) >= 1">
+        <li id="li-previous-num" class="page-item">
+          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'pageNumber' | translate : {p: page - 1} }}">{{page -1}}</a>
+        </li>
+      </div>
+      <li id="li-now" class="page-item">
+        <a id="li-a-now" class="page-link" onclick="" aria-label="{{'pageNumber' | translate : {p: page} }}">{{page}}</a>
       </li>
-      <!--      <c:forEach var="pageNumber" begin="${startPage}" end="${endPage}">-->
-      <!--        <li class="page-item <c:if test="${pageNumber == page }"> active-item </c:if>">-->
-      <!--        <a class="page-link" onclick="modHref(${pageNumber})">${pageNumber}</a>-->
-      <!--        </li>-->
-      <!--      </c:forEach>-->
-      <li id="li-next" class="page-item">
-        <a id="li-a-next" class="page-link" onclick="" aria-label="{{'next' | translate}}">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
+      <div ng-if="(page + 1) <= lastPage">
+        <li id="li-next-num" class="page-item">
+          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'pageNumber' | translate : {p: page + 1} }}">{{page + 1}}</a>
+        </li>
+      </div>
+      <div ng-if="(page + 1) <= lastPage">
+        <li id="li-next" class="page-item">
+          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'nextPage' | translate}}">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </div>
     </ul>
   </div>
   <div class="col-3"></div>
@@ -98,23 +110,28 @@
 
 <!--  <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>-->
   <div class="card-deck group-invest">
-    <div class="card card-invest" ng-repeat="message in messages" ng-if="message.state == 0">
+    <div class="card card-invest" ng-repeat="message in messages">
       <div class="card-header header-grey">
-        <a ng-href="#/projects/{{message.pid}}" class="btn-link">{{message.project.name}}</a>
-        <a ng-href="#/users/{{message.receiverId}}" class="btn msg-usr pull-right">
+        <a ng-href="#{{message.projectUrl}}" class="btn-link">{{message.projectName}}</a>
+        <a ng-href="#{{message.ownerUrl}}" class="btn msg-usr pull-right">
           <!--            TODO: ?back=yes"-->
           <img class="nav-icon" src="images/user-icon.png" alt="">
         </a>
       </div>
-      <img class="img-invest" src="images/mate.jpg">
+      <div ng-if="!message.projectPortraitExists">
+        <img ng-src="images/projectNoImage.png" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+      </div>
+      <div ng-if="message.projectPortraitExists">
+        <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+      </div>
       <div class="card-deal row">
         <div class="col-4 msg-offer">
           <img src="images/down-arrow.png" alt="">
-          <strong>{{message.content.offer}}K</strong>
+          <strong>{{message.offer}}</strong>
         </div>
         <div class="col-8 msg-exch">
           <img src="images/up-arrow.png" alt="">
-          <strong> {{message.content.interest}}</strong>
+          <strong> {{message.exchange}}</strong>
         </div>
       </div>
 
@@ -126,7 +143,7 @@
   </div>
 </div>
 
-<div ng-if="messages.empty()" class="card no-proj-mine">
+<div ng-if="noDealsFound" class="card no-proj-mine">
   <div class="card-header">
     <h5 class="card-title text-white centered">{{'noOffers' | translate}}</h5>
   </div>
