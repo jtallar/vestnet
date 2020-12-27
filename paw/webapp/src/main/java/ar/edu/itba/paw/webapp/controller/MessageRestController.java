@@ -127,6 +127,7 @@ public class MessageRestController {
     }
 
 
+    // TODO: Deberiamos aca marcar como "unseen" o de alguna manera para que le llegue notificacion al otro?
     @PUT
     @Path("/status/{project_id}/{investor_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
