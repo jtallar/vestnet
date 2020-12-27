@@ -1,7 +1,8 @@
 'use strict';
 
-define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService'], function(paw2020a) {
-  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService','$scope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, $scope) {
+// TODO: Ver de agregar la badge tanto afuera en el icono de mensajes (/notifications/project/{project_id}?) como dentro de un chat.
+define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
+  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope, $rootScope) {
 
 
     $scope.id = AuthenticationService.getUserId()
@@ -123,20 +124,18 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
             $scope.projects[index].maxPage = parseInt(lastLink[0].split('p=')[1][0]);
             var messageMap = []
             for (var i = 0; i < response.data.length; i++) {
-              messageMap[response.data[i].investorId] = i
+              messageMap[response.data[i].investorId] = i;
+              // TODO: Mostrar mas que el body
               $scope.messages[index][i] = {
                 'senderId': response.data[i].investorId,
-                'body': '',
+                'body': response.data[i].comment,
                 'offer': '',
                 'request': '',
-                'investor': ''
-              }
-              sampleService.get(response.data[i].chat, i.toString()).then(function (chat) {
-                $scope.messages[index][parseInt(chat.data.route)].body = chat.data[0].comment
-              }, function (error) {
-                console.log(error)
-              })
-
+                'investor': '',
+                'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path,
+                'seen': response.data[i].seen
+              };
+              // TODO: ver si se puede evitar este request.
               sampleService.get(response.data[i].investor, i.toString()).then(function (inv) {
                 $scope.messages[index][inv.data.route].investor = inv.data.firstName
                 $scope.messages[index][inv.data.route].lastName = inv.data.lastName
@@ -179,21 +178,18 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         var messageMap = []
         messageService.getOffers(id.toString(), false, $scope.projects[index].msgPage).then(function (response) {
           for (var i = 0; i < response.data.length; i++) {
-            messageMap[response.data[i].investorId] = length + i
+            messageMap[response.data[i].investorId] = length + i;
+            // TODO: Mostrar mas que el body
             $scope.messages[index][i + length] = {
               'senderId':response.data[i].investorId,
-              'body': '',
+              'body': response.data[i].comment,
               'offer': '',
               'request' : '',
-              'investor': ''
-            }
-            sampleService.get(response.data[i].chat, response.data[i].investorId).then(function (chat) {
-              $scope.messages[index][messageMap[chat.data.route]].body = chat.data[0].comment
-
-            }, function (error) {
-              console.log(error)
-            })
-
+              'investor': '',
+              'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path,
+              'seen': response.data[i].seen
+            };
+            // TODO: ver si se puede evitar este request.
             sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
               $scope.messages[index][messageMap[inv.data.route]].investor = inv.data.firstName
               $scope.messages[index][messageMap[inv.data.route]].lastName = inv.data.lastName
@@ -237,6 +233,11 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.getList = function () {
         if($scope.funded === true) return $scope.fundedProjects;
         else return $scope.projects;
+      }
+
+      $scope.goToChat = function (message) {
+        if (!message.seen) $rootScope.$emit('messageRead');
+        PathService.get().setFullUrl(message.chatUrl).go();
       }
 
     }]);

@@ -99,6 +99,21 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         })
       };
 
+      this.addInfoToChats = function (chats) {
+        var now = new Date();
+        chats.forEach(function (value) {
+          if (value.hasOwnProperty('accepted')) {
+            value.expInDays = 0;
+            value.answered = true;
+          } else {
+            var aux = Math.ceil((new Date(value.expiryDate) - now) / oneDayMs);
+            value.expInDays = (aux <= 0) ? 0 : aux;
+            value.answered = false;
+          }
+          value.incoming = (!value.direction && role === investor) || (value.direction && role === entrepreneur);
+        })
+      };
+
       this.handleChatResponse = function (chats) {
         $scope.chats = chats.reverse();
         // Empty chat && Entrepreneur --> 404
@@ -113,18 +128,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
             return;
           }
         }
-        var now = new Date();
-        $scope.chats.forEach(function (value) {
-          if (value.hasOwnProperty('accepted')) {
-            value.expInDays = 0;
-            value.answered = true;
-          } else {
-            var aux = Math.ceil((new Date(value.expiryDate) - now) / oneDayMs);
-            value.expInDays = (aux <= 0) ? 0 : aux;
-            value.answered = false;
-          }
-          value.incoming = (!value.direction && role === investor) || (value.direction && role === entrepreneur);
-        });
+        this.addInfoToChats($scope.chats);
         $scope.lastMessage = chats[chats.length - 1];
         this.setChatAsSeen($scope.lastMessage);
 
@@ -228,6 +232,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
           if (response.data.length === 0) return;
           element.scrollTop = 0;
           response.data.reverse();
+          _this.addInfoToChats(response.data);
           response.data.forEach(function (msg) { $scope.chats.unshift(msg) });
         }, function (errorResponse) {
           if (errorResponse.status === 403) {

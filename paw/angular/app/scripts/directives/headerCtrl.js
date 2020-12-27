@@ -14,7 +14,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
         $scope.gOptions = ['welcome', 'login', 'signUp'];
         $scope.gIcons = ['home-icon', 'login-icon', 'signup-icon'];
         $scope.notifications = 0;
-        $scope.userid = 2;
+        $scope.userid = 2; // TODO: Change to profile URL when profile is done
 
         var checkNotif = function() {
           if ($scope.valor === 2) return;
@@ -28,6 +28,10 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
         $rootScope.$watch('role', function (newVal) {
           $scope.valor = newVal.value;
           checkNotif();
+        });
+
+        $rootScope.$on('messageRead', function (event) {
+          if ($scope.notifications > 0) $scope.notifications--;
         });
 
         $interval(checkNotif, 5 * 60000);

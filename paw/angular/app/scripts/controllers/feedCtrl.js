@@ -1,8 +1,7 @@
 'use strict';
 
 
-// TODO: Pagination, Show page number in "showing page ... from ... pages
-define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat',
+define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat', 'directives/pagination',
   'services/PathService'], function(paw2020a) {
     paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams) {
       var _this = this;
@@ -115,6 +114,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id};
       };
 
+      // TODO: Corregir retorno de last page para que sea la ultima posta
       this.getArgs = function (string) {
 
         var lastLink = string.split(',').filter(function (el) {

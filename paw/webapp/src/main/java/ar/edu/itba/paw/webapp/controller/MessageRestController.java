@@ -127,6 +127,7 @@ public class MessageRestController {
     }
 
 
+    // TODO: Deberiamos aca marcar como "unseen" o de alguna manera para que le llegue notificacion al otro?
     @PUT
     @Path("/status/{project_id}/{investor_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
@@ -150,6 +151,8 @@ public class MessageRestController {
     }
 
 
+    // TODO: Estamos marcando como visto solamente al ultimo mensaje. Que pasa si un mensaje expiro? Jamas se le va el visto.
+    //  O deberiamos filtrarlos en los demas lugares? Eg: en notificationCount, decir que este unseen y unexpired. Y lo mismo en el front.
     @PUT
     @Path("/seen/{project_id}/{investor_id}")
     public Response seen(@PathParam("project_id") final long projectId,
