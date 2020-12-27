@@ -109,8 +109,8 @@
 
 <!--<button ng-click="animate('invested', 0, 2500, 1000)">TRIAL</button>-->
 <!-- TODO: Ajustar el css de esto -->
-<!--  <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>-->
-  <div class="card-deck group-invest">
+  <span class="anchor-header"></span>
+  <div class="card-deck group-invest" ng-if="!noDealsFound">
     <div class="card card-invest" ng-repeat="message in messages">
       <div class="card-header header-grey">
         <a ng-href="#{{message.projectUrl}}" class="btn-link">{{message.projectName}}</a>
@@ -146,7 +146,7 @@
 
 <div ng-if="noDealsFound" class="card no-proj-mine">
   <div class="card-header">
-    <h5 class="card-title text-white centered">{{'noOffers' | translate}}</h5>
+    <h5 class="card-title text-white centered">{{'noProjFunded' | translate}}</h5>
   </div>
 </div>
 

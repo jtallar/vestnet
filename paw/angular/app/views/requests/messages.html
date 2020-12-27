@@ -1,34 +1,59 @@
 <head><title> {{ 'wppweb' | translate}} | VestNet</title></head>
 
-<body ng-controller="messagesCtrl">
 <!--<vnheader></vnheader>-->
 
-<div class="dashboard sep-nav2">
+<div class="row sep-nav">
+  <div class="col-1"></div>
+  <div class="col-10" ng-show="lastPage !== 1">
+    <pagination></pagination>
+  </div>
+  <div class="col-1"></div>
+</div>
+
+<!-- TODO: Ajustar el css de esto -->
+<div class="dashboard" ng-if="!noMessagesFound">
   <div class="card-group" ng-repeat="message in messages">
-    <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>
+    <span class="anchor-header"></span>
     <div class="container py-3">
       <div class="card msg ww">
 
         <div class="row">
           <div class="col-1">
-            <img src="{{message.image}}" class="ww-img"/>
+            <div ng-if="!message.imageExists">
+              <img ng-src="images/userNoImage.png" class="ww-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+            </div>
+            <div ng-if="message.imageExists">
+              <img ng-src="data:image/JPEG;base64,{{message.ownerImage}}" class="ww-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+            </div>
           </div>
           <div class="col-md-11 ww-content">
             <div class="card-block">
               <div class="row">
                 <div class="col-3">
-                  <a ng-href="#/users/{{message.uid}}" class="btn-link4"><h5>{{message.user}}</h5></a>
-                  <h6 style="color: rgba(99, 99, 99, 0.74)">- {{'from' | translate}} <a ng-href="#/projects/{{message.pid}}" class="btn-link3">{{message.project}}</a></h6>
+                  <a ng-href="#{{message.ownerUrl}}" class="btn-link4">
+                    <h5>{{'fullName' | translate : { firstName: message.ownerFirstName, lastName: message.ownerLastName } }}</h5>
+                  </a>
+                  <h6 style="color: rgba(99, 99, 99, 0.74)">- {{'from' | translate}} <a ng-href="#{{message.projectUrl}}" class="btn-link3">{{message.projectName}}</a></h6>
                 </div>
                 <div class="col-7 ww-last">
-                  <h6>{{message.date}}</h6>
-                  <p>{{message.last}}</p>
+                  <h6>{{message.publishDate}}</h6>
+                  <div class="row">
+                    <div class="col-4 msg-offer">
+                      <img src="images/down-arrow.png" alt="">
+                      <strong>{{message.offer}}</strong>
+                    </div>
+                    <div class="col-8 msg-exch">
+                      <img src="images/up-arrow.png" alt="">
+                      <strong> {{message.exchange}}</strong>
+                    </div>
+                  </div>
+                  <p>{{message.comment}}</p>
                 </div>
                 <div class="col-1 ww-last">
-                  <span ng-if="message.unread != 0" class="badge bg-danger pull-right">{{message.unread}}</span>
+                  <span ng-if="!message.seen && !message.direction" class="badge bg-danger pull-right">1</span>
                 </div>
                 <div class="col-1 ww-last">
-                  <a ng-href="#/chat/1/2" class="btn btn-inv pull-right" style="margin: auto">
+                  <a ng-href="#{{message.chatUrl}}" class="btn btn-inv pull-right" style="margin: auto">
                     <img src="/images/black-arrow.png" alt="">
                   </a>
                 </div>
@@ -44,20 +69,11 @@
   </div>
 </div>
 
-<div ng-if="projects.empty()" class="card no-proj-mine">
+<div ng-if="noMessagesFound" class="card no-proj-mine">
   <div class="card-header text-center">
-    <div ng-switch="true">
-      <div ng-switch-when="true">
-        <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
-      </div>
-      <div ng-switch-when="false">
-        <h5 class="card-title text-white centered">{{'noProjOwned' | translate }}</h5>
-      </div>
-    </div>
+    <h5 class="card-title text-white centered">{{'nomessages' | translate }}</h5>
   </div>
 </div>
-
-</body>
 
 <!--<footer>-->
 <!--  <vnfooter></vnfooter>-->

@@ -1,60 +1,79 @@
     'use strict';
 
-define(['paw2020a', 'services/messageService', 'services/userService', 'services/PathService'],
+define(['paw2020a', 'services/messageService', 'services/sampleService', 'services/PathService', 'directives/pagination'],
   function(paw2020a) {
 
-  paw2020a.controller('messagesCtrl', ['messageService', 'userService', 'PathService', '$scope', function(messageService, userService, PathService, $scope) {
+  paw2020a.controller('messagesCtrl', ['messageService', 'sampleService', 'PathService', '$scope', '$routeParams', function(messageService, sampleService, PathService, $scope, $routeParams) {
 
-      $scope.messages = [
-        {
-          'user': 'Julián Vuoso',
-          'project': 'Superchero',
-          'image': 'images/jmv-avatar.jpg',
-          'last': 'Me interesa preguntarte lo siguiente, mensaje largo se viene asi que agarrate',
-          'unread' : 2,
-          'offer' : '',
-          'exch' : '',
-          'pid': 1,
-          'uid': 1,
-          'date': '10:32 | 15/12/2020'
-        },
-        {
-          'user': 'Wonder Woman',
-          'project': 'Cerberus',
-          'image': 'images/wonder-icon.png',
-          'last': 'A mi me interesa preguntarte lo siguiente',
-          'unread' : 0,
-          'offer' : '',
-          'exch' : '',
-          'pid': 1,
-          'uid':1,
-          'date': '10:32 | 15/12/2020'
-        },
-        {
-          'user': 'Mr Vestnet',
-          'project': 'Vestnet',
-          'image': 'images/projectNoImage.png',
-          'last': 'Y a mi me interesa preguntarte lo siguiente',
-          'unread' : 1,
-          'offer' : '',
-          'exch' : '',
-          'pid': 1,
-          'uid':1,
-          'date': '10:32 | 15/12/2020'
-        }
-      ];
+    var _this = this;
+    $scope.noMessagesFound = false;
 
-      $scope.enabled = true;
-      $scope.onOff = false;
-      $scope.yesNo = true;
-      $scope.disabled = true;
+    var param = parseInt($routeParams.p);
+    if (isNaN(param) || param <= 0) param = 1;
+    $scope.page = param; $scope.lastPage = param;
 
-      $scope.page = 1;
+    this.setMaxPage = function (linkHeaders) {
+      var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
+      var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+      if (isNaN(maxPage)) maxPage = page;
+      $scope.lastPage = maxPage;
+    };
+
+    $scope.messages = [];
+    this.processMessages = function (messages) {
+      $scope.messages = messages;
+      var map = {};
+      for(var i = 0; i < $scope.messages.length; i++) {
+        map[$scope.messages[i].id] = i;
+        $scope.messages[i].ownerUrl = PathService.get().user($scope.messages[i].ownerId).path;
+        $scope.messages[i].projectUrl = PathService.get().singleProject($scope.messages[i].projectId).path;
+        $scope.messages[i].chatUrl = PathService.get().chat($scope.messages[i].projectId).path;
+
+        // TODO: Ver si con un cambio en el back puedo ahorrarme esta mamushka de llamadas
+        sampleService.get($scope.messages[i].project, $scope.messages[i].id.toString()).then(function (project) {
+          $scope.messages[map[project.data.route]].projectName = project.data.name;
+        }, function (err) {
+          console.log("No project found");
+        });
+
+        sampleService.get($scope.messages[i].owner, $scope.messages[i].id.toString()).then(function (user) {
+          $scope.messages[map[user.data.route]].ownerFirstName = user.data.firstName;
+          $scope.messages[map[user.data.route]].ownerLastName = user.data.lastName;
+          $scope.messages[map[user.data.route]].imageExists = user.data.imageExists;
+          if(user.data.imageExists){
+            sampleService.get(user.data.image, user.data.route).then(function (image) {
+              $scope.messages[map[image.data.route]].ownerImage = image.data.image;
+            }, function (err) {
+              console.log("No image");
+            });
+          }
+        }, function (err) {
+          console.log("No user found");
+        });
+      }
+    };
+
+    this.fetchChatList = function () {
       messageService.getInvestorChatList($scope.page).then(function (response) {
-        console.log(response.data);
+        if (response.data.length === 0) {
+          $scope.noMessagesFound = true;
+          $scope.messages = [];
+          return;
+        }
+        _this.setMaxPage(response.headers().link);
+        _this.processMessages(response.data);
       }, function (errorResponse) {
         console.error(errorResponse);
-      })
+      });
+    };
+    this.fetchChatList();
 
-    }]);
+    $scope.getToPage = function (page) {
+      $scope.page = page;
+      PathService.get().setParamsInUrl({p:$scope.page});
+      _this.fetchChatList();
+    }
+
+
+  }]);
 });
