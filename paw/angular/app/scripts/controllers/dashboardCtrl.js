@@ -123,21 +123,17 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
             $scope.projects[index].maxPage = parseInt(lastLink[0].split('p=')[1][0]);
             var messageMap = []
             for (var i = 0; i < response.data.length; i++) {
-              messageMap[response.data[i].investorId] = i
+              messageMap[response.data[i].investorId] = i;
+              // TODO: Mostrar mas que el body
               $scope.messages[index][i] = {
                 'senderId': response.data[i].investorId,
-                'body': '',
+                'body': response.data[i].comment,
                 'offer': '',
                 'request': '',
                 'investor': '',
                 'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path
-              }
-              sampleService.get(response.data[i].chat, i.toString()).then(function (chat) {
-                $scope.messages[index][parseInt(chat.data.route)].body = chat.data[0].comment
-              }, function (error) {
-                console.log(error)
-              })
-
+              };
+              // TODO: ver si se puede evitar este request.
               sampleService.get(response.data[i].investor, i.toString()).then(function (inv) {
                 $scope.messages[index][inv.data.route].investor = inv.data.firstName
                 $scope.messages[index][inv.data.route].lastName = inv.data.lastName
@@ -180,21 +176,17 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         var messageMap = []
         messageService.getOffers(id.toString(), false, $scope.projects[index].msgPage).then(function (response) {
           for (var i = 0; i < response.data.length; i++) {
-            messageMap[response.data[i].investorId] = length + i
+            messageMap[response.data[i].investorId] = length + i;
+            // TODO: Mostrar mas que el body
             $scope.messages[index][i + length] = {
               'senderId':response.data[i].investorId,
-              'body': '',
+              'body': response.data[i].comment,
               'offer': '',
               'request' : '',
-              'investor': ''
-            }
-            sampleService.get(response.data[i].chat, response.data[i].investorId).then(function (chat) {
-              $scope.messages[index][messageMap[chat.data.route]].body = chat.data[0].comment
-
-            }, function (error) {
-              console.log(error)
-            })
-
+              'investor': '',
+              'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path
+            };
+            // TODO: ver si se puede evitar este request.
             sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
               $scope.messages[index][messageMap[inv.data.route]].investor = inv.data.firstName
               $scope.messages[index][messageMap[inv.data.route]].lastName = inv.data.lastName
