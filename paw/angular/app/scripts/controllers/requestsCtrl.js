@@ -1,6 +1,6 @@
     'use strict';
 
-define(['paw2020a', 'services/messageService', 'services/projectService', 'services/sampleService', 'services/PathService'], function(paw2020a) {
+define(['paw2020a', 'services/messageService', 'services/projectService', 'services/sampleService', 'services/PathService', 'directives/pagination'], function(paw2020a) {
     paw2020a.controller('requestsCtrl', ['messageService','projectService', 'sampleService', 'PathService', '$scope', '$routeParams', function(messageService, projectService, sampleService, PathService, $scope, $routeParams) {
 
       var _this = this;

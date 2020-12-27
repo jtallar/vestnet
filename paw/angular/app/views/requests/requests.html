@@ -15,35 +15,36 @@
     <strong class="tab-title"> {{'reqTitle' | translate}} </strong>
   </div>
   <div class="col-6" ng-if="lastPage !== 1">
-    <ul class="pagination justify-content-center">
-      <div ng-if="(page - 1) >= 1">
-        <li id="li-previous" class="page-item">
-          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'previousPage' | translate}}">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      </div>
-      <div ng-if="(page - 1) >= 1">
-        <li id="li-previous-num" class="page-item">
-          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'pageNumber' | translate : {p: page - 1} }}">{{page -1}}</a>
-        </li>
-      </div>
-      <li id="li-now" class="page-item">
-        <a id="li-a-now" class="page-link" onclick="" aria-label="{{'pageNumber' | translate : {p: page} }}">{{page}}</a>
-      </li>
-      <div ng-if="(page + 1) <= lastPage">
-        <li id="li-next-num" class="page-item">
-          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'pageNumber' | translate : {p: page + 1} }}">{{page + 1}}</a>
-        </li>
-      </div>
-      <div ng-if="(page + 1) <= lastPage">
-        <li id="li-next" class="page-item">
-          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'nextPage' | translate}}">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </div>
-    </ul>
+    <pagination></pagination>
+<!--    <ul class="pagination justify-content-center">-->
+<!--      <div ng-if="(page - 1) >= 1">-->
+<!--        <li id="li-previous" class="page-item">-->
+<!--          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'previousPage' | translate}}">-->
+<!--            <span aria-hidden="true">&laquo;</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--      <div ng-if="(page - 1) >= 1">-->
+<!--        <li id="li-previous-num" class="page-item">-->
+<!--          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'pageNumber' | translate : {p: page - 1} }}">{{page -1}}</a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--      <li id="li-now" class="page-item">-->
+<!--        <a id="li-a-now" class="page-link" onclick="" aria-label="{{'pageNumber' | translate : {p: page} }}">{{page}}</a>-->
+<!--      </li>-->
+<!--      <div ng-if="(page + 1) <= lastPage">-->
+<!--        <li id="li-next-num" class="page-item">-->
+<!--          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'pageNumber' | translate : {p: page + 1} }}">{{page + 1}}</a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--      <div ng-if="(page + 1) <= lastPage">-->
+<!--        <li id="li-next" class="page-item">-->
+<!--          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'nextPage' | translate}}">-->
+<!--            <span aria-hidden="true">&raquo;</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--    </ul>-->
   </div>
   <div class="col-3"></div>
 </div>
