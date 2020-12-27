@@ -104,6 +104,7 @@ public class UserRestController {
 
     /** Extra user data endpoints */
 
+    // TODO: Ver si se puede agregar cantidad de mensajes sin leer de este proyecto para mostrarlo en un badge.
     @GET
     @Path("/{id}/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
