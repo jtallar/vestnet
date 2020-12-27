@@ -53,7 +53,7 @@
                   <span ng-if="!message.seen && !message.direction" class="badge bg-danger pull-right">1</span>
                 </div>
                 <div class="col-1 ww-last">
-                  <a ng-href="#{{message.chatUrl}}" class="btn btn-inv pull-right" style="margin: auto">
+                  <a ng-click="goToChat(message)" class="btn btn-inv pull-right" style="margin: auto">
                     <img src="/images/black-arrow.png" alt="">
                   </a>
                 </div>

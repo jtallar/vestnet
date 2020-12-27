@@ -2,7 +2,7 @@
 
 // TODO: Ver de agregar la badge tanto afuera en el icono de mensajes (/notifications/project/{project_id}?) como dentro de un chat.
 define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
-  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope) {
+  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope, $rootScope) {
 
 
     $scope.id = AuthenticationService.getUserId()
@@ -132,7 +132,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
                 'offer': '',
                 'request': '',
                 'investor': '',
-                'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path
+                'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path,
+                'seen': response.data[i].seen
               };
               // TODO: ver si se puede evitar este request.
               sampleService.get(response.data[i].investor, i.toString()).then(function (inv) {
@@ -185,7 +186,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
               'offer': '',
               'request' : '',
               'investor': '',
-              'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path
+              'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path,
+              'seen': response.data[i].seen
             };
             // TODO: ver si se puede evitar este request.
             sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
@@ -231,6 +233,11 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.getList = function () {
         if($scope.funded === true) return $scope.fundedProjects;
         else return $scope.projects;
+      }
+
+      $scope.goToChat = function (message) {
+        if (!message.seen) $rootScope.$emit('messageRead');
+        PathService.get().setFullUrl(message.chatUrl).go();
       }
 
     }]);

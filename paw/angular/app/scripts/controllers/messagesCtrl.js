@@ -3,7 +3,7 @@
 define(['paw2020a', 'services/messageService', 'services/sampleService', 'services/PathService', 'directives/pagination'],
   function(paw2020a) {
 
-  paw2020a.controller('messagesCtrl', ['messageService', 'sampleService', 'PathService', '$scope', '$routeParams', function(messageService, sampleService, PathService, $scope, $routeParams) {
+  paw2020a.controller('messagesCtrl', ['messageService', 'sampleService', 'PathService', '$scope', '$rootScope', '$routeParams', function(messageService, sampleService, PathService, $scope, $rootScope, $routeParams) {
 
     var _this = this;
     $scope.noMessagesFound = false;
@@ -72,8 +72,12 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
       $scope.page = page;
       PathService.get().setParamsInUrl({p:$scope.page});
       _this.fetchChatList();
-    }
+    };
 
+    $scope.goToChat = function (message) {
+      if (!message.seen) $rootScope.$emit('messageRead');
+      PathService.get().setFullUrl(message.chatUrl).go();
+    };
 
   }]);
 });
