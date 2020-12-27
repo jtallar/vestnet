@@ -1,7 +1,7 @@
 'use strict';
 
-define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService'], function(paw2020a) {
-  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService','$scope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, $scope) {
+define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
+  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope) {
 
 
     $scope.id = AuthenticationService.getUserId()
@@ -129,7 +129,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
                 'body': '',
                 'offer': '',
                 'request': '',
-                'investor': ''
+                'investor': '',
+                'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path
               }
               sampleService.get(response.data[i].chat, i.toString()).then(function (chat) {
                 $scope.messages[index][parseInt(chat.data.route)].body = chat.data[0].comment
