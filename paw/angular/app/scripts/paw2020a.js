@@ -170,7 +170,6 @@ define(['routes',
 					// RestangularProvider.setBaseUrl('api/');
           RestangularProvider.setBaseUrl('http://localhost:8080/api/');
 
-          // TODO: Siempre que interpretamos la response como response nomas, solo datos, habria que cambiarlo a response.data
           RestangularProvider.setFullResponse(true);
 
           $httpProvider.defaults.headers.common["Accept-Language"] = navigator.language;

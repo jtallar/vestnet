@@ -44,7 +44,6 @@
                   <label>{{'currency' | translate}}</label>
                 </div>
                 <div class="col">
-  <!--                TODO: Add requirements via scope to put them in translate as variables-->
                   <input name="cost" ng-model="controller.project.fundingTarget" type="number" class="form-control" ng-keypress="costKeypress()" id="new-project-cost"
                     required min="1000" max="2000000000" step="1" no-float/>
                 </div>
@@ -62,7 +61,6 @@
         <div class="d-flex justify-content-around flex-row">
           <div class="d-flex flex-column form-group">
             <label>{{'allCategories' | translate}}</label>
-            <!--              TODO: Internacionalizar categorias-->
             <select id="all-categories" class="custom-form-select mr-sm-2" size="10" ng-model="initCategory"
                     ng-options="option as option.name | translate for option in categories track by option.id">
             </select>

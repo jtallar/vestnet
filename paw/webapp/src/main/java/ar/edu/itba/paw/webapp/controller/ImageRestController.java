@@ -48,8 +48,6 @@ public class ImageRestController {
                 .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
     }
 
-    // TODO: Ver si por concepto nomas no deberia recibir el id en el path, aunque no se use.
-    //  O bien chequear que el que haga el update sea el session user
     @PUT
     @Path("/users")
     @Consumes(value = { MediaType.APPLICATION_JSON })
@@ -91,9 +89,6 @@ public class ImageRestController {
         return Response.ok(new GenericEntity<List<ImageDto>>(images) {}).build();
     }
 
-    // TODO: [org.springframework.orm.jpa.JpaSystemException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance:
-    //  ar.edu.itba.paw.model.Project.images; nested exception is org.hibernate.HibernateException: A collection with cascade="all-delete-orphan" was no longer referenced by the owning entity instance: ar.edu.itba.paw.model.Project.images]
-    // TODO: Ver si el @Valid ahi va bien
     @PUT
     @Path("/projects/{project_id}/slideshow")
     @Consumes(value = { MediaType.APPLICATION_JSON })
