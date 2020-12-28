@@ -3,7 +3,7 @@
 
 define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat', 'directives/pagination',
   'services/PathService'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams) {
+    paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', '$window', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams,$window) {
       var _this = this;
       var pageSize = 12, param, aux;
       $scope.page = 1;
@@ -101,6 +101,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         projectService.getPage(_this.filterObject()).then(function (projects) {
           _this.getArgs(projects.headers().link);
           _this.showProjects(projects.data);
+          $window.scrollTo(0,0);
         }, function (errorResponse) {
           console.error(errorResponse);
         });
@@ -167,6 +168,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         projectService.getPage(_this.filterObject()).then(function (projects) {
           _this.getArgs(projects.headers().link);
           _this.showProjects(projects.data);
+          $window.scrollTo(0,0);
         }, function (errorResponse) {
           console.error(errorResponse);
         });
