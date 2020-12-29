@@ -74,8 +74,8 @@
             <!-- Project card -->
             <div class="card-body single-card">
               <h5 class="card-title"><b>{{project.name}}</b></h5>
-              <div ng-if="userId == project.owner.id" class="blockquote-footer">{{'you' | translate}}</div>
-              <div ng-if="userId != project.owner.id" class="blockquote-footer">by <a ng-href="#/users/{{project.owner.id}}">{{project.owner.firstName}} {{project.owner.lastName}}</a></div>
+              <div ng-if="project.getByOwner" class="blockquote-footer">{{'you' | translate}}</div>
+              <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#/users/{{project.owner.id}}">{{project.owner.firstName}} {{project.owner.lastName}}</a></div>
 
               <p class="card-text">{{project.summary}}</p>
 
@@ -112,35 +112,13 @@
         </div>
 
         <!-- Contact button -->
-        <div class="d-flex justify-content-center">
+        <div ng-if="!project.getByOwner" class="d-flex justify-content-center">
             <a href="#{{project.chatUrl}}" ng-click="pressContact = 1" class="btn btn-dark contact-btn" >
               <img src="images/chat-icon.png" class="contact-img">
               {{'contact' | translate}}
             </a>
-          <!--
-          <sec:authorize access="isAnonymous()">
-            <button class="btn btn-dark btn-lg btn-block" aria-controls="contact" id="contact-login-button" data-toggle="modal" data-target="#expFunding">
-              <spring:message code="singleView.button.createToContactOwner"/>
-            </button>
-          </sec:authorize>
-
-          <sec:authorize access="hasRole('ROLE_INVESTOR')">
-            <c:choose>
-              <c:when test="${lastMessage.isPresent() and lastMessage.get().accepted eq null}">
-                <button class="btn btn-dark btn-lg btn-block" id="contact-already-sent-button" disabled>
-                  <spring:message code="singleView.button.alreadySent"/>
-                </button>
-              </c:when>
-              <c:otherwise>
-                <button class="btn btn-dark btn-lg btn-block" data-toggle="collapse"
-                        data-target="#contact" aria-expanded="false" aria-controls="contact" id="contact-expand-button">
-                  <spring:message code="contactowner"/>
-                </button>
-              </c:otherwise>
-            </c:choose>
-          </sec:authorize>
-          -->
         </div>
+
       </div>
 
     </div>

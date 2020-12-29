@@ -1,8 +1,4 @@
-<!--<head>-->
-<!--    &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="styles/feed.css">-->
-<!--    &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--</head>-->
+
 <head><title> {{ 'feed' | translate}} | VestNet</title></head>
 
 <!--<vnheader></vnheader>-->
@@ -42,7 +38,6 @@
 <!--    </ul>-->
   </div>
 </div>
-
 
 <div class="sidenav sidenav-feed">
   <div class="form-row align-items-center">
@@ -147,12 +142,9 @@
 
 </div>
 
-
 <!-- PROJECTS -->
-
   <div class="body fid" ng-if="!noProjectsFound">
     <div ng-if="loading" class="spinner-grow text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 5rem; height: 5rem;"></div>
-
     <div class="card-deck">
         <div class="card mb-3 card-feed" ng-repeat="project in projects">
           <div class="card-header text-white">
@@ -176,10 +168,10 @@
                       <!--</c:otherwise>-->
                     <!--</c:choose>-->
                     <div ng-if="containsFav(project.id)">
-                      <img ng-src="images/bookmarkOnB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                      <img ng-src="images/bookmarkOnB.png" class="icon-fav-img" alt="{{'imgFav' | translate}}"/>
                     </div>
                     <div ng-if="!containsFav(project.id)">
-                      <img  ng-src="images/bookmarkOffB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                      <img  ng-src="images/bookmarkOffB.png" class="icon-fav-img" alt="{{'imgFav' | translate}}"/>
                     </div>
 
                   </button>
@@ -222,11 +214,13 @@
     </div>
   </div>
 
-<!--TODO: Acomodar esto-->
-<!-- EMPTY PROJECT CARD -->
-  <div class="card m-2 no-proj-feed" ng-if="noProjectsFound">
-    <div class="card-header">
-      <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
+  <div ng-if="noProjectsFound">
+    <div class="card-deck">
+      <div class="card m-2 no-proj-feed">
+        <div class="card-header">
+          <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -236,8 +230,6 @@
       <pagination></pagination>
     </div>
   </div>
-
-</body>
 
 <!--<footer>-->
 <!--  <vnfooter></vnfooter>-->
