@@ -74,8 +74,7 @@ public class MessageRestController {
         List<OfferInvestorDto> messages = messagePage.getContent().stream().map(p -> OfferInvestorDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<OfferInvestorDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
@@ -93,8 +92,7 @@ public class MessageRestController {
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
@@ -112,8 +110,7 @@ public class MessageRestController {
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
