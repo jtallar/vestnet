@@ -290,6 +290,7 @@ public class MessageJpaDaoTest {
         message.put("project_id", projectId.longValue());
         message.put("i_to_e", direction);
         message.put("seen", false);
+        message.put("seen_answer", false);
         return jdbcInsertMessage.executeAndReturnKey(message);
     }
 }

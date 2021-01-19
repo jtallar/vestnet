@@ -163,6 +163,7 @@ CREATE TABLE IF NOT EXISTS messages (
 
     i_to_e              BOOLEAN NOT NULL,
     seen                BOOLEAN NOT NULL,
+    seen_answer         BOOLEAN NOT NULL,
     expiry_date         TIMESTAMP WITH TIME ZONE
 );
 

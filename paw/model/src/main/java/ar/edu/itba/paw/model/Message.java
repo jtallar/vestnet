@@ -33,7 +33,10 @@ public class Message {
     private Boolean accepted;
 
     @Column(name = "seen")
-    private Boolean seen;
+    private boolean seen;
+
+    @Column(name= "seen_answer")
+    private boolean seenAnswer;
 
     @Column(name = "i_to_e")
     private Boolean direction;
@@ -66,6 +69,7 @@ public class Message {
         this.investor = investor;
         this.project = project;
         this.seen = false;
+        this.seenAnswer = false;
         this.direction = direction;
         this.expiryDate = calculateExpiryDate(expireDays);
     }
@@ -113,12 +117,20 @@ public class Message {
         this.accepted = accepted;
     }
 
-    public Boolean getSeen() {
+    public boolean isSeen() {
         return seen;
     }
 
     public void setSeen() {
         this.seen = true;
+    }
+
+    public boolean isSeenAnswer() {
+        return seenAnswer;
+    }
+
+    public void setSeenAnswer() {
+        this.seenAnswer = true;
     }
 
     public Boolean getDirection() {

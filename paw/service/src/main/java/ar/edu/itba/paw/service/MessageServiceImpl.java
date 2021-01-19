@@ -161,7 +161,6 @@ public class MessageServiceImpl implements MessageService {
 
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
-        message.setSeen();
         if (accepted)
             project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
@@ -177,11 +176,20 @@ public class MessageServiceImpl implements MessageService {
         Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
         optionalMessage.ifPresent(m -> {
 
-            /** Is investor, last message cannot be his */
-            if (sessionUserId == investorId && m.getDirection()) return;
+            /** Is investor, last message is his. If accepted or rejected then set as seen answer */
+            if (sessionUserId == investorId && m.getDirection()) {
+                if (m.getAccepted() != null)
+                    m.setSeenAnswer();
+                return;
+            }
 
-            /** Is entrepreneur, last message cannot be his */
-            if (sessionUserId == m.getOwnerId() && !m.getDirection()) return;
+
+            /** Is entrepreneur, last message is his. If accepted or rejected then set as seen answer */
+            if (sessionUserId == m.getOwnerId() && !m.getDirection()) {
+                if (m.getAccepted() != null)
+                    m.setSeenAnswer();
+                return;
+            }
 
             m.setSeen();
         });
@@ -204,30 +212,53 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public long projectNotifications(long projectId, long ownerId) {
-        RequestBuilder request = new MessageRequestBuilder()
+        RequestBuilder request1 = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setUnseen()
                 .setFromInvestor();
 
-        return messageDao.countAll(request);
+        RequestBuilder request2 = new MessageRequestBuilder()
+                .setOwner(ownerId)
+                .setProject(projectId)
+                .setAnswered()
+                .setUnseenAnswer()
+                .setFromEntrepreneur();
+
+        return messageDao.countAll(request1) + messageDao.countAll(request2);
     }
 
 
     @Override
     public long userNotifications(long sessionUserId, boolean isInvestor) {
-        /** If the user is an entrepreneur */
-        RequestBuilder request;
-        if (isInvestor) request = new MessageRequestBuilder()
-                .setInvestor(sessionUserId)
-                .setUnseen()
-                .setFromEntrepreneur();
-        else request = new MessageRequestBuilder()
-                .setOwner(sessionUserId)
-                .setUnseen()
-                .setFromInvestor();
 
-        return messageDao.countAll(request);
+        /** By default are messages from the first request are the one unseen */
+        MessageRequestBuilder request1 = new MessageRequestBuilder()
+                .setUnseen();
+
+        /** By default are messages from the second request are the one with an answer and is unseen */
+        MessageRequestBuilder request2 = new MessageRequestBuilder()
+                .setAnswered()
+                .setUnseenAnswer();
+
+        /** If the user is an investor */
+        if (isInvestor) {
+            request1.setInvestor(sessionUserId)
+                    .setFromEntrepreneur();
+
+            request2.setInvestor(sessionUserId)
+                    .setFromInvestor();
+
+        /** If the user is an entrepreneur */
+        } else {
+            request1.setOwner(sessionUserId)
+                    .setFromInvestor();
+
+            request2.setOwner(sessionUserId)
+                    .setFromEntrepreneur();
+        }
+
+        return messageDao.countAll(request1) + messageDao.countAll(request2);
     }
 
 
@@ -278,6 +309,7 @@ public class MessageServiceImpl implements MessageService {
 
         /** With an expiry date has expired, set the offer as rejected */
         message.setSeen();
+        message.setSeenAnswer();
         message.setAccepted(false);
         return true;
     }

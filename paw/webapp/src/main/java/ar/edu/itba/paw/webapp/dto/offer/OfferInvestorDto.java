@@ -28,7 +28,7 @@ public class OfferInvestorDto extends OfferDto {
         offerDto.setPublishDate(message.getPublishDate());
         offerDto.setExpiryDate(message.getExpiryDate());
 
-        offerDto.setSeen(message.getSeen());
+        offerDto.setSeen(message.isSeen());
         offerDto.setDirection(message.getDirection());
         offerDto.setAccepted(message.getAccepted());
 

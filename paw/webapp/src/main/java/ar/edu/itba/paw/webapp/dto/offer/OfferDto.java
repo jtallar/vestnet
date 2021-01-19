@@ -55,7 +55,7 @@ public class OfferDto {
         offerDto.publishDate = message.getPublishDate();
         offerDto.expiryDate = message.getExpiryDate();
 
-        offerDto.seen = message.getSeen();
+        offerDto.seen = message.isSeen();
         offerDto.direction = message.getDirection();
         offerDto.accepted = message.getAccepted();
 
