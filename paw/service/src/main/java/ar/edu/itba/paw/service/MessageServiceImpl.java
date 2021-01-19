@@ -258,13 +258,17 @@ public class MessageServiceImpl implements MessageService {
         Message message = lastMessage.get();
 
         /** Middle of negotiation */
-        /** If it's accepted, then only the investor can start a new negotiation */
-        if (message.getAccepted() == null || message.getAccepted())
-            return direction;
 
-        /** Rejected the last message, both can send a new one */
-        if (!message.getAccepted())
-            return true;
+        /** Messages accepted or rejected */
+        if (message.getAccepted() != null)
+
+            /** If it's accepted, then only the investor can start a new negotiation */
+            if (message.getAccepted())
+                return direction;
+
+            /** Rejected the last message, both can send a new one */
+            else return true;
+
 
         /** Messages that are not accepted or rejected */
 
@@ -276,7 +280,6 @@ public class MessageServiceImpl implements MessageService {
         message.setSeen();
         message.setAccepted(false);
         return true;
-
     }
 
 }
