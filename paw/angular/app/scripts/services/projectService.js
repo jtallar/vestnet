@@ -33,9 +33,8 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       };
 
 
-      projectService.modifyProj = function (n, sum, c, category,id) {
-        var body = {name: n, summary: sum, cost: c, cat: category};
-        return root.one(id).customPUT(body)
+      projectService.update = function (project) {
+        return root.one(project.id).customPUT(project);
       };
 
 

@@ -80,10 +80,12 @@ public class ProjectRestController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
-                           @Valid final ProjectDto projectDto) {
+                           @Valid final ProjectWithCategoryDto projectDto) {
+
+        List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
 
         Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id,
-                projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget());
+                projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories);
 
         return optionalProject.map(p -> Response.ok().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());

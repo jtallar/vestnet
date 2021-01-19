@@ -73,7 +73,7 @@ define([], function() {
                 templateUrl: 'views/verify/verify.html',
                 controller: 'verifyCtrl'
             },
-            '/editProject': {
+            '/projects/:id/edit': {
               templateUrl: '/views/edit/editProject.html',
               controller: 'editProjectCtrl'
             },
