@@ -79,7 +79,7 @@ public class MessageRestController {
                 .build();
     }
 
-    // TODO: Somehow return all the invested money
+
     @GET
     @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -97,6 +97,16 @@ public class MessageRestController {
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getTotalPages()).build(), "last")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
+    }
+
+
+    @GET
+    @Path("/invested")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getInvestedAmount() {
+
+        long count = messageService.getInvestedAmount(sessionUser.getId(), sessionUser.isInvestor());
+        return Response.ok(NotificationDto.fromNumber(count)).build();
     }
 
 

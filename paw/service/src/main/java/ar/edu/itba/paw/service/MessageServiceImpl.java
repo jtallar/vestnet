@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -188,6 +189,18 @@ public class MessageServiceImpl implements MessageService {
         return optionalMessage;
     }
 
+    @Override
+    public long getInvestedAmount(long sessionUserId, boolean investor) {
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .setAccepted();
+
+        if (investor) request.setInvestor(sessionUserId);
+        else request.setOwner(sessionUserId);
+
+        List<Message> messageList = messageDao.findAll(request);
+        return messageList.stream().map(m -> m.getContent().getOffer()).reduce(0L, Long::sum);
+    }
+
 
     @Override
     public long projectNotifications(long projectId, long ownerId) {
@@ -200,11 +213,12 @@ public class MessageServiceImpl implements MessageService {
         return messageDao.countAll(request);
     }
 
+
     @Override
     public long userNotifications(long sessionUserId, boolean isInvestor) {
         /** If the user is an entrepreneur */
         RequestBuilder request;
-        if (isInvestor)request = new MessageRequestBuilder()
+        if (isInvestor) request = new MessageRequestBuilder()
                 .setInvestor(sessionUserId)
                 .setUnseen()
                 .setFromEntrepreneur();
@@ -215,6 +229,7 @@ public class MessageServiceImpl implements MessageService {
 
         return messageDao.countAll(request);
     }
+
 
 
     /** Auxiliary Methods */
