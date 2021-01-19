@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.NotificationDto;
 import ar.edu.itba.paw.webapp.dto.offer.OfferDto;
 import ar.edu.itba.paw.webapp.dto.offer.OfferInvestorDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferProjectDto;
 import ar.edu.itba.paw.webapp.dto.offer.OfferStatusDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,9 +90,9 @@ public class MessageRestController {
 
         final Page<Message> messagePage = messageService.getInvestorProjects(sessionUser.getId(), accepted, page, PAGE_SIZE);
 
-        List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
+        List<OfferProjectDto> messages = messagePage.getContent().stream().map(p -> OfferProjectDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
+        return Response.ok(new GenericEntity<List<OfferProjectDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "start")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "end")
