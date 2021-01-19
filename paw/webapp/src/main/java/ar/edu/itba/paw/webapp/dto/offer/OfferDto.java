@@ -1,8 +1,6 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.offer;
 
 import ar.edu.itba.paw.model.Message;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;

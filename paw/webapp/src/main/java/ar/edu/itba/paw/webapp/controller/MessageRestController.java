@@ -5,8 +5,9 @@ import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.NotificationDto;
-import ar.edu.itba.paw.webapp.dto.OfferDto;
-import ar.edu.itba.paw.webapp.dto.OfferStatusDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferInvestorDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferStatusDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,9 +71,9 @@ public class MessageRestController {
 
         final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), accepted, page, PAGE_SIZE);
 
-        List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
+        List<OfferInvestorDto> messages = messagePage.getContent().stream().map(p -> OfferInvestorDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
+        return Response.ok(new GenericEntity<List<OfferInvestorDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
                 .header("Access-Control-Expose-Headers", "Link")
