@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class ImageDoesNotExistException extends Exception {
+public class ImageDoesNotExistException extends ResourceDoesNotExistException {
 
     private static final long serialVersionUID = -8678741721272095499L;
 

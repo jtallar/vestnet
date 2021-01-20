@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class ProjectDoesNotExistException extends Exception {
+public class ProjectDoesNotExistException extends ResourceDoesNotExistException {
 
     private static final long serialVersionUID = -8831120205963871767L;
 
