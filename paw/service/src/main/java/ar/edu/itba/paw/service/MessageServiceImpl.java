@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,9 @@ public class MessageServiceImpl implements MessageService {
         Message finalMessage = messageDao.create(messageData);
 
         /** Sends email */
-        emailService.sendOffer(owner.get(), investor.get(), project.get(), messageData.getContent(), messageData.getDirection(), baseUri);
+        try {
+            emailService.sendOffer(owner.get(), investor.get(), project.get(), messageData.getContent(), messageData.getDirection(), baseUri);
+        } catch (MessagingException ignored) {}
 
         return Optional.of(finalMessage);
     }
@@ -165,7 +168,10 @@ public class MessageServiceImpl implements MessageService {
             project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
         /** Send email */
-        emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
+        try {
+            emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
+        } catch (MessagingException ignored) {}
+
         return optionalMessage;
     }
 

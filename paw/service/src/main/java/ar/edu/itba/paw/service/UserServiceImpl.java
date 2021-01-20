@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.*;
 
@@ -46,7 +47,9 @@ public class UserServiceImpl implements UserService {
 
         dataUser.setPassword(encoder.encode(dataUser.getPassword()));
         User newUser = userDao.create(dataUser);
-        emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
+        try {
+            emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
+        } catch (MessagingException ignored) {}
         return newUser;
     }
 
@@ -113,7 +116,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Optional<User> requestPassword(String mail, URI baseUri) {
         Optional<User> optionalUser = userDao.findByUsername(mail);
-        optionalUser.ifPresent(u -> emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri));
+        optionalUser.ifPresent(u -> {
+            try {
+                emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri);
+            } catch (MessagingException ignored) {}
+        });
         return optionalUser;
     }
 
@@ -197,7 +204,11 @@ public class UserServiceImpl implements UserService {
 
         /** Resend in case of an invalid token for verification */
         if (!realToken.isValid()) {
-            if (!isPassword) emailService.sendVerification(user, tokenDao.create(user).getToken(), baseUri);
+            if (!isPassword) {
+                try {
+                    emailService.sendVerification(user, tokenDao.create(user).getToken(), baseUri);
+                } catch (MessagingException ignored) {}
+            }
             throw new InvalidTokenException("Token invalid");
         }
 

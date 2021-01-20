@@ -5,8 +5,6 @@ import ar.edu.itba.paw.model.Mail;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import org.apache.commons.lang.LocaleUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendOffer(User owner, User investor, Project project, Message.MessageContent content, boolean direction, URI baseUri) {
+    public void sendOffer(User owner, User investor, Project project, Message.MessageContent content, boolean direction, URI baseUri) throws MessagingException {
         Mail mail = new Mail();
         if (direction) {
             mail.setFrom(investor.getEmail());
@@ -59,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendOfferAnswer(User owner, User investor, Project project, boolean answer, boolean direction, URI baseUri) {
+    public void sendOfferAnswer(User owner, User investor, Project project, boolean answer, boolean direction, URI baseUri) throws MessagingException {
         Mail mail = new Mail();
         if (direction) {
             mail.setFrom(investor.getEmail());
@@ -78,7 +76,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendPasswordRecovery(User user, String token, URI baseUri) {
+    public void sendPasswordRecovery(User user, String token, URI baseUri) throws MessagingException {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.passwordReset", null, Locale.forLanguageTag(user.getLocale())));
@@ -89,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendVerification(User user, String token, URI baseUri) {
+    public void sendVerification(User user, String token, URI baseUri) throws MessagingException {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.verification", null, Locale.forLanguageTag(user.getLocale())));
@@ -104,22 +102,20 @@ public class EmailServiceImpl implements EmailService {
     /**
      * Sends a formatted mail in html.
      * @param mail The formatted mail. Content must be filled previously.
+     * @throws MessagingException Upon sending error.
      */
-    private void sendEmail(Mail mail) {
+    private void sendEmail(Mail mail) throws MessagingException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        try {
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            mimeMessageHelper.setSubject(mail.getSubject());
-            mimeMessageHelper.setFrom(mail.getFrom());
-            mimeMessageHelper.setTo(mail.getTo());
-            mimeMessageHelper.setText(mail.getContent(), true);
-            mimeMessageHelper.setReplyTo(mail.getFrom());
-            ClassPathResource resource = new ClassPathResource("/images/mail-header.png");
-            mimeMessageHelper.addInline("headerImage", resource);
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        mimeMessageHelper.setSubject(mail.getSubject());
+        mimeMessageHelper.setFrom(mail.getFrom());
+        mimeMessageHelper.setTo(mail.getTo());
+        mimeMessageHelper.setText(mail.getContent(), true);
+        mimeMessageHelper.setReplyTo(mail.getFrom());
+        ClassPathResource resource = new ClassPathResource("/images/mail-header.png");
+        mimeMessageHelper.addInline("headerImage", resource);
 
-            emailSender.send(mimeMessageHelper.getMimeMessage());
-
-        } catch (MessagingException ignored) {}
+        emailSender.send(mimeMessageHelper.getMimeMessage());
     }
 
 
