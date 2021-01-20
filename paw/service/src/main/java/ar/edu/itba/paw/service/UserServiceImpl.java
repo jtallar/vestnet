@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.*;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException {
+
         dataUser.setPassword(encoder.encode(dataUser.getPassword()));
         User newUser = userDao.create(dataUser);
         emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
@@ -118,15 +120,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean updatePassword(String token, String password) {
-        return updateWithToken(token, password, true, null);
+    public void updatePassword(String token, String password) throws InvalidTokenException {
+        updateWithToken(token, password, true, null);
     }
 
 
     @Override
     @Transactional
-    public boolean updateVerification(String token, URI baseUri) {
-        return updateWithToken(token, null, false, baseUri);
+    public void updateVerification(String token, URI baseUri) throws InvalidTokenException {
+        updateWithToken(token, null, false, baseUri);
     }
 
 
@@ -182,13 +184,13 @@ public class UserServiceImpl implements UserService {
      * @param password The password, if given, to update.
      * @param isPassword If its change of password or verification.
      * @param baseUri The base uri in case the verification token has expired.
-     * @return True when update is done, false if token corrupted/missing/invalid.
+     * @throws InvalidTokenException When the token corrupted/missing/invalid.
      */
-    private boolean updateWithToken(String token, String password, boolean isPassword, URI baseUri) {
-        if (token == null || token.isEmpty()) return false;
+    private void updateWithToken(String token, String password, boolean isPassword, URI baseUri) throws InvalidTokenException {
+        if (token == null || token.isEmpty()) throw new InvalidTokenException("Empty token string");
 
         Optional<Token> optionalToken = tokenDao.findByToken(token);
-        if (!optionalToken.isPresent()) return false;
+        if (!optionalToken.isPresent()) throw new InvalidTokenException("Token not found");
 
         Token realToken = optionalToken.get();
         User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
@@ -196,11 +198,10 @@ public class UserServiceImpl implements UserService {
         /** Resend in case of an invalid token for verification */
         if (!realToken.isValid()) {
             if (!isPassword) emailService.sendVerification(user, tokenDao.create(user).getToken(), baseUri);
-            return false;
+            throw new InvalidTokenException("Token invalid");
         }
 
         if (isPassword) user.setPassword(encoder.encode(password));
         else user.setVerified(true);
-        return true;
     }
 }

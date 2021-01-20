@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.exception;
 
+import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,12 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
         /** Custom Exceptions */
         if (thr instanceof UserAlreadyExistsException)
             return Response.status(Response.Status.CONFLICT).entity("").build();
+
+        if (thr instanceof UserDoesNotExistException)
+            return Response.status(Response.Status.NOT_FOUND).entity("").build();
+
+        if (thr instanceof InvalidTokenException)
+            return Response.status(Response.Status.BAD_REQUEST).entity("").build();
 
         /** Validation Exception */
         if (thr instanceof ConstraintViolationException)
