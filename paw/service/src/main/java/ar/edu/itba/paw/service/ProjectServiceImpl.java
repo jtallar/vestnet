@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.daos.CategoryDao;
 import ar.edu.itba.paw.interfaces.daos.ImageDao;
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
+import ar.edu.itba.paw.interfaces.exceptions.IllegalProjectAccessException;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
@@ -37,14 +38,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) {
+    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) throws IllegalProjectAccessException {
         Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
-        optionalProject.get().setName(name);
-        optionalProject.get().setSummary(summary);
-        optionalProject.get().setFundingTarget(fundingTarget);
-        optionalProject.get().setUpdateDate(new Date());
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> {
+            p.setName(name);
+            p.setSummary(summary);
+            p.setFundingTarget(fundingTarget);
+            p.setUpdateDate(new Date());
+        });
         return optionalProject;
     }
 
@@ -70,20 +75,26 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setClosed(long ownerId, long id) {
+    public Optional<Project> setClosed(long ownerId, long id) throws IllegalProjectAccessException {
         Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
-        optionalProject.get().setClosed(true);
+
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> p.setClosed(true));
         return optionalProject;
     }
 
 
     @Override
     @Transactional
-    public Optional<Project> addCategories(long ownerId, long id, List<Category> categories) {
+    public Optional<Project> addCategories(long ownerId, long id, List<Category> categories) throws IllegalProjectAccessException {
         Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
-        optionalProject.get().setCategories(categories);
+
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> p.setCategories(categories));
         return optionalProject;
     }
 
@@ -114,18 +125,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setStage(long ownerId, long id, String name, String comment) {
+    public Optional<Project> setStage(long ownerId, long id, String name, String comment) throws IllegalProjectAccessException {
         Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent()) return optionalProject;
 
-        Project project = optionalProject.get();
-        /** Entrepreneur not the owner */
-        if (project.getOwnerId() != ownerId) return Optional.empty();
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();;
 
         /** Adds the new stage if there are less than 5 */
-        Set<ProjectStages> stages = project.getStages();
-        if (stages.size() < Project.MAX_STAGES)
-            stages.add(new ProjectStages(name, stages.size() + 1, comment, project));
+        optionalProject.ifPresent(p -> {
+            Set<ProjectStages> stages = p.getStages();
+            if (stages.size() < Project.MAX_STAGES)
+                stages.add(new ProjectStages(name, stages.size() + 1, comment, p));
+        });
         return optionalProject;
     }
 

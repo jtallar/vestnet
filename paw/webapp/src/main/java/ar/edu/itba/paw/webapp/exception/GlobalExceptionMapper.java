@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.exception;
 
-import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
-import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,8 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
         if (thr instanceof UserAlreadyExistsException)
             return Response.status(Response.Status.CONFLICT).entity("").build();
 
-        if (thr instanceof UserDoesNotExistException)
+        // TODO make parent, and check for changes of status return
+        if (thr instanceof UserDoesNotExistException || thr instanceof ProjectDoesNotExistException || thr instanceof IllegalProjectAccessException)
             return Response.status(Response.Status.NOT_FOUND).entity("").build();
 
         if (thr instanceof InvalidTokenException)
