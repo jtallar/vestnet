@@ -145,7 +145,6 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       this.sendSlideshow = function (projectId) {
         if (!!(slideshowImages)) {
           imageService.setProjectSlideshow(projectId, slideshowImages).then(function (imageResponse) {
-            console.log('Inserted slideshow to project');
             _this.finishCreation(projectId);
           }, function (imageErrorResponse) {
             console.error(imageErrorResponse);
@@ -159,7 +158,6 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       this.sendPortrait = function (projectId) {
         if (!!(portraitImage)) {
           imageService.setProjectImage(projectId, portraitImage).then(function (imageResponse) {
-            console.log('Inserted image to project');
             _this.sendSlideshow(projectId);
           }, function (imageErrorResponse) {
             console.error(imageErrorResponse);

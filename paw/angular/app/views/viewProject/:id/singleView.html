@@ -2,8 +2,6 @@
 
 <!--<vnheader></vnheader>-->
 
-<body ng-controller="singleViewCtrl" >
-
 <div id="all">
 <!-- Message and Back logic -->
   <div class="container sep-nav" style="margin-top: 20px">
@@ -80,7 +78,7 @@
               <p class="card-text">{{project.summary}}</p>
 
               <h5 class="card-title"><b>{{'categories' | translate}}</b></h5>
-                <li ng-repeat="category in project.categories">{{category}}</li>
+                <li ng-repeat="category in project.categories">{{category | translate}}</li>
               <br/>
 
               <h5 class="card-title"><b>{{'contactMail' | translate}}</b></h5>
@@ -341,9 +339,6 @@
 </div>
 <!--</div>-->
 </div>
-
-</body>
-
 
 <!--<footer>-->
 <!--  <vnfooter></vnfooter>-->

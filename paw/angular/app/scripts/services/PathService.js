@@ -11,7 +11,7 @@ define([], function() {
     pathService.logoutRE = [/^\/logout$/];
     pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
     pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/, /^\/chat\/[^\/]*$/];
-    pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
+    pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject\/.*$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
     pathService.authRoutesRE = [/^\/users\/.*$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
 
     pathService.get = function () {
@@ -110,8 +110,8 @@ define([], function() {
         return append('/verify');
       };
 
-      base.editProject = function () {
-        return append('/editProject');
+      base.editProject = function (id) {
+        return append('/projects/' + id + '/edit');
       };
 
       base.chat = function (id1, id2) {

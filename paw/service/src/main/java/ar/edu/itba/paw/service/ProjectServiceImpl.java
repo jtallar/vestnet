@@ -37,13 +37,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) {
+    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget, List<Category> categories) {
         Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
         optionalProject.get().setName(name);
         optionalProject.get().setSummary(summary);
         optionalProject.get().setFundingTarget(fundingTarget);
+        optionalProject.get().setCategories(categories);
         optionalProject.get().setUpdateDate(new Date());
         return optionalProject;
     }

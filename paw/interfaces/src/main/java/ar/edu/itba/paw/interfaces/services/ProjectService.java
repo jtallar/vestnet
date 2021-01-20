@@ -28,10 +28,10 @@ public interface ProjectService {
      * @param name The project's name.
      * @param summary The project's summary.
      * @param fundingTarget The project's total funding target.
+     * @param categories The project's categories.
      * @return operation return.
-     * @return
      */
-    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget);
+    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget, List<Category> categories);
 
 
     /**

@@ -11,18 +11,19 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     var map = {};
     userService.getUserProjects($scope.id, false).then(function (response) {
-      $scope.projects = response.data
+      $scope.projects = response.data;
       for(var i = 0; i < $scope.projects.length; i++) {
         map[$scope.projects[i].id] = i;
-        $scope.projects[i].msgPage = 1
-        $scope.projects[i].offerPage = 1
-        $scope.projects[i].firstFecthed = false
-        $scope.projects[i].firstFecthedOffers = false
+        $scope.projects[i].msgPage = 1;
+        $scope.projects[i].offerPage = 1;
+        $scope.projects[i].firstFecthed = false;
+        $scope.projects[i].firstFecthedOffers = false;
+        $scope.projects[i].editUrl= PathService.get().editProject($scope.projects[i].id).path;
         if ($scope.projects[i].portraitExists) {
           sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
-            $scope.projects[map[image.data.route]].image = image.data.image
+            $scope.projects[map[image.data.route]].image = image.data.image;
           }, function (err) {
-            console.log("No image")
+            console.log("No image");
           });
         }
       }
@@ -32,10 +33,11 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
 
     userService.getUserProjects($scope.id, true).then(function (response) {
-      $scope.fundedProjects = response.data
+      $scope.fundedProjects = response.data;
       var map = {};
       for(var i = 0; i < $scope.fundedProjects.length; i++) {
         map[$scope.fundedProjects[i].id] = i;
+        $scope.fundedProjects[i].editUrl= PathService.get().editProject($scope.fundedProjects[i].id).path;
         if ($scope.fundedProjects[i].portraitExists) {
           sampleService.get($scope.fundedProjects[i].portraitImage, $scope.fundedProjects[i].id.toString()).then(function (image) {
             $scope.fundedProjects[map[image.data.route]].image = image.data.image

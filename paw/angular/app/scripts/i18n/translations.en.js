@@ -232,7 +232,7 @@ define([], function() {
     profileTitle: '{{first}} {{last}}\'s info',
     lastChat: 'Last message',
     lastChatWithDate: 'Last message: {{date}}',
-    editProject: 'Edit Project',
+    editProjectTitle: 'Edit Project',
     comments: 'Comments',
     counteroffer: 'Send counteroffer',
     sendoffer: 'Send offer',
@@ -266,7 +266,7 @@ define([], function() {
 
     dashboard: 'Dashboard',
     messages: 'Messages',
-    edit: 'Edit Project',
+    edit: 'Edit',
     error: 'Error',
     login: 'Login',
     newProject: 'New Project',
@@ -290,6 +290,7 @@ define([], function() {
     seen: 'Seen by',
     contactClicks: 'Contact Clicks',
     investorsSeen: 'Investors Seen',
-    lastSeen: 'Last seen'
+    lastSeen: 'Last seen',
+    pageTitleEdit: 'Edit Project'
 	};
 });
