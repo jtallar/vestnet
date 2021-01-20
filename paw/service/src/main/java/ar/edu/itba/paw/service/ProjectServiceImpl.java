@@ -38,7 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) throws IllegalProjectAccessException {
+    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget, List<Category> categories) throws IllegalProjectAccessException {
         final Optional<Project> optionalProject = projectDao.findById(id);
 
         /** Not the owner of the found project */
@@ -48,6 +48,7 @@ public class ProjectServiceImpl implements ProjectService {
             p.setName(name);
             p.setSummary(summary);
             p.setFundingTarget(fundingTarget);
+            p.setCategories(categories);
             p.setUpdateDate(new Date());
         });
         return optionalProject;

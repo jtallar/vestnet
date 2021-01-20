@@ -79,9 +79,11 @@ public class ProjectRestController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
-                           @Valid final ProjectDto projectDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
+                           @Valid final ProjectWithCategoryDto projectDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
 
-        projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget()).orElseThrow(ProjectDoesNotExistException::new);
+        final List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+        final Project project = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(),
+                projectDto.getFundingTarget(), categories).orElseThrow(ProjectDoesNotExistException::new);
         return Response.ok().build();
     }
 

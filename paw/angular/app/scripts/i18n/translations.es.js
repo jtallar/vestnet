@@ -232,7 +232,7 @@ define([], function() {
     profileTitle: 'Información de {{first}} {{last}}',
     lastChat: 'Ult. mensaje',
     lastChatWithDate: 'Ult. mensaje: {{date}}',
-    editProject: 'Editar Proyecto',
+    editProjectTitle: 'Editar Proyecto',
     comments: 'Comentarios',
     counteroffer: 'Enviar una contraoferta',
     sendoffer: 'Enviar una oferta',
@@ -264,7 +264,7 @@ define([], function() {
     you: 'Tú',
     dashboard: 'Tablero',
     messages: 'Mensajes',
-    edit: 'Editar Proyecto',
+    edit: 'Editar',
     error: 'Error',
     login: 'Acceder',
     newProject: 'Nuevo Proyecto',
@@ -288,6 +288,7 @@ define([], function() {
     seen: 'Visto por',
     contactClicks: 'Contactados',
     investorsSeen: 'Inversores que visitaron ',
-    lastSeen: 'Última vez visto'
+    lastSeen: 'Última vez visto',
+    pageTitleEdit: 'Editar Proyecto'
   };
 });

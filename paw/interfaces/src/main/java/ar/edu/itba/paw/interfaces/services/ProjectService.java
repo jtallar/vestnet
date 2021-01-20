@@ -29,10 +29,11 @@ public interface ProjectService {
      * @param name The project's name.
      * @param summary The project's summary.
      * @param fundingTarget The project's total funding target.
+     * @param categories The project's categories.
      * @return operation return.
      * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) throws IllegalProjectAccessException;
+    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget, List<Category> categories) throws IllegalProjectAccessException;
 
 
     /**
