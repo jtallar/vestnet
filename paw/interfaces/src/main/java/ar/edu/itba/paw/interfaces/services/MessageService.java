@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.InvalidMessageException;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.components.Page;
@@ -19,9 +20,10 @@ public interface MessageService {
      * @param content The data for the new message to create.
      * @param expiryDays The amount of days until the offer expires.
      * @param baseUri Base url for replies.
-     * @return The optional created message. Empty in case of errors.
+     * @return The  created message.
+     * @throws InvalidMessageException In case the message cannot be sent. Reasons may vary.
      */
-    Optional<Message> create(long projectId, long investorId, long sessionUserId, MessageContent content, int expiryDays, URI baseUri);
+    Message create(long projectId, long investorId, long sessionUserId, MessageContent content, int expiryDays, URI baseUri) throws InvalidMessageException;
 
 
     /**
@@ -77,8 +79,9 @@ public interface MessageService {
      * @param accepted Status to be updated.
      * @param baseUri Base uri for replies.
      * @return The updated message or null if not found.
+     * @throws InvalidMessageException In case the message cannot be updated. Reasons may vary.
      */
-    Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri);
+    Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri) throws InvalidMessageException;
 
 
     /**

@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidMessageException;
+import ar.edu.itba.paw.interfaces.exceptions.MessageDoesNotExistException;
+import ar.edu.itba.paw.interfaces.exceptions.ProjectDoesNotExistException;
+import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
@@ -42,42 +46,40 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public Optional<Message> create(long projectId, long investorId, long sessionUserId, Message.MessageContent content, int expiryDays, URI baseUri) {
+    public Message create(long projectId, long investorId, long sessionUserId, Message.MessageContent content, int expiryDays,
+                          URI baseUri) throws InvalidMessageException {
 
         /** Checks for the existence of the project and the owner ID is the right one */
-        Optional<Project> project = projectService.findById(projectId);
-        if (!project.isPresent()) return Optional.empty();
+        final Project project = projectService.findById(projectId).orElseThrow(InvalidMessageException::new);
 
         /** Checks it the session user id is from one of the two users negotiating, and sets direction of message */
-        boolean direction;
+        final boolean direction;
         if (sessionUserId == investorId)
             direction = true;
-        else if (sessionUserId == project.get().getOwnerId())
+        else if (sessionUserId == project.getOwnerId())
             direction = false;
-        else return Optional.empty();
+        else throw new InvalidMessageException("Session user is not part of the message.");
 
         /** Checks if both users exists */
-        Optional<User> owner = userService.findById(project.get().getOwnerId());
-        Optional<User> investor = userService.findById(investorId);
-        if (!owner.isPresent() || !investor.isPresent()) return Optional.empty();
+        final User owner = userService.findById(project.getOwnerId()).orElseThrow(InvalidMessageException::new);
+        final User investor = userService.findById(investorId).orElseThrow(InvalidMessageException::new);
 
         /** Checks if the user is able to sent message */
-        if (!isPostOfferValid(owner.get().getId(), investorId, projectId, direction))
-            return Optional.empty();
+        isPostOfferValid(owner.getId(), investorId, projectId, direction);
 
         /** Creates the message data to persist */
-        Message messageData = new Message(content, new User(project.get().getOwnerId()),
+        final Message messageData = new Message(content, new User(project.getOwnerId()),
                 new User(investorId), new Project(projectId), direction, expiryDays);
 
         /** Persists message */
-        Message finalMessage = messageDao.create(messageData);
+        final Message finalMessage = messageDao.create(messageData);
 
         /** Sends email */
         try {
-            emailService.sendOffer(owner.get(), investor.get(), project.get(), messageData.getContent(), messageData.getDirection(), baseUri);
+            emailService.sendOffer(owner, investor, project, messageData.getContent(), messageData.getDirection(), baseUri);
         } catch (MessagingException ignored) {}
 
-        return Optional.of(finalMessage);
+        return finalMessage;
     }
 
 
@@ -133,43 +135,41 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri) {
+    public Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted,
+                                                 URI baseUri) throws InvalidMessageException {
         Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
 
         if (!optionalMessage.isPresent()) return Optional.empty();
         Message message = optionalMessage.get();
 
-
-        Optional <Project> project = projectService.findById(projectId);
-        Optional<User> owner = userService.findById(message.getOwnerId());
-        Optional<User> investor = userService.findById(investorId);
-
         /** This cannot happen as the message if its on the database, then the owner, investor and project exist */
-        if (!project.isPresent() || !owner.isPresent() || !investor.isPresent()) return Optional.empty();
+        final Project project = projectService.findById(projectId).orElseThrow(InvalidMessageException::new);
+        final User owner = userService.findById(message.getOwnerId()).orElseThrow(InvalidMessageException::new);
+        final User investor = userService.findById(investorId).orElseThrow(InvalidMessageException::new);
 
         /** If the message has expired */
         if (!message.isExpiryDateValid()) {
             message.setAccepted(false);
-            return Optional.empty();
+            throw new InvalidMessageException("Cannot answer over an expired message.");
         }
 
         /** Valid expire date */
         /** Is investor, last message cannot be his */
         if (sessionUserId == investorId && message.getDirection())
-            return Optional.empty();
+            throw new InvalidMessageException("Cannot answer over an own message.");
 
         /** Is entrepreneur, last message cannot be his */
         if (sessionUserId == message.getOwnerId() && !message.getDirection())
-            return Optional.empty();
+            throw new InvalidMessageException("Cannot answer over an own message.");
 
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
         if (accepted)
-            project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
+            project.setFundingCurrent(project.getFundingCurrent() + message.getContent().getOffer());
 
         /** Send email */
         try {
-            emailService.sendOfferAnswer(owner.get(), investor.get(), project.get(), accepted, message.getDirection(), baseUri);
+            emailService.sendOfferAnswer(owner, investor, project, accepted, message.getDirection(), baseUri);
         } catch (MessagingException ignored) {}
 
         return optionalMessage;
@@ -188,7 +188,6 @@ public class MessageServiceImpl implements MessageService {
                     m.setSeenAnswer();
                 return;
             }
-
 
             /** Is entrepreneur, last message is his. If accepted or rejected then set as seen answer */
             if (sessionUserId == m.getOwnerId() && !m.getDirection()) {
@@ -277,9 +276,9 @@ public class MessageServiceImpl implements MessageService {
      * @param investorId The investor's unique ID.
      * @param projectId The project's unique ID.
      * @param direction The direction of the conversation given. True for investor to entrepreneur. False otherwise.
-     * @return True if its a valid request, false otherwise.
+     * @throws InvalidMessageException If the message is not valid to be sent.
      */
-    private boolean isPostOfferValid(long ownerId, long investorId, long projectId, boolean direction) {
+    private void isPostOfferValid(long ownerId, long investorId, long projectId, boolean direction) throws InvalidMessageException {
         RequestBuilder request = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setInvestor(investorId)
@@ -290,7 +289,8 @@ public class MessageServiceImpl implements MessageService {
 
         /** Opening of a new negotiation, only the investors  */
         if (!lastMessage.isPresent())
-            return direction;
+            if (direction) return;
+            else throw new InvalidMessageException("New negotiation cannot be opened by entrepreneur.");
 
         Message message = lastMessage.get();
 
@@ -301,23 +301,24 @@ public class MessageServiceImpl implements MessageService {
 
             /** If it's accepted, then only the investor can start a new negotiation */
             if (message.getAccepted())
-                return direction;
+                if (direction) return;
+                else throw new InvalidMessageException("New offer after an accepted one cannot be made by entrepreneur");
 
             /** Rejected the last message, both can send a new one */
-            else return true;
+            else return;
 
 
         /** Messages that are not accepted or rejected */
 
         /** With an expiry date not yet crossed, sent only if not the last one */
         if (message.isExpiryDateValid())
-            return message.getDirection() != direction;
+            if (message.getDirection() != direction) return;
+            else throw new InvalidMessageException("Cannot send new offer before the expiry date of a own previous offer.");
 
         /** With an expiry date has expired, set the offer as rejected */
         message.setSeen();
         message.setSeenAnswer();
         message.setAccepted(false);
-        return true;
     }
 
 }

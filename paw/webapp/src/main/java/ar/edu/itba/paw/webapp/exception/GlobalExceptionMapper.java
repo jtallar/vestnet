@@ -26,10 +26,11 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
             return Response.status(Response.Status.CONFLICT).entity("").build();
 
         // TODO make parent, and check for changes of status return
-        if (thr instanceof UserDoesNotExistException || thr instanceof ProjectDoesNotExistException || thr instanceof IllegalProjectAccessException)
+        if (thr instanceof UserDoesNotExistException || thr instanceof ProjectDoesNotExistException
+                || thr instanceof IllegalProjectAccessException || thr instanceof MessageDoesNotExistException)
             return Response.status(Response.Status.NOT_FOUND).entity("").build();
 
-        if (thr instanceof InvalidTokenException)
+        if (thr instanceof InvalidTokenException || thr instanceof InvalidMessageException)
             return Response.status(Response.Status.BAD_REQUEST).entity("").build();
 
         /** Validation Exception */
