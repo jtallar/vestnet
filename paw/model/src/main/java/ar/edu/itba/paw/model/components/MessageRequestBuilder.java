@@ -84,6 +84,26 @@ public class MessageRequestBuilder extends RequestBuilder {
 
 
     /**
+     * Sets to filter the unread response messages.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setUnseenAnswer() {
+        criteriaList.add(new FilterCriteria(MESSAGE_SEEN_ANSWER, false));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the messages not accepted nor rejected.
+     * @return The RequestBuilder
+     */
+    public MessageRequestBuilder setAnswered() {
+        criteriaList.add(new FilterCriteria(MESSAGE_ANSWERED, null));
+        return this;
+    }
+
+
+    /**
      * Sets to filter the accepted messages.
      * @return The RequestBuilder
      */

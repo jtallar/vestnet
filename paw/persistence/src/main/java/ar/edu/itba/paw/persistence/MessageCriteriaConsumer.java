@@ -30,10 +30,12 @@ import java.util.function.Consumer;
         FilterField filter = param.getField();
         switch (filter) {
             case IDS: in(filter.getField(), param.getValue()); break;
+            case MESSAGE_ANSWERED: notNull(filter.getField()); break;
             case MESSAGE_ENTREPRENEUR:
             case MESSAGE_INVESTOR:
             case MESSAGE_PROJECT:
             case MESSAGE_SEEN:
+            case MESSAGE_SEEN_ANSWER:
             case MESSAGE_ACCEPTED:
             case MESSAGE_DIRECTION: equal(filter.getField(), param.getValue()); break;
             default: /** should not happen */ break;
@@ -57,6 +59,15 @@ import java.util.function.Consumer;
      */
     private void in(String field, Object value) {
         predicate = root.get(field).in((List) value);
+    }
+
+
+    /**
+     * Filters by not null a field.
+     * @param field The field to filter by
+     */
+    private void notNull(String field) {
+        predicate = builder.and(predicate, builder.isNotNull(root.get(field)));
     }
 
 

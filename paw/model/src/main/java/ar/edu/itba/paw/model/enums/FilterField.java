@@ -23,7 +23,9 @@ public enum FilterField {
     MESSAGE_INVESTOR("investor"),
     MESSAGE_PROJECT("project"),
     MESSAGE_SEEN("seen"),
+    MESSAGE_SEEN_ANSWER("seenAnswer"),
     MESSAGE_ACCEPTED("accepted"),
+    MESSAGE_ANSWERED("accepted"),
     MESSAGE_DIRECTION("direction");
 
     private String fieldName;

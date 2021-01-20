@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -160,7 +161,6 @@ public class MessageServiceImpl implements MessageService {
 
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
-        message.setSeen();
         if (accepted)
             project.get().setFundingCurrent(project.get().getFundingCurrent() + message.getContent().getOffer());
 
@@ -176,11 +176,20 @@ public class MessageServiceImpl implements MessageService {
         Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
         optionalMessage.ifPresent(m -> {
 
-            /** Is investor, last message cannot be his */
-            if (sessionUserId == investorId && m.getDirection()) return;
+            /** Is investor, last message is his. If accepted or rejected then set as seen answer */
+            if (sessionUserId == investorId && m.getDirection()) {
+                if (m.getAccepted() != null)
+                    m.setSeenAnswer();
+                return;
+            }
 
-            /** Is entrepreneur, last message cannot be his */
-            if (sessionUserId == m.getOwnerId() && !m.getDirection()) return;
+
+            /** Is entrepreneur, last message is his. If accepted or rejected then set as seen answer */
+            if (sessionUserId == m.getOwnerId() && !m.getDirection()) {
+                if (m.getAccepted() != null)
+                    m.setSeenAnswer();
+                return;
+            }
 
             m.setSeen();
         });
@@ -188,33 +197,70 @@ public class MessageServiceImpl implements MessageService {
         return optionalMessage;
     }
 
+    @Override
+    public long getInvestedAmount(long sessionUserId, boolean investor) {
+        MessageRequestBuilder request = new MessageRequestBuilder()
+                .setAccepted();
+
+        if (investor) request.setInvestor(sessionUserId);
+        else request.setOwner(sessionUserId);
+
+        List<Message> messageList = messageDao.findAll(request);
+        return messageList.stream().map(m -> m.getContent().getOffer()).reduce(0L, Long::sum);
+    }
+
 
     @Override
     public long projectNotifications(long projectId, long ownerId) {
-        RequestBuilder request = new MessageRequestBuilder()
+        RequestBuilder request1 = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setUnseen()
                 .setFromInvestor();
 
-        return messageDao.countAll(request);
+        RequestBuilder request2 = new MessageRequestBuilder()
+                .setOwner(ownerId)
+                .setProject(projectId)
+                .setAnswered()
+                .setUnseenAnswer()
+                .setFromEntrepreneur();
+
+        return messageDao.countAll(request1) + messageDao.countAll(request2);
     }
+
 
     @Override
     public long userNotifications(long sessionUserId, boolean isInvestor) {
-        /** If the user is an entrepreneur */
-        RequestBuilder request;
-        if (isInvestor)request = new MessageRequestBuilder()
-                .setInvestor(sessionUserId)
-                .setUnseen()
-                .setFromEntrepreneur();
-        else request = new MessageRequestBuilder()
-                .setOwner(sessionUserId)
-                .setUnseen()
-                .setFromInvestor();
 
-        return messageDao.countAll(request);
+        /** By default are messages from the first request are the one unseen */
+        MessageRequestBuilder request1 = new MessageRequestBuilder()
+                .setUnseen();
+
+        /** By default are messages from the second request are the one with an answer and is unseen */
+        MessageRequestBuilder request2 = new MessageRequestBuilder()
+                .setAnswered()
+                .setUnseenAnswer();
+
+        /** If the user is an investor */
+        if (isInvestor) {
+            request1.setInvestor(sessionUserId)
+                    .setFromEntrepreneur();
+
+            request2.setInvestor(sessionUserId)
+                    .setFromInvestor();
+
+        /** If the user is an entrepreneur */
+        } else {
+            request1.setOwner(sessionUserId)
+                    .setFromInvestor();
+
+            request2.setOwner(sessionUserId)
+                    .setFromEntrepreneur();
+        }
+
+        return messageDao.countAll(request1) + messageDao.countAll(request2);
     }
+
 
 
     /** Auxiliary Methods */
@@ -243,13 +289,17 @@ public class MessageServiceImpl implements MessageService {
         Message message = lastMessage.get();
 
         /** Middle of negotiation */
-        /** If it's accepted, then only the investor can start a new negotiation */
-        if (message.getAccepted() == null || message.getAccepted())
-            return direction;
 
-        /** Rejected the last message, both can send a new one */
-        if (!message.getAccepted())
-            return true;
+        /** Messages accepted or rejected */
+        if (message.getAccepted() != null)
+
+            /** If it's accepted, then only the investor can start a new negotiation */
+            if (message.getAccepted())
+                return direction;
+
+            /** Rejected the last message, both can send a new one */
+            else return true;
+
 
         /** Messages that are not accepted or rejected */
 
@@ -259,9 +309,9 @@ public class MessageServiceImpl implements MessageService {
 
         /** With an expiry date has expired, set the offer as rejected */
         message.setSeen();
+        message.setSeenAnswer();
         message.setAccepted(false);
         return true;
-
     }
 
 }

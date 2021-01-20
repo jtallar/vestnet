@@ -1,8 +1,6 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.offer;
 
 import ar.edu.itba.paw.model.Message;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
@@ -57,7 +55,7 @@ public class OfferDto {
         offerDto.publishDate = message.getPublishDate();
         offerDto.expiryDate = message.getExpiryDate();
 
-        offerDto.seen = message.getSeen();
+        offerDto.seen = message.isSeen();
         offerDto.direction = message.getDirection();
         offerDto.accepted = message.getAccepted();
 

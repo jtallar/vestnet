@@ -5,8 +5,10 @@ import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.NotificationDto;
-import ar.edu.itba.paw.webapp.dto.OfferDto;
-import ar.edu.itba.paw.webapp.dto.OfferStatusDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferInvestorDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferProjectDto;
+import ar.edu.itba.paw.webapp.dto.offer.OfferStatusDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +35,7 @@ public class MessageRestController {
     @Context
     private UriInfo uriInfo;
 
-    // TODO: Puedo poner PAGE_SIZE en 6 para el /investor? Se muestran en filas de 3 columnas
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 6;
 
     @POST
     @Path("/{project_id}/{investor_id}")
@@ -70,17 +71,15 @@ public class MessageRestController {
 
         final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), accepted, page, PAGE_SIZE);
 
-        List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
+        List<OfferInvestorDto> messages = messagePage.getContent().stream().map(p -> OfferInvestorDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+        return Response.ok(new GenericEntity<List<OfferInvestorDto>>(messages) {})
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
 
-    // TODO: Es muy costoso agregar el nombre del proyecto, no? Me falta el nombre y el link de la portrait (de tener)
-    // TODO: Deberia devolverme metadata ademas de la lista de OfferDto, con datos como Sumatoria de plata invertida
+
     @GET
     @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -89,13 +88,25 @@ public class MessageRestController {
 
         final Page<Message> messagePage = messageService.getInvestorProjects(sessionUser.getId(), accepted, page, PAGE_SIZE);
 
-        List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
+        List<OfferProjectDto> messages = messagePage.getContent().stream().map(p -> OfferProjectDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+        return Response.ok(new GenericEntity<List<OfferProjectDto>>(messages) {})
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "start")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "end")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getTotalPages()).build(), "last")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
+    }
+
+
+    @GET
+    @Path("/invested")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getInvestedAmount() {
+
+        long count = messageService.getInvestedAmount(sessionUser.getId(), sessionUser.isInvestor());
+        return Response.ok(NotificationDto.fromNumber(count)).build();
     }
 
 
@@ -111,8 +122,7 @@ public class MessageRestController {
         List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }

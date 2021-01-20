@@ -93,6 +93,15 @@ public interface MessageService {
 
 
     /**
+     * Returns the amount of invested money received or invested.
+     * @param sessionUserId The unique user id.
+     * @param investor Boolean noting if the user is investor or entrepreneur.
+     * @return The amount of money received or invested.
+     */
+    long getInvestedAmount(long sessionUserId, boolean investor);
+
+
+    /**
      * Returns the amount of unread chats for this specific project.
      * @param projectId The specific project's unique id.
      * @param ownerId The owner's unique id.

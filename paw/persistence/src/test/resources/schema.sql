@@ -91,6 +91,15 @@ CREATE TABLE IF NOT EXISTS users (
     image_id        INT
 );
 
+CREATE TABLE IF NOT EXISTS project_stats (
+     id             INTEGER IDENTITY PRIMARY KEY,
+     clicks_avg     INT,
+     contact_clicks INT,
+     investors_seen INT,
+     last_seen      TIMESTAMP WITH TIME ZONE,
+     seconds_avg    INT,
+     seen           INT
+);
 
 /*
 ** All projects created.
@@ -112,7 +121,10 @@ CREATE TABLE IF NOT EXISTS projects (
     update_date     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     hits            INT DEFAULT 0,
     closed          BOOLEAN DEFAULT FALSE,
-    message_count   INT DEFAULT 0
+    message_count   INT DEFAULT 0,
+
+    relevance       INT DEFAULT 0,
+    stats_id        INT
 );
 
 
@@ -122,7 +134,7 @@ CREATE TABLE IF NOT EXISTS projects (
 */
 CREATE TABLE IF NOT EXISTS categories (
     id              INTEGER IDENTITY PRIMARY KEY,
-    parent_id          INT REFERENCES categories ON DELETE CASCADE,
+    parent_id       INT REFERENCES categories ON DELETE CASCADE,
     category        VARCHAR(25) NOT NULL
 );
 
@@ -131,6 +143,16 @@ CREATE TABLE IF NOT EXISTS project_categories (
     category_id     INT NOT NULL,
 
     PRIMARY KEY (project_id, category_id)
+);
+
+CREATE TABLE IF NOT EXISTS project_stages (
+    id             INTEGER IDENTITY PRIMARY KEY,
+    comment        varchar(255),
+    completed      boolean,
+    completed_date TIMESTAMP WITH TIME ZONE,
+    name           varchar(255),
+    number         INT,
+    project_id     INT
 );
 
 
@@ -163,6 +185,7 @@ CREATE TABLE IF NOT EXISTS messages (
 
     i_to_e              BOOLEAN NOT NULL,
     seen                BOOLEAN NOT NULL,
+    seen_answer         BOOLEAN NOT NULL,
     expiry_date         TIMESTAMP WITH TIME ZONE
 );
 

@@ -112,8 +112,10 @@ public class ProjectRestController {
         List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getStartPage()).build(), "start")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getEndPage()).build(), "end")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getTotalPages()).build(), "last")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
