@@ -84,8 +84,11 @@
       <div class="col">
         <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingPortraitClick()"
            data-toggle="collapse" data-target="#singleProjectPictureEdit" aria-expanded="false" aria-controls="singleProjectPictureEdit">
-          <div class="notification-icon">
+          <div class="notification-icon" ng-show="!editingPortrait">
             <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+          </div>
+          <div class="notification-icon" ng-show="editingPortrait">
+            <img class="nav-icon" src="images/x-icon.png" alt="">
           </div>
         </a>
       </div>
@@ -110,9 +113,11 @@
       <div class="col">
         <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingSlideshowClick()" ng-if="!disableSlideshow"
            data-toggle="collapse" data-target="#slideshowProjectPictureEdit" aria-expanded="false" aria-controls="slideshowProjectPictureEdit">
-          <div class="notification-icon">
-<!--            TODO: Ver si hay que cambiar este icono cuando colapsa, porque significa que no quiero editarla-->
+          <div class="notification-icon" ng-show="!editingSlideshow">
             <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+          </div>
+          <div class="notification-icon" ng-show="editingSlideshow">
+            <img class="nav-icon" src="images/x-icon.png" alt="">
           </div>
         </a>
       </div>
