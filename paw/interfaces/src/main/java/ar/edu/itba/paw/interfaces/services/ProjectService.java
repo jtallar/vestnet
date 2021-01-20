@@ -125,8 +125,9 @@ public interface ProjectService {
      * @param id The unique project id.
      * @param image The image to set.
      * @return The optional modified project.
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> setPortraitImage(long ownerId, long id, byte [] image);
+    Optional<Project> setPortraitImage(long ownerId, long id, byte [] image) throws IllegalProjectAccessException;
 
 
     /**
@@ -143,8 +144,9 @@ public interface ProjectService {
      * @param id The unique project id.
      * @param images The images to insert.
      * @return The optional modified project.
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> setSlideshowImages(long ownerId, long id, List<byte []> images);
+    Optional<Project> setSlideshowImages(long ownerId, long id, List<byte []> images) throws IllegalProjectAccessException;
 
 
     /**

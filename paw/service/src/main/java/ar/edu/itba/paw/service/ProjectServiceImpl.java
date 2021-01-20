@@ -149,14 +149,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setPortraitImage(long ownerId, long id, byte[] image) {
+    public Optional<Project> setPortraitImage(long ownerId, long id, byte[] image) throws IllegalProjectAccessException {
         final Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
-        final Set<ProjectImage> images = optionalProject.get().getImages();
-        images.removeIf(ProjectImage::isMain);
-        images.add(new ProjectImage(new Project(id), image, true));
-        optionalProject.get().setImages(images);
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> {
+            final Set<ProjectImage> images = p.getImages();
+            images.removeIf(ProjectImage::isMain);
+            images.add(new ProjectImage(new Project(id), image, true));
+            p.setImages(images);
+        });
         return optionalProject;
     }
 
@@ -169,10 +173,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setSlideshowImages(long ownerId, long id, List<byte[]> images) {
-        /** Obtain the project and check ownership */
+    public Optional<Project> setSlideshowImages(long ownerId, long id, List<byte[]> images) throws IllegalProjectAccessException {
         final Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+
+        if (!optionalProject.isPresent()) return Optional.empty();
+
+        /** Not the owner of the found project */
+        if (optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
 
         final Set<ProjectImage> projectImages = optionalProject.get().getImages();
 

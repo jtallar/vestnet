@@ -27,7 +27,8 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
         // TODO make parent, and check for changes of status return
         if (thr instanceof UserDoesNotExistException || thr instanceof ProjectDoesNotExistException
-                || thr instanceof IllegalProjectAccessException || thr instanceof MessageDoesNotExistException)
+                || thr instanceof IllegalProjectAccessException || thr instanceof MessageDoesNotExistException
+                || thr instanceof ImageDoesNotExistException)
             return Response.status(Response.Status.NOT_FOUND).entity("").build();
 
         if (thr instanceof InvalidTokenException || thr instanceof InvalidMessageException)
