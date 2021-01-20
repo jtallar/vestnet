@@ -85,7 +85,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Optional<Message> getLastChatMessage(long projectId, long investorId, long sessionUserId) {
-        RequestBuilder request = new MessageRequestBuilder()
+        final RequestBuilder request = new MessageRequestBuilder()
                 .setProject(projectId)
                 .setInvestor(investorId)
                 .setOwner(sessionUserId, (sessionUserId != investorId))
@@ -96,7 +96,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> getProjectInvestors(long projectId, long ownerId, boolean accepted, int page, int pageSize) {
-        MessageRequestBuilder request = new MessageRequestBuilder()
+        final MessageRequestBuilder request = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setOrder(OrderField.DATE_DESCENDING);
@@ -109,7 +109,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> getInvestorProjects(long investorId, boolean accepted, int page, int pageSize) {
-        MessageRequestBuilder request = new MessageRequestBuilder()
+        final MessageRequestBuilder request = new MessageRequestBuilder()
                 .setInvestor(investorId)
                 .setOrder(OrderField.DATE_DESCENDING);
 
@@ -122,7 +122,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> getConversation(long projectId, long investorId, long sessionUserId, int page, int pageSize) {
-        RequestBuilder request = new MessageRequestBuilder()
+        final RequestBuilder request = new MessageRequestBuilder()
                 .setProject(projectId)
                 .setInvestor(investorId)
                 /** If session user is the investor then don't need to check project ownership */
@@ -137,10 +137,10 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     public Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted,
                                                  URI baseUri) throws InvalidMessageException {
-        Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
+        final Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
 
         if (!optionalMessage.isPresent()) return Optional.empty();
-        Message message = optionalMessage.get();
+        final Message message = optionalMessage.get();
 
         /** This cannot happen as the message if its on the database, then the owner, investor and project exist */
         final Project project = projectService.findById(projectId).orElseThrow(InvalidMessageException::new);
@@ -179,7 +179,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Optional<Message> updateMessageSeen(long projectId, long investorId, long sessionUserId, URI baseUri) {
-        Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
+        final Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
         optionalMessage.ifPresent(m -> {
 
             /** Is investor, last message is his. If accepted or rejected then set as seen answer */
@@ -204,26 +204,26 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public long getInvestedAmount(long sessionUserId, boolean investor) {
-        MessageRequestBuilder request = new MessageRequestBuilder()
+        final MessageRequestBuilder request = new MessageRequestBuilder()
                 .setAccepted();
 
         if (investor) request.setInvestor(sessionUserId);
         else request.setOwner(sessionUserId);
 
-        List<Message> messageList = messageDao.findAll(request);
+        final List<Message> messageList = messageDao.findAll(request);
         return messageList.stream().map(m -> m.getContent().getOffer()).reduce(0L, Long::sum);
     }
 
 
     @Override
     public long projectNotifications(long projectId, long ownerId) {
-        RequestBuilder request1 = new MessageRequestBuilder()
+        final RequestBuilder request1 = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setUnseen()
                 .setFromInvestor();
 
-        RequestBuilder request2 = new MessageRequestBuilder()
+        final RequestBuilder request2 = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setProject(projectId)
                 .setAnswered()
@@ -238,11 +238,11 @@ public class MessageServiceImpl implements MessageService {
     public long userNotifications(long sessionUserId, boolean isInvestor) {
 
         /** By default are messages from the first request are the one unseen */
-        MessageRequestBuilder request1 = new MessageRequestBuilder()
+        final MessageRequestBuilder request1 = new MessageRequestBuilder()
                 .setUnseen();
 
         /** By default are messages from the second request are the one with an answer and is unseen */
-        MessageRequestBuilder request2 = new MessageRequestBuilder()
+        final MessageRequestBuilder request2 = new MessageRequestBuilder()
                 .setAnswered()
                 .setUnseenAnswer();
 
@@ -279,20 +279,20 @@ public class MessageServiceImpl implements MessageService {
      * @throws InvalidMessageException If the message is not valid to be sent.
      */
     private void isPostOfferValid(long ownerId, long investorId, long projectId, boolean direction) throws InvalidMessageException {
-        RequestBuilder request = new MessageRequestBuilder()
+        final RequestBuilder request = new MessageRequestBuilder()
                 .setOwner(ownerId)
                 .setInvestor(investorId)
                 .setProject(projectId)
                 .setOrder(OrderField.DATE_DESCENDING);
 
-        Optional<Message> lastMessage = messageDao.findAll(request).stream().findFirst();
+        final Optional<Message> lastMessage = messageDao.findAll(request).stream().findFirst();
 
         /** Opening of a new negotiation, only the investors  */
         if (!lastMessage.isPresent())
             if (direction) return;
             else throw new InvalidMessageException("New negotiation cannot be opened by entrepreneur.");
 
-        Message message = lastMessage.get();
+        final Message message = lastMessage.get();
 
         /** Middle of negotiation */
 
@@ -320,5 +320,4 @@ public class MessageServiceImpl implements MessageService {
         message.setSeenAnswer();
         message.setAccepted(false);
     }
-
 }

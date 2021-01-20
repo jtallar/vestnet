@@ -39,7 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget) throws IllegalProjectAccessException {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
         /** Not the owner of the found project */
         if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
@@ -62,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize) {
-        RequestBuilder request = new ProjectRequestBuilder()
+        final RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(category)
                 .setFundingTargetRange(minFundingTarget, maxFundingTarget)
                 .setClosed(false)
@@ -76,7 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> setClosed(long ownerId, long id) throws IllegalProjectAccessException {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
         /** Not the owner of the found project */
         if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
@@ -89,7 +89,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> addCategories(long ownerId, long id, List<Category> categories) throws IllegalProjectAccessException {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
         /** Not the owner of the found project */
         if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
@@ -102,7 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> getStats(long id) {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
         optionalProject.ifPresent(p -> {
             if (p.getStats() == null) p.setStats(new ProjectStats(true));
         });
@@ -113,7 +113,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> addStats(long id, long seconds, long clicks, boolean investor, boolean contact) {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
         optionalProject.ifPresent(p -> {
             if (p.getStats() == null) p.setStats(new ProjectStats(true));
             p.getStats().setNewSeen(seconds, clicks, investor, contact);
@@ -126,14 +126,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> setStage(long ownerId, long id, String name, String comment) throws IllegalProjectAccessException {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
         /** Not the owner of the found project */
         if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();;
 
         /** Adds the new stage if there are less than 5 */
         optionalProject.ifPresent(p -> {
-            Set<ProjectStages> stages = p.getStages();
+            final Set<ProjectStages> stages = p.getStages();
             if (stages.size() < Project.MAX_STAGES)
                 stages.add(new ProjectStages(name, stages.size() + 1, comment, p));
         });
@@ -150,10 +150,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> setPortraitImage(long ownerId, long id, byte[] image) {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
-        Set<ProjectImage> images = optionalProject.get().getImages();
+        final Set<ProjectImage> images = optionalProject.get().getImages();
         images.removeIf(ProjectImage::isMain);
         images.add(new ProjectImage(new Project(id), image, true));
         optionalProject.get().setImages(images);
@@ -171,10 +171,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public Optional<Project> setSlideshowImages(long ownerId, long id, List<byte[]> images) {
         /** Obtain the project and check ownership */
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
         if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
 
-        Set<ProjectImage> projectImages = optionalProject.get().getImages();
+        final Set<ProjectImage> projectImages = optionalProject.get().getImages();
 
         /** Checks if there is a Portrait, main image. If not, returns optional empty */
         if (projectImages.stream().noneMatch(ProjectImage::isMain)) return Optional.empty();

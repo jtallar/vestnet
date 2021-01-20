@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException {
 
         dataUser.setPassword(encoder.encode(dataUser.getPassword()));
-        User newUser = userDao.create(dataUser);
+        final User newUser = userDao.create(dataUser);
         try {
             emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
         } catch (MessagingException ignored) {}
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<User> update(long id, User dataUser) {
-        Optional<User> optionalUser = findById(id);
+        final Optional<User> optionalUser = findById(id);
         optionalUser.ifPresent(u -> {
             u.setFirstName(dataUser.getFirstName());
             u.setLastName(dataUser.getLastName());
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<User> addFavorites(long userId, long projectId, boolean add) {
-        Optional<User> optionalUser = userDao.findById(userId);
+        final Optional<User> optionalUser = userDao.findById(userId);
         optionalUser.ifPresent(u -> {
             if (add) u.getFavoriteProjects().add(new Project(projectId));
             else u.getFavoriteProjects().remove(new Project(projectId));
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Project> getOwnedProjects(long id, boolean closed) {
-        RequestBuilder request = new ProjectRequestBuilder()
+        final RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(id)
                 .setClosed(closed)
                 .setOrder(OrderField.PROJECT_DEFAULT);
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<User> requestPassword(String mail, URI baseUri) {
-        Optional<User> optionalUser = userDao.findByUsername(mail);
+        final Optional<User> optionalUser = userDao.findByUsername(mail);
         optionalUser.ifPresent(u -> {
             try {
                 emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri);
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<User> setImage(long id, byte[] image) {
-        Optional<User> optionalUser = userDao.findById(id);
+        final Optional<User> optionalUser = userDao.findById(id);
         optionalUser.ifPresent(u -> {
             UserImage userImage = null;
             Optional<UserImage> optionalImage;
@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Optional<User> setLocale(String username, String locale) {
-        Optional<User> optionalUser = userDao.findByUsername(username);
+        final Optional<User> optionalUser = userDao.findByUsername(username);
         optionalUser.ifPresent(u -> {
             if (!locale.equals(u.getLocale()))
                 u.setLocale(locale);
@@ -196,11 +196,11 @@ public class UserServiceImpl implements UserService {
     private void updateWithToken(String token, String password, boolean isPassword, URI baseUri) throws InvalidTokenException {
         if (token == null || token.isEmpty()) throw new InvalidTokenException("Empty token string");
 
-        Optional<Token> optionalToken = tokenDao.findByToken(token);
+        final Optional<Token> optionalToken = tokenDao.findByToken(token);
         if (!optionalToken.isPresent()) throw new InvalidTokenException("Token not found");
 
-        Token realToken = optionalToken.get();
-        User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
+        final Token realToken = optionalToken.get();
+        final User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
 
         /** Resend in case of an invalid token for verification */
         if (!realToken.isValid()) {
