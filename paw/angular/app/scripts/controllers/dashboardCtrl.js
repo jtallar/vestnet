@@ -4,6 +4,7 @@
 define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
   paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope, $rootScope) {
 
+    $scope.loadingProjects = true; $scope.loadingFunded = true;
 
     $scope.id = AuthenticationService.getUserId()
     $scope.messages = []
@@ -12,6 +13,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     var map = {};
     userService.getUserProjects($scope.id, false).then(function (response) {
       $scope.projects = response.data;
+      $scope.loadingProjects = false;
       for(var i = 0; i < $scope.projects.length; i++) {
         map[$scope.projects[i].id] = i;
         $scope.projects[i].msgPage = 1;
@@ -34,6 +36,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     userService.getUserProjects($scope.id, true).then(function (response) {
       $scope.fundedProjects = response.data;
+      $scope.loadingFunded = false;
       var map = {};
       for(var i = 0; i < $scope.fundedProjects.length; i++) {
         map[$scope.fundedProjects[i].id] = i;
@@ -232,15 +235,20 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       })
     }
 
-      $scope.getList = function () {
-        if($scope.funded === true) return $scope.fundedProjects;
-        else return $scope.projects;
-      }
+    $scope.getList = function () {
+      if($scope.funded === true) return $scope.fundedProjects;
+      else return $scope.projects;
+    };
 
-      $scope.goToChat = function (message) {
-        if (!message.seen) $rootScope.$emit('messageRead');
-        PathService.get().setFullUrl(message.chatUrl).go();
-      }
+    $scope.isLoading = function () {
+      if($scope.funded === true) return $scope.loadingFunded;
+      else return $scope.loadingProjects;
+    };
+
+    $scope.goToChat = function (message) {
+      if (!message.seen) $rootScope.$emit('messageRead');
+      PathService.get().setFullUrl(message.chatUrl).go();
+    }
 
     }]);
 });

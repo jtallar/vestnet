@@ -10,68 +10,72 @@
 <!--           data-on="{{'showAccProj' | translate}}" data-off="{{'showCurrProj' | translate}}"-->
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
-
+<!-- TODO: Center toggleswitch -->
   <toggleswitch name="funded" ng-model="funded" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
-  <div class="dashboard">
-  <div class="card-group" ng-repeat="project in getList()">
-    <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
-    <div class="container py-3">
-      <div class="card msg">
+  <div class="text-center" ng-if="isLoading()">
+    <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
+  </div>
 
-        <div class="row">
-          <div class="col-1">
-            <div ng-if="project.portraitExists">
-              <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
-            </div>
-            <div ng-if="!project.portraitExists">
-              <img ng-src="images/projectNoImage.png" class="p-img"/>
-            </div>
-          </div>
-          <div class="col-md-11">
-            <div class="card-block">
-              <div class="row">
-                <div class="col-8">
-                  <a ng-href="#/projects/{{project.id}}" class="btn-link2"><h4 class="">{{project.name}}</h4></a>
-                </div>
-                <div class="col-1">
-                  <a ng-href="#{{project.editUrl}}" class="btn btn-inv btn-project pull-right">
-                    <div class="notification-icon">
-                      <img class="nav-icon" src="images/edit-icon-b.png" alt="">
-                    </div>
-                  </a>
-                </div>
-                <div class="col-1">
-                  <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
-                     data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
-                    <div class="notification-icon">
-                        <img class="nav-icon" src="images/chat-icon-b.png" alt="">
-                        <span ng-if="project.msgCount != 0" class="badge bg-danger">{{project.msgCount}}</span>
-                    </div>
-                  </a>
-                </div>
-                <div class="col-1">
-                  <a ng-click="fetchOffers(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
-                     data-target="#fundcollapse{{project.id}}" aria-expanded="false" aria-controls="fundcollapse{{project.id}}">
-                    <div class="notification-icon">
-                      <img class="nav-icon" src="images/pig-icon-b.png" alt="">
-                    </div>
-                  </a>
-                </div>
-                <div class="col-1">
-                  <a ng-click="fetchStats(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
-                     data-target="#statscollapse{{project.id}}" aria-expanded="false" aria-controls="statscollapse{{project.id}}">
-                    <div class="notification-icon">
-                      <img class="nav-icon" src="images/stats-icon-b.png" alt="">
-                    </div>
-                  </a>
-                </div>
+  <div class="dashboard">
+    <div class="card-group" ng-repeat="project in getList()">
+      <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
+      <div class="container py-3">
+        <div class="card msg">
+
+          <div class="row">
+            <div class="col-1">
+              <div ng-if="project.portraitExists">
+                <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
               </div>
+              <div ng-if="!project.portraitExists">
+                <img ng-src="images/projectNoImage.png" class="p-img"/>
+              </div>
+            </div>
+            <div class="col-md-11">
+              <div class="card-block">
+                <div class="row">
+                  <div class="col-8">
+                    <a ng-href="#/projects/{{project.id}}" class="btn-link2"><h4 class="">{{project.name}}</h4></a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-href="#{{project.editUrl}}" class="btn btn-inv btn-project pull-right">
+                      <div class="notification-icon">
+                        <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
+                       data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
+                      <div class="notification-icon">
+                          <img class="nav-icon" src="images/chat-icon-b.png" alt="">
+                          <span ng-if="project.msgCount != 0" class="badge bg-danger">{{project.msgCount}}</span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-click="fetchOffers(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                       data-target="#fundcollapse{{project.id}}" aria-expanded="false" aria-controls="fundcollapse{{project.id}}">
+                      <div class="notification-icon">
+                        <img class="nav-icon" src="images/pig-icon-b.png" alt="">
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-click="fetchStats(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                       data-target="#statscollapse{{project.id}}" aria-expanded="false" aria-controls="statscollapse{{project.id}}">
+                      <div class="notification-icon">
+                        <img class="nav-icon" src="images/stats-icon-b.png" alt="">
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
       <div class="center-collapse collapse" id="chatcollapse{{project.id}}">
         <div ng-if="messages[$index].length > 0">
@@ -201,12 +205,10 @@
             </div>
           </div>
         </div>
-
-
       </div>
 
     </div>
-    </div>
+  </div>
 
     <div ng-if="projects.empty()" class="card no-proj-mine">
       <div class="card-header text-center">
