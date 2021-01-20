@@ -13,7 +13,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
 
       var maxImageSize = 2097152, maxSlideshowCount = 5;
       var selectedCategories = [];
-      var portraitImage = undefined, slideshowImages = undefined;
+      var portraitImage = undefined, slideshowImages = undefined, existingPortrait = false;
       var _this = this;
 
       $scope.loading = false; $scope.loadingInfo = true;
@@ -21,6 +21,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       $scope.slideshowCountError = false; $scope.categoryCountError = false;
       $scope.serverFormErrors = false; $scope.disableSlideshow = true;
       $scope.readingSingleFilesCount = 0; $scope.readingMultiFilesCount = 0;
+      $scope.editingPortrait = false; $scope.editingSlideshow = false;
 
       projectService.getCategories().then(function (cats) {
         $scope.categories = cats.data;
@@ -34,6 +35,9 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           return;
         }
         // Fill up the rest of the form.
+        existingPortrait = $scope.project.portraitExists;
+        $scope.disableSlideshow = !existingPortrait;
+
         sampleService.get($scope.project.categories).then(function (categories) {
           var ids = categories.data.reduce(function (map, obj) {
             map[obj.id] = true;
@@ -47,7 +51,6 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
               sel.appendChild(cat.options[i]);
             }
           }
-          // TODO: Set starting portrait image + slideshow
           $scope.loadingInfo = false;
         }, function (errorResponse) {
           console.error(errorResponse);
@@ -65,7 +68,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           portraitImage = undefined;
           slideshowImages = undefined;
           $scope.$apply(function () {
-            $scope.disableSlideshow = true;
+            $scope.disableSlideshow = !existingPortrait;
             $scope.readingSingleFilesCount = 0;
           });
           return;
@@ -76,7 +79,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           slideshowImages = undefined;
           $scope.$apply(function () {
             $scope.imageSizeError = true;
-            $scope.disableSlideshow = true;
+            $scope.disableSlideshow = !existingPortrait;
             $scope.readingSingleFilesCount = 0;
           });
         } else {
@@ -93,6 +96,15 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
             $scope.disableSlideshow = false;
             $scope.readingSingleFilesCount++;
           });
+        }
+      };
+
+      $scope.editingPortraitClick = function () {
+        var sel = document.getElementById('customFileProjectPic');
+        $scope.editingPortrait = !$scope.editingPortrait;
+        if (!$scope.editingPortrait) {
+          portraitImage = undefined;
+          sel.value = "";
         }
       };
 
@@ -150,6 +162,15 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         }
       };
 
+      $scope.editingSlideshowClick = function () {
+        var sel = document.getElementById('customMultipleFileProjectPic');
+        $scope.editingSlideshow = !$scope.editingSlideshow;
+        if (!$scope.editingSlideshow) {
+          slideshowImages = undefined;
+          sel.value = "";
+        }
+      };
+
       this.objectFromOption = function (option) {
         return {
           id: parseInt(option.value)
@@ -178,14 +199,12 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       };
 
       this.finishCreation = function(projectId, params) {
-        // TODO: Ver si no conviene que vaya a dashboard, capaz con un #id
         PathService.get().singleProject(projectId).go(params);
       };
 
       this.sendSlideshow = function (projectId) {
         if (!!(slideshowImages)) {
           imageService.setProjectSlideshow(projectId, slideshowImages).then(function (imageResponse) {
-            console.log('Inserted slideshow to project');
             _this.finishCreation(projectId);
           }, function (imageErrorResponse) {
             console.error(imageErrorResponse);
@@ -199,14 +218,13 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       this.sendPortrait = function (projectId) {
         if (!!(portraitImage)) {
           imageService.setProjectImage(projectId, portraitImage).then(function (imageResponse) {
-            console.log('Inserted image to project');
             _this.sendSlideshow(projectId);
           }, function (imageErrorResponse) {
             console.error(imageErrorResponse);
             _this.finishCreation(projectId, {imageError: true});
           });
         } else {
-          this.finishCreation(projectId);
+          this.sendSlideshow(projectId);
         }
       };
 
@@ -219,12 +237,8 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         }
         project.categories = selectedCategories;
         $scope.serverFormErrors = false;
-        console.log(project);
         projectService.update(project).then(function (response) {
-          var location = response.headers().location;
-          _this.finishCreation(project.id);
-          // TODO: Update portrait/slideshow if modified
-          // _this.sendPortrait(location.substring(location.lastIndexOf('/') + 1));
+          _this.sendPortrait(project.id.toString());
         }, function (errorResponse) {
           if (errorResponse.status === 400) {
             $scope.serverFormErrors = true;

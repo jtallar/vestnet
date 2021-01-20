@@ -34,7 +34,7 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
 
       projectService.update = function (project) {
-        return root.one(project.id).customPUT(project);
+        return root.one(project.id.toString()).customPUT(project);
       };
 
 

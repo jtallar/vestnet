@@ -77,29 +77,60 @@
       </div>
     </div>
 
-    <h5 class="project-image-header">{{'projectImage' | translate}}</h5>
-    <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
-    <div class="row">
-      <input type="file" class="file-in form-control" custom-on-change="fileboxChange" id="customFileProjectPic" accept="image/*"/>
-      <div ng-if="readingSingleFilesCount !== 0" class="spinner-border text-primary" role="status" style="margin-left: 10px">
-        <span class="sr-only">Loading...</span>
+    <div class="row row-cols-5">
+      <div class="col">
+        <h5 class="project-image-header">{{'projectImage' | translate}}</h5>
+      </div>
+      <div class="col">
+        <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingPortraitClick()"
+           data-toggle="collapse" data-target="#singleProjectPictureEdit" aria-expanded="false" aria-controls="singleProjectPictureEdit">
+          <div class="notification-icon">
+            <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+          </div>
+        </a>
       </div>
     </div>
-    <!-- <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/> -->
-    <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
 
-    <h5 class="project-image-header">{{'projectSlideshow' | translate}}</h5>
-    <p class="form-requirement">{{'picturesRequirement' | translate}}</p>
-    <div class="row">
-      <input type="file" class="file-in form-control" custom-on-change="multipleFileBoxChange" id="customMultipleFileProjectPic" multiple  accept="image/*"
-             ng-disabled="disableSlideshow"/>
-      <div ng-if="readingMultiFilesCount !== 0" class="spinner-border text-dark" role="status" style="margin-left: 10px">
-        <span class="sr-only">Loading...</span>
+    <div class="center-collapse collapse" id="singleProjectPictureEdit">
+      <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
+      <div class="row">
+        <input type="file" class="file-in form-control" custom-on-change="fileboxChange" id="customFileProjectPic" accept="image/*"/>
+        <div ng-if="readingSingleFilesCount !== 0" class="spinner-border text-primary" role="status" style="margin-left: 10px">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <!-- <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/> -->
+      <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
+    </div>
+
+    <div class="row row-cols-5">
+      <div class="col">
+        <h5 class="project-image-header">{{'projectSlideshow' | translate}}</h5>
+      </div>
+      <div class="col">
+        <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingSlideshowClick()" ng-if="!disableSlideshow"
+           data-toggle="collapse" data-target="#slideshowProjectPictureEdit" aria-expanded="false" aria-controls="slideshowProjectPictureEdit">
+          <div class="notification-icon">
+<!--            TODO: Ver si hay que cambiar este icono cuando colapsa, porque significa que no quiero editarla-->
+            <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+          </div>
+        </a>
       </div>
     </div>
-    <!-- <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/> -->
-    <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate}}</label>
-    <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate}}</label>
+
+    <div class="center-collapse collapse" id="slideshowProjectPictureEdit">
+      <p class="form-requirement">{{'picturesRequirement' | translate}}</p>
+      <div class="row">
+        <input type="file" class="file-in form-control" custom-on-change="multipleFileBoxChange" id="customMultipleFileProjectPic" multiple  accept="image/*"
+               ng-disabled="disableSlideshow"/>
+        <div ng-if="readingMultiFilesCount !== 0" class="spinner-border text-dark" role="status" style="margin-left: 10px">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <!-- <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/> -->
+      <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate}}</label>
+      <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate}}</label>
+    </div>
 
     <div style="margin-top: 10px">
       <label class="big-error" ng-if="serverFormErrors" id="serverFromError" >{{'serverFormErrors' | translate}}</label>
