@@ -56,7 +56,7 @@
           <div class="col-md" ng-class="{'has-error': filterForm.search.$touched && filterForm.search.$invalid}">
 <!--            {{ 'search' | translate }}-->
             <input name="search" id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search"
-                   ng-model="searchField" ng-maxlength="50"/>
+                   ng-model="searchField" ng-maxlength="50" ng-keyup="$event.keyCode == 13 && !filterForm.$invalid && applyFilter()"/>
 
             <!-- <form:errors path="keyword" element="p" cssClass="formError"/> -->
           </div>
@@ -120,7 +120,8 @@
             <input class="btn btn-clear pull-left" type="button" value="{{'clear' | translate}}" ng-click="clearFilter()"/>
           </div>
           <div class="col-6 apply-btn">
-            <input type="submit" class="btn btn-dark pull-right" value="{{'apply' | translate}}" ng-click="applyFilter()"/>
+            <input type="submit" class="btn btn-dark pull-right" value="{{'apply' | translate}}"
+                   ng-click="applyFilter()" ng-disabled="filterForm.$invalid"/>
           </div>
         </div>
       </div>
