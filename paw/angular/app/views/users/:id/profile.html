@@ -27,11 +27,11 @@
           <input hidden type="file" class="custom-file-input" id="customFileProfilePic"/>
         </div>
 
-        <div ng-if="true" class="text-center my-2">
-          <button href="#" class="btn btn-linkedin">
+        <div ng-if="user.linkedin" class="text-center my-2">
+          <a href="{{user.linkedin}}" class="btn btn-linkedin">
             <i class="fa fa-linkedin pull-left"></i>
             <label>{{'linkedinProfile' | translate}}</label>
-          </button>
+          </a>
         </div>
       </div>
 
@@ -46,7 +46,7 @@
 
   <!--          <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
   <!--            <c:if test="${session_user_id eq user.id}">-->
-          <div ng-if="id == loggedId">
+          <div ng-if="id === loggedId">
                 <li ng-if="true" class="nav-item">
                   <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
                      aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
@@ -96,7 +96,7 @@
                 <label>{{'birthday' | translate}}</label>
               </div>
               <div class="col-md-6">
-                <p>{{user.birthday}}</p>
+                <p>{{user.birthDate}}</p>
               </div>
             </div>
             <div class="row">

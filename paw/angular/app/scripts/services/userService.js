@@ -37,6 +37,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('favorites').get()
     };
 
+    userService.getProfileFavorites  = function () {
+      return root.one('favorites').one('profile').get()
+    };
 
 
     userService.putFavorite = function (id, add) {
