@@ -291,7 +291,8 @@ define([], function() {
     pageTitleWelcome: 'Welcome to VestNet',
     pageTitleResetPassword: 'Reset Password | VestNet',
     pageTitleSignUp: 'Sign Up | VestNet',
-    pageTitleProfile: '{{f}} {{l}} | VestNet',
+    pageTitleProfile: 'My Profile | VestNet',
+    pageTitleUserInfo: '{{f}} {{l}} | VestNet',
     pageTitleVerify: 'Verify Account | VestNet',
     pageTitleSingeProject: '{{p}} | VestNet'
   };
