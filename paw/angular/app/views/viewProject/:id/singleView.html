@@ -23,10 +23,10 @@
 
           <div class="carousel-inner">
             <div id="carousel-items">
-              <div class="carousel-item active" ng-if="!project.imageExists">
+              <div class="carousel-item active" ng-if="!project.portraitExists">
                 <img ng-src="/images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
-              <div class="carousel-item active" ng-if="project.imageExists">
+              <div class="carousel-item active" ng-if="project.portraitExists">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
               <div  class="carousel-item" ng-if="project.slideshowExists" ng-repeat="image in project.slideshow">
@@ -72,17 +72,17 @@
             <!-- Project card -->
             <div class="card-body single-card">
               <h5 class="card-title"><b>{{project.name}}</b></h5>
-              <div ng-if="userId == project.owner.id" class="blockquote-footer">{{'you' | translate}}</div>
-              <div ng-if="userId != project.owner.id" class="blockquote-footer">by <a ng-href="#/users/{{project.owner.id}}">{{project.owner.firstName}} {{project.owner.lastName}}</a></div>
+              <div ng-if="project.getByOwner" class="blockquote-footer">{{'you' | translate}}</div>
+              <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#/users/{{project.owner.id}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
 
               <p class="card-text">{{project.summary}}</p>
 
               <h5 class="card-title"><b>{{'categories' | translate}}</b></h5>
-                <li ng-repeat="category in project.categories">{{category | translate}}</li>
+                <li ng-repeat="category in project.categorieNames">{{category | translate}}</li>
               <br/>
 
               <h5 class="card-title"><b>{{'contactMail' | translate}}</b></h5>
-              <p>{{project.owner.mail}}</p>
+              <p>{{project.owner.email}}</p>
 
               <h5 class="card-title"><b>{{'funding' | translate}}</b></h5>
               <div class="text-center ">

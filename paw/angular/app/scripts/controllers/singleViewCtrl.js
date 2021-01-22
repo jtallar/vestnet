@@ -40,8 +40,6 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     }
     $scope.id = param;
     $scope.sent = false;    // if the mail was sent retreive from url
-    $scope.owner = true;
-    $scope.userId = 2;
 
     $scope.backAction = function() {
         history.back();
@@ -68,50 +66,18 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     $scope.project = {};
 
     projectService.getById($scope.id.toString()).then(function (project) {
-      // console.log(project.data.projectStages);
-      $scope.project = {      // project infromation from db
-        'name': project.data.name,
-        'cost': project.data.cost,
-        'summary': project.data.summary,
-        'id': project.data.id,
-        'ownerURL': project.data.owner,
-        'owner': {
-          'firstName':'Claudio',
-          'lastName':'Caniggia',
-          'mail':'claudiopaul@gmail.com',
-          'id': 2
-        },
-        'updateDate': project.data.updateDate,
-        'catsURL': project.data.categories,
-        'imageExists': project.data.portraitExists,
-        'slideshowExists': project.data.slideshowExists,
-        'slideshow': [],
-        'fundingCurrent': project.data.fundingCurrent,
-        'fundingTarget': project.data.fundingTarget,
-        'stagesURL': project.data.projectStages,
-        'getByOwner': project.data.getByOwner,
-        'chatUrl': PathService.get().chat(project.data.id).path,
+      $scope.project = project.data;
+      $scope.project.slideshow = [];
+      $scope.project.categorieNames = [];
+      $scope.project.chatUrl = PathService.get().chat(project.data.id).path;
 
-        /** TODO: PARA PROBAR **/
-        'stages': [
-          {'number': 1, 'name': 'Stage 1', 'comment': '',
-            'completed': false, 'completedDate': '02/05/2021'},
-          {'number': 2, 'name': 'Stage 2', 'comment': '',
-            'completed': false, 'completedDate': '02/05/2021'},
-          {'number': 3, 'name': 'Stage 3', 'comment': '',
-            'completed': false, 'completedDate': '02/05/2021'},
-          {'number': 4, 'name': 'Stage 4', 'comment': '',
-            'completed': false, 'completedDate': ''},
-          {'number': 5, 'name': 'Stage 5', 'comment': '',
-            'completed': false, 'completedDate': ''}
-        ]
-      };
-
-
-      // sampleService.get($scope.project.stagesURL).then(function (response) {       // private URI stages;   -> en ProjectDto
+      // sampleService.get($scope.project.projectStages).then(function (response) {       // private URI stages;   -> en ProjectDto
       projectService.getStages($scope.project.id).then(function (response) {       // private URI stages;   -> en ProjectDto
+        if (response.data.length === 0) {
+          $scope.projectstage = 0;
+          return;
+        }
         var i = 0;
-        console.log(response.data)
         response.data.forEach(function (data){
           if(data !== undefined){
             $scope.project.stages[i].number = data.number;
@@ -119,62 +85,60 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
             $scope.project.stages[i].name = data.name;
             $scope.project.stages[i].completed = data.completed;
             $scope.project.stages[i].completedDate = $scope.getDate(data.completedDate)[0];
-            console.log(i, $scope.project.stages[i])
-            console.log($scope.getDate(data.completedDate))
+            console.log(i, $scope.project.stages[i]);
+            console.log($scope.getDate(data.completedDate));
             i++;
           }
-        })
+        });
         $scope.projectstage = $scope.getMaxStage($scope.project.stages);
-        }, function (errorResponse) {
-          if (errorResponse.status === 404) {
-            $scope.addStatError = true;
-            return;
-          }
-          console.error(errorResponse);
-        }
-      );
-
-      sampleService.get($scope.project.ownerURL).then(function (owner) {
-        $scope.project.owner.firstName = owner.data.firstName;
-        $scope.project.owner.lastName = owner.data.lastName;
-        $scope.project.owner.mail = owner.data.email;
-        $scope.project.owner.id = owner.data.id;
+      }, function (errorResponse) {
+        // 404 should not happen
+        console.error(errorResponse);
       });
-      sampleService.get($scope.project.catsURL).then(function (categories) {
+
+      sampleService.get($scope.project.owner).then(function (owner) {
+        $scope.project.owner = owner.data;
+      }, function (errorResponse) {
+        // 404 should not happen
+        console.error(errorResponse);
+      });
+
+      sampleService.get($scope.project.categories).then(function (categories) {
         var cats = [];
         for (var i = 0; i < categories.data.length; i++){
           cats.push(categories.data[i].name);
         }
-        $scope.project.categories = cats;
+        $scope.project.categorieNames = cats;
+      }, function (errorResponse) {
+        // 404 should not happen
+        console.error(errorResponse);
       });
-      if($scope.project.imageExists === true) {
+
+      if($scope.project.portraitExists) {
         sampleService.get(project.data.portraitImage).then(function (image) {
           $scope.project.image = image.data.image;
         },function (error) {
           console.log(error);
         });
       }
-      if($scope.project.slideshowExists === true) {
+      if($scope.project.slideshowExists) {
         sampleService.get(project.data.slideshowImages).then(function (response) {
           $scope.project.slideshow = [];
           for (var i = 0; i < response.data.length; i++){
             $scope.project.slideshow.push(response.data[i].image);
           }
+        },function (error) {
+          console.log(error);
         });
       }
+    }, function (errorResponse) {
+      if (errorResponse.status === 404) {
+        $scope.addStatError = true;
+        PathService.get().error().go();
+        return;
+      }
+      console.error(errorResponse);
     });
-
-    /* $scope.project = {      // project infromation from db
-      'name': 'Vestnet',
-      'cost': 18000,
-      'image': 'images/filter.png',
-      'summary': 'Es una página que tiene como objetivo aumentar la cantidad de inversiones en el país y en to el mundo',
-      'id': 1,
-      'owner': {'firstName': 'Grupo', 'lastName': '5', 'mail': 'fchoi@itba.edu.ar', 'id': 1},
-      'categories': ['Technology', 'Research'],
-      'updateDate': '15/02/2019'
-    };*/
-
 
     $scope.new = {'name':'', 'comment':''};
     $scope.addStage = function (name, comment, defaultname) {
