@@ -32,6 +32,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       this.setUser = function (user) {
         $scope.user = user;
+        $scope.user.userUrl = PathService.get().user(user.id).path;
         if ($scope.user.imageExists) {
           sampleService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
@@ -43,6 +44,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       projectService.getById(projectId.toString()).then(function (response) {
         $scope.project = response.data;
+        $scope.project.projectUrl = PathService.get().singleProject(projectId).path;
         $scope.project.percentage = $scope.project.fundingCurrent * 100 / $scope.project.fundingTarget;
         if ($scope.project.portraitExists) {
           sampleService.get($scope.project.portraitImage).then(function (image) {
