@@ -126,7 +126,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").permitAll()
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()

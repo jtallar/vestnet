@@ -4,9 +4,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
   function(paw2020a) {
     paw2020a.controller('signUpCtrl', ['userService', 'locationService','imageService', 'PathService', '$scope',
       function(userService, locationService, imageService, PathService, $scope) {
-        var maxImageSize = 2097152;
         var emptyElement = {name: "-", id: 0};
-        var profileImage = undefined;
 
         $scope.imageSizeError = false; $scope.serverFormErrors = false;
         $scope.userExistsError = false;
@@ -80,28 +78,6 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
           }
           else if (input === "month"){
             $scope.daySelected = $scope.daysArray[0];
-          }
-        };
-
-        // TODO: Esto no se usa, moverlo al profile para poder updatear la imagen. Todo usuario arranca sin
-        $scope.fileboxChange = function (event) {
-          if (!(event.target.files.length === 0) && event.target.files[0].size >= maxImageSize) {
-            event.target.files = null;
-            profileImage = undefined;
-            $scope.$apply(function () {
-              $scope.imageSizeError = true;
-              $scope.fileLabel = undefined;
-            });
-          } else {
-            var r = new FileReader();
-            r.onloadend = function (ev) {
-              profileImage = ev.target.result;
-            };
-            r.readAsArrayBuffer(event.target.files[0]);
-            $scope.$apply(function () {
-              $scope.imageSizeError = false;
-              $scope.fileLabel = event.target.files[0].name;
-            });
           }
         };
 

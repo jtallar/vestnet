@@ -25,6 +25,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one(id).get()
     };
 
+    userService.getLoggedUser = function () {
+      return root.get();
+    };
 
     userService.getUserProjects = function(id, fund){
 

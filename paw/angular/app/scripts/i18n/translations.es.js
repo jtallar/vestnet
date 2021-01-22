@@ -274,6 +274,7 @@ define([], function() {
     contactClicks: 'Contactados',
     investorsSeen: 'Inversores que visitaron ',
     lastSeen: 'Última vez visto',
+    spinnerLoading: 'Cargando...',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',

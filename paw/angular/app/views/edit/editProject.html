@@ -99,7 +99,7 @@
       <div class="row">
         <input type="file" class="file-in form-control" custom-on-change="fileboxChange" id="customFileProjectPic" accept="image/*"/>
         <div ng-if="readingSingleFilesCount !== 0" class="spinner-border text-primary" role="status" style="margin-left: 10px">
-          <span class="sr-only">Loading...</span>
+          <span class="sr-only">{{'spinnerLoading' | translate}}</span>
         </div>
       </div>
       <!-- <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/> -->
@@ -129,7 +129,7 @@
         <input type="file" class="file-in form-control" custom-on-change="multipleFileBoxChange" id="customMultipleFileProjectPic" multiple  accept="image/*"
                ng-disabled="disableSlideshow"/>
         <div ng-if="readingMultiFilesCount !== 0" class="spinner-border text-dark" role="status" style="margin-left: 10px">
-          <span class="sr-only">Loading...</span>
+          <span class="sr-only">{{'spinnerLoading' | translate}}</span>
         </div>
       </div>
       <!-- <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/> -->

@@ -42,7 +42,7 @@
                 {{'h' + x | translate }}
                 <span ng-if="notifications !== 0 && x==='dashboard'" class="badge bg-danger" style="height: 10px; color: white">{{notifications}}</span>
               </a>
-              <a ng-if="x=='users'" class="dropdown-item" ng-href="/#/{{x}}/{{userid}}">
+              <a ng-if="x=='users'" class="dropdown-item" ng-href="/#/{{x}}">
                 {{'hprofile' | translate }}
               </a>
 
@@ -52,7 +52,7 @@
                 {{'h' + x | translate }}
                 <span ng-if="notifications !== 0 && x==='messages'" class="badge bg-danger" style="height: 10px; color: white">{{notifications}}</span>
               </a>
-              <a ng-if="x=='users'" class="dropdown-item" ng-href="/#/{{x}}/{{userid}}">
+              <a ng-if="x=='users'" class="dropdown-item" ng-href="/#/{{x}}">
                 {{'hprofile' | translate }}
               </a>
             </div>
