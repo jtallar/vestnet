@@ -1,54 +1,90 @@
-    'use strict';
+'use strict';
 
-    define(['paw2020a', 'services/userService', 'services/sampleService','services/AuthenticationService','services/projectService'], function(paw2020a) {
-    paw2020a.controller('profileCtrl',['userService','sampleService','AuthenticationService','projectService','$scope','$routeParams', function(userService,sampleService,AuthenticationService,projectService, $scope, $routeParams) {
+define(['paw2020a', 'services/userService', 'services/sampleService', 'services/messageService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
+  paw2020a.controller('userInfoCtrl',['userService','sampleService','messageService','PathService','$scope','$routeParams', function(userService,sampleService,messageService,PathService, $scope, $routeParams) {
 
-      $scope.id = parseInt($routeParams.id);
-      if (isNaN($scope.id) || $scope.id <= 0) {
-        PathService.get().error().go();
-        return;
-      }
+    var _this = this;
 
-      $scope.loggedId = AuthenticationService.getUserId();
-      console.log($scope.id, $scope.loggedId);
+    $scope.page = 1; $scope.lastPage = 1;
+    $scope.isInvestor = undefined;
 
-      userService.getUser($scope.id.toString()).then(function (userApi) {
-        $scope.user = userApi.data;
-        console.log($scope.user);
+    $scope.id = parseInt($routeParams.id);
+    if (isNaN($scope.id) || $scope.id <= 0) {
+      PathService.get().error().go();
+      return;
+    }
 
-        sampleService.get($scope.user.location).then(function (response) {
-          $scope.user.country = response.data.country;
-          $scope.user.city = response.data.city;
-          $scope.user.state = response.data.state;
-        });
+    $scope.loadingSecondTab = true;
+    $scope.secondTab = [];
 
-        if ($scope.user.imageExists) {
-          sampleService.get(userApi.data.image).then(function (response) {
-            $scope.user.image = response.data.image;
-          });
+    userService.getUser($scope.id.toString()).then(function (userApi) {
+      $scope.user = userApi.data;
+      sampleService.get($scope.user.location).then(function (response) {
+        $scope.user.country = response.data.country;
+        $scope.user.city = response.data.city;
+        $scope.user.state = response.data.state;
+      }, function (errorResponse) {
+        if (errorResponse.status === 404) {
+          PathService.get().error().go();
+          return;
         }
-        // sampleService.get($scope.user.favorites).then(function (response) {
-        //   console.log(response)
-        // })
-
+        console.error(errorResponse);
       });
 
-      if($scope.loggedId === $scope.id) {
-        $scope.favs = [];
-        userService.getProfileFavorites().then(function (response) {
-          console.log(response.data);
-          for (var i = 0; i < response.data.length; i++) {
-            projectService.getById(response.data[i].projectId.toString()).then(function (response) {
-              $scope.favs.push(response.data);
-            });
-          }
-        })
+      if ($scope.user.imageExists) {
+        sampleService.get(userApi.data.image).then(function (response) {
+          $scope.user.image = response.data.image;
+        }, function (errorResponse) {
+          console.error("No img", errorResponse);
+        });
       }
 
+      $scope.isInvestor = $scope.user.role === "Investor";
+      _this.fetchSecondTab();
+    });
 
+    this.setMaxPage = function (linkHeaders) {
+      var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
+      var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+      if (isNaN(maxPage)) maxPage = $scope.page;
+      $scope.lastPage = maxPage;
+    };
 
+    this.processResponse = function (data) {
+      data.forEach(function (proj){
+        proj.percentage = parseInt((proj.fundingCurrent/proj.fundingTarget)*100);
+      });
+      $scope.secondTab = $scope.secondTab.concat(data);
+      console.log($scope.secondTab);
+    };
 
+    this.fetchSecondTab = function () {
+      if ($scope.isInvestor) {
+        // Fetch investor deals
+        messageService.getInvestorDeals($scope.page, $scope.user.id).then(function (response) {
+          _this.setMaxPage(response.headers().link);
+          _this.processResponse(response.data);
+          $scope.loadingSecondTab = false;
+        }, function (errorResponse) {
+          console.error(errorResponse);
+        });
+      } else {
+        // Fetch entrepreneur current funding projects
+        // TODO: Add pagination here
+        userService.getUserProjects($scope.user.id.toString(), false).then(function (response) {
+          // _this.setMaxPage(response.headers().link);
+          _this.processResponse(response.data);
+          $scope.loadingSecondTab = false;
+        }, function (errorResponse) {
+          console.error(errorResponse);
+        });
+      }
+    };
 
-
-    }]);
+    $scope.viewMoreProjects = function () {
+      if ($scope.page >= $scope.lastPage) return;
+      $scope.page++;
+      _this.fetchSecondTab();
+    };
+  }]);
 });

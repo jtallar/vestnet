@@ -275,6 +275,10 @@ define([], function() {
     investorsSeen: 'Inversores que visitaron ',
     lastSeen: 'Última vez visto',
     spinnerLoading: 'Cargando...',
+    profileDeals: 'Acuerdos',
+    profileDashboard: 'Proyectos Publicados',
+    noFavoritesFound: 'No se encontraron favoritos',
+    noDealsFound: 'No se encontraron acuerdos',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',

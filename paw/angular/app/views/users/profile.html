@@ -134,7 +134,7 @@
             <div class="text-center" ng-if="loadingFavs">
               <div class="spinner-grow text-dark loading-grow" role="status"></div>
             </div>
-              <div ng-if="!loadingFavs && !allFavs.empty()">
+              <div ng-if="!loadingFavs && allFavs.length !== 0">
                 <div ng-repeat="fav in showFavs">
                   <div class="card m-2">
                     <div class="card-header text-white">
@@ -169,9 +169,9 @@
                 </div>
               </div>
 
-              <div ng-if="!loadingFavs && allFavs.empty()"  class="card m-2">
-                <div class="card-header">
-                  <h5 class="card-title centered">{{'noProjFound' | translate}}</h5>
+              <div ng-if="!loadingFavs && allFavs.length === 0"  class="card m-2">
+                <div class="card-header text-center">
+                  <h5 class="card-title text-white">{{'noFavoritesFound' | translate}}</h5>
                 </div>
               </div>
           </div>
