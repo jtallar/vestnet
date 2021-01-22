@@ -1,7 +1,7 @@
  'use strict';
 
-define(['paw2020a','services/projectService', 'services/sampleService', 'services/PathService'], function(paw2020a) {
-  paw2020a.controller('singleViewCtrl',['projectService','sampleService', 'PathService', '$scope', '$routeParams', function(projectService,sampleService, PathService, $scope, $routeParams) {
+define(['paw2020a','services/projectService', 'services/sampleService', 'services/PathService', 'services/AuthenticationService'], function(paw2020a) {
+  paw2020a.controller('singleViewCtrl',['projectService','sampleService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', function(projectService,sampleService, PathService, AuthenticationService, $scope, $routeParams) {
 
     /*** STATS ***/
     $scope.$on('$viewContentLoaded', function() {
@@ -40,6 +40,8 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     }
     $scope.id = param;
     $scope.sent = false;    // if the mail was sent retreive from url
+
+    $scope.isEntrepreneur = AuthenticationService.isEntrepreneur();
 
     $scope.backAction = function() {
         history.back();
