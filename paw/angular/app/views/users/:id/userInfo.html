@@ -1,0 +1,175 @@
+
+<head><title>{{ 'pageTitleProfile' | translate : {f : user.firstName, l: user.lastName} }}</title></head>
+
+<!--<vnheader></vnheader>-->
+
+<!--<div class="profile">-->
+  <div ng-if="true" class="back sep-nav">
+    <button onclick="history.back()" class="btn btn-dark">{{'back' | translate}}</button>
+  </div>
+
+  <div class="dropdown-divider"></div>
+
+  <div class="container emp-profile">
+    <div class="row">
+      <div class="col-md-4">
+
+        <div class="profile-img">
+          <div ng-if="user.imageExists">
+            <img ng-src="data:image/JPEG;base64,{{user.image}}" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          </div>
+          <div ng-if="!user.imageExists">
+            <img ng-src="/images/jmv-avatar.jpg" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          </div>
+          <label for="customFileProfilePic">
+            <i class="fa fa-pencil fa-2x" style="color: black"></i>
+          </label>
+          <input hidden type="file" class="custom-file-input" id="customFileProfilePic"/>
+        </div>
+
+        <div ng-if="user.linkedin" class="text-center my-2">
+          <a href="{{user.linkedin}}" class="btn btn-linkedin">
+            <i class="fa fa-linkedin pull-left"></i>
+            <label>{{'linkedinProfile' | translate}}</label>
+          </a>
+        </div>
+      </div>
+
+    <div class="col-md-6">
+      <div class="profile-head">
+        <h2 class="bold">{{'profileTitle' | translate : {first : user.firstName, last : user.lastName} }}</h2>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+               aria-controls="home" aria-selected="true">{{'information' | translate}}</a>
+          </li>
+
+  <!--          <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
+  <!--            <c:if test="${session_user_id eq user.id}">-->
+          <div ng-if="id === loggedId">
+                <li ng-if="true" class="nav-item">
+                  <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
+                     aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
+                </li>
+          </div>
+  <!--            </c:if>-->
+  <!--          </sec:authorize>-->
+          </ul>
+        </div>
+
+        <div class="tab-content profile-tab" id="myTabContent">
+          <div class="tab-pane fade show in active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'firstName' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.firstName}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'lastName' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.lastName}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'email' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.email}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'phone' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.phone}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'birthday' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.birthDate}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'country' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.country}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'city' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.city}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>{{'state' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.state}}</p>
+              </div>
+            </div>
+          </div>
+
+  <!--        <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
+  <!--          <c:if test="${session_user_id eq user.id}">-->
+          <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+              <div ng-if="!favs.empty()"  ng-repeat="fav in favs">
+                <div class="card m-2">
+                  <div class="card-header text-white">
+                    <h5 class="card-title">{{fav.name}}</h5>
+                  </div>
+                  <div class="card-body favorites">
+                    <p class="card-text">{{fav.summary}}</p>
+                    <div class="row">
+                      <div class="col">
+                        <strong>{{'price' | translate}}</strong>
+                        <p>{{'projectCost' | translate : {cost : fav.cost} }}</p>
+                      </div>
+                      <div class="col">
+                        <a href="/#/projects/{{fav.id}}" class="btn btn-inv pull-right more-icon" >
+                          <img src="images/view-icon-b.png" alt="">
+                        </a>
+                      </div>
+<!--                      <div class="col">-->
+<!--                        <a href="#/projects/{{fav.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>-->
+<!--                      </div>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-if="favs.empty()"  class="card m-2">
+                <div class="card-header">
+                  <h5 class="card-title centered">{{'noProjFound' | translate}}</h5>
+                </div>
+              </div>
+          </div>
+  <!--          </c:if>-->
+  <!--        </sec:authorize>-->
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--</div>-->
+
+  <div class="dropdown-divider"></div>
+
+<!--  <footer>-->
+<!--    <vnfooter></vnfooter>-->
+<!--  </footer>-->

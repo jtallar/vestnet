@@ -12,7 +12,7 @@ define([], function() {
     pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
     pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/, /^\/chat\/[^\/]*$/];
     pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject\/.*$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
-    pathService.authRoutesRE = [/^\/users\/.*$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
+    pathService.authRoutesRE = [/^\/users\/.*$/, /^\/profile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
 
     pathService.get = function () {
       var base = {
@@ -88,6 +88,10 @@ define([], function() {
 
       base.user = function (id) {
         return append('/users/' + id);
+      };
+
+      base.profile = function () {
+        return append('/profile');
       };
 
       base.requests = function () {
