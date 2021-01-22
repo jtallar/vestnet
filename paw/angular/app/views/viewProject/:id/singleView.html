@@ -73,7 +73,7 @@
             <div class="card-body single-card">
               <h5 class="card-title"><b>{{project.name}}</b></h5>
               <div ng-if="project.getByOwner" class="blockquote-footer">{{'you' | translate}}</div>
-              <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#/users/{{project.owner.id}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
+              <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
 
               <p class="card-text">{{project.summary}}</p>
 

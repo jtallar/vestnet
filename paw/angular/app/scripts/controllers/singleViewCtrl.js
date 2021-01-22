@@ -98,6 +98,7 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
 
       sampleService.get($scope.project.owner).then(function (owner) {
         $scope.project.owner = owner.data;
+        $scope.project.ownerUrl = PathService.get().user($scope.project.owner.id).path;
       }, function (errorResponse) {
         // 404 should not happen
         console.error(errorResponse);
