@@ -3,12 +3,12 @@
     define(['paw2020a', 'services/userService', 'services/sampleService', 'services/imageService','services/AuthenticationService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
     paw2020a.controller('profileCtrl',['userService','sampleService','imageService','AuthenticationService','PathService','$scope','$routeParams', function(userService,sampleService,imageService,AuthenticationService,PathService, $scope, $routeParams) {
 
-      var maxImageSize = 2097152;
+      var maxImageSize = 2097152, pageSize = 6;
 
       $scope.isInvestor = AuthenticationService.isInvestor();
       $scope.loadingFavs = true; $scope.uploadingImage = false;
       $scope.imageSizeError = false;
-      $scope.favs = [];
+      $scope.allFavs = []; $scope.showFavs = [];
 
       userService.getLoggedUser().then(function (userApi) {
         $scope.user = userApi.data;
@@ -32,15 +32,24 @@
 
       if($scope.isInvestor) {
         userService.getProfileFavorites().then(function (response) {
-          $scope.favs = response.data;
-          console.log($scope.favs);
+          $scope.allFavs = response.data;
+          $scope.allFavs.forEach(function (fav){
+            fav.percentage = parseInt((fav.fundingCurrent/fav.fundingTarget)*100);
+          });
           $scope.loadingFavs = false;
+          $scope.viewMoreFavs();
           // Paginar a mano los favs
         }, function (errorResponse) {
           // 404 should never happen
           console.error(errorResponse);
         })
       }
+
+      $scope.viewMoreFavs = function () {
+        if ($scope.allFavs.length === $scope.showFavs.length) return;
+        var currLength = $scope.showFavs.length;
+        $scope.showFavs = $scope.showFavs.concat($scope.allFavs.slice(currLength, currLength + pageSize));
+      };
 
       $scope.fileboxChange = function (event) {
         if (event.target.files.length === 0) return;
@@ -55,6 +64,7 @@
             imageService.setProfileImage(ev.target.result).then(function (imageResponse) {
               $scope.uploadingImage = false;
               $scope.user.image = imageService.blobToBase64(ev.target.result);
+              $scope.user.imageExists = true;
             }, function (imageErrorResponse) {
               // 404 should never happen
               console.error(imageErrorResponse);

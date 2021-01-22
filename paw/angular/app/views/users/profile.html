@@ -44,7 +44,7 @@
         </div>
       </div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
       <div class="profile-head">
         <h2 class="bold">{{'profileTitle' | translate : {first : user.firstName, last : user.lastName} }}</h2>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -53,16 +53,10 @@
                aria-controls="home" aria-selected="true">{{'information' | translate}}</a>
           </li>
 
-  <!--          <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
-  <!--            <c:if test="${session_user_id eq user.id}">-->
-          <div ng-if="isInvestor">
-            <li class="nav-item">
-              <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
-                 aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
-            </li>
-          </div>
-  <!--            </c:if>-->
-  <!--          </sec:authorize>-->
+          <li ng-if="isInvestor" class="nav-item">
+            <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
+               aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
+          </li>
           </ul>
         </div>
 
@@ -140,32 +134,42 @@
             <div class="text-center" ng-if="loadingFavs">
               <div class="spinner-grow text-dark loading-grow" role="status"></div>
             </div>
-              <div ng-if="!loadingFavs && !favs.empty()"  ng-repeat="fav in favs">
-                <div class="card m-2">
-                  <div class="card-header text-white">
-                    <h5 class="card-title">{{fav.name}}</h5>
-                  </div>
-                  <div class="card-body favorites">
-                    <p class="card-text">{{fav.summary}}</p>
-                    <div class="row">
-                      <div class="col">
-                        <strong>{{'price' | translate}}</strong>
-                        <p>{{'projectCost' | translate : {cost : fav.cost} }}</p>
+              <div ng-if="!loadingFavs && !allFavs.empty()">
+                <div ng-repeat="fav in showFavs">
+                  <div class="card m-2">
+                    <div class="card-header text-white">
+                      <h5 class="card-title">{{fav.name}}</h5>
+                    </div>
+                    <div class="card-body favorites">
+                      <p class="card-text">{{fav.summary}}</p>
+                      <div class="row">
+                        <div class="price-footer col-9">
+                          <h4 style="text-align: center">
+                            {{'of' | translate : {of : fav.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : fav.fundingTarget} }}</b></h4>
+                          <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{fav.percentage}}%" aria-valuenow="{{fav.percentage}}" aria-valuemin="0" aria-valuemax="100">{{fav.percentage}}%</div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <a href="/#/projects/{{fav.id}}" class="btn btn-inv pull-right more-icon" >
+                            <img src="images/view-icon-b.png" alt="">
+                          </a>
+                        </div>
+  <!--                      <div class="col">-->
+  <!--                        <a href="#/projects/{{fav.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>-->
+  <!--                      </div>-->
                       </div>
-                      <div class="col">
-                        <a href="/#/projects/{{fav.id}}" class="btn btn-inv pull-right more-icon" >
-                          <img src="images/view-icon-b.png" alt="">
-                        </a>
-                      </div>
-<!--                      <div class="col">-->
-<!--                        <a href="#/projects/{{fav.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>-->
-<!--                      </div>-->
                     </div>
                   </div>
                 </div>
+                <div ng-if="showFavs.length < allFavs.length">
+                  <button ng-click="viewMoreFavs()" class="btn btn-inv pull-right">
+                    <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
+                  </button>
+                </div>
               </div>
 
-              <div ng-if="!loadingFavs && favs.empty()"  class="card m-2">
+              <div ng-if="!loadingFavs && allFavs.empty()"  class="card m-2">
                 <div class="card-header">
                   <h5 class="card-title centered">{{'noProjFound' | translate}}</h5>
                 </div>
