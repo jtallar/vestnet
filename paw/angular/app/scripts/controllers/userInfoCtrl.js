@@ -61,6 +61,7 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
     this.fetchSecondTab = function () {
       if ($scope.isInvestor) {
         // Fetch investor deals
+        // TODO: Que hacemos aca? No tengo toda la data que tiene el otro, que muestro?
         messageService.getInvestorDeals($scope.page, $scope.user.id).then(function (response) {
           _this.setMaxPage(response.headers().link);
           _this.processResponse(response.data);
