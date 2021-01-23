@@ -173,9 +173,17 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.new.comment = '';
     };
 
-    // TODO: Get initial favorite value
     $scope.isFav = false;
+    if ($scope.isInvestor) {
+      userService.getFavorites().then(function (response) {
+        $scope.isFav = response.data.some(function(e) { return e.projectId === $scope.id });
+      }, function (errorResponse) {
+        console.error(errorResponse);
+      });
+    }
+
     $scope.favTap = function () {
+      if (!$scope.isInvestor) return;
       $scope.isFav = !$scope.isFav;
       userService.putFavorite($scope.id, $scope.isFav).then(function () {
         // Do nothing
