@@ -37,6 +37,10 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('unread').one(projId).get(param)
     };
 
+    messageService.projectNotificationCount = function (projectId) {
+      return root.one('notifications').one('project').one(projectId.toString()).get();
+    };
+
     messageService.notificationCount = function () {
       return root.one('notifications').get();
     };
