@@ -65,7 +65,7 @@ public class UserRestController {
         return Response.ok().build();
     }
 
-
+    // TODO: Ver si lo fletamos, si lo implementamos o ninguna de las dos
     @DELETE
     public Response deleteUser() {
 
@@ -93,6 +93,14 @@ public class UserRestController {
 
 
     /** Extra user data endpoints */
+
+    @GET
+    @Path("/projects")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response ownedProjects(@QueryParam("funded") @DefaultValue("true") boolean funded) {
+
+        return ownedProjects(sessionUser.getId(), funded);
+    }
 
     // TODO: Pagination to avoid overloading dashboard
     @GET

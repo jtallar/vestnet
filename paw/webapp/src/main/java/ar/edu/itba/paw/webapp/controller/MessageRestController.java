@@ -76,14 +76,14 @@ public class MessageRestController {
                 .build();
     }
 
-
     @GET
-    @Path("/investor")
+    @Path("/investor/{investor_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response investorChats(@QueryParam("a") @DefaultValue("false") boolean accepted,
+    public Response investorChats(@PathParam("investor_id") final long investorId,
+                                  @QueryParam("a") @DefaultValue("false") boolean accepted,
                                   @QueryParam("p") @DefaultValue("1") int page) {
 
-        final Page<Message> messagePage = messageService.getInvestorProjects(sessionUser.getId(), accepted, page, PAGE_SIZE);
+        final Page<Message> messagePage = messageService.getInvestorProjects(investorId, accepted, page, PAGE_SIZE);
         final List<OfferProjectDto> messages = messagePage.getContent().stream().map(p -> OfferProjectDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<OfferProjectDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
@@ -92,6 +92,15 @@ public class MessageRestController {
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getTotalPages()).build(), "last")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
+    }
+
+    @GET
+    @Path("/investor")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response investorChats(@QueryParam("a") @DefaultValue("false") boolean accepted,
+                                  @QueryParam("p") @DefaultValue("1") int page) {
+
+        return investorChats(sessionUser.getId(), accepted, page);
     }
 
 

@@ -10,8 +10,6 @@ public class JwtTokenDto {
     private String refreshToken;
     private int refreshMinutes;
     private Collection<String> roles;
-    private String locale;
-    private long userId;
 
     public static JwtTokenDto fromJwtTokenResponse(JwtTokenResponse jwtTokenResponse) {
         final JwtTokenDto jwtTokenDto = new JwtTokenDto();
@@ -20,8 +18,6 @@ public class JwtTokenDto {
         jwtTokenDto.refreshToken = jwtTokenResponse.getRefreshToken();
         jwtTokenDto.refreshMinutes = jwtTokenResponse.getRefreshTokenExpMinutes();
         jwtTokenDto.roles = jwtTokenResponse.getUserRoles();
-        jwtTokenDto.locale = jwtTokenResponse.getLocale();
-        jwtTokenDto.userId = jwtTokenResponse.getUserId();
 
         return jwtTokenDto;
     }
@@ -66,19 +62,4 @@ public class JwtTokenDto {
         this.roles = roles;
     }
 
-    public String getLocale() {
-        return locale;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
 }

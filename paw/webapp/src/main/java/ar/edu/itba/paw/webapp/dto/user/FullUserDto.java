@@ -42,7 +42,7 @@ public class FullUserDto extends UpdatableUserDto {
         userDto.setReceivedMessages(uriInfo.getAbsolutePathBuilder().path("received_messages").build());
         userDto.setSentMessages(uriInfo.getAbsolutePathBuilder().path("sent_messages").build());
         userDto.setFavorites(uriInfo.getAbsolutePathBuilder().path("favorites").build());
-        userDto.setLocation(uriInfo.getAbsolutePathBuilder().path("location").build());
+        userDto.setLocation(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(user.getId())).path("/location").build());
 
         if (user.getImageId() != null) {
             userDto.setImageExists(true);

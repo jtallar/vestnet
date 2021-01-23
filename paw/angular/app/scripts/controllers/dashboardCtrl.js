@@ -1,17 +1,20 @@
 'use strict';
 
 // TODO: Ver de agregar la badge tanto afuera en el icono de mensajes (/notifications/project/{project_id}?) como dentro de un chat.
-define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
-  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope, $rootScope) {
+define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
+  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,sampleService,imageService, PathService, $scope, $rootScope) {
 
+    var _this = this;
 
-    $scope.id = AuthenticationService.getUserId()
+    $scope.loadingProjects = true; $scope.loadingFunded = true;
+
     $scope.messages = []
     $scope.fundedMsgs = []
 
     var map = {};
-    userService.getUserProjects($scope.id, false).then(function (response) {
+    userService.getLoggedProjects(false).then(function (response) {
       $scope.projects = response.data;
+      $scope.loadingProjects = false;
       for(var i = 0; i < $scope.projects.length; i++) {
         map[$scope.projects[i].id] = i;
         $scope.projects[i].msgPage = 1;
@@ -32,8 +35,9 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
 
 
-    userService.getUserProjects($scope.id, true).then(function (response) {
+    userService.getLoggedProjects(true).then(function (response) {
       $scope.fundedProjects = response.data;
+      $scope.loadingFunded = false;
       var map = {};
       for(var i = 0; i < $scope.fundedProjects.length; i++) {
         map[$scope.fundedProjects[i].id] = i;
@@ -78,15 +82,19 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           console.log(senderId);
       };
 
+    this.updateNextPageOffers = function (linkHeaders, index) {
+      var nextLink = linkHeaders.split(',').filter(function (el) {
+        return el.includes('next');
+      });
+      $scope.projects[index].nextPageOffer = parseInt(nextLink[0].split('p=')[1][0]);
+    };
+
     $scope.fetchOffers = function(id, index){
       if($scope.projects[index].firstFecthedOffers == false) {
         $scope.projects[index].firstFecthedOffers = true
         $scope.fundedMsgs[index] = []
         messageService.getOffers(id.toString(), true, 1).then(function (response) {
-          var lastLink = response.headers().link.split(',').filter(function (el) {
-            return el.includes('last');
-          });
-          $scope.projects[index].maxPageOffer = parseInt(lastLink[0].split('p=')[1][0]);
+          _this.updateNextPageOffers(response.headers().link, index);
           var messageMap = []
           console.log(response)
           for (var i = 0; i < response.data.length; i++) {
@@ -112,18 +120,21 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           console.log(error)
         })
       }
-    }
+    };
 
+    this.updateNextPageMessages = function (linkHeaders, index) {
+      var nextLink = linkHeaders.split(',').filter(function (el) {
+        return el.includes('next');
+      });
+      $scope.projects[index].nextPageMessages = parseInt(nextLink[0].split('p=')[1][0]);
+    };
 
       $scope.fetchMessage = function(id, index){
       if($scope.projects[index].firstFecthed == false) {
           $scope.projects[index].firstFecthed = true
           $scope.messages[index] = []
           messageService.getOffers(id.toString(), false, 1).then(function (response) {
-            var lastLink = response.headers().link.split(',').filter(function (el) {
-              return el.includes('last');
-            });
-            $scope.projects[index].maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+            _this.updateNextPageMessages(response.headers().link, index);
             var messageMap = []
             for (var i = 0; i < response.data.length; i++) {
               messageMap[response.data[i].investorId] = i;
@@ -179,6 +190,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         $scope.projects[index].msgPage += 1
         var messageMap = []
         messageService.getOffers(id.toString(), false, $scope.projects[index].msgPage).then(function (response) {
+          _this.updateNextPageMessages(response.headers().link, index);
           for (var i = 0; i < response.data.length; i++) {
             messageMap[response.data[i].investorId] = length + i;
             // TODO: Mostrar mas que el body
@@ -210,6 +222,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.projects[index].offerPage += 1
       var messageMap = []
       messageService.getOffers(id.toString(), true, $scope.projects[index].offerPage).then(function (response) {
+        _this.updateNextPageOffers(response.headers().link, index);
         for (var i = 0; i < response.data.length; i++) {
           messageMap[response.data[i].investorId] = length + i
           $scope.fundedMsgs[index][i + length] = {
@@ -232,15 +245,20 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       })
     }
 
-      $scope.getList = function () {
-        if($scope.funded === true) return $scope.fundedProjects;
-        else return $scope.projects;
-      }
+    $scope.getList = function () {
+      if($scope.funded === true) return $scope.fundedProjects;
+      else return $scope.projects;
+    };
 
-      $scope.goToChat = function (message) {
-        if (!message.seen) $rootScope.$emit('messageRead');
-        PathService.get().setFullUrl(message.chatUrl).go();
-      }
+    $scope.isLoading = function () {
+      if($scope.funded === true) return $scope.loadingFunded;
+      else return $scope.loadingProjects;
+    };
+
+    $scope.goToChat = function (message) {
+      if (!message.seen) $rootScope.$emit('messageRead');
+      PathService.get().setFullUrl(message.chatUrl).go();
+    }
 
     }]);
 });

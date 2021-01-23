@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class JwtTokenHandler implements TokenHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenHandler.class);
 
-    private static final String ROLES_KEY = "roles", USER_ID_KEY = "userId", EXTENDED_KEY = "extended", LOCALE_KEY = "locale";
+    private static final String ROLES_KEY = "roles", USER_ID_KEY = "userId", EXTENDED_KEY = "extended";
 
     /**
      * JwtToken will expire after this time.
@@ -99,7 +99,6 @@ public class JwtTokenHandler implements TokenHandler {
         Claims claims = Jwts.claims().setSubject(sessionUser.getUsername());
         claims.put(USER_ID_KEY, sessionUser.getId());
         claims.put(ROLES_KEY, sessionUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
-        claims.put(LOCALE_KEY, sessionUser.getLocale());
         return claims;
     }
 
@@ -109,8 +108,7 @@ public class JwtTokenHandler implements TokenHandler {
         String refreshToken = createRefreshToken(loggedUser, extended);
 
         return new JwtTokenResponse(accessToken, ACCESS_TOKEN_EXP_MINUTES, refreshToken, getRefreshTokenExpMinutes(extended),
-                loggedUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()), loggedUser.getLocale(),
-                loggedUser.getId());
+                loggedUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
     }
 
     private int getRefreshTokenExpMinutes(boolean extended) {
@@ -128,7 +126,6 @@ public class JwtTokenHandler implements TokenHandler {
 
         List<String> authorities = claimsJws.getBody().get(ROLES_KEY, List.class);
         return Optional.of(new LoggedUser(claimsJws.getBody().get(USER_ID_KEY, Long.class),
-                claimsJws.getBody().get(LOCALE_KEY, String.class),
                 claimsJws.getBody().getSubject(),
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())));
     }
@@ -145,7 +142,6 @@ public class JwtTokenHandler implements TokenHandler {
         boolean extended = claimsJws.getBody().get(EXTENDED_KEY, Boolean.class);
         List<String> authorities = claimsJws.getBody().get(ROLES_KEY, List.class);
         LoggedUser user = new LoggedUser(claimsJws.getBody().get(USER_ID_KEY, Long.class),
-                claimsJws.getBody().get(LOCALE_KEY, String.class),
                 claimsJws.getBody().getSubject(),
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 

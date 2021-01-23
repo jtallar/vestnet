@@ -8,13 +8,12 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
       scope: {},
       templateUrl: 'views/directives/header.html',
       controller: function ($scope, $rootScope) {
-        $scope.eDropdown = ['dashboard', 'users'];
+        $scope.eDropdown = ['dashboard', 'profile'];
         // $scope.eIcons = ['home-icon', 'user-icon'];
-        $scope.iDropdown = ['requests', 'messages', 'users'];
+        $scope.iDropdown = ['requests', 'messages', 'profile'];
         $scope.gOptions = ['welcome', 'login', 'signUp'];
         $scope.gIcons = ['home-icon', 'login-icon', 'signup-icon'];
         $scope.notifications = 0;
-        $scope.userid = 2; // TODO: Change to profile URL when profile is done
 
         var checkNotif = function() {
           if ($scope.valor === 2) return;

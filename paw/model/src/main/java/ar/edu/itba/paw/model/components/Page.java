@@ -51,7 +51,7 @@ public class Page<T> {
     }
 
     public long getNextPage() {
-        return (currentPage > totalPages)? currentPage + 1 : totalPages;
+        return (currentPage < totalPages)? currentPage + 1 : totalPages;
     }
 
     public long getStartPage() {

@@ -10,10 +10,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       var emptyCategory = {id:null, name:'noFilter'};
 
-      $scope.isInvestor = AuthenticationService.isInvestor()
+      $scope.isInvestor = AuthenticationService.isInvestor();
 
-      $scope.favs = []
-      if($scope.isInvestor == true){
+      $scope.favs = [];
+      if($scope.isInvestor){
         userService.getFavorites().then(function (response) {
           for(var i = 0; i < response.data.length;i++){
             $scope.favs.push(response.data[i].projectId)
