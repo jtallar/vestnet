@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Favorite;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
@@ -97,21 +98,32 @@ public class UserRestController {
     @GET
     @Path("/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response ownedProjects(@QueryParam("funded") @DefaultValue("true") boolean funded) {
+    public Response ownedProjects(@QueryParam("funded") @DefaultValue("true") boolean funded,
+                                  @QueryParam("p") @DefaultValue("1") int page,
+                                  @QueryParam("l") @DefaultValue("3") int limit) {
 
-        return ownedProjects(sessionUser.getId(), funded);
+        return ownedProjects(sessionUser.getId(), funded, page, limit);
     }
 
-    // TODO: Pagination to avoid overloading dashboard
+
     @GET
     @Path("/{id}/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response ownedProjects(@PathParam("id") final long userId,
-                                  @QueryParam("funded") @DefaultValue("true") boolean funded) {
+                                  @QueryParam("funded") @DefaultValue("true") boolean funded,
+                                  @QueryParam("p") @DefaultValue("1") int page,
+                                  @QueryParam("l") @DefaultValue("3") int limit) {
 
-        final List<Project> projectsList = userService.getOwnedProjects(userId, funded);
-        final List<ProjectDto> projects = projectsList.stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
+        final Page<Project> projectPage = userService.getOwnedProjects(userId, funded, page, limit);
+        final List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+
+        return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getStartPage()).build(), "start")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getEndPage()).build(), "end")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getTotalPages()).build(), "last")
+                .header("Access-Control-Expose-Headers", "Link")
+                .build();
     }
 
 

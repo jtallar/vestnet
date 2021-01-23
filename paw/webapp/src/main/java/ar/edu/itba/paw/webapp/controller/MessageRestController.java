@@ -70,10 +70,11 @@ public class MessageRestController {
 
         final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), accepted, page, PAGE_SIZE);
         final List<OfferInvestorDto> messages = messagePage.getContent().stream().map(p -> OfferInvestorDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<OfferInvestorDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
-                .header("Access-Control-Expose-Headers", "Link")
-                .build();
+
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<OfferInvestorDto>>(messages) {});
+        if (messagePage.hasNext()) response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next");
+        return response.header("Access-Control-Expose-Headers", "Link").build();
+
     }
 
     @GET
@@ -123,10 +124,10 @@ public class MessageRestController {
 
         final Page<Message> messagePage = messageService.getConversation(projectId, investorId, sessionUser.getId(), page, PAGE_SIZE);
         final List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
-                .header("Access-Control-Expose-Headers", "Link")
-                .build();
+
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<OfferDto>>(messages) {});
+        if (messagePage.hasNext()) response.link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next");
+        return response.header("Access-Control-Expose-Headers", "Link").build();
     }
 
 

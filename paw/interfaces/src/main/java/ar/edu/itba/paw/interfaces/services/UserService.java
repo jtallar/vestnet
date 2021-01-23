@@ -73,17 +73,19 @@ public interface UserService {
      * Finds the projects owned by the user.
      * @param id Unique user id.
      * @param closed Distinguishes from founded project from the ones not.
-     * @return List of all the project for the given user.
+     * @param page The number of page to be shown.
+     * @param pageSize Page size for the pagination request.
+     * @return Paged project owned for the given user.
      */
-    List<Project> getOwnedProjects(long id, boolean closed);
+    Page<Project> getOwnedProjects(long id, boolean closed, int page, int pageSize);
 
 
-    /**
-     * Requests for a password change.
-     * @param mail The users mail to change the password.
-     * @param baseUri Base uri for mail creation.
-     * @return The optional of the found user.
-     */
+        /**
+         * Requests for a password change.
+         * @param mail The users mail to change the password.
+         * @param baseUri Base uri for mail creation.
+         * @return The optional of the found user.
+         */
     Optional<User> requestPassword(String mail, URI baseUri);
 
 

@@ -103,12 +103,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<Project> getOwnedProjects(long id, boolean closed) {
+    public Page<Project> getOwnedProjects(long id, boolean closed, int page, int pageSize) {
         final RequestBuilder request = new ProjectRequestBuilder()
                 .setOwner(id)
                 .setClosed(closed)
                 .setOrder(OrderField.PROJECT_DEFAULT);
-        return projectDao.findAll(request);
+        return projectDao.findAll(request, new PageRequest(page, pageSize));
     }
 
 
