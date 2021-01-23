@@ -35,6 +35,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one(id).one('projects').get(param)
     };
 
+    userService.getLoggedProjects = function(fund){
+      return root.one('projects').get({funded: fund});
+    };
 
     userService.getFavorites  = function () {
       return root.one('favorites').get()

@@ -12,8 +12,7 @@ define([], function() {
         rememberKey = 'd4e9a0f8f4609bb34d2aee6486444db48044e4f9';
     // TODO: Check si es correcto almacenar esto en el localStorage/sessionStorage
     var entrepreneurKey = '85f61433041f941dbf9cda260b0a82f9cccfc1d4',
-        investorKey = '1d8e6dc7a8959ecab4b983da1f5be041ec44ffc6',
-        userIdKey = '9da3e5f0db07686c8b3550e0b2c71a40ffb4126b';
+        investorKey = '1d8e6dc7a8959ecab4b983da1f5be041ec44ffc6';
     var shouldPersist = localStorage.getItem(rememberKey) === 't';
 
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
@@ -31,9 +30,7 @@ define([], function() {
           }), true);
           if (data.roles.includes('ROLE_ENTREPRENEUR')) authService.setRole(false);
           if (data.roles.includes('ROLE_INVESTOR')) authService.setRole(true);
-          authService.setStorage(userIdKey, data.userId);
-          // TODO: Update new locale to data.locale O CHEQUEAR SI FUNCA BIEN SIN ESTO (front en es, mails en es)
-          console.log(data.locale);
+          console.log("Logged");
           return true;
         }
       );
@@ -90,13 +87,11 @@ define([], function() {
     authService.logout = function () {
 
       if (shouldPersist) {
-        localStorage.removeItem(userIdKey);
         localStorage.removeItem(entrepreneurKey);
         localStorage.removeItem(investorKey);
         localStorage.removeItem(refreshTokenKey);
         return localStorage.removeItem(accessTokenKey);
       }
-      sessionStorage.removeItem(userIdKey);
       sessionStorage.removeItem(entrepreneurKey);
       sessionStorage.removeItem(investorKey);
       sessionStorage.removeItem(refreshTokenKey);
@@ -143,10 +138,6 @@ define([], function() {
 
     authService.isEntrepreneur = function () {
       return authService.getRole(false) === 't';
-    };
-
-    authService.getUserId = function () {
-      return authService.getStorage(userIdKey);
     };
 
     return authService;

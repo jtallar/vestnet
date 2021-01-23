@@ -1,19 +1,18 @@
 'use strict';
 
 // TODO: Ver de agregar la badge tanto afuera en el icono de mensajes (/notifications/project/{project_id}?) como dentro de un chat.
-define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
-  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope, $rootScope) {
+define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
+  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,sampleService,imageService, PathService, $scope, $rootScope) {
 
     var _this = this;
 
     $scope.loadingProjects = true; $scope.loadingFunded = true;
 
-    $scope.id = AuthenticationService.getUserId()
     $scope.messages = []
     $scope.fundedMsgs = []
 
     var map = {};
-    userService.getUserProjects($scope.id, false).then(function (response) {
+    userService.getLoggedProjects(false).then(function (response) {
       $scope.projects = response.data;
       $scope.loadingProjects = false;
       for(var i = 0; i < $scope.projects.length; i++) {
@@ -36,7 +35,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
 
 
-    userService.getUserProjects($scope.id, true).then(function (response) {
+    userService.getLoggedProjects(true).then(function (response) {
       $scope.fundedProjects = response.data;
       $scope.loadingFunded = false;
       var map = {};
