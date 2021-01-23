@@ -1,7 +1,7 @@
  'use strict';
 
-define(['paw2020a','services/projectService', 'services/sampleService', 'services/PathService', 'services/AuthenticationService'], function(paw2020a) {
-  paw2020a.controller('singleViewCtrl',['projectService','sampleService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', function(projectService,sampleService, PathService, AuthenticationService, $scope, $routeParams) {
+define(['paw2020a','services/projectService', 'services/userService', 'services/sampleService', 'services/PathService', 'services/AuthenticationService'], function(paw2020a) {
+  paw2020a.controller('singleViewCtrl',['projectService', 'userService', 'sampleService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', function(projectService,userService,sampleService, PathService, AuthenticationService, $scope, $routeParams) {
 
     /*** STATS ***/
     $scope.$on('$viewContentLoaded', function() {
@@ -19,6 +19,7 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     }, false);
     $scope.pressContact = 0;
 
+    // TODO: Si el proyecto no existe, que no intente sumar estadistica, ver que onda el addStatError
     $scope.$on("$destroy", function(){
       projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
         .then(function (response) {
@@ -42,6 +43,7 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
     $scope.sent = false;    // if the mail was sent retreive from url
 
     $scope.isEntrepreneur = AuthenticationService.isEntrepreneur();
+    $scope.isInvestor = AuthenticationService.isInvestor();
 
     $scope.backAction = function() {
         history.back();
@@ -167,6 +169,17 @@ define(['paw2020a','services/projectService', 'services/sampleService', 'service
       $scope.projectstage++;
       $scope.new.name = '';
       $scope.new.comment = '';
+    };
+
+    // TODO: Get initial favorite value
+    $scope.isFav = false;
+    $scope.favTap = function () {
+      $scope.isFav = !$scope.isFav;
+      userService.putFavorite($scope.id, $scope.isFav).then(function () {
+        // Do nothing
+      },function (error) {
+        console.error(error);
+      });
     };
 
     $scope.toInt = function (num){

@@ -52,22 +52,16 @@
       <div class="col-7">
         <div class="d-flex justify-content-center">
           <div class="card description mb-3">
-            <!--
-            <sec:authorize access="hasRole('ROLE_INVESTOR')">
-              <div class="card-header header-white">
-                <button onclick="favTap()" class="btn-transp pull-right">
-                  <c:choose>
-                    <c:when test="${user.favorites.contains(project)}">
-                      <c:set var="icon_fav" value="${icon_fav_on}"/>
-                    </c:when>
-                    <c:otherwise>
-                      <c:set var="icon_fav" value="${icon_fav_off}"/>
-                    </c:otherwise>
-                  </c:choose>
-                  <img id="favImg" src="${icon_fav}" height="40">
-                </button>
-              </div>
-            </sec:authorize> -->
+            <div ng-if="isInvestor" class="card-header header-white">
+              <button ng-click="favTap()" class="btn-transp pull-right">
+                <div ng-if="isFav">
+                  <img ng-src="images/bookmarkOnB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                </div>
+                <div ng-if="!isFav">
+                  <img  ng-src="images/bookmarkOffB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                </div>
+              </button>
+            </div>
 
             <!-- Project card -->
             <div class="card-body single-card">
