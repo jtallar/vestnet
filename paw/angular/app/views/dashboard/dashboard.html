@@ -86,11 +86,12 @@
                   <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
-                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                  <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
+<!--                // TODO: Mostrar mas que el comment-->
                 <div class="col-7">
                   <strong>{{'lastChat' | translate}}:</strong>
-                  <i>{{message.body}}</i>
+                  <i>{{message.comment}}</i>
                 </div>
                 <div class="col-1">
                   <a ng-click="goToChat(message)" class="btn btn-inv pull-right">
@@ -132,7 +133,7 @@
                   <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
-                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                  <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
                 <div class="col-4">
                   <strong>{{'msgTitleOffer' | translate}}</strong> {{message.offer}}

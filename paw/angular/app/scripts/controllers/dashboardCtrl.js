@@ -7,9 +7,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     var _this = this;
 
     $scope.loadingProjects = true; $scope.loadingFunded = true;
-
-    $scope.messages = []
-    $scope.fundedMsgs = []
+    $scope.messages = []; $scope.fundedMsgs = [];
 
     var map = {};
     userService.getLoggedProjects(false).then(function (response) {
@@ -28,10 +26,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           });
         }
       }
-    })
-
-
-
+    });
 
     userService.getLoggedProjects(true).then(function (response) {
       $scope.fundedProjects = response.data;
@@ -48,37 +43,18 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           });
         }
       }
-    })
+    });
 
-
-
-    var size = 3;   // it does not get me length of projects we have to fetch it from services later
-
-
-    var myID = 1; //session
-
-    // $scope.messages = [
-    //   [{'investor': 'Gabriel','projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'investor': 'Mario','projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
-    //   [{'investor': 'Gloria','projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'investor': 'Miriam','projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}],
-    //   []
-    // ];
-
-
-
-
-    // projectService.getById(myID.toString()).then(function (projectsApi) {
-    //   console.log(projectsApi)
-    //   _this.projects = projectsApi
-    //   _this.state = new Array(_this.projects.length).fill(0);
-    // })
-
-      // _this.messages = [[{'projectId': 1,'body': 'hello', 'offer': 500, 'request': 'tu casa', 'senderId': 1}, {'projectId': 1,'body': 'chau', 'offer': 10000, 'request': 'tu esposa', 'senderId': 2}],
-      //   [{'projectId': 2,'body': 'como va', 'offer': 80000, 'request': 'el auto', 'senderId': 10}, {'projectId': 2,'body': 'feqefewq', 'offer': 500, 'request': 'la moto', 'senderId': 3}], []];
-
-      $scope.answer = function (projectId, senderId, accepted) {
-          console.log(projectId);
-          console.log(senderId);
-      };
+    $scope.fetchStats = function(id, index){
+      projectService.getStats(id.toString()).then(function (response) {
+        $scope.projects[index].clicksAvg = response.data.clicksAvg;
+        $scope.projects[index].secondsAvg = response.data.secondsAvg;
+        $scope.projects[index].seen = response.data.seen;
+        $scope.projects[index].contactClicks = response.data.contactClicks;
+        $scope.projects[index].investorsSeen = response.data.investorsSeen;
+        $scope.projects[index].lastSeen = response.data.lastSeen;
+      });
+    };
 
     this.updateNextPageOffers = function (linkHeaders, index) {
       if (!linkHeaders) {
@@ -94,34 +70,14 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     };
 
     $scope.fetchOffers = function(id, index){
-      if($scope.projects[index].firstFecthedOffers == false) {
-        $scope.projects[index].firstFecthedOffers = true
-        $scope.fundedMsgs[index] = []
+      if($scope.projects[index].firstFecthedOffers === false) {
+        $scope.projects[index].firstFecthedOffers = true;
+        $scope.fundedMsgs[index] = [];
         messageService.getOffers(id.toString(), true, 1).then(function (response) {
           _this.updateNextPageOffers(response.headers().link, index);
-          var messageMap = []
-          console.log(response)
-          for (var i = 0; i < response.data.length; i++) {
-            messageMap[response.data[i].investorId] = i
-            $scope.fundedMsgs[index][i] = {
-              'senderId': response.data[i].investorId,
-              'body': '',
-              'offer': response.data[i].offer,
-              'request': response.data[i].request,
-              'investor': '',
-              'exchange': response.data[i].exchange
-            }
-
-
-            sampleService.get(response.data[i].investor, i.toString()).then(function (inv) {
-              $scope.fundedMsgs[index][parseInt(inv.data.route)].investor = inv.data.firstName
-              $scope.fundedMsgs[index][parseInt(inv.data.route)].lastName = inv.data.lastName
-            }, function (error) {
-              console.log(error)
-            })
-          }
+          $scope.fundedMsgs[index] = response.data;
         }, function (error) {
-          console.log(error)
+          console.error(error)
         })
       }
     };
@@ -139,120 +95,44 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.projects[index].nextPageMessages = nextLink[0].substring(1, nextLink[0].indexOf('>'));
     };
 
-      $scope.fetchMessage = function(id, index){
-      if($scope.projects[index].firstFecthed == false) {
-          $scope.projects[index].firstFecthed = true
-          $scope.messages[index] = []
-          messageService.getOffers(id.toString(), false, 1).then(function (response) {
-            _this.updateNextPageMessages(response.headers().link, index);
-            var messageMap = []
-            for (var i = 0; i < response.data.length; i++) {
-              messageMap[response.data[i].investorId] = i;
-              // TODO: Mostrar mas que el body
-              $scope.messages[index][i] = {
-                'senderId': response.data[i].investorId,
-                'body': response.data[i].comment,
-                'offer': '',
-                'request': '',
-                'investor': '',
-                'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path,
-                'seen': response.data[i].seen
-              };
-              // TODO: ver si se puede evitar este request.
-              sampleService.get(response.data[i].investor, i.toString()).then(function (inv) {
-                $scope.messages[index][inv.data.route].investor = inv.data.firstName
-                $scope.messages[index][inv.data.route].lastName = inv.data.lastName
-              }, function (error) {
-                console.log(error)
-              })
-            }
-          }, function (error) {
-            console.log(error)
-          })
-       }
-      }
-
-
-      $scope.fetchStats = function(id, index){
-
-        projectService.getStats(id.toString()).then(function (response) {
-          $scope.projects[index].clicksAvg = response.data.clicksAvg
-          $scope.projects[index].secondsAvg = response.data.secondsAvg
-          $scope.projects[index].seen = response.data.seen
-          $scope.projects[index].contactClicks = response.data.contactClicks
-          $scope.projects[index].investorsSeen = response.data.investorsSeen
-          $scope.projects[index].lastSeen = response.data.lastSeen
-        })
-      }
-
-
-
-
-      $scope.enabled = true;
-      $scope.onOff = false;
-      $scope.funded = false;
-      $scope.disabled = true;
-
-
-
-      $scope.viewMore = function (id, index) {
-        var length = $scope.messages[index].length
-        var messageMap = []
-        sampleService.get($scope.projects[index].nextPageMessages).then(function (response) {
+    $scope.fetchMessage = function(id, index){
+      if($scope.projects[index].firstFecthed === false) {
+        $scope.projects[index].firstFecthed = true;
+        $scope.messages[index] = [];
+        messageService.getOffers(id.toString(), false, 1).then(function (response) {
           _this.updateNextPageMessages(response.headers().link, index);
+          $scope.messages[index] = response.data;
           for (var i = 0; i < response.data.length; i++) {
-            messageMap[response.data[i].investorId] = length + i;
-            // TODO: Mostrar mas que el body
-            $scope.messages[index][i + length] = {
-              'senderId':response.data[i].investorId,
-              'body': response.data[i].comment,
-              'offer': '',
-              'request' : '',
-              'investor': '',
-              'chatUrl': PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path,
-              'seen': response.data[i].seen
-            };
-            // TODO: ver si se puede evitar este request.
-            sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
-              $scope.messages[index][messageMap[inv.data.route]].investor = inv.data.firstName
-              $scope.messages[index][messageMap[inv.data.route]].lastName = inv.data.lastName
-            }, function (error) {
-              console.log(error)
-            })
+            $scope.messages[index][i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
           }
         }, function (error) {
-          console.log(error)
-        })
+          console.error(error)
+        });
       }
+    };
 
-
-    $scope.viewMoreOffers = function (id, index) {
-      var length = $scope.fundedMsgs[index].length
-      var messageMap = []
-      sampleService.get($scope.projects[index].nextPageOffer).then(function (response) {
-        _this.updateNextPageOffers(response.headers().link, index);
+    $scope.viewMore = function (id, index) {
+      sampleService.get($scope.projects[index].nextPageMessages).then(function (response) {
+        _this.updateNextPageMessages(response.headers().link, index);
+        $scope.messages[index] = $scope.messages[index].concat(response.data);
         for (var i = 0; i < response.data.length; i++) {
-          messageMap[response.data[i].investorId] = length + i
-          $scope.fundedMsgs[index][i + length] = {
-            'senderId':response.data[i].investorId,
-            'body': '',
-            'offer': response.data[i].offer,
-            'request' : '',
-            'investor': '',
-            'exchange': response.data[i].exchange
-          }
-          sampleService.get(response.data[i].investor, response.data[i].investorId).then(function (inv) {
-            $scope.fundedMsgs[index][messageMap[inv.data.route]].investor = inv.data.firstName
-            $scope.fundedMsgs[index][messageMap[inv.data.route]].lastName = inv.data.lastName
-          }, function (error) {
-            console.log(error)
-          })
+          $scope.messages[index][i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
         }
       }, function (error) {
-        console.log(error)
+        console.error(error)
       })
-    }
+    };
 
+    $scope.viewMoreOffers = function (id, index) {
+      sampleService.get($scope.projects[index].nextPageOffer).then(function (response) {
+        _this.updateNextPageOffers(response.headers().link, index);
+        $scope.fundedMsgs[index] = $scope.fundedMsgs[index].concat(response.data);
+      }, function (error) {
+        console.error(error)
+      })
+    };
+
+    $scope.funded = false;
     $scope.getList = function () {
       if($scope.funded === true) return $scope.fundedProjects;
       else return $scope.projects;
@@ -268,5 +148,5 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       PathService.get().setFullUrl(message.chatUrl).go();
     }
 
-    }]);
+  }]);
 });
