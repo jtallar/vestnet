@@ -280,6 +280,7 @@ define([], function() {
     profileDashboard: 'Current Projects',
     noFavoritesFound: 'No favorites found',
     noDealsFound: 'No deals found',
+    imageError: 'Could not upload some images',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',

@@ -41,6 +41,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     }
     $scope.id = param;
     $scope.sent = false;    // if the mail was sent retreive from url
+    $scope.imageError = !!($routeParams.imageError);
 
     $scope.isEntrepreneur = AuthenticationService.isEntrepreneur();
     $scope.isInvestor = AuthenticationService.isInvestor();
