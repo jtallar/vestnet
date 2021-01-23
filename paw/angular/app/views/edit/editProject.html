@@ -8,8 +8,15 @@
 <!--<vnheader></vnheader>-->
 
 <div class="container sep-nav" style="margin-top: 20px">
+  <div class="row justify-content-start">
+    <div class="col-4">
+      <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
+    </div>
+    <div class="col-4 text-center">
+      <h1>{{'editProjectTitle' | translate}}</h1>
+    </div>
+  </div>
   <div class="text-center">
-    <h1>{{'editProjectTitle' | translate}}</h1>
     <h6>{{'createProjectSubtitle' | translate}}</h6>
   </div>
   <div class="dropdown-divider dropdown-np"></div>

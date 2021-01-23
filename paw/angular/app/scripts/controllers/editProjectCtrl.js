@@ -253,6 +253,10 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         });
       };
 
+      $scope.backAction = function() {
+        history.back();
+      };
+
     }]);
 
   });
