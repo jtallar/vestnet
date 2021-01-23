@@ -30,15 +30,14 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
 
       $scope.messages = [];
 
-      // TODO: Que pasa si son varias paginas? Voy a mostrar solo el tope de esta pagina.
-      //  Deberia traerme un dato aparte?
       this.updateCounter = function () {
-        var total = 0;
-        $scope.messages.forEach(function (msg){
-          total += msg.offer;
+        messageService.getInvestedAmount().then(function (response) {
+          _this.animate("invested", 0, response.data.unread, 5000);
+        }, function (errorResponse) {
+          console.error(errorResponse);
         });
-        this.animate("invested", 0, total, 5000);
       };
+      this.updateCounter();
 
       this.setMaxPage = function (linkHeaders) {
         var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
@@ -73,7 +72,6 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
           }
           _this.setMaxPage(response.headers().link);
           _this.processMessages(response.data);
-          _this.updateCounter();
         }, function (errorResponse) {
           console.error(errorResponse);
         });
