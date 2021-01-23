@@ -8,7 +8,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       var _this = this;
       var projectId = parseInt($routeParams.id1), investorId = parseInt($routeParams.id2);
-      var page = 1, maxPage = 1, role, entrepreneur = "Ent", investor = "Inv";
+      var page = 1, nextPage = 1, role, entrepreneur = "Ent", investor = "Inv";
       var oneDayMs = 1000*60*60*24;
 
       if (AuthenticationService.isInvestor()) role = investor;
@@ -147,16 +147,16 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.viewMoreEnabled = false;
-      this.setMaxPage = function (linkHeaders) {
-        var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
-        maxPage = parseInt(lastLink[0].split('p=')[1][0]);
-        if (isNaN(maxPage)) maxPage = page;
-        $scope.viewMoreEnabled = (page !== maxPage);
+      this.setNextPage = function (linkHeaders) {
+        var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
+        nextPage = parseInt(lastLink[0].split('p=')[1][0]);
+        if (isNaN(nextPage)) nextPage = page;
+        $scope.viewMoreEnabled = (page !== nextPage);
       };
 
       $scope.chats = [];
       messageService.getChat(projectId, investorId, page).then(function (response) {
-        _this.setMaxPage(response.headers().link);
+        _this.setNextPage(response.headers().link);
         _this.handleChatResponse(response.data);
         _this.scrollToBottom();
       }, function (errorResponse) {
@@ -226,11 +226,12 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.viewMoreChat = function () {
-        if (page >= maxPage) return;
-        page++; $scope.viewMoreEnabled = (page !== maxPage);
+        if (page >= nextPage) return;
+        page++; $scope.viewMoreEnabled = (page !== nextPage);
 
         var element = document.getElementById("chatbox-scroll");
         messageService.getChat(projectId, investorId, page).then(function (response) {
+          _this.setNextPage(response.headers().link);
           if (response.data.length === 0) return;
           element.scrollTop = 0;
           response.data.reverse();

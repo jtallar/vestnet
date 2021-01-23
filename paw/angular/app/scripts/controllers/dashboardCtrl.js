@@ -4,6 +4,8 @@
 define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/AuthenticationService', 'services/sampleService', 'services/imageService', 'services/PathService'], function(paw2020a) {
   paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','AuthenticationService','sampleService','imageService', 'PathService', '$scope', '$rootScope', function(projectService, messageService,userService,AuthenticationService,sampleService,imageService, PathService, $scope, $rootScope) {
 
+    var _this = this;
+
     $scope.loadingProjects = true; $scope.loadingFunded = true;
 
     $scope.id = AuthenticationService.getUserId()
@@ -81,15 +83,19 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           console.log(senderId);
       };
 
+    this.updateNextPageOffers = function (linkHeaders, index) {
+      var nextLink = linkHeaders.split(',').filter(function (el) {
+        return el.includes('next');
+      });
+      $scope.projects[index].nextPageOffer = parseInt(nextLink[0].split('p=')[1][0]);
+    };
+
     $scope.fetchOffers = function(id, index){
       if($scope.projects[index].firstFecthedOffers == false) {
         $scope.projects[index].firstFecthedOffers = true
         $scope.fundedMsgs[index] = []
         messageService.getOffers(id.toString(), true, 1).then(function (response) {
-          var lastLink = response.headers().link.split(',').filter(function (el) {
-            return el.includes('last');
-          });
-          $scope.projects[index].maxPageOffer = parseInt(lastLink[0].split('p=')[1][0]);
+          _this.updateNextPageOffers(response.headers().link, index);
           var messageMap = []
           console.log(response)
           for (var i = 0; i < response.data.length; i++) {
@@ -115,18 +121,21 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           console.log(error)
         })
       }
-    }
+    };
 
+    this.updateNextPageMessages = function (linkHeaders, index) {
+      var nextLink = linkHeaders.split(',').filter(function (el) {
+        return el.includes('next');
+      });
+      $scope.projects[index].nextPageMessages = parseInt(nextLink[0].split('p=')[1][0]);
+    };
 
       $scope.fetchMessage = function(id, index){
       if($scope.projects[index].firstFecthed == false) {
           $scope.projects[index].firstFecthed = true
           $scope.messages[index] = []
           messageService.getOffers(id.toString(), false, 1).then(function (response) {
-            var lastLink = response.headers().link.split(',').filter(function (el) {
-              return el.includes('last');
-            });
-            $scope.projects[index].maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+            _this.updateNextPageMessages(response.headers().link, index);
             var messageMap = []
             for (var i = 0; i < response.data.length; i++) {
               messageMap[response.data[i].investorId] = i;
@@ -182,6 +191,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         $scope.projects[index].msgPage += 1
         var messageMap = []
         messageService.getOffers(id.toString(), false, $scope.projects[index].msgPage).then(function (response) {
+          _this.updateNextPageMessages(response.headers().link, index);
           for (var i = 0; i < response.data.length; i++) {
             messageMap[response.data[i].investorId] = length + i;
             // TODO: Mostrar mas que el body
@@ -213,6 +223,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.projects[index].offerPage += 1
       var messageMap = []
       messageService.getOffers(id.toString(), true, $scope.projects[index].offerPage).then(function (response) {
+        _this.updateNextPageOffers(response.headers().link, index);
         for (var i = 0; i < response.data.length; i++) {
           messageMap[response.data[i].investorId] = length + i
           $scope.fundedMsgs[index][i + length] = {
