@@ -55,7 +55,6 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
         proj.percentage = parseInt((proj.fundingCurrent/proj.fundingTarget)*100);
       });
       $scope.secondTab = $scope.secondTab.concat(data);
-      console.log($scope.secondTab);
     };
 
     this.fetchSecondTab = function () {
