@@ -55,7 +55,7 @@
                   <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChatWithDate' | translate : { date: lastMessage.publishDate } }}</div>
                 </div>
               </div>
-              <button ng-show="viewMoreEnabled" ng-click="viewMoreChat()" class="btn btn-inv pull-right">
+              <button ng-show="nextPageUrl" ng-click="viewMoreChat()" class="btn btn-inv pull-right">
                 <img src="images/up-arrow-wh.png" class="p-img" alt="" style="margin-top: 5px">
               </button>
               <div class="chatbox-body card-body" id="chatbox-scroll">

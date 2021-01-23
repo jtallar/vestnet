@@ -17,8 +17,6 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.loadingProjects = false;
       for(var i = 0; i < $scope.projects.length; i++) {
         map[$scope.projects[i].id] = i;
-        $scope.projects[i].msgPage = 1;
-        $scope.projects[i].offerPage = 1;
         $scope.projects[i].firstFecthed = false;
         $scope.projects[i].firstFecthedOffers = false;
         $scope.projects[i].editUrl= PathService.get().editProject($scope.projects[i].id).path;
@@ -83,10 +81,16 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       };
 
     this.updateNextPageOffers = function (linkHeaders, index) {
-      var nextLink = linkHeaders.split(',').filter(function (el) {
-        return el.includes('next');
-      });
-      $scope.projects[index].nextPageOffer = parseInt(nextLink[0].split('p=')[1][0]);
+      if (!linkHeaders) {
+        $scope.projects[index].nextPageOffer = undefined;
+        return;
+      }
+      var nextLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
+      if (isNaN(parseInt(nextLink[0].split('p=')[1][0]))) {
+        $scope.projects[index].nextPageOffer = undefined;
+        return;
+      }
+      $scope.projects[index].nextPageOffer = nextLink[0].substring(1, nextLink[0].indexOf('>'));
     };
 
     $scope.fetchOffers = function(id, index){
@@ -123,10 +127,16 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     };
 
     this.updateNextPageMessages = function (linkHeaders, index) {
-      var nextLink = linkHeaders.split(',').filter(function (el) {
-        return el.includes('next');
-      });
-      $scope.projects[index].nextPageMessages = parseInt(nextLink[0].split('p=')[1][0]);
+      if (!linkHeaders) {
+        $scope.projects[index].nextPageMessages = undefined;
+        return;
+      }
+      var nextLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
+      if (isNaN(parseInt(nextLink[0].split('p=')[1][0]))) {
+        $scope.projects[index].nextPageMessages = undefined;
+        return;
+      }
+      $scope.projects[index].nextPageMessages = nextLink[0].substring(1, nextLink[0].indexOf('>'));
     };
 
       $scope.fetchMessage = function(id, index){
@@ -187,9 +197,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
       $scope.viewMore = function (id, index) {
         var length = $scope.messages[index].length
-        $scope.projects[index].msgPage += 1
         var messageMap = []
-        messageService.getOffers(id.toString(), false, $scope.projects[index].msgPage).then(function (response) {
+        sampleService.get($scope.projects[index].nextPageMessages).then(function (response) {
           _this.updateNextPageMessages(response.headers().link, index);
           for (var i = 0; i < response.data.length; i++) {
             messageMap[response.data[i].investorId] = length + i;
@@ -219,9 +228,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     $scope.viewMoreOffers = function (id, index) {
       var length = $scope.fundedMsgs[index].length
-      $scope.projects[index].offerPage += 1
       var messageMap = []
-      messageService.getOffers(id.toString(), true, $scope.projects[index].offerPage).then(function (response) {
+      sampleService.get($scope.projects[index].nextPageOffer).then(function (response) {
         _this.updateNextPageOffers(response.headers().link, index);
         for (var i = 0; i < response.data.length; i++) {
           messageMap[response.data[i].investorId] = length + i

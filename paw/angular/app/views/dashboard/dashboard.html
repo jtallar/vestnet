@@ -100,7 +100,7 @@
               </div>
             </div>
           </div>
-          <div ng-if="project.msgPage < project.nextPageMessages">
+          <div ng-if="project.nextPageMessages">
             <button ng-click="viewMore(project.id, $index)" class="btn btn-inv pull-right">
               <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
             </button>
@@ -144,7 +144,7 @@
             </div>
           </div>
         </div>
-        <div ng-if="project.offerPage < project.nextPageOffer">
+        <div ng-if="project.nextPageOffer">
           <button ng-click="viewMoreOffers(project.id, $index)" class="btn btn-inv pull-right">
             <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
           </button>
