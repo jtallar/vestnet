@@ -53,21 +53,14 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
         for(var i = 0; i < $scope.messages.length; i++) {
           map[$scope.messages[i].id] = i;
           $scope.messages[i].ownerUrl = PathService.get().user($scope.messages[i].ownerId).path;
-          // TODO: Ver si con un cambio en el back puedo ahorrarme esta mamushka de llamadas
-          sampleService.get($scope.messages[i].project, $scope.messages[i].id.toString()).then(function (project) {
-            $scope.messages[map[project.data.route]].projectName = project.data.name;
-            $scope.messages[map[project.data.route]].projectUrl = PathService.get().singleProject(project.data.id).path;
-            $scope.messages[map[project.data.route]].projectPortraitExists = project.data.portraitExists;
-            if (project.data.portraitExists) {
-              sampleService.get(project.data.portraitImage, project.data.route).then(function (image) {
-                $scope.messages[map[image.data.route]].projectImage = image.data.image;
-              }, function (err) {
-                console.log("No image")
-              });
-            }
-          }, function (err) {
-            console.log("No project found");
-          });
+          $scope.messages[i].projectUrl = PathService.get().singleProject($scope.messages[i].projectId).path;
+          if ($scope.messages[i].projectPortraitExists) {
+            sampleService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
+              $scope.messages[map[image.data.route]].projectImage = image.data.image;
+            }, function (err) {
+              console.log("No image")
+            });
+          }
         }
       };
 
