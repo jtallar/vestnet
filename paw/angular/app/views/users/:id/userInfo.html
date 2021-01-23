@@ -171,6 +171,7 @@
           <div class="text-center" ng-if="loadingSecondTab">
             <div class="spinner-grow text-dark loading-grow" role="status"></div>
           </div>
+<!--       TODO: Ver si esto lo dejamos asi de estilo   -->
           <div ng-if="!loadingSecondTab && secondTab.length !== 0">
             <div ng-repeat="project in secondTab">
               <div class="card m-2">
@@ -178,23 +179,12 @@
                   <h5 class="card-title">{{project.projectName}}</h5>
                 </div>
                 <div class="card-body favorites">
-                  <p class="card-text">{{project.summary}}</p>
                   <div class="row">
-                    <div class="price-footer col-9">
-                      <h4 style="text-align: center">
-                        {{'of' | translate : {of : project.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : project.fundingTarget} }}</b></h4>
-                      <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
-                      </div>
-                    </div>
                     <div class="col">
                       <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >
                         <img src="images/view-icon-b.png" alt="">
                       </a>
                     </div>
-                    <!--                      <div class="col">-->
-                    <!--                        <a href="#/projects/{{project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>-->
-                    <!--                      </div>-->
                   </div>
                 </div>
               </div>
