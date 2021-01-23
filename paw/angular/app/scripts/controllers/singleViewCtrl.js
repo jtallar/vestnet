@@ -45,6 +45,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
 
     $scope.isEntrepreneur = AuthenticationService.isEntrepreneur();
     $scope.isInvestor = AuthenticationService.isInvestor();
+    $scope.editUrl = PathService.get().editProject($scope.id).path;
 
     $scope.backAction = function() {
         history.back();

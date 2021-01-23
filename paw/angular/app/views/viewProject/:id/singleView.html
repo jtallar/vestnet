@@ -68,7 +68,19 @@
 
             <!-- Project card -->
             <div class="card-body single-card">
-              <h5 class="card-title"><b>{{project.name}}</b></h5>
+              <div class="row justify-content-vertical">
+                <div class="col-11">
+                  <h5 class="card-title"><b>{{project.name}}</b></h5>
+                </div>
+<!--            TODO: Acomodar el tamaño del lapiz y alinearlo con el nombre    -->
+                <div ng-if="project.getByOwner" class="col-1">
+                  <a ng-href="#{{editUrl}}" class="btn btn-inv btn-project pull-right">
+                    <div class="notification-icon">
+                      <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+                    </div>
+                  </a>
+                </div>
+              </div>
               <div ng-if="project.getByOwner" class="blockquote-footer">{{'you' | translate}}</div>
               <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
 
