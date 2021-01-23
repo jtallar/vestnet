@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.daos.CategoryDao;
 import ar.edu.itba.paw.interfaces.daos.ImageDao;
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
+import ar.edu.itba.paw.interfaces.exceptions.IllegalProjectAccessException;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.*;
@@ -37,15 +38,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget, List<Category> categories) {
-        Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+    public Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget, List<Category> categories) throws IllegalProjectAccessException {
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
-        optionalProject.get().setName(name);
-        optionalProject.get().setSummary(summary);
-        optionalProject.get().setFundingTarget(fundingTarget);
-        optionalProject.get().setCategories(categories);
-        optionalProject.get().setUpdateDate(new Date());
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> {
+            p.setName(name);
+            p.setSummary(summary);
+            p.setFundingTarget(fundingTarget);
+            p.setCategories(categories);
+            p.setUpdateDate(new Date());
+        });
         return optionalProject;
     }
 
@@ -58,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize) {
-        RequestBuilder request = new ProjectRequestBuilder()
+        final RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(category)
                 .setFundingTargetRange(minFundingTarget, maxFundingTarget)
                 .setClosed(false)
@@ -71,20 +76,26 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setClosed(long ownerId, long id) {
-        Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
-        optionalProject.get().setClosed(true);
+    public Optional<Project> setClosed(long ownerId, long id) throws IllegalProjectAccessException {
+        final Optional<Project> optionalProject = projectDao.findById(id);
+
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> p.setClosed(true));
         return optionalProject;
     }
 
 
     @Override
     @Transactional
-    public Optional<Project> addCategories(long ownerId, long id, List<Category> categories) {
-        Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
-        optionalProject.get().setCategories(categories);
+    public Optional<Project> addCategories(long ownerId, long id, List<Category> categories) throws IllegalProjectAccessException {
+        final Optional<Project> optionalProject = projectDao.findById(id);
+
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> p.setCategories(categories));
         return optionalProject;
     }
 
@@ -92,7 +103,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> getStats(long id) {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
         optionalProject.ifPresent(p -> {
             if (p.getStats() == null) p.setStats(new ProjectStats(true));
         });
@@ -103,7 +114,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Optional<Project> addStats(long id, long seconds, long clicks, boolean investor, boolean contact) {
-        Optional<Project> optionalProject = projectDao.findById(id);
+        final Optional<Project> optionalProject = projectDao.findById(id);
         optionalProject.ifPresent(p -> {
             if (p.getStats() == null) p.setStats(new ProjectStats(true));
             p.getStats().setNewSeen(seconds, clicks, investor, contact);
@@ -115,18 +126,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setStage(long ownerId, long id, String name, String comment) {
-        Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent()) return optionalProject;
+    public Optional<Project> setStage(long ownerId, long id, String name, String comment) throws IllegalProjectAccessException {
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
-        Project project = optionalProject.get();
-        /** Entrepreneur not the owner */
-        if (project.getOwnerId() != ownerId) return Optional.empty();
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();;
 
         /** Adds the new stage if there are less than 5 */
-        Set<ProjectStages> stages = project.getStages();
-        if (stages.size() < Project.MAX_STAGES)
-            stages.add(new ProjectStages(name, stages.size() + 1, comment, project));
+        optionalProject.ifPresent(p -> {
+            final Set<ProjectStages> stages = p.getStages();
+            if (stages.size() < Project.MAX_STAGES)
+                stages.add(new ProjectStages(name, stages.size() + 1, comment, p));
+        });
         return optionalProject;
     }
 
@@ -139,14 +150,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setPortraitImage(long ownerId, long id, byte[] image) {
-        Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+    public Optional<Project> setPortraitImage(long ownerId, long id, byte[] image) throws IllegalProjectAccessException {
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
-        Set<ProjectImage> images = optionalProject.get().getImages();
-        images.removeIf(ProjectImage::isMain);
-        images.add(new ProjectImage(new Project(id), image, true));
-        optionalProject.get().setImages(images);
+        /** Not the owner of the found project */
+        if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        optionalProject.ifPresent(p -> {
+            final Set<ProjectImage> images = p.getImages();
+            images.removeIf(ProjectImage::isMain);
+            images.add(new ProjectImage(new Project(id), image, true));
+            p.setImages(images);
+        });
         return optionalProject;
     }
 
@@ -159,12 +174,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setSlideshowImages(long ownerId, long id, List<byte[]> images) {
-        /** Obtain the project and check ownership */
-        Optional<Project> optionalProject = projectDao.findById(id);
-        if (!optionalProject.isPresent() || optionalProject.get().getOwnerId() != ownerId) return Optional.empty();
+    public Optional<Project> setSlideshowImages(long ownerId, long id, List<byte[]> images) throws IllegalProjectAccessException {
+        final Optional<Project> optionalProject = projectDao.findById(id);
 
-        Set<ProjectImage> projectImages = optionalProject.get().getImages();
+        if (!optionalProject.isPresent()) return Optional.empty();
+
+        /** Not the owner of the found project */
+        if (optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
+
+        final Set<ProjectImage> projectImages = optionalProject.get().getImages();
 
         /** Checks if there is a Portrait, main image. If not, returns optional empty */
         if (projectImages.stream().noneMatch(ProjectImage::isMain)) return Optional.empty();

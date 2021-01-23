@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidMessageException;
+import ar.edu.itba.paw.interfaces.exceptions.MessageDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
@@ -42,13 +44,10 @@ public class MessageRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response offer(@PathParam("project_id") final long projectId,
                           @PathParam("investor_id") final long investorId,
-                          @Valid final OfferDto offerDto) {
+                          @Valid final OfferDto offerDto) throws InvalidMessageException {
 
-        final Optional<Message> message = messageService.create(projectId, investorId, sessionUser.getId(),
-                OfferDto.toMessageContent(offerDto), offerDto.getExpiryDays(), uriInfo.getBaseUri());
-
-        return message.map(m -> Response.created(uriInfo.getAbsolutePath()).header("Access-Control-Expose-Headers", "Location").build())
-                .orElse(Response.status(Response.Status.BAD_REQUEST).build());
+        messageService.create(projectId, investorId, sessionUser.getId(), OfferDto.toMessageContent(offerDto), offerDto.getExpiryDays(), uriInfo.getBaseUri());
+        return Response.created(uriInfo.getAbsolutePath()).header("Access-Control-Expose-Headers", "Location").build();
     }
 
 
@@ -56,7 +55,7 @@ public class MessageRestController {
     @Path("/{project_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response offer(@PathParam("project_id") final long projectId,
-                          @Valid final OfferDto offerDto) {
+                          @Valid final OfferDto offerDto) throws InvalidMessageException {
 
         return offer(projectId, sessionUser.getId(), offerDto);
     }
@@ -70,9 +69,7 @@ public class MessageRestController {
                                     @QueryParam("p") @DefaultValue("1") int page) {
 
         final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), accepted, page, PAGE_SIZE);
-
-        List<OfferInvestorDto> messages = messagePage.getContent().stream().map(p -> OfferInvestorDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
-
+        final List<OfferInvestorDto> messages = messagePage.getContent().stream().map(p -> OfferInvestorDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<OfferInvestorDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
                 .header("Access-Control-Expose-Headers", "Link")
@@ -87,9 +84,7 @@ public class MessageRestController {
                                   @QueryParam("p") @DefaultValue("1") int page) {
 
         final Page<Message> messagePage = messageService.getInvestorProjects(investorId, accepted, page, PAGE_SIZE);
-
-        List<OfferProjectDto> messages = messagePage.getContent().stream().map(p -> OfferProjectDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
-
+        final List<OfferProjectDto> messages = messagePage.getContent().stream().map(p -> OfferProjectDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<OfferProjectDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getStartPage()).build(), "start")
@@ -114,7 +109,7 @@ public class MessageRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getInvestedAmount() {
 
-        long count = messageService.getInvestedAmount(sessionUser.getId(), sessionUser.isInvestor());
+        final long count = messageService.getInvestedAmount(sessionUser.getId(), sessionUser.isInvestor());
         return Response.ok(NotificationDto.fromNumber(count)).build();
     }
 
@@ -127,9 +122,7 @@ public class MessageRestController {
                          @QueryParam("p") @DefaultValue("1") int page) {
 
         final Page<Message> messagePage = messageService.getConversation(projectId, investorId, sessionUser.getId(), page, PAGE_SIZE);
-
-        List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
-
+        final List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<OfferDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getNextPage()).build(), "next")
                 .header("Access-Control-Expose-Headers", "Link")
@@ -142,22 +135,21 @@ public class MessageRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response chat(@PathParam("project_id") final long projectId,
                          @QueryParam("p") @DefaultValue("1") int page) {
+
         return chat(projectId, sessionUser.getId(), page);
     }
 
 
-    // TODO: Deberiamos aca marcar como "unseen" o de alguna manera para que le llegue notificacion al otro?
     @PUT
     @Path("/status/{project_id}/{investor_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response status(@PathParam("project_id") final long projectId,
                            @PathParam("investor_id") final long investorId,
-                           final OfferStatusDto offerStatusDto) {
+                           final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException {
 
-        final Optional<Message> updatedMessage = messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), offerStatusDto.isAccepted(), uriInfo.getBaseUri());
-
-        return updatedMessage.map(message -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+        messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), offerStatusDto.isAccepted(),
+                uriInfo.getBaseUri()).orElseThrow(MessageDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
@@ -165,28 +157,26 @@ public class MessageRestController {
     @Path("/status/{project_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response status(@PathParam("project_id") final long projectId,
-                           final OfferStatusDto offerStatusDto) {
+                           final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException {
+
         return status(projectId, sessionUser.getId(), offerStatusDto);
     }
 
 
-    // TODO: Estamos marcando como visto solamente al ultimo mensaje. Que pasa si un mensaje expiro? Jamas se le va el visto.
-    //  O deberiamos filtrarlos en los demas lugares? Eg: en notificationCount, decir que este unseen y unexpired. Y lo mismo en el front.
     @PUT
     @Path("/seen/{project_id}/{investor_id}")
     public Response seen(@PathParam("project_id") final long projectId,
-                           @PathParam("investor_id") final long investorId) {
+                           @PathParam("investor_id") final long investorId) throws MessageDoesNotExistException {
 
-        final Optional<Message> updatedMessage = messageService.updateMessageSeen(projectId, investorId, sessionUser.getId(), uriInfo.getBaseUri());
-
-        return updatedMessage.map(message -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+        messageService.updateMessageSeen(projectId, investorId, sessionUser.getId(), uriInfo.getBaseUri()).orElseThrow(MessageDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
     @PUT
     @Path("/seen/{project_id}")
-    public Response seen(@PathParam("project_id") final long projectId) {
+    public Response seen(@PathParam("project_id") final long projectId) throws MessageDoesNotExistException {
+
         return seen(projectId, sessionUser.getId());
     }
 

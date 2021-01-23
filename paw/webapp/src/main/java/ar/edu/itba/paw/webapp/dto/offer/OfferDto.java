@@ -35,6 +35,8 @@ public class OfferDto {
 
     private boolean seen;
 
+    private boolean seenAnswer;
+
     private boolean direction;
 
     private Boolean accepted;
@@ -56,6 +58,7 @@ public class OfferDto {
         offerDto.expiryDate = message.getExpiryDate();
 
         offerDto.seen = message.isSeen();
+        offerDto.seenAnswer = message.isSeenAnswer();
         offerDto.direction = message.getDirection();
         offerDto.accepted = message.getAccepted();
 
@@ -89,6 +92,14 @@ public class OfferDto {
 
     public void setSeen(boolean seen) {
         this.seen = seen;
+    }
+
+    public boolean isSeenAnswer() {
+        return seenAnswer;
+    }
+
+    public void setSeenAnswer(boolean seenAnswer) {
+        this.seenAnswer = seenAnswer;
     }
 
     public boolean getDirection() {
