@@ -91,7 +91,7 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
         $scope.page = page;
         PathService.get().setParamsInUrl({p:$scope.page});
         _this.fetchDeals();
-      }
+      };
 
     }]);
 

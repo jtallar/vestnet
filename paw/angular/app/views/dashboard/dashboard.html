@@ -11,7 +11,14 @@
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
 <!-- TODO: Center toggleswitch -->
-  <toggleswitch name="funded" ng-model="funded" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
+  <toggleswitch name="funded" ng-model="funded" ng-change="toggleChange" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
+
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-11">
+      <pagination></pagination>
+    </div>
+  </div>
 
   <div class="text-center" ng-if="isLoading()">
     <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
@@ -213,7 +220,7 @@
 
     <div ng-if="projects.length === 0" class="card no-proj-mine">
       <div class="card-header text-center">
-        <div ng-switch="true">
+        <div ng-switch="funded">
           <div ng-switch-when="true">
             <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
           </div>

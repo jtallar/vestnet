@@ -5,6 +5,8 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
 
     var _this = this;
 
+    var pageSize = 6;
+
     $scope.page = 1; $scope.lastPage = 1;
     $scope.isInvestor = undefined;
 
@@ -70,9 +72,8 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
         });
       } else {
         // Fetch entrepreneur current funding projects
-        // TODO: Add pagination here
-        userService.getUserProjects($scope.user.id.toString(), false).then(function (response) {
-          // _this.setMaxPage(response.headers().link);
+        userService.getUserProjects($scope.user.id.toString(), false, $scope.page, pageSize).then(function (response) {
+          _this.setMaxPage(response.headers().link);
           _this.processResponse(response.data);
           $scope.loadingSecondTab = false;
         }, function (errorResponse) {
