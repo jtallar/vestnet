@@ -11,7 +11,14 @@
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
 <!-- TODO: Center toggleswitch -->
-  <toggleswitch name="funded" ng-model="funded" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
+  <toggleswitch name="funded" ng-model="funded" ng-change="toggleChange" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
+
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-11">
+      <pagination></pagination>
+    </div>
+  </div>
 
   <div class="text-center" ng-if="isLoading()">
     <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
@@ -48,9 +55,11 @@
                   <div class="col-1">
                     <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
                        data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
+<!--                      TODO: Ver si hay alguna forma mejor de reservar el espacio para cuando se oculta-->
                       <div class="notification-icon">
-                          <img class="nav-icon" src="images/chat-icon-b.png" alt="">
-                          <span ng-if="project.msgCount != 0" class="badge bg-danger">{{project.msgCount}}</span>
+                        <img class="nav-icon" src="images/chat-icon-b.png" alt="">
+                        <span ng-show="project.msgCount !== 0" class="badge bg-danger">{{project.msgCount}}</span>
+                        <span ng-show="project.msgCount === 0" class="badge bg-danger" style="visibility: hidden">{{project.msgCount}}</span>
                       </div>
                     </a>
                   </div>
@@ -86,11 +95,12 @@
                   <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
-                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                  <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
+<!--                // TODO: Mostrar mas que el comment-->
                 <div class="col-7">
                   <strong>{{'lastChat' | translate}}:</strong>
-                  <i>{{message.body}}</i>
+                  <i>{{message.comment}}</i>
                 </div>
                 <div class="col-1">
                   <a ng-click="goToChat(message)" class="btn btn-inv pull-right">
@@ -100,7 +110,7 @@
               </div>
             </div>
           </div>
-          <div ng-if="project.msgPage < project.nextPageMessages">
+          <div ng-if="project.nextPageMessages">
             <button ng-click="viewMore(project.id, $index)" class="btn btn-inv pull-right">
               <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
             </button>
@@ -132,7 +142,7 @@
                   <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
-                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                  <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
                 <div class="col-4">
                   <strong>{{'msgTitleOffer' | translate}}</strong> {{message.offer}}
@@ -144,7 +154,7 @@
             </div>
           </div>
         </div>
-        <div ng-if="project.offerPage < project.nextPageOffer">
+        <div ng-if="project.nextPageOffer">
           <button ng-click="viewMoreOffers(project.id, $index)" class="btn btn-inv pull-right">
             <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
           </button>
@@ -210,9 +220,9 @@
     </div>
   </div>
 
-    <div ng-if="projects.length === 0" class="card no-proj-mine">
+    <div ng-if="getList().length === 0" class="card no-proj-mine">
       <div class="card-header text-center">
-        <div ng-switch="true">
+        <div ng-switch="funded">
           <div ng-switch-when="true">
             <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
           </div>

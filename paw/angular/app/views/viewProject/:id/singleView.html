@@ -9,8 +9,11 @@
       <div class="p-2 mx-3 my-1">
         <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
       </div>
-      <div class="p-2 ml-8" id="mail-feedback" ng-if="sent == true">
+      <div class="p-2 ml-8" ng-if="sent">
         <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'successfullContact' | translate : {name : project.owner.firstName} }} </h5>
+      </div>
+      <div class="p-2 ml-8" ng-if="imageError">
+        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'imageError' | translate }} </h5>
       </div>
     </div>
 
@@ -52,6 +55,7 @@
       <div class="col-7">
         <div class="d-flex justify-content-center">
           <div class="card description mb-3">
+<!--            TODO: Alinear verticalmente el bookmark    -->
             <div ng-if="isInvestor" class="card-header header-white">
               <button ng-click="favTap()" class="btn-transp pull-right">
                 <div ng-if="isFav">
@@ -65,7 +69,19 @@
 
             <!-- Project card -->
             <div class="card-body single-card">
-              <h5 class="card-title"><b>{{project.name}}</b></h5>
+              <div class="row justify-content-vertical">
+                <div class="col-11">
+                  <h5 class="card-title"><b>{{project.name}}</b></h5>
+                </div>
+<!--            TODO: Acomodar el tamaño del lapiz y alinearlo con el nombre    -->
+                <div ng-if="project.getByOwner" class="col-1">
+                  <a ng-href="#{{editUrl}}" class="btn btn-inv btn-project pull-right">
+                    <div class="notification-icon">
+                      <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+                    </div>
+                  </a>
+                </div>
+              </div>
               <div ng-if="project.getByOwner" class="blockquote-footer">{{'you' | translate}}</div>
               <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
 

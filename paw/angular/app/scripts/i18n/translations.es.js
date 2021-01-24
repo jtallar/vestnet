@@ -280,6 +280,7 @@ define([], function() {
     profileDashboard: 'Proyectos Publicados',
     noFavoritesFound: 'No se encontraron favoritos',
     noDealsFound: 'No se encontraron acuerdos',
+    imageError: 'Error al subir algunas imágenes',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',

@@ -37,6 +37,10 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('unread').one(projId).get(param)
     };
 
+    messageService.projectNotificationCount = function (projectId) {
+      return root.one('notifications').one('project').one(projectId.toString()).get();
+    };
+
     messageService.notificationCount = function () {
       return root.one('notifications').get();
     };
@@ -56,6 +60,10 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       if (!page) page = 1;
       if (isNaN(investorId)) return root.one('investor').get({a: true, p: page});       // role === Investor
       return root.one('investor').one(investorId.toString()).get({a: true, p: page});   // role === Entrep
+    };
+
+    messageService.getInvestedAmount = function () {
+      return root.one('invested').get();
     };
 
     return messageService;

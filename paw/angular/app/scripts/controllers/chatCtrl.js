@@ -8,7 +8,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       var _this = this;
       var projectId = parseInt($routeParams.id1), investorId = parseInt($routeParams.id2);
-      var page = 1, nextPage = 1, role, entrepreneur = "Ent", investor = "Inv";
+      var role, entrepreneur = "Ent", investor = "Inv";
       var oneDayMs = 1000*60*60*24;
 
       if (AuthenticationService.isInvestor()) role = investor;
@@ -88,8 +88,6 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       $scope.offerEnabled = false; $scope.responseEnabled = false;
 
       this.setChatAsSeen = function (lastMessage) {
-        if (!lastMessage.incoming || lastMessage.seen) return;
-        // TODO: Ver que funque esto
         messageService.setSeen(projectId, investorId).then(function (response) {
           // console.log(response);
         }, function (errorResponse) {
@@ -146,16 +144,22 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         $scope.offerEnabled = false;
       };
 
-      $scope.viewMoreEnabled = false;
+      $scope.nextPageUrl = undefined;
       this.setNextPage = function (linkHeaders) {
-        var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
-        nextPage = parseInt(lastLink[0].split('p=')[1][0]);
-        if (isNaN(nextPage)) nextPage = page;
-        $scope.viewMoreEnabled = (page !== nextPage);
+        if (!linkHeaders) {
+          $scope.nextPageUrl = undefined;
+          return;
+        }
+        var nextLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
+        if (isNaN(parseInt(nextLink[0].split('p=')[1][0]))) {
+          $scope.nextPageUrl = undefined;
+          return;
+        }
+        $scope.nextPageUrl = nextLink[0].substring(1, nextLink[0].indexOf('>'));
       };
 
       $scope.chats = [];
-      messageService.getChat(projectId, investorId, page).then(function (response) {
+      messageService.getChat(projectId, investorId, 1).then(function (response) {
         _this.setNextPage(response.headers().link);
         _this.handleChatResponse(response.data);
         _this.scrollToBottom();
@@ -226,11 +230,10 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.viewMoreChat = function () {
-        if (page >= nextPage) return;
-        page++; $scope.viewMoreEnabled = (page !== nextPage);
+        if (!$scope.nextPageUrl) return;
 
         var element = document.getElementById("chatbox-scroll");
-        messageService.getChat(projectId, investorId, page).then(function (response) {
+        sampleService.get($scope.nextPageUrl).then(function (response) {
           _this.setNextPage(response.headers().link);
           if (response.data.length === 0) return;
           element.scrollTop = 0;

@@ -41,9 +41,11 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     }
     $scope.id = param;
     $scope.sent = false;    // if the mail was sent retreive from url
+    $scope.imageError = !!($routeParams.imageError);
 
     $scope.isEntrepreneur = AuthenticationService.isEntrepreneur();
     $scope.isInvestor = AuthenticationService.isInvestor();
+    $scope.editUrl = PathService.get().editProject($scope.id).path;
 
     $scope.backAction = function() {
         history.back();
@@ -171,9 +173,17 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.new.comment = '';
     };
 
-    // TODO: Get initial favorite value
     $scope.isFav = false;
+    if ($scope.isInvestor) {
+      userService.getFavorites().then(function (response) {
+        $scope.isFav = response.data.some(function(e) { return e.projectId === $scope.id });
+      }, function (errorResponse) {
+        console.error(errorResponse);
+      });
+    }
+
     $scope.favTap = function () {
+      if (!$scope.isInvestor) return;
       $scope.isFav = !$scope.isFav;
       userService.putFavorite($scope.id, $scope.isFav).then(function () {
         // Do nothing
