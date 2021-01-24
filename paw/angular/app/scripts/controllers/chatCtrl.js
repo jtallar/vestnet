@@ -88,8 +88,6 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       $scope.offerEnabled = false; $scope.responseEnabled = false;
 
       this.setChatAsSeen = function (lastMessage) {
-        if (!lastMessage.incoming || lastMessage.seen) return;
-        // TODO: Ver que funque esto
         messageService.setSeen(projectId, investorId).then(function (response) {
           // console.log(response);
         }, function (errorResponse) {

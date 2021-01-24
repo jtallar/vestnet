@@ -28,6 +28,8 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
         $scope.messages[i].ownerUrl = PathService.get().user($scope.messages[i].ownerId).path;
         $scope.messages[i].projectUrl = PathService.get().singleProject($scope.messages[i].projectId).path;
         $scope.messages[i].chatUrl = PathService.get().chat($scope.messages[i].projectId).path;
+        // TODO: Chequear esta condicion de notification
+        $scope.messages[i].notification = (!$scope.messages[i].seen && !$scope.messages[i].direction) || (!$scope.messages[i].seenAnswer && $scope.messages[i].direction && $scope.messages[i].accepted != null);
         if ($scope.messages[i].projectPortraitExists) {
           sampleService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
             $scope.messages[map[image.data.route]].projectImage = image.data.image;
@@ -60,7 +62,7 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
     };
 
     $scope.goToChat = function (message) {
-      if (!message.seen) $rootScope.$emit('messageRead');
+      if (message.notification) $rootScope.$emit('messageRead');
       PathService.get().setFullUrl(message.chatUrl).go();
     };
 

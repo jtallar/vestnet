@@ -50,7 +50,7 @@
                   <p>{{message.comment}}</p>
                 </div>
                 <div class="col-1 ww-last">
-                  <span ng-if="!message.seen && !message.direction" class="badge bg-danger pull-right">1</span>
+                  <span ng-if="message.notification" class="badge bg-danger pull-right">1</span>
                 </div>
                 <div class="col-1 ww-last">
                   <a ng-click="goToChat(message)" class="btn btn-inv pull-right" style="margin: auto">
