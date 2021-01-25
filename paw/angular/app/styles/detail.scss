@@ -22,7 +22,12 @@
 }
 
 .header-white{
-  background-color: white
+  background-color: white !important;
+}
+
+.single-header{
+  padding: 5px 0 0 0 !important;
+  border: transparent !important;
 }
 
 /* Container holding the image and the text */
@@ -103,7 +108,7 @@
 }
 
 .single-card{
-  padding: 25px 5px 25px 25px !important;
+  padding: 0 25px 25px 25px !important;
   min-height: 620px !important;
 }
 
