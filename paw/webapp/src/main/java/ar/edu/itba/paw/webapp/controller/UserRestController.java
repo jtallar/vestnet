@@ -52,6 +52,8 @@ public class UserRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException {
 
+        LOGGER.debug("Endpoint POST /users reached with " + user.toString());
+
         final User newUser = userService.create(FullUserWithPasswordDto.toUser(user), UriInfoUtils.getBaseURI(uriInfo));
         final URI userUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(newUser.getId())).build();
         return Response.created(userUri).header("Access-Control-Expose-Headers", "Location").build();
@@ -62,22 +64,29 @@ public class UserRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateUser(@Valid final UpdatableUserDto user) throws UserDoesNotExistException {
 
+        LOGGER.debug("Endpoint PUT /users reached with " + user.toString() + " - User is " + sessionUser.getId());
+
         userService.update(sessionUser.getId(), UpdatableUserDto.toUser(user)).orElseThrow(UserDoesNotExistException::new);
         return Response.ok().build();
     }
 
-    // TODO: Ver si lo fletamos, si lo implementamos o ninguna de las dos
+    // TODO: implement?
     @DELETE
     public Response deleteUser() {
 
-        userService.remove(sessionUser.getId());
-        return Response.noContent().build();
+        LOGGER.debug("Endpoint DELETE /users reached - User is " + sessionUser.getId());
+
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
+//        userService.remove(sessionUser.getId());
+//        return Response.noContent().build();
     }
 
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response personalProfile() throws UserDoesNotExistException{
+    public Response personalProfile() throws UserDoesNotExistException {
+
+        LOGGER.debug("Endpoint GET /users reached - User is " + sessionUser.getId());
 
         return userProfile(sessionUser.getId());
     }
@@ -87,6 +96,8 @@ public class UserRestController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response userProfile(@PathParam("id") final long id) throws UserDoesNotExistException {
+
+        LOGGER.debug("Endpoint GET /users/" + id + " reached");
 
         final User user = userService.findById(id).orElseThrow(UserDoesNotExistException::new);
         return Response.ok(FullUserDto.fromUser(user, uriInfo)).build();
@@ -102,6 +113,8 @@ public class UserRestController {
                                   @QueryParam("p") @DefaultValue("1") int page,
                                   @QueryParam("l") @DefaultValue("3") int limit) {
 
+        LOGGER.debug("Endpoint GET /users/projects reached - User is " + sessionUser.getId());
+
         return ownedProjects(sessionUser.getId(), funded, page, limit);
     }
 
@@ -113,6 +126,8 @@ public class UserRestController {
                                   @QueryParam("funded") @DefaultValue("true") boolean funded,
                                   @QueryParam("p") @DefaultValue("1") int page,
                                   @QueryParam("l") @DefaultValue("3") int limit) {
+
+        LOGGER.debug("Endpoint GET /users/" + userId + "/projects/ reached");
 
         final Page<Project> projectPage = userService.getOwnedProjects(userId, funded, page, limit);
         final List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
@@ -132,6 +147,8 @@ public class UserRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getFavoritesIds() throws UserDoesNotExistException {
 
+        LOGGER.debug("Endpoint GET /users/favorites reached - User is " + sessionUser.getId());
+
         final User user = userService.findById(sessionUser.getId()).orElseThrow(UserDoesNotExistException::new);
         final List<FavoriteDto> favorites = user.getFavorites().stream().map(FavoriteDto::fromFavorite).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<FavoriteDto>>(favorites) {}).build();
@@ -142,6 +159,8 @@ public class UserRestController {
     @Path("/favorites/profile")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getFavorites() throws UserDoesNotExistException {
+
+        LOGGER.debug("Endpoint GET /users/favorites/profile reached - User is " + sessionUser.getId());
 
         final User user = userService.findById(sessionUser.getId()).orElseThrow(UserDoesNotExistException::new);
         final List<ProjectDto> favorites = user.getFavoriteProjects().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
@@ -154,6 +173,8 @@ public class UserRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response addFavorite(@Valid final FavoriteDto favoriteDto) throws UserDoesNotExistException {
 
+        LOGGER.debug("Endpoint PUT /users/favorites reached with " + favoriteDto.toString() + " - User is " + sessionUser.getId());
+
         userService.addFavorites(sessionUser.getId(), favoriteDto.getProjectId(), favoriteDto.getAdd()).orElseThrow(UserDoesNotExistException::new);
         return Response.ok().build();
     }
@@ -165,6 +186,8 @@ public class UserRestController {
     @Path("/password")
     public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException {
 
+        LOGGER.debug("Endpoint POST /users/password reached with " + mailDto.toString());
+
         userService.requestPassword(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo)).orElseThrow(UserDoesNotExistException::new);
         return Response.ok().build();
     }
@@ -175,6 +198,8 @@ public class UserRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException {
 
+        LOGGER.debug("Endpoint PUT /users/password reached with " + passwordDto.toString());
+
         userService.updatePassword(passwordDto.getToken(), passwordDto.getPassword());
         return Response.ok().build();
     }
@@ -184,6 +209,8 @@ public class UserRestController {
     @Path("/verify")
     public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException {
 
+        LOGGER.debug("Endpoint PUT /users/verify reached with " + tokenDto.toString());
+
         userService.updateVerification(tokenDto.getToken(), UriInfoUtils.getBaseURI(uriInfo));
         return Response.ok().build();
     }
@@ -192,6 +219,8 @@ public class UserRestController {
     @GET
     @Path("/{id}/location")
     public Response getUserLocation(@PathParam("id") final long userId) throws UserDoesNotExistException {
+
+        LOGGER.debug("Endpoint GET /users/" + userId + "/location reached");
 
         final User user = userService.findById(userId).orElseThrow(UserDoesNotExistException::new);
         return Response.ok(LocationDto.fromLocation(user.getLocation())).build();
