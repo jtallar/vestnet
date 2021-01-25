@@ -160,7 +160,7 @@ define([], function() {
     hprofile: 'Mi Perfil',
     hmessages: 'Mensajes',
     hnewProject: 'Nuevo Proyecto',
-    hrequests: 'Ofertas Enviadas',
+    hrequests: 'Inversiones',
     hwelcome: 'Bienvenido',
     hlogin: 'Iniciar Sesión',
     hsignUp: 'Registrarse',
