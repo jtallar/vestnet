@@ -103,7 +103,7 @@
 }
 
 .single-card{
-  padding: 25px !important;
+  padding: 25px 5px 25px 25px !important;
   min-height: 620px !important;
 }
 
@@ -198,4 +198,9 @@
   margin: 30px 25px !important;
   width: auto;
   height: 60px;
+}
+
+.edit-icon{
+  width: 20px !important;
+  height: auto !important;
 }

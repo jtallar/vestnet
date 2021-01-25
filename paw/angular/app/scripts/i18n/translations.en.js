@@ -300,6 +300,6 @@ define([], function() {
     pageTitleProfile: 'My Profile | VestNet',
     pageTitleUserInfo: '{{f}} {{l}} | VestNet',
     pageTitleVerify: 'Verify Account | VestNet',
-    pageTitleSingeProject: '{{p}} | VestNet'
+    pageTitleSingleProject: '{{p}} | VestNet'
   };
 });

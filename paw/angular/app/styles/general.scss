@@ -64,7 +64,10 @@
 .topnav-right {
   float: right;
   margin: auto;
-  padding: 5px
+  padding: 0
+}
+.header-auth{
+  padding: 5px;
 }
 
 body{
@@ -102,7 +105,8 @@ body{
 
 .header-icon{
   padding: 0 !important;
-  margin-left:10px !important
+  margin-left:10px !important;
+  margin-right: 10px !important;
 }
 
 .navbar-nav{
