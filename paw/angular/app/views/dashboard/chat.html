@@ -1,6 +1,5 @@
-<head><title> {{ 'messages' | translate}} | VestNet</title></head>
+<head><title>{{ 'pageTitleChat' | translate : {p : project.name} }}</title></head>
 
-<body ng-controller="chatCtrl">
 <!--<vnheader></vnheader>-->
 
 <!--<div class="row">-->
@@ -18,7 +17,7 @@
     <div class="row" style="margin-top: 10px">
 
       <div class="col-2 card chat-ficha">
-        <h4 class="chat-p-name">{{project.name}}</h4>
+        <a ng-href="#{{project.projectUrl}}" class="btn-link"><h4 class="chat-p-name">{{project.name}}</h4></a>
         <div ng-if="!project.portraitExists">
           <img ng-src="images/projectNoImage.png" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
         </div>
@@ -47,14 +46,16 @@
                     </div>
                   </div>
                   <div class="center-vertical col-6">
-                    <h5 class="center-vertical chatbox-header">
-                      {{'fullName' | translate : { firstName: user.firstName, lastName: user.lastName } }} - {{ user.role | translate }}
-                    </h5>
+                    <a ng-href="#{{user.userUrl}}" class="btn-link">
+                      <h5 class="center-vertical chatbox-header">
+                        {{'fullName' | translate : { firstName: user.firstName, lastName: user.lastName } }} - {{ user.role | translate }}
+                      </h5>
+                    </a>
                   </div>
                   <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChatWithDate' | translate : { date: lastMessage.publishDate } }}</div>
                 </div>
               </div>
-              <button ng-show="viewMoreEnabled" ng-click="viewMoreChat()" class="btn btn-inv pull-right">
+              <button ng-show="nextPageUrl" ng-click="viewMoreChat()" class="btn btn-inv pull-right">
                 <img src="images/up-arrow-wh.png" class="p-img" alt="" style="margin-top: 5px">
               </button>
               <div class="chatbox-body card-body" id="chatbox-scroll">
@@ -275,10 +276,6 @@
     </div>
   </div>
 </div>
-
-
-</body>
-
 <!--<footer>-->
 <!--  <vnfooter></vnfooter>-->
 <!--</footer>-->

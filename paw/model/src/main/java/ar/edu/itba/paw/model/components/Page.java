@@ -50,6 +50,10 @@ public class Page<T> {
         return totalPages;
     }
 
+    public long getNextPage() {
+        return currentPage + 1;
+    }
+
     public long getStartPage() {
         return startPage;
     }

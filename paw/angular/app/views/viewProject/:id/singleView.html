@@ -1,8 +1,6 @@
-<head><title> {{ 'singleView' | translate : {p : project.name} }} | VestNet</title></head>
+<head><title>{{ 'pageTitleSingeProject' | translate : {p : project.name} }}</title></head>
 
 <!--<vnheader></vnheader>-->
-
-<body ng-controller="singleViewCtrl" >
 
 <div id="all">
 <!-- Message and Back logic -->
@@ -11,8 +9,11 @@
       <div class="p-2 mx-3 my-1">
         <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
       </div>
-      <div class="p-2 ml-8" id="mail-feedback" ng-if="sent == true">
+      <div class="p-2 ml-8" ng-if="sent">
         <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'successfullContact' | translate : {name : project.owner.firstName} }} </h5>
+      </div>
+      <div class="p-2 ml-8" ng-if="imageError">
+        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'imageError' | translate }} </h5>
       </div>
     </div>
 
@@ -25,10 +26,10 @@
 
           <div class="carousel-inner">
             <div id="carousel-items">
-              <div class="carousel-item active" ng-if="!project.imageExists">
+              <div class="carousel-item active" ng-if="!project.portraitExists">
                 <img ng-src="/images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
-              <div class="carousel-item active" ng-if="project.imageExists">
+              <div class="carousel-item active" ng-if="project.portraitExists">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
               <div  class="carousel-item" ng-if="project.slideshowExists" ng-repeat="image in project.slideshow">
@@ -54,37 +55,44 @@
       <div class="col-7">
         <div class="d-flex justify-content-center">
           <div class="card description mb-3">
-            <!--
-            <sec:authorize access="hasRole('ROLE_INVESTOR')">
-              <div class="card-header header-white">
-                <button onclick="favTap()" class="btn-transp pull-right">
-                  <c:choose>
-                    <c:when test="${user.favorites.contains(project)}">
-                      <c:set var="icon_fav" value="${icon_fav_on}"/>
-                    </c:when>
-                    <c:otherwise>
-                      <c:set var="icon_fav" value="${icon_fav_off}"/>
-                    </c:otherwise>
-                  </c:choose>
-                  <img id="favImg" src="${icon_fav}" height="40">
-                </button>
-              </div>
-            </sec:authorize> -->
+<!--            TODO: Alinear verticalmente el bookmark    -->
+            <div ng-if="isInvestor" class="card-header header-white">
+              <button ng-click="favTap()" class="btn-transp pull-right">
+                <div ng-if="isFav">
+                  <img ng-src="images/bookmarkOnB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                </div>
+                <div ng-if="!isFav">
+                  <img  ng-src="images/bookmarkOffB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                </div>
+              </button>
+            </div>
 
             <!-- Project card -->
             <div class="card-body single-card">
-              <h5 class="card-title"><b>{{project.name}}</b></h5>
+              <div class="row justify-content-vertical">
+                <div class="col-11">
+                  <h5 class="card-title"><b>{{project.name}}</b></h5>
+                </div>
+<!--            TODO: Acomodar el tamaño del lapiz y alinearlo con el nombre    -->
+                <div ng-if="project.getByOwner" class="col-1">
+                  <a ng-href="#{{editUrl}}" class="btn btn-inv btn-project pull-right">
+                    <div class="notification-icon">
+                      <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+                    </div>
+                  </a>
+                </div>
+              </div>
               <div ng-if="project.getByOwner" class="blockquote-footer">{{'you' | translate}}</div>
-              <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#/users/{{project.owner.id}}">{{project.owner.firstName}} {{project.owner.lastName}}</a></div>
+              <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
 
               <p class="card-text">{{project.summary}}</p>
 
               <h5 class="card-title"><b>{{'categories' | translate}}</b></h5>
-                <li ng-repeat="category in project.categories">{{category}}</li>
+                <li ng-repeat="category in project.categorieNames">{{category | translate}}</li>
               <br/>
 
               <h5 class="card-title"><b>{{'contactMail' | translate}}</b></h5>
-              <p>{{project.owner.mail}}</p>
+              <p>{{project.owner.email}}</p>
 
               <h5 class="card-title"><b>{{'funding' | translate}}</b></h5>
               <div class="text-center ">
@@ -112,7 +120,7 @@
         </div>
 
         <!-- Contact button -->
-        <div ng-if="!project.getByOwner" class="d-flex justify-content-center">
+        <div ng-if="!isEntrepreneur" class="d-flex justify-content-center">
             <a href="#{{project.chatUrl}}" ng-click="pressContact = 1" class="btn btn-dark contact-btn" >
               <img src="images/chat-icon.png" class="contact-img">
               {{'contact' | translate}}
@@ -319,9 +327,6 @@
 </div>
 <!--</div>-->
 </div>
-
-</body>
-
 
 <!--<footer>-->
 <!--  <vnfooter></vnfooter>-->

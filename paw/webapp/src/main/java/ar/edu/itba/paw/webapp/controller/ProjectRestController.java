@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
+import ar.edu.itba.paw.interfaces.exceptions.IllegalProjectAccessException;
+import ar.edu.itba.paw.interfaces.exceptions.ProjectDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Category;
@@ -53,8 +55,7 @@ public class ProjectRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response create(@Valid final ProjectWithCategoryDto projectDto) {
 
-        List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
-
+        final List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
         final Project project = projectService.create(projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget(), categories, sessionUser.getId());
         final URI projectUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(project.getId())).build();
 
@@ -65,14 +66,12 @@ public class ProjectRestController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response project(@PathParam("id") long id) {
-        return projectService.findById(id)
-                .map(p -> {
-                    ProjectDto projectDto = ProjectDto.fromProject(p, uriInfo);
-                    if (!sessionUser.isAnonymous() && sessionUser.getId() == p.getOwnerId()) projectDto.setGetByOwner();
-                    return Response.ok(projectDto).build();
-                })
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    public Response project(@PathParam("id") long id) throws ProjectDoesNotExistException {
+
+        final Project project = projectService.findById(id).orElseThrow(ProjectDoesNotExistException::new);
+        final ProjectDto projectDto = ProjectDto.fromProject(project, uriInfo);
+        if (!sessionUser.isAnonymous() && sessionUser.getId() == project.getOwnerId()) projectDto.setGetByOwner();
+        return Response.ok(projectDto).build();
     }
 
 
@@ -80,19 +79,17 @@ public class ProjectRestController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
-                           @Valid final ProjectDto projectDto) {
+                           @Valid final ProjectWithCategoryDto projectDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
 
-        Optional<Project> optionalProject = projectService.update(sessionUser.getId(), id,
-                projectDto.getName(), projectDto.getSummary(), projectDto.getFundingTarget());
-
-        return optionalProject.map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        final List<Category> categories = projectDto.getCategories().stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+        final Project project = projectService.update(sessionUser.getId(), id, projectDto.getName(), projectDto.getSummary(),
+                projectDto.getFundingTarget(), categories).orElseThrow(ProjectDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
     /** Search project endpoint */
 
-    // TODO: el Last que devuelve aca es el del rango de arriba (5), no la cantidad maxima de paginas. Es correcto?
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projects(@QueryParam("p") @DefaultValue("1") int page,
@@ -104,14 +101,16 @@ public class ProjectRestController {
                              @QueryParam("c") Integer category,
                              @QueryParam("l") @DefaultValue("3") int limit) {
 
-        Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
+        final Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
         projectPage.setPageRange(PAGINATION_ITEMS);
 
-        List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+        final List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getStartPage()).build(), "first")
-                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getEndPage()).build(), "last")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getStartPage()).build(), "start")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getEndPage()).build(), "end")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getTotalPages()).build(), "last")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
     }
@@ -121,14 +120,11 @@ public class ProjectRestController {
     @GET
     @Path("/{id}/categories")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response projectCategories(@PathParam("id") long id) {
+    public Response projectCategories(@PathParam("id") long id) throws ProjectDoesNotExistException {
 
-        Optional<Project> optionalProject = projectService.findById(id);
-
-        return optionalProject.map(p -> {
-            List<CategoryDto> categoriesDto = p.getCategories().stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
-            return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
-        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        final Project project = projectService.findById(id).orElseThrow(ProjectDoesNotExistException::new);
+        final List<CategoryDto> categoriesDto = project.getCategories().stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
     }
 
 
@@ -137,25 +133,21 @@ public class ProjectRestController {
     @Path("/{id}/categories")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response updateCategories(@PathParam("id") long id,
-                                     @NotEmpty final List<CategoryDto> categoriesDto) {
+                                     @NotEmpty final List<CategoryDto> categoriesDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
 
-        List<Category> categories = categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
-
-        return projectService.addCategories(sessionUser.getId(), id, categories)
-                .map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        final List<Category> categories = categoriesDto.stream().map(c -> new Category(c.getId())).collect(Collectors.toList());
+        projectService.addCategories(sessionUser.getId(), id, categories).orElseThrow(ProjectDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
     @GET
     @Path("/{id}/stats")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getStats(@PathParam("id") long id) {
+    public Response getStats(@PathParam("id") long id) throws ProjectDoesNotExistException {
 
-        Optional<Project> optionalProject = projectService.getStats(id);
-
-        return optionalProject.map(p -> Response.ok(ProjectStatsDto.fromProjectStats(p.getStats())).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        final Project project = projectService.getStats(id).orElseThrow(ProjectDoesNotExistException::new);
+        return Response.ok(ProjectStatsDto.fromProjectStats(project.getStats())).build();
     }
 
 
@@ -163,25 +155,22 @@ public class ProjectRestController {
     @Path("/{id}/stats")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setStats(@PathParam("id") long id,
-                             @Valid final ProjectStatsDto statsDto) {
+                             @Valid final ProjectStatsDto statsDto) throws ProjectDoesNotExistException {
 
-        return projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(), statsDto.getContactClicks() >= 1)
-                .map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(),
+                statsDto.getContactClicks() >= 1).orElseThrow(ProjectDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
     @GET
     @Path("/{id}/stages")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getStages(@PathParam("id") long id) {
+    public Response getStages(@PathParam("id") long id) throws ProjectDoesNotExistException {
 
-        Optional<Project> optionalProject = projectService.findById(id);
-
-        return optionalProject.map(p -> {
-            List<ProjectStagesDto> stagesDto = p.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
-            return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
-        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        final Project project = projectService.findById(id).orElseThrow(ProjectDoesNotExistException::new);
+        final List<ProjectStagesDto> stagesDto = project.getStages().stream().map(ProjectStagesDto::fromProjectStages).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<ProjectStagesDto>>(stagesDto) {}).build();
     }
 
 
@@ -189,21 +178,19 @@ public class ProjectRestController {
     @Path("/{id}/stages")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response addStages(@PathParam("id") long id,
-                              @Valid final ProjectStagesDto stagesDto) {
+                              @Valid final ProjectStagesDto stagesDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
 
-        return projectService.setStage(sessionUser.getId(), id, stagesDto.getName(), stagesDto.getComment())
-                .map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        projectService.setStage(sessionUser.getId(), id, stagesDto.getName(), stagesDto.getComment()).orElseThrow(ProjectDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
     @PUT
     @Path("/{id}/close")
-    public Response close(@PathParam("id") long id) {
+    public Response close(@PathParam("id") long id) throws ProjectDoesNotExistException, IllegalProjectAccessException {
 
-        return projectService.setClosed(sessionUser.getId(), id)
-                .map(p -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        projectService.setClosed(sessionUser.getId(), id).orElseThrow(ProjectDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
@@ -214,8 +201,8 @@ public class ProjectRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response categories() {
 
-        List<Category> categories = projectService.getAllCategories();
-        List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+        final List<Category> categories = projectService.getAllCategories();
+        final List<CategoryDto> categoriesDto = categories.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<CategoryDto>>(categoriesDto) {}).build();
     }

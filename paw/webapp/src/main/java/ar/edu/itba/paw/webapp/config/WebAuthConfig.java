@@ -101,10 +101,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor/**").hasRole("ENTREPRENEUR") // TODO: Check that only entrep can access investor profiles
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/*/*").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/**").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/invested").hasRole("INVESTOR")
+
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/*/*").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/messages/status/*/*").hasRole("ENTREPRENEUR")
@@ -123,8 +126,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/favorites/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.PUT, API_PREFIX_VERSION + "/users/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, API_PREFIX_VERSION + "/users/**").authenticated()
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").permitAll()
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/projects").hasRole("ENTREPRENEUR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**/projects").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()

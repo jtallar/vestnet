@@ -11,8 +11,8 @@ define([], function() {
     pathService.logoutRE = [/^\/logout$/];
     pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
     pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/, /^\/chat\/[^\/]*$/];
-    pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
-    pathService.authRoutesRE = [/^\/users\/.*$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
+    pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject\/.*$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
+    pathService.authRoutesRE = [/^\/users\/.*$/, /^\/profile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
 
     pathService.get = function () {
       var base = {
@@ -90,6 +90,10 @@ define([], function() {
         return append('/users/' + id);
       };
 
+      base.profile = function () {
+        return append('/profile');
+      };
+
       base.requests = function () {
         return append('/requests');
       };
@@ -110,8 +114,8 @@ define([], function() {
         return append('/verify');
       };
 
-      base.editProject = function () {
-        return append('/editProject');
+      base.editProject = function (id) {
+        return append('/projects/' + id + '/edit');
       };
 
       base.chat = function (id1, id2) {

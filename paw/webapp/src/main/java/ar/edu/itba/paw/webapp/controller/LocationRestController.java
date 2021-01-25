@@ -28,9 +28,8 @@ public class LocationRestController {
     @Path("/country")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response countryList() {
-        final List<CountryDto> countries = locationService.findAllCountries().stream()
-                .map(CountryDto::fromCountry).collect(Collectors.toList());
 
+        final List<CountryDto> countries = locationService.findAllCountries().stream().map(CountryDto::fromCountry).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<CountryDto>>(countries) {}).build();
     }
 
@@ -38,9 +37,8 @@ public class LocationRestController {
     @Path("/state/{country_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response stateList(@PathParam("country_id") final int countryId) {
-        final List<StateDto> states = locationService.findStates(countryId).stream()
-                .map(StateDto::fromState).collect(Collectors.toList());
 
+        final List<StateDto> states = locationService.findStates(countryId).stream().map(StateDto::fromState).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<StateDto>>(states) {}).build();
     }
 
@@ -48,9 +46,8 @@ public class LocationRestController {
     @Path("/city/{state_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response cityList(@PathParam("state_id") final int stateId) {
-        final List<CityDto> cities = locationService.findCities(stateId).stream()
-                .map(CityDto::fromCity).collect(Collectors.toList());
 
+        final List<CityDto> cities = locationService.findCities(stateId).stream().map(CityDto::fromCity).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<CityDto>>(cities) {}).build();
     }
 }

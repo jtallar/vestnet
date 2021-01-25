@@ -25,18 +25,29 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one(id).get()
     };
 
-
-    userService.getUserProjects = function(id, fund){
-
-      var param = {funded: fund};
-      return root.one(id).one('projects').get(param)
+    userService.getLoggedUser = function () {
+      return root.get();
     };
 
+    userService.getUserProjects = function(id, fund, page, pageSize){
+      if (!page) page = 1;
+      if (!pageSize) return root.one(id).one('projects').get({funded: fund, p: page});
+      return root.one(id).one('projects').get({funded: fund, p: page, l: pageSize});
+    };
+
+    userService.getLoggedProjects = function(fund, page, pageSize){
+      if (!page) page = 1;
+      if (!pageSize) return root.one('projects').get({funded: fund, p: page});
+      return root.one('projects').get({funded: fund, p: page, l: pageSize});
+    };
 
     userService.getFavorites  = function () {
       return root.one('favorites').get()
     };
 
+    userService.getProfileFavorites  = function () {
+      return root.one('favorites').one('profile').get()
+    };
 
 
     userService.putFavorite = function (id, add) {

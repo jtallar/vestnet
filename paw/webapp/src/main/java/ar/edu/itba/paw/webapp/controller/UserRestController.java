@@ -1,12 +1,19 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.SessionUserFacade;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
+import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Favorite;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.model.image.UserImage;
+import ar.edu.itba.paw.model.location.City;
+import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
+import ar.edu.itba.paw.model.location.State;
 import ar.edu.itba.paw.webapp.dto.location.LocationDto;
 import ar.edu.itba.paw.webapp.component.UriInfoUtils;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
@@ -22,10 +29,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -46,17 +50,9 @@ public class UserRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response createUser(@Valid final FullUserWithPasswordDto user) {
+    public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException {
 
-        LOGGER.debug("\n\nBase URI: {}\n\n", uriInfo.getBaseUri().toString());
-
-        final User newUser;
-        try {
-            newUser = userService.create(FullUserWithPasswordDto.toUser(user), UriInfoUtils.getBaseURI(uriInfo));
-        } catch (UserAlreadyExistsException e) {
-            LOGGER.error("User already exists with email {} in VestNet", user.getEmail());
-            return Response.status(Response.Status.CONFLICT).build();
-        }
+        final User newUser = userService.create(FullUserWithPasswordDto.toUser(user), UriInfoUtils.getBaseURI(uriInfo));
         final URI userUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(newUser.getId())).build();
         return Response.created(userUri).header("Access-Control-Expose-Headers", "Location").build();
     }
@@ -64,15 +60,13 @@ public class UserRestController {
 
     @PUT
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updateUser(@Valid final UpdatableUserDto user) {
+    public Response updateUser(@Valid final UpdatableUserDto user) throws UserDoesNotExistException {
 
-        Optional<User> optionalUser = userService.update(sessionUser.getId(), UpdatableUserDto.toUser(user));
-
-        return optionalUser.map(u -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+        userService.update(sessionUser.getId(), UpdatableUserDto.toUser(user)).orElseThrow(UserDoesNotExistException::new);
+        return Response.ok().build();
     }
 
-
+    // TODO: Ver si lo fletamos, si lo implementamos o ninguna de las dos
     @DELETE
     public Response deleteUser() {
 
@@ -83,7 +77,8 @@ public class UserRestController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response personalProfile() {
+    public Response personalProfile() throws UserDoesNotExistException{
+
         return userProfile(sessionUser.getId());
     }
 
@@ -91,69 +86,76 @@ public class UserRestController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response userProfile(@PathParam("id") final long id) {
+    public Response userProfile(@PathParam("id") final long id) throws UserDoesNotExistException {
 
-        final Optional<User> optionalUser = userService.findById(id);
-
-        return optionalUser.map(u -> Response.ok(FullUserDto.fromUser(u, uriInfo)).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+        final User user = userService.findById(id).orElseThrow(UserDoesNotExistException::new);
+        return Response.ok(FullUserDto.fromUser(user, uriInfo)).build();
     }
 
 
     /** Extra user data endpoints */
 
-    // TODO: Ver si se puede agregar cantidad de mensajes sin leer de este proyecto para mostrarlo en un badge.
+    @GET
+    @Path("/projects")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response ownedProjects(@QueryParam("funded") @DefaultValue("true") boolean funded,
+                                  @QueryParam("p") @DefaultValue("1") int page,
+                                  @QueryParam("l") @DefaultValue("3") int limit) {
+
+        return ownedProjects(sessionUser.getId(), funded, page, limit);
+    }
+
+
     @GET
     @Path("/{id}/projects")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response ownedProjects(@PathParam("id") final long userId,
-                                  @QueryParam("funded") @DefaultValue("true") boolean funded) {
+                                  @QueryParam("funded") @DefaultValue("true") boolean funded,
+                                  @QueryParam("p") @DefaultValue("1") int page,
+                                  @QueryParam("l") @DefaultValue("3") int limit) {
 
-        List<Project> projectsList = userService.getOwnedProjects(userId, funded);
-        List<ProjectDto> projects = projectsList.stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+        final Page<Project> projectPage = userService.getOwnedProjects(userId, funded, page, limit);
+        final List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {}).build();
+        return Response.ok(new GenericEntity<List<ProjectDto>>(projects) {})
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getStartPage()).build(), "start")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getEndPage()).build(), "end")
+                .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", projectPage.getTotalPages()).build(), "last")
+                .header("Access-Control-Expose-Headers", "Link")
+                .build();
     }
 
 
     @GET
     @Path("/favorites")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getFavoritesIds() {
+    public Response getFavoritesIds() throws UserDoesNotExistException {
 
-        Optional<User> optionalUser = userService.findById(sessionUser.getId());
-
-        return optionalUser.map(u -> {
-            List<FavoriteDto> favorites = optionalUser.get().getFavorites().stream().map(FavoriteDto::fromFavorite).collect(Collectors.toList());
-            return Response.ok(new GenericEntity<List<FavoriteDto>>(favorites) {}).build();
-        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
-
+        final User user = userService.findById(sessionUser.getId()).orElseThrow(UserDoesNotExistException::new);
+        final List<FavoriteDto> favorites = user.getFavorites().stream().map(FavoriteDto::fromFavorite).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<FavoriteDto>>(favorites) {}).build();
    }
 
 
     @GET
     @Path("/favorites/profile")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getFavorites() {
+    public Response getFavorites() throws UserDoesNotExistException {
 
-        Optional<User> optionalUser = userService.findById(sessionUser.getId());
-
-        return optionalUser.map(u -> {
-            List<ProjectDto> favorites = optionalUser.get().getFavoriteProjects().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
-            return Response.ok(new GenericEntity<List<ProjectDto>>(favorites) {}).build();
-        }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        final User user = userService.findById(sessionUser.getId()).orElseThrow(UserDoesNotExistException::new);
+        final List<ProjectDto> favorites = user.getFavoriteProjects().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<ProjectDto>>(favorites) {}).build();
     }
 
 
     @PUT
     @Path("/favorites")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response addFavorite(@Valid final FavoriteDto favoriteDto) {
+    public Response addFavorite(@Valid final FavoriteDto favoriteDto) throws UserDoesNotExistException {
 
-        Optional<User> optionalUser = userService.addFavorites(sessionUser.getId(), favoriteDto.getProjectId(), favoriteDto.getAdd());
-
-        return optionalUser.map(u -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+        userService.addFavorites(sessionUser.getId(), favoriteDto.getProjectId(), favoriteDto.getAdd()).orElseThrow(UserDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
@@ -161,43 +163,38 @@ public class UserRestController {
 
     @POST
     @Path("/password")
-    public Response requestPassword(@Valid final MailDto mailDto) {
-        Optional<User> optionalUser = userService.requestPassword(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo));
+    public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException {
 
-        return optionalUser.map(u -> Response.ok().build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
+        userService.requestPassword(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo)).orElseThrow(UserDoesNotExistException::new);
+        return Response.ok().build();
     }
 
 
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@Valid final PasswordDto passwordDto) {
+    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException {
 
-        if (userService.updatePassword(passwordDto.getToken(), passwordDto.getPassword()))
-            return Response.ok().build();
-        return Response.status(Response.Status.BAD_REQUEST).build();
+        userService.updatePassword(passwordDto.getToken(), passwordDto.getPassword());
+        return Response.ok().build();
     }
 
 
     @PUT
     @Path("/verify")
-    public Response updateVerification(@Valid final TokenDto tokenDto) {
+    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException {
 
-        if (userService.updateVerification(tokenDto.getToken(), UriInfoUtils.getBaseURI(uriInfo)))
-            return Response.ok().build();
-        return Response.status(Response.Status.BAD_REQUEST).build();
+        userService.updateVerification(tokenDto.getToken(), UriInfoUtils.getBaseURI(uriInfo));
+        return Response.ok().build();
     }
 
 
     @GET
     @Path("/{id}/location")
-    public Response getUserLocation(@PathParam("id") final long userId){
-        final Optional<User> user = userService.findById(userId);
+    public Response getUserLocation(@PathParam("id") final long userId) throws UserDoesNotExistException {
 
-        return user.map(User::getLocation).map(l -> Response.ok(LocationDto.fromLocation(l)).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND.getStatusCode()).build());
-
+        final User user = userService.findById(userId).orElseThrow(UserDoesNotExistException::new);
+        return Response.ok(LocationDto.fromLocation(user.getLocation())).build();
     }
 }
 

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-//@ResponseStatus(code = HttpStatus.CONFLICT)
 public class UserAlreadyExistsException extends Exception {
 
     private static final long serialVersionUID = 4857452813144338928L;

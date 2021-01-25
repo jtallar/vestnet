@@ -46,13 +46,13 @@ define([], function() {
                 controller: 'singleViewCtrl'
             },
             '/users/:id': {
-                templateUrl: '/views/users/:id/profile.html',
-                controller: 'profileCtrl'
+                templateUrl: '/views/users/:id/userInfo.html',
+                controller: 'userInfoCtrl'
             },
-            // '/profile/:id': {
-            //   templateUrl: '/views/users/:id/profile.html',
-            //   controller: 'profileCtrl'
-            // },
+            '/profile': {
+              templateUrl: '/views/users/profile.html',
+              controller: 'profileCtrl'
+            },
             '/requests': {
                 templateUrl: '/views/requests/requests.html',
                 controller: 'requestsCtrl'
@@ -73,7 +73,7 @@ define([], function() {
                 templateUrl: 'views/verify/verify.html',
                 controller: 'verifyCtrl'
             },
-            '/editProject': {
+            '/projects/:id/edit': {
               templateUrl: '/views/edit/editProject.html',
               controller: 'editProjectCtrl'
             },

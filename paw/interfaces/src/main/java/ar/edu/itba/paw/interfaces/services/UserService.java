@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.model.Message;
@@ -72,17 +73,19 @@ public interface UserService {
      * Finds the projects owned by the user.
      * @param id Unique user id.
      * @param closed Distinguishes from founded project from the ones not.
-     * @return List of all the project for the given user.
+     * @param page The number of page to be shown.
+     * @param pageSize Page size for the pagination request.
+     * @return Paged project owned for the given user.
      */
-    List<Project> getOwnedProjects(long id, boolean closed);
+    Page<Project> getOwnedProjects(long id, boolean closed, int page, int pageSize);
 
 
-    /**
-     * Requests for a password change.
-     * @param mail The users mail to change the password.
-     * @param baseUri Base uri for mail creation.
-     * @return The optional of the found user.
-     */
+        /**
+         * Requests for a password change.
+         * @param mail The users mail to change the password.
+         * @param baseUri Base uri for mail creation.
+         * @return The optional of the found user.
+         */
     Optional<User> requestPassword(String mail, URI baseUri);
 
 
@@ -90,10 +93,9 @@ public interface UserService {
      * Updates a user password.
      * @param token The token to check for.
      * @param password New user's password.
-     * @return True if the verification was successful
-     *          or false if the token did not exist or invalid.
+     * @throws InvalidTokenException If the token does not exists or is invalid
      */
-    boolean updatePassword(String token, String password);
+    void updatePassword(String token, String password) throws InvalidTokenException;
 
 
     /**
@@ -101,10 +103,9 @@ public interface UserService {
      * If the token exists but is invalid, resend email.
      * @param token The token.
      * @param baseUri The uri to resend the email.
-     * @return True if the verification was successful
-     *          or false if the token did not exist or invalid.
+     * @throws InvalidTokenException If the token does not exists or is invalid
      */
-    boolean updateVerification(String token, URI baseUri);
+    void updateVerification(String token, URI baseUri) throws InvalidTokenException;
 
 
     /**

@@ -8,7 +8,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       var _this = this;
       var projectId = parseInt($routeParams.id1), investorId = parseInt($routeParams.id2);
-      var page = 1, maxPage = 1, role, entrepreneur = "Ent", investor = "Inv";
+      var role, entrepreneur = "Ent", investor = "Inv";
       var oneDayMs = 1000*60*60*24;
 
       if (AuthenticationService.isInvestor()) role = investor;
@@ -32,6 +32,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       this.setUser = function (user) {
         $scope.user = user;
+        $scope.user.userUrl = PathService.get().user(user.id).path;
         if ($scope.user.imageExists) {
           sampleService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
@@ -43,6 +44,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       projectService.getById(projectId.toString()).then(function (response) {
         $scope.project = response.data;
+        $scope.project.projectUrl = PathService.get().singleProject(projectId).path;
         $scope.project.percentage = parseInt($scope.project.fundingCurrent * 100 / $scope.project.fundingTarget);
         if ($scope.project.portraitExists) {
           sampleService.get($scope.project.portraitImage).then(function (image) {
@@ -86,8 +88,6 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       $scope.offerEnabled = false; $scope.responseEnabled = false;
 
       this.setChatAsSeen = function (lastMessage) {
-        if (!lastMessage.incoming || lastMessage.seen) return;
-        // TODO: Ver que funque esto
         messageService.setSeen(projectId, investorId).then(function (response) {
           // console.log(response);
         }, function (errorResponse) {
@@ -144,17 +144,23 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         $scope.offerEnabled = false;
       };
 
-      $scope.viewMoreEnabled = false;
-      this.setMaxPage = function (linkHeaders) {
-        var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
-        maxPage = parseInt(lastLink[0].split('p=')[1][0]);
-        if (isNaN(maxPage)) maxPage = page;
-        $scope.viewMoreEnabled = (page !== maxPage);
+      $scope.nextPageUrl = undefined;
+      this.setNextPage = function (linkHeaders) {
+        if (!linkHeaders) {
+          $scope.nextPageUrl = undefined;
+          return;
+        }
+        var nextLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
+        if (isNaN(parseInt(nextLink[0].split('p=')[1][0]))) {
+          $scope.nextPageUrl = undefined;
+          return;
+        }
+        $scope.nextPageUrl = nextLink[0].substring(1, nextLink[0].indexOf('>'));
       };
 
       $scope.chats = [];
-      messageService.getChat(projectId, investorId, page).then(function (response) {
-        _this.setMaxPage(response.headers().link);
+      messageService.getChat(projectId, investorId, 1).then(function (response) {
+        _this.setNextPage(response.headers().link);
         _this.handleChatResponse(response.data);
         _this.scrollToBottom();
       }, function (errorResponse) {
@@ -224,11 +230,11 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.viewMoreChat = function () {
-        if (page >= maxPage) return;
-        page++; $scope.viewMoreEnabled = (page !== maxPage);
+        if (!$scope.nextPageUrl) return;
 
         var element = document.getElementById("chatbox-scroll");
-        messageService.getChat(projectId, investorId, page).then(function (response) {
+        sampleService.get($scope.nextPageUrl).then(function (response) {
+          _this.setNextPage(response.headers().link);
           if (response.data.length === 0) return;
           element.scrollTop = 0;
           response.data.reverse();

@@ -10,10 +10,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       var emptyCategory = {id:null, name:'noFilter'};
 
-      $scope.isInvestor = AuthenticationService.isInvestor()
+      $scope.isInvestor = AuthenticationService.isInvestor();
 
-      $scope.favs = []
-      if($scope.isInvestor == true){
+      $scope.favs = [];
+      if($scope.isInvestor){
         userService.getFavorites().then(function (response) {
           for(var i = 0; i < response.data.length;i++){
             $scope.favs.push(response.data[i].projectId)
@@ -115,14 +115,12 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id};
       };
 
-      // TODO: Corregir retorno de last page para que sea la ultima posta
       this.getArgs = function (string) {
 
         var lastLink = string.split(',').filter(function (el) {
           return el.includes('last');
         });
         $scope.lastPage = parseInt(lastLink[0].split('p=')[1][0]);
-        console.log($scope.lastPage);
       };
 
       this.showProjects = function (projects) {

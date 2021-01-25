@@ -44,6 +44,7 @@ public class ProjectJpaDaoTest {
     private static final String PROJECT_CATEGORY_TABLE = "project_categories";
     private static final String LOCATIONS_TABLE = "user_location";
     private static final String FAVORITES_TABLE = "favorites";
+    private static final String PROJECT_STATS_TABLE = "project_stats";
 
     private static final int COUNTRY_ID = 1;
     private static final int STATE_ID = 2;
@@ -75,7 +76,7 @@ public class ProjectJpaDaoTest {
     private ProjectJpaDao projectJpaDao;
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertProject, jdbcInsertUser, jdbcInsertCategory, jdbcInsertProjectCategory;
+    private SimpleJdbcInsert jdbcInsertProject, jdbcInsertProjectStats, jdbcInsertUser, jdbcInsertCategory, jdbcInsertProjectCategory;
     private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation, jdbcInsertFavorites;
 
     @Before
@@ -83,6 +84,9 @@ public class ProjectJpaDaoTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsertProject = new SimpleJdbcInsert(dataSource)
                 .withTableName(PROJECTS_TABLE)
+                .usingGeneratedKeyColumns("id");
+        jdbcInsertProjectStats = new SimpleJdbcInsert(dataSource)
+                .withTableName(PROJECT_STATS_TABLE)
                 .usingGeneratedKeyColumns("id");
         jdbcInsertCategory = new SimpleJdbcInsert(dataSource)
                 .withTableName(CATEGORIES_TABLE)
@@ -107,6 +111,7 @@ public class ProjectJpaDaoTest {
                 .withTableName(FAVORITES_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_CATEGORY_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_STATS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CATEGORIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
@@ -498,6 +503,8 @@ public class ProjectJpaDaoTest {
         project.put("closed", true);
         project.put("hits", 0);
         project.put("message_count", 0);
+        project.put("relevance", 0);
+        project.put("stats_id", createProjectStats().intValue());
         return jdbcInsertProject.executeAndReturnKey(project);
     }
 
@@ -511,5 +518,19 @@ public class ProjectJpaDaoTest {
         values2.put("category_id", categoryId.longValue());
         values2.put("project_id", projectId.longValue());
         jdbcInsertProjectCategory.execute(values2);
+    }
+
+    /**
+     * Creates a project stats
+     */
+    private Number createProjectStats() {
+        Map<String, Object> values2 = new HashMap<>();
+        values2.put("clicks_avg", 0);
+        values2.put("contact_clicks", 0);
+        values2.put("investors_seen", 0);
+        values2.put("last_seen", new Date());
+        values2.put("seconds_avg", 0);
+        values2.put("seen", 0);
+        return jdbcInsertProjectStats.executeAndReturnKey(values2);
     }
 }

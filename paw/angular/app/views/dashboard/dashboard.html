@@ -1,6 +1,4 @@
-<head><title> {{ 'dashboard' | translate}} | VestNet</title></head>
-
-<body ng-controller="dashboardCtrl">
+<head><title> {{ 'pageTitleDashboard' | translate}}</title></head>
 
 <!--<vnheader></vnheader>-->
 
@@ -12,68 +10,81 @@
 <!--           data-on="{{'showAccProj' | translate}}" data-off="{{'showCurrProj' | translate}}"-->
 <!--           data-onstyle="dark" data-offstyle="white" id="funded-toggle"-->
 <!--           checked >-->
+<!-- TODO: Center toggleswitch -->
+  <toggleswitch name="funded" ng-model="funded" ng-change="toggleChange" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
-  <toggleswitch name="funded" ng-model="funded" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-11">
+      <pagination></pagination>
+    </div>
+  </div>
+
+  <div class="text-center" ng-if="isLoading()">
+    <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
+  </div>
 
   <div class="dashboard">
-  <div class="card-group" ng-repeat="project in getList()">
-    <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
-    <div class="container py-3">
-      <div class="card msg">
+    <div class="card-group" ng-repeat="project in getList()">
+      <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
+      <div class="container py-3">
+        <div class="card msg">
 
-        <div class="row">
-          <div class="col-1">
-            <div ng-if="project.portraitExists">
-              <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
-            </div>
-            <div ng-if="!project.portraitExists">
-              <img ng-src="images/projectNoImage.png" class="p-img"/>
-            </div>
-          </div>
-          <div class="col-md-11">
-            <div class="card-block">
-              <div class="row">
-                <div class="col-8">
-                  <a ng-href="#/projects/{{project.id}}" class="btn-link2"><h4 class="">{{project.name}}</h4></a>
-                </div>
-                <div class="col-1">
-                  <a ng-href="#/editProject" class="btn btn-inv btn-project pull-right">
-                    <div class="notification-icon">
-                      <img class="nav-icon" src="images/edit-icon-b.png" alt="">
-                    </div>
-                  </a>
-                </div>
-                <div class="col-1">
-                  <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
-                     data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
-                    <div class="notification-icon">
-                        <img class="nav-icon" src="images/chat-icon-b.png" alt="">
-                        <span ng-if="project.msgCount != 0" class="badge bg-danger">{{project.msgCount}}</span>
-                    </div>
-                  </a>
-                </div>
-                <div class="col-1">
-                  <a ng-click="fetchOffers(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
-                     data-target="#fundcollapse{{project.id}}" aria-expanded="false" aria-controls="fundcollapse{{project.id}}">
-                    <div class="notification-icon">
-                      <img class="nav-icon" src="images/pig-icon-b.png" alt="">
-                    </div>
-                  </a>
-                </div>
-                <div class="col-1">
-                  <a ng-click="fetchStats(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
-                     data-target="#statscollapse{{project.id}}" aria-expanded="false" aria-controls="statscollapse{{project.id}}">
-                    <div class="notification-icon">
-                      <img class="nav-icon" src="images/stats-icon-b.png" alt="">
-                    </div>
-                  </a>
-                </div>
+          <div class="row">
+            <div class="col-1">
+              <div ng-if="project.portraitExists">
+                <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
               </div>
+              <div ng-if="!project.portraitExists">
+                <img ng-src="images/projectNoImage.png" class="p-img"/>
+              </div>
+            </div>
+            <div class="col-md-11">
+              <div class="card-block">
+                <div class="row">
+                  <div class="col-8">
+                    <a ng-href="#/projects/{{project.id}}" class="btn-link2"><h4 class="">{{project.name}}</h4></a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-href="#{{project.editUrl}}" class="btn btn-inv btn-project pull-right">
+                      <div class="notification-icon">
+                        <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
+                       data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
+<!--                      TODO: Ver si hay alguna forma mejor de reservar el espacio para cuando se oculta-->
+                      <div class="notification-icon">
+                        <img class="nav-icon" src="images/chat-icon-b.png" alt="">
+                        <span ng-show="project.msgCount !== 0" class="badge bg-danger">{{project.msgCount}}</span>
+                        <span ng-show="project.msgCount === 0" class="badge bg-danger" style="visibility: hidden">{{project.msgCount}}</span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-click="fetchOffers(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                       data-target="#fundcollapse{{project.id}}" aria-expanded="false" aria-controls="fundcollapse{{project.id}}">
+                      <div class="notification-icon">
+                        <img class="nav-icon" src="images/pig-icon-b.png" alt="">
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-1">
+                    <a ng-click="fetchStats(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                       data-target="#statscollapse{{project.id}}" aria-expanded="false" aria-controls="statscollapse{{project.id}}">
+                      <div class="notification-icon">
+                        <img class="nav-icon" src="images/stats-icon-b.png" alt="">
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
       <div class="center-collapse collapse" id="chatcollapse{{project.id}}">
         <div ng-if="messages[$index].length > 0">
@@ -84,11 +95,12 @@
                   <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
-                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                  <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
+<!--                // TODO: Mostrar mas que el comment-->
                 <div class="col-7">
                   <strong>{{'lastChat' | translate}}:</strong>
-                  <i>{{message.body}}</i>
+                  <i>{{message.comment}}</i>
                 </div>
                 <div class="col-1">
                   <a ng-click="goToChat(message)" class="btn btn-inv pull-right">
@@ -98,7 +110,7 @@
               </div>
             </div>
           </div>
-          <div ng-if="project.msgPage < project.maxPage">
+          <div ng-if="project.nextPageMessages">
             <button ng-click="viewMore(project.id, $index)" class="btn btn-inv pull-right">
               <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
             </button>
@@ -130,7 +142,7 @@
                   <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
-                  <strong>{{'investor' | translate}}:</strong>  {{message.investor}}
+                  <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
                 <div class="col-4">
                   <strong>{{'msgTitleOffer' | translate}}</strong> {{message.offer}}
@@ -142,7 +154,7 @@
             </div>
           </div>
         </div>
-        <div ng-if="project.offerPage < project.maxPageOffer">
+        <div ng-if="project.nextPageOffer">
           <button ng-click="viewMoreOffers(project.id, $index)" class="btn btn-inv pull-right">
             <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
           </button>
@@ -203,16 +215,14 @@
             </div>
           </div>
         </div>
-
-
       </div>
 
     </div>
-    </div>
+  </div>
 
-    <div ng-if="projects.empty()" class="card no-proj-mine">
+    <div ng-if="getList().length === 0" class="card no-proj-mine">
       <div class="card-header text-center">
-        <div ng-switch="true">
+        <div ng-switch="funded">
           <div ng-switch-when="true">
             <h5 class="card-title text-white centered">{{'noProjFunded' | translate }}</h5>
           </div>
@@ -234,4 +244,3 @@
 <!--    <vnfooter></vnfooter>-->
 <!--  </footer>-->
 
-</body>

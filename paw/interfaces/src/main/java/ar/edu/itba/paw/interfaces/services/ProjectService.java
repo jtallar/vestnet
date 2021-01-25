@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.IllegalProjectAccessException;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.ProjectImage;
@@ -28,10 +29,11 @@ public interface ProjectService {
      * @param name The project's name.
      * @param summary The project's summary.
      * @param fundingTarget The project's total funding target.
+     * @param categories The project's categories.
      * @return operation return.
-     * @return
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget);
+    Optional<Project> update(long ownerId, long id, String name, String summary, long fundingTarget, List<Category> categories) throws IllegalProjectAccessException;
 
 
     /**
@@ -62,8 +64,9 @@ public interface ProjectService {
      * @param ownerId The owner's unique id.
      * @param id The unique project id.
      * @return The optional project modified.
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> setClosed(long ownerId, long id);
+    Optional<Project> setClosed(long ownerId, long id) throws IllegalProjectAccessException;
 
 
     /**
@@ -72,8 +75,9 @@ public interface ProjectService {
      * @param id The unique project's id.
      * @param categories The list of categories.
      * @return The modified project if found.
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> addCategories(long ownerId, long id, List<Category> categories);
+    Optional<Project> addCategories(long ownerId, long id, List<Category> categories) throws IllegalProjectAccessException;
 
 
     /**
@@ -103,8 +107,9 @@ public interface ProjectService {
      * @param name The name of the the stage completed.
      * @param comment The comment on the new completed stage.
      * @return The optional project, modified if found.
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> setStage(long ownerId, long id, String name, String comment);
+    Optional<Project> setStage(long ownerId, long id, String name, String comment) throws IllegalProjectAccessException;
 
 
     /**
@@ -121,8 +126,9 @@ public interface ProjectService {
      * @param id The unique project id.
      * @param image The image to set.
      * @return The optional modified project.
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> setPortraitImage(long ownerId, long id, byte [] image);
+    Optional<Project> setPortraitImage(long ownerId, long id, byte [] image) throws IllegalProjectAccessException;
 
 
     /**
@@ -139,8 +145,9 @@ public interface ProjectService {
      * @param id The unique project id.
      * @param images The images to insert.
      * @return The optional modified project.
+     * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> setSlideshowImages(long ownerId, long id, List<byte []> images);
+    Optional<Project> setSlideshowImages(long ownerId, long id, List<byte []> images) throws IllegalProjectAccessException;
 
 
     /**
