@@ -64,7 +64,10 @@
 .topnav-right {
   float: right;
   margin: auto;
-  padding: 5px
+  padding: 0
+}
+.header-auth{
+  padding: 5px;
 }
 
 body{
@@ -102,7 +105,8 @@ body{
 
 .header-icon{
   padding: 0 !important;
-  margin-left:10px !important
+  margin-left:10px !important;
+  margin-right: 10px !important;
 }
 
 .navbar-nav{
@@ -211,4 +215,8 @@ footer .dropdown-divider{
   font-size: 20px;
   font-family: 'Lato', sans-serif;
   text-align:center
+}
+
+.wel-min{
+  min-height: 425px;
 }

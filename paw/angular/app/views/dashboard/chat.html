@@ -81,16 +81,11 @@
                           <strong> {{chat.comment}}</strong>
                         </div>
                       </div>
-<!--                     TODO: Ajustar esto de abajo -->
-                      <div class="row">
-                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && chat.accepted">
-                          <img class="" src="images/accept-icon.png" alt="">
-                        </div>
-                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && !chat.accepted">
-                          <img class="" src="images/reject-icon.png" alt="">
-                        </div>
-                        <div class="col-10 card-footer chat-date">
+                      <div class="">
+                        <div class="col- card-footer chat-date-other chat-date chat-opt-mini">
                           {{chat.publishDate}}
+                          <img class="" src="images/accept-icon.png" alt="" ng-if="chat.answered && chat.accepted">
+                          <img class="" src="images/reject-icon.png" alt="" ng-if="chat.answered && !chat.accepted">
                         </div>
                       </div>
                     </div>
@@ -118,16 +113,11 @@
                           </div>
 
                       </div>
-                      <!--                     TODO: Ajustar esto de abajo -->
-                      <div class="row">
-                        <div class="col-10 card-footer chat-date-me">
+                      <div class="">
+                        <div class="col- card-footer chat-date-me chat-opt-mini">
+                          <img class="" src="images/accept-icon.png" alt="" ng-if="chat.answered && chat.accepted">
+                          <img class="" src="images/reject-icon.png" alt="" ng-if="chat.answered && !chat.accepted">
                           {{chat.publishDate}}
-                        </div>
-                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && chat.accepted">
-                          <img class="" src="images/accept-icon.png" alt="">
-                        </div>
-                        <div class="col-2 chat-opt-mini" ng-show="chat.answered && !chat.accepted">
-                          <img class="" src="images/reject-icon.png" alt="">
                         </div>
                       </div>
                     </div>
@@ -192,8 +182,8 @@
                     </div>
 <!--                    TODO: Ajustar css de comentario y de serverFormErrors message, que quede bien la cajita-->
                     <div class="row" ng-class="{'has-error': sendOfferForm.comment.$touched && sendOfferForm.comment.$invalid}">
-                      <p class="form-requirement chat-text">{{'commentRequirement' | translate}}</p>
-                      <textarea name="comment" ng-model="controller.offerForm.comment" class="chat-text form-control" placeholder="{{'comments' | translate}}" rows="2" id="msg-comment-title"
+                      <p class="form-requirement chat-text3">{{'commentRequirement' | translate}}</p>
+                      <textarea name="comment" ng-model="controller.offerForm.comment" class="chat-text2 form-control" placeholder="{{'comments' | translate}}" rows="2" id="msg-comment-title"
                                 required ng-maxlength="250"></textarea>
                     </div>
                   </div>
