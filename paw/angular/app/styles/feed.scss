@@ -84,7 +84,7 @@
 
 .single-img{
   width: 100%;
-  height: auto;
+  min-height: 300px !important;
   max-width: 500px;
   max-height: 1000px;
   object-fit: cover;
@@ -98,6 +98,13 @@
   position: relative;
   text-align: center;
   color: white;
+}
+
+.card-title a{
+  color: white;
+}
+.card-title a:hover{
+  color: #990cc4;
 }
 
 .card-title h5{
@@ -900,6 +907,8 @@ html {
 
 .my-bar{
   background-color: #750096 !important;
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .more-icon > img {
@@ -931,17 +940,19 @@ html {
 .card-invest {
   min-width: 30% !important;
   max-width: 30% !important;
+  margin: 10px 20px 10px 0 !important;
   border-color: #cecece !important;
 }
 .img-invest{
-  height: 80px;
-  width: auto;
+  height: 80px !important;
+  width: 100%;
   object-fit: cover;
 }
 
 .ww-img {
   border-radius: 50%;
   width: 90px;
+  min-height:90px;
   border: solid 0.5px #b7b7b7;
 }
 
