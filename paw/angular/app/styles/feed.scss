@@ -100,6 +100,13 @@
   color: white;
 }
 
+.card-title a{
+  color: white;
+}
+.card-title a:hover{
+  color: #990cc4;
+}
+
 .card-title h5{
   text-overflow: ellipsis;
   overflow: hidden;
@@ -900,6 +907,8 @@ html {
 
 .my-bar{
   background-color: #750096 !important;
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .more-icon > img {
@@ -943,6 +952,7 @@ html {
 .ww-img {
   border-radius: 50%;
   width: 90px;
+  min-height:90px;
   border: solid 0.5px #b7b7b7;
 }
 
