@@ -45,7 +45,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       projectService.getById(projectId.toString()).then(function (response) {
         $scope.project = response.data;
         $scope.project.projectUrl = PathService.get().singleProject(projectId).path;
-        $scope.project.percentage = $scope.project.fundingCurrent * 100 / $scope.project.fundingTarget;
+        $scope.project.percentage = parseInt($scope.project.fundingCurrent * 100 / $scope.project.fundingTarget);
         if ($scope.project.portraitExists) {
           sampleService.get($scope.project.portraitImage).then(function (image) {
             $scope.project.image = image.data.image;
@@ -193,7 +193,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
           $scope.lastMessage.answered = true;
           $scope.lastMessage.accepted = true;
           $scope.project.fundingCurrent += $scope.lastMessage.offer;
-          $scope.project.percentage = $scope.project.fundingCurrent * 100 / $scope.project.fundingTarget;
+          $scope.project.percentage = parseInt($scope.project.fundingCurrent * 100 / $scope.project.fundingTarget);
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
             PathService.get().error().go();

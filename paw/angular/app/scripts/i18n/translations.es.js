@@ -160,7 +160,7 @@ define([], function() {
     hprofile: 'Mi Perfil',
     hmessages: 'Mensajes',
     hnewProject: 'Nuevo Proyecto',
-    hrequests: 'Ofertas Enviadas',
+    hrequests: 'Inversiones',
     hwelcome: 'Bienvenido',
     hlogin: 'Iniciar Sesión',
     hsignUp: 'Registrarse',
@@ -300,6 +300,6 @@ define([], function() {
     pageTitleProfile: 'Mi Perfil | VestNet',
     pageTitleUserInfo: '{{f}} {{l}} | VestNet',
     pageTitleVerify: 'Verificar Cuenta | VestNet',
-    pageTitleSingeProject: '{{p}} | VestNet'
+    pageTitleSingleProject: '{{p}} | VestNet'
   };
 });

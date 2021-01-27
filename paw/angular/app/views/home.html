@@ -23,7 +23,7 @@
              aria-controls="entrep" aria-selected="false">{{'entrepTab' | translate}}</a>
         </li>
       </ul>
-      <div class="tab-content inv-tab" id="myTabContent">
+      <div class="tab-content inv-tab wel-min" id="myTabContent">
         <div class="tab-pane fade show in active" id="inv" role="tabpanel" aria-labelledby="inv-tab">
           <h4>{{'wIAsk' | translate}}</h4>
           <p>{{'wIp1' | translate}}</p>
@@ -31,8 +31,8 @@
           <p>{{'wIp3' | translate}}</p>
           <h5>{{'wIRegister' | translate}}</h5>
           <h4>{{'wBepart' | translate}}</h4>
-          <a ng-href="#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>
-          <a ng-href="#/projects" class="btn btn-outline-dark distance-btn">{{'visitWeb' | translate}}</a>
+<!--          <a ng-href="#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>-->
+<!--          <a ng-href="#/projects" class="btn btn-outline-dark distance-btn">{{'visitWeb' | translate}}</a>-->
         </div>
         <div class="tab-pane fade" id="entrep" role="tabpanel" aria-labelledby="entrep-tab">
           <h4>{{'wEAsk' | translate}}</h4>
@@ -41,9 +41,11 @@
           <p>{{'wEp3' | translate}}</p>
           <h5>{{'wERegister' | translate}}</h5>
           <h4>{{'wBepart' | translate}}</h4>
-          <a ng-href="/#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>
+<!--          <a ng-href="/#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>-->
         </div>
       </div>
+      <a ng-href="#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>
+      <a ng-href="#/projects" class="btn btn-outline-dark distance-btn">{{'visitWeb' | translate}}</a>
       <div id="welcome-login">
         <label>{{'welcomeRegistered' | translate}}</label>
         <a ng-href="/#/login" class="btn btn-dark">{{'submit' | translate}}</a>

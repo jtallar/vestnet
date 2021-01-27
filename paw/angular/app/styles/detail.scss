@@ -22,7 +22,12 @@
 }
 
 .header-white{
-  background-color: white;
+  background-color: white !important;
+}
+
+.single-header{
+  padding: 5px 0 0 0 !important;
+  border: transparent !important;
 }
 
 /* Container holding the image and the text */
@@ -103,7 +108,8 @@
 }
 
 .single-card{
-  padding: 25px !important
+  padding: 15px 25px 25px 25px !important;
+  min-height: 620px !important;
 }
 
 .history-group{
@@ -197,4 +203,17 @@
   margin: 30px 25px !important;
   width: auto;
   height: 60px;
+}
+
+.edit-icon{
+  width: 20px !important;
+  height: auto !important;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  position: absolute;
+  z-index: -1;
+  top:150px;
+  outline: black !important;
 }

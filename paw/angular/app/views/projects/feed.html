@@ -1,9 +1,4 @@
-<!--<head>-->
-<!--    &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="styles/feed.css">-->
-<!--    &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--</head>-->
-<head><title>{{ 'pageTitleFeed' | translate}}</title></head>
+<head><title> {{ 'pageTitleFeed' | translate}}</title></head>
 
 <!--<vnheader></vnheader>-->
 
@@ -42,7 +37,6 @@
 <!--    </ul>-->
   </div>
 </div>
-
 
 <div class="sidenav sidenav-feed">
   <div class="form-row align-items-center">
@@ -148,41 +142,30 @@
 
 </div>
 
-
 <!-- PROJECTS -->
-
   <div class="body fid" ng-if="!noProjectsFound">
-    <div ng-if="loading" class="spinner-grow text-dark loading-grow" role="status" style="margin-left: 51%"></div>
-
+    <div ng-if="loading" class="spinner-grow text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 5rem; height: 5rem;"></div>
     <div class="card-deck">
         <div class="card mb-3 card-feed" ng-repeat="project in projects">
           <div class="card-header text-white">
             <div class="row icon-fav">
               <div class="col-10">
                 <div class="card-title">
-                  <h5>{{project.name}}</h5>
+                  <a href="/#/projects/{{project.id}}">
+                    <h5>{{project.name}}</h5>
+                  </a>
                 </div>
               </div>
               <div class="col-2">
-
                 <div ng-if="isInvestor">
                   <button ng-click="favTap(project.id)"
                           class="btn-transp">
-                    <!--<c:choose>-->
-                      <!--<c:when test="${user.favorites.contains(project)}">-->
-                        <!--<c:set var="icon_fav" value="${icon_fav_on}"/>-->
-                      <!--</c:when>-->
-                      <!--<c:otherwise>-->
-                        <!--<c:set var="icon_fav" value="${icon_fav_off}"/>-->
-                      <!--</c:otherwise>-->
-                    <!--</c:choose>-->
                     <div ng-if="containsFav(project.id)">
-                      <img ng-src="images/bookmarkOnB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                      <img ng-src="images/bookmarkOnB.png" class="icon-fav-img" alt="{{'imgFav' | translate}}"/>
                     </div>
                     <div ng-if="!containsFav(project.id)">
-                      <img  ng-src="images/bookmarkOffB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                      <img  ng-src="images/bookmarkOffB.png" class="icon-fav-img" alt="{{'imgFav' | translate}}"/>
                     </div>
-
                   </button>
                 </div>
               </div>
@@ -192,10 +175,14 @@
             <div class="row">
               <div class="col-5">
                 <div ng-if="!project.portraitExists">
+                  <a href="/#/projects/{{project.id}}">
                   <img ng-src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                  </a>
                 </div>
                 <div ng-if="project.portraitExists">
+                  <a href="/#/projects/{{project.id}}">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                  </a>
                 </div>
               </div>
               <div class="col-7 card-content">
@@ -204,30 +191,30 @@
             </div>
           </div>
           <div class="card-footer feed-footer">
-            <div class="row">
-              <div class="price-footer col-9">
+              <div class="price-footer">
                 <h4 style="text-align: center">
                 {{'of' | translate : {of : project.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : project.fundingTarget} }}</b></h4>
-                <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
+                <div class="progress" style="height: 12px; margin: 0 10px 0 10px;">
                   <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
                 </div>
-              </div>
-              <div class="col-2">
-                <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >
-                  <img src="images/view-icon-b.png" alt="">
-                </a>
-              </div>
+<!--              <div class="col-2">-->
+<!--                <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >-->
+<!--                  <img src="images/view-icon-b.png" alt="">-->
+<!--                </a>-->
+<!--              </div>-->
             </div>
           </div>
         </div>
     </div>
   </div>
 
-<!--TODO: Acomodar esto-->
-<!-- EMPTY PROJECT CARD -->
-  <div class="card m-2 no-proj-feed" ng-if="noProjectsFound">
-    <div class="card-header">
-      <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
+  <div ng-if="noProjectsFound">
+    <div class="card-deck">
+      <div class="card m-2 no-proj-feed">
+        <div class="card-header">
+          <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
+        </div>
+      </div>
     </div>
   </div>
 
