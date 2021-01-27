@@ -14,7 +14,7 @@
 
 .card-deck{
   margin: 20px 15% 20px 25% !important;
-  min-height: 1100px !important;
+  min-height: auto !important;
 }
 
 .card-deck .card{
@@ -147,12 +147,23 @@
   margin:0 !important;
 }
 
-.page-link{
-  color: #750096 !important;
-  font-size: 30px !important;
-  font-family:Impact, sans-serif;
+.page-link {
+  color: #000000 !important;
+  font-size: 28px !important;
+  font-family: Impact, sans-serif;
   font-variant: all-petite-caps;
   font-weight: bold;
+  border: transparent
+}
+#li-a-now{
+  background-color: transparent !important;
+  border: none;
+  margin-top:1px;
+  color: #9c28bd !important;
+}
+#li-a-next-num, #li-a-next, #li-a-previous, #li-a-previous-num{
+  background-color: transparent !important;
+  border: none
 }
 
 .page-link2{

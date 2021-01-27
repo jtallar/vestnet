@@ -26,6 +26,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return $scope.favs.includes(id)
       }
 
+      $scope.formatPrice = function(number){
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+
       $scope.favTap = function(id){
         if($scope.containsFav(id)){
           var index = $scope.favs.indexOf(id)
