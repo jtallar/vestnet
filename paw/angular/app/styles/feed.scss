@@ -84,7 +84,7 @@
 
 .single-img{
   width: 100%;
-  height: auto;
+  min-height: 300px !important;
   max-width: 500px;
   max-height: 1000px;
   object-fit: cover;
@@ -931,11 +931,12 @@ html {
 .card-invest {
   min-width: 30% !important;
   max-width: 30% !important;
+  margin: 10px 20px 10px 0 !important;
   border-color: #cecece !important;
 }
 .img-invest{
-  height: 80px;
-  width: auto;
+  height: 80px !important;
+  width: 100%;
   object-fit: cover;
 }
 

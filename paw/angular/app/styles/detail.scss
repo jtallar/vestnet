@@ -108,7 +108,7 @@
 }
 
 .single-card{
-  padding: 0 25px 25px 25px !important;
+  padding: 15px 25px 25px 25px !important;
   min-height: 620px !important;
 }
 
@@ -208,4 +208,12 @@
 .edit-icon{
   width: 20px !important;
   height: auto !important;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  position: absolute;
+  z-index: -1;
+  top:150px;
+  outline: black !important;
 }
