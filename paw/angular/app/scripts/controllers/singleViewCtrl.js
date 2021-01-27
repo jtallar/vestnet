@@ -34,6 +34,13 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     });
     /** ********* **/
 
+    $scope.formatPrice = function(number){
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    $scope.formatDate = function (str){
+      return str.substring(0,10);
+    }
+
     var param = parseInt($routeParams.id);
     if (isNaN(param) || param <= 0) {
       PathService.get().error().go();
