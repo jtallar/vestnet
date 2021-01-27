@@ -49,7 +49,7 @@
           </div>
           <div class="col-md" ng-class="{'has-error': filterForm.search.$touched && filterForm.search.$invalid}">
 <!--            {{ 'search' | translate }}-->
-            <input name="search" id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search"
+            <input style="color: black !important;" name="search" id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search"
                    ng-model="searchField" ng-maxlength="50" ng-keyup="$event.keyCode == 13 && !filterForm.$invalid && applyFilter()"/>
 
             <!-- <form:errors path="keyword" element="p" cssClass="formError"/> -->
@@ -92,8 +92,8 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'min' | translate}}</span>
                 </div>
-                <input name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="1000" id="filter-form-min"
-                       max="2000000000" step="1" no-float/>
+                <input style="color: black !important;" name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="1000" id="filter-form-min"
+                       max="2000000000" step="1" no-float pattern="^[0-9]+"/>
               </div>
               <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
             </div>
@@ -102,8 +102,8 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'max' | translate}}</span>
                 </div>
-                <input name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
-                            id="filter-form-max" max="2000000000" step="1" no-float/>
+                <input style="color: black !important;" name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
+                            id="filter-form-max" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
               </div>
               <label class="formError" ng-if="costRangeError" id="categoryCountError" >{{'costRangeRequirement' | translate}}</label>
             </div>
@@ -193,8 +193,8 @@
           <div class="card-footer feed-footer">
               <div class="price-footer">
                 <h4 style="text-align: center">
-                {{'of' | translate : {of : project.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : project.fundingTarget} }}</b></h4>
-                <div class="progress" style="height: 12px; margin: 0 10px 0 10px;">
+                {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{'moneyarg'| translate : {m : formatPrice(project.fundingTarget)} }}</b></h4>
+                <div class="progress" style="height: 12px; margin: 0 25px 0 25px;">
                   <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
                 </div>
 <!--              <div class="col-2">-->

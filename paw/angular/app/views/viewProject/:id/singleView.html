@@ -71,7 +71,7 @@
             <div class="card-body single-card">
               <div class="row justify-content-vertical">
                 <div class="col-11">
-                  <h5 class="card-title"><b>{{project.name}}</b></h5>
+                  <h4 class="card-title single-name"><b>{{project.name}}</b></h4>
                 </div>
 <!--            TODO: Acomodar el tamaño del lapiz y alinearlo con el nombre    -->
                 <div ng-if="project.getByOwner" class="col-1">
@@ -82,21 +82,21 @@
                   </a>
                 </div>
               </div>
-              <div ng-if="project.getByOwner" class="blockquote-footer">{{'you' | translate}}</div>
-              <div ng-if="!project.getByOwner" class="blockquote-footer">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
+              <div ng-if="project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">{{'you' | translate}}</div>
+              <div ng-if="!project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
 
               <p class="card-text">{{project.summary}}</p>
 
-              <h5 class="card-title"><b>{{'categories' | translate}}</b></h5>
-                <li ng-repeat="category in project.categorieNames">{{category | translate}}</li>
+              <h6 class="card-title"><b>{{'categories' | translate}}</b></h6>
+                <li class="cat-size" ng-repeat="category in project.categorieNames">{{category | translate}}</li>
               <br/>
 
-              <h5 class="card-title"><b>{{'contactMail' | translate}}</b></h5>
-              <p>{{project.owner.email}}</p>
+              <h6 class="card-title"><b>{{'contactMail' | translate}}</b></h6>
+              <p class="cat-size">{{project.owner.email}}</p>
 
-              <h5 class="card-title"><b>{{'funding' | translate}}</b></h5>
+              <h6 class="card-title"><b>{{'funding' | translate}}</b></h6>
               <div class="text-center ">
-                  <h6 class="card-title">{{'of' | translate : {of: project.fundingCurrent} }} <b style="font-size: 25px"> {{'moneyarg' | translate : {m: project.fundingTarget} }}</b></h6>
+                  <h6 class="card-title">{{'of' | translate : {of: formatPrice(project.fundingCurrent)} }} <b style="font-size: 25px"> {{'moneyarg' | translate : {m: formatPrice(project.fundingTarget)} }}</b></h6>
               </div>
 <!--              <div class="row">-->
 <!--                <div class="col-1"></div>-->
@@ -114,9 +114,12 @@
 
               <div class="dropdown-divider"></div>
 
-              <p class="card-text"><small class="text-muted">{{'lastUpdate' | translate : { date : project.updateDate } }}</small></p>
+              <p class="card-text pull-right"><small class="text-muted">{{'lastUpdate' | translate : { date : formatDate(project.updateDate) } }}</small></p>
             </div>
           </div>
+<!--          <div class="card-footer">-->
+<!--            <p class="card-text pull-right"><small class="text-muted">{{'lastUpdate' | translate : { date : formatDate(project.updateDate) } }}</small></p>-->
+<!--          </div>-->
         </div>
 
         <!-- Contact button -->
