@@ -28,6 +28,13 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       return (today.getHours() + ':' + today.getMinutes());
     };
 
+    $scope.millisToMinSec = function (millis) {
+      var minutes = Math.floor(millis / 60000);
+      if(minutes===0) minutes = '00';
+      var seconds = ((millis % 60000) / 1000).toFixed(0);
+      return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    }
+
     this.setMaxPage = function (linkHeaders) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
       var maxPage = parseInt(lastLink[0].split('p=')[1][0]);

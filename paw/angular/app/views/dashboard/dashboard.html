@@ -14,8 +14,7 @@
   <toggleswitch name="funded" ng-model="funded" ng-change="toggleChange" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
   <div class="row">
-    <div class="col-1"></div>
-    <div class="col-11">
+    <div class="col-12">
       <pagination></pagination>
     </div>
   </div>
@@ -187,9 +186,9 @@
               </div>
               <div class="col-2">{{project.clicksAvg}}</div>
               <div class="col-2">
-                <strong>{{'secondsAvg' | translate}}</strong>
+                <strong>{{'minutesAvg' | translate}}</strong>
               </div>
-              <div class="col-">{{project.secondsAvg}}</div>
+              <div class="col-">{{millisToMinSec(project.secondsAvg)}}</div>
             </div>
             <div class="row">
               <div class="col-1"></div>

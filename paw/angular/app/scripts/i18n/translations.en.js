@@ -270,7 +270,7 @@ define([], function() {
     nextPage: 'Next page',
     imgFav: 'Favorites button',
     clicksAvg: 'Clicks Average',
-    secondsAvg: 'Seconds Average',
+    minutesAvg: 'Minutes Average',
     seen: 'Seen by',
     contactClicks: 'Contact Clicks',
     investorsSeen: 'Investors Seen',
