@@ -270,7 +270,7 @@ define([], function() {
     nextPage: 'Next page',
     imgFav: 'Favorites button',
     clicksAvg: 'Clicks Average',
-    secondsAvg: 'Seconds Average',
+    minutesAvg: 'Minutes Average',
     seen: 'Seen by',
     contactClicks: 'Contact Clicks',
     investorsSeen: 'Investors Seen',
@@ -300,6 +300,9 @@ define([], function() {
     pageTitleProfile: 'My Profile | VestNet',
     pageTitleUserInfo: '{{f}} {{l}} | VestNet',
     pageTitleVerify: 'Verify Account | VestNet',
-    pageTitleSingleProject: '{{p}} | VestNet'
-  };
+    pageTitleSingleProject: '{{p}} | VestNet',
+
+    msgSeen: 'Seen',
+    msgNotSeen: 'Delivered'
+	};
 });

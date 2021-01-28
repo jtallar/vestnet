@@ -19,6 +19,21 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
       $scope.lastPage = maxPage;
     };
 
+    $scope.getDate = function(date){
+      if(date !== undefined)
+        return date.toString().match(/.+?(?=T)/);
+
+      var today = new Date();
+      return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
+    };
+    $scope.getHour = function(date){
+      if(date !== undefined)
+        return date.toString().match(/(?<=T).*?(?=\.|-)/);
+
+      var today = new Date();
+      return (today.getHours() + ':' + today.getMinutes());
+    };
+
     $scope.messages = [];
     this.processMessages = function (messages) {
       $scope.messages = messages;
