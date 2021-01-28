@@ -13,6 +13,21 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     $scope.funded = !!($routeParams.f);
 
+    $scope.getDate = function(date){
+      if(date !== undefined)
+        return date.toString().match(/.+?(?=T)/);
+
+      var today = new Date();
+      return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
+    };
+    $scope.getHour = function(date){
+      if(date !== undefined)
+        return date.toString().match(/(?<=T).*?(?=\.|-)/);
+
+      var today = new Date();
+      return (today.getHours() + ':' + today.getMinutes());
+    };
+
     this.setMaxPage = function (linkHeaders) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
       var maxPage = parseInt(lastLink[0].split('p=')[1][0]);

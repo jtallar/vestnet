@@ -30,6 +30,21 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         }
       };
 
+      $scope.getDate = function(date){
+        if(date !== undefined)
+          return date.toString().match(/.+?(?=T)/);
+
+        var today = new Date();
+        return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
+      };
+      $scope.getHour = function(date){
+        if(date !== undefined)
+          return date.toString().match(/(?<=T).*?(?=\.|-)/);
+
+        var today = new Date();
+        return (today.getHours() + ':' + today.getMinutes());
+      };
+
       this.setUser = function (user) {
         $scope.user = user;
         $scope.user.userUrl = PathService.get().user(user.id).path;
