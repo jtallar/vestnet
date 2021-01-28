@@ -16,6 +16,24 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
       return;
     }
 
+    $scope.formatPrice = function(number){
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    $scope.getDate = function(date){
+      if(date !== undefined)
+        return date.toString().match(/.+?(?=T)/);
+
+      var today = new Date();
+      return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
+    };
+    $scope.getHour = function(date){
+      if(date !== undefined)
+        return date.toString().match(/(?<=T).*?(?=\.|-)/);
+
+      var today = new Date();
+      return (today.getHours() + ':' + today.getMinutes());
+    };
+
     $scope.loadingSecondTab = true;
     $scope.secondTab = [];
 

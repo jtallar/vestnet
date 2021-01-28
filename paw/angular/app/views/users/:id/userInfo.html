@@ -54,7 +54,7 @@
       <div class="tab-content profile-tab" id="myTabContent">
         <div class="tab-pane fade show in active" id="home" role="tabpanel" aria-labelledby="home-tab">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label>{{'firstName' | translate}}</label>
             </div>
             <div class="col-md-6">
@@ -62,55 +62,55 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label>{{'lastName' | translate}}</label>
             </div>
             <div class="col-md-6">
               <p>{{user.lastName}}</p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
+          <div ng-if="user.email !== ''" class="row">
+            <div class="col-md-4">
               <label>{{'email' | translate}} </label>
             </div>
             <div class="col-md-6">
               <p>{{user.email}}</p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
+          <div ng-if="user.phone !== ''" class="row">
+            <div class="col-md-4">
               <label>{{'phone' | translate}} </label>
             </div>
             <div class="col-md-6">
               <p>{{user.phone}}</p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
+          <div ng-if="user.birthDate !== ''" class="row">
+            <div class="col-md-4">
               <label>{{'birthday' | translate}}</label>
             </div>
             <div class="col-md-6">
-              <p>{{user.birthDate}}</p>
+              <p>{{getDate(user.birthDate)[0]}}</p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
+          <div ng-if="user.country !== ''" class="row">
+            <div class="col-md-4">
               <label>{{'country' | translate}} </label>
             </div>
             <div class="col-md-6">
               <p>{{user.country}}</p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
+          <div ng-if="user.city !== ''" class="row">
+            <div class="col-md-4">
               <label>{{'city' | translate}} </label>
             </div>
             <div class="col-md-6">
               <p>{{user.city}}</p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
+          <div ng-if="user.state !== ''" class="row">
+            <div class="col-md-4">
               <label>{{'state' | translate}}</label>
             </div>
             <div class="col-md-6">
@@ -128,28 +128,23 @@
           <div ng-if="!loadingSecondTab && secondTab.length !== 0">
             <div ng-repeat="project in secondTab">
               <div class="card m-2">
-                <div class="card-header text-white">
-                  <h5 class="card-title">{{project.name}}</h5>
-                </div>
-                <div class="card-body favorites">
-                  <p class="card-text">{{project.summary}}</p>
+                <div class="card-header card-title text-white">
                   <div class="row">
-                    <div class="price-footer col-9">
-                      <h4 style="text-align: center">
-                        {{'of' | translate : {of : project.fundingCurrent} }} <b>{{'moneyarg'| translate : {m : project.fundingTarget} }}</b></h4>
-                      <div class="progress" style="height: 15px; margin: 5px 0 0 8px;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
+                    <a class="col-8" href="/#/projects/{{project.id}}">
+                      <h5 class="card-title cut-text">{{project.name}}</h5>
+                    </a>
+                    <div class="col-4">
+                      <h4 style="text-align: center; font-size: 12px; margin-bottom: 2px !important;">
+                        {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{'moneyarg'| translate : {m : formatPrice(project.fundingTarget)} }}</b></h4>
+                      <div class="progress" style="height: 10px; margin: 0 0 0 0;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{fav.percentage}}%" aria-valuenow="{{fav.percentage}}" aria-valuemin="0" aria-valuemax="100">{{fav.percentage}}%</div>
                       </div>
                     </div>
-                    <div class="col">
-                      <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >
-                        <img src="images/view-icon-b.png" alt="">
-                      </a>
-                    </div>
-                    <!--                      <div class="col">-->
-                    <!--                        <a href="#/projects/{{project.id}}" class="btn btn-dark pull-right">{{'moreInfo' | translate}}</a>-->
-                    <!--                      </div>-->
                   </div>
+                </div>
+
+                <div class="card-body favorites">
+                  <p class="card-text" style="color: black; font-weight: normal;">{{project.summary}}</p>
                 </div>
               </div>
             </div>
@@ -175,17 +170,13 @@
           <div ng-if="!loadingSecondTab && secondTab.length !== 0">
             <div ng-repeat="project in secondTab">
               <div class="card m-2">
-                <div class="card-header text-white">
-                  <h5 class="card-title">{{project.projectName}}</h5>
+                <div class="card-header card-title text-white">
+                  <a href="/#/projects/{{project.id}}">
+                    <h5 class="card-title cut-text">{{project.projectName}}</h5>
+                  </a>
                 </div>
                 <div class="card-body favorites">
-                  <div class="row">
-                    <div class="col">
-                      <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >
-                        <img src="images/view-icon-b.png" alt="">
-                      </a>
-                    </div>
-                  </div>
+                  <p class="card-text" style="color: black; font-weight: normal;">{{project.summary}}</p>
                 </div>
               </div>
             </div>
