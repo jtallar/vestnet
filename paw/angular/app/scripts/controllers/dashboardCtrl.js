@@ -13,6 +13,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     $scope.funded = !!($routeParams.f);
 
+    $scope.projects = null; $scope.fundedProjects = null;
+
     $scope.getDate = function(date){
       if(date !== undefined)
         return date.toString().match(/.+?(?=T)/);
@@ -29,6 +31,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     };
 
     $scope.millisToMinSec = function (millis) {
+      if(isNaN(millis)) return 0;
       var minutes = Math.floor(millis / 60000);
       if(minutes===0) minutes = '00';
       var seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -57,50 +60,54 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.messages = []; $scope.fundedMsgs = [];
 
     this.getNotFundedProjects = function () {
-      userService.getLoggedProjects(false, $scope.page, pageSize).then(function (response) {
-        _this.setMaxPage(response.headers().link);
-        $scope.projects = response.data;
-        $scope.loadingProjects = false;
-        var map = {};
-        for(var i = 0; i < $scope.projects.length; i++) {
-          map[$scope.projects[i].id] = i;
-          $scope.projects[i].firstFecthed = false;
-          $scope.projects[i].firstFecthedOffers = false;
-          $scope.projects[i].editUrl= PathService.get().editProject($scope.projects[i].id).path;
-          if ($scope.projects[i].portraitExists) {
-            sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
-              $scope.projects[map[image.data.route]].image = image.data.image;
+      if($scope.projects === null) {
+        userService.getLoggedProjects(false, $scope.page, pageSize).then(function (response) {
+          _this.setMaxPage(response.headers().link);
+          $scope.projects = response.data;
+          $scope.loadingProjects = false;
+          var map = {};
+          for (var i = 0; i < $scope.projects.length; i++) {
+            map[$scope.projects[i].id] = i;
+            $scope.projects[i].firstFecthed = false;
+            $scope.projects[i].firstFecthedOffers = false;
+            $scope.projects[i].editUrl = PathService.get().editProject($scope.projects[i].id).path;
+            if ($scope.projects[i].portraitExists) {
+              sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
+                $scope.projects[map[image.data.route]].image = image.data.image;
+              }, function (err) {
+                console.log("No image");
+              });
+            }
+            messageService.projectNotificationCount($scope.projects[i].id).then(function (response) {
+              $scope.projects[map[response.data.route]].msgCount = response.data.unread;
             }, function (err) {
-              console.log("No image");
+              console.error(err);
             });
           }
-          messageService.projectNotificationCount($scope.projects[i].id).then(function (response) {
-            $scope.projects[map[response.data.route]].msgCount = response.data.unread;
-          }, function (err) {
-            console.error(err);
-          });
-        }
-      });
+        });
+      }
     };
 
     this.getFundedProjects = function () {
-      userService.getLoggedProjects(true, $scope.page, pageSize).then(function (response) {
-        _this.setMaxPage(response.headers().link);
-        $scope.fundedProjects = response.data;
-        $scope.loadingFunded = false;
-        var map = {};
-        for(var i = 0; i < $scope.fundedProjects.length; i++) {
-          map[$scope.fundedProjects[i].id] = i;
-          $scope.fundedProjects[i].editUrl= PathService.get().editProject($scope.fundedProjects[i].id).path;
-          if ($scope.fundedProjects[i].portraitExists) {
-            sampleService.get($scope.fundedProjects[i].portraitImage, $scope.fundedProjects[i].id.toString()).then(function (image) {
-              $scope.fundedProjects[map[image.data.route]].image = image.data.image
-            }, function (err) {
-              console.log("No image")
-            });
+      if($scope.fundedProjects === null) {
+        userService.getLoggedProjects(true, $scope.page, pageSize).then(function (response) {
+          _this.setMaxPage(response.headers().link);
+          $scope.fundedProjects = response.data;
+          $scope.loadingFunded = false;
+          var map = {};
+          for (var i = 0; i < $scope.fundedProjects.length; i++) {
+            map[$scope.fundedProjects[i].id] = i;
+            $scope.fundedProjects[i].editUrl = PathService.get().editProject($scope.fundedProjects[i].id).path;
+            if ($scope.fundedProjects[i].portraitExists) {
+              sampleService.get($scope.fundedProjects[i].portraitImage, $scope.fundedProjects[i].id.toString()).then(function (image) {
+                $scope.fundedProjects[map[image.data.route]].image = image.data.image
+              }, function (err) {
+                console.log("No image")
+              });
+            }
           }
-        }
-      });
+        });
+      }
     };
 
     this.fetchProjects = function () {
@@ -111,14 +118,18 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     this.fetchProjects();
 
     $scope.fetchStats = function(id, index){
-      projectService.getStats(id.toString()).then(function (response) {
-        $scope.projects[index].clicksAvg = response.data.clicksAvg;
-        $scope.projects[index].secondsAvg = response.data.secondsAvg;
-        $scope.projects[index].seen = response.data.seen;
-        $scope.projects[index].contactClicks = response.data.contactClicks;
-        $scope.projects[index].investorsSeen = response.data.investorsSeen;
-        $scope.projects[index].lastSeen = response.data.lastSeen;
-      });
+      if($scope.projects[index].openStats === undefined) $scope.projects[index].openStats = false;
+      $scope.projects[index].openStats = !$scope.projects[index].openStats;
+      if($scope.projects[index].openStats === true) {
+        projectService.getStats(id.toString()).then(function (response) {
+          $scope.projects[index].clicksAvg = response.data.clicksAvg;
+          $scope.projects[index].secondsAvg = response.data.secondsAvg;
+          $scope.projects[index].seen = response.data.seen;
+          $scope.projects[index].contactClicks = response.data.contactClicks;
+          $scope.projects[index].investorsSeen = response.data.investorsSeen;
+          $scope.projects[index].lastSeen = response.data.lastSeen;
+        });
+      }
     };
 
     this.updateNextPageOffers = function (linkHeaders, index) {
@@ -135,8 +146,10 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     };
 
     $scope.fetchOffers = function(id, index){
-      if($scope.projects[index].firstFecthedOffers === false) {
-        $scope.projects[index].firstFecthedOffers = true;
+      if($scope.projects[index].openOffers === undefined) $scope.projects[index].openOffers = false;
+      $scope.projects[index].openOffers = !$scope.projects[index].openOffers;
+      if($scope.projects[index].openOffers === true) {
+        console.log("loading offers from ", index)
         $scope.fundedMsgs[index] = [];
         messageService.getOffers(id.toString(), true, 1).then(function (response) {
           _this.updateNextPageOffers(response.headers().link, index);
