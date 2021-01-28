@@ -53,7 +53,9 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
           });
         }
       }
+      this.loading = false;
     };
+    this.loading = true;
 
     this.fetchChatList = function () {
       messageService.getInvestorChatList($scope.page).then(function (response) {

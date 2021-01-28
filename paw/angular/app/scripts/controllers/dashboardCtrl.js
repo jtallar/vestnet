@@ -45,6 +45,11 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       $scope.lastPage = maxPage;
     };
 
+    $scope.last = function (){
+      console.log($scope.lastPage)
+      return $scope.lastPage;
+    }
+
     this.updatePathParams = function () {
       if ($scope.funded) PathService.get().setParamsInUrl({p:$scope.page, f:true});
       else PathService.get().setParamsInUrl({p:$scope.page});
@@ -89,6 +94,9 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     };
 
     this.getFundedProjects = function () {
+      userService.getLoggedProjects(false, $scope.page, pageSize).then(function (response) {
+        _this.setMaxPage(response.headers().link);
+      });
       if($scope.fundedProjects === null) {
         userService.getLoggedProjects(true, $scope.page, pageSize).then(function (response) {
           _this.setMaxPage(response.headers().link);

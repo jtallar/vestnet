@@ -4,14 +4,18 @@
 
 <div class="row sep-nav">
   <div class="col-1"></div>
-  <div class="col-10" ng-show="lastPage !== 1">
+  <div class="col-10" ng-show="lastPage !== 1 && !loading">
     <pagination></pagination>
   </div>
   <div class="col-1"></div>
 </div>
 
+<div class="text-center" ng-if="loading">
+  <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
+</div>
+
 <!-- TODO: Ajustar el css de esto -->
-<div class="dashboard" ng-if="!noMessagesFound">
+<div class="dashboard" ng-if="!noMessagesFound && !loading">
   <div class="card-group" ng-repeat="message in messages">
     <span class="anchor-header"></span>
     <div class="container py-3">
