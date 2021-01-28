@@ -14,8 +14,7 @@
   <toggleswitch name="funded" ng-model="funded" ng-change="toggleChange" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
   <div class="row">
-    <div class="col-1"></div>
-    <div class="col-11">
+    <div class="col-12">
       <pagination></pagination>
     </div>
   </div>
@@ -94,11 +93,11 @@
                 <div class="col-1">
                   <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
                 </div>
-                <div class="col-3">
+                <div class="col-3 cut-text">
                   <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
 <!--                // TODO: Mostrar mas que el comment-->
-                <div class="col-7">
+                <div class="col-7 cut-text">
                   <strong>{{'lastChat' | translate}}:</strong>
                   <i>{{message.comment}}</i>
                 </div>
@@ -141,13 +140,13 @@
                 <div class="col-1">
                   <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
                 </div>
-                <div class="col-3">
+                <div class="col-3 cut-text">
                   <strong>{{'investor' | translate}}:</strong>  {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
-                <div class="col-4">
+                <div class="col-4 cut-text">
                   <strong>{{'msgTitleOffer' | translate}}</strong> {{message.offer}}
                 </div>
-                <div class="col-4">
+                <div class="col-4 cut-text">
                   <strong>{{'msgTitleRequest' | translate}}</strong> {{message.exchange}}
                 </div>
               </div>
@@ -187,9 +186,9 @@
               </div>
               <div class="col-2">{{project.clicksAvg}}</div>
               <div class="col-2">
-                <strong>{{'secondsAvg' | translate}}</strong>
+                <strong>{{'minutesAvg' | translate}}</strong>
               </div>
-              <div class="col-">{{project.secondsAvg}}</div>
+              <div class="col-">{{millisToMinSec(project.secondsAvg)}}</div>
             </div>
             <div class="row">
               <div class="col-1"></div>
@@ -211,7 +210,7 @@
               <div class="col-2">
                 <strong>{{'lastSeen' | translate}}</strong>
               </div>
-              <div class="col-">{{project.lastSeen}}</div>
+              <div class="col-">{{getDate(project.lastSeen)[0]}} {{getHour(project.lastSeen)[0]}}</div>
             </div>
           </div>
         </div>

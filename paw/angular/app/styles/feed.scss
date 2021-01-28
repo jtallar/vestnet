@@ -37,7 +37,7 @@
   width: 1000px !important;
   height: 60px !important;
   background-color: #f5f5f5 !important;
-  margin: 4px auto !important;
+  margin: auto auto 5px auto !important;
   padding: 0;
   min-height:60px !important;
 }
@@ -46,7 +46,7 @@
   width: 1000px !important;
   height: 110px !important;
   background-color: #f5f5f5 !important;
-  margin: 4px auto !important;
+  margin: 0 auto 20px auto !important;
   padding: 0;
   min-height:60px !important;
 }
@@ -679,10 +679,10 @@ html {
 }
 
 .chatbox{
-  height: 500px;
-  width: 1000px;
-  margin-left: 100px;
-  background-image: url("/images/signupBack.png");
+  height: 570px;
+  width: 1200px;
+  margin-left: 200px;
+  background-image: url("/images/purple-wp.jpg");
 }
 
 .chatbox-body{
@@ -701,11 +701,11 @@ html {
 
 .chat-header{
   background-color: #222222 !important;
-  height:90px !important;
+  height:60px !important;
 }
 
 .chat-img{
-  width:70px;
+  width:50px;
   background-color: #222222;
   border-radius: 50%;
   margin: 5px;
@@ -732,14 +732,15 @@ html {
 }
 
 .chat-card-me{
-  width: 400px;
+  width: 480px;
   margin-left: auto;
   margin-bottom: 20px;
   border: solid rgba(182, 177, 255, 0.74) !important
 }
 .chat-card-other{
-  width: 400px;
+  width: 480px;
   margin-bottom: 20px;
+  margin-left: 15px;
 }
 .chat-options{
   text-align: center;
@@ -765,13 +766,20 @@ html {
   border-radius: 50% !important;
 }
 
-.chat-offer{
-    width: 1010px !important;
-    height: 210px !important;
-    background-color: #f5f5f5 !important;
-    margin: 20px auto auto 4.5% !important;
-    padding: 0;
-    min-height:60px !important;
+.chat-opt2{
+  border-radius: 50% !important;
+}
+.chat-opt2 > img{
+  border-radius: 50% !important;
+}
+
+.chat-offer {
+  width: 1550px !important;
+  height: 150px !important;
+  background-color: #f5f5f5 !important;
+  margin: 10px auto auto 3.5% !important;
+  padding: 0;
+  min-height: 60px !important;
 }
 
 .chat-offer .card-header{
@@ -792,9 +800,9 @@ html {
 
 .send-icon{
   margin-right: 10px !important;
-  margin-top: 165% !important;
-  width: 40px !important;
-  height: 40px !important;
+  margin-top: 90% !important;
+  width: 30px !important;
+  height: 30px !important;
 }
 
 .chat-input{
@@ -828,7 +836,7 @@ html {
 .chat-p-name{
   font-size: xx-large;
   margin-left: 5px;
-  margin-top: 10px;
+  margin-top: 15px;
   font-variant: all-petite-caps;
 }
 .chat-p-img{
@@ -836,11 +844,11 @@ html {
   max-height:230px !important;
   object-fit: cover;
   border: solid 2px black;
-  margin: auto;
+  margin: 40px auto;
 }
 
 .chat-ficha {
-   height: 500px;
+   height: 570px;
    padding: 5px;
    text-align: center;
    margin-left:2.5%
@@ -848,6 +856,7 @@ html {
 .chat-ficha p{
   max-height:60px;
   margin-top:10px;
+  margin-bottom: 30px;
   font-size: small;
   color: #5f5f5f;
   //-webkit-line-clamp: 2;
@@ -869,7 +878,7 @@ html {
 }
 
 .msg-offer{
-  font-size: 25px !important;
+  font-size: 18px !important;
   color: #cb6800;
 }
 .msg-offer > img {
@@ -878,7 +887,7 @@ html {
   height: 20px;
 }
 .msg-exch{
-  font-size: 25px !important;
+  font-size: 18px !important;
   color: #10668d;
 }
 .msg-exch > img {
@@ -911,9 +920,22 @@ html {
 .popup{
   margin-top:20% !important;
 }
+.popup .modal-header{
+  padding: 0 !important;
+  height: 45px
+}
+.popup .modal-footer{
+  padding: 0 !important;
+  height: 60px
+}
+.popup .btn{
+  height: 40px !important;
+  width: 80px;
+  padding: 5px !important
+}
 .popup strong{
   font-variant: all-petite-caps;
-  font-size: 35px
+  font-size: 30px
 }
 
 .my-bar{
