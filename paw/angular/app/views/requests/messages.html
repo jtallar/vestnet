@@ -3,11 +3,13 @@
 <!--<vnheader></vnheader>-->
 
 <div class="row sep-nav">
-  <div class="col-1"></div>
-  <div class="col-10" ng-show="lastPage !== 1 && !loading">
+  <div class="col-3 center-vertical">
+      <strong class="tab-title"> {{'hmessages' | translate}} </strong>
+  </div>
+  <div class="col-6" ng-show="lastPage !== 1 && !loading">
     <pagination></pagination>
   </div>
-  <div class="col-1"></div>
+  <div class="col-3"></div>
 </div>
 
 <div class="text-center" ng-if="loading">

@@ -10,6 +10,14 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
       if (isNaN(param) || param <= 0) param = 1;
       $scope.page = param; $scope.lastPage = param;
 
+      $scope.getDate = function(date){
+        if(date !== undefined)
+          return date.toString().match(/.+?(?=T)/);
+
+        var today = new Date();
+        return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
+      };
+
       // Cannot use scope, too many changes to digest
       this.animate = function (id, start, end, duration) {
         if (start === end) return;
