@@ -36,6 +36,7 @@ public class OfferProjectDto extends OfferDto {
         offerDto.setExpiryDate(message.getExpiryDate());
 
         offerDto.setSeen(message.isSeen());
+        offerDto.setSeenAnswer(message.isSeenAnswer());
         offerDto.setDirection(message.getDirection());
         offerDto.setAccepted(message.getAccepted());
 
