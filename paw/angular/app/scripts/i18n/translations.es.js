@@ -228,7 +228,7 @@ define([], function() {
     footerContact: 'Contáctanos',
     footerPhone: 'Tel.:',
     footerMail: 'Mail:',
-    footerLkdn: 'LinkedIn:',
+    footerLkdn: 'LinkedIn',
     footerCopyright: '© 2020 Copyright: VestNet - PAW - ITBA',
     profileTitle: 'Información de {{first}} {{last}}',
     lastChat: 'Ult. mensaje',
