@@ -47,6 +47,8 @@ public class ImageRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getUserImage(@PathParam("image_id") final long imageId) throws ImageDoesNotExistException {
 
+        LOGGER.debug("Endpoint GET /images/users/" + imageId + " reached");
+
         final UserImage profileImage = userService.getImage(imageId).orElseThrow(ImageDoesNotExistException::new);
         return Response.ok(ImageDto.fromUserImage(profileImage)).build();
     }
@@ -55,6 +57,8 @@ public class ImageRestController {
     @Path("/users")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setUserImage(@Valid final ImageDto image) throws UserDoesNotExistException {
+
+        LOGGER.debug("Endpoint PUT /images/users reached with " + image.toString());
 
         userService.setImage(sessionUser.getId(), image.getImage()).orElseThrow(UserDoesNotExistException::new);
         return Response.ok().build();
@@ -66,6 +70,8 @@ public class ImageRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getProjectPortrait(@PathParam("project_id") final long id) throws ImageDoesNotExistException {
 
+        LOGGER.debug("Endpoint GET /images/projects/" + id + " reached");
+
         final ProjectImage projectImage = projectService.getPortraitImage(id).orElseThrow(ImageDoesNotExistException::new);
         return Response.ok(ImageDto.fromProjectImage(projectImage)).build();
     }
@@ -75,6 +81,8 @@ public class ImageRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setProjectPortrait(@PathParam("project_id") final long id,
                                        @Valid final ImageDto image) throws ProjectDoesNotExistException, IllegalProjectAccessException {
+
+        LOGGER.debug("Endpoint PUT /images/projects/" + id + " reached with" + image.toString());
 
         projectService.setPortraitImage(sessionUser.getId(), id, image.getImage()).orElseThrow(ProjectDoesNotExistException::new);
         return Response.ok().build();
@@ -86,6 +94,8 @@ public class ImageRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getProjectSlideshow(@PathParam("project_id") final long id) {
 
+        LOGGER.debug("Endpoint GET /images/projects/" + id + "/slideshow reached");
+
         final List<ProjectImage> projectImages = projectService.getSlideshowImages(id);
         final List<ImageDto> images = projectImages.stream().map(ImageDto::fromProjectImage).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<ImageDto>>(images) {}).build();
@@ -96,6 +106,8 @@ public class ImageRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response setProjectSlideshow(@PathParam("project_id") final long id,
                                         @Valid final SlideshowDto slideshowDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
+
+        LOGGER.debug("Endpoint PUT /images/projects/" + id + "/slideshow reached with" + slideshowDto.toString());
 
         final List<byte []> bytes = slideshowDto.getSlideshow().stream().map(ImageDto::getImage).collect(Collectors.toList());
         projectService.setSlideshowImages(sessionUser.getId(), id, bytes).orElseThrow(ProjectDoesNotExistException::new);

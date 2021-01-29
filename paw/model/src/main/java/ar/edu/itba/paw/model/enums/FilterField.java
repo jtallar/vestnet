@@ -8,6 +8,8 @@ public enum FilterField {
      * The best thing to use would be Metamodel found uin JPA 2.0 */
     PROJECT_MIN_FUNDING_TARGET,
     PROJECT_MAX_FUNDING_TARGET,
+    PROJECT_MAX_PERCENT_FUNDING,
+    PROJECT_MIN_PERCENT_FUNDING,
     PROJECT_CATEGORY,
     PROJECT_OWNER,
     PROJECT_CLOSED,

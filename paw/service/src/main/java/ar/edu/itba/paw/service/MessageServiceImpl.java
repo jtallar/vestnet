@@ -230,7 +230,7 @@ public class MessageServiceImpl implements MessageService {
                 .setUnseenAnswer()
                 .setFromEntrepreneur();
 
-        return messageDao.countAll(request1) + messageDao.countAll(request2);
+        return messageDao.countAll(request1, request2);
     }
 
 
@@ -263,7 +263,7 @@ public class MessageServiceImpl implements MessageService {
                     .setFromEntrepreneur();
         }
 
-        return messageDao.countAll(request1) + messageDao.countAll(request2);
+        return messageDao.countAll(request1, request2);
     }
 
 

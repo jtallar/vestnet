@@ -56,7 +56,7 @@ public class ProjectRequestBuilder extends RequestBuilder {
 
 
     /**
-     * Sets to filter the min value of funding target.
+     * Sets to filter the min and max value of funding target.
      * @param min Min value to filter. None if null.
      * @param max Max value to filter. None if null.
      * @return The RequestBuilder.
@@ -75,6 +75,42 @@ public class ProjectRequestBuilder extends RequestBuilder {
     public ProjectRequestBuilder setClosed(boolean state) {
         criteriaList.add(new FilterCriteria(PROJECT_CLOSED, state));
         return this;
+    }
+
+
+    /**
+     * Sets to filter the min percentage of funded. Current/Target.
+     * @param min Percentage in decimal. 0 to 1. 0 not funded, 1+ over-funded.
+     * @return The RequestBuilder.
+     */
+    public ProjectRequestBuilder setFundingPercentageMin (Double min) {
+        if (min != null)
+            criteriaList.add(new FilterCriteria(PROJECT_MIN_PERCENT_FUNDING, min));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the max percentage of funded. Current/Target.
+     * @param max Percentage in decimal. 0 to 1. 0 not funded, 1+ over-funded.
+     * @return The RequestBuilder.
+     */
+    public ProjectRequestBuilder setFundingPercentageMax (Double max) {
+        if (max != null)
+            criteriaList.add(new FilterCriteria(PROJECT_MAX_PERCENT_FUNDING, max));
+        return this;
+    }
+
+
+    /**
+     * Sets to filter the max and min percentage of funded. Current/Target.
+     * @param min Min value to filter. None if null.
+     * @param max Max value to filter. None if null.
+     * @return The RequestBuilder.
+     */
+    public ProjectRequestBuilder setFundingPercentageRange(Double min, Double max) {
+        setFundingPercentageMin(min);
+        return setFundingPercentageMax(max);
     }
 
 

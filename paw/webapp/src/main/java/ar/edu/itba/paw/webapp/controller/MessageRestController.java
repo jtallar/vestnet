@@ -46,6 +46,8 @@ public class MessageRestController {
                           @PathParam("investor_id") final long investorId,
                           @Valid final OfferDto offerDto) throws InvalidMessageException {
 
+        LOGGER.debug("Endpoint POST /messages/" + projectId + "/" + investorId + " reached with " + offerDto  + " - User is " + sessionUser.getId());
+
         messageService.create(projectId, investorId, sessionUser.getId(), OfferDto.toMessageContent(offerDto), offerDto.getExpiryDays(), uriInfo.getBaseUri());
         return Response.created(uriInfo.getAbsolutePath()).header("Access-Control-Expose-Headers", "Location").build();
     }
@@ -57,6 +59,8 @@ public class MessageRestController {
     public Response offer(@PathParam("project_id") final long projectId,
                           @Valid final OfferDto offerDto) throws InvalidMessageException {
 
+        LOGGER.debug("Endpoint POST /messages/" + projectId + " reached with " + offerDto + " - User is " + sessionUser.getId());
+
         return offer(projectId, sessionUser.getId(), offerDto);
     }
 
@@ -67,6 +71,8 @@ public class MessageRestController {
     public Response projectChats(@PathParam("project_id") final long projectId,
                                     @QueryParam("a") @DefaultValue("false") boolean accepted,
                                     @QueryParam("p") @DefaultValue("1") int page) {
+
+        LOGGER.debug("Endpoint GET /messages/project/" + projectId + " reached - User is " + sessionUser.getId());
 
         final Page<Message> messagePage = messageService.getProjectInvestors(projectId, sessionUser.getId(), accepted, page, PAGE_SIZE);
         final List<OfferInvestorDto> messages = messagePage.getContent().stream().map(p -> OfferInvestorDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
@@ -83,6 +89,8 @@ public class MessageRestController {
     public Response investorChats(@PathParam("investor_id") final long investorId,
                                   @QueryParam("a") @DefaultValue("false") boolean accepted,
                                   @QueryParam("p") @DefaultValue("1") int page) {
+
+        LOGGER.debug("Endpoint GET /messages/investor/" + investorId + " reached");
 
         final Page<Message> messagePage = messageService.getInvestorProjects(investorId, accepted, page, PAGE_SIZE);
         final List<OfferProjectDto> messages = messagePage.getContent().stream().map(p -> OfferProjectDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
@@ -101,6 +109,8 @@ public class MessageRestController {
     public Response investorChats(@QueryParam("a") @DefaultValue("false") boolean accepted,
                                   @QueryParam("p") @DefaultValue("1") int page) {
 
+        LOGGER.debug("Endpoint GET /messages/investor reached - User is " + sessionUser.getId());
+
         return investorChats(sessionUser.getId(), accepted, page);
     }
 
@@ -109,6 +119,8 @@ public class MessageRestController {
     @Path("/invested")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response getInvestedAmount() {
+
+        LOGGER.debug("Endpoint GET /messages/invested reached - User is " + sessionUser.getId());
 
         final long count = messageService.getInvestedAmount(sessionUser.getId(), sessionUser.isInvestor());
         return Response.ok(NotificationDto.fromNumber(count)).build();
@@ -121,6 +133,8 @@ public class MessageRestController {
     public Response chat(@PathParam("project_id") final long projectId,
                          @PathParam("investor_id") final long investorId,
                          @QueryParam("p") @DefaultValue("1") int page) {
+
+        LOGGER.debug("Endpoint GET /messages/chat/" + projectId + "/" + investorId + " reached - User is " + sessionUser.getId());
 
         final Page<Message> messagePage = messageService.getConversation(projectId, investorId, sessionUser.getId(), page, PAGE_SIZE);
         final List<OfferDto> messages = messagePage.getContent().stream().map(p -> OfferDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
@@ -137,6 +151,8 @@ public class MessageRestController {
     public Response chat(@PathParam("project_id") final long projectId,
                          @QueryParam("p") @DefaultValue("1") int page) {
 
+        LOGGER.debug("Endpoint GET /messages/chat/" + projectId + " reached - User is " + sessionUser.getId());
+
         return chat(projectId, sessionUser.getId(), page);
     }
 
@@ -147,6 +163,8 @@ public class MessageRestController {
     public Response status(@PathParam("project_id") final long projectId,
                            @PathParam("investor_id") final long investorId,
                            final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException {
+
+        LOGGER.debug("Endpoint PUT /messages/status/" + projectId + "/" + investorId + " reached with " + offerStatusDto.toString() + " - User is " + sessionUser.getId());
 
         messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), offerStatusDto.isAccepted(),
                 uriInfo.getBaseUri()).orElseThrow(MessageDoesNotExistException::new);
@@ -160,6 +178,8 @@ public class MessageRestController {
     public Response status(@PathParam("project_id") final long projectId,
                            final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException {
 
+        LOGGER.debug("Endpoint PUT /messages/status/" + projectId + " reached with " + offerStatusDto.toString() + " - User is " + sessionUser.getId());
+
         return status(projectId, sessionUser.getId(), offerStatusDto);
     }
 
@@ -169,6 +189,8 @@ public class MessageRestController {
     public Response seen(@PathParam("project_id") final long projectId,
                            @PathParam("investor_id") final long investorId) throws MessageDoesNotExistException {
 
+        LOGGER.debug("Endpoint PUT /messages/seen/" + projectId + "/" + investorId + " reached - User is " + sessionUser.getId());
+
         messageService.updateMessageSeen(projectId, investorId, sessionUser.getId(), uriInfo.getBaseUri()).orElseThrow(MessageDoesNotExistException::new);
         return Response.ok().build();
     }
@@ -177,6 +199,8 @@ public class MessageRestController {
     @PUT
     @Path("/seen/{project_id}")
     public Response seen(@PathParam("project_id") final long projectId) throws MessageDoesNotExistException {
+
+        LOGGER.debug("Endpoint PUT /messages/seen/" + projectId + " reached - User is " + sessionUser.getId());
 
         return seen(projectId, sessionUser.getId());
     }
@@ -189,6 +213,8 @@ public class MessageRestController {
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projectNotifications(@PathParam("project_id") final long projectId) {
 
+        LOGGER.debug("Endpoint GET /messages/notifications/project/" + projectId + " reached - User is " + sessionUser.getId());
+
         long count = messageService.projectNotifications(projectId, sessionUser.getId());
         return Response.ok(NotificationDto.fromNumber(count)).build();
     }
@@ -198,6 +224,8 @@ public class MessageRestController {
     @Path("/notifications")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response projectNotifications() {
+
+        LOGGER.debug("Endpoint GET /messages/notifications reached - User is " + sessionUser.getId());
 
         long count = messageService.userNotifications(sessionUser.getId(), sessionUser.isInvestor());
         return Response.ok(NotificationDto.fromNumber(count)).build();

@@ -184,7 +184,6 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           $scope.messages[index] = response.data;
           for (var i = 0; i < response.data.length; i++) {
             $scope.messages[index][i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
-            // TODO: Chequear esta condicion de notification
             $scope.messages[index][i].notification = (!$scope.messages[index][i].seen && $scope.messages[index][i].direction) || (!$scope.messages[index][i].seenAnswer && !$scope.messages[index][i].direction && $scope.messages[index][i].accepted != null);
           }
         }, function (error) {
@@ -199,7 +198,6 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         $scope.messages[index] = $scope.messages[index].concat(response.data);
         for (var i = 0; i < response.data.length; i++) {
           $scope.messages[index][i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
-          // TODO: Chequear esta condicion de notification
           $scope.messages[index][i].notification = (!$scope.messages[index][i].seen && $scope.messages[index][i].direction) || (!$scope.messages[index][i].seenAnswer && !$scope.messages[index][i].direction && $scope.messages[index][i].accepted != null);
         }
       }, function (error) {
