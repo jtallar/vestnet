@@ -87,7 +87,7 @@ import java.util.function.Consumer;
      */
     private void minFundingPercentage(Object value) {
         predicate = builder.and(predicate, builder.greaterThanOrEqualTo(
-                builder.quot(root.get("fundingCurrent"), root.get("fundingTarget")).as(Double.class), (Double) value));
+                builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget")).as(Double.class), (Double) value));
     }
 
 
@@ -97,7 +97,7 @@ import java.util.function.Consumer;
      */
     private void maxFundingPercentage(Object value) {
         predicate = builder.and(predicate, builder.lessThanOrEqualTo(
-                builder.quot(root.get("fundingCurrent"), root.get("fundingTarget")).as(Double.class), (Double) value));
+                builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget")).as(Double.class), (Double) value));
     }
 
 
