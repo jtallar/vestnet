@@ -9,6 +9,9 @@ public enum OrderField {
     PROJECT_FUNDING_TARGET_ASCENDING(2, "fundingTarget"),
     PROJECT_FUNDING_TARGET_DESCENDING(3, "fundingTarget"),
     PROJECT_ALPHABETICAL(4, "name"),
+    PROJECT_FUNDING_PERCENTAGE_ASCENDING(7, ""),
+    PROJECT_FUNDING_PERCENTAGE_DESCENDING(8, ""),
+
 
     /** This can be used for project or messages */
     DATE_ASCENDING(5, "publishDate"),
