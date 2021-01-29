@@ -35,10 +35,10 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     /** ********* **/
 
     $scope.formatPrice = function(number){
-      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return number === undefined ? null : number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
     $scope.formatDate = function (str){
-      return str.substring(0,10);
+      return str === undefined ? null : str.substring(0,10);
     }
 
     var param = parseInt($routeParams.id);
@@ -83,6 +83,18 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.project.slideshow = [];
       $scope.project.categorieNames = [];
       $scope.project.chatUrl = PathService.get().chat(project.data.id).path;
+      $scope.project.stages = [
+        {'number': 1, 'name': 'Stage 1', 'comment': '',
+          'completed': false, 'completedDate': '02/05/2021'},
+        {'number': 2, 'name': 'Stage 2', 'comment': '',
+          'completed': false, 'completedDate': '02/05/2021'},
+        {'number': 3, 'name': 'Stage 3', 'comment': '',
+          'completed': false, 'completedDate': '02/05/2021'},
+        {'number': 4, 'name': 'Stage 4', 'comment': '',
+          'completed': false, 'completedDate': ''},
+        {'number': 5, 'name': 'Stage 5', 'comment': '',
+          'completed': false, 'completedDate': ''}
+      ]
 
       // sampleService.get($scope.project.projectStages).then(function (response) {       // private URI stages;   -> en ProjectDto
       projectService.getStages($scope.project.id).then(function (response) {       // private URI stages;   -> en ProjectDto
