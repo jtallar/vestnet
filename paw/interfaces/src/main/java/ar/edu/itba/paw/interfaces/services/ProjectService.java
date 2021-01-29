@@ -49,6 +49,8 @@ public interface ProjectService {
      * @param category Projects category. Null if no category set.
      * @param minFundingTarget Projects min funding target. Null if empty.
      * @param maxFundingTarget Projects max funding target. Null if empty.
+     * @param minFundingPercentage The min percentage of founded. Null if none.
+     * @param maxFundingPercentage The max percentage of founded. Null if none.
      * @param keyword Keyword to be matched on search. Null or "" if no search.
      * @param field The field to search the keyword.
      * @param order The order to order by.
@@ -56,7 +58,8 @@ public interface ProjectService {
      * @param pageSize The page size to consider.
      * @return The list of matching projects.
      */
-    Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize);
+    Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, Double minFundingPercentage,
+                          Double maxFundingPercentage, String keyword, int field, int order, int page, int pageSize);
 
 
     /**

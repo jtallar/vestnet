@@ -2,13 +2,10 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.model.Message;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
 import ar.edu.itba.paw.model.enums.FilterField;
 import ar.edu.itba.paw.model.enums.GroupField;
 import ar.edu.itba.paw.model.enums.OrderField;
-import ar.edu.itba.paw.model.image.ProjectImage;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -74,6 +71,16 @@ public class MessageJpaDao implements MessageDao {
     }
 
 
+    @Override
+    public long countAll(RequestBuilder request1, RequestBuilder request2) {
+        List<FilterCriteria> filter1 = request1.getCriteriaList();
+        List<FilterCriteria> filter2 = request2.getCriteriaList();
+        GroupField group = request1.getGroup();
+
+        return findAllIdsCount(filter1, filter2, group);
+    }
+
+
     /** Auxiliary functions */
 
 
@@ -125,6 +132,24 @@ public class MessageJpaDao implements MessageDao {
         Root<Message> root = query.from(Message.class);
         query.select(builder.countDistinct(root.get(group.getField())));
         addPredicates(query, builder,root, filters);
+        return entityManager.createQuery(query).getSingleResult();
+    }
+
+
+    /**
+     * Counts how many messages match criteria. Does filter1 OR filter2.
+     * @param filter1 First filter criteria to apply.
+     * @param filter2 Second filter criteria to apply.
+     * @param group The group by field. If none, then the standard field 'id' is counted.
+     * @return Count.
+     */
+    private Long findAllIdsCount(List<FilterCriteria> filter1, List<FilterCriteria> filter2, GroupField group) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+
+        Root<Message> root = query.from(Message.class);
+        query.select(builder.countDistinct(root.get(group.getField())));
+        addPredicates(query, builder, root, filter1, filter2);
         return entityManager.createQuery(query).getSingleResult();
     }
 
@@ -184,10 +209,38 @@ public class MessageJpaDao implements MessageDao {
      * @param filters List of criteria filters.
      */
     private <T> void addPredicates(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, List<FilterCriteria> filters) {
+        query.where(generatePredicate(query, builder, root, filters));
+    }
+
+
+    /**
+     * Applies the given filters to the query. Creates a general or with the two filters.
+     * @param <T> The type of Criteria Query
+     * @param query The query to be applied the filters.
+     * @param builder Criteria query builder.
+     * @param root Query message root.
+     * @param filter1 List of first criteria filters.
+     * @param filter2 List of second criteria filters.
+     */
+    private <T> void addPredicates(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, List<FilterCriteria> filter1, List<FilterCriteria> filter2) {
+        Predicate predicate1 = generatePredicate(query, builder, root, filter1);
+        Predicate predicate2 = generatePredicate(query, builder, root, filter2);
+        query.where(builder.or(predicate1, predicate2));
+    }
+
+
+    /**
+     * Applies the given filters to the query. This is 2 request queries joined by and OR.
+     * @param <T> The type of Criteria Query
+     * @param query The query to be applied the filters.
+     * @param builder Criteria query builder.
+     * @param root Query message root.
+     * @param filters List of criteria filters.
+     */
+    private <T> Predicate generatePredicate(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, List<FilterCriteria> filters) {
         Predicate predicate = builder.conjunction();
         MessageCriteriaConsumer filterConsumer = new MessageCriteriaConsumer(predicate, builder, root);
-        filters.stream().forEach(filterConsumer);
-        predicate = filterConsumer.getPredicate();
-        query.where(predicate);
+        filters.forEach(filterConsumer);
+        return filterConsumer.getPredicate();
     }
 }

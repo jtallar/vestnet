@@ -166,6 +166,13 @@ public class ProjectJpaDao implements ProjectDao {
             case PROJECT_ALPHABETICAL:
             case PROJECT_FUNDING_TARGET_ASCENDING:
             case DATE_ASCENDING: query.orderBy(builder.asc(root.get(order.getField())), builder.desc(root.get("id"))); break;
+
+            /** Special new order by percentage */
+            case PROJECT_FUNDING_PERCENTAGE_DESCENDING:
+                query.orderBy(builder.desc(builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget"))), builder.desc(root.get("id"))); break;
+            case PROJECT_FUNDING_PERCENTAGE_ASCENDING:
+                query.orderBy(builder.asc(builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget"))), builder.desc(root.get("id"))); break;
+            default:
         }
     }
 
