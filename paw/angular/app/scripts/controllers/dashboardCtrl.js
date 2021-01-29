@@ -38,17 +38,14 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
     }
 
-    this.setMaxPage = function (linkHeaders) {
+    this.setMaxPage = function (linkHeaders, funded) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
       var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
       if (isNaN(maxPage)) maxPage = page;
       $scope.lastPage = maxPage;
+      if($scope.funded) $scope.fundedLast = maxPage;
+      else $scope.notFundedLast = maxPage;
     };
-
-    $scope.last = function (){
-      console.log($scope.lastPage)
-      return $scope.lastPage;
-    }
 
     this.updatePathParams = function () {
       if ($scope.funded) PathService.get().setParamsInUrl({p:$scope.page, f:true});
@@ -67,7 +64,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     this.getNotFundedProjects = function () {
       if($scope.projects === null) {
         userService.getLoggedProjects(false, $scope.page, pageSize).then(function (response) {
-          _this.setMaxPage(response.headers().link);
+          _this.setMaxPage(response.headers().link, false);
           $scope.projects = response.data;
           $scope.loadingProjects = false;
           var map = {};
@@ -94,9 +91,6 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     };
 
     this.getFundedProjects = function () {
-      userService.getLoggedProjects(false, $scope.page, pageSize).then(function (response) {
-        _this.setMaxPage(response.headers().link);
-      });
       if($scope.fundedProjects === null) {
         userService.getLoggedProjects(true, $scope.page, pageSize).then(function (response) {
           _this.setMaxPage(response.headers().link);
@@ -225,6 +219,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.toggleChange = function () {
       $scope.getToPage(1);
       _this.updatePathParams();
+      if ($scope.funded) $scope.lastPage = $scope.fundedLast;
+      else $scope.lastPage = $scope.notFundedLast;
     };
 
     $scope.getList = function () {

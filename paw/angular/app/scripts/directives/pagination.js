@@ -7,7 +7,7 @@ define(['paw2020a'], function(paw2020a) {
       replace: true,
       transclude: true,
       template: function(element, attrs) {
-          return '<ul class="pagination justify-content-center">\n' +
+          return '<ul class="pagination justify-content-center" ng-if="lastPage !== 1">\n' +
             '      <div ng-if="page > 1">\n' +
             '        <li id="li-previous" class="page-item">\n' +
             '          <a href="" id="li-a-previous" class="page-link" ng-click="getToPage(1)" aria-label="{{\'previousPage\' | translate}}">\n' +
