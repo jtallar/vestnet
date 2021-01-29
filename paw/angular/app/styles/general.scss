@@ -157,65 +157,76 @@ body{
 
 /***** FOOTER ******/
 
-footer{
-  margin-top:15%;
+footer {
+  margin-top: 12%;
   background-color: #2d2d2d !important;
   color: white;
 }
 
-@media screen and (min-width: 300px){
-  .footer{
+@media screen and (min-width: 300px) {
+  /* line 167, general.scss */
+  .footer {
     margin-top: 20%;
     color: yellow;
   }
 }
-
-.footer-copyright{
+/* line 173, general.scss */
+.footer-copyright {
   background-color: #222222;
   color: #a7a7a7;
-  font-size:18px;
-  margin-top:20px
+  font-size: 12px;
+  margin-top: 0;
+  padding: 6px;
 }
 
-.footer-content{
-  padding: 30px 0 0 100px;
+/* line 180, general.scss */
+.footer-content {
+  padding: 10px 0 0 100px;
 }
 
-footer li{
-  margin-top:28px;
-  font-size:18px
+/* line 184, general.scss */
+footer li {
+  margin-top: 10px;
+  font-size: 14px;
 }
 
-footer li>a{
+/* line 189, general.scss */
+footer li > a {
   color: #ffffff;
 }
 
-footer li>a:hover{
+/* line 193, general.scss */
+footer li > a:hover {
   color: white;
 }
 
-footer p{
-  font-size:15px;
-  color:grey
+/* line 197, general.scss */
+footer p {
+  font-size: 13px;
+  color: grey;
 }
 
-footer h5{
-  font-variant:all-petite-caps;
-  color:#9700c2
+/* line 202, general.scss */
+footer h5 {
+  font-variant: all-petite-caps;
+  color: #9700c2;
 }
 
-footer .dropdown-divider{
+/* line 207, general.scss */
+footer .dropdown-divider {
   margin: 5px 20% 20px 20%;
-  background-color:black;
-  border-color:#464646
+  background-color: black;
+  border-color: #464646;
 }
 
-.footer-footer > h6{
+/* line 213, general.scss */
+.footer-content h6 {
   color: #d6d6d6;
-  font-size: 20px;
+  font-size: 15px;
   font-family: 'Lato', sans-serif;
-  text-align:center
+  text-align: left;
 }
+
 
 .wel-min{
   min-height: 425px;

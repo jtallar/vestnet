@@ -55,14 +55,14 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.getToPage = function (page) {
       $scope.page = page;
       _this.updatePathParams();
-      _this.fetchProjects();
+      _this.fetchProjects(true);
     };
 
     $scope.loadingProjects = true; $scope.loadingFunded = true;
     $scope.messages = []; $scope.fundedMsgs = [];
 
-    this.getNotFundedProjects = function () {
-      if($scope.projects === null) {
+    this.getNotFundedProjects = function (nextPage) {
+      if($scope.projects === null || nextPage) {
         userService.getLoggedProjects(false, $scope.page, pageSize).then(function (response) {
           _this.setMaxPage(response.headers().link, false);
           $scope.projects = response.data;
@@ -90,8 +90,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       }
     };
 
-    this.getFundedProjects = function () {
-      if($scope.fundedProjects === null) {
+    this.getFundedProjects = function (nextPage) {
+      if($scope.fundedProjects === null || nextPage) {
         userService.getLoggedProjects(true, $scope.page, pageSize).then(function (response) {
           _this.setMaxPage(response.headers().link);
           $scope.fundedProjects = response.data;
@@ -112,12 +112,12 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       }
     };
 
-    this.fetchProjects = function () {
-      if ($scope.funded === true) _this.getFundedProjects();
-      else _this.getNotFundedProjects();
+    this.fetchProjects = function (nextPage) {
+      if ($scope.funded === true) _this.getFundedProjects(nextPage);
+      else _this.getNotFundedProjects(nextPage);
     };
 
-    this.fetchProjects();
+    this.fetchProjects(false);
 
     $scope.fetchStats = function(id, index){
       if($scope.projects[index].openStats === undefined) $scope.projects[index].openStats = false;

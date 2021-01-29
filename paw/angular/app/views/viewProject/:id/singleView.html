@@ -215,7 +215,7 @@
         {{projectstage==1?'bar-red':(projectstage==2?'bar-orange':(projectstage==3?'bar-yellow':(projectstage==4?'bar-cyan':'bar-green')))}}"
          role="progressbar" style="width: {{projectstage*20}}%" aria-valuenow="{{projectstage}}" aria-valuemin="0" aria-valuemax="5"></div>
   </div>
-
+<!---->
   <div ng-if="!project.getByOwner" class="card-group history-group">
     <div class="{{projectstage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
       <div class="card-body h-step-b">
@@ -266,9 +266,9 @@
         <h5 ng-if="projectstage<0" class="card-title">{{'stageN' | translate : '{ n : 1 }' }}</h5>
         <p ng-if="projectstage>=1" class="card-text">{{project.stages[0].comment}}</p>
         <input ng-if="projectstage==0" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s1i"/>
-        <textarea ng-if="projectstage==0" ng-model="new.comment" maxlength="100" class="border-danger form-control" placeholder="{{'comments' | translate}}" rows="5" id="s1"></textarea>
+        <textarea style="max-height: 200px;" ng-if="projectstage==0" ng-model="new.comment" maxlength="100" class="border-danger form-control" placeholder="{{'comments' | translate}}" rows="5" id="s1"></textarea>
         <button ng-if="projectstage==0" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
-          <img src="images/add-icon.png" alt="" class="img-invest">
+          <img src="images/add-icon.png" alt="" class="">
         </button>
         <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=1">{{project.stages[0].completedDate}}</div>
       </div>
@@ -279,9 +279,9 @@
         <h5 ng-if="projectstage<1" class="card-title">{{'stageN' | translate : '{ n : 2 }' }}</h5>
         <p ng-if="projectstage>=2" class="card-text">{{project.stages[1].comment}}</p>
         <input ng-if="projectstage==1" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s2i"/>
-        <textarea ng-if="projectstage==1" ng-model="new.comment" maxlength="100" class="border-orange form-control" placeholder="{{'comments' | translate}}" rows="5" id="s2"></textarea>
+        <textarea style="max-height: 200px;" ng-if="projectstage==1" ng-model="new.comment" maxlength="100" class="border-orange form-control" placeholder="{{'comments' | translate}}" rows="5" id="s2"></textarea>
         <button ng-if="projectstage==1" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
-          <img src="images/add-icon.png" alt="" class="img-invest">
+          <img src="images/add-icon.png" alt="" class="">
         </button>
         <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=2">{{project.stages[1].completedDate}}</div>
       </div>
@@ -292,9 +292,9 @@
         <h5 ng-if="projectstage<2" class="card-title">{{'stageN' | translate : '{ n : 3 }' }}</h5>
         <p ng-if="projectstage>=3" class="card-text">{{project.stages[2].comment}}</p>
         <input ng-if="projectstage==2" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s3i"/>
-        <textarea ng-if="projectstage==2" ng-model="new.comment" maxlength="100" class="border-warning form-control" placeholder="{{'comments' | translate}}" rows="5" id="s3"></textarea>
+        <textarea style="max-height: 200px;" ng-if="projectstage==2" ng-model="new.comment" maxlength="100" class="border-warning form-control" placeholder="{{'comments' | translate}}" rows="5" id="s3"></textarea>
         <button ng-if="projectstage==2" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
-          <img src="images/add-icon.png" alt="" class="img-invest">
+          <img src="images/add-icon.png" alt="" class="">
         </button>
         <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=3">{{project.stages[2].completedDate}}</div>
       </div>
@@ -305,9 +305,9 @@
         <h5 ng-if="projectstage<3" class="card-title">{{'stageN' | translate : '{ n : 4 }' }}</h5>
         <p ng-if="projectstage>=4" class="card-text">{{project.stages[3].comment}}</p>
         <input ng-if="projectstage==3" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s4i"/>
-        <textarea ng-if="projectstage==3" ng-model="new.comment" maxlength="100" class="border-cyan form-control" placeholder="{{'comments' | translate}}" rows="5" id="s4"></textarea>
+        <textarea style="max-height: 200px;" ng-if="projectstage==3" ng-model="new.comment" maxlength="100" class="border-cyan form-control" placeholder="{{'comments' | translate}}" rows="5" id="s4"></textarea>
         <button ng-if="projectstage==3" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
-          <img src="images/add-icon.png" alt="" class="img-invest">
+          <img src="images/add-icon.png" alt="" class="">
         </button>
         <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=4">{{project.stages[3].completedDate}}</div>
       </div>
@@ -318,9 +318,9 @@
         <h5 ng-if="projectstage<4" class="card-title">{{'stageN' | translate : '{ n : 5 }' }}</h5>
         <p ng-if="projectstage>=5" class="card-text">{{project.stages[4].comment}}</p>
         <input ng-if="projectstage==4" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s5i"/>
-        <textarea ng-if="projectstage==4" ng-model="new.comment" maxlength="100" class="border-success form-control" placeholder="{{'comments' | translate}}" rows="5" id="s5"></textarea>
+        <textarea style="max-height: 200px;" ng-if="projectstage==4" ng-model="new.comment" maxlength="100" class="border-success form-control" placeholder="{{'comments' | translate}}" rows="5" id="s5"></textarea>
         <button ng-if="projectstage==4" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
-          <img src="images/add-icon.png" alt="" class="img-invest">
+          <img src="images/add-icon.png" alt="" class="">
         </button>
         <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage==5">{{project.stages[4].completedDate}}</div>
       </div>

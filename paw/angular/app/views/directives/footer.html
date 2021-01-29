@@ -2,10 +2,16 @@
 <div class="row footer-content">
   <div class="col-8">
     <h5>{{'footerWho' | translate}}</h5>
-    <h6>{{'wIAsk' | translate}}</h6>
-    <p>{{'wIp1' | translate}} {{'wIp3' | translate}}</p>
-    <h6>{{'wEAsk' | translate}}</h6>
-    <p>{{'wEp1' | translate}}</p>
+    <div class="row">
+      <div class="col-6">
+        <h6>{{'wIAsk' | translate}}</h6>
+        <p>{{'wIp1' | translate}} {{'wIp3' | translate}}</p>
+      </div>
+      <div class="col-6">
+        <h6>{{'wEAsk' | translate}}</h6>
+        <p>{{'wEp1' | translate}}</p>
+      </div>
+    </div>
   </div>
   <div class="col-4">
     <h5>{{'footerContact' | translate}}</h5>
@@ -23,6 +29,6 @@
 <!--    <h6><spring:message code='w_bepart'/></h6>    -->
 <!--    </div>                                        -->
 
-<div class="footer-copyright text-center py-3">
+<div class="footer-copyright text-center">
   {{'footerCopyright' | translate}}
 </div>
