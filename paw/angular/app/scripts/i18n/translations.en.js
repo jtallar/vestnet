@@ -139,7 +139,7 @@ define([], function() {
     max: 'Max.',
     clear: 'Clear',
     apply: 'Apply',
-    projectImage: 'Project image',
+    projectImage: 'Portrait',
     price: 'Cost',
     projectCost: '{{cost}} $USD',
     moreInfo: 'More information',
@@ -213,11 +213,12 @@ define([], function() {
     costRequirement: 'Between U$D1000 and U$D2000000000',
     currency: '$USD',
     projectCategoriesSubtitle: 'Add all the categories that match with your project (at least one). They will be used to match with a potential investor faster',
+    projectImagesSubtitle: 'Choose representative and big quality images of your project. The first impression is usually the most important...',
     allCategories: 'Possible Categories',
     myCategories: 'Project Categories',
     categoriesRequirement: 'You must choose at least one category',
     serverFormErrors: 'There are errors in your form!',
-    projectSlideshow: 'Project slideshow',
+    projectSlideshow: 'Slideshow',
     imageMaxCount: 'The maximum number of pictures is 5!',
     create: 'Create',
     viewInvProfile: 'View investor profile',
@@ -303,6 +304,7 @@ define([], function() {
     pageTitleSingleProject: '{{p}} | VestNet',
 
     msgSeen: 'Seen',
-    msgNotSeen: 'Delivered'
+    msgNotSeen: 'Delivered',
+    images: 'Project Images'
 	};
 });

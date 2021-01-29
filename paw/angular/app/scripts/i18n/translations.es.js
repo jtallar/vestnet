@@ -213,6 +213,7 @@ define([], function() {
     costRequirement: 'Entre U$D1000 y U$D2000000000',
     currency: '$USD',
     projectCategoriesSubtitle: 'Agregue todas las categorías que describen tu proyecto (al menos una). Estas serán usadas para matchear con un inversor más rápido.',
+    projectImagesSubtitle: 'Escoja imagenes representativas de su proyecto y de buena calidad. La primera impresion suele ser la mas importante...',
     allCategories: 'Categorías Posibles',
     myCategories: 'Categorías del Proyecto',
     categoriesRequirement: 'Debes elegir al menos una categoría',
@@ -303,6 +304,8 @@ define([], function() {
     pageTitleSingleProject: '{{p}} | VestNet',
 
     msgSeen: 'Visto',
-    msgNotSeen: 'Entregado'
+    msgNotSeen: 'Entregado',
+    images: 'Imágenes del Proyecto'
+
   };
 });

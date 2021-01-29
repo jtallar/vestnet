@@ -10,6 +10,24 @@
       $scope.imageSizeError = false;
       $scope.allFavs = []; $scope.showFavs = [];
 
+      $scope.formatPrice = function(number){
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+      $scope.getDate = function(date){
+        if(date !== undefined)
+          return date.toString().match(/.+?(?=T)/);
+
+        var today = new Date();
+        return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
+      };
+      $scope.getHour = function(date){
+        if(date !== undefined)
+          return date.toString().match(/(?<=T).*?(?=\.|-)/);
+
+        var today = new Date();
+        return (today.getHours() + ':' + today.getMinutes());
+      };
+
       userService.getLoggedUser().then(function (userApi) {
         $scope.user = userApi.data;
         sampleService.get($scope.user.location).then(function (response) {
@@ -77,5 +95,42 @@
           });
         }
       };
+
+      this.processResponse = function (data) {
+        data.forEach(function (proj){
+          proj.percentage = parseInt((proj.fundingCurrent/proj.fundingTarget)*100);
+        });
+        $scope.secondTab = $scope.secondTab.concat(data);
+      };
+
+      this.fetchSecondTab = function () {
+        if ($scope.isInvestor) {
+          // Fetch investor deals
+          // TODO: Que hacemos aca? No tengo toda la data que tiene el otro, que muestro?
+          messageService.getInvestorDeals($scope.page, $scope.user.id).then(function (response) {
+            _this.setMaxPage(response.headers().link);
+            _this.processResponse(response.data);
+            $scope.loadingSecondTab = false;
+          }, function (errorResponse) {
+            console.error(errorResponse);
+          });
+        } else {
+          // Fetch entrepreneur current funding projects
+          userService.getUserProjects($scope.user.id.toString(), false, $scope.page, pageSize).then(function (response) {
+            _this.setMaxPage(response.headers().link);
+            _this.processResponse(response.data);
+            $scope.loadingSecondTab = false;
+          }, function (errorResponse) {
+            console.error(errorResponse);
+          });
+        }
+      };
+
+      $scope.viewMoreProjects = function () {
+        if ($scope.page >= $scope.lastPage) return;
+        $scope.page++;
+        _this.fetchSecondTab();
+      };
+
     }]);
 });

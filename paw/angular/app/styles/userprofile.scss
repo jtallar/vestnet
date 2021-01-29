@@ -7,7 +7,7 @@
   margin-bottom: 3%;
   border-radius: 0.5rem;
   background: #fff;
-  height: 600px;
+  height: 700px;
 }
 
 .profile-img{
@@ -18,11 +18,16 @@
   height: auto;
 }
 
-.profile-tab{
-  max-height: 480px !important;
-  overflow-y:auto !important;
-  overflow-x: hidden
+.profile-tab {
+  max-height: 580px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  font-size: 15px;
 }
+#home-tab, #favorites-tab, #projects-tab{
+  font-size: 18px;
+}
+
 
 /*.profile-img .file {*/
 /*    position: relative;*/
@@ -116,7 +121,7 @@
 }
 
 .favorites{
-  padding: 20px 20px 0 20px !important
+  padding: 15px !important
 }
 
 .btn-linkedin {
