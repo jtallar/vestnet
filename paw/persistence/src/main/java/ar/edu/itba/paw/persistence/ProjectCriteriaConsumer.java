@@ -31,6 +31,8 @@ import java.util.function.Consumer;
         switch (param.getField()) {
             case PROJECT_MIN_FUNDING_TARGET: minFundingTarget(param.getValue()); break;
             case PROJECT_MAX_FUNDING_TARGET: maxFundingTarget(param.getValue()); break;
+            case PROJECT_MIN_PERCENT_FUNDING: minFundingPercentage(param.getValue()); break;
+            case PROJECT_MAX_PERCENT_FUNDING: maxFundingPercentage(param.getValue()); break;
             case PROJECT_CATEGORY: category(param.getValue()); break;
             case PROJECT_OWNER: owner(param.getValue()); break;
             case PROJECT_CLOSED: closed(param.getValue()); break;
@@ -76,6 +78,26 @@ import java.util.function.Consumer;
      */
     private void maxFundingTarget(Object value) {
         predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("fundingTarget"), value.toString()));
+    }
+
+
+    /**
+     * Filters by min funding target.
+     * @param value The min funding target.
+     */
+    private void minFundingPercentage(Object value) {
+        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(
+                builder.quot(root.get("fundingCurrent"), root.get("fundingTarget")).as(Double.class), (Double) value));
+    }
+
+
+    /**
+     * Filters by max funding target.
+     * @param value The max funding target.
+     */
+    private void maxFundingPercentage(Object value) {
+        predicate = builder.and(predicate, builder.lessThanOrEqualTo(
+                builder.quot(root.get("fundingCurrent"), root.get("fundingTarget")).as(Double.class), (Double) value));
     }
 
 

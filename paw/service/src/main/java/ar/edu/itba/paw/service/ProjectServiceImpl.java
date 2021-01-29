@@ -62,10 +62,12 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, String keyword, int field, int order, int page, int pageSize) {
+    public Page<Project> findAll(Integer category, Integer minFundingTarget, Integer maxFundingTarget, Double minFundingPercentage,
+                                 Double maxFundingPercentage, String keyword, int field, int order, int page, int pageSize) {
         final RequestBuilder request = new ProjectRequestBuilder()
                 .setCategory(category)
                 .setFundingTargetRange(minFundingTarget, maxFundingTarget)
+                .setFundingPercentageRange(minFundingPercentage, maxFundingPercentage)
                 .setClosed(false)
                 .setSearch(keyword, field)
                 .setOrder(order);

@@ -105,11 +105,14 @@ public class ProjectRestController {
                              @Min(0) @QueryParam("max") Integer maxFundingTarget,
                              @Min(0) @QueryParam("min") Integer minFundingTarget,
                              @QueryParam("c") Integer category,
+                             @Min(0) @QueryParam("pmax") Double maxFundingPercentage,
+                             @Min(0) @QueryParam("pmin") Double minFundingPercentage,
                              @QueryParam("l") @DefaultValue("3") int limit) {
 
         LOGGER.debug("Endpoint GET /projects reached");
 
-        final Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget, keyword, field, order, page, limit);
+        final Page<Project> projectPage = projectService.findAll(category, minFundingTarget, maxFundingTarget,
+                minFundingPercentage, maxFundingPercentage, keyword, field, order, page, limit);
         projectPage.setPageRange(PAGINATION_ITEMS);
 
         final List<ProjectDto> projects = projectPage.getContent().stream().map(p -> ProjectDto.fromProject(p, uriInfo)).collect(Collectors.toList());
