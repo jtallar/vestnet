@@ -1,0 +1,218 @@
+
+<head><title>{{ 'pageTitleSignUp' | translate }}</title></head>
+
+<div class="signUp">
+  <div class="container">
+    <div class="row h-100">
+      <div class="col-sm-10 my-auto mx-auto">
+        <div class="signupCard card rounded-lg px-4 py-3">
+          <ng-form name="signUpForm" enctype="multipart/form-data">
+            <div class="row justify-content-left">
+              <div class="col-1 text-left">
+                <a onclick="history.back()" class="white-text btn btn-dark pull-left">{{'back' | translate}}</a>
+              </div>
+              <div class="col-10 text-center">
+                <h2 class="bold" style="margin: 5px 0 0 0">{{'signUpTitle' | translate}}</h2>
+              </div>
+              <div class="col-1 text-right">
+                <a ng-href="/#/login" class="btn btn-dark pull-right">{{'submit' | translate}}</a>
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="container">
+              <div class="row">
+                <div class="col-md" ng-class="{'has-error': signUpForm.firstName.$touched && signUpForm.firstName.$invalid}">
+                  <div class="form-group">
+                    <label>{{'firstNameRequired' | translate}} </label>
+                    <p class="form-requirement">{{'firstNameRequirement' | translate}}</p>
+                    <input name="firstName" ng-model="controller.user.firstName" type="text" class="form-control"
+                           placeholder="{{'enterFirstName' | translate}}" id="sign-up-first-name"
+                           required ng-maxlength="25"/>
+                  </div>
+                </div>
+                <div class="col-md" ng-class="{'has-error': signUpForm.lastName.$touched && signUpForm.lastName.$invalid}">
+                  <div class="form-group">
+                    <label>{{'lastNameRequired' | translate}} </label>
+                    <p class="form-requirement">{{'lastNameRequirement' | translate}}</p>
+                    <input name="lastName" ng-model="controller.user.lastName" type="text" class="form-control"
+                           placeholder="{{'enterLastName' | translate}}" id="sign-up-last-name"
+                           required ng-maxlength="25"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Real ID and phone form-->
+            <div class="container">
+              <div class="row">
+                <div class="col-md" ng-class="{'has-error': signUpForm.realId.$touched && signUpForm.realId.$invalid}">
+                  <div class="form-group">
+                    <label> {{'realIdRequired' | translate}} </label>
+                    <p class="form-requirement">{{'realIdRequirement' | translate}}</p>
+                    <input name="realId" ng-model="controller.user.realId" type="text" class="form-control"
+                           placeholder="{{'enterRealId' | translate}}" id="sign-up-real-id"
+                           required ng-maxlength="15"/>
+                  </div>
+                </div>
+                <div class="col-md" ng-class="{'has-error': signUpForm.phone.$touched && signUpForm.phone.$invalid}">
+                  <div class="form-group">
+                    <label> {{'phone' | translate}} </label>
+                    <p class="form-requirement">{{'phoneRequirement' | translate}}</p>
+                    <input name="phone" ng-model="controller.user.phone" type="text" class="form-control"
+                           placeholder="{{'enterPhone' | translate}}" ng-maxlength="25" ng-pattern="/^[0-9]*$/"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Mail form -->
+            <div class="container">
+              <div class="row">
+                <div class="col-md" ng-class="{'has-error': signUpForm.email.$touched && signUpForm.email.$invalid}">
+                  <div class="form-group">
+                    <label>{{'emailRequired' | translate}} </label>
+                    <input name="email" ng-model="controller.user.email" type="email" class="form-control"
+                           placeholder="{{'enterEmail' | translate}}" required ng-maxlength="255"/>
+                  </div>
+                </div>
+                <div class="col-md">
+                  <div class="form-group">
+                    <label>{{'role' | translate}} </label>
+                    <select class="custom-select mr-sm-2" ng-model="roleSelected">
+                      <option value="Investor" selected="selected">{{'investor' | translate}}</option>
+                      <option value="Entrepreneur">{{'entrepreneur' | translate}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Password form-->
+            <div class="container">
+              <div class="row">
+                <div class="col-md" ng-class="{'has-error': signUpForm.password.$touched && signUpForm.password.$invalid}">
+                  <div class="form-group">
+                    <label> {{'passwordRequired' | translate}} </label>
+                    <p class="form-requirement">{{'passwordRequirement' | translate}}</p>
+                    <input name="password" ng-model="controller.user.password" type="password" class="form-control"
+                           placeholder="{{'enterPassword' | translate}}" id="sign-up-password"
+                           required ng-maxlength="50"/>
+                  </div>
+                </div>
+                <div class="col-md" ng-class="{'has-error': signUpForm.repeatPassword.$touched && signUpForm.repeatPassword.$invalid}">
+                  <div class="form-group">
+                    <label>{{'repeatPasswordRequired' | translate}}</label>
+                    <p class="form-requirement"> </p>
+                    <input name="repeatPassword" ng-model="controller.user.repeatPassword" type="password" class="form-control"
+                           placeholder="{{'enterRepeatPassword' | translate}}" id="sign-up-repeat-password"
+                           required ng-maxlength="50" ng-pattern="controller.user.password"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!--Linkedin and profile picture-->
+            <div class="container">
+              <div class="row">
+                <div class="col-md" ng-class="{'has-error': signUpForm.linkedin.$touched && signUpForm.linkedin.$invalid}">
+                  <div class="form-group">
+                    <label>{{'linkedin' | translate}}</label>
+                    <p class="form-requirement">{{'linkedinRequirement' | translate}}</p>
+                    <input name="linkedin" ng-model="controller.user.linkedin" type="text" class="form-control"
+                           placeholder="{{'enterLinkedin' | translate}}" ng-maxlength="100"
+                           ng-pattern="/^((http(s)?://)?(www\.)?(linkedin\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*))?$/"/>
+                  </div>
+                </div>
+<!--                TODO: Sacar la imagen de este form, se sube directamente en tu perfil-->
+                <div class="col-md">
+                  <label class="birth-title">{{'birthday' | translate}} </label>
+                  <div class="row">
+                    <div class="col-md">
+                      <label class="date"> {{'year' | translate}} </label>
+                      <select ng-model="yearSelected" class="custom-select mr-sm-2"
+                              ng-options="label for label in yearsArray" ng-change="updateDate('year')" required></select>
+                    </div>
+                    <div class="col-md">
+                      <label class="date"> {{'month' | translate}} </label>
+                      <select ng-model="monthSelected" class="custom-select mr-sm-2"
+                              ng-options="m.name for m in monthsArray | validMonths:yearSelected" ng-change="updateDate('month')" required></select>
+                    </div>
+                    <div class="col-md">
+                      <label class="date">{{'day' | translate}}</label>
+                      <select ng-model="daySelected" class="custom-select mr-sm-2"
+                              ng-options="label for label in daysArray | daysInMonth:yearSelected:monthSelected | validDays:yearSelected:monthSelected"
+                              ng-change="updateDate('day')" required></select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Location form -->
+            <div class="container">
+              <div class="form-group">
+                <div class="container">
+<!--                  <label>{{'location' | translate}}</label>-->
+                  <div class="row">
+                    <div class="col- location-vertical">
+                      <label>{{'country' | translate}}</label>
+                    </div>
+                    <div class="col-md">
+                      <select id="country-select" class="custom-select mr-sm-2" ng-model="countrySelected"
+                              ng-options="option as option.name | translate for option in countriesArray track by option.id"
+                              custom-on-change="countryChange">
+                      </select>
+                    </div>
+                    <div class="col- location-vertical">
+                      <label>{{'state' | translate}} </label>
+                    </div>
+                    <div class="col-md">
+                      <select id="state-select" class="custom-select mr-sm-2" ng-model="stateSelected"
+                              ng-options="option as option.name | translate for option in statesArray track by option.id"
+                              custom-on-change="stateChange">
+                      </select>
+                    </div>
+                    <div class="col- location-vertical">
+                      <label> {{'city' | translate}} </label>
+                    </div>
+                    <div class="col-md">
+                      <select id="city-select" class="custom-select mr-sm-2" ng-model="citySelected"
+                              ng-options="option as option.name | translate for option in citiesArray track by option.id">
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+        <div class="dropdown-divider"></div>
+
+        <!-- Invalid user error -->
+        <div class="text-right">
+          <div ng-if="userExistsError">
+            <h4 class="big-error">{{'userAlreadyExists' | translate}}</h4>
+          </div>
+          <div ng-if="serverFormErrors">
+            <h4 class="big-error">{{'serverFormErrors' | translate}}</h4>
+          </div>
+          <input type="submit" class="signup-btn btn btn-dark pull-right" value="{{'signUp' | translate}}"
+                 ng-click="createUser(controller.user)" ng-disabled="signUpForm.$invalid"/>
+        </div>
+        </div>
+
+        </ng-form>
+
+      </div>
+    </div>
+  </div>
+
+</div>

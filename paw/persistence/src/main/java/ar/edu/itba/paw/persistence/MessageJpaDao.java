@@ -2,12 +2,10 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.model.Message;
-import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.components.PageRequest;
+import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.FilterField;
+import ar.edu.itba.paw.model.enums.GroupField;
+import ar.edu.itba.paw.model.enums.OrderField;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,7 +18,6 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class MessageJpaDao implements MessageDao {
@@ -30,22 +27,25 @@ public class MessageJpaDao implements MessageDao {
 
 
     @Override
-    public Message create(Message.MessageContent content, User sender, User receiver, Project project) {
-        final Message message = new Message(content, sender, receiver, project);
-        entityManager.persist(message);
-        return message;
+    public Message create(Message messageData) {
+        entityManager.persist(messageData);
+        return messageData;
     }
 
 
     @Override
-    public Page<Message> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page) {
-        /** Get to total count of messages with matching criteria */
-        Long count = findAllIdsCount(filters);
+    public Page<Message> findAll(RequestBuilder request, PageRequest page) {
+        /** Disassemble project request builder */
+        List<FilterCriteria> filters = request.getCriteriaList();
+        OrderField order = request.getOrder();
+        GroupField group = request.getGroup();
+
+        /** Get to total count of messages with matching criteria grouping accordingly */
+        Long count = findAllIdsCount(filters, group);
         if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
-        /** Get all messages's ids with matching criteria, order and page  */
-        // TODO check here, should be an exception. Wrong page
-        List<Long> ids = findAllIds(filters, order, page);
+        /** Get all messages's ids with matching criteria, order, group and  page  */
+        List<Long> ids = findAllIds(filters, order, group, page);
         if (ids.isEmpty()) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
         /** Gets all the corresponding messages in order */
@@ -56,11 +56,29 @@ public class MessageJpaDao implements MessageDao {
 
 
     @Override
-    public List<Message> findAll(List<FilterCriteria> filters, OrderField order) {
+    public List<Message> findAll(RequestBuilder request) {
         /** Finds all avoiding paging and thus 2 unnecessary queries */
-        return findAllNotPaged(filters, order);
+        return findAllNotPaged(request.getCriteriaList(), request.getOrder());
     }
 
+
+    @Override
+    public long countAll(RequestBuilder request) {
+        List<FilterCriteria> filters = request.getCriteriaList();
+        GroupField group = request.getGroup();
+
+        return findAllIdsCount(filters, group);
+    }
+
+
+    @Override
+    public long countAll(RequestBuilder request1, RequestBuilder request2) {
+        List<FilterCriteria> filter1 = request1.getCriteriaList();
+        List<FilterCriteria> filter2 = request2.getCriteriaList();
+        GroupField group = request1.getGroup();
+
+        return findAllIdsCount(filter1, filter2, group);
+    }
 
 
     /** Auxiliary functions */
@@ -70,7 +88,7 @@ public class MessageJpaDao implements MessageDao {
      * Finds all ids of messages given a filter and order.
      * @param filters The filters to apply.
      * @param order The order to order by.
-     * @return List of all unique ids.
+     * @return List of all matching messages.
      */
     private List<Message> findAllNotPaged(List<FilterCriteria> filters, OrderField order) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -78,7 +96,7 @@ public class MessageJpaDao implements MessageDao {
 
         Root<Message> root = query.from(Message.class);
         addPredicates(query, builder, root, filters);
-        addOrder(query, builder, root, order);
+        addOrder(query, builder, root, order, false);
 
         return entityManager.createQuery(query).getResultList();
     }
@@ -95,8 +113,8 @@ public class MessageJpaDao implements MessageDao {
         CriteriaQuery<Message> query = builder.createQuery(Message.class);
 
         Root<Message> root = query.from(Message.class);
-        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria("ids", ids)));
-        addOrder(query, builder, root, order);
+        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria(FilterField.IDS, ids)));
+        addOrder(query, builder, root, order, false);
         return entityManager.createQuery(query).getResultList();
     }
 
@@ -104,15 +122,34 @@ public class MessageJpaDao implements MessageDao {
     /**
      * Counts how many messages match criteria.
      * @param filters Filter criteria to apply.
+     * @param group The group by field. If none, then the standard field 'id' is counted.
      * @return Count.
      */
-    private Long findAllIdsCount(List<FilterCriteria> filters) {
+    private Long findAllIdsCount(List<FilterCriteria> filters, GroupField group) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
 
         Root<Message> root = query.from(Message.class);
-        query.select(builder.countDistinct(root.get("id")));
+        query.select(builder.countDistinct(root.get(group.getField())));
         addPredicates(query, builder,root, filters);
+        return entityManager.createQuery(query).getSingleResult();
+    }
+
+
+    /**
+     * Counts how many messages match criteria. Does filter1 OR filter2.
+     * @param filter1 First filter criteria to apply.
+     * @param filter2 Second filter criteria to apply.
+     * @param group The group by field. If none, then the standard field 'id' is counted.
+     * @return Count.
+     */
+    private Long findAllIdsCount(List<FilterCriteria> filter1, List<FilterCriteria> filter2, GroupField group) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+
+        Root<Message> root = query.from(Message.class);
+        query.select(builder.countDistinct(root.get(group.getField())));
+        addPredicates(query, builder, root, filter1, filter2);
         return entityManager.createQuery(query).getSingleResult();
     }
 
@@ -121,18 +158,22 @@ public class MessageJpaDao implements MessageDao {
      * Finds all ids of messages given a filter, order and page.
      * @param filters The filters to apply.
      * @param order The order to order by.
+     * @param group The group by field. If none, then the standard field 'id' is counted.
      * @param page The page requested.
      * @return List of all unique ids.
      */
-    private List<Long> findAllIds(List<FilterCriteria> filters, OrderField order, PageRequest page) {
+    private List<Long> findAllIds(List<FilterCriteria> filters, OrderField order, GroupField group, PageRequest page) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
 
         Root<Message> root = query.from(Message.class);
-        query.select(root.get("id"));
+
+        /** The max from the id field gets us the latest messages for each grouping
+         * In case there is grouping by ID (GroupField.NONE) returns distinct IDs */
+        query.select(builder.max(root.get("id")));
         addPredicates(query, builder, root, filters);
-        addOrder(query, builder, root, order);
-        query.groupBy(root.get("id"));
+        addOrder(query, builder, root, order, group.isGrouped());
+        query.groupBy(root.get(group.getField()));
 
         TypedQuery<Long> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult(page.getFirstResult());
@@ -148,12 +189,12 @@ public class MessageJpaDao implements MessageDao {
      * @param builder Criteria query builder;
      * @param root Query message root.
      * @param order The order to be applied.
+     * @param isGrouped If its grouped then the parameter to ask is different.
      */
-    private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, OrderField order) {
+    private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, OrderField order, boolean isGrouped) {
         switch (order) {
-            case DEFAULT:
-            case DATE_DESCENDING: query.orderBy(builder.desc(root.get("publishDate")), builder.desc(root.get("id"))); break;
-            case DATE_ASCENDING: query.orderBy(builder.asc(root.get("publishDate")), builder.desc(root.get("id"))); break;
+            case DATE_DESCENDING: query.orderBy(builder.desc((isGrouped) ? builder.max(root.get("id")) : root.get("id"))); break;
+            case DATE_ASCENDING: query.orderBy(builder.asc((isGrouped) ? builder.max(root.get("id")) : root.get("id"))); break;
             default: /** Do nothing for the rest of them */ break;
         }
     }
@@ -168,10 +209,38 @@ public class MessageJpaDao implements MessageDao {
      * @param filters List of criteria filters.
      */
     private <T> void addPredicates(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, List<FilterCriteria> filters) {
+        query.where(generatePredicate(query, builder, root, filters));
+    }
+
+
+    /**
+     * Applies the given filters to the query. Creates a general or with the two filters.
+     * @param <T> The type of Criteria Query
+     * @param query The query to be applied the filters.
+     * @param builder Criteria query builder.
+     * @param root Query message root.
+     * @param filter1 List of first criteria filters.
+     * @param filter2 List of second criteria filters.
+     */
+    private <T> void addPredicates(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, List<FilterCriteria> filter1, List<FilterCriteria> filter2) {
+        Predicate predicate1 = generatePredicate(query, builder, root, filter1);
+        Predicate predicate2 = generatePredicate(query, builder, root, filter2);
+        query.where(builder.or(predicate1, predicate2));
+    }
+
+
+    /**
+     * Applies the given filters to the query. This is 2 request queries joined by and OR.
+     * @param <T> The type of Criteria Query
+     * @param query The query to be applied the filters.
+     * @param builder Criteria query builder.
+     * @param root Query message root.
+     * @param filters List of criteria filters.
+     */
+    private <T> Predicate generatePredicate(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Message> root, List<FilterCriteria> filters) {
         Predicate predicate = builder.conjunction();
         MessageCriteriaConsumer filterConsumer = new MessageCriteriaConsumer(predicate, builder, root);
-        filters.stream().forEach(filterConsumer);
-        predicate = filterConsumer.getPredicate();
-        query.where(predicate);
+        filters.forEach(filterConsumer);
+        return filterConsumer.getPredicate();
     }
 }

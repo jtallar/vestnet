@@ -1,0 +1,55 @@
+<head><title>{{ 'pageTitleWelcome' | translate}}</title></head>
+
+<div class="sidenav sidenav-index">
+  <div class="text-center mt-5">
+    <a ng-href="/#/">
+      <img class="logo-img" src="images/logo_bp.png">
+    </a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="col-md-8">
+    <div class="welcome">
+      <h1>{{'wWelcome' | translate}}<b> VestNet</b></h1>
+      <h2>{{'wSubtitle' | translate}}</h2>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="inv-tab" data-toggle="tab" ng-href="#inv" role="tab"
+             aria-controls="inv" aria-selected="true">{{'investTab' | translate}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="entrep-tab" data-toggle="tab" ng-href="#entrep" role="tab"
+             aria-controls="entrep" aria-selected="false">{{'entrepTab' | translate}}</a>
+        </li>
+      </ul>
+      <div class="tab-content inv-tab wel-min" id="myTabContent">
+        <div class="tab-pane fade show in active" id="inv" role="tabpanel" aria-labelledby="inv-tab">
+          <h4>{{'wIAsk' | translate}}</h4>
+          <p>{{'wIp1' | translate}}</p>
+          <p>{{'wIp2' | translate}}</p>
+          <p>{{'wIp3' | translate}}</p>
+          <h5>{{'wIRegister' | translate}}</h5>
+          <h4>{{'wBepart' | translate}}</h4>
+<!--          <a ng-href="#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>-->
+<!--          <a ng-href="#/projects" class="btn btn-outline-dark distance-btn">{{'visitWeb' | translate}}</a>-->
+        </div>
+        <div class="tab-pane fade" id="entrep" role="tabpanel" aria-labelledby="entrep-tab">
+          <h4>{{'wEAsk' | translate}}</h4>
+          <p>{{'wEp1' | translate}}</p>
+          <p>{{'wEp2' | translate}}</p>
+          <p>{{'wEp3' | translate}}</p>
+          <h5>{{'wERegister' | translate}}</h5>
+          <h4>{{'wBepart' | translate}}</h4>
+<!--          <a ng-href="/#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>-->
+        </div>
+      </div>
+      <a ng-href="#/signUp" class="btn btn-dark">{{'signUp' | translate}}</a>
+      <a ng-href="#/projects" class="btn btn-outline-dark distance-btn">{{'visitWeb' | translate}}</a>
+      <div id="welcome-login">
+        <label>{{'welcomeRegistered' | translate}}</label>
+        <a ng-href="/#/login" class="btn btn-dark">{{'submit' | translate}}</a>
+      </div>
+    </div>
+  </div>
+</div>

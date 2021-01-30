@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.components.LoggedUser;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.UserRole;
+import ar.edu.itba.paw.model.enums.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Component
 public class PawUserDetailsService implements UserDetailsService {
@@ -28,8 +29,10 @@ public class PawUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        final User user =  this.userService.setLocale(username, LocaleContextHolder.getLocale().toString());
-        if (user == null) throw  new UsernameNotFoundException(username + "not found");
+        final Optional<User> optionalUser =  this.userService.setLocale(username, LocaleContextHolder.getLocale().toLanguageTag());
+        if (!optionalUser.isPresent()) throw new UsernameNotFoundException(username + "not found");
+
+        final User user = optionalUser.get();
 
         Collection<GrantedAuthority> authorities = new HashSet<>();
 

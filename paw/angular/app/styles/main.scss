@@ -1,0 +1,196 @@
+//$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+// bower:scss
+@import 'bootstrap-sass-official/assets/stylesheets/_bootstrap.scss';
+// endbower
+
+//@import 'partials/home';
+
+body text, a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
+.btn, a.page-link, .msg-title, .msg-content, .row, .modal,
+.custom-form-input, .custom-form-file,.custom-form-select{
+  font-family: 'Lato', sans-serif;
+}
+
+h1{
+  font-size: 25px;
+}
+
+html{
+  font-size: 20px;
+}
+
+.main-head{
+  height: 150px;
+  background: #FFF;
+}
+
+.sidenav-index {
+  height: 100%;
+  background-color: #222222;
+  overflow-x: hidden;
+}
+
+.main {
+  padding: 0 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav-index {margin-top: 50%;}
+}
+
+@media screen and (max-width: 450px) {
+  .register-form{
+    margin-top: 10%;
+  }
+}
+
+
+@media screen and (min-width: 768px){
+  .main{
+    margin-left: 40%;
+  }
+
+  .sidenav-index{
+    width: 40%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    margin-top:0%;
+  }
+  .logo-img{
+    margin-top: 20%;
+  }
+
+  .login-form{
+    margin-top: 40%;
+  }
+
+  .welcome{
+    margin-top: 10%;
+  }
+
+  .register-form{
+    margin-top: 50%;
+  }
+}
+
+.mailError{
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
+}
+
+.mailError p{
+  color: red;
+}
+
+.noError p{
+  color: green;
+}
+
+.login-main-text{
+  margin-top: 20%;
+  padding: 60px;
+  color: #fff;
+}
+
+.login-main-text h2{
+  font-weight: 300;
+}
+
+.btn-black{
+  outline: solid 1px white;
+  background-color: #000 !important;
+  color: #fff;
+}
+
+.btn-inv{
+  background: transparent none;
+  margin-bottom: 10px;
+  padding: 0 !important;
+}
+.btn-inv img{
+  width: 30px;
+  height: 30px;
+}
+
+.nav-tabs{
+  margin-bottom:5%;
+}
+.nav-tabs .nav-link{
+  color: #4b4b4b;
+  /*font-weight:600;*/
+}
+
+.nav-tabs .nav-link.active{
+  color: #750096;
+  border-bottom:2px solid #750096;
+  font-weight: 600;
+}
+
+.inv-tab label{
+  font-weight: 600;
+}
+.inv-tab p{
+  font-weight: 600;
+  color: #750096;
+}
+
+.welcome b{
+  color: #750096;
+}
+
+.distance-btn{
+  margin-left: 20px;
+}
+
+.welcome h4{
+  margin-top: 20px;
+  font-size: 25px !important;
+}
+.welcome h1{
+  font-size: 40px !important;
+}
+.welcome h2{
+  font-size: 30px !important;
+}
+.welcome h5{
+  font-size: 20px !important;
+}
+.welcome p{
+  font-size: 20px !important;
+}
+
+#welcome-login {
+  margin-top: 10px;
+}
+#welcome-login label{
+  margin-right: 40px !important;
+}
+
+.mailSent{
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
+  text-align: right;
+}
+
+.mailSent p{
+  color: blue;
+  text-align: right;
+}
+
+.formError {
+  color: red;
+}
+
+.back-req{
+  margin-left:auto !important;
+  margin-bottom:20px;
+}
+
+.verify{
+  margin: 30% 10% !important
+}
+

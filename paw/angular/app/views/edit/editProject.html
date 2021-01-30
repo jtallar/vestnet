@@ -1,0 +1,164 @@
+<!--<head>-->
+<!--  &lt;!&ndash; build:css(.tmp) styles/form.css &ndash;&gt;-->
+<!--  <link rel="stylesheet" href="styles/form.css">-->
+<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
+<!--</head>-->
+<head><title> {{ 'pageTitleEdit' | translate}}</title></head>
+
+<!--<vnheader></vnheader>-->
+
+<div class="container sep-nav" style="margin-top: 20px">
+  <div class="row justify-content-start">
+    <div class="col-4">
+      <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
+    </div>
+    <div class="col-4 text-center">
+      <h1>{{'editProjectTitle' | translate}}</h1>
+    </div>
+  </div>
+  <div class="text-center">
+    <h6>{{'createProjectSubtitle' | translate}}</h6>
+  </div>
+  <div class="dropdown-divider dropdown-np"></div>
+  <div class="text-center" ng-if="loadingInfo">
+    <div class="spinner-grow text-dark loading-grow" role="status"></div>
+  </div>
+  <ng-form ng-show="!loadingInfo" name="newProjectForm" enctype="multipart/form-data">
+    <div class="d-flex justify-content-between flex-row mt-1">
+      <div class="d-flex flex-column">
+        <h4 >{{'projectOverviewTitle' | translate}}</h4>
+        <h7>{{'projectOverviewSubtitle' | translate}}</h7>
+        <div class="dropdown-divider dropdown-np"></div>
+
+        <div ng-class="{'has-error': newProjectForm.title.$touched && newProjectForm.title.$invalid}">
+          <h6 class="form-label">{{'titleRequired' | translate}}</h6>
+          <p class="form-requirement">{{'titleRequirement' | translate}}</p>
+          <input name="title" ng-model="project.name" type="text" class="form-control" placeholder="{{'projectTitlePlaceholder' | translate}}" id="new-project-title"
+                 required ng-minlength="5" ng-maxlength="50"/>
+        </div>
+
+        <div ng-class="{'has-error': newProjectForm.summary.$touched && newProjectForm.summary.$invalid}">
+          <h6 class="form-label">{{'summaryRequired' | translate}}</h6>
+          <p class="form-requirement">{{'descriptionRequirement' | translate}}</p>
+          <textarea name="summary" ng-model="project.summary" class="form-control" placeholder="{{'projectSummaryPlaceholder' | translate}}" rows="4" id="new-project-summary"
+                    required ng-minlength="30" ng-maxlength="250"></textarea>
+        </div>
+
+        <div ng-class="{'has-error': newProjectForm.cost.$touched && newProjectForm.cost.$invalid}">
+          <h6 class="form-label">{{'costRequired' | translate }}</h6>
+          <p class="form-requirement">{{'costRequirement' | translate}}</p>
+          <div class="row justify-content-center">
+            <div class="col-2">
+              <label>{{'currency' | translate}}</label>
+            </div>
+            <div class="col">
+              <input name="cost" ng-model="project.fundingTarget" type="number" class="form-control" ng-keypress="costKeypress()" id="new-project-cost"
+                     required min="1000" max="2000000000" step="1" no-float/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column">
+      </div>
+    </div>
+
+    <!-- Categories Selection -->
+    <h4 class="mt-3" style="margin-top: 45px !important">{{'categories' | translate}}</h4>
+    <h7>{{'projectCategoriesSubtitle' | translate}}</h7>
+    <div class="dropdown-divider dropdown-np"></div>
+    <div class="d-flex justify-content-around flex-row">
+      <div class="d-flex flex-column form-group">
+        <label>{{'allCategories' | translate}}</label>
+        <select id="all-categories" class="custom-form-select mr-sm-2" size="10" ng-model="initCategory"
+                ng-options="option as option.name | translate for option in categories track by option.id">
+        </select>
+      </div>
+      <div class="d-flex justify-content-around flex-column ">
+        <button type="button" class="btn btn-dark" ng-click="addCategory()">&gt;&gt;</button>
+        <button type="button" class="btn btn-dark" ng-click="delCategory()">&lt;&lt;</button>
+      </div>
+      <div class="d-flex flex-column form-group">
+        <label>{{'myCategories' | translate}}</label>
+        <select id="final-categories" class="custom-form-select mr-sm-2" size="10"></select>
+        <label class="formError" ng-if="categoryCountError" id="categoryCountError" >{{'categoriesRequirement' | translate}}</label>
+      </div>
+    </div>
+
+    <h4 class="mt-3" style="margin-top: 40px !important">{{'images' | translate}}</h4>
+    <h7>{{'projectImagesSubtitle' | translate}}</h7>
+    <div class="dropdown-divider dropdown-np"></div>
+
+    <div class="row row-cols-5">
+      <div class="col">
+        <h5 class="project-image-header">{{'projectImage' | translate}}</h5>
+      </div>
+      <div class="col">
+        <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingPortraitClick()"
+           data-toggle="collapse" data-target="#singleProjectPictureEdit" aria-expanded="false" aria-controls="singleProjectPictureEdit">
+          <div class="notification-icon" ng-show="!editingPortrait">
+            <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+          </div>
+          <div class="notification-icon" ng-show="editingPortrait">
+            <img class="nav-icon" src="images/x-icon.png" alt="">
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="center-collapse collapse" id="singleProjectPictureEdit">
+      <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
+      <div class="row">
+        <input type="file" class="file-in form-control" custom-on-change="fileboxChange" id="customFileProjectPic" accept="image/*"/>
+        <div ng-if="readingSingleFilesCount !== 0" class="spinner-border text-primary" role="status" style="margin-left: 10px">
+          <span class="sr-only">{{'spinnerLoading' | translate}}</span>
+        </div>
+      </div>
+      <!-- <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/> -->
+      <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
+    </div>
+    <div class="row row-cols-5">
+      <div class="col">
+        <h5 class="project-image-header">{{'projectSlideshow' | translate}}</h5>
+      </div>
+      <div class="col">
+        <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingSlideshowClick()" ng-if="!disableSlideshow"
+           data-toggle="collapse" data-target="#slideshowProjectPictureEdit" aria-expanded="false" aria-controls="slideshowProjectPictureEdit">
+          <div class="notification-icon" ng-show="!editingSlideshow">
+            <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+          </div>
+          <div class="notification-icon" ng-show="editingSlideshow">
+            <img class="nav-icon" src="images/x-icon.png" alt="">
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="center-collapse collapse" id="slideshowProjectPictureEdit">
+      <p class="form-requirement">{{'picturesRequirement' | translate}}</p>
+      <div class="row">
+        <input type="file" class="file-in form-control" custom-on-change="multipleFileBoxChange" id="customMultipleFileProjectPic" multiple  accept="image/*"
+               ng-disabled="disableSlideshow"/>
+        <div ng-if="readingMultiFilesCount !== 0" class="spinner-border text-dark" role="status" style="margin-left: 10px">
+          <span class="sr-only">{{'spinnerLoading' | translate}}</span>
+        </div>
+      </div>
+      <!-- <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/> -->
+      <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate}}</label>
+      <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate}}</label>
+    </div>
+
+    <div style="margin-top: 10px">
+      <label class="big-error" ng-if="serverFormErrors" id="serverFromError" >{{'serverFormErrors' | translate}}</label>
+    </div>
+
+    <div class="text-right" style="margin: 20px 0 40px 0">
+      <div ng-if="loading" class="spinner-grow text-dark" role="status" style="margin-right: 25px"></div>
+      <input ng-if="!loading" type="submit" value="{{'edit' | translate}}" class="btn btn-dark" ng-click="updateProject(project)"
+             ng-disabled="newProjectForm.$invalid || readingSingleFilesCount !== 0 || readingMultiFilesCount !== 0"/>
+    </div>
+  </ng-form>
+</div>
+
+<!--<footer>-->
+<!--  <vnfooter></vnfooter>-->
+<!--</footer>-->

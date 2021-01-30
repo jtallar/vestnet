@@ -14,7 +14,20 @@ public class LoggedUser extends User {
         this.id = id;
     }
 
+    public LoggedUser(long id, String username, Collection<? extends GrantedAuthority> authorities) {
+        super(username, "", authorities);
+        this.id = id;
+    }
+
     public long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "LoggedUser{" +
+                "id=" + id +
+                "username=" + getUsername() +
+                '}';
     }
 }

@@ -1,0 +1,20 @@
+
+<head><title> {{ 'pageTitleError' | translate : {e : eCode} }}</title></head>
+
+<!--<vnheader></vnheader>-->
+
+<div id="notfound">
+  <div class="notfound">
+    <div class="notfound-404">
+      <h1>{{eCode}}</h1>
+    </div>
+    <h2>{{'errorTitle' | translate}}</h2>
+    <h2 class="error-sub">{{'error' + eCode | translate}} </h2>
+    <div><a href="#" onclick="history.back()"><span class="arrow"></span>{{'goBack' | translate}}</a></div>
+    <div><a href="/#"><span class="arrow"></span>{{'goHome' | translate}}</a></div>
+  </div>
+</div>
+
+<!--<footer>-->
+<!--  <vnfooter></vnfooter>-->
+<!--</footer>-->

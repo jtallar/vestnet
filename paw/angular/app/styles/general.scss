@@ -1,0 +1,233 @@
+.navbar{
+  top:0;
+  width:100%;
+  position: fixed !important; /* Fixed Sidebar (stay in place on scroll) */
+  z-index:500;
+  height:70px
+}
+
+.navbar-custom {
+  color: #750096;
+  background-color: #222222;
+}
+
+.navbar-custom2 {
+  color: #000000;
+  background-color: #b1b1b1;
+}
+
+.navbar-custom3 {
+  color: #000000;
+  background-color: white;
+}
+
+.navbar-brand img
+{
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.logo-header {
+  margin: 0 0 0 0 !important;
+  padding: 0 !important
+}
+
+.logo-text {
+  color: #750096; font-family: 'Lato', sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-align: center;
+  margin: auto 30px auto 15px;
+}
+
+.logopurple {
+  color: #750096;
+  background-color: #750096 !important;
+}
+
+.logo-text:active, .logo-text:hover {
+  color: #53006d;
+  text-decoration: none;    font-family: 'Lato', sans-serif;
+}
+
+.dropdown-item{
+  font-family: 'Lato', sans-serif
+}
+
+.searchButt{
+  background-color: #53006d;
+  color: #ffffff;
+}
+.topnav-right {
+  float: right;
+  margin: auto;
+  padding: 0
+}
+.header-auth{
+  padding: 5px;
+}
+
+body{
+  overflow-x: hidden;
+}
+
+.sep-nav{
+  margin-top:90px !important;
+}
+.sep-nav2{
+  margin-top:120px !important;
+}
+
+//body text, a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
+//.btn, a.page-link, .msg-title, .msg-content, .row, .modal,
+//.custom-form-input, .custom-form-file,.custom-form-select{
+//  font-family: 'Lato', sans-serif;
+//}
+
+.btn-black{
+  min-width:50px;
+  max-width: 60px;
+}
+
+.logopurple{
+  min-width:60px
+}
+
+.text-icon{
+  font-size: 10px;
+  margin-right:auto !important;
+  margin-left:auto !important;
+  margin-top:3px
+}
+
+.header-icon{
+  padding: 0 !important;
+  margin-left:10px !important;
+  margin-right: 10px !important;
+}
+
+.navbar-nav{
+  margin-left:auto
+}
+
+.nav-item{
+  padding: 0 !important;
+  margin: 0 !important
+}
+
+.btn-dark{
+  min-width:60px
+}
+
+.nav-icon{
+  width: 30px;
+  height: 30px;
+}
+
+.btn-header{
+  padding: 0 !important;
+  margin-left: 40px !important;
+  margin-right: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+.dropdown-toggle:after {
+  border: none !important;
+}
+
+.dropdown-divider-header{
+  margin-top:1px;
+  margin-bottom:1px;
+  border:solid 0.5px #adadadad
+}
+
+.test-input{
+  width: 30px;
+}
+
+.loading-grow {
+  margin-top:200px;
+  width: 5rem !important;
+  height: 5rem !important;
+}
+
+/***** FOOTER ******/
+
+footer {
+  margin-top: 12%;
+  background-color: #2d2d2d !important;
+  color: white;
+}
+
+@media screen and (min-width: 300px) {
+  /* line 167, general.scss */
+  .footer {
+    margin-top: 20%;
+    color: yellow;
+  }
+}
+/* line 173, general.scss */
+.footer-copyright {
+  background-color: #222222;
+  color: #a7a7a7;
+  font-size: 12px;
+  margin-top: 0;
+  padding: 6px;
+}
+
+/* line 180, general.scss */
+.footer-content {
+  padding: 10px 0 0 100px;
+}
+
+/* line 184, general.scss */
+footer li {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* line 189, general.scss */
+footer li > a {
+  color: #ffffff;
+}
+
+/* line 193, general.scss */
+footer li > a:hover {
+  color: white;
+}
+
+/* line 197, general.scss */
+footer p {
+  font-size: 13px;
+  color: grey;
+}
+
+/* line 202, general.scss */
+footer h5 {
+  font-variant: all-petite-caps;
+  color: #9700c2;
+}
+
+/* line 207, general.scss */
+footer .dropdown-divider {
+  margin: 5px 20% 20px 20%;
+  background-color: black;
+  border-color: #464646;
+}
+
+/* line 213, general.scss */
+.footer-content h6 {
+  color: #d6d6d6;
+  font-size: 15px;
+  font-family: 'Lato', sans-serif;
+  text-align: left;
+}
+
+
+.wel-min{
+  min-height: 425px;
+}

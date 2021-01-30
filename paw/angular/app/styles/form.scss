@@ -1,0 +1,97 @@
+body a, strong, p, h1, h2, h2.bold, h3, h4, h5, h6, label, span,
+.btn, .row, .custom-form-input, .custom-form-file,.custom-form-select{
+  font-family: 'Lato', sans-serif;
+}
+
+h1{
+  color: #750096;
+  font-weight: 400
+}
+
+.formError {
+  color: red;
+  font-size:15px;
+  margin-bottom:0;
+}
+
+.custom-checkbox{
+  padding-left: 10px;
+}
+
+.custom-form-input {
+  padding: 6px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.custom-form-number {
+  padding: 6px;
+  border-radius: 10px;
+  width: 16ch;
+}
+
+.custom-form-file {
+  padding: 6px;
+  border-radius: 10px;
+  width: 30ch;
+}
+
+.custom-form-select {
+  padding: 6px;
+  border-radius: 5px;
+  width: 30ch;
+}
+
+.card{
+  //margin-top: auto;
+  background-color: #fefefe;
+}
+
+.big-error {
+  color: red;
+  font-weight: bold;
+  font-style: italic;
+  text-underline: red;
+}
+
+.form-requirement {
+  font-size: xx-small;
+  color: gray;
+  font-style: italic;
+  margin-top: 0;
+  margin-bottom: 5px;
+  white-space: pre-wrap;
+}
+
+.form-label {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.project-image-header {
+  margin-top: 10px;
+}
+
+.white-text{
+  color:white !important;
+}
+
+.date{
+  color: #353535;
+  font-size:13px !important;
+  font-weight: 400;
+  margin: 0 !important;
+}
+
+.birth-title{
+  margin-bottom: 7px !important;
+}
+
+.file-in{
+  width:70% !important;
+  margin-left: 14px;
+}
+
+.dropdown-np{
+  border:solid 0.5px #adadadad !important;
+}

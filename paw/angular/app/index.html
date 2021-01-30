@@ -1,0 +1,78 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <link href="/images/logo.ico" rel="icon" type="image/x-icon" />
+
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/form.css -->
+  <link rel="stylesheet" href="styles/form.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/signup.css -->
+  <link rel="stylesheet" href="styles/signup.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/feed.css -->
+  <link rel="stylesheet" href="styles/feed.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/404.css -->
+  <link rel="stylesheet" href="styles/404.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/userprofile.css -->
+  <link rel="stylesheet" href="styles/userprofile.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/detail.css -->
+  <link rel="stylesheet" href="styles/detail.css">
+  <!-- endbuild -->
+
+  <!-- build:css(.tmp) styles/general.css -->
+  <link rel="stylesheet" href="styles/general.css">
+  <!-- endbuild -->
+
+</head>
+
+<body ng-controller="IndexCtrl">
+
+  <vnheader ng-show="showHeader.value"></vnheader>
+  <div ng-view=""></div>
+
+  <!-- build:js(.) scripts/oldieshim.js -->
+  <!--[if lt IE 9]>
+  <script src="bower_components/es5-shim/es5-shim.js"></script>
+  <script src="bower_components/json3/lib/json3.js"></script>
+  <![endif]-->
+  <!-- endbuild -->
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+          integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+          integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+          crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script type="application/javascript" src="scripts/paths.js"></script>
+<!--  <script type="application/javascript" src="scripts/paw2020a.js"></script>-->
+  <script type="application/javascript" src="bower_components/requirejs/require.js" data-main="scripts/build.js"></script>
+  <!-- endbuild -->
+
+</body>
+
+<footer ng-show="showHeader.value">
+  <vnfooter></vnfooter>
+</footer>
+</html>
+

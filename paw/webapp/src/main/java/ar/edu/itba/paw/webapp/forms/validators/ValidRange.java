@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = RangeValidator.class)
 public @interface ValidRange {
-    String message() default "{ar.edu.itba.paw.webapp.forms.validators.RangeValidator}";
+    String message() default "{ar.edu.itba.paw.webapp.forms.validators.ValidRange.message}";
 
     String minField();
 

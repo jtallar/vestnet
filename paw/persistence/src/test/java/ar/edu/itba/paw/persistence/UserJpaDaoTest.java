@@ -3,7 +3,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.UserRole;
+import ar.edu.itba.paw.model.enums.UserRole;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
@@ -103,7 +103,8 @@ public class UserJpaDaoTest {
 
         // 2 - Execute
         try {
-            userJdbcDao.create(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
+            User newUser = new User(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
+            userJdbcDao.create(newUser);
         } catch (UserAlreadyExistsException e) {
             fail();
         }

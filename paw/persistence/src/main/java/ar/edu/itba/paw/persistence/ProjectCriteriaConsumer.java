@@ -2,16 +2,12 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.SearchField;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
 import ar.edu.itba.paw.model.location.State;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -33,18 +29,29 @@ import java.util.function.Consumer;
     @Override
     public void accept(FilterCriteria param) {
         switch (param.getField()) {
-            case "minCost": minCost(param.getValue()); break;
-            case "maxCost": maxCost(param.getValue()); break;
-            case "category": category(param.getValue()); break;
-            case "owner": owner(param.getValue()); break;
-            case "funded": funded(param.getValue()); break;
-            case "id": id(param.getValue()); break;
-            case "ids": ids(param.getValue()); break;
+            case PROJECT_MIN_FUNDING_TARGET: minFundingTarget(param.getValue()); break;
+            case PROJECT_MAX_FUNDING_TARGET: maxFundingTarget(param.getValue()); break;
+            case PROJECT_MIN_PERCENT_FUNDING: minFundingPercentage(param.getValue()); break;
+            case PROJECT_MAX_PERCENT_FUNDING: maxFundingPercentage(param.getValue()); break;
+            case PROJECT_CATEGORY: category(param.getValue()); break;
+            case PROJECT_OWNER: owner(param.getValue()); break;
+            case PROJECT_CLOSED: closed(param.getValue()); break;
+            case IDS: ids(param.getValue()); break;
+
             /** If its not a filter, its a search */
-            default: search(param);
+            default:
+                /** Escape all the postgres special characters */
+                String searchVal = escapeCharacters(param.getValue().toString(), new String[]{"\\", "%", "_", "\"", "'"});
+                switch (param.getField()) {
+                    case PROJECT_SEARCH_NAME: projectSearch("name", searchVal); break;
+                    case PROJECT_SEARCH_SUMMARY: projectSearch("summary", searchVal); break;
+                    case PROJECT_SEARCH_LOCATION: locationSearch(searchVal); break;
+                    case PROJECT_SEARCH_OWNER_NAME: userNameSearch(searchVal); break;
+                    case PROJECT_SEARCH_OWNER_MAIL: userSearch(searchVal); break;
+                    default: /** should not happen */ break;
+                }
         }
     }
-
 
     /** Getters */
 
@@ -57,36 +64,40 @@ import java.util.function.Consumer;
 
 
     /**
-     * For search criteria, depending on field, executes action.
-     * @param param The parameters, field and value.
+     * Filters by min funding target.
+     * @param value The min funding target.
      */
-    private void search(FilterCriteria param) {
-        String keyword = param.getValue().toString().toLowerCase();
-        switch (SearchField.getEnum(param.getField())) {
-            case PROJECT_NAME: projectSearch("name", keyword); break;
-            case PROJECT_SUMMARY: projectSearch("summary", keyword); break;
-            case PROJECT_LOCATION: locationSearch(keyword); break;
-            case OWNER_NAME: userNameSearch(keyword); break;
-            case OWNER_MAIL: userSearch("email", keyword); break;
-        }
+    private void minFundingTarget(Object value) {
+        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get("fundingTarget"), value.toString()));
     }
 
 
     /**
-     * Filters by min cost.
-     * @param value The min cost.
+     * Filters by max funding target.
+     * @param value The max funding target.
      */
-    private void minCost(Object value) {
-        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get("cost"), value.toString()));
+    private void maxFundingTarget(Object value) {
+        predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("fundingTarget"), value.toString()));
     }
 
 
     /**
-     * Filters by max cost.
-     * @param value The max cost.
+     * Filters by min funding target.
+     * @param value The min funding target.
      */
-    private void maxCost(Object value) {
-        predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get("cost"), value.toString()));
+    private void minFundingPercentage(Object value) {
+        predicate = builder.and(predicate, builder.greaterThanOrEqualTo(
+                builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget")).as(Double.class), (Double) value));
+    }
+
+
+    /**
+     * Filters by max funding target.
+     * @param value The max funding target.
+     */
+    private void maxFundingPercentage(Object value) {
+        predicate = builder.and(predicate, builder.lessThanOrEqualTo(
+                builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget")).as(Double.class), (Double) value));
     }
 
 
@@ -108,21 +119,13 @@ import java.util.function.Consumer;
         predicate = builder.and(predicate, builder.equal(root.get("owner"), value));
     }
 
-    /**
-     * Filter by project fully founded or not.
-     * @param value Boolean funded.
-     */
-    private void funded(Object value) {
-        predicate = builder.and(predicate, builder.equal(root.get("funded"), value));
-    }
-
 
     /**
-     * Filters by min cost.
-     * @param value The min cost.
+     * Filter by project is closed or not.
+     * @param value Boolean closed.
      */
-    private void id(Object value) {
-        predicate = builder.equal(root.get("id"), value.toString());
+    private void closed(Object value) {
+        predicate = builder.and(predicate, builder.equal(root.get("closed"), value));
     }
 
 
@@ -136,43 +139,58 @@ import java.util.function.Consumer;
 
 
     /**
+     * Escapes all the characters given on the input string.
+     * @param input The input string to escape all the special characters.
+     * @param specialCharacters The special characters to escape.
+     * @return The new string with special characters escaped.
+     */
+    private static String escapeCharacters(String input, final String[] specialCharacters) {
+        for (String specialCharacter : specialCharacters) {
+            if (input.contains(specialCharacter)) {
+                input = input.replace(specialCharacter, "\\" + specialCharacter);
+            }
+        }
+        return input;
+    }
+
+
+    /**
      * Filters by a string in a project column.
      * @param column The column to search for matches.
-     * @param value The keyword to search.
+     * @param keyword The keyword to search.
      */
-    private void projectSearch(String column, String value) {
-        predicate = builder.and(predicate, builder.like(builder.lower(root.get(column)), "%" + value + "%"));
+    private void projectSearch(String column, String keyword) {
+        predicate = builder.and(predicate, builder.like(builder.lower(root.get(column)), "%" + keyword + "%"));
     }
 
 
     /**
      * Filters by a string in the user owner column.
-     * @param column The column to search for matches.
-     * @param value The keyword to search.
+     * @param keyword The keyword to search.
      */
-    private void userSearch(String column, String value) {
+    private void userSearch(String keyword) {
         Join<Project, User> userJoin = root.join("owner");
-        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get(column)), "%" + value + "%"));
+        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get("mail")), "%" + keyword + "%"));
     }
 
 
     /**
      * Filters by the full name of the user owner.
-     * @param value The keyword.
+     * @param keyword The keyword.
      */
-    private void userNameSearch(String value) {
+    private void userNameSearch(String keyword) {
         Join<Project, User> userJoin = root.join("owner");
         predicate = builder.and(predicate,
-                builder.or(builder.like(builder.lower(userJoin.get("firstName")), "%" + value + "%"),
-                builder.like(builder.lower(userJoin.get("lastName")), "%" + value + "%")));
+                builder.or(builder.like(builder.lower(userJoin.get("firstName")), "%" + keyword + "%"),
+                builder.like(builder.lower(userJoin.get("lastName")), "%" + keyword + "%")));
     }
 
 
     /**
      * Filters by user owner location.
-     * @param value The keyword.
+     * @param keyword The keyword.
      */
-    private void locationSearch(String value) {
+    private void locationSearch(String keyword) {
         Join<Project, User> userJoin = root.join("owner");
         Join<User, Location> locationJoin = userJoin.join("location");
         Join<User, Country> countryJoin = locationJoin.join("country");
@@ -180,9 +198,9 @@ import java.util.function.Consumer;
         Join<User, City> cityJoin = locationJoin.join("city");
 
         predicate = builder.and(predicate,
-                builder.or(builder.like(builder.lower(countryJoin.get("name")), "%" + value + "%"),
-                        builder.like(builder.lower(stateJoin.get("name")), "%" + value + "%"),
-                        builder.like(builder.lower(cityJoin.get("name")), "%" + value + "%")));
+                builder.or(builder.like(builder.lower(countryJoin.get("name")), "%" + keyword + "%"),
+                        builder.like(builder.lower(stateJoin.get("name")), "%" + keyword + "%"),
+                        builder.like(builder.lower(cityJoin.get("name")), "%" + keyword + "%")));
     }
 
 }

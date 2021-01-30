@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.daos.ProjectDao;
-import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.components.FilterCriteria;
-import ar.edu.itba.paw.model.components.OrderField;
-import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.components.PageRequest;
+import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.FilterField;
+import ar.edu.itba.paw.model.enums.OrderField;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -27,8 +25,8 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public Project create(String name, String summary, long cost, User owner, List<Category> categories) {
-        final Project project = new Project(name, summary, cost, owner, categories);
+    public Project create(String name, String summary, long fundingTarget, User owner) {
+        final Project project = new Project(name, summary, fundingTarget, owner);
         entityManager.persist(project);
         return project;
     }
@@ -41,13 +39,16 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public Page<Project> findAll(List<FilterCriteria> filters, OrderField order, PageRequest page) {
+    public Page<Project> findAll(RequestBuilder request, PageRequest page) {
+        /** Disassemble project request builder */
+        List<FilterCriteria> filters = request.getCriteriaList();
+        OrderField order = request.getOrder();
+
         /** Get to total count of projects with matching criteria */
         Long count = findAllIdsCount(filters);
         if (count == 0) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
         /** Get all project's ids with matching criteria, order and page  */
-        // TODO check here, should be an exception. Wrong page
         List<Long> ids = findAllIds(filters, order, page);
         if (ids.isEmpty()) return new Page<>(new ArrayList<>(), page.getPage(), page.getPageSize(), count);
 
@@ -59,9 +60,9 @@ public class ProjectJpaDao implements ProjectDao {
 
 
     @Override
-    public List<Project> findAll(List<FilterCriteria> filters, OrderField order) {
+    public List<Project> findAll(RequestBuilder request) {
         /** Finds all avoiding paging and thus 2 unnecessary queries */
-        return findAllNotPaged(filters, order);
+        return findAllNotPaged(request.getCriteriaList(), request.getOrder());
     }
 
 
@@ -100,7 +101,7 @@ public class ProjectJpaDao implements ProjectDao {
         CriteriaQuery<Project> query = builder.createQuery(Project.class);
 
         Root<Project> root = query.from(Project.class);
-        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria("ids", ids)));
+        addPredicates(query, builder, root, Collections.singletonList(new FilterCriteria(FilterField.IDS, ids)));
         addOrder(query, builder, root, order);
         return entityManager.createQuery(query).getResultList();
     }
@@ -156,12 +157,22 @@ public class ProjectJpaDao implements ProjectDao {
      */
     private <T> void addOrder(CriteriaQuery<T> query, CriteriaBuilder builder, Root<Project> root, OrderField order) {
         switch (order) {
-            case DEFAULT:  query.orderBy(builder.desc(root.get("hits")), builder.desc(root.get("id"))); break;
-            case ALPHABETICAL: query.orderBy(builder.asc(root.get("name")), builder.desc(root.get("id"))); break;
-            case COST_ASCENDING: query.orderBy(builder.asc(root.get("cost")), builder.desc(root.get("id"))); break;
-            case COST_DESCENDING: query.orderBy(builder.desc(root.get("cost")), builder.desc(root.get("id"))); break;
-            case DATE_ASCENDING: query.orderBy(builder.asc(root.get("publishDate")), builder.desc(root.get("id"))); break;
-            case DATE_DESCENDING: query.orderBy(builder.desc(root.get("publishDate")), builder.desc(root.get("id"))); break;
+            /** Descending order */
+            case PROJECT_DEFAULT:
+            case PROJECT_FUNDING_TARGET_DESCENDING:
+            case DATE_DESCENDING: query.orderBy(builder.desc(root.get(order.getField())), builder.desc(root.get("id"))); break;
+
+            /** Ascending order */
+            case PROJECT_ALPHABETICAL:
+            case PROJECT_FUNDING_TARGET_ASCENDING:
+            case DATE_ASCENDING: query.orderBy(builder.asc(root.get(order.getField())), builder.desc(root.get("id"))); break;
+
+            /** Special new order by percentage */
+            case PROJECT_FUNDING_PERCENTAGE_DESCENDING:
+                query.orderBy(builder.desc(builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget"))), builder.desc(root.get("id"))); break;
+            case PROJECT_FUNDING_PERCENTAGE_ASCENDING:
+                query.orderBy(builder.asc(builder.quot(root.get("fundingCurrent").as(Double.class), root.get("fundingTarget"))), builder.desc(root.get("id"))); break;
+            default:
         }
     }
 

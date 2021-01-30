@@ -1,0 +1,76 @@
+<!--<head>-->
+<head><title> {{ 'pageTitleLogin' | translate}}</title></head>
+
+<div class="sidenav sidenav-index">
+  <div class="text-center mt-5">
+    <a ng-href="/#/">
+      <img class="logo-img" src="images/logo_bp.png">
+    </a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="col-md-8">
+    <div class="login-form">
+      <ng-form name="loginForm">
+        <div class="form-group" ng-class="{'has-error': loginForm.username.$touched && loginForm.username.$invalid}">
+          <label>{{'email' | translate}}</label>
+          <input name="username" class="form-control" placeholder="{{'enterEmail' | translate}}" ng-model="controller.user.username"
+                 type="email" required ng-keyup="$event.keyCode == 13 && !loginForm.$invalid && login(controller.user)"/>
+        </div>
+        <div class="form-group">
+          <label>{{'password' | translate}}</label>
+          <input id="pass" name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}" ng-model="controller.user.password" required
+                 ng-keyup="!loginForm.$invalid && $event.keyCode == 13 && login(controller.user)" />
+          <a ng-href="/#/requestPassword">{{'forgotPassword' | translate}}</a>
+        </div>
+        <div class="form-group">
+          <label>
+            <input name="remember_me" type="checkbox" ng-model="controller.user.rememberMe"/>
+            {{'rememberMe' | translate}}
+          </label>
+        </div>
+        <div class="row ">
+          <div class="col-2 text-left">
+            <div ng-if="loading" class="spinner-grow text-dark" role="status" style="margin-left: 25px"></div>
+            <input ng-if="!loading" type="submit" class="btn btn-dark" value="{{'submit' | translate}}" ng-click="login(controller.user)" ng-disabled="loginForm.$invalid">
+          </div>
+          <div ng-if="code > 0 && code < 3">
+            <div class="col mailError text-right">
+              <div ng-switch="code">
+                <div ng-switch-when="1"><p class="mailError">{{'loginError' | translate}}</p></div>
+                <div ng-switch-when="2"><p class="mailError">{{'loginVerificationError' | translate}}</p></div>
+              </div>
+            </div>
+          </div>
+          <div ng-if="code >= 3 && code <= 6">
+            <div class="col mailError text-right">
+              <div ng-switch="code">
+                <div ng-switch-when="3"><p class="mailError">{{'verificationInvalid' | translate}}</p></div>
+                <div ng-switch-when="4"><p class="mailError">{{'verificationTokenExpired' | translate}}</p></div>
+                <div ng-switch-when="5"><p class="mailError">{{'passwordInvalidToken' | translate}}</p></div>
+                <div ng-switch-when="6"><p class="mailError">{{'passwordExpiredToken' | translate}}</p></div>
+              </div>
+            </div>
+          </div>
+          <div ng-if="code >= 7 && code <= 10">
+            <div class="col mailSent text-right">
+              <div ng-switch="code">
+                <div ng-switch-when="7"><p class="mailSent">{{'verificationMessageSent' | translate}}</p></div>
+                <div ng-switch-when="8"><p class="mailSent">{{'verificationMade' | translate}}</p></div>
+                <div ng-switch-when="9"><p class="mailSent">{{'passwordRecoverySent' | translate}}</p></div>
+                <div ng-switch-when="10"><p class="mailSent">{{'passwordRecoveryMade' | translate}}</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-form>
+
+      <div>
+        <label>{{'noReg' | translate}}</label>
+        <a ng-href="/#/signUp" class="btn btn-outline-dark">{{'signUp' | translate}}</a>
+      </div>
+
+    </div>
+  </div>
+</div>

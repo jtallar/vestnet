@@ -1,0 +1,226 @@
+
+<head><title>{{ 'pageTitleProfile' | translate }}</title></head>
+
+<!--<vnheader></vnheader>-->
+
+<!--<div class="profile">-->
+  <div ng-if="true" class="back sep-nav">
+    <button onclick="history.back()" class="btn btn-dark">{{'back' | translate}}</button>
+  </div>
+
+  <div class="dropdown-divider"></div>
+
+  <div class="container emp-profile">
+    <div class="row">
+      <div class="col-md-4">
+
+        <div class="profile-img">
+          <div ng-if="user.imageExists">
+            <img ng-src="data:image/JPEG;base64,{{user.image}}" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          </div>
+          <div ng-if="!user.imageExists">
+            <img ng-src="/images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          </div>
+          <div style="margin-top: 5px">
+            <label for="customFileProfilePic">
+              <i class="fa fa-pencil fa-2x" style="color: black"></i>
+            </label>
+            <input hidden type="file" class="custom-file-input" custom-on-change="fileboxChange" id="customFileProfilePic" accept="image/*"/>
+            <div ng-if="uploadingImage" class="spinner-border text-primary" role="status" style="margin-left: 15px">
+              <span class="sr-only">{{'spinnerLoading' | translate}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
+        </div>
+
+        <div ng-if="user.linkedin" class="text-center my-2">
+          <a href="{{user.linkedin}}" class="btn btn-linkedin">
+            <i class="fa fa-linkedin pull-left"></i>
+            <label>{{'linkedinProfile' | translate}}</label>
+          </a>
+        </div>
+      </div>
+
+    <div class="col-md-8">
+      <div class="profile-head">
+        <h2 class="bold">{{'profileTitle' | translate : {first : user.firstName, last : user.lastName} }}</h2>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li ng-if="isInvestor" class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+               aria-controls="home" aria-selected="true">{{'information' | translate}}</a>
+          </li>
+
+          <li ng-if="isInvestor" class="nav-item">
+            <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
+               aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
+          </li>
+
+<!--          <li ng-if="!isInvestor" class="nav-item">-->
+<!--            <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab"-->
+<!--               aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>-->
+<!--          </li>-->
+          </ul>
+        </div>
+
+      <div class="tab-content profile-tab" id="myTabContent">
+          <div class="tab-pane fade show in active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+              <div class="col-md-4">
+                <label>{{'firstName' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.firstName}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>{{'lastName' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.lastName}}</p>
+              </div>
+            </div>
+            <div ng-if="user.email !== ''" class="row">
+              <div class="col-md-4">
+                <label>{{'email' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.email}}</p>
+              </div>
+            </div>
+            <div ng-if="user.phone !== ''" class="row">
+              <div class="col-md-4">
+                <label>{{'phone' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.phone}}</p>
+              </div>
+            </div>
+            <div ng-if="user.birthDate !== ''" class="row">
+              <div class="col-md-4">
+                <label>{{'birthday' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{toLocaleDateString(user.birthDate)}}</p>
+              </div>
+            </div>
+            <div ng-if="user.country !== ''" class="row">
+              <div class="col-md-4">
+                <label>{{'country' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.country}}</p>
+              </div>
+            </div>
+            <div ng-if="user.city !== ''" class="row">
+              <div class="col-md-4">
+                <label>{{'city' | translate}} </label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.city}}</p>
+              </div>
+            </div>
+            <div ng-if="user.state !== ''" class="row">
+              <div class="col-md-4">
+                <label>{{'state' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{user.state}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+            <div class="text-center" ng-if="loadingFavs">
+              <div class="spinner-grow text-dark loading-grow" role="status"></div>
+            </div>
+              <div ng-if="!loadingFavs && allFavs.length !== 0">
+                <div ng-repeat="fav in showFavs">
+                  <div class="card m-2">
+                    <div class="card-header card-title text-white">
+                      <div class="row">
+                        <a class="col-8" href="/#/projects/{{fav.id}}">
+                          <h5 class="card-title cut-text">{{fav.name}}</h5>
+                        </a>
+                        <div class="col-4">
+                          <h4 style="text-align: center; font-size: 12px; margin-bottom: 2px !important;">
+                            {{'of' | translate : {of : formatPrice(fav.fundingCurrent)} }} <b>{{'moneyarg'| translate : {m : formatPrice(fav.fundingTarget)} }}</b></h4>
+                          <div class="progress" style="height: 10px; margin: 0 0 0 0;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{fav.percentage}}%" aria-valuenow="{{fav.percentage}}" aria-valuemin="0" aria-valuemax="100">{{fav.percentage}}%</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body favorites">
+                      <p class="card-text" style="color: black; font-weight: normal;">{{fav.summary}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div ng-if="showFavs.length < allFavs.length">
+                  <button ng-click="viewMoreFavs()" class="btn btn-inv pull-right">
+                    <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
+                  </button>
+                </div>
+              </div>
+
+              <div ng-if="!loadingFavs && allFavs.length === 0"  class="card m-2">
+                <div class="card-header text-center">
+                  <h5 class="card-title text-white">{{'noFavoritesFound' | translate}}</h5>
+                </div>
+              </div>
+          </div>
+<!--          &lt;!&ndash;  vvv    TODO -> IMPLEMENTAR   vvv &ndash;&gt;-->
+<!--          <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">-->
+<!--            <div class="text-center" ng-if="loadingSecondTab">-->
+<!--              <div class="spinner-grow text-dark loading-grow" role="status"></div>-->
+<!--            </div>-->
+<!--            <div ng-if="!loadingSecondTab && secondTab.length !== 0">-->
+<!--              <div ng-repeat="project in secondTab">-->
+<!--                <div class="card m-2">-->
+
+<!--                  <div class="card-header card-title text-white">-->
+<!--                    <div class="row">-->
+<!--                      <a class="col-8" href="/#/projects/{{project.id}}">-->
+<!--                        <h5 class="card-title cut-text">{{project.name}}</h5>-->
+<!--                      </a>-->
+<!--                      <div class="col-4">-->
+<!--                        <h4 style="text-align: center; font-size: 12px; margin-bottom: 2px !important;">-->
+<!--                          {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{'moneyarg'| translate : {m : formatPrice(project.fundingTarget)} }}</b></h4>-->
+<!--                        <div class="progress" style="height: 10px; margin: 0 0 0 0;">-->
+<!--                          <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{fav.percentage}}%" aria-valuenow="{{fav.percentage}}" aria-valuemin="0" aria-valuemax="100">{{fav.percentage}}%</div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div class="card-body favorites">-->
+<!--                    <p class="card-text" style="color: black; font-weight: normal;">{{project.summary}}</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div ng-if="page < lastPage">-->
+<!--                <button ng-click="viewMoreProjects()" class="btn btn-inv pull-right">-->
+<!--                  <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div ng-if="!loadingSecondTab && secondTab.length === 0"  class="card m-2">-->
+<!--              <div class="card-header text-center">-->
+<!--                <h5 class="card-title text-white">{{ 'noProjFound' | translate}}</h5>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+      </div>
+    </div>
+    </div>
+  </div>
+  <!--</div>-->
+
+  <div class="dropdown-divider"></div>
+
+<!--  <footer>-->
+<!--    <vnfooter></vnfooter>-->
+<!--  </footer>-->

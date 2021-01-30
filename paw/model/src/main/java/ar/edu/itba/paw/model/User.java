@@ -48,7 +48,7 @@ public class User {
     @Column(name = "linkedin", length = 100)
     private String linkedin;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "join_date", insertable = false)
     private Date joinDate;
 
@@ -63,23 +63,20 @@ public class User {
     private UserImage image;
 
     @Column(name = "image_id", insertable = false, updatable = false)
-    private Long image_id;
+    private Long imageId;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "owner")
-    private List<Project> projectList;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "receiver")
-    private List<Message> receivedMessages;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "sender")
-    private List<Message> sentMessages;
+    private Set<Project> ownedProjects;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "favorites",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))
-    private List<Project> favorites;
+    private Set<Project> favoriteProjects;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private Set<Favorite> favorites;
 
     /** Package */ User() {
         /** For Hibernate only */
@@ -221,43 +218,35 @@ public class User {
         this.image = image;
     }
 
-    public Long getImage_id() {
-        return image_id;
+    public Long getImageId() {
+        return imageId;
     }
 
-    public void setImage_id(Long image_id) {
-        this.image_id = image_id;
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
-    public List<Project> getProjectList() {
-        return projectList;
+    public Set<Project> getOwnedProjects() {
+        return ownedProjects;
     }
 
-    public void setProjectList(List<Project> projectList) {
-        this.projectList = projectList;
+    public void setOwnedProjects(Set<Project> ownedProjects) {
+        this.ownedProjects = ownedProjects;
     }
 
-    public List<Message> getReceivedMessages() {
-        return receivedMessages;
+    public Set<Project> getFavoriteProjects() {
+        return favoriteProjects;
     }
 
-    public void setReceivedMessages(List<Message> receivedMessages) {
-        this.receivedMessages = receivedMessages;
+    public void setFavoriteProjects(Set<Project> favoriteProjects) {
+        this.favoriteProjects = favoriteProjects;
     }
 
-    public List<Message> getSentMessages() {
-        return sentMessages;
-    }
-
-    public void setSentMessages(List<Message> sentMessages) {
-        this.sentMessages = sentMessages;
-    }
-
-    public List<Project> getFavorites() {
+    public Set<Favorite> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(List<Project> favorites) {
+    public void setFavorites(Set<Favorite> favorites) {
         this.favorites = favorites;
     }
 

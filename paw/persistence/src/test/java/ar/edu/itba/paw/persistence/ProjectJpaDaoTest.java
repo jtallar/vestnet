@@ -3,6 +3,9 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.*;
+import ar.edu.itba.paw.model.enums.OrderField;
+import ar.edu.itba.paw.model.enums.SearchField;
+import ar.edu.itba.paw.model.enums.UserRole;
 import ar.edu.itba.paw.model.location.City;
 import ar.edu.itba.paw.model.location.Country;
 import ar.edu.itba.paw.model.location.Location;
@@ -13,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
@@ -41,6 +43,8 @@ public class ProjectJpaDaoTest {
     private static final String CATEGORIES_TABLE = "categories";
     private static final String PROJECT_CATEGORY_TABLE = "project_categories";
     private static final String LOCATIONS_TABLE = "user_location";
+    private static final String FAVORITES_TABLE = "favorites";
+    private static final String PROJECT_STATS_TABLE = "project_stats";
 
     private static final int COUNTRY_ID = 1;
     private static final int STATE_ID = 2;
@@ -55,11 +59,11 @@ public class ProjectJpaDaoTest {
     private static final String LOCALE = "en";
 
     private static final String PROJECT_NAME = "Project Name.", PROJECT_SUMMARY = "Project Summary.";
-    private static final long PROJECT_COST = 1200;
+    private static final long PROJECT_FUNDING_TARGET = 1200;
     private static final String CATEGORY_NAME = "Technology";
 
     private static final String PROJECT_NAME_2 = "Project 2";
-    private static final long PROJECT_COST_2 = 9200;
+    private static final long PROJECT_FUNDING_TARGET_2 = 9200;
     private static final String CATEGORY_NAME_2 = "Software";
 
     @PersistenceContext
@@ -72,14 +76,17 @@ public class ProjectJpaDaoTest {
     private ProjectJpaDao projectJpaDao;
 
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsertProject, jdbcInsertUser, jdbcInsertCategory, jdbcInsertProjectCategory;
-    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation;
+    private SimpleJdbcInsert jdbcInsertProject, jdbcInsertProjectStats, jdbcInsertUser, jdbcInsertCategory, jdbcInsertProjectCategory;
+    private SimpleJdbcInsert jdbcInsertCountry, jdbcInsertState, jdbcInsertCity, jdbcInsertRole, jdbcInsertLocation, jdbcInsertFavorites;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcInsertProject = new SimpleJdbcInsert(dataSource)
                 .withTableName(PROJECTS_TABLE)
+                .usingGeneratedKeyColumns("id");
+        jdbcInsertProjectStats = new SimpleJdbcInsert(dataSource)
+                .withTableName(PROJECT_STATS_TABLE)
                 .usingGeneratedKeyColumns("id");
         jdbcInsertCategory = new SimpleJdbcInsert(dataSource)
                 .withTableName(CATEGORIES_TABLE)
@@ -100,8 +107,11 @@ public class ProjectJpaDaoTest {
         jdbcInsertLocation = new SimpleJdbcInsert(dataSource)
                 .usingGeneratedKeyColumns("id")
                 .withTableName(LOCATIONS_TABLE);
+        jdbcInsertFavorites = new SimpleJdbcInsert(dataSource)
+                .withTableName(FAVORITES_TABLE);
 
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_CATEGORY_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECT_STATS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, PROJECTS_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, CATEGORIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, USERS_TABLE);
@@ -110,6 +120,7 @@ public class ProjectJpaDaoTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, STATES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, COUNTRIES_TABLE);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, ROLES_TABLE);
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, FAVORITES_TABLE);
 
         createLocation();
         createRole();
@@ -122,7 +133,7 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
 
         // 2 - Execute
-        projectJpaDao.create(PROJECT_NAME, PROJECT_SUMMARY, PROJECT_COST, new User(userId.longValue()), new ArrayList<>());
+        projectJpaDao.create(PROJECT_NAME, PROJECT_SUMMARY, PROJECT_FUNDING_TARGET, new User(userId.longValue()));
 
         // 3 - Assert
         assertEquals(1, TestUtils.countRowsInTable(entityManager, PROJECTS_TABLE));
@@ -143,7 +154,7 @@ public class ProjectJpaDaoTest {
     public void testFindByIdProjectExists() {
         // 1 - Setup - Create a project with a category
         Number categoryId = createCategory(CATEGORY_NAME);
-        Number projectId = createProject(PROJECT_NAME, createUser(), PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, createUser(), PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
 
         // 2 - Execute
@@ -153,7 +164,7 @@ public class ProjectJpaDaoTest {
         assertTrue(maybeProject.isPresent());
         assertEquals(PROJECT_NAME, maybeProject.get().getName());
         assertEquals(PROJECT_SUMMARY, maybeProject.get().getSummary());
-        assertEquals(PROJECT_COST, maybeProject.get().getCost());
+        assertEquals(PROJECT_FUNDING_TARGET, maybeProject.get().getFundingTarget());
         assertEquals(categoryId.longValue(), maybeProject.get().getCategories().get(0).getId());
     }
 
@@ -161,10 +172,13 @@ public class ProjectJpaDaoTest {
     public void testFindByOwnerDoesntExists() {
         // 1 - Setup - Empty table
         Number userId = createUser();
-        List<FilterCriteria> filters = getFilterList(getOwnerMap(userId));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setOwner(userId.longValue())
+                .setClosed(true)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertTrue(projects.isEmpty());
@@ -175,12 +189,15 @@ public class ProjectJpaDaoTest {
         // 1 - Setup - Create a project with a category
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        List<FilterCriteria> filters = getFilterList(getOwnerMap(userId));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setOwner(userId.longValue())
+                .setClosed(true)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert - Name, Summary, Category
         assertEquals(1, projects.size());
@@ -195,14 +212,16 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getCategoryMap(categoryId));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setCategory(categoryId.intValue())
+                .setOrder(OrderField.DATE_DESCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DATE_DESCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -216,14 +235,16 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getRangeMap(String.valueOf(PROJECT_COST_2), ""));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setFundingTargetMin((int) PROJECT_FUNDING_TARGET_2)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_ASCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.COST_ASCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -237,14 +258,16 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getRangeMap("", String.valueOf(PROJECT_COST)));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setFundingTargetMax((int) PROJECT_FUNDING_TARGET)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_ASCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.COST_ASCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -258,14 +281,16 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getRangeMap(String.valueOf(PROJECT_COST), String.valueOf(PROJECT_COST_2)));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setFundingTargetRange((int) PROJECT_FUNDING_TARGET, (int) PROJECT_FUNDING_TARGET_2)
+                .setOrder(OrderField.PROJECT_FUNDING_TARGET_DESCENDING);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.COST_DESCENDING);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(2, projects.size());
@@ -279,14 +304,16 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getKeywordMap(PROJECT_NAME, SearchField.PROJECT_NAME.getValue()));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setSearch(PROJECT_NAME, SearchField.PROJECT_NAME)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -300,14 +327,16 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        List<FilterCriteria> filters = getFilterList(getKeywordMap(PROJECT_NAME_2, SearchField.PROJECT_NAME.getValue()));
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setSearch(PROJECT_NAME_2, SearchField.PROJECT_NAME)
+                .setOrder(OrderField.PROJECT_DEFAULT);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.DEFAULT);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(0, projects.size());
@@ -319,23 +348,23 @@ public class ProjectJpaDaoTest {
         Number userId = createUser();
         Number categoryId = createCategory(CATEGORY_NAME);
         Number otherCategoryId = createCategory(CATEGORY_NAME_2);
-        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_COST);
+        Number projectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET);
         createProjectCategory(projectId, categoryId);
-        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number otherProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(otherProjectId, otherCategoryId);
-        Number thirdProjectId = createProject(PROJECT_NAME, userId, PROJECT_COST_2);
+        Number thirdProjectId = createProject(PROJECT_NAME, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(thirdProjectId, categoryId);
-        Number fourthProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_COST_2);
+        Number fourthProjectId = createProject(PROJECT_NAME_2, userId, PROJECT_FUNDING_TARGET_2);
         createProjectCategory(fourthProjectId, categoryId);
 
-        Map<String, Object> map = new HashMap<>();
-        map.putAll(getCategoryMap(categoryId));
-        map.putAll(getKeywordMap(PROJECT_NAME, SearchField.PROJECT_NAME.getValue()));
-        map.putAll(getRangeMap("", String.valueOf(PROJECT_COST)));
-        List<FilterCriteria> filters = getFilterList(map);
+        RequestBuilder request = new ProjectRequestBuilder()
+                .setCategory(categoryId.intValue())
+                .setFundingTargetMax((int) PROJECT_FUNDING_TARGET)
+                .setSearch(PROJECT_NAME, SearchField.PROJECT_NAME)
+                .setOrder(OrderField.PROJECT_ALPHABETICAL);
 
         // 2 - Execute
-        List<Project> projects = projectJpaDao.findAll(filters, OrderField.ALPHABETICAL);
+        List<Project> projects = projectJpaDao.findAll(request);
 
         // 3 - Assert
         assertEquals(1, projects.size());
@@ -430,6 +459,7 @@ public class ProjectJpaDaoTest {
         user.put("email", EMAIL);
         user.put("location_id", createUserLocation().longValue());
         user.put("locale", LOCALE);
+        user.put("verified", true);
 
         return jdbcInsertUser.executeAndReturnKey(user);
     }
@@ -445,21 +475,36 @@ public class ProjectJpaDaoTest {
     }
 
     /**
-     * Creates a project given its name, owner id and cost
+     * Creates a favorite.
+     * @param projectId The project to make favorite
+     * @param userId The user to give a favorite
+     */
+    private void addFavorite(Number projectId, Number userId) {
+        Map<String, Object> category = new HashMap<>();
+        category.put("project_id", projectId.longValue());
+        category.put("user_id", userId.longValue());
+        jdbcInsertFavorites.execute(category);
+    }
+
+    /**
+     * Creates a project given its name, owner id and funding target
      * @param name Project name
      * @param userId Owner user id.
-     * @param cost Project cost
+     * @param fundingTarget Project fundingTarget
      * @return The unique project id.
      */
-    private Number createProject(String name, Number userId, long cost) {
+    private Number createProject(String name, Number userId, long fundingTarget) {
         Map<String, Object> project = new HashMap<>();
         project.put("owner_id", userId.longValue());
         project.put("project_name", name);
         project.put("summary", PROJECT_SUMMARY);
-        project.put("cost", cost);
-        project.put("funded", true);
+        project.put("funding_target", fundingTarget);
+        project.put("funding_current", 0);
+        project.put("closed", true);
         project.put("hits", 0);
         project.put("message_count", 0);
+        project.put("relevance", 0);
+        project.put("stats_id", createProjectStats().intValue());
         return jdbcInsertProject.executeAndReturnKey(project);
     }
 
@@ -476,62 +521,16 @@ public class ProjectJpaDaoTest {
     }
 
     /**
-     * Creates filters for searching keyword projects
-     * @param keyword keyword to look for
-     * @param field field to search keyword in
-     * @return The map with the criteria
+     * Creates a project stats
      */
-    private Map<String, Object> getKeywordMap(String keyword, String field) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(field, keyword);
-        return map;
-    }
-
-    /**
-     * Creates filters for searching range projects
-     * @param minCost minimun cost
-     * @param maxCost minimun cost
-     * @return The map with the criteria
-     */
-    private Map<String, Object> getRangeMap(String minCost, String maxCost) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("minCost", minCost);
-        map.put("maxCost", maxCost);
-        return map;
-    }
-
-    /**
-     * Creates filters for searching categories projects
-     * @param categoryId Category id.
-     * @return The map with the criteria
-     */
-    private Map<String, Object> getCategoryMap(Number categoryId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("category", categoryId.longValue());
-        return map;
-    }
-
-    /**
-     * Creates filters for searching owner's projects
-     * @param userId Owner user id.
-     * @return The map with the criteria
-     */
-    private Map<String, Object> getOwnerMap(Number userId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("owner", new User(userId.longValue()));
-        map.put("funded", true);
-        return map;
-    }
-
-    /**
-     * Creates filters for searching projects
-     * @param filters Map of filters to apply
-     * @return The list with the criteria
-     */
-    private List<FilterCriteria> getFilterList(Map<String, Object> filters) {
-        filters.values().removeIf(value -> (value == null || value.toString().equals("")));
-        List<FilterCriteria> filterList = new ArrayList<>();
-        filters.forEach((key, value) -> filterList.add(new FilterCriteria(key, value)));
-        return filterList;
+    private Number createProjectStats() {
+        Map<String, Object> values2 = new HashMap<>();
+        values2.put("clicks_avg", 0);
+        values2.put("contact_clicks", 0);
+        values2.put("investors_seen", 0);
+        values2.put("last_seen", new Date());
+        values2.put("seconds_avg", 0);
+        values2.put("seen", 0);
+        return jdbcInsertProjectStats.executeAndReturnKey(values2);
     }
 }

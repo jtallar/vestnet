@@ -12,22 +12,17 @@ public interface UserDao {
 
     /**
      * Creates a new user if possible.
-     * @param role Role number.
-     * @param password User's encoded password.
-     * @param firstName User's first name.
-     * @param lastName User's last name.
-     * @param realId User's real ID, country dependant.
-     * @param birthDate User's birth date.
-     * @param location User's location -> country, state and city.
-     * @param email User's mail. Should be unique.
-     * @param phone User's phone number.
-     * @param linkedin User's linkedin profile link.
+     * @param user The user with the populated fields.
      * @return The created user.
      * @throws UserAlreadyExistsException If the user's mail already exists.
      */
-     User create(Integer role, String password, String firstName, String lastName, String realId,
-                 Date birthDate, Location location, String email, String phone, String linkedin, UserImage image) throws UserAlreadyExistsException;
+     User create(User user) throws UserAlreadyExistsException;
 
+    /**
+     * Delete a user given its ID.
+     * @param id The unique user's ID
+     */
+    void removeUser(long id);
 
     /**
      * Finds a user given its username / mail.

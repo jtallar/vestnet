@@ -1,0 +1,117 @@
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#notfound {
+  position: relative;
+  height: 100vh;
+}
+
+#notfound .notfound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.notfound {
+  max-width: 520px;
+  width: 100%;
+  line-height: 1.4;
+}
+
+.notfound .notfound-404 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 150px;
+  width: 200px;
+  z-index: -1;
+}
+
+.notfound .notfound-404 h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 238px;
+  font-weight: 700;
+  margin: 0px;
+  color: #e3e3e3;
+  text-transform: uppercase;
+  letter-spacing: 7px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50% , -50%);
+  -ms-transform: translate(-50% , -50%);
+  transform: translate(-50% , -50%);
+}
+
+.notfound h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #222;
+  margin-top: 12px;
+  margin-bottom: 15px;
+}
+
+.notfound a {
+  font-family: 'Poppins', sans-serif;
+  display: inline-block;
+  font-weight: 700;
+  border-radius: 15px;
+  text-decoration: none;
+  color: #750096;
+}
+
+.notfound a:hover {
+  color: #750096;
+}
+
+.notfound a>.arrow {
+  position: relative;
+  top: -2px;
+  border: solid #750096;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  -webkit-transform: rotate(135deg);
+  -ms-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+
+@media only screen and (max-width: 767px) {
+  .notfound .notfound-404 {
+    height: 110px;
+    line-height: 110px;
+  }
+  .notfound .notfound-404 h1 {
+    font-size: 170px;
+  }
+  .notfound h2 {
+    font-size: 24px;
+  }
+  .notfound .notfound-search {
+    margin: 10px 0px 20px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .notfound .notfound-404 {
+    left: 40px;
+  }
+  .notfound .notfound-404 h1 {
+    font-size: 120px;
+  }
+  .notfound h2 {
+    font-size: 18px;
+  }
+}

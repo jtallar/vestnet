@@ -1,0 +1,231 @@
+<head><title> {{ 'pageTitleFeed' | translate}}</title></head>
+
+<!--<vnheader></vnheader>-->
+
+<div class="row sep-nav">
+  <div class="col-1"></div>
+  <div class="col-11">
+    <pagination></pagination>
+<!--    <ul class="pagination justify-content-center">-->
+<!--      <div ng-if="(page - 1) >= 1">-->
+<!--        <li id="li-previous" class="page-item">-->
+<!--          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'previousPage' | translate}}">-->
+<!--            <span aria-hidden="true">&laquo;</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--      <div ng-if="(page - 1) >= 1">-->
+<!--        <li id="li-previous-num" class="page-item">-->
+<!--          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'pageNumber' | translate : {p: page - 1} }}">{{page -1}}</a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--      <li id="li-now" class="page-item">-->
+<!--        <a id="li-a-now" class="page-link" onclick="" aria-label="{{'pageNumber' | translate : {p: page} }}">{{page}}</a>-->
+<!--      </li>-->
+<!--      <div ng-if="(page + 1) <= lastPage">-->
+<!--        <li id="li-next-num" class="page-item">-->
+<!--          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'pageNumber' | translate : {p: page + 1} }}">{{page + 1}}</a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--      <div ng-if="(page + 1) <= lastPage">-->
+<!--        <li id="li-next" class="page-item">-->
+<!--          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)"  aria-label="{{'nextPage' | translate}}">-->
+<!--            <span aria-hidden="true">&raquo;</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--      </div>-->
+<!--    </ul>-->
+  </div>
+</div>
+
+<div class="sidenav sidenav-feed">
+  <div class="form-row align-items-center">
+    <ng-form name="filterForm">
+      <div class="container">
+
+        <div class="row field">
+          <div class="col-">
+            <img src="images/lupa_bv.png" class="icon-img" width="38px">
+          </div>
+          <div class="col-md" ng-class="{'has-error': filterForm.search.$touched && filterForm.search.$invalid}">
+<!--            {{ 'search' | translate }}-->
+            <input style="color: black !important;" name="search" id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search"
+                   ng-model="searchField" ng-maxlength="50" ng-keyup="$event.keyCode == 13 && !filterForm.$invalid && applyFilter()"/>
+
+            <!-- <form:errors path="keyword" element="p" cssClass="formError"/> -->
+          </div>
+        </div>
+        <div class="row field">
+          <div class="col- icon-img"></div>
+          <div class="col-md">
+            <select ng-model="selectedField" class="custom-select mr-sm-2"
+                    ng-options="option as option.name | translate for option in fields track by option.id"></select>
+          </div>
+        </div>
+
+        <div class="dropdown-divider drop-feed"></div>
+
+        <div class="row field">
+          <div class="col-">
+            <img src="images/filter.png" class="icon-img" width="38px">
+          </div>
+          <div class="col-md">
+            <select ng-model="selectedCategory" class="custom-select mr-sm-2"
+                    ng-options="option as option.name | translate for option in categories track by option.id"></select>
+          </div>
+
+        </div>
+        <div class="row field">
+          <div class="col-">
+            <img src="images/order.png" class="icon-img">
+          </div>
+          <div class="col-md">
+            <select ng-model="selectedOrder" class="custom-select mr-sm-2"
+                    ng-options="option as option.name | translate for option in orders track by option.id"></select>
+          </div>
+        </div>
+        <div class="row field">
+          <label class="range">{{'range' | translate}} </label>
+          <div>
+            <div class="row range-box col-md" ng-class="{'has-error': filterForm.minCost.$touched && filterForm.minCost.$invalid}">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'min' | translate}}</span>
+                </div>
+                <input style="color: black !important;" name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="1000" id="filter-form-min"
+                       max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+              </div>
+              <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
+            </div>
+            <div class="row range-box col-md" ng-class="{'has-error': filterForm.maxCost.$touched && filterForm.maxCost.$invalid}">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'max' | translate}}</span>
+                </div>
+                <input style="color: black !important;" name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
+                            id="filter-form-max" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+              </div>
+              <label class="formError" ng-if="costRangeError" id="categoryCountError" >{{'costRangeRequirement' | translate}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 clear-btn">
+            <input class="btn btn-clear pull-left" type="button" value="{{'clear' | translate}}" ng-click="clearFilter()"/>
+          </div>
+          <div class="col-6 apply-btn">
+            <input type="submit" class="btn btn-dark pull-right" value="{{'apply' | translate}}"
+                   ng-click="applyFilter()" ng-disabled="filterForm.$invalid"/>
+          </div>
+        </div>
+      </div>
+    </ng-form>
+  </div>
+
+<!--  <c:choose>-->
+<!--    <c:when test="${page == endPage && page != startPage}">-->
+<!--      <c:set var="totalFound" value="${projectPage.totalCount % 12}"/>-->
+<!--    </c:when>-->
+<!--    <c:when test="${page == endPage && page == startPage}">-->
+<!--      <c:set var="totalFound" value="${projectPage.totalCount}"/>-->
+<!--    </c:when>-->
+<!--    <c:otherwise>-->
+<!--      <c:set var="totalFound" value="12"/>-->
+<!--    </c:otherwise>-->
+<!--  </c:choose>-->
+
+<!--  <div class="progress">-->
+<!--    <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="200" style="width: 10%">20%</div>-->
+<!--  </div>-->
+
+  <p class="results">{{'feedSearchPages' | translate : {found: lastPage, shown: page} }}</p>
+
+</div>
+
+<!-- PROJECTS -->
+  <div class="body fid" ng-if="!noProjectsFound">
+    <div ng-if="loading" class="spinner-grow text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 5rem; height: 5rem;"></div>
+    <div class="card-deck">
+        <div class="card mb-3 card-feed" ng-repeat="project in projects">
+          <div class="card-header text-white">
+            <div class="row icon-fav">
+              <div class="col-10">
+                <div class="card-title">
+                  <a href="/#/projects/{{project.id}}">
+                    <h5>{{project.name}}</h5>
+                  </a>
+                </div>
+              </div>
+              <div class="col-2">
+                <div ng-if="isInvestor">
+                  <button ng-click="favTap(project.id)"
+                          class="btn-transp">
+                    <div ng-if="containsFav(project.id)">
+                      <img ng-src="images/bookmarkOnB.png" class="icon-fav-img" alt="{{'imgFav' | translate}}"/>
+                    </div>
+                    <div ng-if="!containsFav(project.id)">
+                      <img  ng-src="images/bookmarkOffB.png" class="icon-fav-img" alt="{{'imgFav' | translate}}"/>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body feed-body">
+            <div class="row">
+              <div class="col-5">
+                <div ng-if="!project.portraitExists">
+                  <a href="/#/projects/{{project.id}}">
+                  <img ng-src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                  </a>
+                </div>
+                <div ng-if="project.portraitExists">
+                  <a href="/#/projects/{{project.id}}">
+                  <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+                  </a>
+                </div>
+              </div>
+              <div class="col-7 card-content">
+                <p class="card-text">{{project.summary}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer feed-footer">
+              <div class="price-footer">
+                <h4 style="text-align: center">
+                {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{formatPrice(project.fundingTarget)}}</b></h4>
+                <div class="progress" style="height: 12px; margin: 0 25px 0 25px;">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
+                </div>
+<!--              <div class="col-2">-->
+<!--                <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >-->
+<!--                  <img src="images/view-icon-b.png" alt="">-->
+<!--                </a>-->
+<!--              </div>-->
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div ng-if="noProjectsFound">
+    <div class="card-deck">
+      <div class="card m-2 no-proj-feed">
+        <div class="card-header">
+          <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-11">
+      <pagination></pagination>
+    </div>
+  </div>
+
+<!--<footer>-->
+<!--  <vnfooter></vnfooter>-->
+<!--</footer>-->
+

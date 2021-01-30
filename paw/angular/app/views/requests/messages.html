@@ -1,0 +1,86 @@
+<head><title>{{ 'pageTitleMyMessages' | translate}}</title></head>
+
+<!--<vnheader></vnheader>-->
+
+<div class="row sep-nav">
+  <div class="col-3 center-vertical">
+      <strong class="tab-title"> {{'hmessages' | translate}} </strong>
+  </div>
+  <div class="col-6" ng-show="lastPage !== 1 && !loading">
+    <pagination></pagination>
+  </div>
+  <div class="col-3"></div>
+</div>
+
+<div class="text-center" ng-if="loading">
+  <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
+</div>
+
+<!-- TODO: Ajustar el css de esto -->
+<div class="dashboard" ng-if="!noMessagesFound && !loading">
+  <div class="card-group" ng-repeat="message in messages">
+    <span class="anchor-header"></span>
+    <div class="container py-3">
+      <div class="card msg ww">
+
+        <div class="row">
+          <div class="col-1">
+            <div ng-if="!message.projectPortraitExists">
+              <img ng-src="images/userNoImage.png" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+            </div>
+            <div ng-if="message.projectPortraitExists">
+              <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+            </div>
+          </div>
+          <div class="col-md-11 ww-content">
+            <div class="card-block">
+              <div class="row">
+                <div class="col-3 ww-last">
+                  <a ng-href="#{{message.projectUrl}}" class="btn-link4">
+                    <h5 class="cut-text">{{message.projectName}}</h5>
+                  </a>
+<!--                  <h6 class="cut-text" style="color: rgba(99, 99, 99, 0.74)">- {{'from' | translate}} <a ng-href="#{{message.ownerUrl}}" class="btn-link3">{{message.ownerName}}</a></h6>-->
+                </div>
+                <div class="col-7 ww-last">
+                  <h6>{{toLocaleDateTimeString(message.publishDate)}}</h6>
+                  <div class="row">
+                    <div class="col-4 msg-offer">
+                      <img src="images/down-arrow.png" alt="">
+                      <strong>{{message.offer}}</strong>
+                    </div>
+                    <div class="col-8 msg-exch">
+                      <img src="images/up-arrow.png" alt="">
+                      <strong> {{message.exchange}}</strong>
+                    </div>
+                  </div>
+<!--                  <p>{{message.comment}}</p>-->
+                </div>
+                <div class="col-1 ww-last">
+                  <span ng-if="message.notification" style="color:transparent; border-radius: 50%" class="badge bg-danger pull-right">1</span>
+                </div>
+                <div class="col-1 ww-last">
+                  <a ng-click="goToChat(message)" class="btn btn-inv pull-right" style="margin: auto">
+                    <img src="/images/black-arrow.png" alt="">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<div ng-if="noMessagesFound" class="card no-proj-mine">
+  <div class="card-header text-center">
+    <h5 class="card-title text-white centered">{{'nomessages' | translate }}</h5>
+  </div>
+</div>
+
+<!--<footer>-->
+<!--  <vnfooter></vnfooter>-->
+<!--</footer>-->

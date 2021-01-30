@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.image.ProjectImage;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Models a project with all its properties.
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "projects")
 public class Project {
+    public static final int MAX_STAGES = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "projects_id_seq")
@@ -25,28 +27,34 @@ public class Project {
     @Column(name = "summary", length = 250, nullable = false)
     private String summary;
 
-    @Column(name = "cost", nullable = false)
-    private long cost;
+    @Column(name = "funding_target", nullable = false)
+    private long fundingTarget;
 
-    @Column(name = "funded", nullable = false)
-    private boolean funded;
+    @Column(name = "funding_current", nullable = false)
+    private long fundingCurrent;
 
-    @Temporal(value = TemporalType.DATE)
+    @Column(name = "closed", nullable = false)
+    private boolean closed;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "publish_date", insertable = false)
     private Date publishDate;
 
-    @Temporal(value = TemporalType.DATE)
-    @Column(name = "update_date", insertable = false)
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "update_date")
     private Date updateDate;
 
-    @Column(name = "hits", nullable = false)
-    private long hits;
+    @Column(name = "relevance", nullable = false)
+    private long relevance;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User owner;
 
+    @Column(name = "owner_id", insertable = false, updatable = false)
+    private long ownerId;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-    private List<ProjectImage> images;
+    private Set<ProjectImage> images;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -55,42 +63,34 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favoriteProjects")
+    private Set<User> favoriteBy;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-    private List<Message> messageList;
+    private Set<ProjectStages> stages;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favorites")
-    private List<User> favoriteBy;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "stats_id")
+    private ProjectStats stats;
 
-    @Column(name = "message_count" , nullable = false)
-    private Integer msgCount;
 
     /** Protected */ Project() {
         /** For hibernate only */
     }
 
 
-
-    public Project(String name, String summary, long cost, User owner, List<Category> categories) {
+    public Project(String name, String summary, long target, User owner) {
         this.name = name;
         this.summary = summary;
-        this.cost = cost;
+        this.fundingTarget = target;
         this.owner = owner;
-        this.categories = categories;
-        this.hits = 0;
-        this.funded = false;
-        this.msgCount = 0;
+        this.relevance = 0;
+        this.closed = false;
+        this.stats = new ProjectStats(true);
     }
 
 
     /** Getters and setters */
-
-    public Integer getMsgCount() {
-        return msgCount;
-    }
-
-    public void setMsgCount(Integer msgCount) {
-        this.msgCount = msgCount;
-    }
 
     public Project(long id) {
         this.id = id;
@@ -120,20 +120,28 @@ public class Project {
         this.summary = summary;
     }
 
-    public long getCost() {
-        return cost;
+    public long getFundingTarget() {
+        return fundingTarget;
     }
 
-    public void setCost(long cost) {
-        this.cost = cost;
+    public void setFundingTarget(long fundingTarget) {
+        this.fundingTarget = fundingTarget;
     }
 
-    public boolean isFunded() {
-        return funded;
+    public long getFundingCurrent() {
+        return fundingCurrent;
     }
 
-    public void setFunded(boolean funded) {
-        this.funded = funded;
+    public void setFundingCurrent(long fundingCurrent) {
+        this.fundingCurrent = fundingCurrent;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public Date getPublishDate() {
@@ -152,12 +160,12 @@ public class Project {
         this.updateDate = updateDate;
     }
 
-    public long getHits() {
-        return hits;
+    public long getRelevance() {
+        return relevance;
     }
 
-    public void setHits(long hits) {
-        this.hits = hits;
+    public void setRelevance(long relevance) {
+        this.relevance = relevance;
     }
 
     public User getOwner() {
@@ -168,11 +176,19 @@ public class Project {
         this.owner = owner;
     }
 
-    public List<ProjectImage> getImages() {
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public Set<ProjectImage> getImages() {
         return images;
     }
 
-    public void setImages(List<ProjectImage> images) {
+    public void setImages(Set<ProjectImage> images) {
         this.images = images;
     }
 
@@ -184,31 +200,29 @@ public class Project {
         this.categories = categories;
     }
 
-    public List<Message> getMessageList() {
-        return messageList;
-    }
-
-    public void setMessageList(List<Message> messageList) {
-        this.messageList = messageList;
-    }
-
-    public List<User> getFavoriteBy() {
+    public Set<User> getFavoriteBy() {
         return favoriteBy;
     }
 
-    public void setFavoriteBy(List<User> favoriteBy) {
+    public void setFavoriteBy(Set<User> favoriteBy) {
         this.favoriteBy = favoriteBy;
     }
 
-
-    public void addMsgCount(){
-        this.msgCount += 1;
+    public Set<ProjectStages> getStages() {
+        return stages;
     }
 
-    public void decMsgCount(){
-        this.msgCount -= 1;
+    public void setStages(Set<ProjectStages> stages) {
+        this.stages = stages;
     }
 
+    public ProjectStats getStats() {
+        return stats;
+    }
+
+    public void setStats(ProjectStats stats) {
+        this.stats = stats;
+    }
 
     @Override
     public String toString() {
@@ -216,10 +230,10 @@ public class Project {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", summary='" + summary + '\'' +
-                ", cost=" + cost +
+                ", target=" + fundingTarget +
                 ", publishDate=" + publishDate +
                 ", updateDate=" + updateDate +
-                ", hits=" + hits +
+                ", hits=" + relevance +
                 '}';
     }
 

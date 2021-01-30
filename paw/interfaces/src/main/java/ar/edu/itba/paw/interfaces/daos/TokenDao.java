@@ -28,4 +28,11 @@ public interface TokenDao {
      * @return The amount of tokens deleted.
      */
     int deleteExpired();
+
+    /**
+     * Deletes all the user tokens.
+     * @param user The user to delete associated tokens.
+     * @return The amount of tokens deleted
+     */
+    int deleteUserTokens(User user);
 }

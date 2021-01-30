@@ -1,0 +1,338 @@
+<head><title>{{ 'pageTitleSingleProject' | translate : {p : project.name} }}</title></head>
+
+<!--<vnheader></vnheader>-->
+
+<div id="all">
+<!-- Message and Back logic -->
+  <div class="container sep-nav" style="margin-top: 20px">
+    <div class="d-flex justify-content-between align-self-center" style="margin-right:6%">
+      <div class="p-2 mx-3 my-1">
+        <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
+      </div>
+      <div class="p-2 ml-8" ng-if="sent">
+        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'successfullContact' | translate : {name : project.owner.firstName} }} </h5>
+      </div>
+      <div class="p-2 ml-8" ng-if="imageError">
+        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'imageError' | translate }} </h5>
+      </div>
+    </div>
+
+    <div class="row" style="margin: 0">
+      <div class="col-5">
+
+        <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel" style="width: 100%; margin: 0 auto">
+
+          <ol class="carousel-indicators" id="carousel-slides"></ol>
+
+          <div class="carousel-inner">
+            <div id="carousel-items">
+              <div class="carousel-item active" ng-if="!project.portraitExists">
+                <img ng-src="/images/projectNoImage.png" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
+              </div>
+              <div class="carousel-item active" ng-if="project.portraitExists">
+                  <img ng-src="data:image/JPEG;base64,{{project.image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
+              </div>
+              <div  class="carousel-item" ng-if="project.slideshowExists" ng-repeat="image in project.slideshow">
+                  <img ng-src="data:image/JPEG;base64,{{image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
+<!--                <img ng-src="data:image/JPEG;base64,{{project.image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">-->
+              </div>
+            </div>
+          </div>
+<!--          </div>-->
+            <a ng-if="project.slideshowExists" class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="false"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a ng-if="project.slideshowExists" class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="false"></span>
+              <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+      </div>
+
+      <!-- Favorite icon logic -->
+      <div class="col-7">
+        <div class="d-flex justify-content-center">
+          <div class="card description mb-3">
+<!--            TODO: Alinear verticalmente el bookmark    -->
+            <div ng-if="isInvestor" class="card-header header-white single-header">
+              <button ng-click="favTap()" class="btn-transp pull-right">
+                <div ng-if="isFav">
+                  <img ng-src="images/bookmarkOn.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                </div>
+                <div ng-if="!isFav">
+                  <img  ng-src="images/bookmarkOff.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                </div>
+              </button>
+            </div>
+
+            <!-- Project card -->
+            <div class="card-body single-card">
+              <div class="row justify-content-vertical">
+                <div class="col-11">
+                  <h4 class="card-title single-name"><b>{{project.name}}</b></h4>
+                </div>
+<!--            TODO: Acomodar el tamaño del lapiz y alinearlo con el nombre    -->
+                <div ng-if="project.getByOwner" class="col-1">
+                  <a ng-href="#{{editUrl}}" class="btn btn-inv btn-project pull-right">
+<!--                    <div class="notification-icon">-->
+                      <img class="edit-icon" src="images/edit-icon-b.png" alt="">
+<!--                    </div>-->
+                  </a>
+                </div>
+              </div>
+              <div ng-if="project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">{{'you' | translate}}</div>
+              <div ng-if="!project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
+
+              <p class="card-text">{{project.summary}}</p>
+
+              <h6 class="card-title"><b>{{'categories' | translate}}</b></h6>
+                <li class="cat-size" ng-repeat="category in project.categorieNames">{{category | translate}}</li>
+              <br/>
+
+              <h6 class="card-title"><b>{{'contactMail' | translate}}</b></h6>
+              <p class="cat-size">{{project.owner.email}}</p>
+
+              <h6 class="card-title"><b>{{'funding' | translate}}</b></h6>
+              <div class="text-center ">
+                  <h6 class="card-title">{{'of' | translate : {of: formatPrice(project.fundingCurrent)} }} <b style="font-size: 25px"> {{'moneyarg' | translate : {m: formatPrice(project.fundingTarget)} }}</b></h6>
+              </div>
+<!--              <div class="row">-->
+<!--                <div class="col-1"></div>-->
+<!--                <div class="col-5">-->
+<!--                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; &nbsp;&nbsp; {{'moneyarg' | translate : {m: project.fundingCurrent} }}</h6>-->
+<!--                </div>-->
+<!--                <div class="col-6">-->
+<!--                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; {{'moneyarg' | translate : {m: project.fundingTarget} }}</h6>-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width:{{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
+              </div>
+
+              <div class="dropdown-divider"></div>
+
+              <p class="card-text pull-right"><small class="text-muted">{{'lastUpdate' | translate : { date : formatDate(project.updateDate) } }}</small></p>
+            </div>
+          </div>
+<!--          <div class="card-footer">-->
+<!--            <p class="card-text pull-right"><small class="text-muted">{{'lastUpdate' | translate : { date : formatDate(project.updateDate) } }}</small></p>-->
+<!--          </div>-->
+        </div>
+
+        <!-- Contact button -->
+        <div ng-if="!isEntrepreneur" class="d-flex justify-content-center">
+            <a href="#{{project.chatUrl}}" ng-click="pressContact = 1" class="btn btn-dark contact-btn" >
+              <img src="images/chat-icon.png" class="contact-img">
+              {{'contact' | translate}}
+            </a>
+        </div>
+
+      </div>
+
+    </div>
+<!--    ESTE ES EL QUE SAQUE PORQUE ROMPE-->
+
+    <!--
+    <sec:authorize access="hasRole('ROLE_INVESTOR')">
+      <div class="collapse" id="contact">
+        <div class="card contact">
+          <div class="card-header">
+            <spring:message code="contact.header" arguments="${project.owner.firstName},${project.owner.lastName}" var="contactHeaderVar"/>
+            <label class="label-header"><c:out value="${contactHeaderVar}"/></label>
+            <button class="btn btn-dark pull-right" type="button" data-toggle="collapse"
+                    data-target="#contact" aria-expanded="false" aria-controls="contact">X
+            </button>
+          </div>
+          <div class="card-body">
+            <c:url value="/projects/${project.id}" var="postPath"/>
+            <form:form modelAttribute="mailForm" action="${postPath}" method="post">
+
+              <div class="form-group">
+                <label><spring:message code="contact.bodyMessage"/></label>
+                <div class="input-group mb-3">
+                  <spring:message code="writemessage" var="placeholdermessage"/>
+                  <form:textarea path="body" type="text" class="form-control"
+                                 placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
+                </div>
+                <form:errors path="body" cssClass="formError"/>
+              </div>
+
+              <div class="container-contact">
+                <div class="row">
+                  <div class="col-2">
+                    <label><spring:message code="contact.offerMessage"/></label>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="row justify-content-center">
+                      <div class="col-2">
+                        <label><spring:message code="currency"/></label>
+                      </div>
+                      <div class="col">
+                        <spring:message code="writemessage" var="placeholderoffers"/>
+                        <form:input path="offers" type="number" class="form-control"
+                                    placeholder="${placeholderoffers}"
+                                    aria-describedby="basic-addon2" id="contact-offer"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <form:errors path="offers" cssClass="formError"/>
+              </div>
+
+              <div class="container-contact">
+                <div class="row">
+                  <div class="col-2">
+                    <label><spring:message code="contact.exchangeMessage"/></label>
+                  </div>
+                  <div class="col-md-5">
+                    <spring:message code="writemessage" var="placeholderexchange"/>
+                    <form:textarea path="exchange" type="text" class="form-control"
+                                   placeholder="${placeholderexchange}"
+                                   aria-describedby="basic-addon2"/>
+                  </div>
+                </div>
+                <form:errors path="exchange" cssClass="formError"/>
+              </div>
+
+              <form:input path="receiverId" value="${project.owner.id}" type="hidden"/>
+
+              <div class="text-right">
+                <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark"
+                onclick="adjustInputs()" id="contact-send"/>
+              </div
+            </form:form>
+          </div>
+        </div>
+      </div>
+    </sec:authorize>
+    -->
+
+  <div class="progress my-bar-steps0">
+    <div class="progress-bar progress-bar-striped progress-bar-animated
+        {{projectstage==1?'bar-red':(projectstage==2?'bar-orange':(projectstage==3?'bar-yellow':(projectstage==4?'bar-cyan':'bar-green')))}}"
+         role="progressbar" style="width: {{projectstage*20}}%" aria-valuenow="{{projectstage}}" aria-valuemin="0" aria-valuemax="5"></div>
+  </div>
+<!---->
+  <div ng-if="!project.getByOwner" class="card-group history-group">
+    <div class="{{projectstage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 ng-if="project.stages[0].completed" class="card-title">{{project.stages[0].name}}</h5>
+        <p ng-if="project.stages[0].completed" class="card-text">{{project.stages[0].comment}}</p>
+        <h5 ng-if="!project.stages[0].completed" class="card-title">{{'stageN' | translate : '{ n : 1 }' }}</h5>
+        <img ng-if="!project.stages[0].completed" class="soon-img" src="images/soon.png">
+      </div>
+    </div>
+    <div class="{{projectstage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 ng-if="project.stages[1].completed" class="card-title">{{project.stages[1].name}}</h5>
+        <p ng-if="project.stages[1].completed" class="card-text">{{project.stages[1].comment}}</p>
+        <h5 ng-if="!project.stages[1].completed" class="card-title">{{'stageN' | translate : '{ n : 2 }' }}</h5>
+        <img ng-if="!project.stages[1].completed" class="soon-img" src="images/soon.png">
+      </div>
+    </div>
+    <div class="{{projectstage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 ng-if="project.stages[2].completed" class="card-title">{{project.stages[2].name}}</h5>
+        <p ng-if="project.stages[2].completed" class="card-text">{{project.stages[2].comment}}</p>
+        <h5 ng-if="!project.stages[2].completed" class="card-title">{{'stageN' | translate : '{ n : 3 }' }}</h5>
+        <img ng-if="!project.stages[2].completed" class="soon-img" src="images/soon.png">
+      </div>
+    </div>
+    <div class="{{projectstage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 ng-if="project.stages[3].completed" class="card-title">{{project.stages[3].name}}</h5>
+        <p ng-if="project.stages[3].completed" class="card-text">{{project.stages[3].comment}}</p>
+        <h5 ng-if="!project.stages[3].completed" class="card-title">{{'stageN' | translate : '{ n : 4 }' }}</h5>
+        <img ng-if="!project.stages[3].completed" class="soon-img" src="images/soon.png">
+      </div>
+    </div>
+    <div class="{{projectstage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
+      <div class="card-body h-step-b">
+        <h5 ng-if="project.stages[4].completed" class="card-title">{{project.stages[4].name}}</h5>
+        <p ng-if="project.stages[4].completed" class="card-text">{{project.stages[4].comment}}</p>
+        <h5 ng-if="!project.stages[4].completed" class="card-title">{{'stageN' | translate : '{ n : 5 }' }}</h5>
+        <img ng-if="!project.stages[4].completed" class="soon-img" src="images/soon.png">
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="project.getByOwner" class="card-group history-group">
+    <div class="{{projectstage > 0 ? 'card bg-danger h-step' : 'card border-danger h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="projectstage>0" class="card-title">{{project.stages[0].name}}</h5>
+        <h5 ng-if="projectstage<0" class="card-title">{{'stageN' | translate : '{ n : 1 }' }}</h5>
+        <p ng-if="projectstage>=1" class="card-text">{{project.stages[0].comment}}</p>
+        <input ng-if="projectstage==0" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s1i"/>
+        <textarea style="max-height: 200px;" ng-if="projectstage==0" ng-model="new.comment" maxlength="100" class="border-danger form-control" placeholder="{{'comments' | translate}}" rows="5" id="s1"></textarea>
+        <button ng-if="projectstage==0" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="">
+        </button>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=1">{{project.stages[0].completedDate}}</div>
+      </div>
+    </div>
+    <div class="{{projectstage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="projectstage>1" class="card-title">{{project.stages[1].name}}</h5>
+        <h5 ng-if="projectstage<1" class="card-title">{{'stageN' | translate : '{ n : 2 }' }}</h5>
+        <p ng-if="projectstage>=2" class="card-text">{{project.stages[1].comment}}</p>
+        <input ng-if="projectstage==1" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s2i"/>
+        <textarea style="max-height: 200px;" ng-if="projectstage==1" ng-model="new.comment" maxlength="100" class="border-orange form-control" placeholder="{{'comments' | translate}}" rows="5" id="s2"></textarea>
+        <button ng-if="projectstage==1" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="">
+        </button>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=2">{{project.stages[1].completedDate}}</div>
+      </div>
+    </div>
+    <div class="{{projectstage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="projectstage>2" class="card-title">{{project.stages[2].name}}</h5>
+        <h5 ng-if="projectstage<2" class="card-title">{{'stageN' | translate : '{ n : 3 }' }}</h5>
+        <p ng-if="projectstage>=3" class="card-text">{{project.stages[2].comment}}</p>
+        <input ng-if="projectstage==2" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s3i"/>
+        <textarea style="max-height: 200px;" ng-if="projectstage==2" ng-model="new.comment" maxlength="100" class="border-warning form-control" placeholder="{{'comments' | translate}}" rows="5" id="s3"></textarea>
+        <button ng-if="projectstage==2" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="">
+        </button>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=3">{{project.stages[2].completedDate}}</div>
+      </div>
+    </div>
+    <div class="{{projectstage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="projectstage>3" class="card-title">{{project.stages[3].name}}</h5>
+        <h5 ng-if="projectstage<3" class="card-title">{{'stageN' | translate : '{ n : 4 }' }}</h5>
+        <p ng-if="projectstage>=4" class="card-text">{{project.stages[3].comment}}</p>
+        <input ng-if="projectstage==3" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s4i"/>
+        <textarea style="max-height: 200px;" ng-if="projectstage==3" ng-model="new.comment" maxlength="100" class="border-cyan form-control" placeholder="{{'comments' | translate}}" rows="5" id="s4"></textarea>
+        <button ng-if="projectstage==3" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="">
+        </button>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=4">{{project.stages[3].completedDate}}</div>
+      </div>
+    </div>
+    <div class="{{projectstage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
+      <div class="card-body stage-body h-step-b">
+        <h5 ng-if="projectstage>4" class="card-title">{{project.stages[4].name}}</h5>
+        <h5 ng-if="projectstage<4" class="card-title">{{'stageN' | translate : '{ n : 5 }' }}</h5>
+        <p ng-if="projectstage>=5" class="card-text">{{project.stages[4].comment}}</p>
+        <input ng-if="projectstage==4" ng-model="new.name" maxlength="14" type="text" class="form-control stage-name" placeholder="{{'stage' | translate}}" id="s5i"/>
+        <textarea style="max-height: 200px;" ng-if="projectstage==4" ng-model="new.comment" maxlength="100" class="border-success form-control" placeholder="{{'comments' | translate}}" rows="5" id="s5"></textarea>
+        <button ng-if="projectstage==4" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
+          <img src="images/add-icon.png" alt="" class="">
+        </button>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage==5">{{project.stages[4].completedDate}}</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!--</div>-->
+</div>
+
+<!--<footer>-->
+<!--  <vnfooter></vnfooter>-->
+<!--</footer>-->
+
+
