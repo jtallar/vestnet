@@ -52,7 +52,7 @@
                       </h5>
                     </a>
                   </div>
-<!--                  <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChatWithDate' | translate : { date: getDate(lastMessage.publishDate)[0] } }}</div>-->
+<!--                  <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChatWithDate' | translate : { date: {{toLocaleDateTimeString(lastMessage.publishDate)}} } }}</div>-->
                 </div>
               </div>
               <button ng-show="nextPageUrl" ng-click="viewMoreChat()" class="btn btn-inv pull-right">
@@ -83,8 +83,7 @@
                       </div>
                       <div class="">
                         <div class="col- card-footer chat-date-other chat-date chat-opt-mini">
-                          {{getDate(chat.publishDate)[0]}}
-                          {{getHour(chat.publishDate)[0]}}
+                          {{toLocaleDateTimeString(chat.publishDate)}}
                           <img class="" src="images/accept-icon.png" alt="" ng-if="chat.answered && chat.accepted">
                           <img class="" src="images/reject-icon.png" alt="" ng-if="chat.answered && !chat.accepted">
                         </div>
@@ -136,8 +135,7 @@
                         <div class="col- card-footer chat-date-me chat-opt-mini">
                           <img class="" src="images/accept-icon.png" alt="" ng-if="chat.answered && chat.accepted">
                           <img class="" src="images/reject-icon.png" alt="" ng-if="chat.answered && !chat.accepted">
-                          {{getDate(chat.publishDate)[0]}}
-                          {{getHour(chat.publishDate)[0]}}
+                          {{toLocaleDateTimeString(chat.publishDate)}}
                           <div class="col- pull-right">
                             <div ng-if="chat.seen" style="font-weight: bold; color: black">
                               <img src="images/double-tick.png" style="width: 15px; height: auto">
