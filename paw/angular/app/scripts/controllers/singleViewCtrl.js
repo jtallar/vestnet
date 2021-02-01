@@ -34,12 +34,22 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     });
     /** ********* **/
 
-    $scope.formatPrice = function(number){
-      return number === undefined ? null : number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-    $scope.formatDate = function (str){
-      return str === undefined ? null : str.substring(0,10);
-    }
+    // $scope.formatPrice = function(number) {
+    //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
+    //   return formatter.format(number);
+    // }
+    //
+    // // $scope.formatDate = function (str){
+    // //   return str === undefined ? null : str.substring(0,10);
+    // // }
+    //
+    // $scope.toLocaleDateString = function(date) {
+    //   var aux;
+    //   if(date !== undefined)
+    //     aux = new Date(date);
+    //   else aux = new Date();
+    //   return (aux.toLocaleDateString(navigator.language));
+    // };
 
     var param = parseInt($routeParams.id);
     if (isNaN(param) || param <= 0) {

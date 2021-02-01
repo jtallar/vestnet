@@ -16,13 +16,19 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.projects = null; $scope.fundedProjects = null;
 
 
-    $scope.toLocaleDateTimeString = function(date) {
-      var aux;
-      if(date !== undefined)
-        aux = new Date(date);
-      else aux = new Date();
-      return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
-    };
+    // $scope.toLocaleDateTimeString = function(date) {
+    //   var aux;
+    //   if(date !== undefined)
+    //     aux = new Date(date);
+    //   else aux = new Date();
+    //   return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
+    // };
+
+    $scope.daysAgo = function (date) {
+      const diffTime = Math.abs(new Date() - new Date(date));
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays-1;
+    }
 
     $scope.millisToMinSec = function (millis) {
       if(isNaN(millis)) return 0;

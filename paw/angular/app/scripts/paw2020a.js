@@ -57,6 +57,24 @@ define(['routes',
           var notAuthUrl = routeMatches(url, PathService.noAuthRoutesRE), logoutUrl = routeMatches(url, PathService.logoutRE);
 
           $rootScope.showHeader = {value: !(notAuthUrl || logoutUrl)};
+          $rootScope.formatPrice = function(number) {
+            var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
+            return formatter.format(number);
+          }
+          $rootScope.toLocaleDateString = function(date) {
+            var aux;
+            if(date !== undefined)
+              aux = new Date(date);
+            else aux = new Date();
+            return (aux.toLocaleDateString(navigator.language));
+          };
+          $rootScope.toLocaleDateTimeString = function(date) {
+            var aux;
+            if(date !== undefined)
+              aux = new Date(date);
+            else aux = new Date();
+            return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
+          };
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects

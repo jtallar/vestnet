@@ -26,10 +26,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return $scope.favs.includes(id)
       }
 
-      $scope.formatPrice = function(number) {
-        var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
-        return formatter.format(number);
-      }
+      // $scope.formatPrice = function(number) {
+      //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
+      //   return formatter.format(number);
+      // }
 
       $scope.favTap = function(id){
         if($scope.containsFav(id)){

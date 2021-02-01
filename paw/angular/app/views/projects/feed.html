@@ -4,7 +4,7 @@
 
 <div class="row sep-nav">
   <div class="col-1"></div>
-  <div class="col-11">
+  <div ng-if="!loading" class="col-11">
     <pagination></pagination>
 <!--    <ul class="pagination justify-content-center">-->
 <!--      <div ng-if="(page - 1) >= 1">-->
@@ -38,7 +38,7 @@
   </div>
 </div>
 
-<div class="sidenav sidenav-feed">
+<div ng-if="!loading" class="sidenav sidenav-feed">
   <div class="form-row align-items-center">
     <ng-form name="filterForm">
       <div class="container">
@@ -220,7 +220,7 @@
 
   <div class="row">
     <div class="col-1"></div>
-    <div class="col-11">
+    <div ng-if="!loading" class="col-11">
       <pagination></pagination>
     </div>
   </div>

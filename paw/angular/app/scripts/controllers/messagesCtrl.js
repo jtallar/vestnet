@@ -19,13 +19,13 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
       $scope.lastPage = maxPage;
     };
 
-    $scope.toLocaleDateTimeString = function(date) {
-      var aux;
-      if(date !== undefined)
-        aux = new Date(date);
-      else aux = new Date();
-      return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
-    };
+    // $scope.toLocaleDateTimeString = function(date) {
+    //   var aux;
+    //   if(date !== undefined)
+    //     aux = new Date(date);
+    //   else aux = new Date();
+    //   return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
+    // };
 
     $scope.messages = [];
     this.processMessages = function (messages) {

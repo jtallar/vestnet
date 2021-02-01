@@ -30,13 +30,13 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         }
       };
 
-      $scope.toLocaleDateTimeString = function(date) {
-        var aux;
-        if(date !== undefined)
-          aux = new Date(date);
-        else aux = new Date();
-        return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
-      };
+      // $scope.toLocaleDateTimeString = function(date) {
+      //   var aux;
+      //   if(date !== undefined)
+      //     aux = new Date(date);
+      //   else aux = new Date();
+      //   return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
+      // };
 
       this.setUser = function (user) {
         $scope.user = user;
