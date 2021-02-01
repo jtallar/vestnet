@@ -10,17 +10,18 @@
       $scope.imageSizeError = false;
       $scope.allFavs = []; $scope.showFavs = [];
 
-      $scope.formatPrice = function(number){
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      }
+      // $scope.formatPrice = function(number) {
+      //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
+      //   return formatter.format(number);
+      // }
 
-      $scope.toLocaleDateString = function(date) {
-        var aux;
-        if(date !== undefined)
-          aux = new Date(date);
-        else aux = new Date();
-        return (aux.toLocaleDateString(navigator.language));
-      };
+      // $scope.toLocaleDateString = function(date) {
+      //   var aux;
+      //   if(date !== undefined)
+      //     aux = new Date(date);
+      //   else aux = new Date();
+      //   return (aux.toLocaleDateString(navigator.language));
+      // };
 
       userService.getLoggedUser().then(function (userApi) {
         $scope.user = userApi.data;
