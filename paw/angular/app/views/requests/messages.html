@@ -42,7 +42,7 @@
 <!--                  <h6 class="cut-text" style="color: rgba(99, 99, 99, 0.74)">- {{'from' | translate}} <a ng-href="#{{message.ownerUrl}}" class="btn-link3">{{message.ownerName}}</a></h6>-->
                 </div>
                 <div class="col-7 ww-last">
-                  <h6>{{getDate(message.publishDate)[0]}} {{getHour(message.publishDate)[0]}}</h6>
+                  <h6>{{toLocaleDateTimeString(message.publishDate)}}</h6>
                   <div class="row">
                     <div class="col-4 msg-offer">
                       <img src="images/down-arrow.png" alt="">
