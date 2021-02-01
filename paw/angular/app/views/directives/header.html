@@ -71,10 +71,22 @@
 
     <!--      UNAUTHORIZED-->
     <ul  ng-if="valor === 2" class="navbar-nav">
-      <li ng-repeat="x in gOptions" class="nav-item">
-        <a class="nav-link header-icon" ng-href="./#/{{x}}">
-          <div class="row justify-content-center"><img alt="" class="nav-icon" ng-src="images/{{gIcons[$index]}}.png"></div>
-          <div class="row text-icon">{{'h'+ x | translate }}</div>
+      <li class="nav-item">
+        <a class="nav-link header-icon" ng-href="./#/welcome">
+          <div class="row justify-content-center"><img alt="" class="nav-icon" ng-src="images/home-icon.png"></div>
+          <div class="row text-icon">{{'hwelcome' | translate }}</div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link header-icon" ng-href="./#/login">
+          <div class="row justify-content-center"><img alt="" class="nav-icon" ng-src="images/login-icon.png"></div>
+          <div class="row text-icon">{{'hlogin' | translate }}</div>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link header-icon" ng-href="./#/signUp">
+          <div class="row justify-content-center"><img alt="" class="nav-icon" ng-src="images/signup-icon.png"></div>
+          <div class="row text-icon">{{'hsignUp' | translate }}</div>
         </a>
       </li>
     </ul>
