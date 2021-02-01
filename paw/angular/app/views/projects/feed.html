@@ -151,7 +151,7 @@
             <div class="row icon-fav">
               <div class="col-10">
                 <div class="card-title">
-                  <a href="/#/projects/{{project.id}}">
+                  <a href="#/projects/{{project.id}}">
                     <h5>{{project.name}}</h5>
                   </a>
                 </div>
@@ -175,12 +175,12 @@
             <div class="row">
               <div class="col-5">
                 <div ng-if="!project.portraitExists">
-                  <a href="/#/projects/{{project.id}}">
+                  <a href="#/projects/{{project.id}}">
                   <img ng-src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
                   </a>
                 </div>
                 <div ng-if="project.portraitExists">
-                  <a href="/#/projects/{{project.id}}">
+                  <a href="#/projects/{{project.id}}">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
                   </a>
                 </div>
@@ -198,7 +198,7 @@
                   <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
                 </div>
 <!--              <div class="col-2">-->
-<!--                <a href="/#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >-->
+<!--                <a href="#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >-->
 <!--                  <img src="images/view-icon-b.png" alt="">-->
 <!--                </a>-->
 <!--              </div>-->
