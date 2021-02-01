@@ -433,7 +433,7 @@
                   <goal>grunt</goal>
                 </goals>
                 <configuration>
-                  <arguments>build --force</arguments>
+                  <arguments>clean build</arguments>
                 </configuration>
               </execution>
             </executions>

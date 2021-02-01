@@ -85,7 +85,7 @@
             <div class="card-body dash-body" style="padding:10px 20px !important">
               <div class="row">
                 <div class="col-1">
-                  <img ng-show="$index==0" style="margin-top: 5px" class="nav-icon" src="/images/chat-icon-b.png" alt="">
+                  <img class="nav-icon" src="images/chat-icon-b.png" alt="">
                 </div>
                 <div class="col-3 cut-text ww-last">
                   <h6 class="ww-last">{{toLocaleDateTimeString(message.publishDate)}}</h6>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="col-1">
                   <a ng-click="goToChat(message)" class="btn btn-inv pull-right">
-                    <img src="/images/black-arrow.png" alt="">
+                    <img src="images/black-arrow.png" alt="">
                   </a>
                 </div>
               </div>
@@ -125,7 +125,7 @@
             <div class="card-body dash-body">
               <div class="row">
                 <div class="col-1">
-                  <img class="nav-icon" src="/images/chat-icon-b.png" alt="">
+                  <img class="nav-icon" src="images/chat-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
                   <strong>{{'nomessages' | translate}}</strong>
@@ -143,7 +143,7 @@
             <div class="card-body dash-body">
               <div class="row">
                 <div class="col-1">
-                  <img ng-show="$index==0" class="nav-icon" src="/images/pig-icon-b.png" alt="">
+                  <img class="nav-icon" src="images/pig-icon-b.png" alt="">
                 </div>
                 <div class="col-3 cut-text">
                   {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
@@ -177,7 +177,7 @@
             <div class="card-body dash-body">
               <div class="row">
                 <div class="col-1">
-                  <img class="nav-icon" src="/images/pig-icon-b.png" alt="">
+                  <img class="nav-icon" src="images/pig-icon-b.png" alt="">
                 </div>
                 <div class="col-3">
                   <strong>{{'nooffers' | translate}}</strong>
@@ -192,6 +192,7 @@
         <div class="card msg-collapse-stats">
           <div class="card-body dash-body">
             <div class="row">
+              <div class="col-">{{millisToMinSec(project.secondsAvg)}}</div>
               <div class="col-1"> <img class="nav-icon" src="/images/stats-icon-b.png" alt=""> </div>
               <div class="col-2"> <span class="stat-number">{{project.seen}}</span> <span class="stat-title"> {{'seen' | translate}}</span> </div>
               <div class="col-2"> <span class="stat-number1">{{project.investorsSeen}}</span> <span class="stat-title">{{'investorsSeen' | translate}}</span> </div>

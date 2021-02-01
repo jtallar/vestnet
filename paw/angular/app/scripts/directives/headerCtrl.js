@@ -9,10 +9,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
       templateUrl: 'views/directives/header.html',
       controller: function ($scope, $rootScope) {
         $scope.eDropdown = ['dashboard', 'profile'];
-        // $scope.eIcons = ['home-icon', 'user-icon'];
         $scope.iDropdown = ['requests', 'messages', 'profile'];
-        $scope.gOptions = ['welcome', 'login', 'signUp'];
-        $scope.gIcons = ['home-icon', 'login-icon', 'signup-icon'];
         $scope.notifications = 0;
 
         var checkNotif = function() {
@@ -33,7 +30,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
           if ($scope.notifications > 0) $scope.notifications--;
         });
 
-        $interval(checkNotif, 5 * 60000);
+        $interval(checkNotif, 60000);
 
         $scope.logout = function () {
           PathService.get().logout().go();
