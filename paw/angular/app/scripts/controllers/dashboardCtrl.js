@@ -25,10 +25,10 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     // };
 
     $scope.daysAgo = function (date) {
-      const diffTime = Math.abs(new Date() - new Date(date));
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      var diffTime = Math.abs(new Date() - new Date(date));
+      var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return diffDays-1;
-    }
+    };
 
     $scope.millisToMinSec = function (millis) {
       if(isNaN(millis)) return 0;
@@ -36,7 +36,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       if(minutes===0) minutes = '00';
       var seconds = ((millis % 60000) / 1000).toFixed(0);
       return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-    }
+    };
 
     this.setMaxPage = function (linkHeaders, funded) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
