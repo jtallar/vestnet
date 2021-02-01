@@ -169,40 +169,63 @@
         <div class="card msg-collapse-stats">
           <div class="card-body dash-body">
             <div class="row">
-              <div class="col-1">
-                <img class="nav-icon" src="/images/stats-icon-b.png" alt="">
-              </div>
-              <div class="col-2">
-                <strong>{{'seen' | translate}}</strong>
-              </div>
-              <div class="col-4">{{project.seen}}</div>
-              <div class="col-3">
-                <strong>{{'minutesAvg' | translate}}</strong>
-              </div>
-              <div class="col-">{{millisToMinSec(project.secondsAvg)}} {{'minutes' | translate}}</div>
+              <div class="col-1"> <img class="nav-icon" src="/images/stats-icon-b.png" alt=""> </div>
+              <div class="col-2"> <span class="stat-number">{{project.seen}}</span> <span class="stat-title"> {{'seen' | translate}}</span> </div>
+              <div class="col-2"> <span class="stat-number1">{{project.investorsSeen}}</span> <span class="stat-title">{{'investorsSeen' | translate}}</span> </div>
+              <div class="col-2"> <span class="stat-number2">{{project.contactClicks}}</span> <span class="stat-title"> {{'contactClicks' | translate}}</span> </div>
+              <div class="col-3"> <span class="stat-number3">{{millisToMinSec(project.secondsAvg)}}</span> <span class="stat-title"> {{'minutesAvg' | translate}}</span> </div>
+              <div class="col-2"> <span class="stat-number4">{{project.clicksAvg}}</span> <span class="stat-title"> {{'clicksAvg' | translate}}</span> </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-top: 10px">
               <div class="col-1"></div>
-              <div class="col-2">
-                <strong>{{'investorsSeen' | translate}}</strong>
+              <div class="col-4">
+                <div class="progress" style="height: 12px; width:260px; margin-bottom: 0">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated stat-bar" role="progressbar" style="width: {{(project.investorsSeen/project.seen)*100}}%" aria-valuenow="{{(project.investorsSeen/project.seen)*100}}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <span class="stat-title2" style="margin-left: 30%"><b style="color: #f3a047">{{project.investorsSeen}}</b> {{'outof' | translate}} <b style="color: #5bc0de">{{project.seen}}</b></span>
               </div>
-              <div class="col-4">{{project.investorsSeen}}</div>
-              <div class="col-3">
-                <strong>{{'clicksAvg' | translate}}</strong>
+              <div class="col-2"></div>
+              <div class="col-5">
+                <span class="stat-date" style="margin-left: 10px">{{toLocaleDateTimeString(project.lastSeen)}}</span> <span class="stat-title"> {{'lastSeen' | translate}}</span>
+                <span class="stat-number5"> &raquo; &nbsp;</span>
+                <span class="stat-number5">{{daysAgo(project.lastSeen)}}</span> <span class="stat-title"> {{'daysAgo' | translate}}</span>
               </div>
-              <div class="col-2">{{project.clicksAvg}}</div>
             </div>
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-2">
-                <strong>{{'lastSeen' | translate}}</strong>
-              </div>
-              <div class="col-4">{{toLocaleDateTimeString(project.lastSeen)}}</div>
-              <div class="col-3">
-                <strong>{{'contactClicks' | translate}}</strong>
-              </div>
-              <div class="col-2">{{project.contactClicks}}</div>
-            </div>
+<!--            <div class="row">-->
+<!--              <div class="col-1">-->
+<!--                <img class="nav-icon" src="/images/stats-icon-b.png" alt="">-->
+<!--              </div>-->
+<!--              <div class="col-2">-->
+<!--                <strong>{{'seen' | translate}}</strong>-->
+<!--              </div>-->
+<!--              <div class="col-4">{{project.seen}}</div>-->
+<!--              <div class="col-3">-->
+<!--                <strong>{{'minutesAvg' | translate}}</strong>-->
+<!--              </div>-->
+<!--              <div class="col-">{{millisToMinSec(project.secondsAvg)}} {{'minutes' | translate}}</div>-->
+<!--            </div>-->
+<!--            <div class="row">-->
+<!--              <div class="col-1"></div>-->
+<!--              <div class="col-2">-->
+<!--                <strong>{{'investorsSeen' | translate}}</strong>-->
+<!--              </div>-->
+<!--              <div class="col-4">{{project.investorsSeen}}</div>-->
+<!--              <div class="col-3">-->
+<!--                <strong>{{'clicksAvg' | translate}}</strong>-->
+<!--              </div>-->
+<!--              <div class="col-2">{{project.clicksAvg}}</div>-->
+<!--            </div>-->
+<!--            <div class="row">-->
+<!--              <div class="col-1"></div>-->
+<!--              <div class="col-2">-->
+<!--                <strong>{{'lastSeen' | translate}}</strong>-->
+<!--              </div>-->
+<!--              <div class="col-4">{{toLocaleDateTimeString(project.lastSeen)}}</div>-->
+<!--              <div class="col-3">-->
+<!--                <strong>{{'contactClicks' | translate}}</strong>-->
+<!--              </div>-->
+<!--              <div class="col-2">{{project.contactClicks}}</div>-->
+<!--            </div>-->
           </div>
         </div>
       </div>

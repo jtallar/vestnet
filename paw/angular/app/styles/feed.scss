@@ -44,7 +44,7 @@
 
 .msg-collapse-stats{
   width: 1000px !important;
-  height: 110px !important;
+  height: 140px !important;
   background-color: #f5f5f5 !important;
   margin: 0 auto 20px auto !important;
   padding: 0;
@@ -1021,4 +1021,59 @@ html {
   overflow: hidden;
   width: 100%;
   white-space: nowrap;
+}
+
+.stat-number{
+  font-size: 40px;
+  color: #5bc0de;
+}
+.stat-number1{
+  font-size: 40px;
+  color: #f3a047;
+}
+.stat-number2{
+  font-size: 40px;
+  color: #9fdc3e;
+}
+.stat-number3{
+  font-size: 40px;
+  color: #e5d223;
+}
+.stat-number4{
+  font-size: 40px;
+  color: #ee4a44;
+}
+.stat-number5{
+  font-size: 35px;
+  color: #848484;
+}
+.stat-date {
+  font-size: 16px;
+  color: #848484;
+  display: inline-block;
+  width: 100px !important;
+  white-space: pre-line;
+  line-height: 20px;
+}
+.stat-title{
+  font-size: 15px;
+  color: #505050;
+  font-variant: all-petite-caps;
+  display: inline-block;
+  width: 80px !important;
+  white-space: pre-line;
+  line-height: 14px
+}
+
+.stat-title2{
+  font-size: 20px;
+  color: #505050;
+  font-variant: all-petite-caps;
+}
+
+.stat-bar{
+  background-color: #f3a047 !important;
+  color: #5bc0de;
+  font-size: 11px;
+  font-weight: bold;
 }

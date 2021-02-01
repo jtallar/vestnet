@@ -24,6 +24,12 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     //   return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
     // };
 
+    $scope.daysAgo = function (date) {
+      const diffTime = Math.abs(new Date() - new Date(date));
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays-1;
+    }
+
     $scope.millisToMinSec = function (millis) {
       if(isNaN(millis)) return 0;
       var minutes = Math.floor(millis / 60000);
