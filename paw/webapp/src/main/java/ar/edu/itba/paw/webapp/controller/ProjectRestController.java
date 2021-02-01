@@ -174,7 +174,7 @@ public class ProjectRestController {
     public Response setStats(@PathParam("id") long id,
                              @Valid final ProjectStatsDto statsDto) throws ProjectDoesNotExistException {
 
-        LOGGER.debug("Endpoint PUT /projects/" + id + "/stats reached with" + statsDto.toString() + " - User is " + sessionUser.getId());
+        LOGGER.debug("Endpoint PUT /projects/" + id + "/stats reached with" + statsDto.toString());
 
         projectService.addStats(id, statsDto.getSecondsAvg(), statsDto.getClicksAvg(), sessionUser.isInvestor(),
                 statsDto.getContactClicks() >= 1).orElseThrow(ProjectDoesNotExistException::new);
