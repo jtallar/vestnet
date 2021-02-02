@@ -1,7 +1,7 @@
 /* global paths */
 'use strict';
 require.config({
-    baseUrl: '/scripts',
+    baseUrl: 'scripts',
     paths: {
         affix: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix',
         alert: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert',

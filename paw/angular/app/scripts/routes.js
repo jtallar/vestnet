@@ -5,84 +5,84 @@ define([], function() {
         defaultRoutePath: '/error',
         routes: {
             '/': {                                // welcome
-                templateUrl: 'views/home.html',
+                templateUrl: './views/home.html',
                 controller: 'HomeCtrl'
             },
             '/welcome': {                                // welcome
-              templateUrl: 'views/home.html',
+              templateUrl: './views/home.html',
               controller: 'HomeCtrl'
             },
             '/login': {
-                templateUrl: 'views/login/login.html',
+                templateUrl: './views/login/login.html',
                 controller: 'loginCtrl'
             },
             '/logout': {
-              templateUrl: 'views/logout/logout.html',
+              templateUrl: './views/logout/logout.html',
               controller: 'logoutCtrl'
             },
             '/resetPassword': {
-                templateUrl: '/views/resetPassword/resetPassword.html',
+                templateUrl: './views/resetPassword/resetPassword.html',
                 controller: 'resetPasswordCtrl'
             },
             '/requestPassword': {
-                templateUrl: '/views/requestPassword/requestPassword.html',
+                templateUrl: './views/requestPassword/requestPassword.html',
                 controller: 'requestPasswordCtrl'
             },
             '/signUp': {
-                templateUrl: '/views/signUp/signUp.html',
+                templateUrl: './views/signUp/signUp.html',
                 controller: 'signUpCtrl',
                 css: 'styles/signup.css'
             },
             '/projects': {
-              templateUrl: '/views/projects/feed.html',
+              templateUrl: './views/projects/feed.html',
               controller: 'feedCtrl'
             },
             '/error': {
-              templateUrl: '/views/errors/errors.html',
+              templateUrl: './views/errors/errors.html',
               controller: 'errorCtrl'
             },
             '/projects/:id': {
-                templateUrl: '/views/viewProject/:id/singleView.html',
+                templateUrl: './views/viewProject/:id/singleView.html',
                 controller: 'singleViewCtrl'
             },
             '/users/:id': {
-                templateUrl: '/views/users/:id/userInfo.html',
+                templateUrl: './views/users/:id/userInfo.html',
                 controller: 'userInfoCtrl'
             },
             '/profile': {
-              templateUrl: '/views/users/profile.html',
+              templateUrl: './views/users/profile.html',
               controller: 'profileCtrl'
             },
             '/requests': {
-                templateUrl: '/views/requests/requests.html',
+                templateUrl: './views/requests/requests.html',
                 controller: 'requestsCtrl'
             },
             '/dashboard': {
-                templateUrl: '/views/dashboard/dashboard.html',
+                templateUrl: './views/dashboard/dashboard.html',
                 controller: 'dashboardCtrl'
             },
             '/messages': {
-              templateUrl: '/views/requests/messages.html',
+              templateUrl: './views/requests/messages.html',
               controller: 'messagesCtrl'
             },
             '/newProject': {
-                templateUrl: '/views/newProject/newProject.html',
+                templateUrl: './views/newProject/newProject.html',
                 controller: 'newProjectCtrl'
             },
             '/verify': {
-                templateUrl: 'views/verify/verify.html',
+                templateUrl: './views/verify/verify.html',
                 controller: 'verifyCtrl'
             },
             '/projects/:id/edit': {
-              templateUrl: '/views/edit/editProject.html',
+              templateUrl: './views/edit/editProject.html',
               controller: 'editProjectCtrl'
             },
             '/chat/:id1': {
-              templateUrl: '/views/dashboard/chat.html',
+              templateUrl: './views/dashboard/chat.html',
               controller: 'chatCtrl'
             },
             '/chat/:id1/:id2': {
-              templateUrl: '/views/dashboard/chat.html',
+              templateUrl: './views/dashboard/chat.html',
               controller: 'chatCtrl'
             }
             /* ===== yeoman hook ===== */

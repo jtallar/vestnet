@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/**/*.html',
           '.tmp/styles/**/*.css',
-          '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
+          '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg,ico}'
         ]
       }
     },
@@ -171,7 +171,7 @@ module.exports = function (grunt) {
       dist: {
         src: [
           '<%= yeoman.dist %>/styles/**/*.css',
-          '<%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}',
+          '<%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp,svg,ico}',
           '<%= yeoman.dist %>/styles/fonts/*',
           '<%= yeoman.dist %>/views/**/*.html',
           '<%= yeoman.dist %>/scripts/**/*.js',
@@ -208,7 +208,7 @@ module.exports = function (grunt) {
         assetsDirs: ['<%= yeoman.dist %>', '<%= yeoman.dist %>/images'],
         patterns: {
           imagesAndViews: [
-            [/(images\/.*?\.(?:gif|jpeg|jpg|png|webp))/gm, 'Update the JS to reference our revved images'],
+            [/(images\/.*?\.(?:gif|jpeg|jpg|png|webp|ico))/gm, 'Update the JS to reference our revved images'],
             [/(views\/.*?\.(?:html))/gm, 'Update the JS to reference our revved html views']
           ]
         }
@@ -236,7 +236,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>/images',
-          src: '**/*.{png,jpg,jpeg,gif}',
+          src: '**/*.{png,jpg,jpeg,gif,ico}',
           dest: '<%= yeoman.dist %>/images'
         }]
       }

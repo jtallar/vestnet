@@ -19,7 +19,7 @@
           <img ng-src="data:image/JPEG;base64,{{user.image}}" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
         </div>
         <div ng-if="!user.imageExists">
-          <img ng-src="/images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+          <img ng-src="images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
         </div>
       </div>
 
@@ -129,7 +129,7 @@
               <div class="card m-2">
                 <div class="card-header card-title text-white">
                   <div class="row">
-                    <a class="col-8" href="/#/projects/{{project.id}}">
+                    <a class="col-8" href="#/projects/{{project.id}}">
                       <h5 class="card-title cut-text">{{project.name}}</h5>
                     </a>
                     <div class="col-4">
@@ -169,7 +169,7 @@
 <!--            <div ng-repeat="project in secondTab">-->
 <!--              <div class="card m-2">-->
 <!--                <div class="card-header card-title text-white">-->
-<!--                  <a href="/#/projects/{{project.id}}">-->
+<!--                  <a href="#/projects/{{project.id}}">-->
 <!--                    <h5 class="card-title cut-text">{{project.projectName}}</h5>-->
 <!--                  </a>-->
 <!--                </div>-->

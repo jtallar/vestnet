@@ -3,7 +3,7 @@
 
 <div class="sidenav sidenav-index">
   <div class="text-center mt-5">
-    <a ng-href="/#/">
+    <a ng-href="#/">
       <img class="logo-img" src="images/logo_bp.png">
     </a>
   </div>
@@ -22,7 +22,7 @@
           <label>{{'password' | translate}}</label>
           <input id="pass" name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}" ng-model="controller.user.password" required
                  ng-keyup="!loginForm.$invalid && $event.keyCode == 13 && login(controller.user)" />
-          <a ng-href="/#/requestPassword">{{'forgotPassword' | translate}}</a>
+          <a ng-href="#/requestPassword">{{'forgotPassword' | translate}}</a>
         </div>
         <div class="form-group">
           <label>
@@ -68,7 +68,7 @@
 
       <div>
         <label>{{'noReg' | translate}}</label>
-        <a ng-href="/#/signUp" class="btn btn-outline-dark">{{'signUp' | translate}}</a>
+        <a ng-href="#/signUp" class="btn btn-outline-dark">{{'signUp' | translate}}</a>
       </div>
 
     </div>
