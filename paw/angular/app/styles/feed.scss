@@ -75,11 +75,13 @@
 }
 
 .proj-img{
-  width: 110%;
-  height: auto;
-  max-width: 150px;
-  max-height: 133px;
-  object-fit: cover;
+  width:120px;
+  height:120px;
+  min-width:120px;
+  min-height:120px;
+  max-width:120px;
+  max-height:120px;
+  object-fit:cover
 }
 
 .single-img{
@@ -121,6 +123,26 @@
 
 @media screen and (max-height: 450px) {
   .sidenav-feed {margin-top: 50%;}
+}
+
+@media screen and (max-width: 1400px) {
+  .sidenav-feed {
+    display: none !important;
+  }
+  .card-deck{
+    margin:20px 5% 20px 5%!important;
+  }
+}
+@media screen and (max-width: 1550px) {
+  .card-deck{
+    margin:20px 5% 20px 25%!important;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .card-deck{
+    margin:20px 5% 20px 5%!important;
+  }
 }
 
 @media screen and (min-width: 768px){
@@ -302,13 +324,13 @@ html {
   padding: 10px !important;
 }
 
-.card-text{
-  font-size:15px !important;
-  overflow: hidden;
-  display: -webkit-box;
-  //-webkit-line-clamp: 7;
-  -webkit-box-orient: vertical;
-}
+//.card-text{
+//  font-size:15px !important;
+//  overflow: hidden;
+//  display: -webkit-box;
+//  //-webkit-line-clamp: 7;
+//  -webkit-box-orient: vertical;
+//}
 
 .msg-content{
   margin-left:40px;
@@ -424,12 +446,12 @@ html {
   max-height: 300px !important
 }
 
-.card-content .card-text {
+.card-text{
   font-size: 14px !important;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
+  display: -webkit-box !important;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  -webkit-line-clamp: 6;
   text-overflow: ellipsis;
 }
 
@@ -443,7 +465,7 @@ html {
 }
 
 .feed-body{
-  padding: 10px 8px 0 10px !important;
+  padding: 10px 8px 10px 10px !important;
 }
 
 .btn-deal{
@@ -507,11 +529,11 @@ html {
 }
 
 .btn-link2{
-  color:#750096bd !important;
+  color:#000 !important;
   text-decoration:underline;
 }
 .btn-link2:hover{
-  color: black !important;
+  color: #750096bd !important;
 }
 
 .btn-link3{
@@ -523,10 +545,10 @@ html {
 }
 
 .btn-link4{
-  color:#750096bd !important;
+  color:#000 !important;
 }
 .btn-link4:hover{
-  color: black !important;
+  color: #750096bd !important;
   text-decoration: underline;
 }
 
@@ -846,6 +868,22 @@ html {
   border: solid 2px black;
   margin: 40px auto;
 }
+
+@media screen and (max-width:1700px){
+  .chat-ficha{display:none!important}
+  .chatbox{margin-left:21% !important}
+  .chat-offer{margin-left:5% !important; width: 107% !important}
+}
+
+@media screen and (max-width:1000px){
+  .chatbox{margin-left:21% !important;height:470px;width:900px;}
+  .chat-offer{margin:0 !important; width: 100% !important}
+}
+
+@media screen and (max-width:800px){
+  .chat-offer{display: none !important}
+}
+
 
 .chat-ficha {
    height: 570px;

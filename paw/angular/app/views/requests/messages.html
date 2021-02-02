@@ -35,22 +35,21 @@
           <div class="col-md-11 ww-content">
             <div class="card-block">
               <div class="row">
-                <div class="col-3 ww-last">
+                <div class="col-4 ww-last">
                   <a ng-href="#{{message.projectUrl}}" class="btn-link4">
                     <h5 class="cut-text">{{message.projectName}}</h5>
                   </a>
-<!--                  <h6 class="cut-text" style="color: rgba(99, 99, 99, 0.74)">- {{'from' | translate}} <a ng-href="#{{message.ownerUrl}}" class="btn-link3">{{message.ownerName}}</a></h6>-->
                 </div>
-                <div class="col-7 ww-last">
+                <div class="col-6 ww-last">
                   <h6>{{toLocaleDateTimeString(message.publishDate)}}</h6>
                   <div class="row">
-                    <div class="col-4 msg-offer">
+                    <div class="col-4 msg-offer cut-text">
                       <img src="images/down-arrow.png" alt="">
-                      <strong>{{message.offer}}</strong>
+                      {{message.offer}}
                     </div>
-                    <div class="col-8 msg-exch">
+                    <div class="col-8 msg-exch cut-text">
                       <img src="images/up-arrow.png" alt="">
-                      <strong> {{message.exchange}}</strong>
+                      {{message.exchange}}
                     </div>
                   </div>
 <!--                  <p>{{message.comment}}</p>-->

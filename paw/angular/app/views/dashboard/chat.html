@@ -17,7 +17,7 @@
     <div class="row" style="margin-top: 10px">
 
       <div class="col-2 card chat-ficha">
-        <a ng-href="#{{project.projectUrl}}" class="btn-link"><h4 class="chat-p-name">{{project.name}}</h4></a>
+        <a ng-href="#{{project.projectUrl}}" class="btn-link4"><h4 class="chat-p-name">{{project.name}}</h4></a>
         <div ng-if="!project.portraitExists">
           <img ng-src="images/projectNoImage.png" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
         </div>
@@ -72,9 +72,12 @@
                             <img src="images/up-arrow.png" alt="{{'msgTitleRequest' | translate}}">
                             <strong> {{chat.exchange}}</strong>
                           </div>
-                          <div ng-if="!chat.answered" class="col-4 msg-exp-me cut-text">
+                          <div ng-if="!chat.answered && chat.expInDays != 0" class="col-4 msg-exp-me cut-text">
                             {{'expireWithDays' | translate : { days: chat.expInDays } }}
                             <img src="images/clock-icon.png" alt="">
+                          </div>
+                          <div ng-if="!chat.answered && chat.expInDays == 0" class="col-4 msg-exp-me cut-text">
+                            {{'expired' | translate }} ⚠️
                           </div>
                         </div>
                         <div class="msg-comm">
