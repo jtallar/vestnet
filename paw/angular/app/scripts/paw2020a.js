@@ -75,6 +75,7 @@ define(['routes',
             else aux = new Date();
             return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
           };
+          $rootScope.isSafari = window.safari !== undefined;
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
