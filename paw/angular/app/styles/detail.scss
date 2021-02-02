@@ -109,7 +109,26 @@
 
 .single-card{
   padding: 15px 25px 25px 25px !important;
-  min-height: 620px !important;
+  max-height: 620px !important;
+}
+
+.categories-size{
+  margin-left: 8%;
+  -moz-column-count:2;
+  -moz-column-gap:20px;
+  -webkit-column-count:2;
+  -webkit-column-gap:20px;
+  column-count:2;
+  column-gap:20px;
+  list-style-type: none;
+  text-align: center
+}
+
+.categories-size li{
+  border: solid 0.1px #d2d2d2 !important;
+  margin-bottom:5px;
+  width:80%;
+  border-radius:100px
 }
 
 .history-group{

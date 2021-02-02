@@ -141,6 +141,7 @@ define([], function() {
     max: 'Max.',
     clear: 'Clear',
     apply: 'Apply',
+    percFilter: '% Funded ',
     projectImage: 'Portrait',
     price: 'Cost',
     projectCost: '{{cost}} $USD',
