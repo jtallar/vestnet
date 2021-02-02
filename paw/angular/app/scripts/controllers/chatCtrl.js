@@ -3,8 +3,8 @@
 define(['paw2020a', 'services/projectService', 'services/sampleService', 'services/messageService', 'services/userService',
   'services/PathService', 'services/AuthenticationService', 'directives/noFloat'], function(paw2020a) {
 
-  paw2020a.controller('chatCtrl', ['projectService', 'sampleService', 'messageService', 'userService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', '$route',
-    function(projectService, sampleService, messageService, userService, PathService, AuthenticationService, $scope, $routeParams, $route) {
+  paw2020a.controller('chatCtrl', ['projectService', 'sampleService', 'messageService', 'userService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', '$route', '$rootScope',
+    function(projectService, sampleService, messageService, userService, PathService, AuthenticationService, $scope, $routeParams, $route, $rootScope) {
 
       var _this = this;
       var projectId = parseInt($routeParams.id1), investorId = parseInt($routeParams.id2);
@@ -97,7 +97,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
 
       this.setChatAsSeen = function (lastMessage) {
         messageService.setSeen(projectId, investorId).then(function (response) {
-          // console.log(response);
+          $rootScope.$emit('notificationChange');
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
             console.log('Message already seen!');

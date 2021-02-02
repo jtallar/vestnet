@@ -103,6 +103,8 @@ define([], function() {
     newestOrder: 'Newest',
     costAscendingOrder: 'Cost ascending order',
     costDescendingOrder: 'Cost descending order',
+    percentageAscendingOrder: '% Funded ascending order',
+    percentageDescendingOrder: '% Funded descending order',
     alphabeticalOrder: 'Alphabetical order',
     Technology: 'Technology',
     Construction: 'Construction',

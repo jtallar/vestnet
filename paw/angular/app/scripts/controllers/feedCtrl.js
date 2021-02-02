@@ -23,7 +23,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.containsFav = function(id){
         return $scope.favs.includes(id)
-      }
+      };
 
       // $scope.formatPrice = function(number) {
       //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
@@ -32,8 +32,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.favTap = function(id){
         if($scope.containsFav(id)){
-          var index = $scope.favs.indexOf(id)
-          $scope.favs.splice(index,1)
+          var index = $scope.favs.indexOf(id);
+          $scope.favs.splice(index,1);
           userService.putFavorite(id, false).then(function () {
 
           },function (error) {
@@ -41,7 +41,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           })
         }
         else {
-          $scope.favs.push(id)
+          $scope.favs.push(id);
           userService.putFavorite(id, true).then(function () {
 
           },function (error) {
@@ -50,11 +50,11 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
         }
         console.log(id)
-      }
+      };
 
 
 
-      $scope.lastPage = 0
+      $scope.lastPage = 0;
 
       $scope.noProjectsFound = false;
       $scope.loading = true;
@@ -66,7 +66,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       if (isNaN(param) || param <= 0) param = 1;
       $scope.page = param;
 
-      $scope.searchField = $routeParams.s;
+      param = $routeParams.s;
+      $scope.searchField = (!($routeParams.s)) ? undefined : param;
       $scope.fields = [{id: 1, name:'projectNameSearch'}, {id: 2, name:'projectDescSearch'}, {id: 3, name:'ownerNameSearch'}, {id: 4, name:'ownerEmailSearch'}, {id: 5, name:'locationSearch'}];
       param = parseInt($routeParams.f);
       if (isNaN(param)) {
@@ -75,7 +76,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         aux = $scope.fields.filter(function (el) { return el.id === param; });
         (aux.length !== 0) ? $scope.selectedField = aux[0] : $scope.selectedField = $scope.fields[0];
       }
-      $scope.orders = [{id: 1, name:'recommendedOrder'}, {id: 6, name:'oldestOrder'}, {id: 5, name:'newestOrder'}, {id: 2, name:'costAscendingOrder'}, {id: 3, name:'costDescendingOrder'}, {id: 4, name:'alphabeticalOrder'}];
+      $scope.orders = [{id: 1, name:'recommendedOrder'}, {id: 6, name:'oldestOrder'}, {id: 5, name:'newestOrder'}, {id: 2, name:'costAscendingOrder'},
+        {id: 3, name:'costDescendingOrder'}, {id: 4, name:'alphabeticalOrder'}, {id: 7, name:'percentageAscendingOrder'}, {id: 8, name:'percentageDescendingOrder'}];
       param = parseInt($routeParams.o);
       if (isNaN(param)) {
         $scope.selectedOrder = $scope.orders[0];
@@ -193,15 +195,5 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return parseInt(num);
       }
 
-
-
-
-
-
     }]);
-
-
-
-
-
 });
