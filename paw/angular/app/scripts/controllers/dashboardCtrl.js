@@ -109,6 +109,11 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
                 console.log("No image")
               });
             }
+            messageService.projectNotificationCount($scope.fundedProjects[i].id).then(function (response) {
+              $scope.fundedProjects[map[response.data.route]].msgCount = response.data.unread;
+            }, function (err) {
+              console.error(err);
+            });
           }
         });
       }
