@@ -9,10 +9,10 @@ define([], function() {
     // /\/users\/.*/
     pathService.noAuthRoutesRE = [/^\/$/, /^\/login$/, /^\/welcome$/, /^\/signUp$/, /^\/resetPassword$/, /^\/requestPassword$/, /^\/verify$/];
     pathService.logoutRE = [/^\/logout$/];
-    pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
+    pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/, /^\/users\/.*$/];
     pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/, /^\/chat\/[^\/]*$/];
     pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject\/.*$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
-    pathService.authRoutesRE = [/^\/users\/.*$/, /^\/profile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
+    pathService.authRoutesRE = [/^\/profile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
 
     pathService.get = function () {
       var base = {
