@@ -182,7 +182,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           return;
         }
         $scope.costRangeError = false;
-        if ($scope.minPercentage && $scope.maxPercentage && $scope.minPercentage > $scope.maxPercentage) {
+        if ($scope.minPercentage > $scope.maxPercentage) {
           $scope.percentageRangeError = true;
           return;
         }
@@ -212,7 +212,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.toInt = function (num){
         return parseInt(num);
-      }
+      };
 
     }]);
 });
