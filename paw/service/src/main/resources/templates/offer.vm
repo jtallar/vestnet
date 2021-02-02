@@ -27,7 +27,7 @@
     </p>
     <p style="font-weight:bold">
         #message("email.body.contactInvestor")
-        <a href="${baseUrl}/dashboard#dashboard-project-${project.getId()}">#message("email.clickhere")</a>
+        <a href="${baseUrl}/dashboard">#message("email.clickhere")</a>
         #message("email.body.contactInvestor2")
     </p>
 
