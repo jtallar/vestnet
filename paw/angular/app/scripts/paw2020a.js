@@ -78,6 +78,7 @@ define(['routes',
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
+            $rootScope.showHeader = {value: true};
             PathService.get().projects().go();
           } else if (!logged && logoutUrl) {
             PathService.get().index().go();
