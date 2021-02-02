@@ -88,11 +88,13 @@
               <p class="card-text">{{project.summary}}</p>
 
               <h6 class="card-title"><b>{{'categories' | translate}}</b></h6>
+              <div class="categories-size">
                 <li class="cat-size" ng-repeat="category in project.categorieNames">{{category | translate}}</li>
+              </div>
               <br/>
 
-              <h6 class="card-title"><b>{{'contactMail' | translate}}</b></h6>
-              <p class="cat-size">{{project.owner.email}}</p>
+<!--              <h6 class="card-title"><b>{{'contactMail' | translate}}</b></h6>-->
+<!--              <p class="cat-size">{{project.owner.email}}</p>-->
 
               <h6 class="card-title"><b>{{'funding' | translate}}</b></h6>
               <div class="text-center ">
