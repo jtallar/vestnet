@@ -99,7 +99,7 @@ define(['routes',
 
         Restangular.addRequestInterceptor(function (element, operation, what, url) {
           if (requestsInProgress === 0) {
-            $rootScope.loading = true;
+            $rootScope.rootScopeLoading = true;
           }
           requestsInProgress++;
           return element;
@@ -109,7 +109,7 @@ define(['routes',
         Restangular.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
           requestsInProgress--;
           if (requestsInProgress === 0) {
-            $rootScope.loading = false;
+            $rootScope.rootScopeLoading = false;
           }
           return data;
         });
