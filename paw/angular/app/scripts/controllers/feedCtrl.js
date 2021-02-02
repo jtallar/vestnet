@@ -24,7 +24,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.containsFav = function(id){
         return $scope.favs.includes(id)
-      }
+      };
 
       // $scope.formatPrice = function(number) {
       //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
@@ -33,8 +33,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.favTap = function(id){
         if($scope.containsFav(id)){
-          var index = $scope.favs.indexOf(id)
-          $scope.favs.splice(index,1)
+          var index = $scope.favs.indexOf(id);
+          $scope.favs.splice(index,1);
           userService.putFavorite(id, false).then(function () {
 
           },function (error) {
@@ -42,7 +42,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           })
         }
         else {
-          $scope.favs.push(id)
+          $scope.favs.push(id);
           userService.putFavorite(id, true).then(function () {
 
           },function (error) {
@@ -51,11 +51,11 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
         }
         console.log(id)
-      }
+      };
 
 
 
-      $scope.lastPage = 0
+      $scope.lastPage = 0;
 
       $scope.noProjectsFound = false;
       $scope.loading = true;
@@ -189,15 +189,5 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return parseInt(num);
       }
 
-
-
-
-
-
     }]);
-
-
-
-
-
 });
