@@ -41,7 +41,7 @@ public class ImageRestController {
     @Context
     private UriInfo uriInfo;
 
-    // TODO: deberia recibir user_id y gettear la image desde el image_id en el user como hace el update? O lo cambiamos a image_id?
+
     @GET
     @Path("/users/{image_id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -76,6 +76,7 @@ public class ImageRestController {
         return Response.ok(ImageDto.fromProjectImage(projectImage)).build();
     }
 
+
     @PUT
     @Path("/projects/{project_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
@@ -88,7 +89,7 @@ public class ImageRestController {
         return Response.ok().build();
     }
 
-    // TODO: deberiamos devolver algun not found?
+
     @GET
     @Path("/projects/{project_id}/slideshow")
     @Produces(value = { MediaType.APPLICATION_JSON })
@@ -100,6 +101,7 @@ public class ImageRestController {
         final List<ImageDto> images = projectImages.stream().map(ImageDto::fromProjectImage).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<ImageDto>>(images) {}).build();
     }
+
 
     @PUT
     @Path("/projects/{project_id}/slideshow")
