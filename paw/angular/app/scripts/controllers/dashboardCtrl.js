@@ -183,11 +183,11 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         $scope.messages[index] = [];
         messageService.getOffers(id.toString(), false, 1).then(function (response) {
           _this.updateNextPageMessages(response.headers().link, index);
-          $scope.messages[index] = response.data;
           for (var i = 0; i < response.data.length; i++) {
-            $scope.messages[index][i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
-            $scope.messages[index][i].notification = (!$scope.messages[index][i].seen && $scope.messages[index][i].direction) || (!$scope.messages[index][i].seenAnswer && !$scope.messages[index][i].direction && $scope.messages[index][i].accepted != null);
+            response.data[i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
+            response.data[i].notification = (!response.data[i].seen && response.data[i].direction) || (!response.data[i].seenAnswer && !response.data[i].direction && response.data[i].accepted != null);
           }
+          $scope.messages[index] = response.data;
         }, function (error) {
           console.error(error)
         });
@@ -197,11 +197,11 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.viewMore = function (id, index) {
       sampleService.get($scope.projects[index].nextPageMessages).then(function (response) {
         _this.updateNextPageMessages(response.headers().link, index);
-        $scope.messages[index] = $scope.messages[index].concat(response.data);
         for (var i = 0; i < response.data.length; i++) {
-          $scope.messages[index][i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
-          $scope.messages[index][i].notification = (!$scope.messages[index][i].seen && $scope.messages[index][i].direction) || (!$scope.messages[index][i].seenAnswer && !$scope.messages[index][i].direction && $scope.messages[index][i].accepted != null);
+          response.data[i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;
+          response.data[i].notification = (!response.data[i].seen && response.data[i].direction) || (!response.data[i].seenAnswer && !response.data[i].direction && response.data[i].accepted != null);
         }
+        $scope.messages[index] = $scope.messages[index].concat(response.data);
       }, function (error) {
         console.error(error)
       })
