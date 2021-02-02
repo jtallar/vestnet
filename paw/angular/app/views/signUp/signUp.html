@@ -27,7 +27,7 @@
                   <div class="form-group">
                     <label>{{'firstNameRequired' | translate}} </label>
                     <p class="form-requirement">{{'firstNameRequirement' | translate}}</p>
-                    <input name="firstName" ng-model="controller.user.firstName" type="text" class="form-control"
+                    <input style="color: black !important;" name="firstName" ng-model="controller.user.firstName" type="text" class="form-control"
                            placeholder="{{'enterFirstName' | translate}}" id="sign-up-first-name"
                            required ng-maxlength="25"/>
                   </div>
@@ -36,7 +36,7 @@
                   <div class="form-group">
                     <label>{{'lastNameRequired' | translate}} </label>
                     <p class="form-requirement">{{'lastNameRequirement' | translate}}</p>
-                    <input name="lastName" ng-model="controller.user.lastName" type="text" class="form-control"
+                    <input style="color: black !important;" name="lastName" ng-model="controller.user.lastName" type="text" class="form-control"
                            placeholder="{{'enterLastName' | translate}}" id="sign-up-last-name"
                            required ng-maxlength="25"/>
                   </div>
@@ -51,7 +51,7 @@
                   <div class="form-group">
                     <label> {{'realIdRequired' | translate}} </label>
                     <p class="form-requirement">{{'realIdRequirement' | translate}}</p>
-                    <input name="realId" ng-model="controller.user.realId" type="text" class="form-control"
+                    <input style="color: black !important;" name="realId" ng-model="controller.user.realId" type="text" class="form-control"
                            placeholder="{{'enterRealId' | translate}}" id="sign-up-real-id"
                            required ng-maxlength="15"/>
                   </div>
@@ -60,7 +60,7 @@
                   <div class="form-group">
                     <label> {{'phone' | translate}} </label>
                     <p class="form-requirement">{{'phoneRequirement' | translate}}</p>
-                    <input name="phone" ng-model="controller.user.phone" type="text" class="form-control"
+                    <input style="color: black !important;" name="phone" ng-model="controller.user.phone" type="text" class="form-control"
                            placeholder="{{'enterPhone' | translate}}" ng-maxlength="25" ng-pattern="/^[0-9]*$/"/>
                   </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="col-md" ng-class="{'has-error': signUpForm.email.$touched && signUpForm.email.$invalid}">
                   <div class="form-group">
                     <label>{{'emailRequired' | translate}} </label>
-                    <input name="email" ng-model="controller.user.email" type="email" class="form-control"
+                    <input style="color: black !important;" name="email" ng-model="controller.user.email" type="email" class="form-control"
                            placeholder="{{'enterEmail' | translate}}" required ng-maxlength="255"/>
                   </div>
                 </div>
@@ -98,7 +98,7 @@
                   <div class="form-group">
                     <label> {{'passwordRequired' | translate}} </label>
                     <p class="form-requirement">{{'passwordRequirement' | translate}}</p>
-                    <input name="password" ng-model="controller.user.password" type="password" class="form-control"
+                    <input style="color: black !important;" name="password" ng-model="controller.user.password" type="password" class="form-control"
                            placeholder="{{'enterPassword' | translate}}" id="sign-up-password"
                            required ng-maxlength="50"/>
                   </div>
@@ -107,7 +107,7 @@
                   <div class="form-group">
                     <label>{{'repeatPasswordRequired' | translate}}</label>
                     <p class="form-requirement"> </p>
-                    <input name="repeatPassword" ng-model="controller.user.repeatPassword" type="password" class="form-control"
+                    <input style="color: black !important;" name="repeatPassword" ng-model="controller.user.repeatPassword" type="password" class="form-control"
                            placeholder="{{'enterRepeatPassword' | translate}}" id="sign-up-repeat-password"
                            required ng-maxlength="50" ng-pattern="controller.user.password"/>
                   </div>
@@ -124,7 +124,7 @@
                   <div class="form-group">
                     <label>{{'linkedin' | translate}}</label>
                     <p class="form-requirement">{{'linkedinRequirement' | translate}}</p>
-                    <input name="linkedin" ng-model="controller.user.linkedin" type="text" class="form-control"
+                    <input style="color: black !important;" name="linkedin" ng-model="controller.user.linkedin" type="text" class="form-control"
                            placeholder="{{'enterLinkedin' | translate}}" ng-maxlength="100"
                            ng-pattern="/^((http(s)?://)?(www\.)?(linkedin\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*))?$/"/>
                   </div>

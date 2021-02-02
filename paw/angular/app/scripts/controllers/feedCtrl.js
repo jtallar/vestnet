@@ -21,7 +21,6 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         })
       }
 
-
       $scope.containsFav = function(id){
         return $scope.favs.includes(id)
       };
@@ -59,6 +58,9 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.noProjectsFound = false;
       $scope.loading = true;
+
+      var foot = document.getElementById("foot");
+      foot.style.display = 'none';
 
       param = parseInt($routeParams.p);
       if (isNaN(param) || param <= 0) param = 1;
@@ -134,6 +136,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         if (projects.length === 0) {
           $scope.noProjectsFound = true;
           $scope.loading = false;
+          foot.style.display = 'block';
           return;
         }
         $scope.projects = projects;
@@ -149,6 +152,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           }
         }
         $scope.loading = false;
+        foot.style.display = 'block';
       };
 
       $scope.clearFilter = function () {
