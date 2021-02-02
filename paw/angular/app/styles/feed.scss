@@ -324,13 +324,13 @@ html {
   padding: 10px !important;
 }
 
-.card-text{
-  font-size:15px !important;
-  overflow: hidden;
-  display: -webkit-box;
-  //-webkit-line-clamp: 7;
-  -webkit-box-orient: vertical;
-}
+//.card-text{
+//  font-size:15px !important;
+//  overflow: hidden;
+//  display: -webkit-box;
+//  //-webkit-line-clamp: 7;
+//  -webkit-box-orient: vertical;
+//}
 
 .msg-content{
   margin-left:40px;
@@ -446,12 +446,12 @@ html {
   max-height: 300px !important
 }
 
-.card-content .card-text {
+.card-text{
   font-size: 14px !important;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
+  display: -webkit-box !important;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  -webkit-line-clamp: 6;
   text-overflow: ellipsis;
 }
 

@@ -38,7 +38,7 @@
         <div class="col-6" ng-class="{'has-error': newProjectForm.summary.$touched && newProjectForm.summary.$invalid}">
           <h6 class="form-label">{{'summaryRequired' | translate}}</h6>
           <p class="form-requirement">{{'descriptionRequirement' | translate}}</p>
-          <textarea name="summary" ng-model="project.summary" class="form-control" placeholder="{{'projectSummaryPlaceholder' | translate}}" rows="4" id="new-project-summary"
+          <textarea style="max-height: 200px" name="summary" ng-model="project.summary" class="form-control" placeholder="{{'projectSummaryPlaceholder' | translate}}" rows="4" id="new-project-summary"
                     required ng-minlength="30" ng-maxlength="250"></textarea>
         </div>
     </div>
