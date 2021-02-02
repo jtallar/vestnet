@@ -58,9 +58,9 @@ define(['routes',
 
           $rootScope.showHeader = {value: !(notAuthUrl || logoutUrl)};
           $rootScope.formatPrice = function(number) {
-            var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
+            var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0 });
             return formatter.format(number);
-          }
+          };
           $rootScope.toLocaleDateString = function(date) {
             var aux;
             if(date !== undefined)
