@@ -243,6 +243,7 @@ define([], function() {
     confAcceptBody: '¿Está seguro que desea confirmar? La acción no tiene vuelta atrás.',
     expire: 'Expira en (días)',
     expireWithDays: 'Expira en {{days}} días',
+    expired: 'Oferta expirada',
     days: 'días',
     offerRequirement: 'Entre U$D100 y U$D1000000000',
     exchangeRequirement: 'No vacío, hasta 100 caracteres',

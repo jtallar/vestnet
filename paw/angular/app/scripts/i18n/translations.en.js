@@ -243,6 +243,7 @@ define([], function() {
     confAcceptBody: 'You sure you wanna confirm? Action cannot be undone.',
     expire: 'Expires in (days)',
     expireWithDays: 'Expires in {{days}} days',
+    expired: 'Offer expired',
     days: 'days',
     offerRequirement: 'Between U$D100 and U$D1000000000',
     exchangeRequirement: 'Not blank, up to 100 characters',
