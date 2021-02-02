@@ -26,8 +26,8 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
           checkNotif();
         });
 
-        $rootScope.$on('messageRead', function (event) {
-          if ($scope.notifications > 0) $scope.notifications--;
+        $rootScope.$on('notificationChange', function (event) {
+          checkNotif();
         });
 
         $interval(checkNotif, 60000);
