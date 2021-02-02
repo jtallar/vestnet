@@ -19,3 +19,15 @@ vestnet
 To build accordingly the JAR file, it is needed to add a config file called
 `application.properties` at `paw/webapp/src/main/resources/application.properties`
 
+The needed fields for it to work are:
+```properties
+postgres.url=jdbc:postgresql://localhost/paw-2020a-5
+postgres.username=...
+postgres.password=...
+
+mail.host=smtp.gmail.com
+mail.port=587
+mail.username=...
+mail.password=...
+```
+
