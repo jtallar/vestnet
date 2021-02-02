@@ -73,7 +73,6 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
     };
 
     $scope.goToChat = function (message) {
-      $rootScope.$emit('notificationChange');
       PathService.get().setFullUrl(message.chatUrl).go();
     };
 

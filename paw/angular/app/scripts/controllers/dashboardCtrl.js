@@ -1,6 +1,5 @@
 'use strict';
 
-// TODO: Ver de agregar la badge tanto afuera en el icono de mensajes (/notifications/project/{project_id}?) como dentro de un chat.
 define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/sampleService', 'services/imageService', 'services/PathService', 'directives/pagination'], function(paw2020a) {
   paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','sampleService','imageService', 'PathService', '$scope', '$routeParams', '$rootScope', function(projectService, messageService,userService,sampleService,imageService, PathService, $scope, $routeParams, $rootScope) {
     // Start with updated notification count
@@ -159,6 +158,9 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       if ($scope.projects[index].openMessages === true) {
         $scope.messages[index] = [];
         messageService.projectNotificationCount(id.toString()).then(function (response) {
+          if ($scope.projects[index].msgCount !== response.data.unread) {
+            $rootScope.$emit('notificationChange');
+          }
           $scope.projects[index].msgCount = response.data.unread;
         }, function (err) {
           console.error(err);
@@ -197,7 +199,6 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     };
 
     $scope.goToChat = function (message) {
-      $rootScope.$emit('notificationChange');
       PathService.get().setFullUrl(message.chatUrl).go();
     }
 
