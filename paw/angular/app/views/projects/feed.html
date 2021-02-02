@@ -105,26 +105,27 @@
                 <input style="color: black !important;" name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
                             id="filter-form-max" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
               </div>
-              <label class="formError" ng-if="costRangeError" id="categoryCountError" >{{'costRangeRequirement' | translate}}</label>
+              <label class="formError" ng-if="costRangeError">{{'costRangeRequirement' | translate}}</label>
             </div>
           </div>
         </div>
 
         <div class="field">
           <label class="row range">{{'percFilter' | translate}} </label>
-          <div class="col-md slidecontainer">
+          <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
             <div class="row">
               <span class="col-6 perc-range">{{'min' | translate}}</span>
-              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important"> 20 </label>
+              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ minPercentage }}</label>
             </div>
-            <input type="range" min="1" max="99" value="20" class="slider" id="myRange">
+            <input name="minPercentage" ng-model="minPercentage" type="range" min="0" max="100" class="slider">
           </div>
-          <div class="col-md slidecontainer">
+          <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
             <div class="row" style="margin-top:10px !important">
               <span class="col-6 perc-range">{{'max' | translate}}</span>
-              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important"> 80 </label>
+              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ maxPercentage }}</label>
             </div>
-            <input type="range" min="2" max="100" value="80" class="slider" id="myRange">
+            <input name="maxPercentage" ng-model="maxPercentage" type="range" min="0" max="100" class="slider">
+            <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
           </div>
         </div>
 
