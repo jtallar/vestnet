@@ -64,7 +64,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       if (isNaN(param) || param <= 0) param = 1;
       $scope.page = param;
 
-      $scope.searchField = $routeParams.s;
+      param = $routeParams.s;
+      $scope.searchField = (!($routeParams.s)) ? undefined : param;
       $scope.fields = [{id: 1, name:'projectNameSearch'}, {id: 2, name:'projectDescSearch'}, {id: 3, name:'ownerNameSearch'}, {id: 4, name:'ownerEmailSearch'}, {id: 5, name:'locationSearch'}];
       param = parseInt($routeParams.f);
       if (isNaN(param)) {
@@ -73,7 +74,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         aux = $scope.fields.filter(function (el) { return el.id === param; });
         (aux.length !== 0) ? $scope.selectedField = aux[0] : $scope.selectedField = $scope.fields[0];
       }
-      $scope.orders = [{id: 1, name:'recommendedOrder'}, {id: 6, name:'oldestOrder'}, {id: 5, name:'newestOrder'}, {id: 2, name:'costAscendingOrder'}, {id: 3, name:'costDescendingOrder'}, {id: 4, name:'alphabeticalOrder'}];
+      $scope.orders = [{id: 1, name:'recommendedOrder'}, {id: 6, name:'oldestOrder'}, {id: 5, name:'newestOrder'}, {id: 2, name:'costAscendingOrder'},
+        {id: 3, name:'costDescendingOrder'}, {id: 4, name:'alphabeticalOrder'}, {id: 7, name:'percentageAscendingOrder'}, {id: 8, name:'percentageDescendingOrder'}];
       param = parseInt($routeParams.o);
       if (isNaN(param)) {
         $scope.selectedOrder = $scope.orders[0];

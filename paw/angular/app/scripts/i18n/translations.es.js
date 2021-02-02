@@ -103,6 +103,8 @@ define([], function() {
     newestOrder: 'Recientes',
     costAscendingOrder: 'Costo de menor a mayor',
     costDescendingOrder: 'Costo de mayor a menor',
+    percentageAscendingOrder: '% Financiación cubierto de menor a mayor',
+    percentageDescendingOrder: '% Financiación cubierto de mayor a menor',
     alphabeticalOrder: 'Orden Alfabético',
     Technology: 'Tecnología',
     Construction: 'Construcción',
