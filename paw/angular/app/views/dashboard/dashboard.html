@@ -10,12 +10,12 @@
     </div>
   </div>
 
-  <div class="text-center" ng-if="isLoading()">
+  <div class="text-center" ng-if="loadingProjects">
     <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
   </div>
 
   <div class="dashboard">
-    <div class="card-group" ng-repeat="project in getList()">
+    <div class="card-group" ng-repeat="project in projects">
       <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
       <div class="container py-3">
         <div class="card msg">
@@ -260,7 +260,7 @@
     </div>
   </div>
 
-    <div ng-if="getList().length === 0" class="card no-proj-mine">
+    <div ng-if="projects.length === 0" class="card no-proj-mine">
       <div class="card-header text-center">
         <div ng-switch="funded">
           <div ng-switch-when="true">
