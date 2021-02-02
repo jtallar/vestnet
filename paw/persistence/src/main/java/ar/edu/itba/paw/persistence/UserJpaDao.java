@@ -26,7 +26,6 @@ public class UserJpaDao implements UserDao {
 
     @Override
     public User create(User user) throws UserAlreadyExistsException {
-        // TODO return optional empty and throw exception in service?
         if (findByUsername(user.getEmail()).isPresent()) throw new UserAlreadyExistsException();
         entityManager.persist(user);
         return user;
@@ -34,8 +33,6 @@ public class UserJpaDao implements UserDao {
 
     @Override
     public void removeUser(long id) {
-        // TODO: Logical delete?
-        findById(id).ifPresent(user -> entityManager.remove(user));
     }
 
     @Override

@@ -70,15 +70,12 @@ public class UserRestController {
         return Response.ok().build();
     }
 
-    // TODO: implement?
     @DELETE
     public Response deleteUser() {
 
         LOGGER.debug("Endpoint DELETE /users reached - User is " + sessionUser.getId());
 
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-//        userService.remove(sessionUser.getId());
-//        return Response.noContent().build();
     }
 
 

@@ -73,8 +73,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void remove(long id) {
-        tokenDao.deleteUserTokens(new User(id));
-        userDao.removeUser(id);
     }
 
 
