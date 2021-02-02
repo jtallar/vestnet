@@ -15,12 +15,12 @@
       <ng-form name="loginForm">
         <div class="form-group" ng-class="{'has-error': loginForm.username.$touched && loginForm.username.$invalid}">
           <label>{{'email' | translate}}</label>
-          <input name="username" class="form-control" placeholder="{{'enterEmail' | translate}}" ng-model="controller.user.username"
+          <input style="color: black !important;" name="username" class="form-control" placeholder="{{'enterEmail' | translate}}" ng-model="controller.user.username"
                  type="email" required ng-keyup="$event.keyCode == 13 && !loginForm.$invalid && login(controller.user)"/>
         </div>
         <div class="form-group">
           <label>{{'password' | translate}}</label>
-          <input id="pass" name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}" ng-model="controller.user.password" required
+          <input style="color: black !important;" id="pass" name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}" ng-model="controller.user.password" required
                  ng-keyup="!loginForm.$invalid && $event.keyCode == 13 && login(controller.user)" />
           <a ng-href="#/requestPassword">{{'forgotPassword' | translate}}</a>
         </div>

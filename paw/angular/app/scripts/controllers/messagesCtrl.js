@@ -4,6 +4,8 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
   function(paw2020a) {
 
   paw2020a.controller('messagesCtrl', ['messageService', 'sampleService', 'PathService', '$scope', '$rootScope', '$routeParams', function(messageService, sampleService, PathService, $scope, $rootScope, $routeParams) {
+    // Start with updated notification count
+    $rootScope.$emit('notificationChange');
 
     var _this = this;
     $scope.noMessagesFound = false;
@@ -71,7 +73,6 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
     };
 
     $scope.goToChat = function (message) {
-      if (message.notification) $rootScope.$emit('messageRead');
       PathService.get().setFullUrl(message.chatUrl).go();
     };
 

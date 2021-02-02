@@ -75,6 +75,7 @@ define(['routes',
             else aux = new Date();
             return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
           };
+          $rootScope.isSafari = window.safari !== undefined;
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
@@ -99,7 +100,7 @@ define(['routes',
 
         Restangular.addRequestInterceptor(function (element, operation, what, url) {
           if (requestsInProgress === 0) {
-            $rootScope.loading = true;
+            $rootScope.rootScopeLoading = true;
           }
           requestsInProgress++;
           return element;
@@ -109,7 +110,7 @@ define(['routes',
         Restangular.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
           requestsInProgress--;
           if (requestsInProgress === 0) {
-            $rootScope.loading = false;
+            $rootScope.rootScopeLoading = false;
           }
           return data;
         });

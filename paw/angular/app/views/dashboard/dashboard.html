@@ -10,12 +10,12 @@
     </div>
   </div>
 
-  <div class="text-center" ng-if="isLoading()">
+  <div class="text-center" ng-if="loadingProjects">
     <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
   </div>
 
   <div class="dashboard">
-    <div class="card-group" ng-repeat="project in getList()">
+    <div class="card-group" ng-repeat="project in projects">
       <span class="anchor-header" id="dashboard-project-{{project.id}}"></span>
       <div class="container py-3">
         <div class="card msg">
@@ -46,7 +46,7 @@
                     </a>
                   </div>
                   <div class="col-1">
-                    <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right "  type="button" data-toggle="collapse"
+                    <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right " data-toggle="collapse"
                        data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
 <!--                      TODO: Ver si hay alguna forma mejor de reservar el espacio para cuando se oculta-->
                       <div class="notification-icon">
@@ -57,7 +57,7 @@
                     </a>
                   </div>
                   <div class="col-1">
-                    <a ng-click="fetchOffers(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                    <a ng-click="fetchOffers(project.id, $index)" class="btn btn-inv btn-project pull-right" data-toggle="collapse"
                        data-target="#fundcollapse{{project.id}}" aria-expanded="false" aria-controls="fundcollapse{{project.id}}">
                       <div class="notification-icon">
                         <img class="nav-icon" src="images/pig-icon-b.png" alt="">
@@ -65,7 +65,7 @@
                     </a>
                   </div>
                   <div class="col-1">
-                    <a ng-if="!funded" ng-click="fetchStats(project.id, $index)" class="btn btn-inv btn-project pull-right"  type="button" data-toggle="collapse"
+                    <a ng-if="!funded" ng-click="fetchStats(project.id, $index)" class="btn btn-inv btn-project pull-right" data-toggle="collapse"
                        data-target="#statscollapse{{project.id}}" aria-expanded="false" aria-controls="statscollapse{{project.id}}">
                       <div class="notification-icon">
                         <img class="nav-icon" src="images/stats-icon-b.png" alt="">
@@ -85,13 +85,13 @@
             <div class="card-body dash-body" style="padding:10px 20px !important">
               <div class="row">
                 <div class="col-1">
-                  <img class="nav-icon" src="images/chat-icon-b.png" alt="">
+                  <img ng-show="$index==0" class="nav-icon" src="images/chat-icon-b.png" alt="">
                 </div>
                 <div class="col-3 cut-text ww-last">
                   <h6 class="ww-last">{{toLocaleDateTimeString(message.publishDate)}}</h6>
                   {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
                 </div>
-                <div class="col-7 ww-last">
+                <div class="col-6 ww-last">
                   <div class="row">
                     <div class="col-3 msg-offer cut-text">
                       <img src="images/down-arrow.png" alt="">
@@ -105,6 +105,9 @@
                       <h6><i>{{message.comment}}</i></h6>
                     </div>
                   </div>
+                </div>
+                <div class="col-1 ww-last">
+                  <span ng-if="message.notification" style="color:transparent; border-radius: 50%" class="badge bg-danger pull-right">1</span>
                 </div>
                 <div class="col-1">
                   <a ng-click="goToChat(message)" class="btn btn-inv pull-right">
@@ -143,7 +146,7 @@
             <div class="card-body dash-body">
               <div class="row">
                 <div class="col-1">
-                  <img class="nav-icon" src="images/pig-icon-b.png" alt="">
+                  <img ng-show="$index==0" class="nav-icon" src="images/pig-icon-b.png" alt="">
                 </div>
                 <div class="col-3 cut-text">
                   {{'fullName' | translate : { firstName: message.firstName, lastName: message.lastName } }}
@@ -192,7 +195,6 @@
         <div class="card msg-collapse-stats">
           <div class="card-body dash-body">
             <div class="row">
-              <div class="col-">{{millisToMinSec(project.secondsAvg)}}</div>
               <div class="col-1"> <img class="nav-icon" src="images/stats-icon-b.png" alt=""> </div>
               <div class="col-2"> <span class="stat-number">{{project.seen}}</span> <span class="stat-title"> {{'seen' | translate}}</span> </div>
               <div class="col-2"> <span class="stat-number1">{{project.investorsSeen}}</span> <span class="stat-title">{{'investorsSeen' | translate}}</span> </div>
@@ -257,7 +259,7 @@
     </div>
   </div>
 
-    <div ng-if="getList().length === 0" class="card no-proj-mine">
+    <div ng-if="projects.length === 0" class="card no-proj-mine">
       <div class="card-header text-center">
         <div ng-switch="funded">
           <div ng-switch-when="true">
