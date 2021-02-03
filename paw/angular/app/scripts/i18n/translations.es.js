@@ -290,11 +290,13 @@ define([], function() {
     noDealsFound: 'No se encontraron acuerdos',
     imageError: 'Error al subir algunas imágenes',
     serverRetryError: 'No pudo completarse la solicitud. Intente nuevamente.',
+    editProfileTitle: 'Editar Perfil',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',
     pageTitleDashboard: 'Tablero | VestNet',
-    pageTitleEdit: 'Editar Proyecto | VestNet',
+    pageTitleEditProfile: 'Editar Perfil | VestNet',
+    pageTitleEditProject: 'Editar Proyecto | VestNet',
     pageTitleError: 'Error {{e}} | VestNet',
     pageTitleLogin: 'Acceder | VestNet',
     pageTitleLogout: 'Cerrar Sesión | VestNet',

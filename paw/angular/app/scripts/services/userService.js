@@ -11,9 +11,8 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     };
 
 
-    userService.updateUser = function (fName, lName,rId,ph,em,rl,ln, bday,count, st, c) {
-      var body = {firstName: fName, lastName: lName, realId: rId, phone: ph, email:em, role:rl, password: pass, linkedin: ln, birthday:bday, country:count, state:st, city: c};
-      return root.customPUT(body)
+    userService.updateUser = function (user) {
+      return root.customPUT(user)
     };
 
 

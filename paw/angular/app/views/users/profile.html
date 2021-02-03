@@ -46,7 +46,18 @@
 
     <div class="col-md-8">
       <div class="profile-head">
-        <h2 class="bold">{{'profileTitle' | translate : {first : user.firstName, last : user.lastName} }}</h2>
+        <div class="row">
+          <div class="col-10">
+            <h2 class="bold">{{'profileTitle' | translate : {first : user.firstName, last : user.lastName} }}</h2>
+          </div>
+          <div class="col-2">
+            <a ng-href="#/editProfile" class="btn btn-inv btn-project pull-right">
+              <div class="notification-icon">
+                <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+              </div>
+            </a>
+          </div>
+        </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li ng-if="isInvestor" class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"

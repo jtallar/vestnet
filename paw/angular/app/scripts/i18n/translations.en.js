@@ -290,11 +290,13 @@ define([], function() {
     noDealsFound: 'No deals found',
     imageError: 'Could not upload some images',
     serverRetryError: 'Could not complete request. Please try again.',
+    editProfileTitle: 'Edit Profile',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',
     pageTitleDashboard: 'Dashboard | VestNet',
-    pageTitleEdit: 'Edit Project | VestNet',
+    pageTitleEditProfile: 'Edit Profile | VestNet',
+    pageTitleEditProject: 'Edit Project | VestNet',
     pageTitleError: 'Error {{e}} | VestNet',
     pageTitleLogin: 'Login | VestNet',
     pageTitleLogout: 'Logout | VestNet',
