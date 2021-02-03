@@ -85,7 +85,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         (aux.length !== 0) ? $scope.selectedOrder = aux[0] : $scope.selectedOrder = $scope.fields[0];
       }
       $scope.categories = [emptyCategory];
-      $scope.selectedCategory = emptyCategory;
+      param = parseInt($routeParams.c);
+      $scope.selectedCategory = (isNaN(param)) ? emptyCategory : {id:param, name:'noFilter'};
 
       param = parseInt($routeParams.min);
       $scope.minCost = (isNaN(param)) ? undefined : param;
@@ -115,11 +116,11 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
 
       projectService.getCategories().then(function (cats) {
-        $scope.categories = $scope.categories.concat(cats.data);
+        $scope.categories = [emptyCategory].concat(cats.data);
         param = parseInt($routeParams.c);
         if (!isNaN(param)) {
           aux = $scope.categories.filter(function (el) { return el.id === param; });
-          if (aux.length !== 0) $scope.selectedCategory = aux[0];
+          $scope.selectedCategory = (aux.length !== 0) ? aux[0] : emptyCategory;
         }
       });
 
