@@ -42,7 +42,7 @@ define([], function() {
     forgotPassword: 'Olvidó su contraseña?',
     noReg: '¿Aún no esta registrado?',
     loginError: '¡Mail o contraseña inválidos!',
-    loginVerificationError: 'La cuenta no esta verificada. ¡Revisa tu mail para verificarla!',
+    loginVerificationError: 'La cuenta no esta verificada. ¡Revisa tu mail!',
     verificationInvalid: '¡El link de verificación es inválido!',
     verificationTokenExpired: 'Tu link de verificación expiró. ¡Te mandamos uno nuevo!',
     passwordInvalidToken: '¡El link de recuperación es inválido!',

@@ -42,7 +42,7 @@ define([], function() {
     forgotPassword: 'Forgot password?',
     noReg: 'Don\'t have an account?',
     loginError: 'Invalid email or password!',
-    loginVerificationError: 'Account is not verified. Check your mail for the verification link!',
+    loginVerificationError: 'Account is not verified. Check your email!',
     verificationInvalid: 'Verification link is invalid!',
     verificationTokenExpired: 'Your verification link expired. We sent you a new one!',
     passwordInvalidToken: 'Password recovery link is invalid!',
