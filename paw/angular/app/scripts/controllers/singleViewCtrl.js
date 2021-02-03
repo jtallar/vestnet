@@ -92,7 +92,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     projectService.getById($scope.id.toString()).then(function (project) {
       $scope.project = project.data;
       $scope.project.slideshow = [];
-      $scope.project.categorieNames = [];
+      $scope.project.categorieObjects = [];
       $scope.project.chatUrl = PathService.get().chat(project.data.id).path;
       $scope.project.stages = [
         {'number': 1, 'name': 'Stage 1', 'comment': '',
@@ -141,11 +141,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       });
 
       urlService.get($scope.project.categories).then(function (categories) {
-        var cats = [];
-        for (var i = 0; i < categories.data.length; i++){
-          cats.push(categories.data[i].name);
-        }
-        $scope.project.categorieNames = cats;
+        $scope.project.categorieObjects = categories.data;
       }, function (errorResponse) {
         // 404 should not happen
         console.error(errorResponse);
