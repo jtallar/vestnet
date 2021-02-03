@@ -93,6 +93,13 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       $scope.maxCost = (isNaN(param)) ? undefined : param;
       $scope.costRangeError = false;
 
+      param = parseInt($routeParams.pmin);
+      $scope.minPercentage = (isNaN(param)) ? 0 : param;
+      param = parseInt($routeParams.pmax);
+      $scope.maxPercentage = (isNaN(param)) ? 100 : param;
+      $scope.percentageRangeError = false;
+
+
       projectService.getCategories().then(function (cats) {
         $scope.categories = $scope.categories.concat(cats.data);
         param = parseInt($routeParams.c);
@@ -117,11 +124,13 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       this.setPathParams = function () {
-        PathService.get().setParamsInUrl({p:$scope.page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id});
+        PathService.get().setParamsInUrl({p:$scope.page, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost,
+          pmax:$scope.maxPercentage, pmin:$scope.minPercentage, c:$scope.selectedCategory.id});
       };
 
       this.filterObject = function () {
-        return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost, c:$scope.selectedCategory.id};
+        return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost,
+          pmax:$scope.maxPercentage / 100.0, pmin:$scope.minPercentage  / 100.0, c:$scope.selectedCategory.id};
       };
 
       this.getArgs = function (string) {
@@ -136,6 +145,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         if (projects.length === 0) {
           $scope.noProjectsFound = true;
           $scope.loading = false;
+          $scope.lastPage = 1;
           foot.style.display = 'block';
           return;
         }
@@ -162,6 +172,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         $scope.minCost = undefined;
         $scope.maxCost = undefined;
         $scope.searchField = undefined;
+        $scope.minPercentage = 0;
+        $scope.maxPercentage = 100;
       };
 
       $scope.applyFilter = function () {
@@ -169,10 +181,17 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           $scope.costRangeError = true;
           return;
         }
+        $scope.costRangeError = false;
+        if ($scope.minPercentage > $scope.maxPercentage) {
+          $scope.percentageRangeError = true;
+          return;
+        }
+        $scope.percentageRangeError = false;
 
         $scope.page = 1;
         $scope.projects = [];
         $scope.noProjectsFound = false;
+        $scope.loading = true;
         _this.setPathParams();
         projectService.getPage(_this.filterObject()).then(function (projects) {
           _this.getArgs(projects.headers().link);
@@ -193,7 +212,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.toInt = function (num){
         return parseInt(num);
-      }
+      };
 
     }]);
 });

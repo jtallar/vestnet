@@ -21,9 +21,10 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
 
     // TODO: Si el proyecto no existe, que no intente sumar estadistica, ver que onda el addStatError
     $scope.$on("$destroy", function(){
+      if ($scope.addStatError || $scope.project == null) return;
       projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
         .then(function (response) {
-          console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+          // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
         }, function (errorResponse) {
         if (errorResponse.status === 404) {
           $scope.addStatError = true;
@@ -53,7 +54,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
 
     var param = parseInt($routeParams.id);
     if (isNaN(param) || param <= 0) {
-      PathService.get().error().go();
+      PathService.get().error().replace();
       return;
     }
     $scope.id = param;
@@ -170,7 +171,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     }, function (errorResponse) {
       if (errorResponse.status === 404) {
         $scope.addStatError = true;
-        PathService.get().error().go();
+        PathService.get().error().replace();
         return;
       }
       console.error(errorResponse);

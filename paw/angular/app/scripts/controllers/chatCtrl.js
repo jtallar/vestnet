@@ -16,18 +16,12 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       else PathService.get().logout().go();
 
       if (isNaN(projectId) || (isNaN(investorId) && role === entrepreneur)) {
-        PathService.get().error().go();
+        PathService.get().error().replace();
         return;
       }
 
-      $scope.sent = true;    // if the mail was sent retreive from url
       $scope.backAction = function() {
-        if (this.sent) {
-          history.back();
-        } else {
-          history.back();
-          history.back();
-        }
+        history.back();
       };
 
       // $scope.toLocaleDateTimeString = function(date) {
@@ -66,12 +60,12 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
             _this.setUser(user.data);
           }, function (err) {
             console.error(err);
-            PathService.get().error().go();
+            PathService.get().error().replace();
           })
         }
       }, function (errorResponse) {
         if (errorResponse.status === 404) {
-          PathService.get().error().go();
+          PathService.get().error().replace();
           return;
         }
         console.error(errorResponse);
@@ -80,9 +74,12 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       if (role === entrepreneur) {
         userService.getUser(investorId.toString()).then(function (user) {
           _this.setUser(user.data);
-        }, function (err) {
-          console.error(err);
-          PathService.get().error().go();
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            PathService.get().error().replace();
+            return;
+          }
+          console.error(errorResponse);
         })
       }
 
@@ -128,7 +125,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         // Empty chat && Investor --> only send new offer
         if (chats.length === 0) {
           if (role === entrepreneur) {
-            PathService.get().error().go();
+            PathService.get().error().replace();
             return;
           } else {
             $scope.responseEnabled = false;
@@ -173,7 +170,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         _this.scrollToBottom();
       }, function (errorResponse) {
         if (errorResponse.status === 403) {
-          PathService.get().error().go({code: 403});
+          PathService.get().error().replace({code: 403});
           return;
         }
         console.error(errorResponse);
