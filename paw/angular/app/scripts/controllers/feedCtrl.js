@@ -144,8 +144,8 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       this.filterObject = function () {
-        var pmin = (!$scope.minPercentage) ? 0.0 : $scope.minPercentage / 100.0;
-        var pmax = (!$scope.maxPercentage) ? 1.0 : $scope.maxPercentage / 100.0;
+        var pmin = (!$scope.minPercentage) ? undefined : $scope.minPercentage / 100.0;
+        var pmax = (!$scope.maxPercentage || $scope.maxPercentage === 100) ? undefined : $scope.maxPercentage / 100.0;
         return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost,
           pmax:pmax, pmin:pmin, c:$scope.selectedCategory.id};
       };
