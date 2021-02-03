@@ -186,7 +186,7 @@ public class UserRestController {
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException, MessagingException {
+    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException {
 
         LOGGER.debug("Endpoint PUT /users/password reached with " + passwordDto.toString());
 
@@ -195,9 +195,20 @@ public class UserRestController {
     }
 
 
+    @POST
+    @Path("/verify")
+    public Response requestVerification(@Valid final MailDto mailDto) throws UserDoesNotExistException, MessagingException {
+
+        LOGGER.debug("Endpoint POST /users/verify reached with " + mailDto.toString());
+
+        userService.requestVerification(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo)).orElseThrow(UserDoesNotExistException::new);
+        return Response.ok().build();
+    }
+
+
     @PUT
     @Path("/verify")
-    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException, MessagingException {
+    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException {
 
         LOGGER.debug("Endpoint PUT /users/verify reached with " + tokenDto.toString());
 

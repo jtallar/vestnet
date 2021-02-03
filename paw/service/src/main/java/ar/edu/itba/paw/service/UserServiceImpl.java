@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.*;
+import java.util.function.BiFunction;
 
 @Primary
 @Service
@@ -117,13 +118,8 @@ public class UserServiceImpl implements UserService {
     public Optional<User> requestPassword(String mail, URI baseUri) throws MessagingException {
         final Optional<User> optionalUser = userDao.findByUsername(mail);
         if (optionalUser.isPresent()) {
-            Token token = tokenDao.create(optionalUser.get());
-            try {
-                emailService.sendPasswordRecovery(optionalUser.get(), token.getToken(), baseUri);
-            } catch (MessagingException e) {
-                tokenDao.delete(token.getId());
-                throw e;
-            }
+            ThrowableTriConsumer<User, String, URI, MessagingException> func = (x, y, z) -> emailService.sendPasswordRecovery(x, y, z);
+            sendMailWithToken(optionalUser.get(), baseUri, func);
         }
         return optionalUser;
     }
@@ -131,15 +127,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updatePassword(String token, String password) throws InvalidTokenException, MessagingException {
-        updateWithToken(token, password, true, null);
+    public Optional<User> requestVerification(String mail, URI baseUri) throws MessagingException {
+        final Optional<User> optionalUser = userDao.findByUsername(mail);
+        if (optionalUser.isPresent()) {
+            ThrowableTriConsumer<User, String, URI, MessagingException> func = (x, y, z) -> emailService.sendVerification(x, y, z);
+            sendMailWithToken(optionalUser.get(), baseUri, func);
+        }
+        return optionalUser;
     }
 
 
     @Override
     @Transactional
-    public void updateVerification(String token, URI baseUri) throws InvalidTokenException, MessagingException {
-        updateWithToken(token, null, false, baseUri);
+    public void updatePassword(String token, String password) throws InvalidTokenException {
+        updateWithToken(token, password, true);
+    }
+
+
+    @Override
+    @Transactional
+    public void updateVerification(String token, URI baseUri) throws InvalidTokenException {
+        updateWithToken(token, null, false);
     }
 
 
@@ -190,15 +198,32 @@ public class UserServiceImpl implements UserService {
     /** Auxiliary functions */
 
     /**
+     *
+     * @param user
+     * @param baseUri
+     * @param func
+     * @throws MessagingException
+     */
+    private void sendMailWithToken(User user, URI baseUri, ThrowableTriConsumer<User, String, URI, MessagingException> func) throws MessagingException {
+        Token token = tokenDao.create(user);
+        try {
+            func.apply(user, token.getToken(), baseUri);
+        } catch (MessagingException e) {
+            tokenDao.delete(token.getId());
+            throw e;
+        }
+    }
+
+
+
+    /**
      * Updates the password or sets as verified.
      * @param token The necessary token to check its validity.
      * @param password The password, if given, to update.
      * @param isPassword If its change of password or verification.
-     * @param baseUri The base uri in case the verification token has expired.
      * @throws InvalidTokenException When the token corrupted/missing/invalid.
-     * @throws MessagingException On messaging error.
      */
-    private void updateWithToken(String token, String password, boolean isPassword, URI baseUri) throws InvalidTokenException, MessagingException {
+    private void updateWithToken(String token, String password, boolean isPassword) throws InvalidTokenException {
         if (token == null || token.isEmpty()) throw new InvalidTokenException("Empty token string");
 
         final Optional<Token> optionalToken = tokenDao.findByToken(token);
@@ -211,18 +236,7 @@ public class UserServiceImpl implements UserService {
         tokenDao.delete(realToken.getId());
 
         /** Resend in case of an invalid token for verification */
-        if (!realToken.isValid()) {
-            if (!isPassword) {
-                Token newToken = tokenDao.create(user);
-                try {
-                    emailService.sendVerification(user, newToken.getToken(), baseUri);
-                } catch (MessagingException e) {
-                    tokenDao.delete(newToken.getId());
-                    throw e;
-                }
-            }
-            throw new InvalidTokenException("Token invalid");
-        }
+        if (!realToken.isValid()) throw new InvalidTokenException("Token invalid");
 
         /** Valid token, make changes */
         if (isPassword) user.setPassword(encoder.encode(password));

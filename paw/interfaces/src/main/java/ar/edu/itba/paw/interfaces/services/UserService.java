@@ -82,14 +82,24 @@ public interface UserService {
     Page<Project> getOwnedProjects(long id, boolean closed, int page, int pageSize);
 
 
-        /**
-         * Requests for a password change.
-         * @param mail The users mail to change the password.
-         * @param baseUri Base uri for mail creation.
-         * @return The optional of the found user.
-         * @throws MessagingException If the mail sender fails to deliver message.
-         */
+    /**
+     * Requests for a password change.
+     * @param mail The users mail to change the password.
+     * @param baseUri Base uri for mail creation.
+     * @return The optional of the found user.
+     * @throws MessagingException If the mail sender fails to deliver message.
+     */
     Optional<User> requestPassword(String mail, URI baseUri) throws MessagingException;
+
+
+    /**
+     * Requests for a verification mail.
+     * @param mail The users mail to send the verification mail.
+     * @param baseUri Base uri for mail creation.
+     * @return The optional of the found user.
+     * @throws MessagingException If the mail sender fails to deliver message.
+     */
+    Optional<User> requestVerification(String mail, URI baseUri) throws MessagingException;
 
 
     /**
@@ -97,9 +107,8 @@ public interface UserService {
      * @param token The token to check for.
      * @param password New user's password.
      * @throws InvalidTokenException If the token does not exists or is invalid.
-     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    void updatePassword(String token, String password) throws InvalidTokenException, MessagingException;
+    void updatePassword(String token, String password) throws InvalidTokenException;
 
 
     /**
@@ -108,9 +117,8 @@ public interface UserService {
      * @param token The token.
      * @param baseUri The uri to resend the email.
      * @throws InvalidTokenException If the token does not exists or is invalid.
-     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    void updateVerification(String token, URI baseUri) throws InvalidTokenException, MessagingException;
+    void updateVerification(String token, URI baseUri) throws InvalidTokenException;
 
 
     /**
