@@ -26,10 +26,14 @@
         <div class="row">
           <div class="col-1">
             <div ng-if="!message.projectPortraitExists">
-              <img ng-src="images/projectNoImage.png" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              <a ng-href="#{{message.projectUrl}}">
+                <img ng-src="images/projectNoImage.png" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              </a>
             </div>
             <div ng-if="message.projectPortraitExists">
-              <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              <a ng-href="#{{message.projectUrl}}">
+                <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              </a>
             </div>
           </div>
           <div class="col-md-11 ww-content">
