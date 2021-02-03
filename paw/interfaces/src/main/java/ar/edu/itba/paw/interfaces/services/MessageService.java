@@ -5,9 +5,7 @@ import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.components.Page;
 
-import javax.mail.MessagingException;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -23,9 +21,8 @@ public interface MessageService {
      * @param baseUri Base url for replies.
      * @return The  created message.
      * @throws InvalidMessageException In case the message cannot be sent. Reasons may vary.
-     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    Message create(long projectId, long investorId, long sessionUserId, MessageContent content, int expiryDays, URI baseUri) throws InvalidMessageException, MessagingException;
+    Message create(long projectId, long investorId, long sessionUserId, MessageContent content, int expiryDays, URI baseUri) throws InvalidMessageException;
 
 
     /**
@@ -82,9 +79,8 @@ public interface MessageService {
      * @param baseUri Base uri for replies.
      * @return The updated message or null if not found.
      * @throws InvalidMessageException In case the message cannot be updated. Reasons may vary.
-     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri) throws InvalidMessageException, MessagingException;
+    Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted, URI baseUri) throws InvalidMessageException;
 
 
     /**

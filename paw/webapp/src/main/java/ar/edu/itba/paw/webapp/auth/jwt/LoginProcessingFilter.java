@@ -38,7 +38,7 @@ public class LoginProcessingFilter extends AbstractAuthenticationProcessingFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         JsonLoginRequest loginRequest = null;
         try {
             loginRequest = objectMapper.readValue(request.getReader(), JsonLoginRequest.class);

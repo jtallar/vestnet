@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -43,7 +42,7 @@ public class UserRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException, MessagingException {
+    public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException {
 
         LOGGER.debug("Endpoint POST /users reached with " + user.toString());
 
@@ -174,7 +173,7 @@ public class UserRestController {
 
     @POST
     @Path("/password")
-    public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException, MessagingException {
+    public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException {
 
         LOGGER.debug("Endpoint POST /users/password reached with " + mailDto.toString());
 
@@ -186,7 +185,7 @@ public class UserRestController {
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException, MessagingException {
+    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException {
 
         LOGGER.debug("Endpoint PUT /users/password reached with " + passwordDto.toString());
 
@@ -195,9 +194,20 @@ public class UserRestController {
     }
 
 
+    @POST
+    @Path("/verify")
+    public Response requestVerification(@Valid final MailDto mailDto) throws UserDoesNotExistException {
+
+        LOGGER.debug("Endpoint POST /users/verify reached with " + mailDto.toString());
+
+        userService.requestVerification(mailDto.getMail(), UriInfoUtils.getBaseURI(uriInfo)).orElseThrow(UserDoesNotExistException::new);
+        return Response.ok().build();
+    }
+
+
     @PUT
     @Path("/verify")
-    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException, MessagingException {
+    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException {
 
         LOGGER.debug("Endpoint PUT /users/verify reached with " + tokenDto.toString());
 

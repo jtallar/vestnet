@@ -24,7 +24,7 @@ public class Token {
 
 
     /** Protected */ Token() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public Token(User user) {
@@ -73,7 +73,7 @@ public class Token {
     }
 
 
-    /** Auxiliary functions */
+    /* Auxiliary functions */
 
 
     /**

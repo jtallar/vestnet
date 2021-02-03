@@ -38,7 +38,7 @@ public class ProjectStats {
     private Date lastSeen;
 
     /** Protected */ ProjectStats() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public ProjectStats(boolean dummy) {

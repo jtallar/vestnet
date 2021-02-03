@@ -75,7 +75,7 @@ public class Project {
 
 
     /** Protected */ Project() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
 
