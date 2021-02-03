@@ -16,6 +16,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'test-main.js',
+      {pattern:'bower_components/angular/angular.js', included:true},
+      {pattern:'bower_components/angular-mocks/angular-mocks.js', included:true},
       {pattern:'app/tests/feedCtrlTest/*.js', included:true}
     ],
 
