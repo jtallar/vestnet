@@ -22,10 +22,10 @@
           <label>{{'password' | translate}}</label>
           <input style="color: black !important;" id="pass" name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}" ng-model="controller.user.password" required
                  ng-keyup="!loginForm.$invalid && $event.keyCode == 13 && login(controller.user)" />
-          <a ng-href="#/requestPassword">{{'forgotPassword' | translate}}</a>
+          <a style="font-size: 16px" ng-href="#/requestPassword">{{'forgotPassword' | translate}}</a>
         </div>
         <div class="form-group">
-          <label>
+          <label style="font-weight: normal !important">
             <input name="remember_me" type="checkbox" ng-model="controller.user.rememberMe"/>
             {{'rememberMe' | translate}}
           </label>

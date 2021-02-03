@@ -38,7 +38,7 @@ define([], function() {
     send: 'Send',
     emailError: 'Invalid email!',
     back: 'Back',
-    rememberMe: 'Remember email and password',
+    rememberMe: 'Remember me',
     forgotPassword: 'Forgot password?',
     noReg: 'Don\'t have an account?',
     loginError: 'Invalid email or password!',
