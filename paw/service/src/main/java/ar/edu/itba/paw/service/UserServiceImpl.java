@@ -15,10 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.*;
-import java.util.function.BiFunction;
 
 @Primary
 @Service
@@ -44,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException, MessagingException {
+    public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException {
 
         if (userDao.findByUsername(dataUser.getEmail()).isPresent()) throw new UserAlreadyExistsException();
         dataUser.setPassword(encoder.encode(dataUser.getPassword()));
@@ -115,24 +113,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Optional<User> requestPassword(String mail, URI baseUri) throws MessagingException {
+    public Optional<User> requestPassword(String mail, URI baseUri) {
         final Optional<User> optionalUser = userDao.findByUsername(mail);
-        if (optionalUser.isPresent()) {
-            ThrowableTriConsumer<User, String, URI, MessagingException> func = (x, y, z) -> emailService.sendPasswordRecovery(x, y, z);
-            sendMailWithToken(optionalUser.get(), baseUri, func);
-        }
+        optionalUser.ifPresent(u -> emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri));
         return optionalUser;
     }
 
 
     @Override
     @Transactional
-    public Optional<User> requestVerification(String mail, URI baseUri) throws MessagingException {
+    public Optional<User> requestVerification(String mail, URI baseUri) {
         final Optional<User> optionalUser = userDao.findByUsername(mail);
-        if (optionalUser.isPresent()) {
-            ThrowableTriConsumer<User, String, URI, MessagingException> func = (x, y, z) -> emailService.sendVerification(x, y, z);
-            sendMailWithToken(optionalUser.get(), baseUri, func);
-        }
+        optionalUser.ifPresent(u -> emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri));
         return optionalUser;
     }
 
@@ -191,29 +183,7 @@ public class UserServiceImpl implements UserService {
 
 
 
-
-
-
-
     /** Auxiliary functions */
-
-    /**
-     *
-     * @param user
-     * @param baseUri
-     * @param func
-     * @throws MessagingException
-     */
-    private void sendMailWithToken(User user, URI baseUri, ThrowableTriConsumer<User, String, URI, MessagingException> func) throws MessagingException {
-        Token token = tokenDao.create(user);
-        try {
-            func.apply(user, token.getToken(), baseUri);
-        } catch (MessagingException e) {
-            tokenDao.delete(token.getId());
-            throw e;
-        }
-    }
-
 
 
     /**

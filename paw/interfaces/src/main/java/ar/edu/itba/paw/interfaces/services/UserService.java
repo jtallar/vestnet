@@ -2,18 +2,12 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
-import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
 
-import javax.mail.MessagingException;
 import java.net.URI;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -24,9 +18,8 @@ public interface UserService {
      * @param baseUri Base URI for verification purposes.
      * @return The created User.
      * @throws UserAlreadyExistsException when the username is already taken.
-     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    User create(User dataUser, URI baseUri) throws UserAlreadyExistsException, MessagingException;
+    User create(User dataUser, URI baseUri) throws UserAlreadyExistsException;
 
 
     /**
@@ -87,9 +80,8 @@ public interface UserService {
      * @param mail The users mail to change the password.
      * @param baseUri Base uri for mail creation.
      * @return The optional of the found user.
-     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    Optional<User> requestPassword(String mail, URI baseUri) throws MessagingException;
+    Optional<User> requestPassword(String mail, URI baseUri);
 
 
     /**
@@ -97,9 +89,8 @@ public interface UserService {
      * @param mail The users mail to send the verification mail.
      * @param baseUri Base uri for mail creation.
      * @return The optional of the found user.
-     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    Optional<User> requestVerification(String mail, URI baseUri) throws MessagingException;
+    Optional<User> requestVerification(String mail, URI baseUri);
 
 
     /**

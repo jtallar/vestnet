@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +43,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Message create(long projectId, long investorId, long sessionUserId, Message.MessageContent content, int expiryDays,
-                          URI baseUri) throws InvalidMessageException, MessagingException {
+                          URI baseUri) throws InvalidMessageException {
 
         /** Checks for the existence of the project and the owner ID is the right one */
         final Project project = projectService.findById(projectId).orElseThrow(InvalidMessageException::new);
@@ -129,7 +128,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted,
-                                                 URI baseUri) throws InvalidMessageException, MessagingException {
+                                                 URI baseUri) throws InvalidMessageException {
         final Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
 
         if (!optionalMessage.isPresent()) return Optional.empty();
