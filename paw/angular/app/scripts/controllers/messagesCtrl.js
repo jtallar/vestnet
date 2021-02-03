@@ -39,13 +39,16 @@ define(['paw2020a', 'services/messageService', 'services/sampleService', 'servic
         $scope.messages[i].projectUrl = PathService.get().singleProject($scope.messages[i].projectId).path;
         $scope.messages[i].chatUrl = PathService.get().chat($scope.messages[i].projectId).path;
         $scope.messages[i].notification = (!$scope.messages[i].seen && !$scope.messages[i].direction) || (!$scope.messages[i].seenAnswer && $scope.messages[i].direction && $scope.messages[i].accepted != null);
-        if ($scope.messages[i].projectPortraitExists) {
-          sampleService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
-            $scope.messages[map[image.data.route]].projectImage = image.data.image;
-          }, function (err) {
-            console.log("No image");
-          });
-        }
+        $scope.messages[i].projectPortraitExists = false;
+        sampleService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
+          $scope.messages[map[image.data.route]].projectImage = image.data.image;
+          $scope.messages[map[image.data.route]].projectPortraitExists = true;
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            return;
+          }
+          console.error(errorResponse);
+        });
       }
       this.loading = false;
     };

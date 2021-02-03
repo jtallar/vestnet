@@ -38,7 +38,7 @@ define([], function() {
     send: 'Enviar',
     emailError: 'Mail inválido!',
     back: 'Volver',
-    rememberMe: 'Recordar mail y constraseña',
+    rememberMe: 'Recuérdame',
     forgotPassword: 'Olvidó su contraseña?',
     noReg: '¿Aún no esta registrado?',
     loginError: '¡Mail o contraseña inválidos!',
