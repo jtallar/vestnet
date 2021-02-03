@@ -16,7 +16,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'test-main.js',
-      pattern('')
+      {pattern:'app/tests/feedCtrlTest/*.js', included:true}
     ],
 
 
