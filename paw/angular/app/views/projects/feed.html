@@ -110,25 +110,27 @@
           </div>
         </div>
 
-        <div class="row field">
+        <div class="field">
           <label class="range">{{'percFilter' | translate}} </label>
-          <div>
-            <div class="row range-box col-md" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
+          <div class="row">
+            <div class="range-box2 col-md" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'min' | translate}}</span>
                 </div>
                 <input style="color: black !important;" name="minPercentage" ng-model="minPercentage" type="number" class="form-control mx-auto mx-auto" placeholder="0"
                        min="0" max="100" step="1" no-float pattern="^[0-9]+"/>
+                <span style="font-size:14px !important;  padding: 0 !important; margin: auto !important">%</span>
               </div>
             </div>
-            <div class="row range-box col-md" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
+            <div class="range-box2 col-md" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'max' | translate}}</span>
                 </div>
                 <input style="color: black !important;" name="maxPercentage" ng-model="maxPercentage" type="number" class="form-control mx-auto mx-auto" placeholder="100"
                        min="0" max="100" step="1" no-float pattern="^[0-9]+"/>
+                <span style="font-size:14px !important;  padding: 0 !important; margin: auto !important">%</span>
               </div>
               <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
             </div>
