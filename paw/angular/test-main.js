@@ -12,13 +12,77 @@ Object.keys(window.__karma__.files).forEach(function (file) {
   }
 })
 
+var tests = [];
+for (var file in window.__karma__.files) {
+  if (window.__karma__.files.hasOwnProperty(file)) {
+    if (/Spec\.js$/.test(file)) {
+      tests.push(file);
+    }
+  }
+}
+
+
 require.config({
   // Karma serves files under /base, which is the basePath from your config file
-  baseUrl: '/base/',
+  baseUrl: '/base/app/scripts',
+
+  paths: {
+    jquery: '../../bower_components/jquery/dist/jquery',
+    angular: '../../bower_components/angular/angular',
+    angularMocks: '../../bower_components/angular-mocks/angular-mocks',
+    ngResource: '../../bower_components/angular-resource/angular-resource.min',
+    'angular-route': '../../bower_components/angular-route/angular-route',
+    bootstrap: '../../bower_components/bootstrap/dist/js/bootstrap',
+    modal: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal',
+    'angular-translate': '../../bower_components/angular-translate/angular-translate',
+  },
+
+  shim: {
+    jquery: {
+      exports: '$'
+    },
+    angular: {
+      deps: [ 'jquery', 'bootstrap'],
+      exports: 'angular'
+    },
+    'angular-route': {
+      deps: [
+        'angular'
+      ]
+    },
+    modal: {
+      deps: [
+        'jquery'
+      ]
+    },
+    bootstrap: {
+      deps: [
+        'jquery',
+        'modal'
+      ]
+    },
+    ngResource: {
+      deps: [ 'angular' ],
+      exports: 'ngResource'
+    },
+    angularMocks: {
+      deps: [ 'ngResource' ],
+      exports: 'angularMocks'
+    }
+  },
+
+  priority: [
+    'angular'
+  ],
+
 
   // dynamically load all test files
-  deps: allTestFiles,
+  deps: tests,
 
-  // we have to kickoff jasmine, as it is asynchronous
-  callback: window.__karma__.start
-})
+  // // we have to kickoff jasmine, as it is asynchronous
+  // callback: window.__karma__.start
+});
+
+require(tests, function(){
+  window.__karma__.start();
+});
