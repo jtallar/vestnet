@@ -289,6 +289,7 @@ define([], function() {
     noFavoritesFound: 'No favorites found',
     noDealsFound: 'No deals found',
     imageError: 'Could not upload some images',
+    serverRetryError: 'Could not complete request. Please try again.',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',

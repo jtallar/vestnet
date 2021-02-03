@@ -37,7 +37,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           userService.putFavorite(id, false).then(function () {
 
           },function (error) {
-            console.log(error)
+            console.error(error)
           })
         }
         else {
@@ -45,11 +45,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           userService.putFavorite(id, true).then(function () {
 
           },function (error) {
-            console.log(error)
+            console.error(error)
           })
 
         }
-        console.log(id)
       };
 
 

@@ -289,6 +289,7 @@ define([], function() {
     noFavoritesFound: 'No se encontraron favoritos',
     noDealsFound: 'No se encontraron acuerdos',
     imageError: 'Error al subir algunas imágenes',
+    serverRetryError: 'No pudo completarse la solicitud. Intente nuevamente.',
 
     // Page Titles
     pageTitleChat: 'Chat - {{p}} | VestNet',

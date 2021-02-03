@@ -121,8 +121,8 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
             $scope.project.stages[i].name = data.name;
             $scope.project.stages[i].completed = data.completed;
             $scope.project.stages[i].completedDate = $scope.getDate(data.completedDate)[0];
-            console.log(i, $scope.project.stages[i]);
-            console.log($scope.getDate(data.completedDate));
+            // console.log(i, $scope.project.stages[i]);
+            // console.log($scope.getDate(data.completedDate));
             i++;
           }
         });

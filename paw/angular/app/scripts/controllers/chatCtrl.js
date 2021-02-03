@@ -6,6 +6,8 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
   paw2020a.controller('chatCtrl', ['projectService', 'sampleService', 'messageService', 'userService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', '$route', '$rootScope',
     function(projectService, sampleService, messageService, userService, PathService, AuthenticationService, $scope, $routeParams, $route, $rootScope) {
 
+      $scope.serverRetryError = false;
+
       var _this = this;
       var projectId = parseInt($routeParams.id1), investorId = parseInt($routeParams.id2);
       var role, entrepreneur = "Ent", investor = "Inv";
@@ -100,7 +102,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
           $rootScope.$emit('notificationChange');
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
-            console.log('Message already seen!');
+            // console.log('Message already seen!');
             return;
           }
           console.error(errorResponse);
@@ -180,6 +182,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       });
 
       $scope.rejectOffer = function () {
+        $scope.serverRetryError = false;
         messageService.setStatus(projectId, investorId, false).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = true;
@@ -189,12 +192,16 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
           if (errorResponse.status === 404) {
             PathService.get().error().go();
             return;
+          } else if (errorResponse.status === 503) {
+            $scope.serverRetryError = true;
+            return;
           }
           console.error(errorResponse);
         })
       };
 
       $scope.acceptOffer = function () {
+        $scope.serverRetryError = false;
         messageService.setStatus(projectId, investorId, true).then(function (response) {
           $scope.responseEnabled = false;
           $scope.offerEnabled = (role === investor);
@@ -205,6 +212,9 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         }, function (errorResponse) {
           if (errorResponse.status === 404) {
             PathService.get().error().go();
+            return;
+          } else if (errorResponse.status === 503) {
+            $scope.serverRetryError = true;
             return;
           }
           console.error(errorResponse);
@@ -222,6 +232,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
       };
 
       $scope.sendOffer = function (offer) {
+        $scope.serverRetryError = false;
         offer.direction = (role === investor);
         messageService.offer(projectId, investorId, offer).then(function (response) {
           _this.addOfferToChat(offer);
@@ -231,6 +242,9 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         }, function (errorResponse) {
           if (errorResponse.status === 400) {
             $route.reload();
+            return;
+          } else if (errorResponse.status === 503) {
+            $scope.serverRetryError = true;
             return;
           }
           console.error(errorResponse);
