@@ -1,9 +1,9 @@
 'use strict';
 
 
-define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat', 'directives/pagination', 'directives/customOnChange',
+define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/urlService', 'directives/noFloat', 'directives/pagination', 'directives/customOnChange',
   'services/PathService'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', '$window', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams,$window) {
+    paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','urlService', 'PathService', '$scope', '$routeParams', '$window', function (AuthenticationService,userService,projectService,imageService,urlService,PathService,$scope,$routeParams,$window) {
       var _this = this;
       var pageSize = 12, param, aux;
       $scope.page = 1;
@@ -170,7 +170,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         for(var i = 0; i < $scope.projects.length; i++) {
           map[$scope.projects[i].id] = i;
           $scope.projects[i].portraitExists = false;
-          sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
+          urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
             $scope.projects[map[image.data.route]].image = image.data.image;
             $scope.projects[map[image.data.route]].portraitExists = true;
           }, function (errorResponse) {

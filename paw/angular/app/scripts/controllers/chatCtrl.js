@@ -1,10 +1,10 @@
     'use strict';
 
-define(['paw2020a', 'services/projectService', 'services/sampleService', 'services/messageService', 'services/userService',
+define(['paw2020a', 'services/projectService', 'services/urlService', 'services/messageService', 'services/userService',
   'services/PathService', 'services/AuthenticationService', 'directives/noFloat'], function(paw2020a) {
 
-  paw2020a.controller('chatCtrl', ['projectService', 'sampleService', 'messageService', 'userService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', '$route', '$rootScope',
-    function(projectService, sampleService, messageService, userService, PathService, AuthenticationService, $scope, $routeParams, $route, $rootScope) {
+  paw2020a.controller('chatCtrl', ['projectService', 'urlService', 'messageService', 'userService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', '$route', '$rootScope',
+    function(projectService, urlService, messageService, userService, PathService, AuthenticationService, $scope, $routeParams, $route, $rootScope) {
 
       $scope.serverRetryError = false;
 
@@ -38,7 +38,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         $scope.user = user;
         $scope.user.userUrl = PathService.get().user(user.id).path;
         if ($scope.user.imageExists) {
-          sampleService.get($scope.user.image).then(function (image) {
+          urlService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
           }, function (err) {
             console.log("No image")
@@ -51,7 +51,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         $scope.project.projectUrl = PathService.get().singleProject(projectId).path;
         $scope.project.percentage = parseInt($scope.project.fundingCurrent * 100 / $scope.project.fundingTarget);
         $scope.project.portraitExists = false;
-        sampleService.get($scope.project.portraitImage).then(function (image) {
+        urlService.get($scope.project.portraitImage).then(function (image) {
           $scope.project.image = image.data.image;
           $scope.project.portraitExists = true;
         }, function (errorResponse) {
@@ -61,7 +61,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
           console.error(errorResponse);
         });
         if (role === investor) {
-          sampleService.get($scope.project.owner).then(function (user) {
+          urlService.get($scope.project.owner).then(function (user) {
             _this.setUser(user.data);
           }, function (err) {
             console.error(err);
@@ -255,7 +255,7 @@ define(['paw2020a', 'services/projectService', 'services/sampleService', 'servic
         if (!$scope.nextPageUrl) return;
 
         var element = document.getElementById("chatbox-scroll");
-        sampleService.get($scope.nextPageUrl).then(function (response) {
+        urlService.get($scope.nextPageUrl).then(function (response) {
           _this.setNextPage(response.headers().link);
           if (response.data.length === 0) return;
           element.scrollTop = 0;
