@@ -1,7 +1,7 @@
 'use strict';
 
 
-define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat', 'directives/pagination',
+define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat', 'directives/pagination', 'directives/customOnChange',
   'services/PathService'], function(paw2020a) {
     paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', '$window', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams,$window) {
       var _this = this;
@@ -87,16 +87,31 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       }
       $scope.categories = [emptyCategory];
       $scope.selectedCategory = emptyCategory;
+
       param = parseInt($routeParams.min);
       $scope.minCost = (isNaN(param)) ? undefined : param;
       param = parseInt($routeParams.max);
       $scope.maxCost = (isNaN(param)) ? undefined : param;
+      if ($scope.minCost != null && $scope.maxCost != null && $scope.minCost > $scope.maxCost) {
+        $scope.minCost = undefined; $scope.maxCost = undefined;
+      }
       $scope.costRangeError = false;
 
-      param = parseInt($routeParams.pmin);
+      /*param = parseInt($routeParams.pmin);
       $scope.minPercentage = (isNaN(param)) ? 0 : param;
       param = parseInt($routeParams.pmax);
       $scope.maxPercentage = (isNaN(param)) ? 100 : param;
+      if ($scope.minPercentage > $scope.maxPercentage) {
+        $scope.minPercentage = 0; $scope.maxPercentage = 100;
+      }
+      $scope.percentageRangeError = false;*/
+      param = parseInt($routeParams.pmin);
+      $scope.minPercentage = (isNaN(param)) ? undefined : param;
+      param = parseInt($routeParams.pmax);
+      $scope.maxPercentage = (isNaN(param)) ? undefined : param;
+      if ($scope.minPercentage != null && $scope.maxPercentage != null && $scope.minPercentage > $scope.maxPercentage) {
+        $scope.minPercentage = undefined; $scope.maxPercentage = undefined;
+      }
       $scope.percentageRangeError = false;
 
 
@@ -129,8 +144,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       this.filterObject = function () {
+        var pmin = (!$scope.minPercentage) ? 0.0 : $scope.minPercentage / 100.0;
+        var pmax = (!$scope.maxPercentage) ? 1.0 : $scope.maxPercentage / 100.0;
         return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost,
-          pmax:$scope.maxPercentage / 100.0, pmin:$scope.minPercentage  / 100.0, c:$scope.selectedCategory.id};
+          pmax:pmax, pmin:pmin, c:$scope.selectedCategory.id};
       };
 
       this.getArgs = function (string) {
@@ -172,17 +189,20 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         $scope.minCost = undefined;
         $scope.maxCost = undefined;
         $scope.searchField = undefined;
-        $scope.minPercentage = 0;
-        $scope.maxPercentage = 100;
+        $scope.minPercentage = undefined;
+        $scope.maxPercentage = undefined;
+
+        $scope.costRangeError = false;
+        $scope.percentageRangeError = false;
       };
 
       $scope.applyFilter = function () {
-        if ($scope.minCost && $scope.maxCost && $scope.minCost > $scope.maxCost) {
+        if ($scope.minCost != null && $scope.maxCost != null && $scope.minCost > $scope.maxCost) {
           $scope.costRangeError = true;
           return;
         }
         $scope.costRangeError = false;
-        if ($scope.minPercentage > $scope.maxPercentage) {
+        if ($scope.minPercentage != null && $scope.maxPercentage != null && $scope.minPercentage > $scope.maxPercentage) {
           $scope.percentageRangeError = true;
           return;
         }
@@ -214,5 +234,24 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return parseInt(num);
       };
 
+      /*$scope.onSliderChange = function (event) {
+        if (event.target.name === 'maxPercentage') {
+          if (event.target.value >= $scope.minPercentage) {
+            $scope.$apply(function () {
+              $scope.maxPercentage = event.target.value;
+            });
+          } else {
+            event.target.value = $scope.maxPercentage;
+          }
+        } else if (event.target.name === 'minPercentage') {
+          if (event.target.value <= $scope.maxPercentage) {
+            $scope.$apply(function () {
+              $scope.minPercentage = event.target.value;
+            });
+          } else {
+            event.target.value = $scope.minPercentage;
+          }
+        }
+      }*/
     }]);
 });
