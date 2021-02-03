@@ -27,14 +27,18 @@ require.config({
   baseUrl: '/base/app/scripts',
 
   paths: {
+    'paw2020a': 'paw2020a',
     jquery: '../../bower_components/jquery/dist/jquery',
     angular: '../../bower_components/angular/angular',
     angularMocks: '../../bower_components/angular-mocks/angular-mocks',
     ngResource: '../../bower_components/angular-resource/angular-resource.min',
     'angular-route': '../../bower_components/angular-route/angular-route',
     bootstrap: '../../bower_components/bootstrap/dist/js/bootstrap',
+    restangular: '../../bower_components/restangular/dist/restangular',
+    lodash: '../../bower_components/lodash/lodash',
     modal: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal',
     'angular-translate': '../../bower_components/angular-translate/angular-translate',
+    feedCtrl: 'controllers/feedCtrl',
   },
 
   shim: {
@@ -73,7 +77,16 @@ require.config({
     angularMocks: {
       deps: [ 'ngResource' ],
       exports: 'angularMocks'
-    }
+    },
+    lodash: {
+      exports: '_'
+    },
+    restangular: {
+      deps: [
+        'angular',
+        'lodash'
+      ]
+    },
   },
 
   priority: [

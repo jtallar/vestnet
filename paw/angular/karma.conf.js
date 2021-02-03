@@ -16,15 +16,19 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
 
+
       {pattern: 'bower_components/jquery/dist/jquery.js', included: false},
       {pattern: 'bower_components/angular/angular.js', included: false},
-      {pattern: 'bower_components/angular-resource/angular-resource.min.js', included: false},
       {pattern: 'bower_components/angular-mocks/angular-mocks.js', included: false},
+      {pattern: 'bower_components/angular-resource/angular-resource.min.js', included: false},
       {pattern: 'bower_components/angular-route/angular-route.js', included: false},
       {pattern: 'bower_components/bootstrap/dist/js/bootstrap.js', included: false},
+      {pattern: 'bower_components/lodash/lodash.js', included:false},
+      {pattern: 'bower_components/restangular/dist/restangular.js', included:false},
       {pattern: 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal.js', included: false},
       {pattern: 'bower_components/angular-translate/angular-translate.js', included: false},
       {pattern: 'app/scripts/*.js', included: false},
+      {pattern: 'app/views/*.html', included: false},
       {pattern: 'app/scripts/**/*.js', included: false},
       {pattern:'app/tests/feedCtrlTest/*Spec.js', included:false},
       'test-main.js',
@@ -64,7 +68,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
 
     // enable / disable watching file and executing tests whenever any file changes
