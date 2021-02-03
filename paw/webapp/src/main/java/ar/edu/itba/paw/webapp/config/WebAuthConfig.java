@@ -49,7 +49,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String API_PREFIX_VERSION = "/api";
     private static final String LOGIN_ENTRY_POINT = API_PREFIX_VERSION + "/auth/login";
 
-    private static final int TOKEN_DAYS = 365;
 
     @Autowired
     private PawUserDetailsService userDetails;
@@ -145,10 +144,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Folder and files to ignore applying filters to.
      * @param web The web to config.
-     * @throws Exception On creating or configuration error.
      */
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
                 .antMatchers(
                         "/views/**",
@@ -176,10 +174,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Bean for remembering the authentications provided.
      * @return The created authentication provided.
-     * @throws Exception On creating or configuration error.
      */
     @Bean
-    public AuthenticationProvider rememberAuthenticationProvider() throws Exception {
+    public AuthenticationProvider rememberAuthenticationProvider() {
         RememberAuthenticationProvider rememberAuthenticationProvider = new RememberAuthenticationProvider();
         rememberAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         rememberAuthenticationProvider.setUserDetailsService(userDetails);

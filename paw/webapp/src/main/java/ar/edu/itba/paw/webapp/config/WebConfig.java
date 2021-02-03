@@ -45,9 +45,7 @@ import java.util.Properties;
 @PropertySource(value = "classpath:application.properties")
 public class WebConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
-
     public static final int MAX_UPLOAD_SIZE = 2097152; // 2 MB
-    public static final int MAX_SLIDESHOW_COUNT = 5;
 
 
     @Autowired

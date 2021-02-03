@@ -23,7 +23,7 @@ public class MyCustomLoginSuccessHandler implements AuthenticationSuccessHandler
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         HttpSession session = request.getSession();
         if (session != null) {
             final Enumeration<String> attributeNames = session.getAttributeNames();

@@ -14,7 +14,7 @@ public class PlainTextBasicAuthenticationEntryPoint extends BasicAuthenticationE
     private static final Logger LOGGER = LoggerFactory.getLogger(PlainTextBasicAuthenticationEntryPoint.class);
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 }
