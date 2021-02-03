@@ -26,7 +26,10 @@ public class CacheFilter extends OncePerRequestFilter {
                                     final FilterChain chain) throws ServletException, IOException {
 
         /** All the requests not to the API (front files mostly) */
-        if(!request.getRequestURI().matches(".*/api/.*")) response.setHeader("Cache-Control", "max-age=31536000, public"); // 1 year
+        if(!request.getRequestURI().matches(".*/api/.*")) {
+            LOGGER.debug("Cache-Control added to request " + request.getRequestURI());
+            response.setHeader("Cache-Control", "max-age=31536000, public"); // 1 year
+        }
 
         response.setHeader("Connection", "Keep-Alive");
         chain.doFilter(request, response);

@@ -9,10 +9,10 @@ define([], function() {
     // /\/users\/.*/
     pathService.noAuthRoutesRE = [/^\/$/, /^\/login$/, /^\/welcome$/, /^\/signUp$/, /^\/resetPassword$/, /^\/requestPassword$/, /^\/verify$/];
     pathService.logoutRE = [/^\/logout$/];
-    pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/];
+    pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/, /^\/users\/.*$/];
     pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/, /^\/chat\/[^\/]*$/];
     pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject\/.*$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
-    pathService.authRoutesRE = [/^\/users\/.*$/, /^\/profile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
+    pathService.authRoutesRE = [/^\/profile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
 
     pathService.get = function () {
       var base = {
@@ -33,6 +33,13 @@ define([], function() {
         $location.url($location.path());
         if (paramsObject) return $location.path(base.absolutePath()).search(paramsObject);
         return $location.path(base.absolutePath());
+      };
+
+      base.replace = function (paramsObject) {
+        // Clear current search params
+        $location.url($location.path());
+        if (paramsObject) return $location.path(base.absolutePath()).search(paramsObject);
+        return $location.path(base.absolutePath()).replace();
       };
 
       base.setParamsInUrl = function (paramsObject) {

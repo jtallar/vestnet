@@ -4,16 +4,14 @@ import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.IllegalProjectAccessException;
 import ar.edu.itba.paw.interfaces.exceptions.ProjectDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.ProjectStats;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectStagesDto;
 import ar.edu.itba.paw.webapp.dto.project.ProjectStatsDto;
-import ar.edu.itba.paw.webapp.dto.project.ProjectWithCategoryDto;
+import ar.edu.itba.paw.webapp.dto.project.UpdatableProjectDto;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +25,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("projects")
 @Component
 public class ProjectRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectRestController.class);
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private ProjectService projectService;
@@ -53,7 +47,7 @@ public class ProjectRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response create(@Valid final ProjectWithCategoryDto projectDto) {
+    public Response create(@Valid final UpdatableProjectDto projectDto) {
 
         LOGGER.debug("Endpoint POST /projects reached with " + projectDto.toString() + " - User is " + sessionUser.getId());
 
@@ -83,7 +77,7 @@ public class ProjectRestController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response update(@PathParam("id") long id,
-                           @Valid final ProjectWithCategoryDto projectDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
+                           @Valid final UpdatableProjectDto projectDto) throws ProjectDoesNotExistException, IllegalProjectAccessException {
 
         LOGGER.debug("Endpoint PUT /projects/" + id + " reached with" + projectDto.toString() + " - User is " + sessionUser.getId());
 

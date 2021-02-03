@@ -10,6 +10,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
 
+import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +24,9 @@ public interface UserService {
      * @param baseUri Base URI for verification purposes.
      * @return The created User.
      * @throws UserAlreadyExistsException when the username is already taken.
+     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    User create(User dataUser, URI baseUri) throws UserAlreadyExistsException;
+    User create(User dataUser, URI baseUri) throws UserAlreadyExistsException, MessagingException;
 
 
     /**
@@ -85,17 +87,19 @@ public interface UserService {
          * @param mail The users mail to change the password.
          * @param baseUri Base uri for mail creation.
          * @return The optional of the found user.
+         * @throws MessagingException If the mail sender fails to deliver message.
          */
-    Optional<User> requestPassword(String mail, URI baseUri);
+    Optional<User> requestPassword(String mail, URI baseUri) throws MessagingException;
 
 
     /**
      * Updates a user password.
      * @param token The token to check for.
      * @param password New user's password.
-     * @throws InvalidTokenException If the token does not exists or is invalid
+     * @throws InvalidTokenException If the token does not exists or is invalid.
+     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    void updatePassword(String token, String password) throws InvalidTokenException;
+    void updatePassword(String token, String password) throws InvalidTokenException, MessagingException;
 
 
     /**
@@ -103,9 +107,10 @@ public interface UserService {
      * If the token exists but is invalid, resend email.
      * @param token The token.
      * @param baseUri The uri to resend the email.
-     * @throws InvalidTokenException If the token does not exists or is invalid
+     * @throws InvalidTokenException If the token does not exists or is invalid.
+     * @throws MessagingException If the mail sender fails to deliver message.
      */
-    void updateVerification(String token, URI baseUri) throws InvalidTokenException;
+    void updateVerification(String token, URI baseUri) throws InvalidTokenException, MessagingException;
 
 
     /**

@@ -17,7 +17,7 @@
     <h4>#messageArgs("email.body.offer",[${offer.getOffer()}])</h4>
     <h4>#messageArgs("email.body.inExchange",[${offer.getInterest()}])</h4>
     <h4>#message("email.body.messageHeader")
-        <i>${offer.getMessage()}</i>
+        <i>${offer.getComment()}</i>
     </h4>
 </div>
 <div style="padding:10px;color:#38004d;text-align:left;max-width:800px;font-size:16px">
@@ -27,7 +27,7 @@
     </p>
     <p style="font-weight:bold">
         #message("email.body.contactInvestor")
-        <a href="${baseUrl}/dashboard#dashboard-project-${project.getId()}">#message("email.clickhere")</a>
+        <a href="${baseUrl}/dashboard">#message("email.clickhere")</a>
         #message("email.body.contactInvestor2")
     </p>
 

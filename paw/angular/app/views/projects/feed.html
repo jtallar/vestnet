@@ -93,7 +93,7 @@
                   <span class="input-group-text">{{'min' | translate}}</span>
                 </div>
                 <input style="color: black !important;" name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="1000" id="filter-form-min"
-                       max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+                       min="0" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
               </div>
               <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
             </div>
@@ -103,30 +103,56 @@
                   <span class="input-group-text">{{'max' | translate}}</span>
                 </div>
                 <input style="color: black !important;" name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
-                            id="filter-form-max" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+                            id="filter-form-max" min="0" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
               </div>
-              <label class="formError" ng-if="costRangeError" id="categoryCountError" >{{'costRangeRequirement' | translate}}</label>
+              <label class="formError" ng-if="costRangeError">{{'costRangeRequirement' | translate}}</label>
             </div>
           </div>
         </div>
 
-        <div class="field">
-          <label class="row range">{{'percFilter' | translate}} </label>
-          <div class="col-md slidecontainer">
-            <div class="row">
-              <span class="col-6 perc-range">{{'min' | translate}}</span>
-              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important"> 20 </label>
+        <div class="row field">
+          <label class="range">{{'percFilter' | translate}} </label>
+          <div>
+            <div class="row range-box col-md" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'min' | translate}}</span>
+                </div>
+                <input style="color: black !important;" name="minPercentage" ng-model="minPercentage" type="number" class="form-control mx-auto mx-auto" placeholder="0"
+                       min="0" max="100" step="1" no-float pattern="^[0-9]+"/>
+              </div>
             </div>
-            <input type="range" min="1" max="99" value="20" class="slider" id="myRange">
-          </div>
-          <div class="col-md slidecontainer">
-            <div class="row" style="margin-top:10px !important">
-              <span class="col-6 perc-range">{{'max' | translate}}</span>
-              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important"> 80 </label>
+            <div class="row range-box col-md" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'max' | translate}}</span>
+                </div>
+                <input style="color: black !important;" name="maxPercentage" ng-model="maxPercentage" type="number" class="form-control mx-auto mx-auto" placeholder="100"
+                       min="0" max="100" step="1" no-float pattern="^[0-9]+"/>
+              </div>
+              <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
             </div>
-            <input type="range" min="2" max="100" value="80" class="slider" id="myRange">
           </div>
         </div>
+
+        <!--<div class="field">
+          <label class="row range">{{'percFilter' | translate}} </label>
+          <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
+            <div class="row">
+              <span class="col-6 perc-range">{{'min' | translate}}</span>
+              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ minPercentage }}</label>
+            </div>
+            <input name="minPercentage" custom-on-change="onSliderChange" value="{{ minPercentage }}" type="range" min="0" max="100" class="slider">
+          </div>
+          <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
+            <div class="row" style="margin-top:10px !important">
+              <span class="col-6 perc-range">{{'max' | translate}}</span>
+              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ maxPercentage }}</label>
+            </div>
+            <input name="maxPercentage" custom-on-change="onSliderChange" value="{{ maxPercentage }}" type="range" min="0" max="100" class="slider">
+            <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
+          </div>
+        </div>-->
 
         <div class="row">
           <div class="col-6 clear-btn">
@@ -229,12 +255,18 @@
   </div>
 
   <div ng-if="noProjectsFound">
-    <div class="card-deck">
+    <div class="card-deck" style="height: 250px">
       <div class="card m-2 no-proj-feed">
         <div class="card-header">
           <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div ng-if="!noProjectsFound || projects.length < 3">
+    <div class="card-deck" style="height: 220px;">
+      <p></p>
     </div>
   </div>
 

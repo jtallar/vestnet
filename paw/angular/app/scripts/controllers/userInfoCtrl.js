@@ -12,7 +12,7 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
 
     $scope.id = parseInt($routeParams.id);
     if (isNaN($scope.id) || $scope.id <= 0) {
-      PathService.get().error().go();
+      PathService.get().error().replace();
       return;
     }
 
@@ -40,7 +40,7 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
         $scope.user.state = response.data.state;
       }, function (errorResponse) {
         if (errorResponse.status === 404) {
-          PathService.get().error().go();
+          PathService.get().error().replace();
           return;
         }
         console.error(errorResponse);
@@ -56,6 +56,12 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
 
       $scope.isInvestor = $scope.user.role === "Investor";
       _this.fetchSecondTab();
+    }, function (errorResponse) {
+      if (errorResponse.status === 404) {
+        PathService.get().error().replace();
+        return;
+      }
+      console.error(errorResponse);
     });
 
     this.setMaxPage = function (linkHeaders) {

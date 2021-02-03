@@ -7,7 +7,6 @@ import ar.edu.itba.paw.webapp.config.WebAuthConfig;
 import ar.edu.itba.paw.webapp.dto.JwtTokenDto;
 import ar.edu.itba.paw.webapp.exception.jwt.JwtExpiredTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;

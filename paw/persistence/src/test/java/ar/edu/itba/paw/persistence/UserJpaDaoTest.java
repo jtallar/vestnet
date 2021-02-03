@@ -102,12 +102,8 @@ public class UserJpaDaoTest {
         Location location = assignLocation();
 
         // 2 - Execute
-        try {
-            User newUser = new User(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
-            userJdbcDao.create(newUser);
-        } catch (UserAlreadyExistsException e) {
-            fail();
-        }
+        User newUser = new User(ROLE_ID, PASSWORD ,FIRST_NAME, LAST_NAME, REAL_ID, new Date(), location, EMAIL, null, null, null);
+        userJdbcDao.create(newUser);
 
         // 3 - Assert
         assertEquals(1, TestUtils.countRowsInTable(entityManager, USERS_TABLE));

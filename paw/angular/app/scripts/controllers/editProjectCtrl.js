@@ -7,7 +7,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
 
       var id = parseInt($routeParams.id);
       if (isNaN(id) || id <= 0) {
-        PathService.get().error().go();
+        PathService.get().error().replace();
         return;
       }
 
@@ -31,7 +31,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       projectService.getById(id.toString()).then(function (project) {
         $scope.project = project.data;
         if (!$scope.project.getByOwner) {
-          PathService.get().error().go();
+          PathService.get().error().replace();
           return;
         }
         // Fill up the rest of the form.
@@ -57,7 +57,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         });
       }, function (errorResponse) {
         if (errorResponse.status === 404) {
-          PathService.get().error().go();
+          PathService.get().error().replace();
           return;
         }
         console.error(errorResponse);

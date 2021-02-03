@@ -93,6 +93,7 @@ define([], function() {
     userAlreadyExists: 'Oops! User with that email already exists.',
     noFilter: 'No filter',
     costRangeRequirement: 'Min cost must be lower than max cost',
+    percentageRangeRequirement: 'Min % must be lower than max %',
     projectNameSearch: 'Project name',
     projectDescSearch: 'Project description',
     ownerNameSearch: 'Owner name',
