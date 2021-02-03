@@ -41,7 +41,7 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
           urlService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
           }, function (err) {
-            console.log("No image")
+            // console.log("No image")
           });
         }
       };
