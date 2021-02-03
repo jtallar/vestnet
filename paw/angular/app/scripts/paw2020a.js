@@ -87,8 +87,9 @@ define(['routes',
             PathService.get().login().go({url: url});
           } else if ((!AuthenticationService.isInvestor() && routeMatches(url, PathService.investorRoutesRE)) ||
               (!AuthenticationService.isEntrepreneur() && routeMatches(url, PathService.entrepreneurRoutesRE))) {
-            // if logged in and trying to access something they shouldnt, redirect to 403
-            PathService.get().error().go({code:403});
+            // if logged in and trying to access something they shouldnt, redirect to index
+            // PathService.get().error().replace({code:403});
+            PathService.get().index().go();
           }
         });
 
@@ -106,7 +107,6 @@ define(['routes',
           return element;
         });
 
-        // TODO: Ver si esto arruina alguna response
         Restangular.addResponseInterceptor(function (data, operation, what, url, response, deferred) {
           requestsInProgress--;
           if (requestsInProgress === 0) {
@@ -115,7 +115,6 @@ define(['routes',
           return data;
         });
 
-        // TODO: Add all error codes wanted
         Restangular.setErrorInterceptor(function (response, deferred, responseHandler) {
           if (response.status === 404) {
             // PathService.get().error().go({code:404});
@@ -123,7 +122,8 @@ define(['routes',
             return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
-              PathService.get().error().go({code:403});
+              // PathService.get().error().replace({code:403});
+              PathService.get().index().go();
             } else {
               PathService.get().login().go();
             }
