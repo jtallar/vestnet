@@ -29,7 +29,6 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
         if (thr instanceof MessagingException)
             return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("").build();
 
-        // TODO check for changes of status return
         if (thr instanceof ResourceDoesNotExistException || thr instanceof IllegalProjectAccessException)
             return Response.status(Response.Status.NOT_FOUND).entity("").build();
 
