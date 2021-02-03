@@ -5,26 +5,19 @@ import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
 import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.model.Favorite;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
-import ar.edu.itba.paw.model.image.UserImage;
-import ar.edu.itba.paw.model.location.City;
-import ar.edu.itba.paw.model.location.Country;
-import ar.edu.itba.paw.model.location.Location;
-import ar.edu.itba.paw.model.location.State;
 import ar.edu.itba.paw.webapp.dto.location.LocationDto;
 import ar.edu.itba.paw.webapp.component.UriInfoUtils;
-import ar.edu.itba.paw.webapp.dto.CategoryDto;
 import ar.edu.itba.paw.webapp.dto.user.*;
 import ar.edu.itba.paw.webapp.dto.project.ProjectDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -50,7 +43,7 @@ public class UserRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException {
+    public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException, MessagingException {
 
         LOGGER.debug("Endpoint POST /users reached with " + user.toString());
 
@@ -181,7 +174,7 @@ public class UserRestController {
 
     @POST
     @Path("/password")
-    public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException {
+    public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException, MessagingException {
 
         LOGGER.debug("Endpoint POST /users/password reached with " + mailDto.toString());
 
@@ -193,7 +186,7 @@ public class UserRestController {
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException {
+    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException, MessagingException {
 
         LOGGER.debug("Endpoint PUT /users/password reached with " + passwordDto.toString());
 
@@ -204,7 +197,7 @@ public class UserRestController {
 
     @PUT
     @Path("/verify")
-    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException {
+    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException, MessagingException {
 
         LOGGER.debug("Endpoint PUT /users/verify reached with " + tokenDto.toString());
 

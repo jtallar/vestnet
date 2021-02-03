@@ -10,7 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-public class ProjectWithCategoryDto {
+public class UpdatableProjectDto {
     private long id;
 
     @Size(min = 5, max = 50)

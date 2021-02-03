@@ -14,6 +14,12 @@ public interface TokenDao {
      */
     Token create(User user);
 
+    /**
+     * Delete a specific token.
+     * @param id The token's unique id.
+     */
+    void delete(long id);
+
 
     /**
      * Search for a specific token.
