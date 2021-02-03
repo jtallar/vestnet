@@ -1,9 +1,9 @@
 'use strict';
 
-define(['paw2020a', 'services/projectService', 'services/imageService', 'services/sampleService', 'directives/customOnChange', 'directives/noFloat', 'services/PathService'],
+define(['paw2020a', 'services/projectService', 'services/imageService', 'services/urlService', 'directives/customOnChange', 'directives/noFloat', 'services/PathService'],
   function(paw2020a) {
 
-    paw2020a.controller('editProjectCtrl',['projectService','imageService', 'sampleService', 'PathService', '$scope', '$routeParams', function(projectService, imageService, sampleService, PathService, $scope, $routeParams) {
+    paw2020a.controller('editProjectCtrl',['projectService','imageService', 'urlService', 'PathService', '$scope', '$routeParams', function(projectService, imageService, urlService, PathService, $scope, $routeParams) {
 
       var id = parseInt($routeParams.id);
       if (isNaN(id) || id <= 0) {
@@ -38,7 +38,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         existingPortrait = $scope.project.portraitExists;
         $scope.disableSlideshow = !existingPortrait;
 
-        sampleService.get($scope.project.categories).then(function (categories) {
+        urlService.get($scope.project.categories).then(function (categories) {
           var ids = categories.data.reduce(function (map, obj) {
             map[obj.id] = true;
             return map;

@@ -201,6 +201,9 @@
           <div ng-if="userExistsError">
             <h4 class="big-error">{{'userAlreadyExists' | translate}}</h4>
           </div>
+          <div ng-if="serverRetryError">
+            <h4 class="big-error">{{'serverRetryError' | translate}}</h4>
+          </div>
           <div ng-if="serverFormErrors">
             <h4 class="big-error">{{'serverFormErrors' | translate}}</h4>
           </div>

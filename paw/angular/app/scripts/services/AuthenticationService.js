@@ -8,18 +8,15 @@ define([], function() {
   return function(Restangular) {
     var authService = {};
     var accessTokenKey = 'c091fd4c2ff1277a66e2c0bff4d3efb11e89c1f3',
-        refreshTokenKey = '68da4ce1c82076ff4749c2cfde06a4b51956b140',
-        rememberKey = 'd4e9a0f8f4609bb34d2aee6486444db48044e4f9';
-    // TODO: Check si es correcto almacenar esto en el localStorage/sessionStorage
+        refreshTokenKey = '68da4ce1c82076ff4749c2cfde06a4b51956b140';
+
     var entrepreneurKey = '85f61433041f941dbf9cda260b0a82f9cccfc1d4',
         investorKey = '1d8e6dc7a8959ecab4b983da1f5be041ec44ffc6';
-    var shouldPersist = localStorage.getItem(rememberKey) === 't';
 
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
       RestangularConfigurer.addResponseInterceptor(
         function(data, operation, what, url, response, deferred) {
           var now = new Date();
-          authService.setShouldPersist(shouldPersist);
           authService.setToken(JSON.stringify({
             value: data.accessToken,
             expiry: now.getTime() + data.accessMinutes * 60000
@@ -37,26 +34,11 @@ define([], function() {
     });
 
     authService.setStorage = function (key, value) {
-      if (shouldPersist) {
-        return localStorage.setItem(key, value);
-      }
-      return sessionStorage.setItem(key, value);
+      return localStorage.setItem(key, value);
     };
 
     authService.getStorage = function (key) {
-      if (shouldPersist) {
-        return localStorage.getItem(key);
-      }
-      return sessionStorage.getItem(key);
-    };
-
-    authService.setShouldPersist = function(persist) {
-      shouldPersist = !! persist;
-      if (persist) {
-        localStorage.setItem(rememberKey, 't');
-      } else {
-        localStorage.removeItem(rememberKey);
-      }
+      return localStorage.getItem(key);
     };
 
     authService.getToken = function(refresh) {
@@ -78,24 +60,14 @@ define([], function() {
 
     authService.removeToken = function (refresh) {
       var key = (refresh) ? refreshTokenKey : accessTokenKey;
-      if (shouldPersist) {
-        return localStorage.removeItem(key);
-      }
-      return sessionStorage.removeItem(key);
+      return localStorage.removeItem(key);
     };
 
     authService.logout = function () {
-
-      if (shouldPersist) {
-        localStorage.removeItem(entrepreneurKey);
-        localStorage.removeItem(investorKey);
-        localStorage.removeItem(refreshTokenKey);
-        return localStorage.removeItem(accessTokenKey);
-      }
-      sessionStorage.removeItem(entrepreneurKey);
-      sessionStorage.removeItem(investorKey);
-      sessionStorage.removeItem(refreshTokenKey);
-      return sessionStorage.removeItem(accessTokenKey);
+      localStorage.removeItem(entrepreneurKey);
+      localStorage.removeItem(investorKey);
+      localStorage.removeItem(refreshTokenKey);
+      return localStorage.removeItem(accessTokenKey);
     };
 
     authService.getHeaderContent = function (refresh) {
@@ -107,7 +79,6 @@ define([], function() {
     };
 
     authService.login = function (user) {
-      shouldPersist = !!(user.rememberMe);
       return rest.one('auth').one('login').customPOST(user);
     };
 

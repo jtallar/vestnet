@@ -1,7 +1,7 @@
 'use strict';
 
-define(['paw2020a', 'services/userService', 'services/sampleService', 'services/messageService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
-  paw2020a.controller('userInfoCtrl',['userService','sampleService','messageService','PathService','$scope','$routeParams', function(userService,sampleService,messageService,PathService, $scope, $routeParams) {
+define(['paw2020a', 'services/userService', 'services/urlService', 'services/messageService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
+  paw2020a.controller('userInfoCtrl',['userService','urlService','messageService','PathService','$scope','$routeParams', function(userService,urlService,messageService,PathService, $scope, $routeParams) {
 
     var _this = this;
 
@@ -34,7 +34,7 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
 
     userService.getUser($scope.id.toString()).then(function (userApi) {
       $scope.user = userApi.data;
-      sampleService.get($scope.user.location).then(function (response) {
+      urlService.get($scope.user.location).then(function (response) {
         $scope.user.country = response.data.country;
         $scope.user.city = response.data.city;
         $scope.user.state = response.data.state;
@@ -47,7 +47,7 @@ define(['paw2020a', 'services/userService', 'services/sampleService', 'services/
       });
 
       if ($scope.user.imageExists) {
-        sampleService.get(userApi.data.image).then(function (response) {
+        urlService.get(userApi.data.image).then(function (response) {
           $scope.user.image = response.data.image;
         }, function (errorResponse) {
           console.error("No img", errorResponse);
