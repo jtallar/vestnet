@@ -30,6 +30,12 @@ public class TokenJpaDao implements TokenDao {
 
 
     @Override
+    public void delete(long id) {
+        Optional.ofNullable(entityManager.find(Token.class, id)).ifPresent(token -> entityManager.remove(token));
+    }
+
+
+    @Override
     public Optional<Token> findByToken(String token) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Token> query = builder.createQuery(Token.class);

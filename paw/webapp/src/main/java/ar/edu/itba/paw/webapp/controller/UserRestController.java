@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -50,7 +51,7 @@ public class UserRestController {
 
     @POST
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException {
+    public Response createUser(@Valid final FullUserWithPasswordDto user) throws UserAlreadyExistsException, MessagingException {
 
         LOGGER.debug("Endpoint POST /users reached with " + user.toString());
 
@@ -181,7 +182,7 @@ public class UserRestController {
 
     @POST
     @Path("/password")
-    public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException {
+    public Response requestPassword(@Valid final MailDto mailDto) throws UserDoesNotExistException, MessagingException {
 
         LOGGER.debug("Endpoint POST /users/password reached with " + mailDto.toString());
 
@@ -193,7 +194,7 @@ public class UserRestController {
     @PUT
     @Path("/password")
     @Consumes(value = { MediaType.APPLICATION_JSON })
-    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException {
+    public Response updatePassword(@Valid final PasswordDto passwordDto) throws InvalidTokenException, MessagingException {
 
         LOGGER.debug("Endpoint PUT /users/password reached with " + passwordDto.toString());
 
@@ -204,7 +205,7 @@ public class UserRestController {
 
     @PUT
     @Path("/verify")
-    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException {
+    public Response updateVerification(@Valid final TokenDto tokenDto) throws InvalidTokenException, MessagingException {
 
         LOGGER.debug("Endpoint PUT /users/verify reached with " + tokenDto.toString());
 

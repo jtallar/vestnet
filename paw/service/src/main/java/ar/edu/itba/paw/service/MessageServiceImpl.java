@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Message create(long projectId, long investorId, long sessionUserId, Message.MessageContent content, int expiryDays,
-                          URI baseUri) throws InvalidMessageException {
+                          URI baseUri) throws InvalidMessageException, MessagingException {
 
         /** Checks for the existence of the project and the owner ID is the right one */
         final Project project = projectService.findById(projectId).orElseThrow(InvalidMessageException::new);
@@ -71,15 +71,11 @@ public class MessageServiceImpl implements MessageService {
         final Message messageData = new Message(content, new User(project.getOwnerId()),
                 new User(investorId), new Project(projectId), direction, expiryDays);
 
-        /** Persists message */
-        final Message finalMessage = messageDao.create(messageData);
-
         /** Sends email */
-        try {
-            emailService.sendOffer(owner, investor, project, messageData.getContent(), messageData.getDirection(), baseUri);
-        } catch (MessagingException ignored) {}
+        emailService.sendOffer(owner, investor, project, messageData.getContent(), messageData.getDirection(), baseUri);
 
-        return finalMessage;
+        /** Persists message */
+        return messageDao.create(messageData);
     }
 
 
@@ -136,7 +132,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Optional<Message> updateMessageStatus(long projectId, long investorId, long sessionUserId, boolean accepted,
-                                                 URI baseUri) throws InvalidMessageException {
+                                                 URI baseUri) throws InvalidMessageException, MessagingException {
         final Optional<Message> optionalMessage = getLastChatMessage(projectId, investorId, sessionUserId);
 
         if (!optionalMessage.isPresent()) return Optional.empty();
@@ -162,15 +158,13 @@ public class MessageServiceImpl implements MessageService {
         if (sessionUserId == message.getOwnerId() && !message.getDirection())
             throw new InvalidMessageException("Cannot answer over an own message.");
 
+        /** Send email */
+        emailService.sendOfferAnswer(owner, investor, project, accepted, message.getDirection(), baseUri);
+
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
         if (accepted)
             project.setFundingCurrent(project.getFundingCurrent() + message.getContent().getOffer());
-
-        /** Send email */
-        try {
-            emailService.sendOfferAnswer(owner, investor, project, accepted, message.getDirection(), baseUri);
-        } catch (MessagingException ignored) {}
 
         return optionalMessage;
     }

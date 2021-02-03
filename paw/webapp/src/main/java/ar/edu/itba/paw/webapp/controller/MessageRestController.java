@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -44,7 +45,7 @@ public class MessageRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response offer(@PathParam("project_id") final long projectId,
                           @PathParam("investor_id") final long investorId,
-                          @Valid final OfferDto offerDto) throws InvalidMessageException {
+                          @Valid final OfferDto offerDto) throws InvalidMessageException, MessagingException {
 
         LOGGER.debug("Endpoint POST /messages/" + projectId + "/" + investorId + " reached with " + offerDto  + " - User is " + sessionUser.getId());
 
@@ -57,7 +58,7 @@ public class MessageRestController {
     @Path("/{project_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response offer(@PathParam("project_id") final long projectId,
-                          @Valid final OfferDto offerDto) throws InvalidMessageException {
+                          @Valid final OfferDto offerDto) throws InvalidMessageException, MessagingException {
 
         LOGGER.debug("Endpoint POST /messages/" + projectId + " reached with " + offerDto + " - User is " + sessionUser.getId());
 
@@ -162,7 +163,7 @@ public class MessageRestController {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response status(@PathParam("project_id") final long projectId,
                            @PathParam("investor_id") final long investorId,
-                           final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException {
+                           final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException, MessagingException {
 
         LOGGER.debug("Endpoint PUT /messages/status/" + projectId + "/" + investorId + " reached with " + offerStatusDto.toString() + " - User is " + sessionUser.getId());
 
@@ -176,7 +177,7 @@ public class MessageRestController {
     @Path("/status/{project_id}")
     @Consumes(value = { MediaType.APPLICATION_JSON })
     public Response status(@PathParam("project_id") final long projectId,
-                           final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException {
+                           final OfferStatusDto offerStatusDto) throws MessageDoesNotExistException, InvalidMessageException, MessagingException {
 
         LOGGER.debug("Endpoint PUT /messages/status/" + projectId + " reached with " + offerStatusDto.toString() + " - User is " + sessionUser.getId());
 

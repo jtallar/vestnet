@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.mail.MessagingException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
@@ -24,6 +25,9 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
         /** Custom Exceptions */
         if (thr instanceof UserAlreadyExistsException)
             return Response.status(Response.Status.CONFLICT).entity("").build();
+
+        if (thr instanceof MessagingException)
+            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("").build();
 
         // TODO check for changes of status return
         if (thr instanceof ResourceDoesNotExistException || thr instanceof IllegalProjectAccessException)
