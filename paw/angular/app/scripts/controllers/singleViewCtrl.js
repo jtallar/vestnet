@@ -151,23 +151,29 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
         console.error(errorResponse);
       });
 
-      if($scope.project.portraitExists) {
-        sampleService.get(project.data.portraitImage).then(function (image) {
-          $scope.project.image = image.data.image;
-        },function (error) {
-          console.log(error);
-        });
-      }
-      if($scope.project.slideshowExists) {
-        sampleService.get(project.data.slideshowImages).then(function (response) {
-          $scope.project.slideshow = [];
-          for (var i = 0; i < response.data.length; i++){
-            $scope.project.slideshow.push(response.data[i].image);
-          }
-        },function (error) {
-          console.log(error);
-        });
-      }
+      $scope.project.portraitExists = false;
+      sampleService.get(project.data.portraitImage).then(function (image) {
+        $scope.project.image = image.data.image;
+        $scope.project.portraitExists = true;
+      },function (errorResponse) {
+        if (errorResponse.status === 404) {
+          return;
+        }
+        console.error(errorResponse);
+      });
+      $scope.project.slideshowExists = false;
+      sampleService.get(project.data.slideshowImages).then(function (response) {
+        $scope.project.slideshow = [];
+        for (var i = 0; i < response.data.length; i++){
+          $scope.project.slideshow.push(response.data[i].image);
+        }
+        $scope.project.slideshowExists = $scope.project.slideshow.length > 0;
+      },function (errorResponse) {
+        if (errorResponse.status === 404) {
+          return;
+        }
+        console.error(errorResponse);
+      });
     }, function (errorResponse) {
       if (errorResponse.status === 404) {
         $scope.addStatError = true;

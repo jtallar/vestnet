@@ -257,7 +257,7 @@
   </div>
 
   <div ng-if="noProjectsFound">
-    <div class="card-deck" style="height: 250px">
+    <div class="card-deck" style="height: 500px">
       <div class="card m-2 no-proj-feed">
         <div class="card-header">
           <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
@@ -266,7 +266,7 @@
     </div>
   </div>
 
-  <div ng-if="!noProjectsFound || projects.length < 3">
+  <div ng-if="!noProjectsFound && projects.length <= 3">
     <div class="card-deck" style="height: 220px;">
       <p></p>
     </div>

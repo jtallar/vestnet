@@ -120,10 +120,14 @@
         </a>
       </div>
       <div ng-if="!message.projectPortraitExists">
-        <img ng-src="images/projectNoImage.png" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        <a href="#{{message.projectUrl}}">
+          <img ng-src="images/projectNoImage.png" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        </a>
       </div>
       <div ng-if="message.projectPortraitExists">
-        <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        <a href="#{{message.projectUrl}}">
+          <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        </a>
       </div>
       <div class="card-deal row">
         <div class="col-4 msg-offer">

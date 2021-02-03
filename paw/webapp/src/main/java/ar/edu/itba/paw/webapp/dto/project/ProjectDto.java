@@ -40,7 +40,7 @@ public class ProjectDto {
     private Date updateDate;
     private long hits;
 
-    private boolean portraitExists, slideshowExists, getByOwner;
+    private boolean getByOwner;
 
     private URI categories;
     private URI owner;
@@ -66,16 +66,8 @@ public class ProjectDto {
         projectDto.setCategories(builder.build());
 
         projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
-
-        final Map<Boolean, Long> imageCount = project.getImages().stream().map(ProjectImage::isMain).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        Optional.ofNullable(imageCount.get(true)).ifPresent(aLong -> {
-            projectDto.portraitExists = true;
-            projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
-        });
-        Optional.ofNullable(imageCount.get(false)).ifPresent(aLong -> {
-            projectDto.slideshowExists = true;
-            projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
-        });
+        projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
+        projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
 
         projectDto.setProjectStages(uriInfo.getBaseUriBuilder().path("/projects").path(String.valueOf(project.getId())).path("/stages").build());
 
@@ -193,22 +185,6 @@ public class ProjectDto {
 
     public void setProjectStages(URI projectStages) {
         this.projectStages = projectStages;
-    }
-
-    public boolean isPortraitExists() {
-        return portraitExists;
-    }
-
-    public void setPortraitExists(boolean portraitExists) {
-        this.portraitExists = portraitExists;
-    }
-
-    public boolean isSlideshowExists() {
-        return slideshowExists;
-    }
-
-    public void setSlideshowExists(boolean slideshowExists) {
-        this.slideshowExists = slideshowExists;
     }
 
     public boolean isGetByOwner() {
