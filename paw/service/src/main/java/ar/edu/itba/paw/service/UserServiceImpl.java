@@ -124,9 +124,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Optional<User> requestVerification(String mail, URI baseUri) {
+    public Optional<User> requestVerification(String mail, URI baseUri) throws UserAlreadyExistsException {
         final Optional<User> optionalUser = userDao.findByUsername(mail);
-        optionalUser.ifPresent(u -> emailService.sendVerification(u, tokenDao.create(u).getToken(), baseUri));
+        if (optionalUser.isPresent()) {
+            if (optionalUser.get().isVerified()) throw new UserAlreadyExistsException();
+            emailService.sendVerification(optionalUser.get(), tokenDao.create(optionalUser.get()).getToken(), baseUri);
+        }
         return optionalUser;
     }
 

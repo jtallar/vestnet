@@ -89,8 +89,9 @@ public interface UserService {
      * @param mail The users mail to send the verification mail.
      * @param baseUri Base uri for mail creation.
      * @return The optional of the found user.
+     * @throws UserAlreadyExistsException In case already exists a user verified.
      */
-    Optional<User> requestVerification(String mail, URI baseUri);
+    Optional<User> requestVerification(String mail, URI baseUri) throws UserAlreadyExistsException;
 
 
     /**

@@ -196,7 +196,7 @@ public class UserRestController {
 
     @POST
     @Path("/verify")
-    public Response requestVerification(@Valid final MailDto mailDto) throws UserDoesNotExistException {
+    public Response requestVerification(@Valid final MailDto mailDto) throws UserDoesNotExistException, UserAlreadyExistsException {
 
         LOGGER.debug("Endpoint POST /users/verify reached with " + mailDto.toString());
 
