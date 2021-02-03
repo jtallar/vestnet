@@ -39,6 +39,8 @@ require.config({
     modal: '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal',
     'angular-translate': '../../bower_components/angular-translate/angular-translate',
     feedCtrl: 'controllers/feedCtrl',
+    newProjectCtrl: 'controllers/newProjectCtrl',
+    apiResponses: '../tests/apiResponses',
   },
 
   shim: {

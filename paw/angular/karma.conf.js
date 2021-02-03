@@ -30,7 +30,8 @@ module.exports = function(config) {
       {pattern: 'app/scripts/*.js', included: false},
       {pattern: 'app/views/*.html', included: false},
       {pattern: 'app/scripts/**/*.js', included: false},
-      {pattern:'app/tests/feedCtrlTest/*Spec.js', included:false},
+      {pattern:'app/tests/apiResponses.js', included:false},
+      {pattern:'app/tests/**/*Spec.js', included:false},
       'test-main.js',
     ],
 
