@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public class UriInfoUtils {
-    // TODO: check if it works on deploy. It may delete paw2020-a-5
+
     public static URI getBaseURI(UriInfo uriInfo) {
         try {
             final URL baseUrlWithPath = uriInfo.getBaseUri().toURL();

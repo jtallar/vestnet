@@ -131,7 +131,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()
-                .antMatchers("/**").permitAll(); // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
+                .antMatchers("/**").permitAll();
 
         if (isDevelopmentMode()) http
                 .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class);
