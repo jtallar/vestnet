@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.exceptions.MessageDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.components.Page;
+import ar.edu.itba.paw.webapp.component.UriInfoUtils;
 import ar.edu.itba.paw.webapp.dto.NotificationDto;
 import ar.edu.itba.paw.webapp.dto.offer.OfferDto;
 import ar.edu.itba.paw.webapp.dto.offer.OfferInvestorDto;
@@ -49,7 +50,7 @@ public class MessageRestController {
 
         LOGGER.debug("Endpoint POST /messages/" + projectId + "/" + investorId + " reached with " + offerDto  + " - User is " + sessionUser.getId());
 
-        messageService.create(projectId, investorId, sessionUser.getId(), OfferDto.toMessageContent(offerDto), offerDto.getExpiryDays(), uriInfo.getBaseUri());
+        messageService.create(projectId, investorId, sessionUser.getId(), OfferDto.toMessageContent(offerDto), offerDto.getExpiryDays(), UriInfoUtils.getBaseURI(uriInfo));
         return Response.created(uriInfo.getAbsolutePath()).header("Access-Control-Expose-Headers", "Location").build();
     }
 
@@ -168,7 +169,7 @@ public class MessageRestController {
         LOGGER.debug("Endpoint PUT /messages/status/" + projectId + "/" + investorId + " reached with " + offerStatusDto.toString() + " - User is " + sessionUser.getId());
 
         messageService.updateMessageStatus(projectId, investorId, sessionUser.getId(), offerStatusDto.isAccepted(),
-                uriInfo.getBaseUri()).orElseThrow(MessageDoesNotExistException::new);
+                UriInfoUtils.getBaseURI(uriInfo)).orElseThrow(MessageDoesNotExistException::new);
         return Response.ok().build();
     }
 
@@ -192,7 +193,7 @@ public class MessageRestController {
 
         LOGGER.debug("Endpoint PUT /messages/seen/" + projectId + "/" + investorId + " reached - User is " + sessionUser.getId());
 
-        messageService.updateMessageSeen(projectId, investorId, sessionUser.getId(), uriInfo.getBaseUri()).orElseThrow(MessageDoesNotExistException::new);
+        messageService.updateMessageSeen(projectId, investorId, sessionUser.getId(), UriInfoUtils.getBaseURI(uriInfo)).orElseThrow(MessageDoesNotExistException::new);
         return Response.ok().build();
     }
 
