@@ -79,7 +79,7 @@ public class User {
     private Set<Favorite> favorites;
 
     /** Package */ User() {
-        /** For Hibernate only */
+        /* For Hibernate only */
     }
 
     public User(Integer role, String password, String firstName, String lastName, String realId, Date birthDate,

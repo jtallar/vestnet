@@ -137,7 +137,7 @@ public class WebConfig {
 
     /**
      * Bean for mail server configuration
-     * @return
+     * @return The java mail sender.
      */
     @Bean
     public JavaMailSender getJavaMailSender() {
@@ -162,8 +162,6 @@ public class WebConfig {
     /**
      * Bean for velocity set up.
      * @return The created velocity engine.
-     * @throws VelocityException
-     * @throws IOException
      */
     @Bean
     public VelocityEngine velocityEngine() {
@@ -204,7 +202,7 @@ public class WebConfig {
     }
 
 
-    /** Auxiliary Method */
+    /* Auxiliary Method */
 
 
     /**

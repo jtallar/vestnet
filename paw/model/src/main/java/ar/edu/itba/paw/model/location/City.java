@@ -20,7 +20,7 @@ public class City {
     private String name;
 
     /** Protected */ City() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public City(int id, String name) {

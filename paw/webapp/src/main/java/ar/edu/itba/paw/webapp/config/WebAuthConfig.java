@@ -145,7 +145,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Folder and files to ignore applying filters to.
      * @param web The web to config.
-     * @throws Exception
+     * @throws Exception On creating or configuration error.
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -164,7 +164,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Authentication manager bean.
      * @return The created authentication manager.
-     * @throws Exception
+     * @throws Exception On creating or configuration error.
      */
     @Bean
     @Override
@@ -176,7 +176,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Bean for remembering the authentications provided.
      * @return The created authentication provided.
-     * @throws Exception
+     * @throws Exception On creating or configuration error.
      */
     @Bean
     public AuthenticationProvider rememberAuthenticationProvider() throws Exception {
@@ -194,12 +194,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     */
 
 
-    /** Auxiliary functions */
+    /* Auxiliary functions */
 
     /**
      * Builds the Login Filter.
      * @return The built processing login filter.
-     * @throws Exception
+     * @throws Exception On creating or configuration error
      */
     private LoginProcessingFilter buildLoginFilter() throws Exception {
         return new LoginProcessingFilter(LOGIN_ENTRY_POINT, rememberAuthenticationProvider(), successHandler, failureHandler, objectMapper);

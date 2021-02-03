@@ -17,7 +17,7 @@ public class ProjectImage extends Image {
 
 
     /** Protected */ ProjectImage() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public ProjectImage(Project project, byte[] image, boolean main) {

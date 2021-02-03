@@ -26,7 +26,7 @@ public class Category {
     private List<Project> projectList;
 
     /** Protected */ Category() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public Category(long id, String name, long parent) {
