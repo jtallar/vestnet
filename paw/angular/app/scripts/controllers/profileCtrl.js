@@ -51,7 +51,6 @@
           });
           $scope.loadingFavs = false;
           $scope.viewMoreFavs();
-          // Paginar a mano los favs
         }, function (errorResponse) {
           // 404 should never happen
           console.error(errorResponse);
@@ -62,6 +61,16 @@
         if ($scope.allFavs.length === $scope.showFavs.length) return;
         var currLength = $scope.showFavs.length;
         $scope.showFavs = $scope.showFavs.concat($scope.allFavs.slice(currLength, currLength + pageSize));
+      };
+
+      $scope.removeFav = function (id) {
+        if (!$scope.isInvestor) return;
+        userService.putFavorite(id, false).then(function () {
+          $scope.allFavs = $scope.allFavs.filter(function (el) { return el.id !== id });
+          $scope.showFavs = $scope.showFavs.filter(function (el) { return el.id !== id });
+        },function (error) {
+          console.error(error);
+        });
       };
 
       $scope.fileboxChange = function (event) {

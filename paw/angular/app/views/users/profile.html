@@ -141,7 +141,12 @@
                   <div class="card m-2">
                     <div class="card-header card-title text-white">
                       <div class="row">
-                        <a class="col-8" href="#/projects/{{fav.id}}">
+                        <div class="col-1">
+                          <button ng-click="removeFav(fav.id)" class="btn-transp pull-right">
+                            <img ng-src="images/bookmarkOnB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                          </button>
+                        </div>
+                        <a class="col-7" href="#/projects/{{fav.id}}">
                           <h5 class="card-title cut-text">{{fav.name}}</h5>
                         </a>
                         <div class="col-4">
