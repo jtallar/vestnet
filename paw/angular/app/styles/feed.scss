@@ -177,6 +177,16 @@
   font-weight: bold;
   border: transparent
 }
+
+@supports (-moz-appearance:none) {
+  .page-link {
+    font-size:21px !important;
+  }
+  .price-footer h4 {
+    font-size:13px !important;
+  }
+}
+
 #li-a-now{
   background-color: transparent !important;
   border: none;
@@ -961,12 +971,17 @@ html {
   margin-bottom: 2px;
   width: 10px;
 }
-.popup{
+.popup {
   margin-top:20% !important;
+  font-size: 17px !important
 }
-.popup .modal-header{
+.popup .modal-header {
   padding: 0 !important;
-  height: 45px
+  height:45px;
+}
+.modal-title{
+  margin-top: 10px;
+  font-size: 22px !important
 }
 .popup .modal-footer{
   padding: 0 !important;
@@ -1133,5 +1148,18 @@ html {
   -webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#000000;cursor:pointer
 }
 .slider::-moz-range-thumb{
-  width:25px;height:25px;border-radius:50%;background:#750096;cursor:pointer
+  width:20px;height:20px;border-radius:50%;background:#000000;cursor:pointer
+}
+
+
+@keyframes spinner-grow {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
 }
