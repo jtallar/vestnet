@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         if (e instanceof BadCredentialsException) {
@@ -36,6 +37,9 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
         } else if (e instanceof JwtExpiredTokenException) {
             LOGGER.error("Token has expired");
             mapper.writeValue(response.getWriter(), ErrorResponse.of("Token has expired", ErrorCode.JWT_TOKEN_EXPIRED, HttpServletResponse.SC_UNAUTHORIZED));
+        } else if (e instanceof DisabledException) {
+            LOGGER.error("User not verified");
+            mapper.writeValue(response.getWriter(), ErrorResponse.of("User not verified", ErrorCode.DISABLED, HttpServletResponse.SC_UNAUTHORIZED));
         } else if (e instanceof AuthMethodNotSupportedException) {
             LOGGER.error("Error message: {}", e.getMessage());
             mapper.writeValue(response.getWriter(), ErrorResponse.of(e.getMessage(), ErrorCode.AUTHENTICATION, HttpServletResponse.SC_UNAUTHORIZED));

@@ -183,13 +183,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return rememberAuthenticationProvider;
     }
 
-    /*
-    @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-        return new MyCustomLoginSuccessHandler();
-    }
-    */
-
 
     /* Auxiliary functions */
 
