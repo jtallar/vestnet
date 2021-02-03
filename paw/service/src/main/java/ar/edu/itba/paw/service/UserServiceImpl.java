@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
             u.setLastName(dataUser.getLastName());
             u.setRealId(dataUser.getRealId());
             u.setBirthDate(dataUser.getBirthDate());
-            u.setLocation(dataUser.getLocation());
             u.setPhone(dataUser.getPhone());
             u.setLinkedin(dataUser.getLinkedin());
         });

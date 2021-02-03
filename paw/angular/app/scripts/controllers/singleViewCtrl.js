@@ -1,7 +1,7 @@
  'use strict';
 
-define(['paw2020a','services/projectService', 'services/userService', 'services/sampleService', 'services/PathService', 'services/AuthenticationService'], function(paw2020a) {
-  paw2020a.controller('singleViewCtrl',['projectService', 'userService', 'sampleService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', function(projectService,userService,sampleService, PathService, AuthenticationService, $scope, $routeParams) {
+define(['paw2020a','services/projectService', 'services/userService', 'services/urlService', 'services/PathService', 'services/AuthenticationService'], function(paw2020a) {
+  paw2020a.controller('singleViewCtrl',['projectService', 'userService', 'urlService', 'PathService', 'AuthenticationService', '$scope', '$routeParams', function(projectService,userService,urlService, PathService, AuthenticationService, $scope, $routeParams) {
 
     /*** STATS ***/
     $scope.$on('$viewContentLoaded', function() {
@@ -107,7 +107,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
           'completed': false, 'completedDate': ''}
       ]
 
-      // sampleService.get($scope.project.projectStages).then(function (response) {       // private URI stages;   -> en ProjectDto
+      // urlService.get($scope.project.projectStages).then(function (response) {       // private URI stages;   -> en ProjectDto
       projectService.getStages($scope.project.id).then(function (response) {       // private URI stages;   -> en ProjectDto
         if (response.data.length === 0) {
           $scope.projectstage = 0;
@@ -121,8 +121,8 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
             $scope.project.stages[i].name = data.name;
             $scope.project.stages[i].completed = data.completed;
             $scope.project.stages[i].completedDate = $scope.getDate(data.completedDate)[0];
-            console.log(i, $scope.project.stages[i]);
-            console.log($scope.getDate(data.completedDate));
+            // console.log(i, $scope.project.stages[i]);
+            // console.log($scope.getDate(data.completedDate));
             i++;
           }
         });
@@ -132,7 +132,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
         console.error(errorResponse);
       });
 
-      sampleService.get($scope.project.owner).then(function (owner) {
+      urlService.get($scope.project.owner).then(function (owner) {
         $scope.project.owner = owner.data;
         $scope.project.ownerUrl = PathService.get().user($scope.project.owner.id).path;
       }, function (errorResponse) {
@@ -140,7 +140,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
         console.error(errorResponse);
       });
 
-      sampleService.get($scope.project.categories).then(function (categories) {
+      urlService.get($scope.project.categories).then(function (categories) {
         var cats = [];
         for (var i = 0; i < categories.data.length; i++){
           cats.push(categories.data[i].name);
@@ -152,7 +152,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       });
 
       $scope.project.portraitExists = false;
-      sampleService.get(project.data.portraitImage).then(function (image) {
+      urlService.get(project.data.portraitImage).then(function (image) {
         $scope.project.image = image.data.image;
         $scope.project.portraitExists = true;
       },function (errorResponse) {
@@ -162,7 +162,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
         console.error(errorResponse);
       });
       $scope.project.slideshowExists = false;
-      sampleService.get(project.data.slideshowImages).then(function (response) {
+      urlService.get(project.data.slideshowImages).then(function (response) {
         $scope.project.slideshow = [];
         for (var i = 0; i < response.data.length; i++){
           $scope.project.slideshow.push(response.data[i].image);
