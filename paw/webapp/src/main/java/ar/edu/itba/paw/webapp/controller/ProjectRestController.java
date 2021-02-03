@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.SessionUserFacade;
 import ar.edu.itba.paw.interfaces.exceptions.IllegalProjectAccessException;
 import ar.edu.itba.paw.interfaces.exceptions.ProjectDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.model.Category;
 import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.components.Page;
@@ -32,9 +31,6 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectRestController.class);
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private ProjectService projectService;

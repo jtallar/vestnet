@@ -47,5 +47,4 @@ public class SessionUser implements SessionUserFacade {
     private List<String> getRoles() {
         return getAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     }
-
 }

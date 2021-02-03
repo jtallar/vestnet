@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("messages")

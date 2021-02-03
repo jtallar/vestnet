@@ -2,9 +2,6 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidMessageException;
-import ar.edu.itba.paw.interfaces.exceptions.MessageDoesNotExistException;
-import ar.edu.itba.paw.interfaces.exceptions.ProjectDoesNotExistException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;

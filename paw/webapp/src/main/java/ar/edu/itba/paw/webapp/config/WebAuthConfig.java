@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.config;
 
-
 import ar.edu.itba.paw.interfaces.TokenExtractor;
 import ar.edu.itba.paw.webapp.auth.CorsFilter;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
