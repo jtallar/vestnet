@@ -50,6 +50,11 @@ require.config({
         'angular'
       ]
     },
+    'angular-translate': {
+      deps: [
+        'angular'
+      ]
+    },
     modal: {
       deps: [
         'jquery'
