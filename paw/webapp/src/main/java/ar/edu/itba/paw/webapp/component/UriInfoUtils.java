@@ -12,13 +12,8 @@ public class UriInfoUtils {
         try {
             final URL baseUrlWithPath = uriInfo.getBaseUri().toURL();
 
-            /** Strip the path in search of the application context
-             * Could be /api/ or /applicationContext/api/
-             * In case is the second we use it.
-             * */
-            final String[] aux = baseUrlWithPath.getPath().split("\\/");
-            String applicationContext = "";
-            if (aux.length > 2) applicationContext = "/" + aux[1];
+            /** Remove the /api/ to obtain either an empty string or the application context */
+            String applicationContext = baseUrlWithPath.getPath().replace("/api/", "");
 
             /** Create the final url, adding the /# for Angular */
             final URL finalUrl = new URL(baseUrlWithPath.getProtocol(), baseUrlWithPath.getHost(), baseUrlWithPath.getPort(), applicationContext + "/#");
