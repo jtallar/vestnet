@@ -75,7 +75,23 @@ define(['routes',
             else aux = new Date();
             return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
           };
-          $rootScope.isSafari = window.safari !== undefined;
+          // $rootScope.isSafari = function() {
+          //   console.log("is Safari kinga");
+          //   return window.safari !== undefined;
+          // };
+
+          $rootScope.safari = function() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.indexOf('safari') !== -1) {
+              if (ua.indexOf('chrome') > -1) {
+                console.log("Chrome") // Chrome
+                return false;
+              } else {
+                console.log("Safari") // Safari
+                return true;
+              }
+            }
+          };
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects

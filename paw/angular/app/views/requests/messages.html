@@ -12,8 +12,11 @@
   <div class="col-3"></div>
 </div>
 
-<div class="text-center" ng-if="loading">
+<div class="text-center" ng-if="loading && !safari()">
   <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
+</div>
+<div class="text-center" ng-if="loading && safari()">
+  <div class="spinner-border text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 3rem; height: 3rem;"></div>
 </div>
 
 <div class="dashboard" ng-if="!noMessagesFound && !loading">
