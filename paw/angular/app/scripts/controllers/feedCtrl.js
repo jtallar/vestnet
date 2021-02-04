@@ -53,6 +53,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
 
 
+
     $scope.lastPage = 0;
 
     $scope.noProjectsFound = false;
@@ -123,6 +124,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         $scope.selectedCategory = (aux.length !== 0) ? aux[0] : emptyCategory;
       }
     });
+
 
 
 
