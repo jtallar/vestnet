@@ -219,7 +219,7 @@
               </div>
             </div>
           </div>
-          <div class="card-body feed-body">
+          <div class="card-body feed-body clickable-element" ng-click="goToProject(project.id)">
             <div class="row">
               <div class="col-5">
                 <div ng-if="!project.portraitExists">
@@ -238,7 +238,7 @@
               </div>
             </div>
           </div>
-          <div class="card-footer feed-footer">
+          <div class="card-footer feed-footer clickable-element" ng-click="goToProject(project.id)">
               <div class="price-footer">
                 <h4 style="text-align: center">
                 {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{formatPrice(project.fundingTarget)}}</b></h4>

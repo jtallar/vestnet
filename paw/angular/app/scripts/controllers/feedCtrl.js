@@ -237,6 +237,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return parseInt(num);
       };
 
+      $scope.goToProject = function (id) {
+        PathService.get().singleProject(id).go();
+      }
+
       /*$scope.onSliderChange = function (event) {
         if (event.target.name === 'maxPercentage') {
           if (event.target.value >= $scope.minPercentage) {
