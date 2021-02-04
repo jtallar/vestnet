@@ -100,41 +100,5 @@
         }
       };
 
-      this.processResponse = function (data) {
-        data.forEach(function (proj){
-          proj.percentage = parseInt((proj.fundingCurrent/proj.fundingTarget)*100);
-        });
-        $scope.secondTab = $scope.secondTab.concat(data);
-      };
-
-      this.fetchSecondTab = function () {
-        if ($scope.isInvestor) {
-          // Fetch investor deals
-          // TODO: Que hacemos aca? No tengo toda la data que tiene el otro, que muestro?
-          messageService.getInvestorDeals($scope.page, $scope.user.id).then(function (response) {
-            _this.setMaxPage(response.headers().link);
-            _this.processResponse(response.data);
-            $scope.loadingSecondTab = false;
-          }, function (errorResponse) {
-            console.error(errorResponse);
-          });
-        } else {
-          // Fetch entrepreneur current funding projects
-          userService.getUserProjects($scope.user.id.toString(), false, $scope.page, pageSize).then(function (response) {
-            _this.setMaxPage(response.headers().link);
-            _this.processResponse(response.data);
-            $scope.loadingSecondTab = false;
-          }, function (errorResponse) {
-            console.error(errorResponse);
-          });
-        }
-      };
-
-      $scope.viewMoreProjects = function () {
-        if ($scope.page >= $scope.lastPage) return;
-        $scope.page++;
-        _this.fetchSecondTab();
-      };
-
     }]);
 });
