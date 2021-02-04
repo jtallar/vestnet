@@ -84,15 +84,14 @@ public class MessageRestController {
     }
 
     @GET
-    @Path("/investor/{investor_id}")
+    @Path("/investor")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response investorChats(@PathParam("investor_id") final long investorId,
-                                  @QueryParam("a") @DefaultValue("false") boolean accepted,
+    public Response investorChats(@QueryParam("a") @DefaultValue("false") boolean accepted,
                                   @QueryParam("p") @DefaultValue("1") int page) {
 
-        LOGGER.debug("Endpoint GET /messages/investor/" + investorId + " reached");
+        LOGGER.debug("Endpoint GET /messages/investor reached - User is " + sessionUser.getId());
 
-        final Page<Message> messagePage = messageService.getInvestorProjects(investorId, accepted, page, PAGE_SIZE);
+        final Page<Message> messagePage = messageService.getInvestorProjects(sessionUser.getId(), accepted, page, PAGE_SIZE);
         final List<OfferProjectDto> messages = messagePage.getContent().stream().map(p -> OfferProjectDto.fromMessage(p, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<OfferProjectDto>>(messages) {})
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", 1).build(), "first")
@@ -101,17 +100,6 @@ public class MessageRestController {
                 .link(uriInfo.getRequestUriBuilder().replaceQueryParam("p", messagePage.getTotalPages()).build(), "last")
                 .header("Access-Control-Expose-Headers", "Link")
                 .build();
-    }
-
-    @GET
-    @Path("/investor")
-    @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response investorChats(@QueryParam("a") @DefaultValue("false") boolean accepted,
-                                  @QueryParam("p") @DefaultValue("1") int page) {
-
-        LOGGER.debug("Endpoint GET /messages/investor reached - User is " + sessionUser.getId());
-
-        return investorChats(sessionUser.getId(), accepted, page);
     }
 
 
@@ -123,6 +111,17 @@ public class MessageRestController {
         LOGGER.debug("Endpoint GET /messages/invested reached - User is " + sessionUser.getId());
 
         final long count = messageService.getInvestedAmount(sessionUser.getId(), sessionUser.isInvestor());
+        return Response.ok(NotificationDto.fromNumber(count)).build();
+    }
+
+    @GET
+    @Path("/invested/{investor_id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getInvestedAmount(@PathParam("investor_id") final long investorId) {
+
+        LOGGER.debug("Endpoint GET /messages/invested/" + investorId + " reached - User is " + sessionUser.getId());
+
+        final long count = messageService.getInvestedAmount(investorId, true);
         return Response.ok(NotificationDto.fromNumber(count)).build();
     }
 

@@ -237,27 +237,9 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return parseInt(num);
       };
 
-      // $scope.isSafari = function() {
-      //   if(window.safari !== undefined) {
-      //     console.log("is Safari kinga");
-      //     return true;
-      //   }
-      //   console.log("it isnt");
-      //   return false;
-      // };
-      //
-      // $scope.safari = function() {
-      //   var ua = navigator.userAgent.toLowerCase();
-      //   if (ua.indexOf('safari') !== -1) {
-      //     if (ua.indexOf('chrome') > -1) {
-      //       console.log("Chrome") // Chrome
-      //       return false;
-      //     } else {
-      //       console.log("Safari") // Safari
-      //       return true;
-      //     }
-      //   }
-      // };
+      $scope.goToProject = function (id) {
+        PathService.get().singleProject(id).go();
+      }
 
       /*$scope.onSliderChange = function (event) {
         if (event.target.name === 'maxPercentage') {
