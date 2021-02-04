@@ -19,7 +19,6 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     }, false);
     $scope.pressContact = 0;
 
-    // TODO: Si el proyecto no existe, que no intente sumar estadistica, ver que onda el addStatError
     $scope.$on("$destroy", function(){
       if ($scope.addStatError || $scope.project == null) return;
       projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
