@@ -11,9 +11,8 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
     };
 
 
-    userService.updateUser = function (fName, lName,rId,ph,em,rl,ln, bday,count, st, c) {
-      var body = {firstName: fName, lastName: lName, realId: rId, phone: ph, email:em, role:rl, password: pass, linkedin: ln, birthday:bday, country:count, state:st, city: c};
-      return root.customPUT(body)
+    userService.updateUser = function (user) {
+      return root.customPUT(user)
     };
 
 
@@ -51,9 +50,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
 
     userService.putFavorite = function (id, add) {
-      var body = {projectId : id, add: add}
+      var body = {projectId : id, add: add};
       return root.one('favorites').customPUT(body)
-    }
+    };
 
     userService.requestPassword = function (mail) {
       var body = {mail: mail};
@@ -67,6 +66,11 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
 
     userService.resetPassword = function (passwordBlock) {
       return root.one('password').customPUT(passwordBlock);
+    };
+
+    userService.requestVerification = function (mail) {
+      var body = {mail: mail};
+      return root.one('verify').customPOST(body);
     };
 
     return userService;

@@ -49,7 +49,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String API_PREFIX_VERSION = "/api";
     private static final String LOGIN_ENTRY_POINT = API_PREFIX_VERSION + "/auth/login";
 
-    private static final int TOKEN_DAYS = 365;
 
     @Autowired
     private PawUserDetailsService userDetails;
@@ -145,10 +144,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Folder and files to ignore applying filters to.
      * @param web The web to config.
-     * @throws Exception
      */
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
                 .antMatchers(
                         "/views/**",
@@ -164,7 +162,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Authentication manager bean.
      * @return The created authentication manager.
-     * @throws Exception
+     * @throws Exception On creating or configuration error.
      */
     @Bean
     @Override
@@ -176,30 +174,22 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Bean for remembering the authentications provided.
      * @return The created authentication provided.
-     * @throws Exception
      */
     @Bean
-    public AuthenticationProvider rememberAuthenticationProvider() throws Exception {
+    public AuthenticationProvider rememberAuthenticationProvider() {
         RememberAuthenticationProvider rememberAuthenticationProvider = new RememberAuthenticationProvider();
         rememberAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         rememberAuthenticationProvider.setUserDetailsService(userDetails);
         return rememberAuthenticationProvider;
     }
 
-    /*
-    @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-        return new MyCustomLoginSuccessHandler();
-    }
-    */
 
-
-    /** Auxiliary functions */
+    /* Auxiliary functions */
 
     /**
      * Builds the Login Filter.
      * @return The built processing login filter.
-     * @throws Exception
+     * @throws Exception On creating or configuration error
      */
     private LoginProcessingFilter buildLoginFilter() throws Exception {
         return new LoginProcessingFilter(LOGIN_ENTRY_POINT, rememberAuthenticationProvider(), successHandler, failureHandler, objectMapper);

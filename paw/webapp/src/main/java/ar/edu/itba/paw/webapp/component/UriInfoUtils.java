@@ -12,10 +12,10 @@ public class UriInfoUtils {
         try {
             final URL baseUrlWithPath = uriInfo.getBaseUri().toURL();
 
-            /** Remove the /api/ to obtain either an empty string or the application context */
+            /* Remove the /api/ to obtain either an empty string or the application context */
             String applicationContext = baseUrlWithPath.getPath().replace("/api/", "");
 
-            /** Create the final url, adding the /# for Angular */
+            /* Create the final url, adding the /# for Angular */
             final URL finalUrl = new URL(baseUrlWithPath.getProtocol(), baseUrlWithPath.getHost(), baseUrlWithPath.getPort(), applicationContext + "/#");
             return new URI(finalUrl.toString());
 

@@ -1,7 +1,7 @@
 'use strict';
 
-define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/sampleService', 'services/imageService', 'services/PathService', 'directives/pagination'], function(paw2020a) {
-  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','sampleService','imageService', 'PathService', '$scope', '$routeParams', '$rootScope', function(projectService, messageService,userService,sampleService,imageService, PathService, $scope, $routeParams, $rootScope) {
+define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/messageService', 'services/userService', 'services/urlService', 'services/imageService', 'services/PathService', 'directives/pagination'], function(paw2020a) {
+  paw2020a.controller('dashboardCtrl', ['projectService', 'messageService','userService','urlService','imageService', 'PathService', '$scope', '$routeParams', '$rootScope', function(projectService, messageService,userService,urlService,imageService, PathService, $scope, $routeParams, $rootScope) {
     // Start with updated notification count
     $rootScope.$emit('notificationChange');
 
@@ -73,7 +73,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           $scope.projects[i].openStats = false;
           $scope.projects[i].editUrl = PathService.get().editProject($scope.projects[i].id).path;
           $scope.projects[i].portraitExists = false;
-          sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
+          urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
             $scope.projects[map[image.data.route]].image = image.data.image;
             $scope.projects[map[image.data.route]].portraitExists = true;
           }, function (errorResponse) {
@@ -135,7 +135,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     $scope.viewMoreOffers = function (id, index) {
       if (!$scope.projects[index].nextPageOffer) return;
-      sampleService.get($scope.projects[index].nextPageOffer).then(function (response) {
+      urlService.get($scope.projects[index].nextPageOffer).then(function (response) {
         _this.updateNextPageOffers(response.headers().link, index);
         $scope.fundedMsgs[index] = $scope.fundedMsgs[index].concat(response.data);
       }, function (error) {
@@ -183,7 +183,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     $scope.viewMore = function (id, index) {
       if (!$scope.projects[index].nextPageMessages) return;
-      sampleService.get($scope.projects[index].nextPageMessages).then(function (response) {
+      urlService.get($scope.projects[index].nextPageMessages).then(function (response) {
         _this.updateNextPageMessages(response.headers().link, index);
         for (var i = 0; i < response.data.length; i++) {
           response.data[i].chatUrl = PathService.get().chat($scope.projects[index].id, response.data[i].investorId).path;

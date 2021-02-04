@@ -1,7 +1,7 @@
 
 <head><title>{{ 'pageTitleSignUp' | translate }}</title></head>
 
-<div class="signUp">
+<div class="signUp signUp-background">
   <div class="container">
     <div class="row h-100">
       <div class="col-sm-10 my-auto mx-auto">
@@ -129,7 +129,6 @@
                            ng-pattern="/^((http(s)?://)?(www\.)?(linkedin\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*))?$/"/>
                   </div>
                 </div>
-<!--                TODO: Sacar la imagen de este form, se sube directamente en tu perfil-->
                 <div class="col-md">
                   <label class="birth-title">{{'birthday' | translate}} </label>
                   <div class="row">
@@ -200,6 +199,9 @@
         <div class="text-right">
           <div ng-if="userExistsError">
             <h4 class="big-error">{{'userAlreadyExists' | translate}}</h4>
+          </div>
+          <div ng-if="serverRetryError">
+            <h4 class="big-error">{{'serverRetryError' | translate}}</h4>
           </div>
           <div ng-if="serverFormErrors">
             <h4 class="big-error">{{'serverFormErrors' | translate}}</h4>

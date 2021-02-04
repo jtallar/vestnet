@@ -60,7 +60,7 @@ public class Message {
     private int projectId;
 
     /** Protected */ Message() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public Message(MessageContent content, User owner, User investor, Project project, boolean direction, int expireDays) {
@@ -243,7 +243,7 @@ public class Message {
         private String interest;
 
         /** Protected */ MessageContent() {
-            /** For hibernate only */
+            /* For hibernate only */
         }
 
         public MessageContent(String comment, long offer, String interest) {
@@ -286,7 +286,7 @@ public class Message {
         }
     }
 
-    /** Auxiliary functions */
+    /* Auxiliary functions */
 
 
     /**

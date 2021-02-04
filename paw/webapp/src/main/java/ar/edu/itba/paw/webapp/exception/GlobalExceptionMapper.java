@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.mail.MessagingException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
@@ -22,12 +21,9 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
     public Response toResponse(Throwable thr) {
         LOGGER.error("Exception thrown: {}", (Object[]) thr.getStackTrace());
 
-        /** Custom Exceptions */
+        /* Custom Exceptions */
         if (thr instanceof UserAlreadyExistsException)
             return Response.status(Response.Status.CONFLICT).entity("").build();
-
-        if (thr instanceof MessagingException)
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity("").build();
 
         if (thr instanceof ResourceDoesNotExistException || thr instanceof IllegalProjectAccessException)
             return Response.status(Response.Status.NOT_FOUND).entity("").build();
@@ -35,22 +31,22 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
         if (thr instanceof InvalidTokenException || thr instanceof InvalidMessageException)
             return Response.status(Response.Status.BAD_REQUEST).entity("").build();
 
-        /** Validation Exception */
+        /* Validation Exception */
         if (thr instanceof ConstraintViolationException)
             return Response.status(Response.Status.BAD_REQUEST).entity(prepareMessage((ConstraintViolationException) thr)).build();
 
-        /** Jersey WebApplication Exceptions */
+        /* Jersey WebApplication Exceptions */
         if (thr instanceof WebApplicationException)
             return Response.status(((WebApplicationException) thr).getResponse().getStatus()).entity("").build();
 
         LOGGER.error("Exception not caught: {}", (Object[]) thr.getStackTrace());
 
-        /** Default treatment for uncaught exceptions */
+        /* Default treatment for uncaught exceptions */
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("").build();
     }
 
 
-    /** Auxiliary Methods */
+    /* Auxiliary Methods */
 
 
     /**

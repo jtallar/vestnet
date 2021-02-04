@@ -34,7 +34,7 @@ public class ProjectStages {
     private Project project;
 
     /** Protected */ ProjectStages() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public ProjectStages(String name, long number, String comment, Project project) {
