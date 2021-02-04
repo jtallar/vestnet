@@ -53,7 +53,6 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
 
-
       $scope.lastPage = 0;
 
       $scope.noProjectsFound = false;
@@ -210,16 +209,22 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       $scope.projects = [];
-      projectService.getPage(_this.filterObject()).then(function (projects) {
-        _this.getArgs(projects.headers().link);
-        _this.showProjects(projects.data);
-      }, function (errorResponse) {
-        console.error(errorResponse);
-      });
+
+      this.getFirstLoad = function() {
+        projectService.getPage(_this.filterObject()).then(function (projects) {
+          _this.getArgs(projects.headers().link);
+          _this.showProjects(projects.data);
+        }, function (errorResponse) {
+          console.error(errorResponse);
+        });
+      }
 
       $scope.toInt = function (num){
         return parseInt(num);
       };
+
+
+      this.getFirstLoad();
 
     }]);
 });

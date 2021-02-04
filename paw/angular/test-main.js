@@ -27,7 +27,8 @@ require.config({
   baseUrl: '/base/app/scripts',
 
   paths: {
-    'paw2020a': 'paw2020a',
+    paw2020a: 'paw2020a',
+    'services/dependencyResolverFor': 'services/dependencyResolverFor',
     jquery: '../../bower_components/jquery/dist/jquery',
     angular: '../../bower_components/angular/angular',
     angularMocks: '../../bower_components/angular-mocks/angular-mocks',
@@ -40,6 +41,7 @@ require.config({
     'angular-translate': '../../bower_components/angular-translate/angular-translate',
     feedCtrl: 'controllers/feedCtrl',
     newProjectCtrl: 'controllers/newProjectCtrl',
+    userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
   },
 

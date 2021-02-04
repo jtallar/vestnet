@@ -29,6 +29,7 @@ module.exports = function(config) {
       {pattern: 'bower_components/angular-translate/angular-translate.js', included: false},
       {pattern: 'app/scripts/*.js', included: false},
       {pattern: 'app/views/*.html', included: false},
+      {pattern: 'app/views/**/*.html', included: false},
       {pattern: 'app/scripts/**/*.js', included: false},
       {pattern:'app/tests/apiResponses.js', included:false},
       {pattern:'app/tests/**/*Spec.js', included:false},
@@ -39,7 +40,13 @@ module.exports = function(config) {
       'karma-jasmine',
       'karma-requirejs',
       'karma-firefox-launcher',
+      'karma-ng-html2js-preprocessor',
+      'karma-coverage'
     ],
+
+    ngHtml2JsPreprocessor: {
+      moduleName: 'directive-templates'
+    },
 
 
     // list of files / patterns to exclude
@@ -50,6 +57,11 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'app/views/*.html': ['ng-html2js'],
+      'app/views/**/*.html': ['ng-html2js'],
+      'app/scripts/controllers/**/*.js': ['coverage'],
+      'app/scripts/directives/**/*.js': ['coverage'],
+      'app/scripts/services/**/*.js': ['coverage']
     },
 
 
