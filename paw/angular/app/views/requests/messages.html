@@ -12,11 +12,13 @@
   <div class="col-3"></div>
 </div>
 
-<div class="text-center" ng-if="loading">
+<div class="text-center" ng-if="loading && !safari()">
   <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
 </div>
+<div class="text-center" ng-if="loading && safari()">
+  <div class="spinner-border text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 3rem; height: 3rem;"></div>
+</div>
 
-<!-- TODO: Ajustar el css de esto -->
 <div class="dashboard" ng-if="!noMessagesFound && !loading">
   <div class="card-group" ng-repeat="message in messages">
     <span class="anchor-header"></span>
@@ -26,10 +28,14 @@
         <div class="row">
           <div class="col-1">
             <div ng-if="!message.projectPortraitExists">
-              <img ng-src="images/userNoImage.png" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              <a ng-href="#{{message.projectUrl}}">
+                <img ng-src="images/projectNoImage.png" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              </a>
             </div>
             <div ng-if="message.projectPortraitExists">
-              <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              <a ng-href="#{{message.projectUrl}}">
+                <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+              </a>
             </div>
           </div>
           <div class="col-md-11 ww-content">
@@ -40,7 +46,7 @@
                     <h5 class="cut-text">{{message.projectName}}</h5>
                   </a>
                 </div>
-                <div class="col-6 ww-last">
+                <div class="col-6 ww-last clickable-element" ng-click="goToChat(message)">
                   <h6>{{toLocaleDateTimeString(message.publishDate)}}</h6>
                   <div class="row">
                     <div class="col-4 msg-offer cut-text">

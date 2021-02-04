@@ -1,9 +1,9 @@
 'use strict';
 
 
-define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/sampleService', 'directives/noFloat', 'directives/pagination',
+define(['paw2020a','services/AuthenticationService','services/userService', 'services/projectService', 'services/imageService','services/urlService', 'directives/noFloat', 'directives/pagination', 'directives/customOnChange',
   'services/PathService'], function(paw2020a) {
-    paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','sampleService', 'PathService', '$scope', '$routeParams', '$window', function (AuthenticationService,userService,projectService,imageService,sampleService,PathService,$scope,$routeParams,$window) {
+    paw2020a.controller('feedCtrl', ['AuthenticationService','userService','projectService','imageService','urlService', 'PathService', '$scope', '$routeParams', '$window', function (AuthenticationService,userService,projectService,imageService,urlService,PathService,$scope,$routeParams,$window) {
       var _this = this;
       var pageSize = 12, param, aux;
       $scope.page = 1;
@@ -37,7 +37,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           userService.putFavorite(id, false).then(function () {
 
           },function (error) {
-            console.log(error)
+            console.error(error)
           })
         }
         else {
@@ -45,11 +45,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           userService.putFavorite(id, true).then(function () {
 
           },function (error) {
-            console.log(error)
+            console.error(error)
           })
 
         }
-        console.log(id)
       };
 
 
@@ -88,26 +87,42 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         (aux.length !== 0) ? $scope.selectedOrder = aux[0] : $scope.selectedOrder = $scope.fields[0];
       }
       $scope.categories = [emptyCategory];
-      $scope.selectedCategory = emptyCategory;
+      param = parseInt($routeParams.c);
+      $scope.selectedCategory = (isNaN(param)) ? emptyCategory : {id:param, name:'noFilter'};
+
       param = parseInt($routeParams.min);
       $scope.minCost = (isNaN(param)) ? undefined : param;
       param = parseInt($routeParams.max);
       $scope.maxCost = (isNaN(param)) ? undefined : param;
+      if ($scope.minCost != null && $scope.maxCost != null && $scope.minCost > $scope.maxCost) {
+        $scope.minCost = undefined; $scope.maxCost = undefined;
+      }
       $scope.costRangeError = false;
 
-      param = parseInt($routeParams.pmin);
+      /*param = parseInt($routeParams.pmin);
       $scope.minPercentage = (isNaN(param)) ? 0 : param;
       param = parseInt($routeParams.pmax);
       $scope.maxPercentage = (isNaN(param)) ? 100 : param;
+      if ($scope.minPercentage > $scope.maxPercentage) {
+        $scope.minPercentage = 0; $scope.maxPercentage = 100;
+      }
+      $scope.percentageRangeError = false;*/
+      param = parseInt($routeParams.pmin);
+      $scope.minPercentage = (isNaN(param)) ? undefined : param;
+      param = parseInt($routeParams.pmax);
+      $scope.maxPercentage = (isNaN(param)) ? undefined : param;
+      if ($scope.minPercentage != null && $scope.maxPercentage != null && $scope.minPercentage > $scope.maxPercentage) {
+        $scope.minPercentage = undefined; $scope.maxPercentage = undefined;
+      }
       $scope.percentageRangeError = false;
 
 
       projectService.getCategories().then(function (cats) {
-        $scope.categories = $scope.categories.concat(cats.data);
+        $scope.categories = [emptyCategory].concat(cats.data);
         param = parseInt($routeParams.c);
         if (!isNaN(param)) {
           aux = $scope.categories.filter(function (el) { return el.id === param; });
-          if (aux.length !== 0) $scope.selectedCategory = aux[0];
+          $scope.selectedCategory = (aux.length !== 0) ? aux[0] : emptyCategory;
         }
       });
 
@@ -131,8 +146,10 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       this.filterObject = function () {
+        var pmin = (!$scope.minPercentage) ? undefined : $scope.minPercentage / 100.0;
+        var pmax = (!$scope.maxPercentage || $scope.maxPercentage === 100) ? undefined : $scope.maxPercentage / 100.0;
         return {p:$scope.page, l:pageSize, f:$scope.selectedField.id, o:$scope.selectedOrder.id, s:$scope.searchField, max:$scope.maxCost, min:$scope.minCost,
-          pmax:$scope.maxPercentage / 100.0, pmin:$scope.minPercentage  / 100.0, c:$scope.selectedCategory.id};
+          pmax:pmax, pmin:pmin, c:$scope.selectedCategory.id};
       };
 
       this.getArgs = function (string) {
@@ -157,13 +174,16 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         var map = {};
         for(var i = 0; i < $scope.projects.length; i++) {
           map[$scope.projects[i].id] = i;
-          if ($scope.projects[i].portraitExists) {
-            sampleService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
-              $scope.projects[map[image.data.route]].image = image.data.image
-            }, function (err) {
-              console.log("No image")
-            });
-          }
+          $scope.projects[i].portraitExists = false;
+          urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
+            $scope.projects[map[image.data.route]].image = image.data.image;
+            $scope.projects[map[image.data.route]].portraitExists = true;
+          }, function (errorResponse) {
+            if (errorResponse.status === 404) {
+              return;
+            }
+            console.error(errorResponse);
+          });
         }
         $scope.loading = false;
         if(foot) {
@@ -178,17 +198,20 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         $scope.minCost = undefined;
         $scope.maxCost = undefined;
         $scope.searchField = undefined;
-        $scope.minPercentage = 0;
-        $scope.maxPercentage = 100;
+        $scope.minPercentage = undefined;
+        $scope.maxPercentage = undefined;
+
+        $scope.costRangeError = false;
+        $scope.percentageRangeError = false;
       };
 
       $scope.applyFilter = function () {
-        if ($scope.minCost && $scope.maxCost && $scope.minCost > $scope.maxCost) {
+        if ($scope.minCost != null && $scope.maxCost != null && $scope.minCost > $scope.maxCost) {
           $scope.costRangeError = true;
           return;
         }
         $scope.costRangeError = false;
-        if ($scope.minPercentage > $scope.maxPercentage) {
+        if ($scope.minPercentage != null && $scope.maxPercentage != null && $scope.minPercentage > $scope.maxPercentage) {
           $scope.percentageRangeError = true;
           return;
         }
@@ -223,8 +246,28 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return parseInt(num);
       };
 
+      $scope.goToProject = function (id) {
+        PathService.get().singleProject(id).go();
+      }
 
-      this.getFirstLoad();
-
+      /*$scope.onSliderChange = function (event) {
+        if (event.target.name === 'maxPercentage') {
+          if (event.target.value >= $scope.minPercentage) {
+            $scope.$apply(function () {
+              $scope.maxPercentage = event.target.value;
+            });
+          } else {
+            event.target.value = $scope.maxPercentage;
+          }
+        } else if (event.target.name === 'minPercentage') {
+          if (event.target.value <= $scope.maxPercentage) {
+            $scope.$apply(function () {
+              $scope.minPercentage = event.target.value;
+            });
+          } else {
+            event.target.value = $scope.minPercentage;
+          }
+        }
+      }*/
     }]);
 });

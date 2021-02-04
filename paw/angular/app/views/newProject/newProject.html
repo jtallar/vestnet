@@ -112,7 +112,8 @@
         </div>
 
         <div class="text-right" style="margin: 20px 0 40px 0">
-          <div ng-if="loading" class="spinner-grow text-dark" role="status" style="margin-right: 25px"></div>
+          <div ng-if="loading && !safari()" class="spinner-grow text-dark" role="status" style="margin-right: 25px"></div>
+          <div ng-if="loading && safari()" class="spinner-border text-dark" role="status" style="margin-right: 25px"></div>
           <input ng-if="!loading" type="submit" value="{{'create' | translate}}" class="btn btn-dark" ng-click="createProject(controller.project)"
                  ng-disabled="newProjectForm.$invalid || readingSingleFilesCount !== 0 || readingMultiFilesCount !== 0"/>
         </div>

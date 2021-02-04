@@ -1,7 +1,7 @@
     'use strict';
 
-define(['paw2020a', 'services/messageService', 'services/projectService', 'services/sampleService', 'services/PathService', 'directives/pagination'], function(paw2020a) {
-    paw2020a.controller('requestsCtrl', ['messageService','projectService', 'sampleService', 'PathService', '$scope', '$routeParams', function(messageService, projectService, sampleService, PathService, $scope, $routeParams) {
+define(['paw2020a', 'services/messageService', 'services/projectService', 'services/urlService', 'services/PathService', 'directives/pagination'], function(paw2020a) {
+    paw2020a.controller('requestsCtrl', ['messageService','projectService', 'urlService', 'PathService', '$scope', '$routeParams', function(messageService, projectService, urlService, PathService, $scope, $routeParams) {
 
       var _this = this;
       $scope.noDealsFound = false;
@@ -61,13 +61,16 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
           map[$scope.messages[i].id] = i;
           $scope.messages[i].ownerUrl = PathService.get().user($scope.messages[i].ownerId).path;
           $scope.messages[i].projectUrl = PathService.get().singleProject($scope.messages[i].projectId).path;
-          if ($scope.messages[i].projectPortraitExists) {
-            sampleService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
-              $scope.messages[map[image.data.route]].projectImage = image.data.image;
-            }, function (err) {
-              console.log("No image")
-            });
-          }
+          $scope.messages[i].projectPortraitExists = false;
+          urlService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
+            $scope.messages[map[image.data.route]].projectImage = image.data.image;
+            $scope.messages[map[image.data.route]].projectPortraitExists = true;
+          }, function (errorResponse) {
+            if (errorResponse.status === 404) {
+              return;
+            }
+            console.error(errorResponse);
+          });
         }
       };
 

@@ -20,7 +20,7 @@ public class State {
     private String isoCode;
 
     /** Protected */ State() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public State(int id, String name, String isoCode) {

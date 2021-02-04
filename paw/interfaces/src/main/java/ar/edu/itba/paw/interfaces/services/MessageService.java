@@ -6,7 +6,6 @@ import ar.edu.itba.paw.model.Message.MessageContent;
 import ar.edu.itba.paw.model.components.Page;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 

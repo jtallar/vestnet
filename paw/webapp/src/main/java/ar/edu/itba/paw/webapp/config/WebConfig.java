@@ -45,9 +45,7 @@ import java.util.Properties;
 @PropertySource(value = "classpath:application.properties")
 public class WebConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
-
     public static final int MAX_UPLOAD_SIZE = 2097152; // 2 MB
-    public static final int MAX_SLIDESHOW_COUNT = 5;
 
 
     @Autowired
@@ -137,7 +135,7 @@ public class WebConfig {
 
     /**
      * Bean for mail server configuration
-     * @return
+     * @return The java mail sender.
      */
     @Bean
     public JavaMailSender getJavaMailSender() {
@@ -162,8 +160,6 @@ public class WebConfig {
     /**
      * Bean for velocity set up.
      * @return The created velocity engine.
-     * @throws VelocityException
-     * @throws IOException
      */
     @Bean
     public VelocityEngine velocityEngine() {
@@ -204,7 +200,7 @@ public class WebConfig {
     }
 
 
-    /** Auxiliary Method */
+    /* Auxiliary Method */
 
 
     /**

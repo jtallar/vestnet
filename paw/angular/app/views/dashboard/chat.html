@@ -19,10 +19,14 @@
       <div class="col-2 card chat-ficha">
         <a ng-href="#{{project.projectUrl}}" class="btn-link4"><h4 class="chat-p-name">{{project.name}}</h4></a>
         <div ng-if="!project.portraitExists">
-          <img ng-src="images/projectNoImage.png" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+          <a href="#{{project.projectUrl}}">
+            <img ng-src="images/projectNoImage.png" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+          </a>
         </div>
         <div ng-if="project.portraitExists">
-          <img ng-src="data:image/JPEG;base64,{{project.image}}" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+          <a href="#{{project.projectUrl}}">
+            <img ng-src="data:image/JPEG;base64,{{project.image}}" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+          </a>
         </div>
         <p><i>{{project.summary}}</i></p>
         <h6><i>Funded</i></h6>
@@ -39,10 +43,14 @@
                 <div class="row">
                   <div class="col-3">
                     <div ng-if="!user.imageExists">
-                      <img ng-src="images/userNoImage.png" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+                      <a ng-href="#{{user.userUrl}}">
+                        <img ng-src="images/userNoImage.png" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+                      </a>
                     </div>
                     <div ng-if="user.imageExists">
-                      <img ng-src="data:image/JPEG;base64,{{user.image}}" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+                      <a ng-href="#{{user.userUrl}}">
+                        <img ng-src="data:image/JPEG;base64,{{user.image}}" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
+                      </a>
                     </div>
                   </div>
                   <div class="center-vertical col-6">
@@ -226,6 +234,11 @@
               </div>
             </div>
           </ng-form>
+          <div ng-if="serverRetryError">
+            <div class="col mailError" style="margin-left: 30px">
+              <p class="mailError">{{'serverRetryError' | translate}}</p>
+            </div>
+          </div>
         </div>
       </div>
 

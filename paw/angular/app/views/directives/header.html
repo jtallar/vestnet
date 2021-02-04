@@ -27,7 +27,6 @@
           <div class="row justify-content-center"><img alt="" class="nav-icon" src="images/home-icon.png"></div>
         </a>
       </li>
-<!--  TODO: Fix badge number CSS   -->
       <li class="nav-item">
         <div class="dropdown">
           <button class="btn btn-header btn-transp dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -62,7 +61,8 @@
               <a class="dropdown-item" ng-href="#/newProject">{{'hnewProject' | translate }}</a>
               <div class="dropdown-divider-header"></div>
             </div>
-            <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">{{'hlogout' | translate }}</a>
+<!--            <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">{{'hlogout' | translate }}</a>-->
+            <a class="dropdown-item" ng-click="logout()">{{'hlogout' | translate }}</a>
           </div>
         </div>
       </li>

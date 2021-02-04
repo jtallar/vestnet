@@ -46,7 +46,18 @@
 
     <div class="col-md-8">
       <div class="profile-head">
-        <h2 class="bold">{{'profileTitle' | translate : {first : user.firstName, last : user.lastName} }}</h2>
+        <div class="row">
+          <div class="col-10">
+            <h2 class="bold">{{'profileTitle' | translate : {first : user.firstName, last : user.lastName} }}</h2>
+          </div>
+          <div class="col-2">
+            <a ng-href="#/editProfile" class="btn btn-inv btn-project pull-right">
+              <div class="notification-icon">
+                <img class="nav-icon" src="images/edit-icon-b.png" alt="">
+              </div>
+            </a>
+          </div>
+        </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li ng-if="isInvestor" class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
@@ -141,7 +152,12 @@
                   <div class="card m-2">
                     <div class="card-header card-title text-white">
                       <div class="row">
-                        <a class="col-8" href="#/projects/{{fav.id}}">
+                        <div class="col-1">
+                          <button ng-click="removeFav(fav.id)" class="btn-transp pull-right">
+                            <img ng-src="images/bookmarkOnB.png" class="icon-img" alt="{{'imgFav' | translate}}"/>
+                          </button>
+                        </div>
+                        <a class="col-7" href="#/projects/{{fav.id}}">
                           <h5 class="card-title cut-text">{{fav.name}}</h5>
                         </a>
                         <div class="col-4">
@@ -171,48 +187,6 @@
                 </div>
               </div>
           </div>
-<!--          &lt;!&ndash;  vvv    TODO -> IMPLEMENTAR   vvv &ndash;&gt;-->
-<!--          <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">-->
-<!--            <div class="text-center" ng-if="loadingSecondTab">-->
-<!--              <div class="spinner-grow text-dark loading-grow" role="status"></div>-->
-<!--            </div>-->
-<!--            <div ng-if="!loadingSecondTab && secondTab.length !== 0">-->
-<!--              <div ng-repeat="project in secondTab">-->
-<!--                <div class="card m-2">-->
-
-<!--                  <div class="card-header card-title text-white">-->
-<!--                    <div class="row">-->
-<!--                      <a class="col-8" href="#/projects/{{project.id}}">-->
-<!--                        <h5 class="card-title cut-text">{{project.name}}</h5>-->
-<!--                      </a>-->
-<!--                      <div class="col-4">-->
-<!--                        <h4 style="text-align: center; font-size: 12px; margin-bottom: 2px !important;">-->
-<!--                          {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{'moneyarg'| translate : {m : formatPrice(project.fundingTarget)} }}</b></h4>-->
-<!--                        <div class="progress" style="height: 10px; margin: 0 0 0 0;">-->
-<!--                          <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{fav.percentage}}%" aria-valuenow="{{fav.percentage}}" aria-valuemin="0" aria-valuemax="100">{{fav.percentage}}%</div>-->
-<!--                        </div>-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                  </div>-->
-
-<!--                  <div class="card-body favorites">-->
-<!--                    <p class="card-text" style="color: black; font-weight: normal;">{{project.summary}}</p>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div ng-if="page < lastPage">-->
-<!--                <button ng-click="viewMoreProjects()" class="btn btn-inv pull-right">-->
-<!--                  <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>-->
-<!--                </button>-->
-<!--              </div>-->
-<!--            </div>-->
-
-<!--            <div ng-if="!loadingSecondTab && secondTab.length === 0"  class="card m-2">-->
-<!--              <div class="card-header text-center">-->
-<!--                <h5 class="card-title text-white">{{ 'noProjFound' | translate}}</h5>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
       </div>
     </div>
     </div>

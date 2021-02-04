@@ -6,9 +6,12 @@
   font-size: 16px;
 }
 
+.signUp-background {
+  background-image: url("../images/signupBack.png");
+}
+
 .signUp, .welcome-full{
   padding-bottom: 20%;
-  background-image: url("../images/signupBack.png");
   background-size:100%;
   background-repeat: repeat;
 }

@@ -14,9 +14,8 @@ public interface UserDao {
      * Creates a new user if possible.
      * @param user The user with the populated fields.
      * @return The created user.
-     * @throws UserAlreadyExistsException If the user's mail already exists.
      */
-     User create(User user) throws UserAlreadyExistsException;
+     User create(User user);
 
     /**
      * Delete a user given its ID.

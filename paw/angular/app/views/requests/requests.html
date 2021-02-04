@@ -49,53 +49,6 @@
   <div class="col-3"></div>
 </div>
 
-<!--<div ng-repeat="message in messages">-->
-<!--  <span class="anchor-header" id="dashboard-project-{{message.pid}}"></span>-->
-<!--  <div class="container-deal py-3">-->
-<!--    <div class="card">-->
-
-<!--      <div class="card-header header-grey">-->
-<!--        <a ng-href="#/projects/{{message.pid}}" class="btn-link">{{message.project.name}}</a>-->
-<!--        <a ng-href="#/users/{{message.receiverId}}" class="btn msg-usr pull-right">-->
-<!--          &lt;!&ndash;            TODO: ?back=yes"&ndash;&gt;-->
-<!--          <img class="nav-icon" src="images/user-icon.png" alt="">-->
-<!--        </a>-->
-<!--      </div>-->
-
-<!--      <div class="card-deal row">-->
-<!--        <div class="col-6">-->
-<!--          <strong> {{'msgTitleBody' | translate}} </strong>-->
-<!--          <p> {{message.content.message}}</p>-->
-<!--        </div>-->
-<!--        <div class="col-6">-->
-<!--          <strong>{{'msgTitleOffer' | translate}} </strong>-->
-<!--          <p>{{message.content.offer}}</p>-->
-<!--          <strong>{{'msgTitleRequest' | translate}} </strong>-->
-<!--          <p>{{message.content.interest}}</p>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      <div class="row dr-footer">-->
-<!--      <div class="col-3" ng-switch="{{message.state}}">-->
-<!--&lt;!&ndash;        <strong>{{'state' | translate}} </strong>&ndash;&gt;-->
-<!--        <div ng-switch-when="1">-->
-<!--          <h3 class="state text-secondary">{{'pending' | translate}}</h3>-->
-<!--        </div>-->
-<!--        <div ng-switch-when="0">-->
-<!--          <h3 class="state text-success">{{'accepted' | translate}}</h3>-->
-<!--        </div>-->
-<!--        <div ng-switch-when="2">-->
-<!--          <h3 class="state text-danger">{{'rejected' | translate}}</h3>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--        <div class="col-7"></div>-->
-<!--      <p class="col-2 msg-date">{{message.publishDate}}</p>-->
-<!--      </div>-->
-
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-
   <div class="row text-center">
     <div class="col">
       <div class="counter">
@@ -108,22 +61,24 @@
   </div>
 
 <!--<button ng-click="animate('invested', 0, 2500, 1000)">TRIAL</button>-->
-<!-- TODO: Ajustar el css de esto -->
   <span class="anchor-header"></span>
   <div class="card-group group-invest" ng-if="!noDealsFound">
     <div class="card card-invest" ng-repeat="message in messages">
       <div class="card-header header-grey">
         <a ng-href="#{{message.projectUrl}}" class="btn-link">{{message.projectName}}</a>
         <a ng-href="#{{message.ownerUrl}}" class="btn msg-usr pull-right">
-          <!--            TODO: ?back=yes"-->
           <img class="nav-icon" src="images/user-icon.png" alt="">
         </a>
       </div>
       <div ng-if="!message.projectPortraitExists">
-        <img ng-src="images/projectNoImage.png" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        <a href="#{{message.projectUrl}}">
+          <img ng-src="images/projectNoImage.png" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        </a>
       </div>
       <div ng-if="message.projectPortraitExists">
-        <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        <a href="#{{message.projectUrl}}">
+          <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
+        </a>
       </div>
       <div class="card-deal row">
         <div class="col-4 msg-offer">

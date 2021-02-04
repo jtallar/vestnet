@@ -2,9 +2,6 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.daos.MessageDao;
 import ar.edu.itba.paw.interfaces.exceptions.InvalidMessageException;
-import ar.edu.itba.paw.interfaces.exceptions.MessageDoesNotExistException;
-import ar.edu.itba.paw.interfaces.exceptions.ProjectDoesNotExistException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.MessageService;
 import ar.edu.itba.paw.interfaces.services.ProjectService;
@@ -20,7 +17,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -71,15 +67,11 @@ public class MessageServiceImpl implements MessageService {
         final Message messageData = new Message(content, new User(project.getOwnerId()),
                 new User(investorId), new Project(projectId), direction, expiryDays);
 
-        /** Persists message */
-        final Message finalMessage = messageDao.create(messageData);
-
         /** Sends email */
-        try {
-            emailService.sendOffer(owner, investor, project, messageData.getContent(), messageData.getDirection(), baseUri);
-        } catch (MessagingException ignored) {}
+        emailService.sendOffer(owner, investor, project, messageData.getContent(), messageData.getDirection(), baseUri);
 
-        return finalMessage;
+        /** Persists message */
+        return messageDao.create(messageData);
     }
 
 
@@ -162,15 +154,13 @@ public class MessageServiceImpl implements MessageService {
         if (sessionUserId == message.getOwnerId() && !message.getDirection())
             throw new InvalidMessageException("Cannot answer over an own message.");
 
+        /** Send email */
+        emailService.sendOfferAnswer(owner, investor, project, accepted, message.getDirection(), baseUri);
+
         /** Set message as accepted or not, and if accepted add the new funds */
         message.setAccepted(accepted);
         if (accepted)
             project.setFundingCurrent(project.getFundingCurrent() + message.getContent().getOffer());
-
-        /** Send email */
-        try {
-            emailService.sendOfferAnswer(owner, investor, project, accepted, message.getDirection(), baseUri);
-        } catch (MessagingException ignored) {}
 
         return optionalMessage;
     }

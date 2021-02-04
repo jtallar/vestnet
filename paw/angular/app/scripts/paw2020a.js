@@ -75,7 +75,23 @@ define(['routes',
             else aux = new Date();
             return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
           };
-          $rootScope.isSafari = window.safari !== undefined;
+          // $rootScope.isSafari = function() {
+          //   console.log("is Safari kinga");
+          //   return window.safari !== undefined;
+          // };
+
+          $rootScope.safari = function() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.indexOf('safari') !== -1) {
+              if (ua.indexOf('chrome') > -1) {
+                console.log("Chrome") // Chrome
+                return false;
+              } else {
+                console.log("Safari") // Safari
+                return true;
+              }
+            }
+          };
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
@@ -88,9 +104,8 @@ define(['routes',
             PathService.get().login().go({url: url});
           } else if ((!AuthenticationService.isInvestor() && routeMatches(url, PathService.investorRoutesRE)) ||
               (!AuthenticationService.isEntrepreneur() && routeMatches(url, PathService.entrepreneurRoutesRE))) {
-            // if logged in and trying to access something they shouldnt, redirect to index
-            // PathService.get().error().replace({code:403});
-            PathService.get().index().go();
+            // if logged in and trying to access something they shouldnt, redirect to error
+            PathService.get().error().replace({code:403});
           }
         });
 
@@ -119,12 +134,12 @@ define(['routes',
         Restangular.setErrorInterceptor(function (response, deferred, responseHandler) {
           if (response.status === 404) {
             // PathService.get().error().go({code:404});
+            // TODO: Borrar este console para deployar
             console.error("404 que tenes que manejar");
             return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
-              // PathService.get().error().replace({code:403});
-              PathService.get().index().go();
+              PathService.get().error().replace({code:403});
             } else {
               PathService.get().login().go();
             }

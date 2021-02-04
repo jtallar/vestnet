@@ -1,9 +1,9 @@
 'use strict';
 
-define(['paw2020a', 'services/projectService', 'services/imageService', 'services/sampleService', 'directives/customOnChange', 'directives/noFloat', 'services/PathService'],
+define(['paw2020a', 'services/projectService', 'services/imageService', 'services/urlService', 'directives/customOnChange', 'directives/noFloat', 'services/PathService'],
   function(paw2020a) {
 
-    paw2020a.controller('editProjectCtrl',['projectService','imageService', 'sampleService', 'PathService', '$scope', '$routeParams', function(projectService, imageService, sampleService, PathService, $scope, $routeParams) {
+    paw2020a.controller('editProjectCtrl',['projectService','imageService', 'urlService', 'PathService', '$scope', '$routeParams', function(projectService, imageService, urlService, PathService, $scope, $routeParams) {
 
       var id = parseInt($routeParams.id);
       if (isNaN(id) || id <= 0) {
@@ -35,10 +35,20 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           return;
         }
         // Fill up the rest of the form.
-        existingPortrait = $scope.project.portraitExists;
+        existingPortrait = false;
         $scope.disableSlideshow = !existingPortrait;
+        // Check if portraitImage exists to enable/disable slideshow
+        urlService.get($scope.project.portraitImage).then(function (image) {
+          existingPortrait = true;
+          $scope.disableSlideshow = !existingPortrait;
+        }, function (errorResponse) {
+          if (errorResponse.status === 404) {
+            return;
+          }
+          console.error(errorResponse);
+        });
 
-        sampleService.get($scope.project.categories).then(function (categories) {
+        urlService.get($scope.project.categories).then(function (categories) {
           var ids = categories.data.reduce(function (map, obj) {
             map[obj.id] = true;
             return map;

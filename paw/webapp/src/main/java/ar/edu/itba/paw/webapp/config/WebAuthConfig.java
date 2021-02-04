@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.config;
 
-
 import ar.edu.itba.paw.interfaces.TokenExtractor;
 import ar.edu.itba.paw.webapp.auth.CorsFilter;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
@@ -50,7 +49,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String API_PREFIX_VERSION = "/api";
     private static final String LOGIN_ENTRY_POINT = API_PREFIX_VERSION + "/auth/login";
 
-    private static final int TOKEN_DAYS = 365;
 
     @Autowired
     private PawUserDetailsService userDetails;
@@ -101,12 +99,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor").hasRole("INVESTOR")
-                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/investor/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications/project/**").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/notifications").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/*/*").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/chat/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/invested").hasRole("INVESTOR")
+                .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/messages/invested/**").hasRole("ENTREPRENEUR")
 
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/*/*").hasRole("ENTREPRENEUR")
                 .antMatchers(HttpMethod.POST, API_PREFIX_VERSION + "/messages/**").hasRole("INVESTOR")
@@ -131,7 +129,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/favorites/**").hasRole("INVESTOR")
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users").authenticated()
                 .antMatchers(HttpMethod.GET, API_PREFIX_VERSION + "/users/**").permitAll()
-                .antMatchers("/**").permitAll(); // FIXME: IF SOMETHING FAILS WITH 403, MAYBE ADD IT UP HERE ^
+                .antMatchers("/**").permitAll();
 
         if (isDevelopmentMode()) http
                 .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class);
@@ -146,10 +144,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Folder and files to ignore applying filters to.
      * @param web The web to config.
-     * @throws Exception
      */
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
                 .antMatchers(
                         "/views/**",
@@ -165,7 +162,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Authentication manager bean.
      * @return The created authentication manager.
-     * @throws Exception
+     * @throws Exception On creating or configuration error.
      */
     @Bean
     @Override
@@ -177,30 +174,22 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Bean for remembering the authentications provided.
      * @return The created authentication provided.
-     * @throws Exception
      */
     @Bean
-    public AuthenticationProvider rememberAuthenticationProvider() throws Exception {
+    public AuthenticationProvider rememberAuthenticationProvider() {
         RememberAuthenticationProvider rememberAuthenticationProvider = new RememberAuthenticationProvider();
         rememberAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         rememberAuthenticationProvider.setUserDetailsService(userDetails);
         return rememberAuthenticationProvider;
     }
 
-    /*
-    @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-        return new MyCustomLoginSuccessHandler();
-    }
-    */
 
-
-    /** Auxiliary functions */
+    /* Auxiliary functions */
 
     /**
      * Builds the Login Filter.
      * @return The built processing login filter.
-     * @throws Exception
+     * @throws Exception On creating or configuration error
      */
     private LoginProcessingFilter buildLoginFilter() throws Exception {
         return new LoginProcessingFilter(LOGIN_ENTRY_POINT, rememberAuthenticationProvider(), successHandler, failureHandler, objectMapper);

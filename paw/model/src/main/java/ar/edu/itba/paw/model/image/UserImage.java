@@ -12,7 +12,7 @@ public class UserImage extends Image {
     private User user;
 
     /** Protected */ UserImage() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public UserImage(long id) {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -38,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendOffer(User owner, User investor, Project project, Message.MessageContent content, boolean direction, URI baseUri) throws MessagingException {
+    public void sendOffer(User owner, User investor, Project project, Message.MessageContent content, boolean direction, URI baseUri) {
         Mail mail = new Mail();
         if (direction) {
             mail.setFrom(investor.getEmail());
@@ -57,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendOfferAnswer(User owner, User investor, Project project, boolean answer, boolean direction, URI baseUri) throws MessagingException {
+    public void sendOfferAnswer(User owner, User investor, Project project, boolean answer, boolean direction, URI baseUri) {
         Mail mail = new Mail();
         if (direction) {
             mail.setFrom(investor.getEmail());
@@ -76,7 +77,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendPasswordRecovery(User user, String token, URI baseUri) throws MessagingException {
+    public void sendPasswordRecovery(User user, String token, URI baseUri) {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.passwordReset", null, Locale.forLanguageTag(user.getLocale())));
@@ -87,7 +88,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendVerification(User user, String token, URI baseUri) throws MessagingException {
+    public void sendVerification(User user, String token, URI baseUri) {
         Mail mail = new Mail();
         mail.setTo(user.getEmail());
         mail.setSubject(messageSource.getMessage("email.subject.verification", null, Locale.forLanguageTag(user.getLocale())));
@@ -102,20 +103,25 @@ public class EmailServiceImpl implements EmailService {
     /**
      * Sends a formatted mail in html.
      * @param mail The formatted mail. Content must be filled previously.
-     * @throws MessagingException Upon sending error.
      */
-    private void sendEmail(Mail mail) throws MessagingException {
-        MimeMessage mimeMessage = emailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        mimeMessageHelper.setSubject(mail.getSubject());
-        mimeMessageHelper.setFrom(mail.getFrom());
-        mimeMessageHelper.setTo(mail.getTo());
-        mimeMessageHelper.setText(mail.getContent(), true);
-        mimeMessageHelper.setReplyTo(mail.getFrom());
-        ClassPathResource resource = new ClassPathResource("/images/mail-header.png");
-        mimeMessageHelper.addInline("headerImage", resource);
+    private void sendEmail(Mail mail) {
+        try {
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            mimeMessageHelper.setSubject(mail.getSubject());
+            mimeMessageHelper.setFrom(mail.getFrom());
+            mimeMessageHelper.setTo(mail.getTo());
+            mimeMessageHelper.setText(mail.getContent(), true);
+            mimeMessageHelper.setReplyTo(mail.getFrom());
+            ClassPathResource resource = new ClassPathResource("/images/mail-header.png");
+            mimeMessageHelper.addInline("headerImage", resource);
 
-        emailSender.send(mimeMessageHelper.getMimeMessage());
+            emailSender.send(mimeMessageHelper.getMimeMessage());
+        } catch (MessagingException e) {
+            // in case the message cannot be created
+        } catch (MailException e) {
+            // in case the mail cannot be sent
+        }
     }
 
 

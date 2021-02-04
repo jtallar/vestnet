@@ -12,7 +12,7 @@ define([], function() {
     pathService.freeRoutesRE = [/^\/projects\/.*$/, /^\/error$/, /^\/users\/.*$/];
     pathService.investorRoutesRE = [/^\/requests$/, /^\/messages$/, /^\/chat\/[^\/]*$/];
     pathService.entrepreneurRoutesRE = [/^\/dashboard$/, /^\/editProject\/.*$/, /^\/newProject$/, /^\/chat\/[^\/]*\/.+$/];
-    pathService.authRoutesRE = [/^\/profile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
+    pathService.authRoutesRE = [/^\/profile$/, /^\/editProfile$/].concat(pathService.investorRoutesRE).concat(pathService.entrepreneurRoutesRE);
 
     pathService.get = function () {
       var base = {
@@ -38,7 +38,7 @@ define([], function() {
       base.replace = function (paramsObject) {
         // Clear current search params
         $location.url($location.path());
-        if (paramsObject) return $location.path(base.absolutePath()).search(paramsObject);
+        if (paramsObject) return $location.path(base.absolutePath()).search(paramsObject).replace();
         return $location.path(base.absolutePath()).replace();
       };
 
