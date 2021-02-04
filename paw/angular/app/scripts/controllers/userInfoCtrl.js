@@ -79,17 +79,7 @@ define(['paw2020a', 'services/userService', 'services/urlService', 'services/mes
     };
 
     this.fetchSecondTab = function () {
-      if ($scope.isInvestor) {
-        // Fetch investor deals
-        // TODO: Que hacemos aca? No tengo toda la data que tiene el otro, que muestro?
-        messageService.getInvestorDeals($scope.page, $scope.user.id).then(function (response) {
-          _this.setMaxPage(response.headers().link);
-          _this.processResponse(response.data);
-          $scope.loadingSecondTab = false;
-        }, function (errorResponse) {
-          console.error(errorResponse);
-        });
-      } else {
+      if (!$scope.isInvestor) {
         // Fetch entrepreneur current funding projects
         userService.getUserProjects($scope.user.id.toString(), false, $scope.page, pageSize).then(function (response) {
           _this.setMaxPage(response.headers().link);
