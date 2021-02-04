@@ -93,7 +93,7 @@
                   <span class="input-group-text">{{'min' | translate}}</span>
                 </div>
                 <input style="color: black !important;" name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="1000" id="filter-form-min"
-                       max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+                       min="0" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
               </div>
               <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
             </div>
@@ -103,32 +103,58 @@
                   <span class="input-group-text">{{'max' | translate}}</span>
                 </div>
                 <input style="color: black !important;" name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
-                            id="filter-form-max" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+                            id="filter-form-max" min="0" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
               </div>
               <label class="formError" ng-if="costRangeError">{{'costRangeRequirement' | translate}}</label>
             </div>
           </div>
         </div>
 
-<!--    TODO: Fix sliders, they get stuck    -->
         <div class="field">
+          <label class="range">{{'percFilter' | translate}} </label>
+          <div class="row">
+            <div class="range-box2 col-md" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'min' | translate}}</span>
+                </div>
+                <input style="color: black !important;" name="minPercentage" ng-model="minPercentage" type="number" class="form-control mx-auto mx-auto" placeholder="0"
+                       min="0" max="100" step="1" no-float pattern="^[0-9]+"/>
+                <span style="font-size:14px !important;  padding: 0 !important; margin: auto !important">%</span>
+              </div>
+            </div>
+            <div class="range-box2 col-md" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">{{'max' | translate}}</span>
+                </div>
+                <input style="color: black !important;" name="maxPercentage" ng-model="maxPercentage" type="number" class="form-control mx-auto mx-auto" placeholder="100"
+                       min="0" max="100" step="1" no-float pattern="^[0-9]+"/>
+                <span style="font-size:14px !important;  padding: 0 !important; margin: auto !important">%</span>
+              </div>
+              <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="field">
           <label class="row range">{{'percFilter' | translate}} </label>
           <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
             <div class="row">
               <span class="col-6 perc-range">{{'min' | translate}}</span>
               <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ minPercentage }}</label>
             </div>
-            <input name="minPercentage" ng-model="minPercentage" type="range" min="0" max="100" class="slider">
+            <input name="minPercentage" custom-on-change="onSliderChange" value="{{ minPercentage }}" type="range" min="0" max="100" class="slider">
           </div>
           <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
             <div class="row" style="margin-top:10px !important">
               <span class="col-6 perc-range">{{'max' | translate}}</span>
               <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ maxPercentage }}</label>
             </div>
-            <input name="maxPercentage" ng-model="maxPercentage" type="range" min="0" max="100" class="slider">
+            <input name="maxPercentage" custom-on-change="onSliderChange" value="{{ maxPercentage }}" type="range" min="0" max="100" class="slider">
             <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
           </div>
-        </div>
+        </div>-->
 
         <div class="row">
           <div class="col-6 clear-btn">
@@ -165,8 +191,8 @@
 
 <!-- PROJECTS -->
   <div class="body fid" ng-if="!noProjectsFound">
-    <div ng-if="loading && !isSafari" class="spinner-grow text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 5rem; height: 5rem;"></div>
-    <div ng-if="loading && isSafari" class="spinner text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 5rem; height: 5rem;"></div>
+    <div ng-if="loading && !safari()" class="spinner-grow text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 5rem; height: 5rem;"></div>
+    <div ng-if="loading && safari()" class="spinner-border text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 3rem; height: 3rem;"></div>
     <div class="card-deck">
         <div class="card mb-3 card-feed" ng-repeat="project in projects">
           <div class="card-header text-white">
@@ -193,7 +219,7 @@
               </div>
             </div>
           </div>
-          <div class="card-body feed-body">
+          <div class="card-body feed-body clickable-element" ng-click="goToProject(project.id)">
             <div class="row">
               <div class="col-5">
                 <div ng-if="!project.portraitExists">
@@ -212,7 +238,7 @@
               </div>
             </div>
           </div>
-          <div class="card-footer feed-footer">
+          <div class="card-footer feed-footer clickable-element" ng-click="goToProject(project.id)">
               <div class="price-footer">
                 <h4 style="text-align: center">
                 {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{formatPrice(project.fundingTarget)}}</b></h4>
@@ -231,7 +257,7 @@
   </div>
 
   <div ng-if="noProjectsFound">
-    <div class="card-deck" style="height: 250px">
+    <div class="card-deck" style="height: 500px">
       <div class="card m-2 no-proj-feed">
         <div class="card-header">
           <h5 class="card-title text-white">{{'noProjFound' | translate}}</h5>
@@ -240,7 +266,7 @@
     </div>
   </div>
 
-  <div ng-if="!noProjectsFound || projects.length < 3">
+  <div ng-if="!noProjectsFound && projects.length <= 3">
     <div class="card-deck" style="height: 220px;">
       <p></p>
     </div>

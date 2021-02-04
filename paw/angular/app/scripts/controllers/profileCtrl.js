@@ -1,7 +1,7 @@
     'use strict';
 
-    define(['paw2020a', 'services/userService', 'services/sampleService', 'services/imageService','services/AuthenticationService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
-    paw2020a.controller('profileCtrl',['userService','sampleService','imageService','AuthenticationService','PathService','$scope','$routeParams', function(userService,sampleService,imageService,AuthenticationService,PathService, $scope, $routeParams) {
+    define(['paw2020a', 'services/userService', 'services/urlService', 'services/imageService','services/AuthenticationService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
+    paw2020a.controller('profileCtrl',['userService','urlService','imageService','AuthenticationService','PathService','$scope','$routeParams', function(userService,urlService,imageService,AuthenticationService,PathService, $scope, $routeParams) {
 
       var maxImageSize = 2097152, pageSize = 6;
 
@@ -25,7 +25,7 @@
 
       userService.getLoggedUser().then(function (userApi) {
         $scope.user = userApi.data;
-        sampleService.get($scope.user.location).then(function (response) {
+        urlService.get($scope.user.location).then(function (response) {
           $scope.user.country = response.data.country;
           $scope.user.city = response.data.city;
           $scope.user.state = response.data.state;
@@ -35,7 +35,7 @@
         });
 
         if ($scope.user.imageExists) {
-          sampleService.get(userApi.data.image).then(function (response) {
+          urlService.get(userApi.data.image).then(function (response) {
             $scope.user.image = response.data.image;
           }, function (errorResponse) {
             console.error("No img", errorResponse);
@@ -51,7 +51,6 @@
           });
           $scope.loadingFavs = false;
           $scope.viewMoreFavs();
-          // Paginar a mano los favs
         }, function (errorResponse) {
           // 404 should never happen
           console.error(errorResponse);
@@ -62,6 +61,16 @@
         if ($scope.allFavs.length === $scope.showFavs.length) return;
         var currLength = $scope.showFavs.length;
         $scope.showFavs = $scope.showFavs.concat($scope.allFavs.slice(currLength, currLength + pageSize));
+      };
+
+      $scope.removeFav = function (id) {
+        if (!$scope.isInvestor) return;
+        userService.putFavorite(id, false).then(function () {
+          $scope.allFavs = $scope.allFavs.filter(function (el) { return el.id !== id });
+          $scope.showFavs = $scope.showFavs.filter(function (el) { return el.id !== id });
+        },function (error) {
+          console.error(error);
+        });
       };
 
       $scope.fileboxChange = function (event) {
@@ -89,42 +98,6 @@
             $scope.uploadingImage = true;
           });
         }
-      };
-
-      this.processResponse = function (data) {
-        data.forEach(function (proj){
-          proj.percentage = parseInt((proj.fundingCurrent/proj.fundingTarget)*100);
-        });
-        $scope.secondTab = $scope.secondTab.concat(data);
-      };
-
-      this.fetchSecondTab = function () {
-        if ($scope.isInvestor) {
-          // Fetch investor deals
-          // TODO: Que hacemos aca? No tengo toda la data que tiene el otro, que muestro?
-          messageService.getInvestorDeals($scope.page, $scope.user.id).then(function (response) {
-            _this.setMaxPage(response.headers().link);
-            _this.processResponse(response.data);
-            $scope.loadingSecondTab = false;
-          }, function (errorResponse) {
-            console.error(errorResponse);
-          });
-        } else {
-          // Fetch entrepreneur current funding projects
-          userService.getUserProjects($scope.user.id.toString(), false, $scope.page, pageSize).then(function (response) {
-            _this.setMaxPage(response.headers().link);
-            _this.processResponse(response.data);
-            $scope.loadingSecondTab = false;
-          }, function (errorResponse) {
-            console.error(errorResponse);
-          });
-        }
-      };
-
-      $scope.viewMoreProjects = function () {
-        if ($scope.page >= $scope.lastPage) return;
-        $scope.page++;
-        _this.fetchSecondTab();
       };
 
     }]);

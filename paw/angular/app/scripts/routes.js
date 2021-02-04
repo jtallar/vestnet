@@ -53,6 +53,10 @@ define([], function() {
               templateUrl: './views/users/profile.html',
               controller: 'profileCtrl'
             },
+            '/editProfile': {
+              templateUrl: './views/edit/editProfile.html',
+              controller: 'editProfileCtrl'
+            },
             '/requests': {
                 templateUrl: './views/requests/requests.html',
                 controller: 'requestsCtrl'

@@ -28,7 +28,6 @@ public class UpdatableUserDto {
     @NotBlank
     private String realId;
 
-    // Si el formato no es "2010-06-02T00:00:00-03:00", no lo toma. TODO: Hacemos custom validation?
     @NotNull
     private Date birthDate;
 

@@ -7,7 +7,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
         var emptyElement = {name: "-", id: 0};
 
         $scope.imageSizeError = false; $scope.serverFormErrors = false;
-        $scope.userExistsError = false;
+        $scope.userExistsError = false; $scope.serverRetryError = false;
         $scope.roleSelected = "Investor"; $scope.fileLabel = undefined;
         $scope.countrySelected = emptyElement; $scope.stateSelected = emptyElement;
         $scope.citySelected = emptyElement;
@@ -82,7 +82,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
         };
 
         $scope.createUser = function (user) {
-          $scope.serverFormErrors = false; $scope.userExistsError = false;
+          $scope.serverFormErrors = false; $scope.userExistsError = false; $scope.serverRetryError = false;
           user.birthDate = new Date($scope.yearSelected, $scope.monthSelected.id - 1, $scope.daySelected);
           user.countryId = $scope.countrySelected.id;
           user.stateId = $scope.stateSelected.id;
@@ -96,6 +96,9 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
               return;
             } else if (errorResponse.status === 409) {
               $scope.userExistsError = true;
+              return;
+            } else if (errorResponse.status === 503) {
+              $scope.serverRetryError = true;
               return;
             }
             console.error(errorResponse);

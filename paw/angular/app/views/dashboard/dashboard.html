@@ -10,8 +10,11 @@
     </div>
   </div>
 
-  <div class="text-center" ng-if="loadingProjects">
+  <div class="text-center" ng-if="loadingProjects && !safari()">
     <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
+  </div>
+  <div class="text-center" ng-if="loadingProjects && safari()">
+    <div class="spinner-border text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 3rem; height: 3rem;"></div>
   </div>
 
   <div class="dashboard">
@@ -23,10 +26,14 @@
           <div class="row">
             <div class="col-1">
               <div ng-if="project.portraitExists">
-                <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
+                <a href="#/projects/{{project.id}}">
+                  <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
+                </a>
               </div>
               <div ng-if="!project.portraitExists">
-                <img ng-src="images/projectNoImage.png" class="p-img"/>
+                <a href="#/projects/{{project.id}}">
+                  <img ng-src="images/projectNoImage.png" class="p-img"/>
+                </a>
               </div>
             </div>
             <div class="col-md-11">

@@ -29,6 +29,11 @@
           <label>{{'linkedinProfile' | translate}}</label>
         </a>
       </div>
+      <div ng-if="isInvestor" class="counter text-center">
+        <img src="images/invest-icon.png" style="width: 50px; height: auto">
+        <h2 class="timer count-title count-number" data-to="100" data-speed="1500"><div id="invested">0</div></h2>
+        <p class="count-text ">{{'totalinv' | translate}}</p>
+      </div>
     </div>
 
     <div class="col-md-8">
@@ -160,39 +165,6 @@
             </div>
           </div>
         </div>
-
-<!--        <div class="tab-pane fade" id="deals" role="tabpanel" aria-labelledby="deals-tab">-->
-<!--          <div class="text-center" ng-if="loadingSecondTab">-->
-<!--            <div class="spinner-grow text-dark loading-grow" role="status"></div>-->
-<!--          </div>-->
-<!--          <div ng-if="!loadingSecondTab && secondTab.length !== 0">-->
-<!--            <div ng-repeat="project in secondTab">-->
-<!--              <div class="card m-2">-->
-<!--                <div class="card-header card-title text-white">-->
-<!--                  <a href="#/projects/{{project.id}}">-->
-<!--                    <h5 class="card-title cut-text">{{project.projectName}}</h5>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--                <div class="card-body favorites">-->
-<!--                  <p class="card-text" style="color: black; font-weight: normal;">{{project.summary}}</p>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div ng-if="page < lastPage">-->
-<!--              <button ng-click="viewMoreProjects()" class="btn btn-inv pull-right">-->
-<!--                <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <div ng-if="!loadingSecondTab && secondTab.length === 0"  class="card m-2">-->
-<!--            <div class="card-header text-center">-->
-<!--              <h5 class="card-title text-white">{{ 'noDealsFound' | translate}}</h5>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-
       </div>
     </div>
   </div>

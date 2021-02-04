@@ -38,7 +38,7 @@ public class ProjectStats {
     private Date lastSeen;
 
     /** Protected */ ProjectStats() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public ProjectStats(boolean dummy) {
@@ -128,7 +128,8 @@ public class ProjectStats {
     public long getRelevance() {
         long millis = Math.abs(new Date().getTime() - lastSeen.getTime());
         long days = TimeUnit.DAYS.convert(millis, TimeUnit.MILLISECONDS);
-        long relevance = (seen - days * 10) * 100 + secondsAvg + clicksAvg;
+//        long relevance = (seen - days * 10) * 100 + secondsAvg + clicksAvg;
+        long relevance = (seen - days * 3) * 100 + (investorsSeen / seen) * 400 + contactClicks * 20 + secondsAvg / 1000 + clicksAvg * 5;
         return (relevance > 0) ? relevance : 0;
     }
 

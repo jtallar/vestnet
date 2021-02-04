@@ -2,17 +2,12 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.InvalidTokenException;
 import ar.edu.itba.paw.interfaces.exceptions.UserAlreadyExistsException;
-import ar.edu.itba.paw.interfaces.exceptions.UserDoesNotExistException;
-import ar.edu.itba.paw.model.Message;
 import ar.edu.itba.paw.model.Project;
-import ar.edu.itba.paw.model.Token;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.components.Page;
 import ar.edu.itba.paw.model.image.UserImage;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -80,20 +75,30 @@ public interface UserService {
     Page<Project> getOwnedProjects(long id, boolean closed, int page, int pageSize);
 
 
-        /**
-         * Requests for a password change.
-         * @param mail The users mail to change the password.
-         * @param baseUri Base uri for mail creation.
-         * @return The optional of the found user.
-         */
+    /**
+     * Requests for a password change.
+     * @param mail The users mail to change the password.
+     * @param baseUri Base uri for mail creation.
+     * @return The optional of the found user.
+     */
     Optional<User> requestPassword(String mail, URI baseUri);
+
+
+    /**
+     * Requests for a verification mail.
+     * @param mail The users mail to send the verification mail.
+     * @param baseUri Base uri for mail creation.
+     * @return The optional of the found user.
+     * @throws UserAlreadyExistsException In case already exists a user verified.
+     */
+    Optional<User> requestVerification(String mail, URI baseUri) throws UserAlreadyExistsException;
 
 
     /**
      * Updates a user password.
      * @param token The token to check for.
      * @param password New user's password.
-     * @throws InvalidTokenException If the token does not exists or is invalid
+     * @throws InvalidTokenException If the token does not exists or is invalid.
      */
     void updatePassword(String token, String password) throws InvalidTokenException;
 
@@ -103,7 +108,7 @@ public interface UserService {
      * If the token exists but is invalid, resend email.
      * @param token The token.
      * @param baseUri The uri to resend the email.
-     * @throws InvalidTokenException If the token does not exists or is invalid
+     * @throws InvalidTokenException If the token does not exists or is invalid.
      */
     void updateVerification(String token, URI baseUri) throws InvalidTokenException;
 

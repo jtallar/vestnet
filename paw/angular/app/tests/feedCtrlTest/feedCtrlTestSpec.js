@@ -59,6 +59,8 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'feedCtrl', 'apiResp
         return deferred.promise;
       });
 
+
+
       $httpBackend.whenGET(/views.*/).respond(200, '');
 
 
@@ -72,7 +74,6 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'feedCtrl', 'apiResp
 
       describe('feed controller testing', function() {
         it('feed controller should be defined', function() {
-
           expect(feedCtrl).toBeDefined();
         });
 

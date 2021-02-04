@@ -17,7 +17,7 @@ public abstract class Image {
     private byte[] image;
 
     /** Protected */ Image() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
 

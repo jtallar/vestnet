@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import java.net.URI;
 import java.util.*;
 
@@ -45,11 +44,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User create(User dataUser, URI baseUri) throws UserAlreadyExistsException {
 
+        /** Check for unique mail */
+        if (userDao.findByUsername(dataUser.getEmail()).isPresent()) throw new UserAlreadyExistsException();
         dataUser.setPassword(encoder.encode(dataUser.getPassword()));
+
+        /** Persist user */
         final User newUser = userDao.create(dataUser);
-        try {
-            emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
-        } catch (MessagingException ignored) {}
+
+        /** Send verification email */
+        emailService.sendVerification(newUser, tokenDao.create(newUser).getToken(), baseUri);
+
         return newUser;
     }
 
@@ -62,7 +66,6 @@ public class UserServiceImpl implements UserService {
             u.setLastName(dataUser.getLastName());
             u.setRealId(dataUser.getRealId());
             u.setBirthDate(dataUser.getBirthDate());
-            u.setLocation(dataUser.getLocation());
             u.setPhone(dataUser.getPhone());
             u.setLinkedin(dataUser.getLinkedin());
         });
@@ -114,11 +117,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Optional<User> requestPassword(String mail, URI baseUri) {
         final Optional<User> optionalUser = userDao.findByUsername(mail);
-        optionalUser.ifPresent(u -> {
-            try {
-                emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri);
-            } catch (MessagingException ignored) {}
-        });
+        optionalUser.ifPresent(u -> emailService.sendPasswordRecovery(u, tokenDao.create(u).getToken(), baseUri));
+        return optionalUser;
+    }
+
+
+    @Override
+    @Transactional
+    public Optional<User> requestVerification(String mail, URI baseUri) throws UserAlreadyExistsException {
+        final Optional<User> optionalUser = userDao.findByUsername(mail);
+        if (optionalUser.isPresent()) {
+            if (optionalUser.get().isVerified()) throw new UserAlreadyExistsException();
+            emailService.sendVerification(optionalUser.get(), tokenDao.create(optionalUser.get()).getToken(), baseUri);
+        }
         return optionalUser;
     }
 
@@ -126,14 +137,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updatePassword(String token, String password) throws InvalidTokenException {
-        updateWithToken(token, password, true, null);
+        updateWithToken(token, password, true);
     }
 
 
     @Override
     @Transactional
     public void updateVerification(String token, URI baseUri) throws InvalidTokenException {
-        updateWithToken(token, null, false, baseUri);
+        updateWithToken(token, null, false);
     }
 
 
@@ -177,21 +188,17 @@ public class UserServiceImpl implements UserService {
 
 
 
-
-
-
-
     /** Auxiliary functions */
+
 
     /**
      * Updates the password or sets as verified.
      * @param token The necessary token to check its validity.
      * @param password The password, if given, to update.
      * @param isPassword If its change of password or verification.
-     * @param baseUri The base uri in case the verification token has expired.
      * @throws InvalidTokenException When the token corrupted/missing/invalid.
      */
-    private void updateWithToken(String token, String password, boolean isPassword, URI baseUri) throws InvalidTokenException {
+    private void updateWithToken(String token, String password, boolean isPassword) throws InvalidTokenException {
         if (token == null || token.isEmpty()) throw new InvalidTokenException("Empty token string");
 
         final Optional<Token> optionalToken = tokenDao.findByToken(token);
@@ -200,16 +207,13 @@ public class UserServiceImpl implements UserService {
         final Token realToken = optionalToken.get();
         final User user = userDao.findById(realToken.getUser().getId()).get(); // Got from token, then exists
 
-        /** Resend in case of an invalid token for verification */
-        if (!realToken.isValid()) {
-            if (!isPassword) {
-                try {
-                    emailService.sendVerification(user, tokenDao.create(user).getToken(), baseUri);
-                } catch (MessagingException ignored) {}
-            }
-            throw new InvalidTokenException("Token invalid");
-        }
+        /** In any case if its valid or not the token is no longer needed */
+        tokenDao.delete(realToken.getId());
 
+        /** Resend in case of an invalid token for verification */
+        if (!realToken.isValid()) throw new InvalidTokenException("Token invalid");
+
+        /** Valid token, make changes */
         if (isPassword) user.setPassword(encoder.encode(password));
         else user.setVerified(true);
     }

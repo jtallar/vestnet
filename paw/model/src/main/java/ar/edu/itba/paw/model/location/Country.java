@@ -31,7 +31,7 @@ public class Country {
     private String locale;
 
     /** Protected */ Country() {
-        /** For hibernate only */
+        /* For hibernate only */
     }
 
     public Country(int id, String name, String isoCode, String phoneCode, String currency, String locale) {

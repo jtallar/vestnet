@@ -33,7 +33,7 @@ public class Location {
     private User user;
 
     /** Protected */ Location() {
-        /** For hibernate only*/
+        /* For hibernate only*/
     }
 
     public Location(Country country, State state, City city) {

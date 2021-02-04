@@ -89,8 +89,8 @@ public class Page<T> {
                 '}';
     }
 
-    /**
-     * Auxiliary functions
+    /*
+      Auxiliary functions
      */
 
 
@@ -98,14 +98,14 @@ public class Page<T> {
      * Sets the start and end pages
      */
     private void setStartEndPage() {
-        /** Total pages within range */
+        /* Total pages within range */
         if (totalPages <= pageRange) {
             this.startPage = FIRST_PAGE;
             this.endPage = totalPages == 0 ? 1: totalPages;
             return;
         }
 
-        /** If current page is on the left part of the range */
+        /* If current page is on the left part of the range */
         long firstPage = currentPage - pageRange / 2;
         if (firstPage <= FIRST_PAGE ) {
             this.startPage = FIRST_PAGE;
@@ -113,7 +113,7 @@ public class Page<T> {
             return;
         }
 
-        /** If current page is range centered */
+        /* If current page is range centered */
         long lastPage = currentPage + pageRange / 2;
         if (lastPage <= totalPages) {
             this.startPage = firstPage;
@@ -121,7 +121,7 @@ public class Page<T> {
             return;
         }
 
-        /** If current page is on the right part of the range */
+        /* If current page is on the right part of the range */
         this.startPage = totalPages - pageRange;
         this.endPage =  totalPages;
     }
