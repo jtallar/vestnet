@@ -38,7 +38,7 @@ define([], function() {
       base.replace = function (paramsObject) {
         // Clear current search params
         $location.url($location.path());
-        if (paramsObject) return $location.path(base.absolutePath()).search(paramsObject);
+        if (paramsObject) return $location.path(base.absolutePath()).search(paramsObject).replace();
         return $location.path(base.absolutePath()).replace();
       };
 

@@ -114,6 +114,17 @@ public class MessageRestController {
         return Response.ok(NotificationDto.fromNumber(count)).build();
     }
 
+    @GET
+    @Path("/invested/{investor_id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getInvestedAmount(@PathParam("investor_id") final long investorId) {
+
+        LOGGER.debug("Endpoint GET /messages/invested/" + investorId + " reached - User is " + sessionUser.getId());
+
+        final long count = messageService.getInvestedAmount(investorId, true);
+        return Response.ok(NotificationDto.fromNumber(count)).build();
+    }
+
 
     @GET
     @Path("/chat/{project_id}/{investor_id}")

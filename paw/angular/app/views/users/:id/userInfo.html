@@ -29,6 +29,11 @@
           <label>{{'linkedinProfile' | translate}}</label>
         </a>
       </div>
+      <div ng-if="isInvestor" class="counter text-center">
+        <img src="images/invest-icon.png" style="width: 50px; height: auto">
+        <h2 class="timer count-title count-number" data-to="100" data-speed="1500"><div id="invested">0</div></h2>
+        <p class="count-text ">{{'totalinv' | translate}}</p>
+      </div>
     </div>
 
     <div class="col-md-8">

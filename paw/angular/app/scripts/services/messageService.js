@@ -61,8 +61,9 @@ define(['paw2020a', 'services/AuthenticatedRestangular'], function(paw2020a) {
       return root.one('investor').get({a: true, p: page}); // role === Investor
     };
 
-    messageService.getInvestedAmount = function () {
-      return root.one('invested').get();
+    messageService.getInvestedAmount = function (investorId) {
+      if (isNaN(investorId)) return root.one('invested').get();     // role === Investor
+      return root.one('invested').one(investorId.toString()).get(); // role === Entrepreneur
     };
 
     return messageService;

@@ -1,7 +1,7 @@
 'use strict';
 
-define(['paw2020a', 'services/userService', 'services/urlService', 'services/messageService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
-  paw2020a.controller('userInfoCtrl',['userService','urlService','messageService','PathService','$scope','$routeParams', function(userService,urlService,messageService,PathService, $scope, $routeParams) {
+define(['paw2020a', 'services/AuthenticationService', 'services/userService', 'services/urlService', 'services/messageService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
+  paw2020a.controller('userInfoCtrl',['AuthenticationService','userService','urlService','messageService','PathService','$scope','$routeParams', function(AuthenticationService,userService,urlService,messageService,PathService, $scope, $routeParams) {
 
     var _this = this;
 
@@ -32,6 +32,31 @@ define(['paw2020a', 'services/userService', 'services/urlService', 'services/mes
     $scope.loadingSecondTab = true;
     $scope.secondTab = [];
 
+    this.animate = function (id, start, end, duration) {
+      if (start === end) return;
+      var range = end - start;
+      var current = start;
+      var increment = end/500;
+      var stepTime = Math.abs(Math.floor(duration / range));
+      var obj = document.getElementById(id);
+      var timer = setInterval(function() {
+        current += increment;
+        obj.innerHTML = parseInt(current);
+        if (current >= end) {
+          clearInterval(timer);
+          obj.innerHTML = end;
+        }
+      }, stepTime);
+    };
+
+    this.getCounter = function () {
+      messageService.getInvestedAmount($scope.id).then(function (response) {
+        _this.animate("invested", 0, response.data.unread, 5000);
+      }, function (errorResponse) {
+        console.error(errorResponse);
+      });
+    };
+
     userService.getUser($scope.id.toString()).then(function (userApi) {
       $scope.user = userApi.data;
       urlService.get($scope.user.location).then(function (response) {
@@ -55,6 +80,13 @@ define(['paw2020a', 'services/userService', 'services/urlService', 'services/mes
       }
 
       $scope.isInvestor = $scope.user.role === "Investor";
+      if ($scope.isInvestor) {
+        if (!AuthenticationService.isEntrepreneur()) {
+          PathService.get().error().replace({code:403});
+          return;
+        }
+        _this.getCounter();
+      }
       _this.fetchSecondTab();
     }, function (errorResponse) {
       if (errorResponse.status === 404) {
