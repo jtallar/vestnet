@@ -18,8 +18,11 @@
           </div>
 
           <div class="dropdown-divider"></div>
-          <div class="text-center" ng-if="loadingInfo">
+          <div class="text-center" ng-if="loadingInfo && !safari()">
             <div class="spinner-grow text-dark" role="status"></div>
+          </div>
+          <div class="text-center" ng-if="loadingInfo && safari()">
+            <div class="spinner-border text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 3rem; height: 3rem;"></div>
           </div>
 
           <ng-form ng-show="!loadingInfo" name="editProfileForm" enctype="multipart/form-data">
