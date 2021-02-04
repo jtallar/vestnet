@@ -43,7 +43,7 @@
                     <h5 class="cut-text">{{message.projectName}}</h5>
                   </a>
                 </div>
-                <div class="col-6 ww-last">
+                <div class="col-6 ww-last" ng-click="goToChat(message)" style="cursor: pointer;">
                   <h6>{{toLocaleDateTimeString(message.publishDate)}}</h6>
                   <div class="row">
                     <div class="col-4 msg-offer cut-text">
