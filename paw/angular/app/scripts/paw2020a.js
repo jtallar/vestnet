@@ -88,9 +88,8 @@ define(['routes',
             PathService.get().login().go({url: url});
           } else if ((!AuthenticationService.isInvestor() && routeMatches(url, PathService.investorRoutesRE)) ||
               (!AuthenticationService.isEntrepreneur() && routeMatches(url, PathService.entrepreneurRoutesRE))) {
-            // if logged in and trying to access something they shouldnt, redirect to index
-            // PathService.get().error().replace({code:403});
-            PathService.get().index().go();
+            // if logged in and trying to access something they shouldnt, redirect to error
+            PathService.get().error().replace({code:403});
           }
         });
 
@@ -124,8 +123,7 @@ define(['routes',
             return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
-              // PathService.get().error().replace({code:403});
-              PathService.get().index().go();
+              PathService.get().error().replace({code:403});
             } else {
               PathService.get().login().go();
             }
