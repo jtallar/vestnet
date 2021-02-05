@@ -73,6 +73,14 @@
               <p>{{user.lastName}}</p>
             </div>
           </div>
+          <div ng-if="user.realId !== ''" class="row">
+            <div class="col-md-4">
+              <label>{{'realId' | translate}}</label>
+            </div>
+            <div class="col-md-6">
+              <p>{{user.realId}}</p>
+            </div>
+          </div>
           <div ng-if="user.email !== ''" class="row">
             <div class="col-md-4">
               <label>{{'email' | translate}} </label>

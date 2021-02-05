@@ -178,6 +178,7 @@ define([], function() {
     favorites: 'Favorites',
     firstName: 'First Name',
     lastName: 'Last Name',
+    realId: 'Identification',
     dealsTitle: 'Accepted Deals',
     msgTitleBody: 'Message',
     msgTitleOffer: 'Offer',
