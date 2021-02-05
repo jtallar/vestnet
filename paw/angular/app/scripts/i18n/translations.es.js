@@ -272,7 +272,7 @@ define([], function() {
     nomessages: 'No hay mensajes',
     you: 'Tú',
 
-    edit: 'Editar',
+    edit: 'Aplicar',
     previousPage: 'Página anterior',
     pageNumber: 'Página {{p}}',
     nextPage: 'Página siguiente',
