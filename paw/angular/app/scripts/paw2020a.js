@@ -167,6 +167,14 @@ define(['routes',
       $rootScope.realIdMaxLength = 15; $rootScope.phoneMaxLength = 25;
       $rootScope.emailMaxLength = 255; $rootScope.passwordMaxLength = 50;
       $rootScope.linkedinMaxLength = 100;
+
+      $rootScope.projectNameMinLength = 5; $rootScope.projectNameMaxLength = 50;
+      $rootScope.projectSummaryMinLength = 30; $rootScope.projectSummaryMaxLength = 250;
+      $rootScope.projectFundingMin = 1000; $rootScope.projectFundingMax = 2000000000;
+
+      $rootScope.offerOfferMin = 100; $rootScope.offerOfferMax = 1000000000;
+      $rootScope.offerExchangeMaxLength = 100; $rootScope.offerCommentMaxLength = 250;
+      $rootScope.offerExpiresMin = 1; $rootScope.offerExpiresMax = 31;
     }]);
 
     paw2020a
