@@ -51,6 +51,7 @@ define([], function() {
     verificationMade: 'Your account has been successfully verified!',
     passwordRecoverySent: 'Recovery email sent!',
     passwordRecoveryMade: 'Your password was updated!',
+    upToCharactersRequirement: 'Up to {{maxLength}} characters',
     passwordRequirement: 'Up to 50 characters',
     signUpTitle: 'Sign up',
     firstNameRequired: '*First Name',

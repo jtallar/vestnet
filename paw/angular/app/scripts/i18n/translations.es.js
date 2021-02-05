@@ -51,6 +51,7 @@ define([], function() {
     verificationMade: '¡Tu cuenta ha sido verificada satisfactoriamente!',
     passwordRecoverySent: '¡Mail de recuperación enviado!',
     passwordRecoveryMade: '¡Tu contraseña fue actualizada exitosamente!',
+    upToCharactersRequirement: 'Hasta {{maxLength}} caracteres',
     passwordRequirement: 'Hasta 50 caracteres',
     signUpTitle: 'Registro',
     firstNameRequired: '*Nombre',
