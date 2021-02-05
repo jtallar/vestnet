@@ -41,24 +41,40 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'newProjectCtrl', 'a
 
       it('should add category', function () {
 
-        var initialCat = document.createElement('select');
-        var finalCats = document.createElement('select');
+
+        var cat = document.createElement('select');
+        // var sel = document.createElement('select');
         var i = 0;
 
         while(i < $scope.categories.length){
           var option = document.createElement('option')
           option.setAttribute('value', $scope.categories[i].id)
-          initialCat.appendChild(option);
+          cat.appendChild(option);
           i++;
         }
 
-        initialCat.setAttribute('selectedIndex')
-        document.getElementById = jasmine.createSpy('all-categories').and.returnValue(initialCat);
-        document.getElementById = jasmine.createSpy('final-categories').and.returnValue(finalCats);
+        // var indexToAdd = 3;
+
+        cat.selectedIndex = 5;
+
+        cat.setAttribute("selectedIndex", 2)
+
+        console.log(newProjectCtrl.objectFromOption(cat.options[cat.selectedIndex]))
+
+        console.log(cat.selectedIndex)
+
+        document.getElementById = jasmine.createSpy('all-categories').and.returnValue(cat);
+        // document.getElementById = jasmine.createSpy('final-categories').and.returnValue(sel);
 
 
 
         $scope.addCategory();
+
+        // console.log($scope.cat.selectedIndex)
+
+        // console.log($scope.cat);
+
+        // console.log($scope.cat.selectedIndex)
       });
 
 

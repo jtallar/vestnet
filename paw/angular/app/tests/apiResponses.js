@@ -78,7 +78,7 @@ define(['paw2020a'], function(paw2020a) {
       }
 
 
-      this.favs = {data:[{projectId: 7}, {projectId: 15},{projectId: 10}]};
+      this.favs = {data:[{projectId: '7'}, {projectId: '15'},{projectId: '10'}]};
 
 
       this.emptyProjects = [];
