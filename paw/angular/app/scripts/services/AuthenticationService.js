@@ -47,7 +47,7 @@ define([], function() {
       token = JSON.parse(authService.getStorage(key));
       if (!token) return null;
       if (refresh && now.getTime() > token.expiry) { // Only remove old refresh tokens
-        authService.removeToken(refresh);
+        authService.logout();
         return null;
       }
       return token.value;
