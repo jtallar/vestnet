@@ -107,7 +107,7 @@
     </div>
 
     <div class="center-collapse collapse" id="singleProjectPictureEdit">
-      <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
+      <p class="form-requirement">{{'pictureRequirement' | translate : { maxImageMB: maxImageSizeMB } }}</p>
       <div class="row">
         <input type="file" class="file-in form-control" custom-on-change="fileboxChange" id="customFileProjectPic" accept="image/*"/>
         <div ng-if="readingSingleFilesCount !== 0" class="spinner-border text-primary" role="status" style="margin-left: 10px">
@@ -115,7 +115,7 @@
         </div>
       </div>
       <!-- <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/> -->
-      <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
+      <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate : { maxImageMB: maxImageSizeMB } }}</label>
     </div>
     <div class="row row-cols-5">
       <div class="col-3">
@@ -135,7 +135,7 @@
     </div>
 
     <div class="center-collapse collapse" id="slideshowProjectPictureEdit">
-      <p class="form-requirement">{{'picturesRequirement' | translate}}</p>
+      <p class="form-requirement">{{'picturesRequirement' | translate : { maxImageMB: maxImageSizeMB, maxImageCount: maxSlideshowCount } }}</p>
       <div class="row">
         <input type="file" class="file-in form-control" custom-on-change="multipleFileBoxChange" id="customMultipleFileProjectPic" multiple  accept="image/*"
                ng-disabled="disableSlideshow"/>
@@ -144,8 +144,8 @@
         </div>
       </div>
       <!-- <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/> -->
-      <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate}}</label>
-      <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate}}</label>
+      <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate : { maxImageMB: maxImageSizeMB } }}</label>
+      <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate : { maxImageCount: maxSlideshowCount } }}</label>
     </div>
 
     <div style="margin-top: 10px">

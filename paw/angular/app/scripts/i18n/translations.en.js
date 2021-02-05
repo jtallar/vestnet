@@ -77,14 +77,15 @@ define([], function() {
     linkedinRequirement: 'Copy your LinkedIn Profile URL (linkedin.com/in/[your-custom-url])',
     enterLinkedin: 'Enter linkedin URL...',
     userPicture: 'Profile picture',
-    pictureRequirement: 'Your picture must not exceed 2MB.\n' +
+    pictureRequirement: 'Your picture must not exceed {{maxImageMB}}MB.\n' +
       'Recommended aspect ratio is 4:3.',
-    picturesRequirement: 'Your pictures must not exceed 2MB.\n' +
+    picturesRequirement: 'Your pictures must not exceed {{maxImageMB}}MB.\n' +
       'They must be in the same directory.\n' +
-      'You may upload up to 5 slideshow pictures.\n' +
+      'You may upload up to {{maxImageCount}} slideshow pictures.\n' +
       'Recommended aspect ratio is 4:3.',
     chooseFile: 'Choose file...',
-    imageMaxSize: 'Maximum size is 2MB!',
+    imageMaxSize: 'Maximum size is {{maxImageMB}}MB!',
+    imageMaxCount: 'The maximum number of pictures is {{maxImageCount}}!',
     birthday: 'Birth date',
     day: 'Day',
     month: 'Month',
@@ -223,7 +224,6 @@ define([], function() {
     categoriesRequirement: 'You must choose at least one category',
     serverFormErrors: 'There are errors in your form!',
     projectSlideshow: 'Slideshow',
-    imageMaxCount: 'The maximum number of pictures is 5!',
     create: 'Create',
     viewInvProfile: 'View investor profile',
     reject: 'Reject',

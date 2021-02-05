@@ -77,14 +77,15 @@ define([], function() {
     linkedinRequirement: 'Copia el URL de tu perfil de Linkedin (linkedin.com/in/[your-custom-url])',
     enterLinkedin: 'Ingrese el URL a su perfil de linkedin',
     userPicture: 'Foto de perfil',
-    pictureRequirement: 'La imagen no debe exceder los 2MB.\n' +
+    pictureRequirement: 'La imagen no debe exceder los {{maxImageMB}}MB.\n' +
       'La relación de aspecto recomendada es 4:3.',
-    picturesRequirement: 'Las imágenes no deben exceder los 2MB.\n' +
+    picturesRequirement: 'Las imágenes no deben exceder los {{maxImageMB}}MB.\n' +
       'Deben estar en el mismo directorio.\n' +
-      'Puedes subir hasta 5 imágenes de slideshow.\n' +
+      'Puedes subir hasta {{maxImageCount}} imágenes de slideshow.\n' +
       'La relación de aspecto recomendada es 4:3.',
     chooseFile: 'Seleccionar archivo...',
-    imageMaxSize: 'El tamaño máximo es 2MB!',
+    imageMaxSize: 'El tamaño máximo es {{maxImageMB}}MB!',
+    imageMaxCount: 'La cantidad máxima de imágenes es {{maxImageCount}}!',
     birthday: 'Fecha de nacimiento',
     day: 'Día',
     month: 'Mes',
@@ -223,7 +224,6 @@ define([], function() {
     categoriesRequirement: 'Debes elegir al menos una categoría',
     serverFormErrors: '¡Hay errores en tu formulario!',
     projectSlideshow: 'Slideshow del proyecto',
-    imageMaxCount: 'La cantidad máxima de imágenes es 5!',
     create: 'Crear',
     viewInvProfile: 'Ver perfil de inversor',
     reject: 'Rechazar',
