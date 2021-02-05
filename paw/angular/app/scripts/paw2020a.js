@@ -99,8 +99,7 @@ define(['routes',
         Restangular.setErrorInterceptor(function (response, deferred, responseHandler) {
           if (response.status === 404) {
             // PathService.get().error().go({code:404});
-            // TODO: Borrar este console para deployar
-            console.error("404 que tenes que manejar");
+            // console.error("404 que tenes que manejar");
             return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
