@@ -13,7 +13,10 @@
     <h2 style="color: #750096">#message("email.body.vestnetReports") </h2>
     <h3>#message("email.body.greeting") ${receiver.getFirstName()}!</h3>
 
-    <h3>#messageArgs("email.body.reportContact",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])</h3>
+    <h3>#messageArgs("email.body.reportContact",["${sender.getFirstName()} ${sender.getLastName()}",${project.getName()}])
+        #message("email.click")<a href="${baseUrl}/projects/${project.getId()}">#message("email.clickhere")</a>
+        #message("email.clickproject")
+    </h3>
     <h4>#messageArgs("email.body.offer",[${offer.getOffer()}])</h4>
     <h4>#messageArgs("email.body.inExchange",[${offer.getInterest()}])</h4>
     <h4>#message("email.body.messageHeader")
