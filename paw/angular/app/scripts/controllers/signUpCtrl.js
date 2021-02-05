@@ -4,11 +4,6 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
   function(paw2020a) {
     paw2020a.controller('signUpCtrl', ['userService', 'locationService','imageService', 'PathService', '$scope',
       function(userService, locationService, imageService, PathService, $scope) {
-        $scope.firstNameMaxLength = 25; $scope.lastNameMaxLength = 25;
-        $scope.realIdMaxLength = 15; $scope.phoneMaxLength = 25;
-        $scope.passwordMaxLength = 50; $scope.emailMaxLength = 255;
-        $scope.linkedinMaxLength = 100;
-
         var emptyElement = {name: "-", id: 0};
 
         $scope.imageSizeError = false; $scope.serverFormErrors = false;

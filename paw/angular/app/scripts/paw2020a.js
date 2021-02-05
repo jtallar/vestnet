@@ -57,37 +57,6 @@ define(['routes',
           var notAuthUrl = routeMatches(url, PathService.noAuthRoutesRE), logoutUrl = routeMatches(url, PathService.logoutRE);
 
           $rootScope.showHeader = {value: !(notAuthUrl || logoutUrl)};
-          $rootScope.formatPrice = function(number) {
-            var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0 });
-            return formatter.format(number);
-          };
-          $rootScope.toLocaleDateString = function(date) {
-            var aux;
-            if(date !== undefined)
-              aux = new Date(date);
-            else aux = new Date();
-            return (aux.toLocaleDateString(navigator.language));
-          };
-          $rootScope.toLocaleDateTimeString = function(date) {
-            var aux;
-            if(date !== undefined)
-              aux = new Date(date);
-            else aux = new Date();
-            return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
-          };
-
-          $rootScope.safari = function() {
-            var ua = navigator.userAgent.toLowerCase();
-            if (ua.indexOf('safari') !== -1) {
-              if (ua.indexOf('chrome') > -1) {
-                // console.log("Chrome"); // Chrome
-                return false;
-              } else {
-                // console.log("Safari"); // Safari
-                return true;
-              }
-            }
-          };
 
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
@@ -158,6 +127,46 @@ define(['routes',
         }
         return original.apply($location, [path]);
       };
+    }]);
+
+    // Define general usage functions + form restrictions in rootScope
+    paw2020a.run(['$rootScope', function ($rootScope) {
+      $rootScope.formatPrice = function(number) {
+        var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0 });
+        return formatter.format(number);
+      };
+      $rootScope.toLocaleDateString = function(date) {
+        var aux;
+        if(date !== undefined)
+          aux = new Date(date);
+        else aux = new Date();
+        return (aux.toLocaleDateString(navigator.language));
+      };
+      $rootScope.toLocaleDateTimeString = function(date) {
+        var aux;
+        if(date !== undefined)
+          aux = new Date(date);
+        else aux = new Date();
+        return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
+      };
+
+      $rootScope.safari = function() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf('safari') !== -1) {
+          if (ua.indexOf('chrome') > -1) {
+            // console.log("Chrome"); // Chrome
+            return false;
+          } else {
+            // console.log("Safari"); // Safari
+            return true;
+          }
+        }
+      };
+
+      $rootScope.firstNameMaxLength = 25; $rootScope.lastNameMaxLength = 25;
+      $rootScope.realIdMaxLength = 15; $rootScope.phoneMaxLength = 25;
+      $rootScope.emailMaxLength = 255; $rootScope.passwordMaxLength = 50;
+      $rootScope.linkedinMaxLength = 100;
     }]);
 
     paw2020a
