@@ -60,7 +60,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     public void sendOfferAnswer(User owner, User investor, Project project, boolean answer, boolean direction, URI baseUri) {
         Mail mail = new Mail();
-        if (direction) {
+        if (!direction) {
             mail.setFrom(investor.getEmail());
             mail.setTo(owner.getEmail());
             mail.setSubject(messageSource.getMessage("email.subject.response", null, Locale.forLanguageTag(owner.getLocale())));
