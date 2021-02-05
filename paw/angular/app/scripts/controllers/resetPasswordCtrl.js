@@ -2,6 +2,8 @@
 
 define(['paw2020a', 'services/userService', 'services/PathService'], function(paw2020a) {
     paw2020a.controller('resetPasswordCtrl', ['userService', 'PathService', '$scope', '$routeParams', function(userService, PathService, $scope, $routeParams) {
+      $scope.passwordMaxLength = 50;
+
       var token = $routeParams.token;
       if (token === undefined) {
         PathService.get().login().go({code: 5});
