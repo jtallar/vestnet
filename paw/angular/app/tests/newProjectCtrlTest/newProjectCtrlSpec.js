@@ -9,6 +9,7 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'newProjectCtrl', 'a
     var $httpBackend, $routeParams, $rootScope;
     var ProjectService;
     var expectedCats;
+    var indexUsed;
 
     beforeEach(inject(function(_$controller_, _projectService_, apiResponses,utilities, _$rootScope_,_$routeParams_, _$httpBackend_){
       $controller = _$controller_;
@@ -23,6 +24,19 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'newProjectCtrl', 'a
       utilities.ignoreTestAside($httpBackend);
       newProjectCtrl = $controller('newProjectCtrl', {$scope: $scope, projectService: ProjectService});
 
+      var cat = document.createElement('select'); //this is just a test setting it is not the way we use it in our application
+      indexUsed = 3;
+      var i = 0;
+      while(i < expectedCats.length){
+        var option = document.createElement('option')
+        option.setAttribute('value', expectedCats[i].id)
+        cat.appendChild(option);
+        i++;
+      }
+
+      cat.selectedIndex = indexUsed;
+      document.getElementById = jasmine.createSpy('all-categories').and.returnValue(cat);
+
 
 
 
@@ -34,48 +48,29 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'newProjectCtrl', 'a
         expect(newProjectCtrl).toBeDefined();
       });
 
-      it('Scopes Equality', function () {
+      it('Scope category is equal to expectedCats', function () {
         expect(ProjectService.getCategories).toHaveBeenCalled();
         expect($scope.categories).toEqual(expectedCats)
       })
 
       it('should add category', function () {
+        $scope.addCategory();
+        expect(document.getElementById).toHaveBeenCalled();
+        expect(newProjectCtrl.selectedCategories).toContain({id: $scope.categories[indexUsed].id})
+      });
 
-
-        var cat = document.createElement('select');
-        // var sel = document.createElement('select');
-        var i = 0;
-
-        while(i < $scope.categories.length){
-          var option = document.createElement('option')
-          option.setAttribute('value', $scope.categories[i].id)
-          cat.appendChild(option);
-          i++;
+      it('should remove category', function () {
+        var j = 0;
+        while (j < $scope.categories.length){ //we supose every category is inside selectedCategories
+          newProjectCtrl.selectedCategories.push({id: $scope.categories[j].id});
+          j++;
         }
 
-        // var indexToAdd = 3;
+        expect(newProjectCtrl.selectedCategories).toContain({id: $scope.categories[indexUsed].id}); //here it is inside the array
+        $scope.delCategory();
+        expect(newProjectCtrl.selectedCategories).not.toContain({id: $scope.categories[indexUsed].id}); //here it is not
 
-        cat.selectedIndex = 5;
-
-        cat.setAttribute("selectedIndex", 2)
-
-        console.log(newProjectCtrl.objectFromOption(cat.options[cat.selectedIndex]))
-
-        console.log(cat.selectedIndex)
-
-        document.getElementById = jasmine.createSpy('all-categories').and.returnValue(cat);
-        // document.getElementById = jasmine.createSpy('final-categories').and.returnValue(sel);
-
-
-
-        $scope.addCategory();
-
-        // console.log($scope.cat.selectedIndex)
-
-        // console.log($scope.cat);
-
-        // console.log($scope.cat.selectedIndex)
-      });
+      })
 
 
     });
