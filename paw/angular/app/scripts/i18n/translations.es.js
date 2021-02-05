@@ -77,10 +77,12 @@ define([], function() {
     linkedinRequirement: 'Copia el URL de tu perfil de Linkedin (linkedin.com/in/[your-custom-url])',
     enterLinkedin: 'Ingrese el URL a su perfil de linkedin',
     userPicture: 'Foto de perfil',
-    pictureRequirement: 'La imagen no debe exceder los 2MB',
+    pictureRequirement: 'La imagen no debe exceder los 2MB.\n' +
+      'La relación de aspecto recomendada es 4:3.',
     picturesRequirement: 'Las imágenes no deben exceder los 2MB.\n' +
       'Deben estar en el mismo directorio.\n' +
-      'Puedes subir hasta 5 imágenes de slideshow.',
+      'Puedes subir hasta 5 imágenes de slideshow.\n' +
+      'La relación de aspecto recomendada es 4:3.',
     chooseFile: 'Seleccionar archivo...',
     imageMaxSize: 'El tamaño máximo es 2MB!',
     birthday: 'Fecha de nacimiento',
