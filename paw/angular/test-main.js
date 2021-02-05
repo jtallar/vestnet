@@ -42,6 +42,8 @@ require.config({
     'angular-translate': '../../bower_components/angular-translate/angular-translate',
     feedCtrl: 'controllers/feedCtrl',
     newProjectCtrl: 'controllers/newProjectCtrl',
+    signUpCtrl: 'controllers/signUpCtrl',
+    chatCtrl: 'controllers/chatCtrl',
     userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
 

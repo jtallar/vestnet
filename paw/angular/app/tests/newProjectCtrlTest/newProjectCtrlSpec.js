@@ -36,10 +36,6 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'newProjectCtrl', 'a
 
       cat.selectedIndex = indexUsed;
       document.getElementById = jasmine.createSpy('all-categories').and.returnValue(cat);
-
-
-
-
       $rootScope.$apply();
     }));
 
