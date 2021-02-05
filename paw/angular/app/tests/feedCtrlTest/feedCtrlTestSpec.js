@@ -1,6 +1,6 @@
 'use strict'
 
-define(['angular','paw2020a','angularMocks', 'restangular', 'feedCtrl', 'apiResponses',], function (angular, paw2020a, angularMocks, restangular, feedCtrl,apiResponses){
+define(['angular','paw2020a','angularMocks', 'restangular', 'feedCtrl', 'apiResponses','utilities'], function (angular, paw2020a, angularMocks, restangular, feedCtrl,apiResponses,utilities){
 
 
 
@@ -14,17 +14,17 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'feedCtrl', 'apiResp
     var $controller;
     var feedCtrl;
     var $scope;
-    var AuthenticationFactory;
-    var ProjectService;
-    var expectedProjects;
+    var AuthenticationFactory, ProjectService, UserService;;
+    var expectedProjects, expectedFavs, expectedCats;
     var $rootScope;
     var $routeParams;
     var $httpBackend;
-    var UserService;
 
 
 
-    beforeEach(inject(function( _$controller_, AuthenticationService, _userService_ , _projectService_ ,apiResponses, $q, _$rootScope_, _$routeParams_, _$httpBackend_){
+
+
+    beforeEach(inject(function( _$controller_, AuthenticationService, _userService_ , _projectService_ ,apiResponses,utilities, _$rootScope_, _$routeParams_, _$httpBackend_){
       $controller = _$controller_;
       $httpBackend = _$httpBackend_;
       $scope = {};
@@ -34,34 +34,23 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'feedCtrl', 'apiResp
       UserService = _userService_;
       ProjectService = _projectService_;
       expectedProjects = apiResponses.projects.data;
+      expectedFavs = apiResponses.favs.data;
+      expectedCats = apiResponses.categories.data;
 
+
+      //this will resolve api calls being tested inside controllers
 
 
       spyOn(AuthenticationFactory, 'isInvestor').and.callFake(function () {
         return apiResponses.isInvestor;
       });
-      //
-      spyOn(UserService, 'getFavorites').and.callFake(function (){
-        var deferred = $q.defer();
-        deferred.resolve(apiResponses.favs);
-        return deferred.promise;
-      })
-
-      spyOn(ProjectService, 'getPage').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.resolve(apiResponses.projects);
-        return deferred.promise;
-      });
-
-      spyOn(ProjectService, 'getCategories').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.resolve(apiResponses.categories);
-        return deferred.promise;
-      });
+      utilities.resolvePromise(UserService, 'getFavorites', apiResponses.favs);
+      utilities.resolvePromise(ProjectService, 'getPage', apiResponses.projects);
+      utilities.resolvePromise(ProjectService, 'getCategories', apiResponses.categories);
 
 
+      utilities.ignoreTestAside(_$httpBackend_);
 
-      $httpBackend.whenGET(/views.*/).respond(200, '');
 
 
 
@@ -72,21 +61,64 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'feedCtrl', 'apiResp
 
     }));
 
-      describe('feed controller testing', function() {
-        it('feed controller should be defined', function() {
-          expect(feedCtrl).toBeDefined();
+        describe('feed controller testing', function() {
+          it('feed controller should be defined', function() {
+            expect(feedCtrl).toBeDefined();
+          });
+
+        it('Should be an investor', function () {
+          expect($scope.isInvestor).toEqual(true);
+
+        })
+
+        it('Projects must be fetched from api', function () {
+          expect(ProjectService.getPage).toHaveBeenCalled();
+          expect($scope.projects).toEqual(expectedProjects);
+        })
+
+        it('should contain favorite', function () {
+          expect(UserService.getFavorites).toHaveBeenCalled();
+          expect($scope.containsFav(expectedFavs[1].projectId)).toEqual(true);
         });
 
-      it('Should be an investor', function () {
-        expect($scope.isInvestor).toEqual(true);
+          it('should delete favorite', function () {
+            $scope.favTap(expectedFavs[0].projectId)
+            expect($scope.favs).not.toContain(expectedFavs[0].projectId);
+          });
 
-      })
+          it('should add a favorite', function () {
+            var i = 0, j = 0, found = false; //finding an id of a project that is not fav
+            while (i < expectedProjects.length && !found){
+              while (j < expectedFavs.length && !found){
+                if(expectedProjects[i].id !== expectedFavs[j].projectId){
+                  found = true;
+                }
+                j++;
+              }
+              if(!found){
+                i++;
+              }
+            }
+            $scope.favTap(expectedProjects[i].id);
+            expect($scope.favs).toContain(expectedProjects[i].id);
+          });
 
-      it('Projects must be fetched from api', function () {
-        expect(ProjectService.getPage).toHaveBeenCalled();
-        expect($scope.projects).toEqual(expectedProjects);
-      })
+          it('should set error of min cost being higher than max cost', function () {
+            $scope.maxCost = 50;
+            $scope.minCost = 100;
+            $scope.applyFilter();
+            expect($scope.costRangeError).toEqual(true);
+          });
 
-    });
+          it('should set error of min percentage being higher than max percentage', function () {
+            $scope.maxPercentage = 50;
+            $scope.minPercentage = 3300;
+            $scope.applyFilter();
+            expect($scope.percentageRangeError).toEqual(true);
+          });
+
+      });
+
+
   })
 });

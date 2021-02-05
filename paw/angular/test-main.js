@@ -28,6 +28,7 @@ require.config({
 
   paths: {
     paw2020a: 'paw2020a',
+    utilities: '../tests/utilities',
     'services/dependencyResolverFor': 'services/dependencyResolverFor',
     jquery: '../../bower_components/jquery/dist/jquery',
     angular: '../../bower_components/angular/angular',
@@ -43,6 +44,7 @@ require.config({
     newProjectCtrl: 'controllers/newProjectCtrl',
     userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
+
   },
 
   shim: {
