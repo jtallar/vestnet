@@ -42,12 +42,12 @@
               <div class="chat-header">
                 <div class="row">
                   <div class="col-3">
-                    <div ng-if="!user.imageExists">
+                    <div ng-if="!user.profileImageAvailable">
                       <a ng-href="#{{user.userUrl}}">
                         <img ng-src="images/userNoImage.png" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
                       </a>
                     </div>
-                    <div ng-if="user.imageExists">
+                    <div ng-if="user.profileImageAvailable">
                       <a ng-href="#{{user.userUrl}}">
                         <img ng-src="data:image/JPEG;base64,{{user.image}}" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
                       </a>
