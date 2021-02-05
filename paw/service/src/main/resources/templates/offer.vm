@@ -26,9 +26,12 @@
         <a href="${baseUrl}/users/${sender.getId()}">#message("email.clickhere").</a>
     </p>
     <p style="font-weight:bold">
-        #message("email.body.contactInvestor")
-        <a href="${baseUrl}/dashboard">#message("email.clickhere")</a>
-        #message("email.body.contactInvestor2")
+        #message("email.body.contactAnswerOffer")
+        #if(${direction})
+            <a href="${baseUrl}/chat/${project.getId()}/${sender.getId()}">#message("email.clickhere")</a>
+        #else
+            <a href="${baseUrl}/chat/${project.getId()}">#message("email.clickhere")</a>
+        #end
     </p>
 
     <p><i>#message("email.moreinfo")</i></p>
