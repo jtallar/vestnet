@@ -1,7 +1,7 @@
 'use strict';
 
 define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 'services/messageService'], function(paw2020a) {
-  paw2020a.directive('vnheader', ['PathService', 'AuthenticationService', 'messageService', '$interval', function(PathService, AuthenticationService, messageService, $interval) {
+  paw2020a.directive('vnheader', ['PathService', 'AuthenticationService', 'messageService', '$interval', '$location', function(PathService, AuthenticationService, messageService, $interval, $location) {
     return {
       restrict: 'E',
       transclude: true,
@@ -32,9 +32,13 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
 
         $interval(checkNotif, 60000);
 
+        $scope.login = function () {
+          PathService.get().login().go({url: $location.url()});
+        };
+
         $scope.logout = function () {
           PathService.get().logout().go();
-        }
+        };
       }
     };
   }]);
