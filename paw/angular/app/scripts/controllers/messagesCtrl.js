@@ -56,6 +56,7 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
 
     this.fetchChatList = function () {
       messageService.getInvestorChatList($scope.page).then(function (response) {
+        $scope.loadingPage = false;
         if (response.data.length === 0) {
           $scope.noMessagesFound = true;
           $scope.messages = [];
@@ -69,7 +70,9 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
     };
     this.fetchChatList();
 
+    $scope.loadingPage = false;
     $scope.getToPage = function (page) {
+      $scope.loadingPage = true;
       $scope.page = page;
       PathService.get().setParamsInUrl({p:$scope.page});
       _this.fetchChatList();

@@ -90,10 +90,10 @@
     <div class="dropdown-divider dropdown-np"></div>
 
     <div class="row row-cols-5">
-      <div class="col">
+      <div class="col-3">
         <h5 class="project-image-header">{{'projectImage' | translate}}</h5>
       </div>
-      <div class="col">
+      <div class="col-1">
         <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingPortraitClick()"
            data-toggle="collapse" data-target="#singleProjectPictureEdit" aria-expanded="false" aria-controls="singleProjectPictureEdit">
           <div class="notification-icon" ng-show="!editingPortrait">
@@ -118,10 +118,10 @@
       <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
     </div>
     <div class="row row-cols-5">
-      <div class="col">
+      <div class="col-3">
         <h5 class="project-image-header">{{'projectSlideshow' | translate}}</h5>
       </div>
-      <div class="col">
+      <div class="col-1">
         <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingSlideshowClick()" ng-if="!disableSlideshow"
            data-toggle="collapse" data-target="#slideshowProjectPictureEdit" aria-expanded="false" aria-controls="slideshowProjectPictureEdit">
           <div class="notification-icon" ng-show="!editingSlideshow">

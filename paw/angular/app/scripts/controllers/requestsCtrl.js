@@ -76,6 +76,7 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
 
       this.fetchDeals = function () {
         messageService.getInvestorDeals($scope.page).then(function (response) {
+          $scope.loadingPage = false;
           if (response.data.length === 0) {
             $scope.noDealsFound = true;
             $scope.messages = [];
@@ -89,7 +90,9 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
       };
       this.fetchDeals();
 
+      $scope.loadingPage = false;
       $scope.getToPage = function (page) {
+        $scope.loadingPage = true;
         $scope.page = page;
         PathService.get().setParamsInUrl({p:$scope.page});
         _this.fetchDeals();

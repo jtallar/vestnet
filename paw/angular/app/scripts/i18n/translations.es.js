@@ -77,10 +77,12 @@ define([], function() {
     linkedinRequirement: 'Copia el URL de tu perfil de Linkedin (linkedin.com/in/[your-custom-url])',
     enterLinkedin: 'Ingrese el URL a su perfil de linkedin',
     userPicture: 'Foto de perfil',
-    pictureRequirement: 'La imagen no debe exceder los 2MB',
+    pictureRequirement: 'La imagen no debe exceder los 2MB.\n' +
+      'La relación de aspecto recomendada es 4:3.',
     picturesRequirement: 'Las imágenes no deben exceder los 2MB.\n' +
       'Deben estar en el mismo directorio.\n' +
-      'Puedes subir hasta 5 imágenes de slideshow.',
+      'Puedes subir hasta 5 imágenes de slideshow.\n' +
+      'La relación de aspecto recomendada es 4:3.',
     chooseFile: 'Seleccionar archivo...',
     imageMaxSize: 'El tamaño máximo es 2MB!',
     birthday: 'Fecha de nacimiento',
@@ -92,8 +94,8 @@ define([], function() {
     city: 'Ciudad',
     userAlreadyExists: 'Ups! Ya existe un usuario con esa dirección email.',
     noFilter: 'Sin filtro',
-    costRangeRequirement: 'El costo mínimo debe ser menor al máximo',
-    percentageRangeRequirement: 'El % mínimo debe ser menor al máximo',
+    costRangeRequirement: 'El costo mín. debe ser menor al máx.',
+    percentageRangeRequirement: 'El % mín. debe ser menor al máx.',
     projectNameSearch: 'Nombre del proyecto',
     projectDescSearch: 'Descripción del proyecto',
     ownerNameSearch: 'Nombre del emprendedor',
@@ -140,7 +142,7 @@ define([], function() {
     range: 'Rango',
     min: 'Mín.',
     max: 'Máx.',
-    clear: 'Vaciar',
+    clear: 'Limpiar',
     apply: 'Aplicar',
     percFilter: '% Financiado',
     projectImage: 'Imagen de proyecto',
@@ -178,6 +180,7 @@ define([], function() {
     favorites: 'Favoritos',
     firstName: 'Nombre/s',
     lastName: 'Apellido/s',
+    realId: 'Identificación',
     dealsTitle: 'Acuerdos Aceptados',
     msgTitleBody: 'Mensaje',
     msgTitleOffer: 'Oferta',
@@ -269,7 +272,7 @@ define([], function() {
     nomessages: 'No hay mensajes',
     you: 'Tú',
 
-    edit: 'Editar',
+    edit: 'Aplicar',
     previousPage: 'Página anterior',
     pageNumber: 'Página {{p}}',
     nextPage: 'Página siguiente',

@@ -139,7 +139,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       };
 
       this.finishCreation = function(projectId, params) {
-        PathService.get().singleProject(projectId).go(params);
+        PathService.get().singleProject(projectId).replace(params);
       };
 
       this.sendSlideshow = function (projectId) {
