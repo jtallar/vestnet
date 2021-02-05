@@ -58,7 +58,7 @@
         <div class="row field">
           <div class="col- icon-img"></div>
           <div class="col-md">
-            <select ng-model="selectedField" class="custom-select mr-sm-2"
+            <select ng-model="field" class="custom-select mr-sm-2"
                     ng-options="option as option.name | translate for option in fields track by option.id"></select>
           </div>
         </div>
@@ -70,7 +70,7 @@
             <img src="images/filter.png" class="icon-img" width="38px">
           </div>
           <div class="col-md">
-            <select ng-model="selectedCategory" class="custom-select mr-sm-2"
+            <select ng-model="category" class="custom-select mr-sm-2"
                     ng-options="option as option.name | translate for option in categories track by option.id"></select>
           </div>
 
@@ -80,7 +80,7 @@
             <img src="images/order.png" class="icon-img">
           </div>
           <div class="col-md">
-            <select ng-model="selectedOrder" class="custom-select mr-sm-2"
+            <select ng-model="order" class="custom-select mr-sm-2"
                     ng-options="option as option.name | translate for option in orders track by option.id"></select>
           </div>
         </div>
