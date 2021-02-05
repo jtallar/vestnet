@@ -5,7 +5,8 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
 
     paw2020a.controller('newProjectCtrl',['projectService','imageService', 'PathService', '$scope', function(projectService, imageService, PathService, $scope) {
 
-      var maxImageSize = 2097152, maxSlideshowCount = 5;
+      $scope.maxImageSizeMB = 2; $scope.maxSlideshowCount = 5;
+      var maxImageSize = 2097152; // 2 * 1024 * 1024
       this.selectedCategories = [];
       var portraitImage = undefined, slideshowImages = undefined;
       var _this = this;
@@ -76,7 +77,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
 
       $scope.multipleFileBoxChange = function (event) {
         var index = 0, error = 0;
-        if (event.target.files.length > maxSlideshowCount) {
+        if (event.target.files.length > $scope.maxSlideshowCount) {
           error = 1;
           $scope.$apply(function () {
             $scope.slideshowSizeError = false;

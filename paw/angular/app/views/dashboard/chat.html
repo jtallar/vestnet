@@ -42,12 +42,12 @@
               <div class="chat-header">
                 <div class="row">
                   <div class="col-3">
-                    <div ng-if="!user.imageExists">
+                    <div ng-if="!user.profileImageAvailable">
                       <a ng-href="#{{user.userUrl}}">
                         <img ng-src="images/userNoImage.png" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
                       </a>
                     </div>
-                    <div ng-if="user.imageExists">
+                    <div ng-if="user.profileImageAvailable">
                       <a ng-href="#{{user.userUrl}}">
                         <img ng-src="data:image/JPEG;base64,{{user.image}}" class="chat-img" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
                       </a>
@@ -201,28 +201,28 @@
                 <div class="col-11">
                   <div class="row chat-input">
                     <div class="col-2" ng-class="{'has-error': sendOfferForm.offer.$touched && sendOfferForm.offer.$invalid}">
-                      <p class="form-requirement">{{'offerRequirement' | translate}}</p>
+                      <p class="form-requirement">{{'betweenMoneyRequirement' | translate : { minQuantity: offerOfferMin, maxQuantity: offerOfferMax } }}</p>
                       <input style="color: black !important;" name="offer" ng-model="controller.offerForm.offer" type="number" class="form-control" placeholder="{{'msgTitleOffer' | translate}}" id="msg-offer-title"
-                             required min="100" max="1000000000" step="1" no-float/>
+                             required min="{{offerOfferMin}}" max="{{offerOfferMax}}" step="1" no-float/>
                     </div>
                     <div class="col-4" ng-class="{'has-error': sendOfferForm.exchange.$touched && sendOfferForm.exchange.$invalid}">
-                      <p class="form-requirement">{{'exchangeRequirement' | translate}}</p>
+                      <p class="form-requirement">{{'upToCharactersNotBlankRequirement' | translate : { maxLength: offerExchangeMaxLength } }}</p>
                       <input style="color: black !important;" name="exchange" ng-model="controller.offerForm.exchange" type="text" class="form-control" placeholder="{{'msgTitleRequest' | translate}}" id="msg-req-title"
-                             required ng-maxlength="100"/>
+                             required ng-maxlength="{{offerExchangeMaxLength}}"/>
                     </div>
                     <div class="col-2" ng-class="{'has-error': sendOfferForm.expDays.$touched && sendOfferForm.expDays.$invalid}">
-                      <p class="form-requirement">{{'daysRequirement' | translate}}</p>
+                      <p class="form-requirement">{{'betweenDaysRequirement' | translate : { minQuantity: offerExpiresMin, maxQuantity: offerExpiresMax } }}</p>
                       <input style="color: black !important;" name="expDays" ng-model="controller.offerForm.expiryDays" type="number" class="form-control" placeholder="{{'expire' | translate}}" id="msg-days-title"
-                             required min="1" max="31" step="1" no-float/>
+                             required min="{{offerExpiresMin}}" max="{{offerExpiresMax}}" step="1" no-float/>
                       <!--                      <select id="expire" class="custom-select mr-sm-2">-->
                       <!--                        <option value="0">{{'expire' | translate}}</option>-->
                       <!--                        <option ng-repeat="x in [].constructor(30) track by $index"> {{$index+1}} days</option>-->
                       <!--                      </select>-->
                     </div>
                     <div class="col-4" ng-class="{'has-error': sendOfferForm.comment.$touched && sendOfferForm.comment.$invalid}">
-                      <p class="form-requirement chat-text2">{{'commentRequirement' | translate}}</p>
+                      <p class="form-requirement chat-text2">{{'upToCharactersNotBlankRequirement' | translate : { maxLength: offerCommentMaxLength } }}</p>
                       <textarea style="color: black !important;" name="comment" ng-model="controller.offerForm.comment" class="chat-text2 form-control" placeholder="{{'comments' | translate}}" rows="2" id="msg-comment-title"
-                                required ng-maxlength="250"></textarea>
+                                required ng-maxlength="{{offerCommentMaxLength}}"></textarea>
                     </div>
                   </div>
                 </div>

@@ -50,7 +50,7 @@
           <div class="col-md" ng-class="{'has-error': filterForm.search.$touched && filterForm.search.$invalid}">
 <!--            {{ 'search' | translate }}-->
             <input style="color: black !important;" name="search" id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search"
-                   ng-model="searchField" ng-maxlength="50" ng-keyup="$event.keyCode == 13 && !filterForm.$invalid && applyFilter()"/>
+                   ng-model="searchField" ng-maxlength="{{feedSearchMaxLength}}" ng-keyup="$event.keyCode == 13 && !filterForm.$invalid && applyFilter()"/>
 
             <!-- <form:errors path="keyword" element="p" cssClass="formError"/> -->
           </div>
@@ -58,7 +58,7 @@
         <div class="row field">
           <div class="col- icon-img"></div>
           <div class="col-md">
-            <select ng-model="selectedField" class="custom-select mr-sm-2"
+            <select ng-model="field" class="custom-select mr-sm-2"
                     ng-options="option as option.name | translate for option in fields track by option.id"></select>
           </div>
         </div>
@@ -70,7 +70,7 @@
             <img src="images/filter.png" class="icon-img" width="38px">
           </div>
           <div class="col-md">
-            <select ng-model="selectedCategory" class="custom-select mr-sm-2"
+            <select ng-model="category" class="custom-select mr-sm-2"
                     ng-options="option as option.name | translate for option in categories track by option.id"></select>
           </div>
 
@@ -80,7 +80,7 @@
             <img src="images/order.png" class="icon-img">
           </div>
           <div class="col-md">
-            <select ng-model="selectedOrder" class="custom-select mr-sm-2"
+            <select ng-model="order" class="custom-select mr-sm-2"
                     ng-options="option as option.name | translate for option in orders track by option.id"></select>
           </div>
         </div>
@@ -92,8 +92,8 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'min' | translate}}</span>
                 </div>
-                <input style="color: black !important;" name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="1000" id="filter-form-min"
-                       min="0" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+                <input style="color: black !important;" name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="{{projectFundingMin}}" id="filter-form-min"
+                       min="0" max="{{projectFundingMax}}" step="1" no-float pattern="^[0-9]+"/>
               </div>
               <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
             </div>
@@ -102,8 +102,8 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">{{'max' | translate}}</span>
                 </div>
-                <input style="color: black !important;" name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="2000000000"
-                            id="filter-form-max" min="0" max="2000000000" step="1" no-float pattern="^[0-9]+"/>
+                <input style="color: black !important;" name="maxCost" ng-model="maxCost" type="number" class="form-control mx-auto mx-auto" placeholder="{{projectFundingMax}}"
+                            id="filter-form-max" min="0" max="{{projectFundingMax}}" step="1" no-float pattern="^[0-9]+"/>
               </div>
               <label class="formError" ng-if="costRangeError">{{'costRangeRequirement' | translate}}</label>
             </div>
