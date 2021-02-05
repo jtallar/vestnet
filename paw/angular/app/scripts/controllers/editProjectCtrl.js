@@ -10,6 +10,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         PathService.get().error().replace();
         return;
       }
+      var back = !!($routeParams.back);
 
       var maxImageSize = 2097152, maxSlideshowCount = 5;
       var selectedCategories = [];
@@ -209,7 +210,11 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       };
 
       this.finishCreation = function(projectId, params) {
-        PathService.get().singleProject(projectId).go(params);
+        if (back) {
+          if (!params) params = {back:true};
+          else params.back = true;
+        }
+        PathService.get().singleProject(projectId).replace(params);
       };
 
       this.sendSlideshow = function (projectId) {
