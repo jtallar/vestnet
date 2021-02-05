@@ -171,6 +171,7 @@ define(['routes',
       $rootScope.projectNameMinLength = 5; $rootScope.projectNameMaxLength = 50;
       $rootScope.projectSummaryMinLength = 30; $rootScope.projectSummaryMaxLength = 250;
       $rootScope.projectFundingMin = 1000; $rootScope.projectFundingMax = 2000000000;
+      $rootScope.feedSearchMaxLength = 50;
 
       $rootScope.offerOfferMin = 100; $rootScope.offerOfferMax = 1000000000;
       $rootScope.offerExchangeMaxLength = 100; $rootScope.offerCommentMaxLength = 250;
