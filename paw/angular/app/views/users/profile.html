@@ -31,7 +31,7 @@
         </div>
 
         <div class="text-center">
-          <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
+          <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate : { maxImageMB: maxImageSizeMB } }}</label>
         </div>
 
         <div ng-if="user.linkedin" class="text-center my-2">
