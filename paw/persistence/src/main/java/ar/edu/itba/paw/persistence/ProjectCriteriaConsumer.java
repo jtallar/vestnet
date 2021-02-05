@@ -170,7 +170,7 @@ import java.util.function.Consumer;
      */
     private void userSearch(String keyword) {
         Join<Project, User> userJoin = root.join("owner");
-        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get("mail")), "%" + keyword + "%"));
+        predicate = builder.and(predicate, builder.like(builder.lower(userJoin.get("email")), "%" + keyword + "%"));
     }
 
 
