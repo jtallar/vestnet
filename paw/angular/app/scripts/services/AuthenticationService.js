@@ -33,6 +33,10 @@ define([], function() {
       );
     });
 
+    authService.removeStorage = function (key) {
+      return localStorage.removeItem(key);
+    };
+
     authService.setStorage = function (key, value) {
       return localStorage.setItem(key, value);
     };
@@ -94,8 +98,13 @@ define([], function() {
     };
 
     authService.setRole = function(investor) {
-      var key = (investor) ? investorKey : entrepreneurKey;
-      return authService.setStorage(key, 't');
+      if (investor) {
+        authService.removeStorage(entrepreneurKey);
+        return authService.setStorage(investorKey, 't');
+      } else {
+        authService.removeStorage(investorKey);
+        return authService.setStorage(entrepreneurKey, 't');
+      }
     };
 
     authService.getRole = function(investor) {
