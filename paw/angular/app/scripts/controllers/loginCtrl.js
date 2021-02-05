@@ -3,6 +3,8 @@
 define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 'services/userService'],
   function(paw2020a) {
     paw2020a.controller('loginCtrl', ['PathService', 'AuthenticationService', 'userService', '$scope', '$routeParams', '$rootScope', function(PathService, AuthenticationService, userService, $scope, $routeParams, $rootScope) {
+      $scope.emailMaxLength = 255; $scope.passwordMaxLength = 50;
+
       var code = parseInt($routeParams.code);
       $scope.code = (isNaN(code)) ? 0 : code;
 
