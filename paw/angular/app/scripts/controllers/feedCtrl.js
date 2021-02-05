@@ -59,7 +59,9 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       $scope.loading = true;
 
       var foot = document.getElementById("foot");
-      foot.style.display = 'none';
+      if(foot) {
+        foot.style.display = 'none';
+      }
 
       param = parseInt($routeParams.p);
       if (isNaN(param) || param <= 0) param = 1;
@@ -125,11 +127,13 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       });
 
 
-
+      $scope.loadingPage = false;
       $scope.getToPage = function (page) {
+        $scope.loadingPage = true;
         $scope.page = page;
         _this.setPathParams();
         projectService.getPage(_this.filterObject()).then(function (projects) {
+          $scope.loadingPage = false;
           _this.getArgs(projects.headers().link);
           _this.showProjects(projects.data);
           $window.scrollTo(0,0);
@@ -163,7 +167,9 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           $scope.noProjectsFound = true;
           $scope.loading = false;
           $scope.lastPage = 1;
-          foot.style.display = 'block';
+          if(foot) {
+            foot.style.display = 'block';
+          }
           return;
         }
         $scope.projects = projects;
@@ -182,7 +188,9 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           });
         }
         $scope.loading = false;
-        foot.style.display = 'block';
+        if(foot) {
+          foot.style.display = 'block';
+        }
       };
 
       $scope.clearFilter = function () {

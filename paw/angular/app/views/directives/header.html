@@ -27,7 +27,6 @@
           <div class="row justify-content-center"><img alt="" class="nav-icon" src="images/home-icon.png"></div>
         </a>
       </li>
-<!--  TODO: Fix badge number CSS   -->
       <li class="nav-item">
         <div class="dropdown">
           <button class="btn btn-header btn-transp dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -79,7 +78,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link header-icon" ng-href="#/login">
+        <a class="nav-link header-icon" ng-click="login()">
           <div class="row justify-content-center"><img alt="" class="nav-icon" ng-src="images/login-icon.png"></div>
           <div class="row text-icon">{{'hlogin' | translate }}</div>
         </a>

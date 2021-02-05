@@ -77,10 +77,12 @@ define([], function() {
     linkedinRequirement: 'Copy your LinkedIn Profile URL (linkedin.com/in/[your-custom-url])',
     enterLinkedin: 'Enter linkedin URL...',
     userPicture: 'Profile picture',
-    pictureRequirement: 'Your picture must not exceed 2MB',
+    pictureRequirement: 'Your picture must not exceed 2MB.\n' +
+      'Recommended aspect ratio is 4:3.',
     picturesRequirement: 'Your pictures must not exceed 2MB.\n' +
       'They must be in the same directory.\n' +
-      'You may upload up to 5 slideshow pictures.',
+      'You may upload up to 5 slideshow pictures.\n' +
+      'Recommended aspect ratio is 4:3.',
     chooseFile: 'Choose file...',
     imageMaxSize: 'Maximum size is 2MB!',
     birthday: 'Birth date',
@@ -178,6 +180,7 @@ define([], function() {
     favorites: 'Favorites',
     firstName: 'First Name',
     lastName: 'Last Name',
+    realId: 'Identification',
     dealsTitle: 'Accepted Deals',
     msgTitleBody: 'Message',
     msgTitleOffer: 'Offer',
@@ -269,7 +272,7 @@ define([], function() {
     nomessages: 'No messages',
     you: 'You',
 
-    edit: 'Edit',
+    edit: 'Apply',
     previousPage: 'Previous page',
     pageNumber: 'Page {{p}}',
     nextPage: 'Next page',

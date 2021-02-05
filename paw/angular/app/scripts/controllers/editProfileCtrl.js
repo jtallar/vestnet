@@ -69,7 +69,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
           user.birthDate = new Date($scope.yearSelected, $scope.monthSelected.id - 1, $scope.daySelected);
           userService.updateUser(user).then(function (response) {
             $scope.loadingUpdate = false;
-            PathService.get().profile().go();
+            PathService.get().profile().replace();
           }, function (errorResponse) {
             if (errorResponse.status === 400) {
               $scope.serverFormErrors = true;

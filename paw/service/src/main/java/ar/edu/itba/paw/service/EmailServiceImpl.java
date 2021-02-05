@@ -45,12 +45,12 @@ public class EmailServiceImpl implements EmailService {
             mail.setFrom(investor.getEmail());
             mail.setTo(owner.getEmail());
             mail.setSubject(messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(owner.getLocale())));
-            mail.setContent(prepareOfferEmail(mail, investor, owner, project, content, baseUri));
+            mail.setContent(prepareOfferEmail(mail, investor, owner, project, content, direction, baseUri));
         } else {
             mail.setFrom(owner.getEmail());
             mail.setTo(investor.getEmail());
             mail.setSubject(messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(investor.getLocale())));
-            mail.setContent(prepareOfferEmail(mail, owner, investor, project, content, baseUri));
+            mail.setContent(prepareOfferEmail(mail, owner, investor, project, content, direction, baseUri));
         }
         sendEmail(mail);
     }
@@ -60,16 +60,16 @@ public class EmailServiceImpl implements EmailService {
     @Async
     public void sendOfferAnswer(User owner, User investor, Project project, boolean answer, boolean direction, URI baseUri) {
         Mail mail = new Mail();
-        if (direction) {
+        if (!direction) {
             mail.setFrom(investor.getEmail());
             mail.setTo(owner.getEmail());
             mail.setSubject(messageSource.getMessage("email.subject.response", null, Locale.forLanguageTag(owner.getLocale())));
-            mail.setContent(prepareOfferAnswerEmail(mail, investor, owner, project, answer, baseUri));
+            mail.setContent(prepareOfferAnswerEmail(mail, investor, owner, project, answer, direction, baseUri));
         } else {
             mail.setFrom(owner.getEmail());
             mail.setTo(investor.getEmail());
             mail.setSubject(messageSource.getMessage("email.subject.response", null, Locale.forLanguageTag(investor.getLocale())));
-            mail.setContent(prepareOfferAnswerEmail(mail, owner, investor, project, answer, baseUri));
+            mail.setContent(prepareOfferAnswerEmail(mail, owner, investor, project, answer, direction, baseUri));
         }
         sendEmail(mail);
     }
@@ -132,15 +132,17 @@ public class EmailServiceImpl implements EmailService {
      * @param receiver The user receiver.
      * @param project The project in matter.
      * @param offer The offer content.
+     * @param direction If sent from investor or not.
      * @param baseUri The base uri for the answer.
      * @return Formatted text in html.
      */
-    private String prepareOfferEmail(Mail mail, User sender, User receiver, Project project, Message.MessageContent offer, URI baseUri) {
+    private String prepareOfferEmail(Mail mail, User sender, User receiver, Project project, Message.MessageContent offer, boolean direction, URI baseUri) {
         VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUri);
 
         velocityContext.put("sender", sender);
         velocityContext.put("project", project);
         velocityContext.put("offer", offer);
+        velocityContext.put("direction", direction);
 
         StringWriter stringWriter = new StringWriter();
         velocityEngine.mergeTemplate("/templates/offer.vm", "UTF-8", velocityContext, stringWriter);
@@ -155,15 +157,17 @@ public class EmailServiceImpl implements EmailService {
      * @param receiver The user receiver.
      * @param project The project in matter.
      * @param answer The answer of the made offer.
+     * @param direction If sent from investor or not.
      * @param baseUri The base uri for the answer.
      * @return Formatted text in html.
      */
-    private String prepareOfferAnswerEmail(Mail mail, User sender, User receiver, Project project, boolean answer, URI baseUri) {
+    private String prepareOfferAnswerEmail(Mail mail, User sender, User receiver, Project project, boolean answer, boolean direction, URI baseUri) {
         VelocityContext velocityContext = defaultContextInit(mail, receiver, baseUri);
 
         velocityContext.put("sender", sender);
         velocityContext.put("project", project);
         velocityContext.put("answer", answer);
+        velocityContext.put("direction", direction);
 
         StringWriter stringWriter = new StringWriter();
         velocityEngine.mergeTemplate("/templates/offer-answer.vm", "UTF-8", velocityContext, stringWriter);

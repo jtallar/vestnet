@@ -6,7 +6,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
     paw2020a.controller('newProjectCtrl',['projectService','imageService', 'PathService', '$scope', function(projectService, imageService, PathService, $scope) {
 
       var maxImageSize = 2097152, maxSlideshowCount = 5;
-      var selectedCategories = [];
+      this.selectedCategories = [];
       var portraitImage = undefined, slideshowImages = undefined;
       var _this = this;
 
@@ -123,7 +123,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
         if (cat.selectedIndex !== -1) {
           $scope.categoryCountError = false;
           var op = cat.options[cat.selectedIndex];
-          selectedCategories.push(_this.objectFromOption(op));
+          _this.selectedCategories.push(_this.objectFromOption(op));
           sel.appendChild(op);
         }
       };
@@ -133,13 +133,13 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
         var sel = document.getElementById('final-categories');
         if (sel.selectedIndex !== -1) {
           var op = sel.options[sel.selectedIndex], opId = _this.objectFromOption(op).id;
-          _.remove(selectedCategories, function(n) { return n.id === opId;});
+          _.remove(_this.selectedCategories, function(n) { return n.id === opId;});
           cat.appendChild(op);
         }
       };
 
       this.finishCreation = function(projectId, params) {
-        PathService.get().singleProject(projectId).go(params);
+        PathService.get().singleProject(projectId).replace(params);
       };
 
       this.sendSlideshow = function (projectId) {
@@ -170,12 +170,12 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
 
       $scope.createProject = function (project) {
         $scope.loading = true;
-        if (selectedCategories.length === 0) {
+        if (_this.selectedCategories.length === 0) {
           $scope.categoryCountError = true;
           $scope.loading = false;
           return;
         }
-        project.categories = selectedCategories;
+        project.categories = _this.selectedCategories;
         $scope.serverFormErrors = false;
         projectService.create(project).then(function (response) {
           var location = response.headers().location;

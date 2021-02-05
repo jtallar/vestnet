@@ -57,15 +57,22 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       return;
     }
     $scope.id = param;
-    $scope.sent = false;    // if the mail was sent retreive from url
+
+    var back = !!($routeParams.back);
     $scope.imageError = !!($routeParams.imageError);
 
     $scope.isEntrepreneur = AuthenticationService.isEntrepreneur();
     $scope.isInvestor = AuthenticationService.isInvestor();
-    $scope.editUrl = PathService.get().editProject($scope.id).path;
 
     $scope.backAction = function() {
+      if (back) {
         history.back();
+      }
+      history.back();
+    };
+
+    $scope.goToEdit = function () {
+      PathService.get().editProject($scope.id).go({back:true});
     };
 
     $scope.getDate = function(date){
@@ -104,7 +111,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
           'completed': false, 'completedDate': ''},
         {'number': 5, 'name': 'Stage 5', 'comment': '',
           'completed': false, 'completedDate': ''}
-      ]
+      ];
 
       // urlService.get($scope.project.projectStages).then(function (response) {       // private URI stages;   -> en ProjectDto
       projectService.getStages($scope.project.id).then(function (response) {       // private URI stages;   -> en ProjectDto
