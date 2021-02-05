@@ -111,7 +111,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
           'completed': false, 'completedDate': ''},
         {'number': 5, 'name': 'Stage 5', 'comment': '',
           'completed': false, 'completedDate': ''}
-      ]
+      ];
 
       // urlService.get($scope.project.projectStages).then(function (response) {       // private URI stages;   -> en ProjectDto
       projectService.getStages($scope.project.id).then(function (response) {       // private URI stages;   -> en ProjectDto
