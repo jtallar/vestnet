@@ -127,11 +127,13 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       });
 
 
-
+      $scope.loadingPage = false;
       $scope.getToPage = function (page) {
+        $scope.loadingPage = true;
         $scope.page = page;
         _this.setPathParams();
         projectService.getPage(_this.filterObject()).then(function (projects) {
+          $scope.loadingPage = false;
           _this.getArgs(projects.headers().link);
           _this.showProjects(projects.data);
           $window.scrollTo(0,0);

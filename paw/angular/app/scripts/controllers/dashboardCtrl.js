@@ -50,6 +50,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       else PathService.get().setParamsInUrl({p:$scope.page});
     };
 
+    $scope.loadingPage = false;
     $scope.getToPage = function (page) {
       $scope.page = page;
       _this.updatePathParams();
