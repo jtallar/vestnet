@@ -94,28 +94,22 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       $scope.minCost = (isNaN(param)) ? undefined : param;
       param = parseInt($routeParams.max);
       $scope.maxCost = (isNaN(param)) ? undefined : param;
-      if ($scope.minCost != null && $scope.maxCost != null && $scope.minCost > $scope.maxCost) {
-        $scope.minCost = undefined; $scope.maxCost = undefined;
-      }
-      $scope.costRangeError = false;
-
-      /*param = parseInt($routeParams.pmin);
-      $scope.minPercentage = (isNaN(param)) ? 0 : param;
-      param = parseInt($routeParams.pmax);
-      $scope.maxPercentage = (isNaN(param)) ? 100 : param;
-      if ($scope.minPercentage > $scope.maxPercentage) {
-        $scope.minPercentage = 0; $scope.maxPercentage = 100;
-      }
-      $scope.percentageRangeError = false;*/
       param = parseInt($routeParams.pmin);
       $scope.minPercentage = (isNaN(param)) ? undefined : param;
       param = parseInt($routeParams.pmax);
       $scope.maxPercentage = (isNaN(param)) ? undefined : param;
-      if ($scope.minPercentage != null && $scope.maxPercentage != null && $scope.minPercentage > $scope.maxPercentage) {
-        $scope.minPercentage = undefined; $scope.maxPercentage = undefined;
-      }
-      $scope.percentageRangeError = false;
 
+      this.normalizeNumberInput = function () {
+        if ($scope.minCost != null && $scope.maxCost != null && $scope.minCost > $scope.maxCost) {
+          $scope.minCost = undefined; $scope.maxCost = undefined;
+        }
+        $scope.costRangeError = false;
+        if ($scope.minPercentage != null && $scope.maxPercentage != null && $scope.minPercentage > $scope.maxPercentage) {
+          $scope.minPercentage = undefined; $scope.maxPercentage = undefined;
+        }
+        $scope.percentageRangeError = false;
+      };
+      this.normalizeNumberInput();
 
       projectService.getCategories().then(function (cats) {
         $scope.categories = [emptyCategory].concat(cats.data);
@@ -125,7 +119,6 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           $scope.selectedCategory = (aux.length !== 0) ? aux[0] : emptyCategory;
         }
       });
-
 
       $scope.loadingPage = false;
       $scope.getToPage = function (page) {
