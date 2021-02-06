@@ -21,7 +21,7 @@ public class Message {
     @Embedded
     private MessageContent content;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "publish_date")
     private Date publishDate;
 
