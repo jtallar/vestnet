@@ -1,9 +1,6 @@
 
 <head><title>{{ 'pageTitleProfile' | translate }}</title></head>
 
-<!--<vnheader></vnheader>-->
-
-<!--<div class="profile">-->
   <div class="back sep-nav">
     <button onclick="history.back()" class="btn btn-dark hidden-class">{{'back' | translate}}</button>
   </div>
@@ -19,9 +16,9 @@
           <div ng-if="!user.profileImageAvailable">
             <img ng-src="images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
           </div>
-          <div style="margin-top: 5px">
+          <div style="margin-top: 5px; cursor:pointer;">
             <label for="customFileProfilePic">
-              <i class="fa fa-pencil fa-2x" style="color: black"></i>
+              <img src="images/edit-icon-b.png" style="height: 22px; width: auto"/>
             </label>
             <input hidden type="file" class="custom-file-input" custom-on-change="fileboxChange" id="customFileProfilePic" accept="image/*"/>
             <div ng-if="uploadingImage" class="spinner-border text-primary" role="status" style="margin-left: 15px">
@@ -35,8 +32,8 @@
         </div>
 
         <div ng-if="user.linkedin" class="text-center my-2">
-          <a href="{{user.linkedin}}" class="btn btn-linkedin">
-            <i class="fa fa-linkedin pull-left"></i>
+          <a href="{{user.linkedin}}" class="btn btn-linkedin" style="cursor: pointer">
+            <img src="images/linkedin.png" style="height: 20px; width: auto"/>
             <label>{{'linkedinProfile' | translate}}</label>
           </a>
         </div>
@@ -66,11 +63,6 @@
             <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
                aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>
           </li>
-
-<!--          <li ng-if="!isInvestor" class="nav-item">-->
-<!--            <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab"-->
-<!--               aria-controls="favorites" aria-selected="false">{{'favorites' | translate}}</a>-->
-<!--          </li>-->
           </ul>
         </div>
 
@@ -197,10 +189,6 @@
     </div>
     </div>
   </div>
-  <!--</div>-->
 
   <div class="dropdown-divider"></div>
 
-<!--  <footer>-->
-<!--    <vnfooter></vnfooter>-->
-<!--  </footer>-->

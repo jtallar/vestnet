@@ -1,10 +1,5 @@
 <head><title>{{ 'pageTitleChat' | translate : {p : project.name} }}</title></head>
 
-<!--<vnheader></vnheader>-->
-
-<!--<div class="row">-->
-<!--  -->
-<!--</div>-->
 <!-- Message and Back logic -->
 <div class="chatscreen sep-nav">
 
@@ -31,7 +26,9 @@
         <p><i>{{project.summary}}</i></p>
         <h6><i>Funded</i></h6>
         <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
-          <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
+          <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">
+            <b ng-if="hideornot(project.percentage)">{{project.percentage}}%</b>
+          </div>
         </div>
       </div>
 
@@ -60,7 +57,6 @@
                       </h5>
                     </a>
                   </div>
-<!--                  <div class="col-3 center-vertical blockquote-footer mini-text">{{'lastChatWithDate' | translate : { date: {{toLocaleDateTimeString(lastMessage.publishDate)}} } }}</div>-->
                 </div>
               </div>
               <button ng-show="nextPageUrl" ng-click="viewMoreChat()" class="btn btn-inv pull-right">
@@ -76,7 +72,7 @@
                             <img src="images/down-arrow.png" alt="{{'msgTitleOffer' | translate}}">
                             <strong>{{chat.offer}}</strong>
                           </div>
-                          <div class="col-5 msg-exch cut-text">
+                          <div class="col-5 msg-exch continue-down">
                             <img src="images/up-arrow.png" alt="{{'msgTitleRequest' | translate}}">
                             <strong> {{chat.exchange}}</strong>
                           </div>
@@ -131,7 +127,7 @@
                               <strong>{{chat.offer}}</strong>
                               <img src="images/down-arrow.png" alt="{{'msgTitleOffer' | translate}}">
                             </div>
-                            <div class="col-5 cut-text msg-exch">
+                            <div class="col-5 msg-exch continue-down">
                             <strong> {{chat.exchange}}</strong>
                             <img src="images/up-arrow.png" alt="">
                           </div>
@@ -164,28 +160,6 @@
             </div>
           </div>
           </div>
-
-<!--        <div class="row chat-options">-->
-<!--            <div class="col-6">-->
-<!--              <a ng-click="" class="btn btn-success btn-project"  type="button">-->
-<!--                <div class="chat-opt">-->
-<!--                  <img class="" src="images/accept-icon.png" alt="">-->
-<!--                </div>-->
-<!--              </a>-->
-<!--            </div>-->
-
-<!--            <div class="col-6">-->
-<!--              <a ng-click="" class="btn btn-danger btn-project"  type="button" data-toggle="collapse"-->
-<!--                 data-target="#newoffer" aria-expanded="false" aria-controls="newoffer">-->
-<!--                <div class="chat-opt">-->
-<!--                  <img class="" src="images/reject-icon.png" alt="">-->
-<!--                </div>-->
-<!--              </a>-->
-<!--            </div>-->
-<!--        </div>-->
-
-
-
       </div>
       <div class="row">
         <div class="center-collapse" id="newoffer" ng-show="offerEnabled">
@@ -214,10 +188,6 @@
                       <p class="form-requirement">{{'betweenDaysRequirement' | translate : { minQuantity: offerExpiresMin, maxQuantity: offerExpiresMax } }}</p>
                       <input style="color: black !important;" name="expDays" ng-model="controller.offerForm.expiryDays" type="number" class="form-control" placeholder="{{'expire' | translate}}" id="msg-days-title"
                              required min="{{offerExpiresMin}}" max="{{offerExpiresMax}}" step="1" no-float/>
-                      <!--                      <select id="expire" class="custom-select mr-sm-2">-->
-                      <!--                        <option value="0">{{'expire' | translate}}</option>-->
-                      <!--                        <option ng-repeat="x in [].constructor(30) track by $index"> {{$index+1}} days</option>-->
-                      <!--                      </select>-->
                     </div>
                     <div class="col-4" ng-class="{'has-error': sendOfferForm.comment.$touched && sendOfferForm.comment.$invalid}">
                       <p class="form-requirement chat-text2">{{'upToCharactersNotBlankRequirement' | translate : { maxLength: offerCommentMaxLength } }}</p>
@@ -241,27 +211,6 @@
           </div>
         </div>
       </div>
-
-<!--      <div class="col-1">-->
-<!--        <div class="row chat-options" ng-show="responseEnabled">-->
-<!--          <div class="col-">-->
-<!--            <a class="btn chat-opt" type="button" data-toggle="modal" data-target="#confirmaccept">-->
-<!--              <div class="chat-opt">-->
-<!--                <img class="" src="images/accept-icon.png" alt="">-->
-<!--              </div>-->
-<!--            </a>-->
-<!--          </div>-->
-<!--          <div class="col-">-->
-<!--            <a ng-click="rejectOffer()" class="btn chat-opt"  type="button" data-toggle="collapse"-->
-<!--               data-target="#newoffer" aria-expanded="false" aria-controls="newoffer">-->
-<!--              <div class="chat-opt">-->
-<!--                <img class="" src="images/reject-icon.png" alt="">-->
-<!--              </div>-->
-<!--            </a>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
     </div>
 </div>
 
@@ -317,7 +266,4 @@
     </div>
   </div>
 </div>
-<!--<footer>-->
-<!--  <vnfooter></vnfooter>-->
-<!--</footer>-->
 

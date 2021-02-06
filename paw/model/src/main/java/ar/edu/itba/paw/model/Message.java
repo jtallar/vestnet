@@ -21,8 +21,8 @@ public class Message {
     @Embedded
     private MessageContent content;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "publish_date", insertable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "publish_date")
     private Date publishDate;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -72,6 +72,7 @@ public class Message {
         this.seenAnswer = false;
         this.direction = direction;
         this.expiryDate = calculateExpiryDate(expireDays);
+        this.publishDate = new Date();
     }
 
 
@@ -206,6 +207,7 @@ public class Message {
                 ", expiryDate=" + expiryDate +
                 ", accepted=" + accepted +
                 ", seen=" + seen +
+                ", seenAnswer=" + seenAnswer +
                 ", investor_to_entrep=" + direction +
                 ", sender_id=" + ownerId +
                 ", receiver_id=" + investorId +

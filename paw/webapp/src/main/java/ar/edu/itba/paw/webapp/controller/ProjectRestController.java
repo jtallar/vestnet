@@ -208,7 +208,7 @@ public class ProjectRestController {
 
         LOGGER.debug("Endpoint PUT /projects/" + id + "/close reached - User is " + sessionUser.getId());
 
-        projectService.setClosed(sessionUser.getId(), id).orElseThrow(ProjectDoesNotExistException::new);
+        projectService.toggleClosed(sessionUser.getId(), id).orElseThrow(ProjectDoesNotExistException::new);
         return Response.ok().build();
     }
 
