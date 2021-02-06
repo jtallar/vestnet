@@ -22,7 +22,7 @@ public class Message {
     private MessageContent content;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "publish_date", insertable = false)
+    @Column(name = "publish_date")
     private Date publishDate;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -72,6 +72,7 @@ public class Message {
         this.seenAnswer = false;
         this.direction = direction;
         this.expiryDate = calculateExpiryDate(expireDays);
+        this.publishDate = new Date();
     }
 
 
