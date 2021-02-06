@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model.image;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 @MappedSuperclass
@@ -51,12 +52,12 @@ public abstract class Image {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Image)) return false;
-        Image image = (Image) o;
-        return id == image.id;
+        Image imageOb = (Image) o;
+        return id == imageOb.id && Arrays.equals(image, imageOb.image);
     }
 
     @Override
     public int hashCode() {
-        return Long.hashCode(id);
+        return 31 * Long.hashCode(id) + Arrays.hashCode(image);
     }
 }

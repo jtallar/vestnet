@@ -10,8 +10,10 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         PathService.get().error().replace();
         return;
       }
+      var back = !!($routeParams.back);
 
-      var maxImageSize = 2097152, maxSlideshowCount = 5;
+      $scope.maxImageSizeMB = 2; $scope.maxSlideshowCount = 5;
+      var maxImageSize = 2097152; // 2 * 1024 * 1024
       var selectedCategories = [];
       var portraitImage = undefined, slideshowImages = undefined, existingPortrait = false;
       var _this = this;
@@ -137,7 +139,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
 
       $scope.multipleFileBoxChange = function (event) {
         var index = 0, error = 0;
-        if (event.target.files.length > maxSlideshowCount) {
+        if (event.target.files.length > $scope.maxSlideshowCount) {
           error = 1;
           $scope.$apply(function () {
             $scope.slideshowSizeError = false;
@@ -209,7 +211,11 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       };
 
       this.finishCreation = function(projectId, params) {
-        PathService.get().singleProject(projectId).go(params);
+        if (back) {
+          if (!params) params = {back:true};
+          else params.back = true;
+        }
+        PathService.get().singleProject(projectId).replace(params);
       };
 
       this.sendSlideshow = function (projectId) {

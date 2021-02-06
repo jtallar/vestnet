@@ -26,6 +26,10 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
         history.back();
       };
 
+      $scope.hideornot = function (perc){
+        return perc > 10;
+      }
+
       // $scope.toLocaleDateTimeString = function(date) {
       //   var aux;
       //   if(date !== undefined)
@@ -37,9 +41,11 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
       this.setUser = function (user) {
         $scope.user = user;
         $scope.user.userUrl = PathService.get().user(user.id).path;
+        $scope.user.profileImageAvailable = false;
         if ($scope.user.imageExists) {
           urlService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
+            $scope.user.profileImageAvailable = true;
           }, function (err) {
             // console.log("No image")
           });

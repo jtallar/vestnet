@@ -30,7 +30,14 @@
         #message("email.body.userProfile")
         <a href="${baseUrl}/users/${sender.getId()}"> #message("email.clickhere").</a>
     </p>
-    <p style="font-weight: bold">#message("email.body.contactEntrepreneur")</p>
+    <p style="font-weight: bold">
+        #message("email.body.contactContraOffer")
+        #if(${direction})
+            <a href="${baseUrl}/chat/${project.getId()}">#message("email.clickhere")</a>
+        #else
+            <a href="${baseUrl}/chat/${project.getId()}/${sender.getId()}">#message("email.clickhere")</a>
+        #end
+    </p>
 
     <p><i>#message("email.moreinfo")</i></p>
 </div>

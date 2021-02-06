@@ -34,28 +34,28 @@
       <div class="row">
         <div class="col-6" ng-class="{'has-error': newProjectForm.title.$touched && newProjectForm.title.$invalid}">
           <h6 class="form-label">{{'titleRequired' | translate}}</h6>
-          <p class="form-requirement">{{'titleRequirement' | translate}}</p>
+          <p class="form-requirement">{{'betweenCharactersRequirement' | translate : { minQuantity: projectNameMinLength, maxQuantity: projectNameMaxLength } }}</p>
           <input name="title" ng-model="project.name" type="text" class="form-control" placeholder="{{'projectTitlePlaceholder' | translate}}" id="new-project-title"
-                 required ng-minlength="5" ng-maxlength="50"/>
+                 required ng-minlength="{{projectNameMinLength}}" ng-maxlength="{{projectNameMaxLength}}"/>
         </div>
         <div class="col-6" ng-class="{'has-error': newProjectForm.summary.$touched && newProjectForm.summary.$invalid}">
           <h6 class="form-label">{{'summaryRequired' | translate}}</h6>
-          <p class="form-requirement">{{'descriptionRequirement' | translate}}</p>
-          <textarea style="max-height: 200px" name="summary" ng-model="project.summary" class="form-control" placeholder="{{'projectSummaryPlaceholder' | translate}}" rows="4" id="new-project-summary"
-                    required ng-minlength="30" ng-maxlength="250"></textarea>
+          <p class="form-requirement">{{'betweenCharactersRequirement' | translate : { minQuantity: projectSummaryMinLength, maxQuantity: projectSummaryMaxLength } }}</p>
+          <textarea style="max-height: 200px" name="summary" ng-model="project.summary" class="form-control" placeholder="{{'upToCharactersRequirement' | translate : { maxLength: projectSummaryMaxLength } }}" rows="4" id="new-project-summary"
+                    required ng-minlength="{{projectSummaryMinLength}}" ng-maxlength="{{projectSummaryMaxLength}}"></textarea>
         </div>
     </div>
     <div class="row">
         <div class="col-6" ng-class="{'has-error': newProjectForm.cost.$touched && newProjectForm.cost.$invalid}">
           <h6 class="form-label">{{'costRequired' | translate }}</h6>
-          <p class="form-requirement">{{'costRequirement' | translate}}</p>
+          <p class="form-requirement">{{'betweenMoneyRequirement' | translate : { minQuantity: projectFundingMin, maxQuantity: projectFundingMax } }}</p>
           <div class="row justify-content-center">
             <div class="col-2">
               <label>{{'currency' | translate}}</label>
             </div>
             <div class="col">
-              <input name="cost" ng-model="project.fundingTarget" type="number" class="form-control" ng-keypress="costKeypress()" id="new-project-cost"
-                     required min="1000" max="2000000000" step="1" no-float/>
+              <input name="cost" ng-model="project.fundingTarget" type="number" class="form-control" id="new-project-cost"
+                     required min="{{projectFundingMin}}" max="{{projectFundingMax}}" step="1" no-float/>
             </div>
           </div>
         </div>
@@ -90,10 +90,10 @@
     <div class="dropdown-divider dropdown-np"></div>
 
     <div class="row row-cols-5">
-      <div class="col">
+      <div class="col-3">
         <h5 class="project-image-header">{{'projectImage' | translate}}</h5>
       </div>
-      <div class="col">
+      <div class="col-1">
         <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingPortraitClick()"
            data-toggle="collapse" data-target="#singleProjectPictureEdit" aria-expanded="false" aria-controls="singleProjectPictureEdit">
           <div class="notification-icon" ng-show="!editingPortrait">
@@ -107,7 +107,7 @@
     </div>
 
     <div class="center-collapse collapse" id="singleProjectPictureEdit">
-      <p class="form-requirement">{{'pictureRequirement' | translate}}</p>
+      <p class="form-requirement">{{'pictureRequirement' | translate : { maxImageMB: maxImageSizeMB } }}</p>
       <div class="row">
         <input type="file" class="file-in form-control" custom-on-change="fileboxChange" id="customFileProjectPic" accept="image/*"/>
         <div ng-if="readingSingleFilesCount !== 0" class="spinner-border text-primary" role="status" style="margin-left: 10px">
@@ -115,13 +115,13 @@
         </div>
       </div>
       <!-- <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/> -->
-      <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate}}</label>
+      <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate : { maxImageMB: maxImageSizeMB } }}</label>
     </div>
     <div class="row row-cols-5">
-      <div class="col">
+      <div class="col-3">
         <h5 class="project-image-header">{{'projectSlideshow' | translate}}</h5>
       </div>
-      <div class="col">
+      <div class="col-1">
         <a class="btn btn-inv btn-project pull-right" type="button" ng-click="editingSlideshowClick()" ng-if="!disableSlideshow"
            data-toggle="collapse" data-target="#slideshowProjectPictureEdit" aria-expanded="false" aria-controls="slideshowProjectPictureEdit">
           <div class="notification-icon" ng-show="!editingSlideshow">
@@ -135,7 +135,7 @@
     </div>
 
     <div class="center-collapse collapse" id="slideshowProjectPictureEdit">
-      <p class="form-requirement">{{'picturesRequirement' | translate}}</p>
+      <p class="form-requirement">{{'picturesRequirement' | translate : { maxImageMB: maxImageSizeMB, maxImageCount: maxSlideshowCount } }}</p>
       <div class="row">
         <input type="file" class="file-in form-control" custom-on-change="multipleFileBoxChange" id="customMultipleFileProjectPic" multiple  accept="image/*"
                ng-disabled="disableSlideshow"/>
@@ -144,8 +144,8 @@
         </div>
       </div>
       <!-- <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/> -->
-      <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate}}</label>
-      <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate}}</label>
+      <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate : { maxImageMB: maxImageSizeMB } }}</label>
+      <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate : { maxImageCount: maxSlideshowCount } }}</label>
     </div>
 
     <div style="margin-top: 10px">

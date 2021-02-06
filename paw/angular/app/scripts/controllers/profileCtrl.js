@@ -3,7 +3,8 @@
     define(['paw2020a', 'services/userService', 'services/urlService', 'services/imageService','services/AuthenticationService','services/PathService', 'directives/customOnChange'], function(paw2020a) {
     paw2020a.controller('profileCtrl',['userService','urlService','imageService','AuthenticationService','PathService','$scope','$routeParams', function(userService,urlService,imageService,AuthenticationService,PathService, $scope, $routeParams) {
 
-      var maxImageSize = 2097152, pageSize = 6;
+      $scope.maxImageSizeMB = 2;
+      var maxImageSize = 2097152, pageSize = 6; // 2 * 1024 * 1024
 
       $scope.isInvestor = AuthenticationService.isInvestor();
       $scope.loadingFavs = true; $scope.uploadingImage = false;
@@ -34,9 +35,11 @@
           console.error(errorResponse);
         });
 
+        $scope.user.profileImageAvailable = false;
         if ($scope.user.imageExists) {
           urlService.get(userApi.data.image).then(function (response) {
             $scope.user.image = response.data.image;
+            $scope.user.profileImageAvailable = true;
           }, function (errorResponse) {
             console.error("No img", errorResponse);
           });

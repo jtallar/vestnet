@@ -1,16 +1,11 @@
 <head><title>{{ 'pageTitleSingleProject' | translate : {p : project.name} }}</title></head>
 
-<!--<vnheader></vnheader>-->
-
 <div id="all">
 <!-- Message and Back logic -->
   <div class="container sep-nav" style="margin-top: 20px">
     <div class="d-flex justify-content-between align-self-center" style="margin-right:6%">
       <div class="p-2 mx-3 my-1">
         <button ng-click="backAction()" class="btn btn-dark"> {{'back' | translate}} </button>
-      </div>
-      <div class="p-2 ml-8" ng-if="sent">
-        <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'successfullContact' | translate : {name : project.owner.firstName} }} </h5>
       </div>
       <div class="p-2 ml-8" ng-if="imageError">
         <h5 class="card-title mr-4" style="margin-top: 15px; color: #750096"> {{'imageError' | translate }} </h5>
@@ -34,11 +29,9 @@
               </div>
               <div  class="carousel-item" ng-if="project.slideshowExists" ng-repeat="image in project.slideshow">
                   <img ng-src="data:image/JPEG;base64,{{image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
-<!--                <img ng-src="data:image/JPEG;base64,{{project.image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">-->
               </div>
             </div>
           </div>
-<!--          </div>-->
             <a ng-if="project.slideshowExists" class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="false"></span>
               <span class="sr-only">Previous</span>
@@ -48,7 +41,6 @@
               <span class="sr-only">Next</span>
             </a>
         </div>
-
       </div>
 
       <!-- Favorite icon logic -->
@@ -73,7 +65,7 @@
                   <h4 class="card-title single-name"><b>{{project.name}}</b></h4>
                 </div>
                 <div ng-if="project.getByOwner" class="col-1">
-                  <a ng-href="#{{editUrl}}" class="btn btn-inv btn-project pull-right">
+                  <a ng-click="goToEdit()" class="btn btn-inv btn-project pull-right">
 <!--                    <div class="notification-icon">-->
                       <img class="edit-icon" src="images/edit-icon-b.png" alt="">
 <!--                    </div>-->
@@ -81,7 +73,10 @@
                 </div>
               </div>
               <div ng-if="project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">{{'you' | translate}}</div>
-              <div ng-if="!project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">by <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a></div>
+              <div ng-if="!project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">by
+                <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a>
+                <a ng-href="mailto:{{project.owner.email}}?subject={{project.name}}"><img src="images/new-mail.png" style="height: 20px; width: auto"></a>
+              </div>
 
               <p class="card-text">{{project.summary}}</p>
 
@@ -94,26 +89,13 @@
                 </li>
               </div>
               <br/>
-
-<!--              <h6 class="card-title"><b>{{'contactMail' | translate}}</b></h6>-->
-<!--              <p class="cat-size">{{project.owner.email}}</p>-->
-
               <h6 class="card-title"><b>{{'funding' | translate}}</b></h6>
               <div class="text-center ">
-                  <h6 class="card-title">{{'of' | translate : {of: formatPrice(project.fundingCurrent)} }} <b style="font-size: 25px"> {{'moneyarg' | translate : {m: formatPrice(project.fundingTarget)} }}</b></h6>
+                  <h6 class="card-title">{{formatPrice(project.fundingCurrent)}} {{'of' | translate}} <b style="font-size: 25px"> {{'moneyarg' | translate : {m: formatPrice(project.fundingTarget)} }}</b></h6>
               </div>
-<!--              <div class="row">-->
-<!--                <div class="col-1"></div>-->
-<!--                <div class="col-5">-->
-<!--                  <h6 class="card-title"><b>{{'current' | translate}}</b> &nbsp; &nbsp;&nbsp; {{'moneyarg' | translate : {m: project.fundingCurrent} }}</h6>-->
-<!--                </div>-->
-<!--                <div class="col-6">-->
-<!--                  <h6 class="card-title"><b>{{'target' | translate}}</b> &nbsp; {{'moneyarg' | translate : {m: project.fundingTarget} }}</h6>-->
-<!--                </div>-->
-<!--              </div>-->
-
               <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
-                <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width:{{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width:{{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">
+                  <b ng-if="hideornot(project.fundingCurrent, project.fundingTarget)">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</b></div>
               </div>
 
               <div class="dropdown-divider"></div>
@@ -121,9 +103,6 @@
               <p class="card-text pull-right"><small class="text-muted">{{'lastUpdate' | translate : { date : toLocaleDateString(project.updateDate) } }}</small></p>
             </div>
           </div>
-<!--          <div class="card-footer">-->
-<!--            <p class="card-text pull-right"><small class="text-muted">{{'lastUpdate' | translate : { date : formatDate(project.updateDate) } }}</small></p>-->
-<!--          </div>-->
         </div>
 
         <!-- Contact button -->
@@ -137,83 +116,6 @@
       </div>
 
     </div>
-<!--    ESTE ES EL QUE SAQUE PORQUE ROMPE-->
-
-    <!--
-    <sec:authorize access="hasRole('ROLE_INVESTOR')">
-      <div class="collapse" id="contact">
-        <div class="card contact">
-          <div class="card-header">
-            <spring:message code="contact.header" arguments="${project.owner.firstName},${project.owner.lastName}" var="contactHeaderVar"/>
-            <label class="label-header"><c:out value="${contactHeaderVar}"/></label>
-            <button class="btn btn-dark pull-right" type="button" data-toggle="collapse"
-                    data-target="#contact" aria-expanded="false" aria-controls="contact">X
-            </button>
-          </div>
-          <div class="card-body">
-            <c:url value="/projects/${project.id}" var="postPath"/>
-            <form:form modelAttribute="mailForm" action="${postPath}" method="post">
-
-              <div class="form-group">
-                <label><spring:message code="contact.bodyMessage"/></label>
-                <div class="input-group mb-3">
-                  <spring:message code="writemessage" var="placeholdermessage"/>
-                  <form:textarea path="body" type="text" class="form-control"
-                                 placeholder="${placeholdermessage}" aria-describedby="basic-addon2"/>
-                </div>
-                <form:errors path="body" cssClass="formError"/>
-              </div>
-
-              <div class="container-contact">
-                <div class="row">
-                  <div class="col-2">
-                    <label><spring:message code="contact.offerMessage"/></label>
-                  </div>
-                  <div class="col-md-5">
-                    <div class="row justify-content-center">
-                      <div class="col-2">
-                        <label><spring:message code="currency"/></label>
-                      </div>
-                      <div class="col">
-                        <spring:message code="writemessage" var="placeholderoffers"/>
-                        <form:input path="offers" type="number" class="form-control"
-                                    placeholder="${placeholderoffers}"
-                                    aria-describedby="basic-addon2" id="contact-offer"/>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <form:errors path="offers" cssClass="formError"/>
-              </div>
-
-              <div class="container-contact">
-                <div class="row">
-                  <div class="col-2">
-                    <label><spring:message code="contact.exchangeMessage"/></label>
-                  </div>
-                  <div class="col-md-5">
-                    <spring:message code="writemessage" var="placeholderexchange"/>
-                    <form:textarea path="exchange" type="text" class="form-control"
-                                   placeholder="${placeholderexchange}"
-                                   aria-describedby="basic-addon2"/>
-                  </div>
-                </div>
-                <form:errors path="exchange" cssClass="formError"/>
-              </div>
-
-              <form:input path="receiverId" value="${project.owner.id}" type="hidden"/>
-
-              <div class="text-right">
-                <input type="submit" value="<spring:message code="send"/>" class="btn btn-dark"
-                onclick="adjustInputs()" id="contact-send"/>
-              </div
-            </form:form>
-          </div>
-        </div>
-      </div>
-    </sec:authorize>
-    -->
-
   <div class="progress my-bar-steps0">
     <div class="progress-bar progress-bar-striped progress-bar-animated
         {{projectstage==1?'bar-red':(projectstage==2?'bar-orange':(projectstage==3?'bar-yellow':(projectstage==4?'bar-cyan':'bar-green')))}}"
@@ -330,13 +232,7 @@
       </div>
     </div>
   </div>
-
 </div>
-<!--</div>-->
 </div>
-
-<!--<footer>-->
-<!--  <vnfooter></vnfooter>-->
-<!--</footer>-->
 
 

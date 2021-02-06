@@ -7,10 +7,13 @@ define(['paw2020a', 'services/userService', 'services/PathService'], function(pa
         PathService.get().login().go({code: 5});
         return;
       }
+      $scope.loading = false;
 
       $scope.resetPassword = function (passwordBlock) {
+        $scope.loading = true;
         passwordBlock.token = token;
         userService.resetPassword(passwordBlock).then(function () {
+          $scope.loading = false;
           PathService.get().login().go({code: 10});
         }, function (errorResponse) {
           if (errorResponse.status === 400) {

@@ -8,6 +8,9 @@ define(['paw2020a'], function(paw2020a) {
       transclude: true,
       template: function(element, attrs) {
           return '<ul class="pagination justify-content-center" ng-class="{\'hidden-class\': lastPage === 1}">\n' +
+            '      <div class="spinner-border text-dark hidden-class" role="status" style="margin-left: 10px; margin-top: 1%; width: 1.5rem; height: 1.5rem;">\n' +
+            '        <span class="sr-only">{{\'spinnerLoading\' | translate}}</span>\n' +
+            '      </div>\n' +
             '      <div ng-if="page > 1">\n' +
             '        <li id="li-previous" class="page-item">\n' +
             '          <a href="" id="li-a-previous" class="page-link" ng-click="getToPage(1)" aria-label="{{\'previousPage\' | translate}}">\n' +
@@ -60,6 +63,9 @@ define(['paw2020a'], function(paw2020a) {
             '            <span aria-hidden="true">&raquo;</span>\n' +
             '          </a>\n' +
             '        </li>\n' +
+            '      </div>\n' +
+            '      <div class="spinner-border text-dark" role="status" ng-class="{\'hidden-class\': !loadingPage}" style="margin-left: 10px; margin-top: 1%; width: 1.5rem; height: 1.5rem;">\n' +
+            '        <span class="sr-only">{{\'spinnerLoading\' | translate}}</span>\n' +
             '      </div>\n' +
             '    </ul>'
       }

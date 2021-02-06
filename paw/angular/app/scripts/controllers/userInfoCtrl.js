@@ -71,9 +71,11 @@ define(['paw2020a', 'services/AuthenticationService', 'services/userService', 's
         console.error(errorResponse);
       });
 
+      $scope.user.profileImageAvailable = false;
       if ($scope.user.imageExists) {
         urlService.get(userApi.data.image).then(function (response) {
           $scope.user.image = response.data.image;
+          $scope.user.profileImageAvailable = true;
         }, function (errorResponse) {
           console.error("No img", errorResponse);
         });
