@@ -304,16 +304,15 @@ public class MessageServiceImpl implements MessageService {
         }
 
         /** Messages that are not accepted or rejected */
-        System.out.println("IS NOT ACCEPTED NOR REJECTED");
+
         /** With an expiry date not yet crossed, sent only if not the last one */
         if (message.isExpiryDateValid())
             if (message.getDirection() != direction) return; // Not here, only the opposite one can send, so seen answer is true.
             else throw new InvalidMessageException("Cannot send new offer before the expiry date of a own previous offer.");
-        System.out.println("IS NOT VALID");
+
         /** With an expiry date has expired, set the offer as rejected */
         message.setSeen();
         message.setSeenAnswer(); // This because the new message will generate the new notification for this chat.
         message.setAccepted(false);
-        System.out.println("IS NOT: " + message.toString());
     }
 }
