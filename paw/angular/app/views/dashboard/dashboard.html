@@ -30,7 +30,7 @@
                   <img class="nav-icon" src="images/play-icon.png" alt="">
                 </div>
                 <div ng-if="!project.closed" class="notification-icon">
-                  <img class="nav-icon" src="images/stop-icon.png" alt="">
+                  <img class="nav-icon" src="images/pause-icon.png" alt="">
                 </div>
               </a>
             </div>
@@ -49,10 +49,10 @@
             <div class="col-md-10">
               <div class="card-block">
                 <div class="row">
-                  <div ng-if="!funded" class="col-7">
+                  <div ng-if="!funded" class="col">
                     <a ng-href="#/projects/{{project.id}}" class="btn-link2"><h4 class="">{{project.name}}</h4></a>
                   </div>
-                  <div ng-if="funded" class="col-8">
+                  <div ng-if="funded" class="col">
                     <a ng-href="#/projects/{{project.id}}" class="btn-link2"><h4 class="">{{project.name}}</h4></a>
                   </div>
                   <div class="col-1">
