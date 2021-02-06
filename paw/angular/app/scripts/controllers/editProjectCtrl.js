@@ -63,6 +63,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
             if (ids[cat.options[i].value]) {
               _this.selectedCategories.push(_this.objectFromOption(cat.options[i]));
               sel.appendChild(cat.options[i]);
+              i -= 1;
             }
           }
           $scope.loadingInfo = false;
