@@ -206,6 +206,7 @@ public class Message {
                 ", expiryDate=" + expiryDate +
                 ", accepted=" + accepted +
                 ", seen=" + seen +
+                ", seenAnswer=" + seenAnswer +
                 ", investor_to_entrep=" + direction +
                 ", sender_id=" + ownerId +
                 ", receiver_id=" + investorId +
