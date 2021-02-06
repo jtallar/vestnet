@@ -45,6 +45,7 @@ require.config({
     signUpCtrl: 'controllers/signUpCtrl',
     chatCtrl: 'controllers/chatCtrl',
     dashboardCtrl: 'controllers/dashboardCtrl',
+    profileCtrl: 'controllers/profileCtrl',
     userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
 

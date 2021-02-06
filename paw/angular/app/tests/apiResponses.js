@@ -71,24 +71,21 @@ define(['paw2020a'], function(paw2020a) {
         },
       ] };
 
-      this.projectService = {
-        getPage : function () {},
-      }
-
-      this.userService = {
-        getFavorites : function () { return apiResponses.favs},
-      }
-
 
       this.favs = {data:[{projectId: '7'}, {projectId: '15'},{projectId: '10'}]};
+
+      this.profileFavs = {data:[{id: '7', "fundingCurrent":2109090, "fundingTarget":9999999}, {id: '15', "fundingCurrent":0,"fundingTarget":5000000},{id: '10',"fundingCurrent":2109090, "fundingTarget":9999999}]};
 
 
       this.emptyProjects = [];
 
       this.userInvestor = {data: {"type":"fullUserDto","birthDate":"1999-04-02T00:00:00-03:00","cityId":0,"countryId":0,"favorites":"http://localhost:8080/paw-2020a-5/api/users/4/favorites","firstName":"francisco","id":4,"imageExists":false,"joinDate":"2020-04-14T00:00:00-03:00","lastName":"choi","linkedin":"linkedin.com/in/francisco-choi-2a3577194/","locale":"es-AR","location":"http://localhost:8080/paw-2020a-5/api/users/4/location","phone":"1158885374","projectList":"http://localhost:8080/paw-2020a-5/api/users/4/projects","realId":"41824814","receivedMessages":"http://localhost:8080/paw-2020a-5/api/users/4/received_messages","sentMessages":"http://localhost:8080/paw-2020a-5/api/users/4/sent_messages","stateId":0,"verified":true,"email":"fchoi@itba.edu.ar","role":"Investor"}};
 
+      this.invLocation = {data: {"city":"Ghazni","country":"Afghanistan","id":4,"state":"Ghazni"}};
+
       this.userEntrepreuner = {data : {"type":"fullUserDto","birthDate":"1987-04-06T00:00:00-03:00","cityId":0,"countryId":0,"favorites":"http://localhost:8080/paw-2020a-5/api/users/16/favorites","firstName":"elon","id":16,"imageExists":false,"joinDate":"2020-05-11T00:00:00-03:00","lastName":"musk","linkedin":"www.linkedin.com/in/elonmusk","locale":"es-AR","location":"http://localhost:8080/paw-2020a-5/api/users/16/location","phone":"43215315321","projectList":"http://localhost:8080/paw-2020a-5/api/users/16/projects","realId":"43124321423","receivedMessages":"http://localhost:8080/paw-2020a-5/api/users/16/received_messages","sentMessages":"http://localhost:8080/paw-2020a-5/api/users/16/sent_messages","stateId":0,"verified":true,"email":"franchoi42@gmail.com","role":"Entrepreneur"}};
 
+      this.entLocation = {data: {"city":"Buenos Aires","country":"Argentina","id":10,"state":"Buenos Aires"}};
 
       this.project = {data: {"categories":"http://localhost:8080/paw-2020a-5/api/projects/82/categories","closed":false,"fundingCurrent":2109090,"fundingTarget":9999999,"getByOwner":false,"hits":59,"id":82,"name":"tesla","owner":"http://localhost:8080/paw-2020a-5/api/users/16","portraitImage":"http://localhost:8080/paw-2020a-5/api/images/projects/82","projectStages":"http://localhost:8080/paw-2020a-5/api/projects/82/stages","publishDate":"2020-05-11T00:00:00-03:00","slideshowImages":"http://localhost:8080/paw-2020a-5/api/images/projects/82/slideshow","summary":"Electric cars designed with AI. Project to produce cars that work with water.","updateDate":"2020-05-11T00:00:00-03:00"}};
 
