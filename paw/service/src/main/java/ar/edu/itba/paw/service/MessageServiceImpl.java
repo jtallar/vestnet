@@ -287,16 +287,21 @@ public class MessageServiceImpl implements MessageService {
         /** Middle of negotiation */
 
         /** Messages accepted or rejected */
-        if (message.getAccepted() != null)
+        if (message.getAccepted() != null) {
 
             /** If it's accepted, then only the investor can start a new negotiation */
-            if (message.getAccepted())
-                if (direction) return;
-                else throw new InvalidMessageException("New offer after an accepted one cannot be made by entrepreneur");
+            if (message.getAccepted()) {
+                if (direction) {
+                    message.setSeenAnswer(); // This because the new message will generate the new notification for this chat.
+                    return;
+                } else throw new InvalidMessageException("New offer after an accepted one cannot be made by entrepreneur");
 
-            /** Rejected the last message, both can send a new one */
-            else return;
-
+                /** Rejected the last message, both can send a new one */
+            } else {
+                message.setSeenAnswer(); // This because the new message will generate the new notification for this chat.
+                return;
+            }
+        }
 
         /** Messages that are not accepted or rejected */
 
