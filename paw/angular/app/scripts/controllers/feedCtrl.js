@@ -25,11 +25,6 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         return $scope.favs.includes(id)
       };
 
-      // $scope.formatPrice = function(number) {
-      //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
-      //   return formatter.format(number);
-      // }
-
       $scope.favTap = function(id){
         if($scope.containsFav(id)){
           var index = $scope.favs.indexOf(id);
@@ -189,9 +184,9 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       $scope.hideornot = function (tar, curr){
-        console.log('perc -> ',$scope.toInt((tar/curr)*100))
+        // console.log('perc -> ',$scope.toInt((tar/curr)*100))
         return $scope.toInt((tar/curr)*100) > 10;
-      }
+      };
 
       $scope.clearFilter = function () {
         $scope.field = $scope.fields[0];
@@ -259,26 +254,6 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
 
       $scope.goToProject = function (id) {
         PathService.get().singleProject(id).go();
-      }
-
-      /*$scope.onSliderChange = function (event) {
-        if (event.target.name === 'maxPercentage') {
-          if (event.target.value >= $scope.minPercentage) {
-            $scope.$apply(function () {
-              $scope.maxPercentage = event.target.value;
-            });
-          } else {
-            event.target.value = $scope.maxPercentage;
-          }
-        } else if (event.target.name === 'minPercentage') {
-          if (event.target.value <= $scope.maxPercentage) {
-            $scope.$apply(function () {
-              $scope.minPercentage = event.target.value;
-            });
-          } else {
-            event.target.value = $scope.minPercentage;
-          }
-        }
-      }*/
+      };
     }]);
 });

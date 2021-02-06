@@ -1,7 +1,5 @@
 <head><title> {{ 'pageTitleDashboard' | translate}}</title></head>
 
-<!--<vnheader></vnheader>-->
-
   <toggleswitch name="funded" ng-model="funded" ng-change="toggleChange" on="{{'showAccProj' | translate}}" off="{{'showCurrProj' | translate}}" class="sep-nav wide"></toggleswitch>
 
   <div class="row">
@@ -233,41 +231,6 @@
                 <span class="stat-number5">{{daysAgo(project.lastSeen)}}</span> <span class="stat-title"> {{'daysAgo' | translate}}</span>
               </div>
             </div>
-<!--            <div class="row">-->
-<!--              <div class="col-1">-->
-<!--                <img class="nav-icon" src="/images/stats-icon-b.png" alt="">-->
-<!--              </div>-->
-<!--              <div class="col-2">-->
-<!--                <strong>{{'seen' | translate}}</strong>-->
-<!--              </div>-->
-<!--              <div class="col-4">{{project.seen}}</div>-->
-<!--              <div class="col-3">-->
-<!--                <strong>{{'minutesAvg' | translate}}</strong>-->
-<!--              </div>-->
-<!--              <div class="col-">{{millisToMinSec(project.secondsAvg)}} {{'minutes' | translate}}</div>-->
-<!--            </div>-->
-<!--            <div class="row">-->
-<!--              <div class="col-1"></div>-->
-<!--              <div class="col-2">-->
-<!--                <strong>{{'investorsSeen' | translate}}</strong>-->
-<!--              </div>-->
-<!--              <div class="col-4">{{project.investorsSeen}}</div>-->
-<!--              <div class="col-3">-->
-<!--                <strong>{{'clicksAvg' | translate}}</strong>-->
-<!--              </div>-->
-<!--              <div class="col-2">{{project.clicksAvg}}</div>-->
-<!--            </div>-->
-<!--            <div class="row">-->
-<!--              <div class="col-1"></div>-->
-<!--              <div class="col-2">-->
-<!--                <strong>{{'lastSeen' | translate}}</strong>-->
-<!--              </div>-->
-<!--              <div class="col-4">{{toLocaleDateTimeString(project.lastSeen)}}</div>-->
-<!--              <div class="col-3">-->
-<!--                <strong>{{'contactClicks' | translate}}</strong>-->
-<!--              </div>-->
-<!--              <div class="col-2">{{project.contactClicks}}</div>-->
-<!--            </div>-->
           </div>
         </div>
       </div>
@@ -294,8 +257,3 @@
   <div class="text-center add-new mt-5 mb-5">
     <a href="#/newProject" class="btn btn-lg"> {{'addProject' | translate}} </a>
   </div>
-
-<!--  <footer>-->
-<!--    <vnfooter></vnfooter>-->
-<!--  </footer>-->
-

@@ -1,11 +1,4 @@
-<!--<head>-->
-<!--  &lt;!&ndash; build:css(.tmp) styles/form.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/form.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--</head>-->
 <head><title>{{ 'pageTitleNewProject' | translate}}</title></head>
-
-<!--<vnheader></vnheader>-->
 
     <div class="container sep-nav" style="margin-top: 20px">
       <div class="text-center">
@@ -88,7 +81,6 @@
                 <span class="sr-only">{{'spinnerLoading' | translate}}</span>
               </div>
             </div>
-            <!-- <form:errors path="portraitImage" cssClass="formError" element="p" id="fileErrorFormTag"/> -->
             <label class="formError" ng-show="imageSizeError" id="maxSizeErrorMsg">{{'imageMaxSize' | translate : { maxImageMB: maxImageSizeMB } }}</label>
           </div>
           <div class="col-6">
@@ -101,7 +93,6 @@
                 <span class="sr-only">{{'spinnerLoading' | translate}}</span>
               </div>
             </div>
-            <!-- <form:errors path="slideshowImages" cssClass="formError" element="p" id="multipleFileErrorFormTag"/> -->
             <label class="formError" ng-if="slideshowSizeError" id="maxSizeErrorMsgMultiple" >{{'imageMaxSize' | translate : { maxImageMB: maxImageSizeMB } }}</label>
             <label class="formError" ng-if="slideshowCountError" id="maxCountErrorMsgMultiple">{{'imageMaxCount' | translate : { maxImageCount: maxSlideshowCount } }}</label>
           </div>
@@ -119,8 +110,3 @@
         </div>
       </ng-form>
     </div>
-
-<!--<footer>-->
-<!--  <vnfooter></vnfooter>-->
-<!--</footer>-->
-

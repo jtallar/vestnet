@@ -66,16 +66,14 @@
                 </div>
                 <div ng-if="project.getByOwner" class="col-1">
                   <a ng-click="goToEdit()" class="btn btn-inv btn-project pull-right">
-<!--                    <div class="notification-icon">-->
-                      <img class="edit-icon" src="images/edit-icon-b.png" alt="">
-<!--                    </div>-->
+                    <img class="edit-icon" src="images/edit-icon-b.png" alt="">
                   </a>
                 </div>
               </div>
               <div ng-if="project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">{{'you' | translate}}</div>
               <div ng-if="!project.getByOwner" class="blockquote-footer" style="margin-bottom: 15px">by
                 <a ng-href="#{{project.ownerUrl}}">{{'fullName' | translate : {firstName: project.owner.firstName, lastName: project.owner.lastName} }}</a>
-                <a ng-href="mailto:{{project.owner.email}}?subject={{project.name}}"><img src="images/new-mail.png" style="height: 20px; width: auto"></a>
+                <a ng-href="mailto:{{project.owner.email}}?subject={{project.name}}" style="margin-left: 5px"><img src="images/new-mail.png" style="height: 20px; width: auto"></a>
               </div>
 
               <p class="card-text">{{project.summary}}</p>

@@ -16,19 +16,6 @@ define(['paw2020a', 'services/AuthenticationService', 'services/userService', 's
       return;
     }
 
-    // $scope.formatPrice = function(number) {
-    //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
-    //   return formatter.format(number);
-    // }
-    //
-    // $scope.toLocaleDateString = function(date) {
-    //   var aux;
-    //   if(date !== undefined)
-    //     aux = new Date(date);
-    //   else aux = new Date();
-    //   return (aux.toLocaleDateString(navigator.language));
-    // };
-
     $scope.loadingSecondTab = true;
     $scope.secondTab = [];
 
