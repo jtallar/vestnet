@@ -103,7 +103,7 @@ define(['routes',
             return true;
           } else if (response.status === 403) {
             if (AuthenticationService.isLoggedIn()) {
-              PathService.get().error().replace({code:403});
+              PathService.get().logout().go();
             } else {
               PathService.get().login().go();
             }

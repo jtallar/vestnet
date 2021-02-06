@@ -63,13 +63,13 @@ public interface ProjectService {
 
 
     /**
-     * Sets a project as closed.
+     * Toggles the project to open or closed.
      * @param ownerId The owner's unique id.
      * @param id The unique project id.
      * @return The optional project modified.
      * @throws IllegalProjectAccessException If the user attempting to update the project is not its owner.
      */
-    Optional<Project> setClosed(long ownerId, long id) throws IllegalProjectAccessException;
+    Optional<Project> toggleClosed(long ownerId, long id) throws IllegalProjectAccessException;
 
 
     /**

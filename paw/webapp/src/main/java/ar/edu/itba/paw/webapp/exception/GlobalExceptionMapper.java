@@ -19,7 +19,8 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable thr) {
-        LOGGER.error("Exception thrown: {}", (Object[]) thr.getStackTrace());
+
+        LOGGER.error("Exception thrown: {}", thr.getStackTrace()[1]);
 
         /* Custom Exceptions */
         if (thr instanceof UserAlreadyExistsException)
