@@ -19,6 +19,8 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable thr) {
+        // TODO: Ver si no conviene thr.getMessage()
+        LOGGER.debug("Exception thrown: {}, {}, {}", thr.getStackTrace()[0], thr.getStackTrace()[1], thr.toString());
         LOGGER.error("Exception thrown: {}", (Object[]) thr.getStackTrace());
 
         /* Custom Exceptions */

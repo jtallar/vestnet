@@ -4,7 +4,6 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
   function(paw2020a) {
     paw2020a.controller('editProfileCtrl', ['userService', 'locationService','urlService', 'PathService', '$scope',
       function(userService, locationService, urlService, PathService, $scope) {
-
         $scope.serverFormErrors = false;
         $scope.loadingUpdate = false; $scope.loadingInfo = true;
 
