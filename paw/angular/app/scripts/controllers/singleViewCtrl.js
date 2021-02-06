@@ -20,7 +20,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     $scope.pressContact = 0;
 
     $scope.$on("$destroy", function(){
-      if ($scope.addStatError || $scope.project == null) return;
+      if ($scope.addStatError || $scope.project == null || $scope.project.id == null) return;
       projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
         .then(function (response) {
           // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
