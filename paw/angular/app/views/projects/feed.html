@@ -171,10 +171,11 @@
           <div class="card-footer feed-footer clickable-element" ng-click="goToProject(project.id)">
               <div class="price-footer">
                 <h4 style="text-align: center">
-                {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{formatPrice(project.fundingTarget)}}</b></h4>
+                  {{formatPrice(project.fundingCurrent)}} {{'of' | translate }} <b>{{formatPrice(project.fundingTarget)}}</b></h4>
                 <div class="progress" style="height: 12px; margin: 0 25px 0 25px;">
-                  <span class="progress-value">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</span>
-                  <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100">
+                    <b ng-if="hideornot(project.fundingCurrent, project.fundingTarget)">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</b>
+                  </div>
                 </div>
             </div>
           </div>

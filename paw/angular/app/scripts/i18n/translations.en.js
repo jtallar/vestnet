@@ -254,7 +254,7 @@ define([], function() {
     target: 'Target',
     current: 'Current',
     moneyarg: '{{m}}',
-    of: '{{of}} of',
+    of: 'of',
     contact: 'Send new message',
     viewmore: 'View more...',
     totalinv: 'Total Invested',

@@ -25,10 +25,16 @@
 
       <div ng-if="user.linkedin" class="text-center my-2">
         <a href="{{user.linkedin}}" class="btn btn-linkedin">
-          <i class="fa fa-linkedin pull-left"></i>
+          <img src="images/linkedin.png" style="height: 20px; width: auto"/>
           <label>{{'linkedinProfile' | translate}}</label>
         </a>
       </div>
+<!--      <div ng-if="user.linkedin && safari()" class="text-center my-2">-->
+<!--        <a href="{{user.linkedin}}" class="btn btn-linkedin">-->
+<!--          <label>{{'linkedinProfile' | translate}}</label>-->
+<!--        </a>-->
+<!--      </div>-->
+
       <div ng-if="isInvestor" class="counter text-center">
         <img src="images/invest-icon.png" style="width: 50px; height: auto">
         <h2 class="timer count-title count-number" data-to="100" data-speed="1500"><div id="invested">0</div></h2>
