@@ -1,6 +1,6 @@
 define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/PathService'], function(paw2020a) {
     'use strict';
-    paw2020a.service('AuthenticatedRestangular', ['Restangular', 'AuthenticationService', 'PathService', '$timeout', '$route', '$http', function(Restangular, AuthenticationService, PathService, $timeout, $route, $http) {
+    paw2020a.service('AuthenticatedRestangular', ['Restangular', 'AuthenticationService', 'PathService', '$timeout', '$route', '$http', '$rootScope', function(Restangular, AuthenticationService, PathService, $timeout, $route, $http, $rootScope) {
       return Restangular.withConfig(function (RestangularConfigurer) {
         // cannot use RestangularConfigurer.setDefaultHeaders(), it is called once and before token set
         // This requests the token on each request, when this instance is made token should already be set
@@ -20,9 +20,10 @@ define(['paw2020a', 'restangular', 'services/AuthenticationService', 'services/P
               $http(response.config).then(deferred.resolve, deferred.reject);
               return false;
             }, function (errorResponse) {
-              $timeout(function () {
-                PathService.get().logout().go();
-              }, 0);
+              AuthenticationService.logout();
+              $rootScope.$emit('credentialsChanged');
+              $route.reload();
+              return true;
             });
             return false;
           }
