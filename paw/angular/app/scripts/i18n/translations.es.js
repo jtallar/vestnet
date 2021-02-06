@@ -192,7 +192,7 @@ define([], function() {
     accepted: 'Aceptado',
     rejected: 'Rechazado',
     myProjects: 'Mis Proyectos',
-    showAccProj: 'Proyectos no publicados',
+    showAccProj: 'Proyectos pausados',
     showCurrProj: 'Proyectos publicados',
     stopFunding: 'Detener publicación',
     cost: 'Costo',
