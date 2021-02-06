@@ -16,14 +16,6 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     $scope.projects = [];
 
-    // $scope.toLocaleDateTimeString = function(date) {
-    //   var aux;
-    //   if(date !== undefined)
-    //     aux = new Date(date);
-    //   else aux = new Date();
-    //   return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
-    // };
-
     $scope.daysAgo = function (date) {
       var diffTime = Math.abs(new Date() - new Date(date));
       var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -199,12 +191,20 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.toggleChange = function () {
       $scope.getToPage(1);
       _this.updatePathParams();
-      _this.getProjects();
     };
 
     $scope.goToChat = function (message) {
       PathService.get().setFullUrl(message.chatUrl).go();
-    }
+    };
+
+    $scope.changeFunded = function (project) {
+      projectService.toggleClosed(project.id.toString()).then(function (response) {
+        $scope.projects = $scope.projects.filter(function (el) { return el.id !== project.id });
+      }, function (errorResponse) {
+        // Should never throw 404
+        console.error(errorResponse);
+      });
+    };
 
   }]);
 });
