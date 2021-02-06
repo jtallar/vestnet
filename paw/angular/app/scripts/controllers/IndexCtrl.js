@@ -7,6 +7,3 @@ define(['paw2020a', 'directives/headerCtrl', 'directives/footer'], function(paw2
   });
 
 });
-
-// angular.module('paw2020a', ['ui.toggle']);
-
