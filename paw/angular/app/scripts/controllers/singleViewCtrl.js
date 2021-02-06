@@ -234,5 +234,10 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       return parseInt(num);
     };
 
+    $scope.hideornot = function (tar, curr){
+      console.log('perc -> ',$scope.toInt((tar/curr)*100))
+      return $scope.toInt((tar/curr)*100) > 10;
+    }
+
   }]);
 });

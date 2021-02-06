@@ -65,7 +65,6 @@
                   <div class="col-1">
                     <a ng-click="fetchMessage(project.id, $index)" class="btn btn-inv btn-project pull-right " data-toggle="collapse"
                        data-target="#chatcollapse{{project.id}}" aria-expanded="false" aria-controls="chatcollapse{{project.id}}">
-<!--                      TODO: Ver si hay alguna forma mejor de reservar el espacio para cuando se oculta-->
                       <div class="notification-icon">
                         <img class="nav-icon" src="images/chat-icon-b.png" alt="">
                         <span ng-show="project.msgCount !== 0" class="badge bg-danger">{{project.msgCount}}</span>

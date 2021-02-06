@@ -1,14 +1,5 @@
-<!--<head>-->
-<!--  &lt;!&ndash; build:css(.tmp) styles/userprofile.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/userprofile.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--  &lt;!&ndash; build:css(.tmp) styles/feed.css &ndash;&gt;-->
-<!--  <link rel="stylesheet" href="styles/feed.css">-->
-<!--  &lt;!&ndash; endbuild &ndash;&gt;-->
-<!--</head>-->
-<head><title>{{ 'pageTitleMyInvestments' | translate}}</title></head>
 
-<!--<vnheader></vnheader>-->
+<head><title>{{ 'pageTitleMyInvestments' | translate}}</title></head>
 
 <div class="row sep-nav">
   <div class="col-3 center-vertical">
@@ -16,35 +7,6 @@
   </div>
   <div class="col-6" ng-if="lastPage !== 1">
     <pagination></pagination>
-<!--    <ul class="pagination justify-content-center">-->
-<!--      <div ng-if="(page - 1) >= 1">-->
-<!--        <li id="li-previous" class="page-item">-->
-<!--          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'previousPage' | translate}}">-->
-<!--            <span aria-hidden="true">&laquo;</span>-->
-<!--          </a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--      <div ng-if="(page - 1) >= 1">-->
-<!--        <li id="li-previous-num" class="page-item">-->
-<!--          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'pageNumber' | translate : {p: page - 1} }}">{{page -1}}</a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--      <li id="li-now" class="page-item">-->
-<!--        <a id="li-a-now" class="page-link" onclick="" aria-label="{{'pageNumber' | translate : {p: page} }}">{{page}}</a>-->
-<!--      </li>-->
-<!--      <div ng-if="(page + 1) <= lastPage">-->
-<!--        <li id="li-next-num" class="page-item">-->
-<!--          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'pageNumber' | translate : {p: page + 1} }}">{{page + 1}}</a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--      <div ng-if="(page + 1) <= lastPage">-->
-<!--        <li id="li-next" class="page-item">-->
-<!--          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'nextPage' | translate}}">-->
-<!--            <span aria-hidden="true">&raquo;</span>-->
-<!--          </a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--    </ul>-->
   </div>
   <div class="col-3"></div>
 </div>
@@ -52,7 +14,6 @@
   <div class="row text-center">
     <div class="col">
       <div class="counter">
-<!--        <i class="fa fa-usd fa-2x"></i>-->
         <img src="images/invest-icon.png" style="width: 50px; height: auto">
         <h2 class="timer count-title count-number" data-to="100" data-speed="1500"><div id="invested">0</div></h2>
         <p class="count-text ">{{'totalinv' | translate}}</p>
@@ -60,7 +21,6 @@
     </div>
   </div>
 
-<!--<button ng-click="animate('invested', 0, 2500, 1000)">TRIAL</button>-->
   <span class="anchor-header"></span>
   <div class="card-group group-invest" ng-if="!noDealsFound">
     <div class="card card-invest" ng-repeat="message in messages">

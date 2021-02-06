@@ -26,6 +26,10 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
         history.back();
       };
 
+      $scope.hideornot = function (perc){
+        return perc > 10;
+      }
+
       // $scope.toLocaleDateTimeString = function(date) {
       //   var aux;
       //   if(date !== undefined)
