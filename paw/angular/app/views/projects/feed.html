@@ -1,40 +1,9 @@
 <head><title> {{ 'pageTitleFeed' | translate}}</title></head>
 
-<!--<vnheader></vnheader>-->
-
 <div class="row sep-nav">
   <div class="col-1"></div>
   <div ng-if="!loading" class="col-11">
     <pagination></pagination>
-<!--    <ul class="pagination justify-content-center">-->
-<!--      <div ng-if="(page - 1) >= 1">-->
-<!--        <li id="li-previous" class="page-item">-->
-<!--          <a id="li-a-previous" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'previousPage' | translate}}">-->
-<!--            <span aria-hidden="true">&laquo;</span>-->
-<!--          </a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--      <div ng-if="(page - 1) >= 1">-->
-<!--        <li id="li-previous-num" class="page-item">-->
-<!--          <a id="li-a-previous-num" class="page-link" ng-click="getToPage(page - 1)" aria-label="{{'pageNumber' | translate : {p: page - 1} }}">{{page -1}}</a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--      <li id="li-now" class="page-item">-->
-<!--        <a id="li-a-now" class="page-link" onclick="" aria-label="{{'pageNumber' | translate : {p: page} }}">{{page}}</a>-->
-<!--      </li>-->
-<!--      <div ng-if="(page + 1) <= lastPage">-->
-<!--        <li id="li-next-num" class="page-item">-->
-<!--          <a id="li-a-next-num" class="page-link" ng-click="getToPage(page + 1)" aria-label="{{'pageNumber' | translate : {p: page + 1} }}">{{page + 1}}</a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--      <div ng-if="(page + 1) <= lastPage">-->
-<!--        <li id="li-next" class="page-item">-->
-<!--          <a id="li-a-next" class="page-link" ng-click="getToPage(page + 1)"  aria-label="{{'nextPage' | translate}}">-->
-<!--            <span aria-hidden="true">&raquo;</span>-->
-<!--          </a>-->
-<!--        </li>-->
-<!--      </div>-->
-<!--    </ul>-->
   </div>
 </div>
 
@@ -48,11 +17,8 @@
             <img src="images/lupa_bv.png" class="icon-img" width="38px">
           </div>
           <div class="col-md" ng-class="{'has-error': filterForm.search.$touched && filterForm.search.$invalid}">
-<!--            {{ 'search' | translate }}-->
             <input style="color: black !important;" name="search" id="keyword" class="form-control mr-sm-2" type="text" placeholder="{{ 'search' | translate }}" aria-label="Search"
                    ng-model="searchField" ng-maxlength="{{feedSearchMaxLength}}" ng-keyup="$event.keyCode == 13 && !filterForm.$invalid && applyFilter()"/>
-
-            <!-- <form:errors path="keyword" element="p" cssClass="formError"/> -->
           </div>
         </div>
         <div class="row field">
@@ -111,7 +77,7 @@
         </div>
 
         <div class="field">
-          <label class="range">{{'percFilter' | translate}} </label>
+          <label class="range2">{{'percFilter' | translate}} </label>
           <div class="row">
             <div class="range-box2 col-md" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
               <div class="input-group">
@@ -136,26 +102,6 @@
           </div>
           <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
         </div>
-
-        <!--<div class="field">
-          <label class="row range">{{'percFilter' | translate}} </label>
-          <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.minPercentage.$touched && filterForm.minPercentage.$invalid}">
-            <div class="row">
-              <span class="col-6 perc-range">{{'min' | translate}}</span>
-              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ minPercentage }}</label>
-            </div>
-            <input name="minPercentage" custom-on-change="onSliderChange" value="{{ minPercentage }}" type="range" min="0" max="100" class="slider">
-          </div>
-          <div class="col-md slidecontainer" ng-class="{'has-error': filterForm.maxPercentage.$touched && filterForm.maxPercentage.$invalid}">
-            <div class="row" style="margin-top:10px !important">
-              <span class="col-6 perc-range">{{'max' | translate}}</span>
-              <label class="col-5 perc-range pull-right" style="text-align:right; margin-bottom: 0 !important">{{ maxPercentage }}</label>
-            </div>
-            <input name="maxPercentage" custom-on-change="onSliderChange" value="{{ maxPercentage }}" type="range" min="0" max="100" class="slider">
-            <label class="formError" ng-if="percentageRangeError">{{'percentageRangeRequirement' | translate}}</label>
-          </div>
-        </div>-->
-
         <div class="row">
           <div class="col-6 clear-btn">
             <input class="btn btn-clear pull-left" type="button" value="{{'clear' | translate}}" ng-click="clearFilter()"/>
@@ -168,22 +114,6 @@
       </div>
     </ng-form>
   </div>
-
-<!--  <c:choose>-->
-<!--    <c:when test="${page == endPage && page != startPage}">-->
-<!--      <c:set var="totalFound" value="${projectPage.totalCount % 12}"/>-->
-<!--    </c:when>-->
-<!--    <c:when test="${page == endPage && page == startPage}">-->
-<!--      <c:set var="totalFound" value="${projectPage.totalCount}"/>-->
-<!--    </c:when>-->
-<!--    <c:otherwise>-->
-<!--      <c:set var="totalFound" value="12"/>-->
-<!--    </c:otherwise>-->
-<!--  </c:choose>-->
-
-<!--  <div class="progress">-->
-<!--    <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="200" style="width: 10%">20%</div>-->
-<!--  </div>-->
 
   <p class="results">{{'feedSearchPages' | translate : {found: lastPage, shown: page} }}</p>
 
@@ -243,13 +173,9 @@
                 <h4 style="text-align: center">
                 {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{formatPrice(project.fundingTarget)}}</b></h4>
                 <div class="progress" style="height: 12px; margin: 0 25px 0 25px;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</div>
+                  <span class="progress-value">{{toInt((project.fundingCurrent/project.fundingTarget)*100)}}%</span>
+                  <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{(project.fundingCurrent/project.fundingTarget)*100}}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-<!--              <div class="col-2">-->
-<!--                <a href="#/projects/{{project.id}}" class="btn btn-inv pull-right more-icon" >-->
-<!--                  <img src="images/view-icon-b.png" alt="">-->
-<!--                </a>-->
-<!--              </div>-->
             </div>
           </div>
         </div>
@@ -279,7 +205,4 @@
     </div>
   </div>
 
-<!--<footer>-->
-<!--  <vnfooter></vnfooter>-->
-<!--</footer>-->
 

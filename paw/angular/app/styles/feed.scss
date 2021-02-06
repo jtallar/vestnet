@@ -389,8 +389,17 @@ html {
   font-size: 16px;
   color: grey;
   font-weight: 400;
-  margin-left:7px;
+  margin-left:15px;
 }
+
+.range2{
+  font-size: 16px;
+  color: grey;
+  font-weight: 400;
+  margin-left: 0;
+  margin-bottom: 0;
+}
+
 .perc-range{
   font-size: 14px;
   color: grey;
@@ -1173,4 +1182,21 @@ html {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
+}
+
+.no-proj-mine{
+  margin-bottom:580px !important
+}
+
+.progress-value {
+  margin-left:3%;
+  z-index:2;
+  padding: 0 !important;
+  font-size: 12px !important;
+  color:black;
+  font-weight: bold;
+}
+
+.continue-down{
+  word-wrap: break-word !important;
 }
