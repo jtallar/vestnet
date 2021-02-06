@@ -41,7 +41,7 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'dashboardCtrl', 'ap
     }));
 
     describe('Testing form', function() {
-      it('New project controller should be defined', function() {
+      it('Dashboard controller should be defined', function() {
         expect(dashboardCtrl).toBeDefined();
       });
 

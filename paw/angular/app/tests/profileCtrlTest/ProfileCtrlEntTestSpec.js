@@ -1,6 +1,6 @@
 define(['angular','paw2020a','angularMocks', 'restangular', 'profileCtrl', 'apiResponses', 'utilities'], function (angular, paw2020a, angularMocks, restangular, feedCtrl){
 
-  describe('Testing dashboard', function() {
+  describe('Testing profile', function() {
     beforeEach(angular.mock.module("paw2020a"));
 
     var $controller;
@@ -38,8 +38,8 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'profileCtrl', 'apiR
       $rootScope.$apply();
     }));
 
-    describe('Testing form', function() {
-      it('New project controller should be defined', function() {
+    describe('Testing profile investor data', function() {
+      it('Profile controller should be defined', function() {
         expect(profileCtrl).toBeDefined();
       });
 

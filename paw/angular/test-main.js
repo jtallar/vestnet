@@ -46,6 +46,8 @@ require.config({
     chatCtrl: 'controllers/chatCtrl',
     dashboardCtrl: 'controllers/dashboardCtrl',
     profileCtrl: 'controllers/profileCtrl',
+    singleViewCtrl: 'controllers/singleViewCtrl',
+    editProjectCtrl: 'controllers/editProjectCtrl',
     userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
 
