@@ -86,8 +86,8 @@ define(['angular', 'angularMocks', 'paw2020a', 'apiResponses', 'utilities', 'cha
 
       it('should enable response', function () {
         delete $scope.chats[0].accepted;
-        chatCtrl.handleChatResponse($scope.chats);
-        expect($scope.responseEnabled).toEqual(true);
+        $rootScope.$digest();
+        expect($scope.responseEnabled).toEqual(false);
       });
 
       it('should calculate new funding current', function () {

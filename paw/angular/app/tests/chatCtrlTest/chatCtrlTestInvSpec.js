@@ -100,8 +100,12 @@ define(['angular', 'angularMocks', 'paw2020a', 'apiResponses', 'utilities', 'cha
 
       it('should not enable offer as last offer is not expired', function () {
         delete $scope.chats[0].accepted; //this is to add expInDays
-        // expect($scope.chats[0].hasOwnProperty('accepted')).toEqual(false); //
+        var date = new Date();
+        date.setDate(date.getDay() + 5);
+        $scope.chats[0].expiryDate =  date;
+
         chatCtrl.handleChatResponse($scope.chats);
+        $rootScope.$digest();
         expect($scope.offerEnabled).toEqual(false);
       })
 

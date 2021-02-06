@@ -19,7 +19,7 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
     var $routeParams;
     var $httpBackend;
 
-    var projectId, expectedProject, expectedProjCategories;
+    var projectId, expectedProject, expectedProjCategories, expectedCats;
 
 
 
@@ -34,6 +34,7 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
       ProjectService = _projectService_;
       UrlService = _urlService_;
       expectedProject = apiResponses.project.data;
+      expectedCats = apiResponses.categories.data;
       expectedProjCategories = apiResponses.projectCategories.data;
       projectId = expectedProject.id;
 
@@ -41,15 +42,25 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
       $routeParams.id = projectId;
 
       utilities.resolvePromise(ProjectService, 'getById', apiResponses.project);
-      utilities.resolvePromise(ProjectService, 'getCategories', apiResponses.projectCategories);
+      utilities.resolvePromise(ProjectService, 'getCategories', apiResponses.categories);
       utilities.resolvePromise(UrlService, 'get', apiResponses.projectCategories);
 
 
       utilities.ignoreTestAside(_$httpBackend_);
 
       var cat = document.createElement('select');
+      var sel = document.createElement('select')
 
-      document.getElementById = jasmine.createSpy('all-categories').and.returnValue(cat);
+      var i = 0;
+      while(i < expectedCats.length){
+        var option = document.createElement('option')
+        option.setAttribute('value', expectedCats[i].id)
+        cat.appendChild(option);
+        i++;
+      }
+
+
+      document.getElementById = jasmine.createSpy('all-categories').and.returnValues(cat, sel);
 
       editProjectCtrl = $controller('editProjectCtrl', {$scope: $scope});
 
@@ -63,17 +74,26 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
       });
 
       it('should fetch project', function () {
-        console.log($scope.hola)
         expect(ProjectService.getById).toHaveBeenCalled();
         expect($scope.project).toEqual(expectedProject)
       })
 
-      it('should fetch project categories', function () {
-        expect(UrlService.get).toHaveBeenCalledWith($scope.project.categories);
-        $scope.updateProject($scope.project);
-        $rootScope.$digest();
-        expect($scope.project.categories).toEqual(expectedProjCategories);
+      it('should fetch all categories', function () {
+        expect(ProjectService.getCategories).toHaveBeenCalledWith();
+        expect($scope.categories).toEqual(expectedCats);
       });
+
+      it('should fetch project categories', function () {
+        //expect(UrlService.get).toHaveBeenCalledWith($scope.project.categories);
+        var idsArray = [];
+        expectedProjCategories.map(function (cat) {
+          idsArray.push({id : cat.id});
+        })
+
+        expect(editProjectCtrl.selectedCategories.map(a => a.id).sort()).toEqual(idsArray.map(a => a.id).sort());
+      });
+
+
 
       // it('should set errors because of no categories', function () {
       //   expect(UrlService.get).toHaveBeenCalledWith($scope.project.categories);
