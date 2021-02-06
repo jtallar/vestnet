@@ -94,6 +94,17 @@ define(['paw2020a'], function(paw2020a) {
 
       this.formErrorResponse = {status: 400};
 
+      this.fundedProjects = {data :[{"categories":"http://localhost:8080/paw-2020a-5/api/users/16/projects/categories","closed":true,"fundingCurrent":0,"fundingTarget":5000000,"getByOwner":false,"hits":0,"id":85,"name":"SolarCity","owner":"http://localhost:8080/paw-2020a-5/api/users/16","portraitImage":"http://localhost:8080/paw-2020a-5/api/images/projects/85","projectStages":"http://localhost:8080/paw-2020a-5/api/projects/85/stages","publishDate":"2020-05-12T00:00:00-03:00","slideshowImages":"http://localhost:8080/paw-2020a-5/api/images/projects/85/slideshow","summary":"SolarCity Corporation is a subsidiary of Tesla, Inc. that specializes in solar energy services and is headquartered in San Mateo, California.","updateDate":"2020-05-12T00:00:00-03:00"}]};
+
+      this.notFundedProjects = { headers: function () {
+          return {'cache-control': "no-cache, no-store, max-age=0, must-revalidate",
+            'content-length': "7559",
+            'content-type': "application/json",
+            expires: "0",
+            link: '<http://localhost:8080/api/projects?p=1&f=1&l=12&o=1>; rel="first", <http://localhost:8080/api/projects?p=1&f=1&l=12&o=1>; rel="start", <http://localhost:8080/api/projects?p=5&f=1&l=12&o=1>; rel="end", <http://localhost:8080/api/projects?p=9&f=1&l=12&o=1>; rel="last"',
+            pragma: "no-cache"}
+        },data: [{"categories":"http://localhost:8080/paw-2020a-5/api/users/16/projects/categories","closed":false,"fundingCurrent":2109090,"fundingTarget":9999999,"getByOwner":false,"hits":59,"id":82,"name":"tesla","owner":"http://localhost:8080/paw-2020a-5/api/users/16","portraitImage":"http://localhost:8080/paw-2020a-5/api/images/projects/82","projectStages":"http://localhost:8080/paw-2020a-5/api/projects/82/stages","publishDate":"2020-05-11T00:00:00-03:00","slideshowImages":"http://localhost:8080/paw-2020a-5/api/images/projects/82/slideshow","summary":"Electric cars designed with AI. Project to produce cars that work with water.","updateDate":"2020-05-11T00:00:00-03:00"},{"categories":"http://localhost:8080/paw-2020a-5/api/users/16/projects/categories","closed":false,"fundingCurrent":0,"fundingTarget":5000000,"getByOwner":false,"hits":1,"id":102,"name":"SpaceY","owner":"http://localhost:8080/paw-2020a-5/api/users/16","portraitImage":"http://localhost:8080/paw-2020a-5/api/images/projects/102","projectStages":"http://localhost:8080/paw-2020a-5/api/projects/102/stages","publishDate":"2020-06-24T00:00:00-03:00","slideshowImages":"http://localhost:8080/paw-2020a-5/api/images/projects/102/slideshow","summary":"new project to reach other galaxies reaching almost speed of light","updateDate":"2020-06-24T00:00:00-03:00"},{"categories":"http://localhost:8080/paw-2020a-5/api/users/16/projects/categories","closed":false,"fundingCurrent":0,"fundingTarget":500000,"getByOwner":false,"hits":1,"id":88,"name":"Ziip2","owner":"http://localhost:8080/paw-2020a-5/api/users/16","portraitImage":"http://localhost:8080/paw-2020a-5/api/images/projects/88","projectStages":"http://localhost:8080/paw-2020a-5/api/projects/88/stages","publishDate":"2020-05-12T00:00:00-03:00","slideshowImages":"http://localhost:8080/paw-2020a-5/api/images/projects/88/slideshow","summary":"The company developed and marketed an internet city guide for the newspaper publishing industry, with maps, directions and yellow pages,[61] with the vector graphics mapping and direction code being implemented by Musk in Java.","updateDate":"2020-05-12T00:00:00-03:00"}]};
+
       this.userExistingError = {status: 409};
 
       this.serverRetryError = {status: 503};
@@ -186,7 +197,11 @@ define(['paw2020a'], function(paw2020a) {
       projectId: 110,
       publishDate: "2021-02-05T00:00:00-03:00",
       seen: true,
-      seenAnswer: false}]}
+      seenAnswer: false}]};
+
+      this.msgCount = {data: {route: 82, unread:5}};
+
+      this.accept = {status: 200, data: []};
 
     }
 

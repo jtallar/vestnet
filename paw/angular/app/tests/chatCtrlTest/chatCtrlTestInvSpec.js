@@ -88,7 +88,7 @@ define(['angular', 'angularMocks', 'paw2020a', 'apiResponses', 'utilities', 'cha
       it('rootscope should emit signal of read message', function () {
         spyOn($rootScope, '$emit');
         chatCtrl.setChatAsSeen({});
-        $rootScope.$digest()
+        $rootScope.$digest();
         expect($rootScope.$emit).toHaveBeenCalledWith('notificationChange');
       });
 

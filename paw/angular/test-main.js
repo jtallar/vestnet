@@ -44,8 +44,10 @@ require.config({
     newProjectCtrl: 'controllers/newProjectCtrl',
     signUpCtrl: 'controllers/signUpCtrl',
     chatCtrl: 'controllers/chatCtrl',
+    dashboardCtrl: 'controllers/dashboardCtrl',
     userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
+
 
   },
 

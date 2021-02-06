@@ -21,6 +21,7 @@ define(['paw2020a'], function(paw2020a) {
       this.ignoreTestAside = function (httpBackend){
         httpBackend.whenGET(/views.*/).respond(200, '');
         httpBackend.whenGET(/api.*/).respond(200, '');
+
       }
 
       this.resolvePromiseMultiple = function (service,func, responses, index) {
