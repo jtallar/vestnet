@@ -189,9 +189,9 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
       };
 
       $scope.hideornot = function (tar, curr){
-        console.log('perc -> ',$scope.toInt((tar/curr)*100))
+        // console.log('perc -> ',$scope.toInt((tar/curr)*100))
         return $scope.toInt((tar/curr)*100) > 10;
-      }
+      };
 
       $scope.clearFilter = function () {
         $scope.field = $scope.fields[0];
