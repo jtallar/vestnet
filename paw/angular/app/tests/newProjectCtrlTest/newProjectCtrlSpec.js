@@ -65,7 +65,6 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'newProjectCtrl', 'a
         expect(newProjectCtrl.selectedCategories).toContain({id: $scope.categories[indexUsed].id}); //here it is inside the array
         $scope.delCategory();
         expect(newProjectCtrl.selectedCategories).not.toContain({id: $scope.categories[indexUsed].id}); //here it is not
-
       })
 
 

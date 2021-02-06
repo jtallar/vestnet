@@ -3,6 +3,8 @@ define(['paw2020a'], function(paw2020a) {
     function() {
       this.isInvestor = true;
 
+      this.isEntrepreneur = false;
+
       this.projects = {headers: function () {
           return {'cache-control': "no-cache, no-store, max-age=0, must-revalidate",
           'content-length': "7559",
@@ -83,6 +85,13 @@ define(['paw2020a'], function(paw2020a) {
 
       this.emptyProjects = [];
 
+      this.userInvestor = {data: {"type":"fullUserDto","birthDate":"1999-04-02T00:00:00-03:00","cityId":0,"countryId":0,"favorites":"http://localhost:8080/paw-2020a-5/api/users/4/favorites","firstName":"francisco","id":4,"imageExists":false,"joinDate":"2020-04-14T00:00:00-03:00","lastName":"choi","linkedin":"linkedin.com/in/francisco-choi-2a3577194/","locale":"es-AR","location":"http://localhost:8080/paw-2020a-5/api/users/4/location","phone":"1158885374","projectList":"http://localhost:8080/paw-2020a-5/api/users/4/projects","realId":"41824814","receivedMessages":"http://localhost:8080/paw-2020a-5/api/users/4/received_messages","sentMessages":"http://localhost:8080/paw-2020a-5/api/users/4/sent_messages","stateId":0,"verified":true,"email":"fchoi@itba.edu.ar","role":"Investor"}};
+
+      this.userEntrepreuner = {data : {"type":"fullUserDto","birthDate":"1987-04-06T00:00:00-03:00","cityId":0,"countryId":0,"favorites":"http://localhost:8080/paw-2020a-5/api/users/16/favorites","firstName":"elon","id":16,"imageExists":false,"joinDate":"2020-05-11T00:00:00-03:00","lastName":"musk","linkedin":"www.linkedin.com/in/elonmusk","locale":"es-AR","location":"http://localhost:8080/paw-2020a-5/api/users/16/location","phone":"43215315321","projectList":"http://localhost:8080/paw-2020a-5/api/users/16/projects","realId":"43124321423","receivedMessages":"http://localhost:8080/paw-2020a-5/api/users/16/received_messages","sentMessages":"http://localhost:8080/paw-2020a-5/api/users/16/sent_messages","stateId":0,"verified":true,"email":"franchoi42@gmail.com","role":"Entrepreneur"}};
+
+
+      this.project = {data: {"categories":"http://localhost:8080/paw-2020a-5/api/projects/82/categories","closed":false,"fundingCurrent":2109090,"fundingTarget":9999999,"getByOwner":false,"hits":59,"id":82,"name":"tesla","owner":"http://localhost:8080/paw-2020a-5/api/users/16","portraitImage":"http://localhost:8080/paw-2020a-5/api/images/projects/82","projectStages":"http://localhost:8080/paw-2020a-5/api/projects/82/stages","publishDate":"2020-05-11T00:00:00-03:00","slideshowImages":"http://localhost:8080/paw-2020a-5/api/images/projects/82/slideshow","summary":"Electric cars designed with AI. Project to produce cars that work with water.","updateDate":"2020-05-11T00:00:00-03:00"}};
+
       this.formErrorResponse = {status: 400};
 
       this.userExistingError = {status: 409};
@@ -99,7 +108,85 @@ define(['paw2020a'], function(paw2020a) {
 
       this.cities = {data: [{"id":38592,"name":"Alaba Special Wereda"},{"id":38593,"name":"Arba Minch"},{"id":38599,"name":"Bako"},{"id":38603,"name":"Bench Maji Zone"},{"id":38606,"name":"Bodītī"},{"id":38607,"name":"Bonga"},{"id":38609,"name":"Butajīra"},{"id":38625,"name":"Dīla"},{"id":38629,"name":"Felege Neway"},{"id":38634,"name":"Gedeo Zone"},{"id":38645,"name":"Guraghe Zone"},{"id":38647,"name":"Gīdolē"},{"id":38648,"name":"Hadiya Zone"},{"id":38651,"name":"Hawassa"},{"id":38652,"name":"Hosa’ina"},{"id":38662,"name":"Jinka"},{"id":38663,"name":"Kembata Alaba Tembaro Zone"},{"id":38668,"name":"Konso"},{"id":38670,"name":"K’olīto"},{"id":38672,"name":"Leku"},{"id":38674,"name":"Lobuni"},{"id":38683,"name":"Mīzan Teferī"},{"id":38696,"name":"Sheka Zone"},{"id":38698,"name":"Sidama Zone"},{"id":38700,"name":"Sodo"},{"id":38705,"name":"Tippi"},{"id":38707,"name":"Turmi"},{"id":38710,"name":"Wendo"},{"id":38716,"name":"Wolayita Zone"},{"id":38718,"name":"Yem"},{"id":38719,"name":"Yirga ‘Alem"},{"id":38725,"name":"Āreka"}]}
 
-
+      this.messages = {headers: function () {
+          return {'cache-control': "no-cache, no-store, max-age=0, must-revalidate",
+          'content-length': "2953",
+          'content-type': "application/json",
+          expires: "0",
+          link: '<http://localhost:8080/api/messages/chat/111?p=2>; rel="next"',
+          pragma: "no-cache"}
+        },
+        data: [{
+      $$hashKey: "object:50",
+      accepted: false,
+      answered: true,
+      chat: "http://localhost:8080/api/messages/chat/110/7",
+      comment: "Me interesaron mucho los cascos",
+      direction: true,
+      exchange: "10% de futuras ventas",
+      expInDays: 0,
+      expiryDate: "2021-02-06T22:10:01.77-03:00",
+      expiryDays: 0,
+      id: 123,
+      incoming: false,
+      investor: "http://localhost:8080/api/users/7",
+      investorId: 7,
+      offer: 1000,
+      owner: "http://localhost:8080/api/users/16",
+      ownerId: 16,
+      project: "http://localhost:8080/api/projects/110",
+      projectId: 110,
+      publishDate: "2021-02-04T00:00:00-03:00",
+      seen: true,
+      seenAnswer: true,
+      _proto_: Object},
+      {
+      $$hashKey: "object:51",
+      accepted: true,
+      answered: true,
+      chat: "http://localhost:8080/api/messages/chat/110/7",
+      comment: "Es mucho 10 bro",
+      direction: false,
+      exchange: "5% Ventas",
+      expInDays: 0,
+      expiryDate: "2021-02-05T22:34:16.482-03:00",
+      expiryDays: 0,
+      id: 124,
+      incoming: true,
+      investor: "http://localhost:8080/api/users/7",
+      investorId: 7,
+      offer: 1000,
+      owner: "http://localhost:8080/api/users/16",
+      ownerId: 16,
+      project: "http://localhost:8080/api/projects/110",
+      projectId: 110,
+      publishDate: "2021-02-04T00:00:00-03:00",
+      seen: true,
+      seenAnswer: true,
+      _proto_: Object},
+      {
+      $$hashKey: "object:52",
+      accepted: false,
+      answered: true,
+      chat: "http://localhost:8080/api/messages/chat/110/7",
+      comment: "Nada",
+      direction: true,
+      exchange: "Nada",
+      expInDays: 0,
+      expiryDate: "2021-02-06T20:07:39.27-03:00",
+      expiryDays: 0,
+      id: 125,
+      incoming: false,
+      investor: "http://localhost:8080/api/users/7",
+      investorId: 7,
+      offer: 100,
+      owner: "http://localhost:8080/api/users/2",
+      ownerId: 16,
+      project: "http://localhost:8080/api/projects/110",
+      projectId: 110,
+      publishDate: "2021-02-05T00:00:00-03:00",
+      seen: true,
+      seenAnswer: false}]}
 
     }
 
