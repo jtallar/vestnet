@@ -16,7 +16,7 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
 
     this.setMaxPage = function (linkHeaders) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
-      var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+      var maxPage = parseInt(lastLink[0].split('p=')[1]);
       if (isNaN(maxPage)) maxPage = page;
       $scope.lastPage = maxPage;
     };

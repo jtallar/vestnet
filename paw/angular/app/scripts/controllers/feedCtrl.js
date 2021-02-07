@@ -150,7 +150,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         var lastLink = string.split(',').filter(function (el) {
           return el.includes('last');
         });
-        $scope.lastPage = parseInt(lastLink[0].split('p=')[1][0]);
+        $scope.lastPage = parseInt(lastLink[0].split('p=')[1]);
       };
 
       this.showProjects = function (projects) {

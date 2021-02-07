@@ -175,7 +175,8 @@
   font-family: Impact, sans-serif;
   font-variant: all-petite-caps;
   font-weight: bold;
-  border: transparent
+  border: transparent;
+  box-shadow: none !important;
 }
 
 @supports (-moz-appearance:none) {
