@@ -16,6 +16,7 @@ define(['paw2020a', 'services/userService', 'services/PathService'], function(pa
           $scope.loading = false;
           PathService.get().login().go({code: 10});
         }, function (errorResponse) {
+          $scope.loading = false;
           if (errorResponse.status === 400) {
             PathService.get().login().go({code: 6});
             return;

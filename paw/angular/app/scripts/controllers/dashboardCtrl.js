@@ -42,7 +42,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       else PathService.get().setParamsInUrl({p:$scope.page});
     };
 
-    $scope.loadingPage = false;
+    $scope.loadingPage = false; // Not used in this page
     $scope.getToPage = function (page) {
       $scope.page = page;
       _this.updatePathParams();
@@ -82,6 +82,9 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
             console.error(err);
           });
         }
+      }, function (errorResponse) {
+        $scope.loadingProjects = false;
+        console.error(errorResponse);
       });
     };
 

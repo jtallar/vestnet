@@ -85,6 +85,7 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
           _this.setMaxPage(response.headers().link);
           _this.processMessages(response.data);
         }, function (errorResponse) {
+          $scope.loadingPage = false;
           console.error(errorResponse);
         });
       };

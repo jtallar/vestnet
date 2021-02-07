@@ -107,6 +107,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/userService', 's
           _this.processResponse(response.data);
           $scope.loadingSecondTab = false;
         }, function (errorResponse) {
+          $scope.loadingSecondTab = false;
           console.error(errorResponse);
         });
       }

@@ -42,6 +42,7 @@
           $scope.loadingFavs = false;
           $scope.viewMoreFavs();
         }, function (errorResponse) {
+          $scope.loadingFavs = false;
           // 404 should never happen
           console.error(errorResponse);
         })
@@ -79,6 +80,7 @@
               $scope.user.imageExists = true;
               $scope.user.profileImageAvailable = true;
             }, function (imageErrorResponse) {
+              $scope.uploadingImage = false;
               // 404 should never happen
               console.error(imageErrorResponse);
             });
