@@ -70,7 +70,7 @@ require.config({
                 'angular',
                 'lodash'
             ]
-        },
+        }
     },
     packages: [
 

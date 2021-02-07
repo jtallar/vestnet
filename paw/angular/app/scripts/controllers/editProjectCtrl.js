@@ -30,8 +30,6 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         $scope.initCategory = $scope.categories[0];
       });
 
-
-
       projectService.getById(id.toString()).then(function (project) {
         $scope.project = project.data;
         if (!$scope.project.getByOwner) {

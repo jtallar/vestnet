@@ -15,13 +15,11 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       return $scope.clicks;
     };
     document.getElementById('all').addEventListener('click', function(event) {
-      $scope.hola = 3;
       $scope.clicks++;
     }, false);
     $scope.pressContact = 0;
 
     $scope.$on("$destroy", function(){
-      $scope.hola =3;
       if ($scope.addStatError || $scope.project == null || $scope.project.id == null) return;
       projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
         .then(function (response) {
