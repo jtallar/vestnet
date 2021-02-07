@@ -41,6 +41,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
             $scope.user.state = response.data.state;
             $scope.loadingInfo = false;
           }, function (errorResponse) {
+            $scope.loadingInfo = false;
             // 404 should never happen
             console.error(errorResponse);
           });
@@ -49,6 +50,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
           $scope.monthSelected = $scope.monthsArray.filter(function (value) { return value.id - 1 === date.getMonth(); })[0];
           $scope.daySelected = date.getDate();
         }, function (errorReponse) {
+          $scope.loadingInfo = false;
           // Should never throw 404
           console.error(errorReponse);
         });
@@ -70,6 +72,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
             $scope.loadingUpdate = false;
             PathService.get().profile().replace();
           }, function (errorResponse) {
+            $scope.loadingUpdate = false;
             if (errorResponse.status === 400) {
               $scope.serverFormErrors = true;
               return;

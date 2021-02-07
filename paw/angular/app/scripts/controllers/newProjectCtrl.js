@@ -140,6 +140,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       };
 
       this.finishCreation = function(projectId, params) {
+        $scope.loading = false;
         PathService.get().singleProject(projectId).replace(params);
       };
 
@@ -170,24 +171,22 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'directi
       };
 
       $scope.createProject = function (project) {
-        $scope.loading = true;
         if (_this.selectedCategories.length === 0) {
           $scope.categoryCountError = true;
-          $scope.loading = false;
           return;
         }
+        $scope.loading = true;
         project.categories = _this.selectedCategories;
         $scope.serverFormErrors = false;
         projectService.create(project).then(function (response) {
           var location = response.headers().location;
           _this.sendPortrait(location.substring(location.lastIndexOf('/') + 1));
         }, function (errorResponse) {
+          $scope.loading = false;
           if (errorResponse.status === 400) {
             $scope.serverFormErrors = true;
-            $scope.loading = false;
             return;
           }
-          $scope.loading = false;
           console.error(errorResponse);
         });
       };

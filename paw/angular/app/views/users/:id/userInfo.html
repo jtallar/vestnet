@@ -127,7 +127,8 @@
 
         <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
           <div class="text-center" ng-if="loadingSecondTab">
-            <div class="spinner-grow text-dark loading-grow" role="status"></div>
+            <div ng-if="!safari()" class="spinner-grow text-dark loading-grow" role="status"></div>
+            <div ng-if="safari()" class="spinner-border text-dark loading-border" role="status"></div>
           </div>
           <div ng-if="!loadingSecondTab && secondTab.length !== 0">
             <div ng-repeat="project in secondTab">

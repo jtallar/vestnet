@@ -58,6 +58,10 @@ define(['routes',
 
           $rootScope.showHeader = {value: !(notAuthUrl || logoutUrl)};
 
+          if ((logged && $rootScope.role.value === 2) || (!logged && $rootScope.role.value !== 2)) {
+            $rootScope.$emit('credentialsChanged');
+          }
+
           if (logged && notAuthUrl) {
             // if logged in and trying to access no auth routes, redirect to projects
             $rootScope.showHeader = {value: true};

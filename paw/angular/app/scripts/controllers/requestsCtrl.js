@@ -10,14 +10,6 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
       if (isNaN(param) || param <= 0) param = 1;
       $scope.page = param; $scope.lastPage = param;
 
-      $scope.getDate = function(date){
-        if(date !== undefined)
-          return date.toString().match(/.+?(?=T)/);
-
-        var today = new Date();
-        return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
-      };
-
       // Cannot use scope, too many changes to digest
       this.animate = function (id, start, end, duration) {
         if (start === end) return;
@@ -74,8 +66,10 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
         }
       };
 
+      $scope.loading = true;
       this.fetchDeals = function () {
         messageService.getInvestorDeals($scope.page).then(function (response) {
+          $scope.loading = false;
           $scope.loadingPage = false;
           if (response.data.length === 0) {
             $scope.noDealsFound = true;
@@ -85,6 +79,8 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
           _this.setMaxPage(response.headers().link);
           _this.processMessages(response.data);
         }, function (errorResponse) {
+          $scope.loading = false;
+          $scope.loadingPage = false;
           console.error(errorResponse);
         });
       };

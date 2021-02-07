@@ -128,6 +128,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           _this.showProjects(projects.data);
           $window.scrollTo(0,0);
         }, function (errorResponse) {
+          $scope.loadingPage = false;
           console.error(errorResponse);
         });
       };
@@ -236,6 +237,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           _this.showProjects(projects.data);
           $window.scrollTo(0,0);
         }, function (errorResponse) {
+          $scope.loading = false;
           console.error(errorResponse);
         });
       };
