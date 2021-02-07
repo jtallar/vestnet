@@ -220,7 +220,7 @@ define(['routes',
 
           // TODO: Uncomment in production, comment the one below
 					RestangularProvider.setBaseUrl('api/');
-          // RestangularProvider.setBaseUrl('http://localhost:8080/api/');
+           //RestangularProvider.setBaseUrl('http://localhost:8080/api/');
 
           RestangularProvider.setFullResponse(true);
 
