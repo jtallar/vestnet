@@ -94,7 +94,7 @@
         </div>
 
       <div class="px-5 center-collapse collapse" id="chatcollapse{{project.id}}">
-        <div ng-if="messages[$index].length > 0">
+        <div ng-if="!project.loadingMessages && messages[$index].length > 0">
           <div class="card msg-collapse" ng-repeat="message in messages[$index]">
             <div class="card-body dash-body" style="padding:10px 20px !important">
               <div class="row">
@@ -137,7 +137,7 @@
             </button>
           </div>
         </div>
-        <div ng-if="messages[$index].length == 0">
+        <div ng-if="!project.loadingMessages && messages[$index].length == 0">
           <div class="card msg-collapse">
             <div class="card-body dash-body">
               <div class="row">
@@ -151,11 +151,18 @@
             </div>
           </div>
         </div>
+        <div ng-if="project.loadingMessages">
+          <div class="card msg-collapse">
+            <div class="text-center" style="padding-top: 10px">
+              <div class="spinner-border text-dark" role="status"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
 
       <div class="px-5 center-collapse collapse" id="fundcollapse{{project.id}}">
-        <div ng-if="fundedMsgs[$index].length > 0">
+        <div ng-if="!project.loadingOffers && fundedMsgs[$index].length > 0">
           <div class="card msg-collapse" ng-repeat="message in fundedMsgs[$index]">
             <div class="card-body dash-body">
               <div class="row">
@@ -189,7 +196,7 @@
             <h5 class="view-more pull-right"> {{'viewmore' | translate}}</h5>
           </button>
         </div>
-        <div ng-if="fundedMsgs[$index].length == 0">
+        <div ng-if="!project.loadingOffers && fundedMsgs[$index].length == 0">
           <div class="card msg-collapse">
             <div class="card-body dash-body">
               <div class="row">
@@ -203,32 +210,44 @@
             </div>
           </div>
         </div>
+        <div ng-if="project.loadingOffers">
+          <div class="card msg-collapse">
+            <div class="text-center" style="padding-top: 10px">
+              <div class="spinner-border text-dark" role="status"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="px-5 center-collapse collapse" id="statscollapse{{project.id}}">
         <div class="card msg-collapse-stats">
           <div class="card-body dash-body">
-            <div class="row">
-              <div class="col-1"> <img class="nav-icon" src="images/stats-icon-b.png" alt=""> </div>
-              <div class="col-2"> <span class="stat-number">{{project.seen}}</span> <span class="stat-title"> {{'seen' | translate}}</span> </div>
-              <div class="col-2"> <span class="stat-number1">{{project.investorsSeen}}</span> <span class="stat-title">{{'investorsSeen' | translate}}</span> </div>
-              <div class="col-2"> <span class="stat-number2">{{project.contactClicks}}</span> <span class="stat-title"> {{'contactClicks' | translate}}</span> </div>
-              <div class="col-3"> <span class="stat-number3">{{millisToMinSec(project.secondsAvg)}}</span> <span class="stat-title"> {{'minutesAvg' | translate}}</span> </div>
-              <div class="col-2"> <span class="stat-number4">{{project.clicksAvg}}</span> <span class="stat-title"> {{'clicksAvg' | translate}}</span> </div>
+            <div ng-if="project.loadingStats" class="text-center">
+              <div class="spinner-border text-dark" role="status"></div>
             </div>
-            <div class="row" style="margin-top: 10px">
-              <div class="col-1"></div>
-              <div class="col-4">
-                <div class="progress" style="height: 12px; width:260px; margin-bottom: 0">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated stat-bar" role="progressbar" style="width: {{(project.investorsSeen/project.seen)*100}}%" aria-valuenow="{{(project.investorsSeen/project.seen)*100}}" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="stat-title2" style="margin-left: 30%"><b style="color: #f3a047">{{project.investorsSeen}}</b> {{'outof' | translate}} <b style="color: #5bc0de">{{project.seen}}</b></span>
+            <div ng-if="!project.loadingStats">
+              <div class="row">
+                <div class="col-1"> <img class="nav-icon" src="images/stats-icon-b.png" alt=""> </div>
+                <div class="col-2"> <span class="stat-number">{{project.seen}}</span> <span class="stat-title"> {{'seen' | translate}}</span> </div>
+                <div class="col-2"> <span class="stat-number1">{{project.investorsSeen}}</span> <span class="stat-title">{{'investorsSeen' | translate}}</span> </div>
+                <div class="col-2"> <span class="stat-number2">{{project.contactClicks}}</span> <span class="stat-title"> {{'contactClicks' | translate}}</span> </div>
+                <div class="col-3"> <span class="stat-number3">{{millisToMinSec(project.secondsAvg)}}</span> <span class="stat-title"> {{'minutesAvg' | translate}}</span> </div>
+                <div class="col-2"> <span class="stat-number4">{{project.clicksAvg}}</span> <span class="stat-title"> {{'clicksAvg' | translate}}</span> </div>
               </div>
-              <div class="col-2"></div>
-              <div class="col-5">
-                <span class="stat-date" style="margin-left: 10px">{{toLocaleDateTimeString(project.lastSeen)}}</span> <span class="stat-title"> {{'lastSeen' | translate}}</span>
-                <span class="stat-number5"> &raquo; &nbsp;</span>
-                <span class="stat-number5">{{daysAgo(project.lastSeen)}}</span> <span class="stat-title"> {{'daysAgo' | translate}}</span>
+              <div class="row" style="margin-top: 10px">
+                <div class="col-1"></div>
+                <div class="col-4">
+                  <div class="progress" style="height: 12px; width:260px; margin-bottom: 0">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated stat-bar" role="progressbar" style="width: {{(project.investorsSeen/project.seen)*100}}%" aria-valuenow="{{(project.investorsSeen/project.seen)*100}}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span class="stat-title2" style="margin-left: 30%"><b style="color: #f3a047">{{project.investorsSeen}}</b> {{'outof' | translate}} <b style="color: #5bc0de">{{project.seen}}</b></span>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-5">
+                  <span class="stat-date" style="margin-left: 10px">{{toLocaleDateTimeString(project.lastSeen)}}</span> <span class="stat-title"> {{'lastSeen' | translate}}</span>
+                  <span class="stat-number5"> &raquo; &nbsp;</span>
+                  <span class="stat-number5">{{daysAgo(project.lastSeen)}}</span> <span class="stat-title"> {{'daysAgo' | translate}}</span>
+                </div>
               </div>
             </div>
           </div>
