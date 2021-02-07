@@ -1,5 +1,7 @@
 # VestNet
 
+Run `mvn clean package` at `paw/` to create the output `webapp.war`. It will be located at `paw/webapp/target`.
+
 ### Users
 There are two types of users and both of them can be generated via Sign Up.
 ##### Investor User
