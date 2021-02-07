@@ -18,7 +18,7 @@
           </div>
           <div style="margin-top: 5px; cursor:pointer;">
             <label for="customFileProfilePic">
-              <img src="images/edit-icon-b.png" style="height: 22px; width: auto"/>
+              <img src="images/edit-icon-b.png" style="height: 22px; width: auto; cursor:pointer"/>
             </label>
             <input hidden type="file" class="custom-file-input" custom-on-change="fileboxChange" id="customFileProfilePic" accept="image/*"/>
             <div ng-if="uploadingImage" class="spinner-border text-primary" role="status" style="margin-left: 15px">
@@ -160,7 +160,7 @@
                         </a>
                         <div class="col-4">
                           <h4 style="text-align: center; font-size: 12px; margin-bottom: 2px !important;">
-                            {{'of' | translate : {of : formatPrice(fav.fundingCurrent)} }} <b>{{'moneyarg'| translate : {m : formatPrice(fav.fundingTarget)} }}</b></h4>
+                            {{formatPrice(fav.fundingCurrent)}} {{'of' | translate }} <b>{{formatPrice(fav.fundingTarget)}}</b></h4>
                           <div class="progress" style="height: 10px; margin: 0 0 0 0;">
                             <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{fav.percentage}}%" aria-valuenow="{{fav.percentage}}" aria-valuemin="0" aria-valuemax="100">{{fav.percentage}}%</div>
                           </div>
