@@ -52,6 +52,8 @@ require.config({
     logoutCtrl: 'controllers/logoutCtrl',
     userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
+    AuthenticationService: 'services/AuthenticationService',
+    PathService: 'services/PathService',
 
 
   },
