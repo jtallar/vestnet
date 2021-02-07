@@ -74,8 +74,10 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
         }
       };
 
+      $scope.loading = true;
       this.fetchDeals = function () {
         messageService.getInvestorDeals($scope.page).then(function (response) {
+          $scope.loading = false;
           $scope.loadingPage = false;
           if (response.data.length === 0) {
             $scope.noDealsFound = true;
@@ -85,6 +87,7 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
           _this.setMaxPage(response.headers().link);
           _this.processMessages(response.data);
         }, function (errorResponse) {
+          $scope.loading = false;
           $scope.loadingPage = false;
           console.error(errorResponse);
         });
