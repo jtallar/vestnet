@@ -168,10 +168,10 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.project.stages[s].comment = comment;
       $scope.project.stages[s].number = s + 1;
       $scope.project.stages[s].completed = true;
-      $scope.project.stages[s].completedDate = $scope.getDate();
+      $scope.project.stages[s].completedDate = new Date();
       /** llamada a set stage **/
       //  setStage($scope.project.id, $scope.project.stages[s])
-      projectService.addStage($scope.project.id, s+1, name, comment, true, $scope.getDate())
+      projectService.addStage($scope.project.id, s+1, name, comment, true, new Date())
         .then(function () {}, function (errorResponse) {
           if (errorResponse.status === 404) {
             $scope.addStageError = true;
