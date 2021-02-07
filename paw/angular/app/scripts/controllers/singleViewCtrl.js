@@ -58,14 +58,6 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       PathService.get().editProject($scope.id).go({back:true});
     };
 
-    $scope.getDate = function(date){
-      if(date !== undefined)
-        return date.toString().match(/.+?(?=T)/);
-
-      var today = new Date();
-      return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
-    };
-
     $scope.getMaxStage = function (stages){
       var maxStage = 0;
       stages.forEach(function (stage) {
