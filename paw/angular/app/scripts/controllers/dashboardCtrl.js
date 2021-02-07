@@ -42,7 +42,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
       else PathService.get().setParamsInUrl({p:$scope.page});
     };
 
-    $scope.loadingPage = false;
+    $scope.loadingPage = false; // Not used in this page
     $scope.getToPage = function (page) {
       $scope.page = page;
       _this.updatePathParams();
@@ -64,6 +64,8 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           map[$scope.projects[i].id] = i;
           $scope.projects[i].openOffers = false; $scope.projects[i].openMessages = false;
           $scope.projects[i].openStats = false;
+          $scope.projects[i].loadingOffers = false; $scope.projects[i].loadingMessages = false;
+          $scope.projects[i].loadingStats = false;
           $scope.projects[i].editUrl = PathService.get().editProject($scope.projects[i].id).path;
           $scope.projects[i].portraitExists = false;
           urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
@@ -82,6 +84,9 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
             console.error(err);
           });
         }
+      }, function (errorResponse) {
+        $scope.loadingProjects = false;
+        console.error(errorResponse);
       });
     };
 
@@ -90,6 +95,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.fetchStats = function(id, index){
       $scope.projects[index].openStats = !$scope.projects[index].openStats;
       if($scope.projects[index].openStats === true) {
+        $scope.projects[index].loadingStats = true;
         projectService.getStats(id.toString()).then(function (response) {
           $scope.projects[index].clicksAvg = response.data.clicksAvg;
           $scope.projects[index].secondsAvg = response.data.secondsAvg;
@@ -97,6 +103,10 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           $scope.projects[index].contactClicks = response.data.contactClicks;
           $scope.projects[index].investorsSeen = response.data.investorsSeen;
           $scope.projects[index].lastSeen = response.data.lastSeen;
+          $scope.projects[index].loadingStats = false;
+        }, function (errorResponse) {
+          $scope.projects[index].loadingStats = false;
+          console.error(errorResponse);
         });
       }
     };
@@ -117,12 +127,15 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.fetchOffers = function(id, index){
       $scope.projects[index].openOffers = !$scope.projects[index].openOffers;
       if($scope.projects[index].openOffers === true) {
+        $scope.projects[index].loadingOffers = true;
         $scope.fundedMsgs[index] = [];
         messageService.getOffers(id.toString(), true, 1).then(function (response) {
           _this.updateNextPageOffers(response.headers().link, index);
           $scope.fundedMsgs[index] = response.data;
+          $scope.projects[index].loadingOffers = false;
         }, function (error) {
-          console.error(error)
+          $scope.projects[index].loadingOffers = false;
+          console.error(error);
         })
       }
     };
@@ -153,6 +166,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
     $scope.fetchMessage = function(id, index){
       $scope.projects[index].openMessages = !$scope.projects[index].openMessages;
       if ($scope.projects[index].openMessages === true) {
+        $scope.projects[index].loadingMessages = true;
         $scope.messages[index] = [];
         messageService.projectNotificationCount(id.toString()).then(function (response) {
           if ($scope.projects[index].msgCount !== response.data.unread) {
@@ -169,7 +183,9 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
             response.data[i].notification = (!response.data[i].seen && response.data[i].direction) || (!response.data[i].seenAnswer && !response.data[i].direction && response.data[i].accepted != null);
           }
           $scope.messages[index] = response.data;
+          $scope.projects[index].loadingMessages = false;
         }, function (error) {
+          $scope.projects[index].loadingMessages = false;
           console.error(error)
         });
       }

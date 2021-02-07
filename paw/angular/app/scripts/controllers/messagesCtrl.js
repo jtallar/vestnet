@@ -42,9 +42,9 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
           console.error(errorResponse);
         });
       }
-      this.loading = false;
+      $scope.loading = false;
     };
-    this.loading = true;
+    $scope.loading = true;
 
     this.fetchChatList = function () {
       messageService.getInvestorChatList($scope.page).then(function (response) {
@@ -57,6 +57,8 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
         _this.setMaxPage(response.headers().link);
         _this.processMessages(response.data);
       }, function (errorResponse) {
+        $scope.loading = false;
+        $scope.loadingPage = false;
         console.error(errorResponse);
       });
     };
