@@ -17,13 +17,13 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     document.getElementById('all').addEventListener('click', function(event) {
       $scope.clicks++;
     }, false);
-    $scope.pressContact = 0;
+    var pressContact = 0;
 
     $scope.$on("$destroy", function(){
       if ($scope.addStatError || $scope.project == null || $scope.project.id == null) return;
-      projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
+      projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), pressContact, new Date())
         .then(function (response) {
-          // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+          // console.log($scope.timeHere(), $scope.clicksHere(), pressContact);
         }, function (errorResponse) {
         if (errorResponse.status === 404) {
           $scope.addStatError = true;
@@ -58,6 +58,11 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       PathService.get().editProject($scope.id).go({back:true});
     };
 
+    $scope.goToChat = function () {
+      pressContact = 1;
+      PathService.get().chat($scope.project.id).go();
+    };
+
     $scope.getMaxStage = function (stages){
       var maxStage = 0;
       stages.forEach(function (stage) {
@@ -74,7 +79,6 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.project = project.data;
       $scope.project.slideshow = [];
       $scope.project.categorieObjects = [];
-      $scope.project.chatUrl = PathService.get().chat(project.data.id).path;
       $scope.project.stages = [
         {'number': 1, 'name': 'Stage 1', 'comment': '',
           'completed': false, 'completedDate': '02/05/2021'},

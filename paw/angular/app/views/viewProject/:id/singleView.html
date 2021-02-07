@@ -105,7 +105,7 @@
 
         <!-- Contact button -->
         <div ng-if="!isEntrepreneur" class="d-flex justify-content-center">
-            <a href="#{{project.chatUrl}}" ng-click="pressContact = 1" class="btn btn-dark contact-btn" >
+            <a ng-click="goToChat()" class="btn btn-dark contact-btn" >
               <img src="images/chat-icon.png" class="contact-img">
               {{'contact' | translate}}
             </a>

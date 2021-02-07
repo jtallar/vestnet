@@ -27,7 +27,10 @@ require.config({
         'bootstrap-sass-official': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap',
         lodash: '../../bower_components/lodash/lodash',
         restangular: '../../bower_components/restangular/dist/restangular',
-        bower: '../../bower_components/bower/atom-full-compiled'
+        bower: '../../bower_components/bower/atom-full-compiled',
+        'angular-mocks': '../../bower_components/angular-mocks/angular-mocks',
+        'angular-resource': '../../bower_components/angular-resource/angular-resource',
+        'jquery-mousewheel': '../../bower_components/jquery-mousewheel/jquery.mousewheel'
     },
     shim: {
         angular: {
