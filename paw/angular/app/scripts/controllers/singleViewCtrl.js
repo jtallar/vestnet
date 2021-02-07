@@ -58,14 +58,6 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       PathService.get().editProject($scope.id).go({back:true});
     };
 
-    $scope.getDate = function(date){
-      if(date !== undefined)
-        return date.toString().match(/.+?(?=T)/);
-
-      var today = new Date();
-      return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
-    };
-
     $scope.getMaxStage = function (stages){
       var maxStage = 0;
       stages.forEach(function (stage) {
@@ -109,7 +101,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
             $scope.project.stages[i].comment = data.comment;
             $scope.project.stages[i].name = data.name;
             $scope.project.stages[i].completed = data.completed;
-            $scope.project.stages[i].completedDate = $scope.getDate(data.completedDate)[0];
+            $scope.project.stages[i].completedDate = data.completedDate;
             i++;
           }
         });
@@ -176,10 +168,10 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.project.stages[s].comment = comment;
       $scope.project.stages[s].number = s + 1;
       $scope.project.stages[s].completed = true;
-      $scope.project.stages[s].completedDate = $scope.getDate();
+      $scope.project.stages[s].completedDate = new Date();
       /** llamada a set stage **/
       //  setStage($scope.project.id, $scope.project.stages[s])
-      projectService.addStage($scope.project.id, s+1, name, comment, true, $scope.getDate())
+      projectService.addStage($scope.project.id, s+1, name, comment, true, new Date())
         .then(function () {}, function (errorResponse) {
           if (errorResponse.status === 404) {
             $scope.addStageError = true;
