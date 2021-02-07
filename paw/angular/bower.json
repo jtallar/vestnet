@@ -5,7 +5,7 @@
     "angular": "~1.6.1",
     "angular-mocks": "~1.6.1",
     "angular-route": "~1.6.1",
-    "angular-translate": "~2.13.1",
+    "angular-translate": "~2.14.0",
     "bootstrap-sass-official": "~3.3.7",
     "es5-shim": "~4.5.9",
     "jquery-mousewheel": "~3.1.13",
@@ -16,6 +16,6 @@
   },
   "devDependencies": {
     "bootstrap": "~3.3.1",
-    "angular-resource": "^1.8.2"
+    "angular-resource": "~1.6.1"
   }
 }
