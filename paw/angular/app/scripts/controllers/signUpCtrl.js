@@ -12,6 +12,8 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
         $scope.countrySelected = emptyElement; $scope.stateSelected = emptyElement;
         $scope.citySelected = emptyElement;
 
+        $scope.loadingCreate = false;
+
         $scope.countryChange = function () {
           locationService.getStateList($scope.countrySelected.id).then(function (states) {
             if (!states.data || states.data.length === 0) {
@@ -82,6 +84,7 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
         };
 
         $scope.createUser = function (user) {
+          $scope.loadingCreate = true;
           $scope.serverFormErrors = false; $scope.userExistsError = false; $scope.serverRetryError = false;
           user.birthDate = new Date($scope.yearSelected, $scope.monthSelected.id - 1, $scope.daySelected);
           user.countryId = $scope.countrySelected.id;
@@ -89,8 +92,10 @@ define(['paw2020a', 'services/userService', 'services/locationService', 'service
           user.cityId = $scope.citySelected.id;
           user.role = $scope.roleSelected;
           userService.createUser(user).then(function (response) {
+            $scope.loadingCreate = false;
             PathService.get().login().go({code: 7});
           }, function (errorResponse) {
+            $scope.loadingCreate = false;
             if (errorResponse.status === 400) {
               $scope.serverFormErrors = true;
               return;
