@@ -159,7 +159,7 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
           return;
         }
         var nextLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
-        if (isNaN(parseInt(nextLink[0].split('p=')[1][0]))) {
+        if (isNaN(parseInt(nextLink[0].split('p=')[1]))) {
           $scope.nextPageUrl = undefined;
           return;
         }

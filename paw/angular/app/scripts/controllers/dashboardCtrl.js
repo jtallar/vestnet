@@ -32,7 +32,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
 
     this.setMaxPage = function (linkHeaders) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
-      var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+      var maxPage = parseInt(lastLink[0].split('p=')[1]);
       if (isNaN(maxPage)) maxPage = page;
       $scope.lastPage = maxPage;
     };
@@ -117,7 +117,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         return;
       }
       var nextLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
-      if (isNaN(parseInt(nextLink[0].split('p=')[1][0]))) {
+      if (isNaN(parseInt(nextLink[0].split('p=')[1]))) {
         $scope.projects[index].nextPageOffer = undefined;
         return;
       }
@@ -156,7 +156,7 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
         return;
       }
       var nextLink = linkHeaders.split(',').filter(function (el) { return el.includes('next'); });
-      if (isNaN(parseInt(nextLink[0].split('p=')[1][0]))) {
+      if (isNaN(parseInt(nextLink[0].split('p=')[1]))) {
         $scope.projects[index].nextPageMessages = undefined;
         return;
       }
