@@ -26,20 +26,18 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
         history.back();
       };
 
-      // $scope.toLocaleDateTimeString = function(date) {
-      //   var aux;
-      //   if(date !== undefined)
-      //     aux = new Date(date);
-      //   else aux = new Date();
-      //   return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
-      // };
+      $scope.hideornot = function (perc){
+        return perc > 10;
+      };
 
       this.setUser = function (user) {
         $scope.user = user;
         $scope.user.userUrl = PathService.get().user(user.id).path;
+        $scope.user.profileImageAvailable = false;
         if ($scope.user.imageExists) {
           urlService.get($scope.user.image).then(function (image) {
             $scope.user.image = image.data.image;
+            $scope.user.profileImageAvailable = true;
           }, function (err) {
             // console.log("No image")
           });

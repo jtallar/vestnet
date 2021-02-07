@@ -78,13 +78,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public Optional<Project> setClosed(long ownerId, long id) throws IllegalProjectAccessException {
+    public Optional<Project> toggleClosed(long ownerId, long id) throws IllegalProjectAccessException {
         final Optional<Project> optionalProject = projectDao.findById(id);
 
         /** Not the owner of the found project */
         if (optionalProject.isPresent() && optionalProject.get().getOwnerId() != ownerId) throw new IllegalProjectAccessException();
 
-        optionalProject.ifPresent(p -> p.setClosed(true));
+        optionalProject.ifPresent(p -> p.setClosed(!p.isClosed()));
         return optionalProject;
     }
 

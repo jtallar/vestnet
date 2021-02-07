@@ -20,7 +20,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     $scope.pressContact = 0;
 
     $scope.$on("$destroy", function(){
-      if ($scope.addStatError || $scope.project == null) return;
+      if ($scope.addStatError || $scope.project == null || $scope.project.id == null) return;
       projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
         .then(function (response) {
           // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
@@ -33,23 +33,6 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       });
     });
     /** ********* **/
-
-    // $scope.formatPrice = function(number) {
-    //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
-    //   return formatter.format(number);
-    // }
-    //
-    // // $scope.formatDate = function (str){
-    // //   return str === undefined ? null : str.substring(0,10);
-    // // }
-    //
-    // $scope.toLocaleDateString = function(date) {
-    //   var aux;
-    //   if(date !== undefined)
-    //     aux = new Date(date);
-    //   else aux = new Date();
-    //   return (aux.toLocaleDateString(navigator.language));
-    // };
 
     var param = parseInt($routeParams.id);
     if (isNaN(param) || param <= 0) {
@@ -127,8 +110,6 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
             $scope.project.stages[i].name = data.name;
             $scope.project.stages[i].completed = data.completed;
             $scope.project.stages[i].completedDate = $scope.getDate(data.completedDate)[0];
-            // console.log(i, $scope.project.stages[i]);
-            // console.log($scope.getDate(data.completedDate));
             i++;
           }
         });
@@ -232,6 +213,11 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
 
     $scope.toInt = function (num){
       return parseInt(num);
+    };
+
+    $scope.hideornot = function (tar, curr){
+      // console.log('perc -> ',$scope.toInt((tar/curr)*100))
+      return $scope.toInt((tar/curr)*100) > 10;
     };
 
   }]);

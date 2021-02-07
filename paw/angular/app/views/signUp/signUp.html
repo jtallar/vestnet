@@ -26,19 +26,19 @@
                 <div class="col-md" ng-class="{'has-error': signUpForm.firstName.$touched && signUpForm.firstName.$invalid}">
                   <div class="form-group">
                     <label>{{'firstNameRequired' | translate}} </label>
-                    <p class="form-requirement">{{'firstNameRequirement' | translate}}</p>
+                    <p class="form-requirement">{{'upToCharactersRequirement' | translate : { maxLength: firstNameMaxLength } }}</p>
                     <input style="color: black !important;" name="firstName" ng-model="controller.user.firstName" type="text" class="form-control"
                            placeholder="{{'enterFirstName' | translate}}" id="sign-up-first-name"
-                           required ng-maxlength="25"/>
+                           required ng-maxlength="{{firstNameMaxLength}}"/>
                   </div>
                 </div>
                 <div class="col-md" ng-class="{'has-error': signUpForm.lastName.$touched && signUpForm.lastName.$invalid}">
                   <div class="form-group">
                     <label>{{'lastNameRequired' | translate}} </label>
-                    <p class="form-requirement">{{'lastNameRequirement' | translate}}</p>
+                    <p class="form-requirement">{{'upToCharactersRequirement' | translate : { maxLength: lastNameMaxLength } }}</p>
                     <input style="color: black !important;" name="lastName" ng-model="controller.user.lastName" type="text" class="form-control"
                            placeholder="{{'enterLastName' | translate}}" id="sign-up-last-name"
-                           required ng-maxlength="25"/>
+                           required ng-maxlength="{{lastNameMaxLength}}"/>
                   </div>
                 </div>
               </div>
@@ -50,18 +50,18 @@
                 <div class="col-md" ng-class="{'has-error': signUpForm.realId.$touched && signUpForm.realId.$invalid}">
                   <div class="form-group">
                     <label> {{'realIdRequired' | translate}} </label>
-                    <p class="form-requirement">{{'realIdRequirement' | translate}}</p>
+                    <p class="form-requirement">{{'upToCharactersRequirement' | translate : { maxLength: realIdMaxLength } }}</p>
                     <input style="color: black !important;" name="realId" ng-model="controller.user.realId" type="text" class="form-control"
                            placeholder="{{'enterRealId' | translate}}" id="sign-up-real-id"
-                           required ng-maxlength="15"/>
+                           required ng-maxlength="{{realIdMaxLength}}"/>
                   </div>
                 </div>
                 <div class="col-md" ng-class="{'has-error': signUpForm.phone.$touched && signUpForm.phone.$invalid}">
                   <div class="form-group">
                     <label> {{'phone' | translate}} </label>
-                    <p class="form-requirement">{{'phoneRequirement' | translate}}</p>
+                    <p class="form-requirement">{{'upToCharactersRequirement' | translate : { maxLength: phoneMaxLength } }}</p>
                     <input style="color: black !important;" name="phone" ng-model="controller.user.phone" type="number" class="form-control"
-                           placeholder="{{'enterPhone' | translate}}" ng-maxlength="25" ng-pattern="/^[0-9]*$/"/>
+                           placeholder="{{'enterPhone' | translate}}" ng-maxlength="{{phoneMaxLength}}" ng-pattern="/^[0-9]*$/"/>
                   </div>
                 </div>
               </div>
@@ -76,7 +76,7 @@
                   <div class="form-group">
                     <label>{{'emailRequired' | translate}} </label>
                     <input style="color: black !important;" name="email" ng-model="controller.user.email" type="email" class="form-control"
-                           placeholder="{{'enterEmail' | translate}}" required ng-maxlength="255"/>
+                           placeholder="{{'enterEmail' | translate}}" required ng-maxlength="{{emailMaxLength}}"/>
                   </div>
                 </div>
                 <div class="col-md">
@@ -97,10 +97,10 @@
                 <div class="col-md" ng-class="{'has-error': signUpForm.password.$touched && signUpForm.password.$invalid}">
                   <div class="form-group">
                     <label> {{'passwordRequired' | translate}} </label>
-                    <p class="form-requirement">{{'passwordRequirement' | translate}}</p>
+                    <p class="form-requirement">{{'upToCharactersRequirement' | translate : { maxLength: passwordMaxLength } }}</p>
                     <input style="color: black !important;" name="password" ng-model="controller.user.password" type="password" class="form-control"
                            placeholder="{{'enterPassword' | translate}}" id="sign-up-password"
-                           required ng-maxlength="50"/>
+                           required ng-maxlength="{{passwordMaxLength}}"/>
                   </div>
                 </div>
                 <div class="col-md" ng-class="{'has-error': signUpForm.repeatPassword.$touched && signUpForm.repeatPassword.$invalid}">
@@ -109,7 +109,7 @@
                     <p class="form-requirement"> </p>
                     <input style="color: black !important;" name="repeatPassword" ng-model="controller.user.repeatPassword" type="password" class="form-control"
                            placeholder="{{'enterRepeatPassword' | translate}}" id="sign-up-repeat-password"
-                           required ng-maxlength="50" ng-pattern="controller.user.password"/>
+                           required ng-maxlength="{{passwordMaxLength}}" ng-pattern="controller.user.password"/>
                   </div>
                 </div>
               </div>
@@ -125,7 +125,7 @@
                     <label>{{'linkedin' | translate}}</label>
                     <p class="form-requirement">{{'linkedinRequirement' | translate}}</p>
                     <input style="color: black !important;" name="linkedin" ng-model="controller.user.linkedin" type="text" class="form-control"
-                           placeholder="{{'enterLinkedin' | translate}}" ng-maxlength="100"
+                           placeholder="{{'enterLinkedin' | translate}}" ng-maxlength="{{linkedinMaxLength}}"
                            ng-pattern="/^((http(s)?://)?(www\.)?(linkedin\.com/in/)([-a-zA-Z0-9@:%_+.~#?&=/]*))?$/"/>
                   </div>
                 </div>
@@ -159,7 +159,6 @@
             <div class="container">
               <div class="form-group">
                 <div class="container">
-<!--                  <label>{{'location' | translate}}</label>-->
                   <div class="row">
                     <div class="col- location-vertical">
                       <label>{{'country' | translate}}</label>

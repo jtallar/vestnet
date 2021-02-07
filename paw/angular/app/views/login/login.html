@@ -1,4 +1,3 @@
-<!--<head>-->
 <head><title> {{ 'pageTitleLogin' | translate}}</title></head>
 
 <div class="sidenav sidenav-index">
@@ -16,12 +15,13 @@
         <div class="form-group" ng-class="{'has-error': loginForm.username.$touched && loginForm.username.$invalid}">
           <label>{{'email' | translate}}</label>
           <input style="color: black !important;" name="username" class="form-control" placeholder="{{'enterEmail' | translate}}" ng-model="controller.user.username"
-                 type="email" required ng-keyup="$event.keyCode == 13 && !loginForm.$invalid && login(controller.user)"/>
+                 type="email" required ng-keyup="$event.keyCode == 13 && !loginForm.$invalid && login(controller.user)"
+                 ng-maxlength="{{emailMaxLength}}"/>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-class="{'has-error': loginForm.password.$touched && loginForm.password.$invalid}">
           <label>{{'password' | translate}}</label>
           <input style="color: black !important;" id="pass" name="password" class="form-control" type="password" placeholder="{{'enterPassword' | translate}}" ng-model="controller.user.password" required
-                 ng-keyup="!loginForm.$invalid && $event.keyCode == 13 && login(controller.user)" />
+                 ng-keyup="!loginForm.$invalid && $event.keyCode == 13 && login(controller.user)" ng-maxlength="{{passwordMaxLength}}"/>
           <a style="font-size: 16px" ng-href="#/requestPassword">{{'forgotPassword' | translate}}</a>
         </div>
         <div class="form-group">

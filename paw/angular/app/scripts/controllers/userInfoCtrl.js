@@ -16,19 +16,6 @@ define(['paw2020a', 'services/AuthenticationService', 'services/userService', 's
       return;
     }
 
-    // $scope.formatPrice = function(number) {
-    //   var formatter = new Intl.NumberFormat(navigator.language, { style: 'currency', currency: 'USD', minimumFractionDigits: 0, });
-    //   return formatter.format(number);
-    // }
-    //
-    // $scope.toLocaleDateString = function(date) {
-    //   var aux;
-    //   if(date !== undefined)
-    //     aux = new Date(date);
-    //   else aux = new Date();
-    //   return (aux.toLocaleDateString(navigator.language));
-    // };
-
     $scope.loadingSecondTab = true;
     $scope.secondTab = [];
 
@@ -71,9 +58,11 @@ define(['paw2020a', 'services/AuthenticationService', 'services/userService', 's
         console.error(errorResponse);
       });
 
+      $scope.user.profileImageAvailable = false;
       if ($scope.user.imageExists) {
         urlService.get(userApi.data.image).then(function (response) {
           $scope.user.image = response.data.image;
+          $scope.user.profileImageAvailable = true;
         }, function (errorResponse) {
           console.error("No img", errorResponse);
         });

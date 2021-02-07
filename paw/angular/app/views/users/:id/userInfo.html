@@ -1,10 +1,7 @@
 
 <head><title>{{ 'pageTitleUserInfo' | translate : {f : user.firstName, l: user.lastName} }}</title></head>
 
-<!--<vnheader></vnheader>-->
-
-<!--<div class="profile">-->
-<div ng-if="true" class="back sep-nav">
+<div class="back sep-nav">
   <button onclick="history.back()" class="btn btn-dark">{{'back' | translate}}</button>
 </div>
 
@@ -15,20 +12,21 @@
     <div class="col-md-4">
 
       <div class="profile-img">
-        <div ng-if="user.imageExists">
+        <div ng-if="user.profileImageAvailable">
           <img ng-src="data:image/JPEG;base64,{{user.image}}" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
         </div>
-        <div ng-if="!user.imageExists">
+        <div ng-if="!user.profileImageAvailable">
           <img ng-src="images/userNoImage.png" alt="{{'userPicture' | translate}}" aria-placeholder="{{'userPicture' | translate}}"/>
         </div>
       </div>
 
       <div ng-if="user.linkedin" class="text-center my-2">
         <a href="{{user.linkedin}}" class="btn btn-linkedin">
-          <i class="fa fa-linkedin pull-left"></i>
+          <img src="images/linkedin.png" style="height: 20px; width: auto"/>
           <label>{{'linkedinProfile' | translate}}</label>
         </a>
       </div>
+
       <div ng-if="isInvestor" class="counter text-center">
         <img src="images/invest-icon.png" style="width: 50px; height: auto">
         <h2 class="timer count-title count-number" data-to="100" data-speed="1500"><div id="invested">0</div></h2>
@@ -44,10 +42,6 @@
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
                aria-controls="home" aria-selected="true">{{'information' | translate}}</a>
           </li>
-<!--          <li ng-if="isInvestor" class="nav-item">-->
-<!--            <a class="nav-link" id="deals-tab" data-toggle="tab" href="#deals" role="tab"-->
-<!--               aria-controls="deals" aria-selected="false">{{ 'profileDeals' | translate}}</a>-->
-<!--          </li>-->
           <li ng-if="!isInvestor" class="nav-item">
             <a class="nav-link" id="projects-tab" data-toggle="tab" href="#projects" role="tab"
                aria-controls="projects" aria-selected="false">{{ 'profileDashboard' | translate}}</a>
@@ -131,8 +125,6 @@
           </div>
         </div>
 
-        <!--        <sec:authorize access="hasRole('ROLE_INVESTOR')">-->
-        <!--          <c:if test="${session_user_id eq user.id}">-->
         <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
           <div class="text-center" ng-if="loadingSecondTab">
             <div class="spinner-grow text-dark loading-grow" role="status"></div>
@@ -177,10 +169,5 @@
     </div>
   </div>
 </div>
-<!--</div>-->
 
 <div class="dropdown-divider"></div>
-
-<!--  <footer>-->
-<!--    <vnfooter></vnfooter>-->
-<!--  </footer>-->
