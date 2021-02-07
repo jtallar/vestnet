@@ -205,7 +205,8 @@
           <div ng-if="serverFormErrors">
             <h4 class="big-error">{{'serverFormErrors' | translate}}</h4>
           </div>
-          <div ng-if="loadingCreate" class="spinner-grow text-dark" role="status" style="margin-right: 25px"></div>
+          <div ng-if="loadingCreate && !safari()" class="spinner-grow text-dark" role="status" style="margin-right: 25px"></div>
+          <div ng-if="loadingCreate && safari()" class="spinner-border text-dark" role="status" style="margin-right: 25px"></div>
           <input ng-if="!loadingCreate" type="submit" class="signup-btn btn btn-dark pull-right" value="{{'signUp' | translate}}"
                  ng-click="createUser(controller.user)" ng-disabled="signUpForm.$invalid"/>
         </div>

@@ -22,7 +22,7 @@
             <div class="spinner-grow text-dark" role="status"></div>
           </div>
           <div class="text-center" ng-if="loadingInfo && safari()">
-            <div class="spinner-border text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 3rem; height: 3rem;"></div>
+            <div class="spinner-border text-dark" role="status"></div>
           </div>
 
           <ng-form ng-show="!loadingInfo" name="editProfileForm" enctype="multipart/form-data">
@@ -168,7 +168,8 @@
           </div>
 
           <div class="text-right" style="margin: 20px 0 40px 0">
-            <div ng-if="loadingUpdate" class="spinner-grow text-dark" role="status" style="margin-right: 25px"></div>
+            <div ng-if="loadingUpdate && !safari()" class="spinner-grow text-dark" role="status" style="margin-right: 25px"></div>
+            <div ng-if="loadingUpdate && safari()" class="spinner-border text-dark" role="status" style="margin-right: 25px"></div>
             <input ng-if="!loadingUpdate" type="submit" class="btn btn-dark pull-right" value="{{'edit' | translate}}"
                  ng-click="updateUser(user)" ng-disabled="editProfileForm.$invalid"/>
           </div>
