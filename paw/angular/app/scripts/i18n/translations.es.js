@@ -46,7 +46,7 @@ define([], function() {
     verificationInvalid: '¡El link de verificación es inválido!',
     verificationTokenExpired: 'Tu link de verificación expiró. ¡Te mandamos uno nuevo!',
     passwordInvalidToken: '¡El link de recuperación es inválido!',
-    passwordExpiredToken: 'El link de recuperación ha expirado. Por favor, reinicie el proceso.',
+    passwordExpiredToken: 'El link de recuperación ha expirado. Intente nuevamente.',
     verificationMessageSent: '¡Te enviamos un link de verificación a tu mail!',
     verificationMade: '¡Tu cuenta ha sido verificada satisfactoriamente!',
     passwordRecoverySent: '¡Mail de recuperación enviado!',

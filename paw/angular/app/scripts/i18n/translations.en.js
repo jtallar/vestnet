@@ -46,7 +46,7 @@ define([], function() {
     verificationInvalid: 'Verification link is invalid!',
     verificationTokenExpired: 'Your verification link expired. We sent you a new one!',
     passwordInvalidToken: 'Password recovery link is invalid!',
-    passwordExpiredToken: 'Your password recovery link expired. Please try to recover password again!',
+    passwordExpiredToken: 'Your password recovery link expired. Please try again!',
     verificationMessageSent: 'We sent you a verification link to your mail!',
     verificationMade: 'Your account has been successfully verified!',
     passwordRecoverySent: 'Recovery email sent!',
