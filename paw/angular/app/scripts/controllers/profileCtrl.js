@@ -77,6 +77,7 @@
               $scope.uploadingImage = false;
               $scope.user.image = imageService.blobToBase64(ev.target.result);
               $scope.user.imageExists = true;
+              $scope.user.profileImageAvailable = true;
             }, function (imageErrorResponse) {
               // 404 should never happen
               console.error(imageErrorResponse);

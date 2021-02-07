@@ -52,6 +52,7 @@ define([], function() {
     passwordRecoverySent: '¡Mail de recuperación enviado!',
     passwordRecoveryMade: '¡Tu contraseña fue actualizada exitosamente!',
     upToCharactersRequirement: 'Hasta {{maxLength}} caracteres',
+    upToNumbersRequirement: 'Hasta {{maxLength}} números',
     upToCharactersNotBlankRequirement: 'No vacío, hasta {{maxLength}} caracteres',
     betweenCharactersRequirement: 'Entre {{minQuantity}} y {{maxQuantity}} caracteres',
     betweenMoneyRequirement: 'Entre U$D{{minQuantity}} y U$D{{maxQuantity}}',

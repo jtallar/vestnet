@@ -64,8 +64,8 @@
                 <div class="col-md" ng-class="{'has-error': editProfileForm.phone.$touched && editProfileForm.phone.$invalid}">
                   <div class="form-group">
                     <label> {{'phone' | translate}} </label>
-                    <p class="form-requirement">{{'upToCharactersRequirement' | translate : { maxLength: phoneMaxLength } }}</p>
-                    <input style="color: black !important;" name="phone" ng-model="user.phone" type="number" class="form-control"
+                    <p class="form-requirement">{{'upToNumbersRequirement' | translate : { maxLength: phoneMaxLength } }}</p>
+                    <input style="color: black !important;" name="phone" ng-model="user.phone" type="text" class="form-control"
                            placeholder="{{'enterPhone' | translate}}" ng-maxlength="{{phoneMaxLength}}" ng-pattern="/^[0-9]*$/"/>
                   </div>
                 </div>
