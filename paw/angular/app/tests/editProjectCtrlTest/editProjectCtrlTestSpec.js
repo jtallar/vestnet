@@ -19,7 +19,7 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
     var $routeParams;
     var $httpBackend;
 
-    var projectId, expectedProject, expectedProjCategories, expectedCats;
+    var projectId, expectedProject, expectedProjCategories, expectedCats, cat, sel;
 
 
 
@@ -48,8 +48,8 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
 
       utilities.ignoreTestAside(_$httpBackend_);
 
-      var cat = document.createElement('select');
-      var sel = document.createElement('select')
+      cat = document.createElement('select');
+      sel = document.createElement('select')
 
       var i = 0;
       while(i < expectedCats.length){
@@ -59,8 +59,7 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
         i++;
       }
 
-
-      document.getElementById = jasmine.createSpy('all-categories').and.returnValues(cat, sel);
+      document.getElementById = jasmine.createSpy('all-categories').and.returnValues(cat, sel,cat,sel); //when we execute delete categories we need it again
 
       editProjectCtrl = $controller('editProjectCtrl', {$scope: $scope});
 
@@ -84,7 +83,7 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
       });
 
       it('should fetch project categories', function () {
-        //expect(UrlService.get).toHaveBeenCalledWith($scope.project.categories);
+        expect(UrlService.get).toHaveBeenCalledWith($scope.project.categories);
         var idsArray = [];
         expectedProjCategories.map(function (cat) {
           idsArray.push({id : cat.id});
@@ -93,14 +92,22 @@ define(['angular','paw2020a','angularMocks', 'restangular', 'editProjectCtrl', '
         expect(editProjectCtrl.selectedCategories.map(a => a.id).sort()).toEqual(idsArray.map(a => a.id).sort());
       });
 
+      it('should remove a category', function () {
+        expect(document.getElementById).toHaveBeenCalledWith('final-categories')
+        sel.selectedIndex = 3;
+        var project = sel.options[sel.selectedIndex];
+        $scope.delCategory();
+        expect(sel.options).not.toContain(project);
+      })
 
 
-      // it('should set errors because of no categories', function () {
-      //   expect(UrlService.get).toHaveBeenCalledWith($scope.project.categories);
-      //   $scope.project.categories.splice(0,$scope.project.categories.length);
-      //   $scope.updateProject($scope.project);
-      //   expect($scope.categoryCountError).toEqual(true);
-      // });
+
+      it('should set errors because of no categories', function () {
+        expect(UrlService.get).toHaveBeenCalledWith($scope.project.categories);
+        editProjectCtrl.selectedCategories.splice(0,$scope.project.categories.length); //this is the same as triggering delCategory
+        $scope.updateProject($scope.project);
+        expect($scope.categoryCountError).toEqual(true);
+      });
 
 
 

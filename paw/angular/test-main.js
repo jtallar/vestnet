@@ -48,6 +48,8 @@ require.config({
     profileCtrl: 'controllers/profileCtrl',
     singleViewCtrl: 'controllers/singleViewCtrl',
     editProjectCtrl: 'controllers/editProjectCtrl',
+    loginCtrl: 'controllers/loginCtrl',
+    logoutCtrl: 'controllers/logoutCtrl',
     userService: 'services/userService',
     apiResponses: '../tests/apiResponses',
 
