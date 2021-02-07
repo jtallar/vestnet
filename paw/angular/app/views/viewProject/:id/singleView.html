@@ -127,6 +127,7 @@
         <p ng-if="project.stages[0].completed" class="card-text">{{project.stages[0].comment}}</p>
         <h5 ng-if="!project.stages[0].completed" class="card-title">{{'stageN' | translate : '{ n : 1 }' }}</h5>
         <img ng-if="!project.stages[0].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=1">{{toLocaleDateString(project.stages[0].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
@@ -135,6 +136,7 @@
         <p ng-if="project.stages[1].completed" class="card-text">{{project.stages[1].comment}}</p>
         <h5 ng-if="!project.stages[1].completed" class="card-title">{{'stageN' | translate : '{ n : 2 }' }}</h5>
         <img ng-if="!project.stages[1].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=2">{{toLocaleDateString(project.stages[1].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
@@ -143,6 +145,7 @@
         <p ng-if="project.stages[2].completed" class="card-text">{{project.stages[2].comment}}</p>
         <h5 ng-if="!project.stages[2].completed" class="card-title">{{'stageN' | translate : '{ n : 3 }' }}</h5>
         <img ng-if="!project.stages[2].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=3">{{toLocaleDateString(project.stages[2].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
@@ -151,6 +154,7 @@
         <p ng-if="project.stages[3].completed" class="card-text">{{project.stages[3].comment}}</p>
         <h5 ng-if="!project.stages[3].completed" class="card-title">{{'stageN' | translate : '{ n : 4 }' }}</h5>
         <img ng-if="!project.stages[3].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=4">{{toLocaleDateString(project.stages[3].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
@@ -159,6 +163,7 @@
         <p ng-if="project.stages[4].completed" class="card-text">{{project.stages[4].comment}}</p>
         <h5 ng-if="!project.stages[4].completed" class="card-title">{{'stageN' | translate : '{ n : 5 }' }}</h5>
         <img ng-if="!project.stages[4].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage==5">{{toLocaleDateString(project.stages[4].completedDate)}}</div>
       </div>
     </div>
   </div>
