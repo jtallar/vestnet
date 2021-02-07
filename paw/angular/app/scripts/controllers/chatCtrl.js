@@ -28,15 +28,7 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
 
       $scope.hideornot = function (perc){
         return perc > 10;
-      }
-
-      // $scope.toLocaleDateTimeString = function(date) {
-      //   var aux;
-      //   if(date !== undefined)
-      //     aux = new Date(date);
-      //   else aux = new Date();
-      //   return (aux.toLocaleDateString(navigator.language) + " " + aux.toLocaleTimeString(navigator.language));
-      // };
+      };
 
       this.setUser = function (user) {
         $scope.user = user;

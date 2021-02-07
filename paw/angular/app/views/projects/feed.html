@@ -61,7 +61,6 @@
                 <input style="color: black !important;" name="minCost" ng-model="minCost" type="number" class="form-control mx-auto mx-auto" placeholder="{{projectFundingMin}}" id="filter-form-min"
                        min="0" max="{{projectFundingMax}}" step="1" no-float pattern="^[0-9]+"/>
               </div>
-              <!--<form:errors path="minCost" element="p" cssClass="formError"/> -->
             </div>
             <div class="row range-box col-md" ng-class="{'has-error': filterForm.maxCost.$touched && filterForm.maxCost.$invalid}">
               <div class="input-group">
