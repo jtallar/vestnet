@@ -163,12 +163,22 @@ body{
   cursor: pointer;
 }
 
+.dashboard{
+  min-height: 530px !important
+}
+
 /***** FOOTER ******/
 
 footer {
   margin-top: 12%;
   background-color: #2d2d2d !important;
   color: white;
+}
+
+@media screen and (max-width:1500px){
+  footer{
+    margin-top: 14%;
+  }
 }
 
 @media screen and (min-width: 300px) {
