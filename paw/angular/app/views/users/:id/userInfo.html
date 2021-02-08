@@ -21,7 +21,7 @@
       </div>
 
       <div ng-if="user.linkedin" class="text-center my-2">
-        <a href="{{user.linkedin}}" class="btn btn-linkedin">
+        <a href="{{getLinkedinUrl()}}" class="btn btn-linkedin">
           <img src="images/linkedin.png" style="height: 20px; width: auto"/>
           <label>{{'linkedinProfile' | translate}}</label>
         </a>

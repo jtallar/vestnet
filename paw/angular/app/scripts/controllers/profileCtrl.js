@@ -93,5 +93,13 @@
         }
       };
 
+      $scope.getLinkedinUrl = function () {
+        if ($scope.user.linkedin) {
+          if ($scope.user.linkedin.indexOf('http') !== 0) return '//' + $scope.user.linkedin;
+          return $scope.user.linkedin;
+        }
+        return undefined;
+      };
+
     }]);
 });
