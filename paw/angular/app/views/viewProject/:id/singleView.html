@@ -21,22 +21,22 @@
 
           <div class="carousel-inner">
             <div id="carousel-items">
-              <div class="carousel-item active" ng-if="!project.portraitExists">
+              <div class="carousel-item item active" ng-if="!project.portraitAvailable">
                 <img ng-src="images/projectNoImage.png" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
-              <div class="carousel-item active" ng-if="project.portraitExists">
+              <div class="carousel-item item active" ng-if="project.portraitAvailable">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
-              <div  class="carousel-item" ng-if="project.slideshowExists" ng-repeat="image in project.slideshow">
+              <div  class="carousel-item item" ng-if="project.slideshowAvailable" ng-repeat="image in project.slideshow">
                   <img ng-src="data:image/JPEG;base64,{{image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
             </div>
           </div>
-            <a ng-if="project.slideshowExists" class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+            <a ng-if="project.slideshowAvailable" class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="false"></span>
               <span class="sr-only">Previous</span>
             </a>
-            <a ng-if="project.slideshowExists" class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+            <a ng-if="project.slideshowAvailable" class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="false"></span>
               <span class="sr-only">Next</span>
             </a>

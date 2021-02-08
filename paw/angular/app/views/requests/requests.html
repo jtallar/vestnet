@@ -34,12 +34,12 @@
           <img class="nav-icon" src="images/user-icon.png" alt="">
         </a>
       </div>
-      <div ng-if="!message.projectPortraitExists">
+      <div ng-if="!message.projectPortraitAvailable">
         <a href="#{{message.projectUrl}}">
           <img ng-src="images/projectNoImage.png" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
         </a>
       </div>
-      <div ng-if="message.projectPortraitExists">
+      <div ng-if="message.projectPortraitAvailable">
         <a href="#{{message.projectUrl}}">
           <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
         </a>
