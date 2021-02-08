@@ -40,6 +40,7 @@ public class ProjectDto {
     private Date updateDate;
     private long hits;
 
+    private boolean portraitExists, slideshowExists;
     private boolean getByOwner;
 
     private URI categories;
@@ -62,18 +63,21 @@ public class ProjectDto {
 
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
-        builder.path("categories");
-        projectDto.setCategories(builder.build());
-
-        projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
-        projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
-        projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
-
-        projectDto.setProjectStages(uriInfo.getBaseUriBuilder().path("/projects").path(String.valueOf(project.getId())).path("/stages").build());
+        projectDto.setCategories(builder.path("categories").build());
 
         projectDto.setNotGetByOwner();
+        projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
+        projectDto.setProjectStages(uriInfo.getBaseUriBuilder().path("/projects").path(String.valueOf(project.getId())).path("/stages").build());
+
+        projectDto.setPortraitExists(project.hasPortraitImage());
+        if (project.hasPortraitImage()) projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
+        projectDto.setSlideshowExists(project.hasSlideshowImages());
+        if (project.hasSlideshowImages()) projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
+
         return projectDto;
     }
+
+    /* Getters and setters */
 
     public long getId() {
         return id;
@@ -185,6 +189,22 @@ public class ProjectDto {
 
     public void setProjectStages(URI projectStages) {
         this.projectStages = projectStages;
+    }
+
+    public boolean isPortraitExists() {
+        return portraitExists;
+    }
+
+    public void setPortraitExists(boolean portraitExists) {
+        this.portraitExists = portraitExists;
+    }
+
+    public boolean isSlideshowExists() {
+        return slideshowExists;
+    }
+
+    public void setSlideshowExists(boolean slideshowExists) {
+        this.slideshowExists = slideshowExists;
     }
 
     public boolean isGetByOwner() {

@@ -17,13 +17,13 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
     document.getElementById('all').addEventListener('click', function(event) {
       $scope.clicks++;
     }, false);
-    $scope.pressContact = 0;
+    var pressContact = 0;
 
     $scope.$on("$destroy", function(){
       if ($scope.addStatError || $scope.project == null || $scope.project.id == null) return;
-      projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), $scope.pressContact, new Date())
+      projectService.addStat($scope.project.id, $scope.timeHere(), $scope.clicksHere(), pressContact, new Date())
         .then(function (response) {
-          // console.log($scope.timeHere(), $scope.clicksHere(), $scope.pressContact);
+          // console.log($scope.timeHere(), $scope.clicksHere(), pressContact);
         }, function (errorResponse) {
         if (errorResponse.status === 404) {
           $scope.addStatError = true;
@@ -58,12 +58,9 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       PathService.get().editProject($scope.id).go({back:true});
     };
 
-    $scope.getDate = function(date){
-      if(date !== undefined)
-        return date.toString().match(/.+?(?=T)/);
-
-      var today = new Date();
-      return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
+    $scope.goToChat = function () {
+      pressContact = 1;
+      PathService.get().chat($scope.project.id).go();
     };
 
     $scope.getMaxStage = function (stages){
@@ -82,7 +79,6 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.project = project.data;
       $scope.project.slideshow = [];
       $scope.project.categorieObjects = [];
-      $scope.project.chatUrl = PathService.get().chat(project.data.id).path;
       $scope.project.stages = [
         {'number': 1, 'name': 'Stage 1', 'comment': '',
           'completed': false, 'completedDate': '02/05/2021'},
@@ -109,7 +105,7 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
             $scope.project.stages[i].comment = data.comment;
             $scope.project.stages[i].name = data.name;
             $scope.project.stages[i].completed = data.completed;
-            $scope.project.stages[i].completedDate = $scope.getDate(data.completedDate)[0];
+            $scope.project.stages[i].completedDate = data.completedDate;
             i++;
           }
         });
@@ -134,29 +130,27 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
         console.error(errorResponse);
       });
 
-      $scope.project.portraitExists = false;
-      urlService.get(project.data.portraitImage).then(function (image) {
-        $scope.project.image = image.data.image;
-        $scope.project.portraitExists = true;
-      },function (errorResponse) {
-        if (errorResponse.status === 404) {
-          return;
-        }
-        console.error(errorResponse);
-      });
-      $scope.project.slideshowExists = false;
-      urlService.get(project.data.slideshowImages).then(function (response) {
-        $scope.project.slideshow = [];
-        for (var i = 0; i < response.data.length; i++){
-          $scope.project.slideshow.push(response.data[i].image);
-        }
-        $scope.project.slideshowExists = $scope.project.slideshow.length > 0;
-      },function (errorResponse) {
-        if (errorResponse.status === 404) {
-          return;
-        }
-        console.error(errorResponse);
-      });
+      $scope.project.portraitAvailable = false;
+      if($scope.project.portraitExists) {
+        urlService.get(project.data.portraitImage).then(function (image) {
+          $scope.project.image = image.data.image;
+          $scope.project.portraitAvailable = true;
+        },function (error) {
+          console.log("No image");
+        });
+      }
+      $scope.project.slideshowAvailable = false;
+      if($scope.project.slideshowExists) {
+        urlService.get(project.data.slideshowImages).then(function (response) {
+          $scope.project.slideshow = [];
+          for (var i = 0; i < response.data.length; i++){
+            $scope.project.slideshow.push(response.data[i].image);
+          }
+          $scope.project.slideshowAvailable = $scope.project.slideshow.length > 0;
+        },function (error) {
+          console.log("No slideshow");
+        });
+      }
     }, function (errorResponse) {
       if (errorResponse.status === 404) {
         $scope.addStatError = true;
@@ -176,10 +170,10 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
       $scope.project.stages[s].comment = comment;
       $scope.project.stages[s].number = s + 1;
       $scope.project.stages[s].completed = true;
-      $scope.project.stages[s].completedDate = $scope.getDate();
+      $scope.project.stages[s].completedDate = new Date();
       /** llamada a set stage **/
       //  setStage($scope.project.id, $scope.project.stages[s])
-      projectService.addStage($scope.project.id, s+1, name, comment, true, $scope.getDate())
+      projectService.addStage($scope.project.id, s+1, name, comment, true, new Date())
         .then(function () {}, function (errorResponse) {
           if (errorResponse.status === 404) {
             $scope.addStageError = true;

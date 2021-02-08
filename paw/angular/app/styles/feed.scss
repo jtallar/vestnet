@@ -175,7 +175,8 @@
   font-family: Impact, sans-serif;
   font-variant: all-petite-caps;
   font-weight: bold;
-  border: transparent
+  border: transparent;
+  box-shadow: none !important;
 }
 
 @supports (-moz-appearance:none) {
@@ -832,7 +833,7 @@ html {
 }
 
 .chat-offer {
-  width: 1550px !important;
+  width: 180% !important;
   height: 150px !important;
   background-color: #f5f5f5 !important;
   margin: 10px auto auto 3.5% !important;

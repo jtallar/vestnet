@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.project;
 
-import ar.edu.itba.paw.model.Project;
 import ar.edu.itba.paw.model.ProjectStages;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.access.method.P;
 
 import javax.validation.constraints.Min;
 import java.util.Date;
@@ -25,16 +23,18 @@ public class ProjectStagesDto {
 
     public static ProjectStagesDto fromProjectStages(ProjectStages projectStages) {
         ProjectStagesDto stagesDto = new ProjectStagesDto();
+
         stagesDto.setNumber(projectStages.getNumber());
         stagesDto.setName(projectStages.getName());
         stagesDto.setComment(projectStages.getComment());
         stagesDto.setCompleted(projectStages.isCompleted());
         if (stagesDto.isCompleted()) stagesDto.setCompletedDate(projectStages.getCompletedDate());
+
         return stagesDto;
     }
 
 
-    /** Getters and Setters */
+    /* Getters and Setters */
 
     public long getNumber() {
         return number;

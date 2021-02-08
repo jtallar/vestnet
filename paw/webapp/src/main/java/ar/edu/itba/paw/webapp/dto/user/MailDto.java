@@ -4,9 +4,12 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class MailDto {
+
     @NotEmpty
     @Email
     private String mail;
+
+    /* Getters and setters */
 
     public String getMail() {
         return mail;

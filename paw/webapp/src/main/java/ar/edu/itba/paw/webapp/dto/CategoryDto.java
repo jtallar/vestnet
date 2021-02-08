@@ -16,8 +16,11 @@ public class CategoryDto {
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
         categoryDto.setParent(category.getParent());
+
         return categoryDto;
     }
+
+    /* Getters and setters */
 
     public long getId() {
         return id;

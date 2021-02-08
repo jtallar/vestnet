@@ -21,22 +21,22 @@
 
           <div class="carousel-inner">
             <div id="carousel-items">
-              <div class="carousel-item active" ng-if="!project.portraitExists">
+              <div class="carousel-item item active" ng-if="!project.portraitAvailable">
                 <img ng-src="images/projectNoImage.png" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
-              <div class="carousel-item active" ng-if="project.portraitExists">
+              <div class="carousel-item item active" ng-if="project.portraitAvailable">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
-              <div  class="carousel-item" ng-if="project.slideshowExists" ng-repeat="image in project.slideshow">
+              <div  class="carousel-item item" ng-if="project.slideshowAvailable" ng-repeat="image in project.slideshow">
                   <img ng-src="data:image/JPEG;base64,{{image}}" class="single-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}">
               </div>
             </div>
           </div>
-            <a ng-if="project.slideshowExists" class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+            <a ng-if="project.slideshowAvailable" class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="false"></span>
               <span class="sr-only">Previous</span>
             </a>
-            <a ng-if="project.slideshowExists" class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+            <a ng-if="project.slideshowAvailable" class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="false"></span>
               <span class="sr-only">Next</span>
             </a>
@@ -89,7 +89,7 @@
               <br/>
               <h6 class="card-title"><b>{{'funding' | translate}}</b></h6>
               <div class="text-center ">
-                  <h6 class="card-title">{{formatPrice(project.fundingCurrent)}} {{'of' | translate}} <b style="font-size: 25px"> {{'moneyarg' | translate : {m: formatPrice(project.fundingTarget)} }}</b></h6>
+                  <h6 class="card-title">{{formatPrice(project.fundingCurrent)}} {{'of' | translate}} <b style="font-size: 25px"> {{formatPrice(project.fundingTarget)}}</b></h6>
               </div>
               <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
                 <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width:{{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">
@@ -105,7 +105,7 @@
 
         <!-- Contact button -->
         <div ng-if="!isEntrepreneur" class="d-flex justify-content-center">
-            <a href="#{{project.chatUrl}}" ng-click="pressContact = 1" class="btn btn-dark contact-btn" >
+            <a ng-click="goToChat()" class="btn btn-dark contact-btn" >
               <img src="images/chat-icon.png" class="contact-img">
               {{'contact' | translate}}
             </a>
@@ -127,6 +127,7 @@
         <p ng-if="project.stages[0].completed" class="card-text">{{project.stages[0].comment}}</p>
         <h5 ng-if="!project.stages[0].completed" class="card-title">{{'stageN' | translate : '{ n : 1 }' }}</h5>
         <img ng-if="!project.stages[0].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=1">{{toLocaleDateString(project.stages[0].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
@@ -135,6 +136,7 @@
         <p ng-if="project.stages[1].completed" class="card-text">{{project.stages[1].comment}}</p>
         <h5 ng-if="!project.stages[1].completed" class="card-title">{{'stageN' | translate : '{ n : 2 }' }}</h5>
         <img ng-if="!project.stages[1].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=2">{{toLocaleDateString(project.stages[1].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
@@ -143,6 +145,7 @@
         <p ng-if="project.stages[2].completed" class="card-text">{{project.stages[2].comment}}</p>
         <h5 ng-if="!project.stages[2].completed" class="card-title">{{'stageN' | translate : '{ n : 3 }' }}</h5>
         <img ng-if="!project.stages[2].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=3">{{toLocaleDateString(project.stages[2].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
@@ -151,6 +154,7 @@
         <p ng-if="project.stages[3].completed" class="card-text">{{project.stages[3].comment}}</p>
         <h5 ng-if="!project.stages[3].completed" class="card-title">{{'stageN' | translate : '{ n : 4 }' }}</h5>
         <img ng-if="!project.stages[3].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=4">{{toLocaleDateString(project.stages[3].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
@@ -159,6 +163,7 @@
         <p ng-if="project.stages[4].completed" class="card-text">{{project.stages[4].comment}}</p>
         <h5 ng-if="!project.stages[4].completed" class="card-title">{{'stageN' | translate : '{ n : 5 }' }}</h5>
         <img ng-if="!project.stages[4].completed" class="soon-img" src="images/soon.png">
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage==5">{{toLocaleDateString(project.stages[4].completedDate)}}</div>
       </div>
     </div>
   </div>
@@ -174,7 +179,7 @@
         <button ng-if="projectstage==0" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
           <img src="images/add-icon.png" alt="" class="">
         </button>
-        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=1">{{project.stages[0].completedDate}}</div>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=1">{{toLocaleDateString(project.stages[0].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 1 ? 'card bg-orange h-step' : 'card border-orange h-step'}}">
@@ -187,7 +192,7 @@
         <button ng-if="projectstage==1" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
           <img src="images/add-icon.png" alt="" class="">
         </button>
-        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=2">{{project.stages[1].completedDate}}</div>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=2">{{toLocaleDateString(project.stages[1].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 2 ? 'card bg-warning h-step' : 'card border-warning h-step'}}">
@@ -200,7 +205,7 @@
         <button ng-if="projectstage==2" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
           <img src="images/add-icon.png" alt="" class="">
         </button>
-        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=3">{{project.stages[2].completedDate}}</div>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=3">{{toLocaleDateString(project.stages[2].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 3 ? 'card bg-cyan h-step' : 'card border-cyan h-step'}}">
@@ -213,7 +218,7 @@
         <button ng-if="projectstage==3" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
           <img src="images/add-icon.png" alt="" class="">
         </button>
-        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=4">{{project.stages[3].completedDate}}</div>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage>=4">{{toLocaleDateString(project.stages[3].completedDate)}}</div>
       </div>
     </div>
     <div class="{{projectstage > 4 ? 'card bg-success h-step' : 'card border-success h-step'}}">
@@ -226,7 +231,7 @@
         <button ng-if="projectstage==4" class="btn btn-inv text-center" ng-click="addStage(new.name, new.comment, 'stageN'|translate)" style="margin-left:40%; margin-top:10px">
           <img src="images/add-icon.png" alt="" class="">
         </button>
-        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage==5">{{project.stages[4].completedDate}}</div>
+        <div class="blockquote-footer blockquote-footer mini-text pull-right" ng-if="projectstage==5">{{toLocaleDateString(project.stages[4].completedDate)}}</div>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ define(['paw2020a'], function(paw2020a) {
       transclude: true,
       template: function(element, attrs) {
           return '<ul class="pagination justify-content-center" ng-class="{\'hidden-class\': lastPage === 1}">\n' +
-            '      <div class="spinner-border text-dark hidden-class" role="status" style="margin-left: 10px; margin-top: 1%; width: 1.5rem; height: 1.5rem;">\n' +
+            '      <div class="spinner-border text-dark hidden-class" role="status" style="margin-left: 10px; margin-top: 15px; width: 1.5rem; height: 1.5rem;">\n' +
             '        <span class="sr-only">{{\'spinnerLoading\' | translate}}</span>\n' +
             '      </div>\n' +
             '      <div ng-if="page > 1">\n' +
@@ -64,7 +64,7 @@ define(['paw2020a'], function(paw2020a) {
             '          </a>\n' +
             '        </li>\n' +
             '      </div>\n' +
-            '      <div class="spinner-border text-dark" role="status" ng-class="{\'hidden-class\': !loadingPage}" style="margin-left: 10px; margin-top: 1%; width: 1.5rem; height: 1.5rem;">\n' +
+            '      <div class="spinner-border text-dark" role="status" ng-class="{\'hidden-class\': !loadingPage}" style="margin-left: 10px; margin-top: 15px; width: 1.5rem; height: 1.5rem;">\n' +
             '        <span class="sr-only">{{\'spinnerLoading\' | translate}}</span>\n' +
             '      </div>\n' +
             '    </ul>'

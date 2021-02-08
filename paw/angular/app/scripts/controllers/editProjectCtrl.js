@@ -14,7 +14,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
 
       $scope.maxImageSizeMB = 2; $scope.maxSlideshowCount = 5;
       var maxImageSize = 2097152; // 2 * 1024 * 1024
-      var selectedCategories = [];
+      this.selectedCategories = [];
       var portraitImage = undefined, slideshowImages = undefined, existingPortrait = false;
       var _this = this;
 
@@ -59,12 +59,14 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           var sel = document.getElementById('final-categories');
           for (var i = 0; i < cat.options.length; i++){
             if (ids[cat.options[i].value]) {
-              selectedCategories.push(_this.objectFromOption(cat.options[i]));
+              _this.selectedCategories.push(_this.objectFromOption(cat.options[i]));
               sel.appendChild(cat.options[i]);
+              i -= 1;
             }
           }
           $scope.loadingInfo = false;
         }, function (errorResponse) {
+          $scope.loadingInfo = false;
           console.error(errorResponse);
         });
       }, function (errorResponse) {
@@ -195,7 +197,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         if (cat.selectedIndex !== -1) {
           $scope.categoryCountError = false;
           var op = cat.options[cat.selectedIndex];
-          selectedCategories.push(_this.objectFromOption(op));
+          _this.selectedCategories.push(_this.objectFromOption(op));
           sel.appendChild(op);
         }
       };
@@ -205,7 +207,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
         var sel = document.getElementById('final-categories');
         if (sel.selectedIndex !== -1) {
           var op = sel.options[sel.selectedIndex], opId = _this.objectFromOption(op).id;
-          _.remove(selectedCategories, function(n) { return n.id === opId;});
+          _.remove(_this.selectedCategories, function(n) { return n.id === opId;});
           cat.appendChild(op);
         }
       };
@@ -215,6 +217,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           if (!params) params = {back:true};
           else params.back = true;
         }
+        $scope.loading = false;
         PathService.get().singleProject(projectId).replace(params);
       };
 
@@ -245,26 +248,24 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       };
 
       $scope.updateProject = function (project) {
-        $scope.loading = true;
-        if (selectedCategories.length === 0) {
+        if (_this.selectedCategories.length === 0) {
           $scope.categoryCountError = true;
-          $scope.loading = false;
           return;
         }
-        project.categories = selectedCategories;
+        $scope.loading = true;
+        project.categories = _this.selectedCategories;
         $scope.serverFormErrors = false;
         projectService.update(project).then(function (response) {
           _this.sendPortrait(project.id.toString());
         }, function (errorResponse) {
+          $scope.loading = false;
           if (errorResponse.status === 400) {
             $scope.serverFormErrors = true;
-            $scope.loading = false;
             return;
           } else if (errorResponse.status === 404) {
             PathService.get().error().go();
             return;
           }
-          $scope.loading = false;
           console.error(errorResponse);
         });
       };

@@ -14,6 +14,7 @@ import java.net.URI;
 import java.util.Date;
 
 public class UpdatableUserDto {
+
     private long id;
 
     @Size(min = 1, max = 25)
@@ -54,6 +55,8 @@ public class UpdatableUserDto {
                 new Location(new Country(userDto.countryId), new State(userDto.stateId), new City(userDto.cityId)),
                         null, userDto.phone, userDto.linkedin, null);
     }
+
+    /* Getters and setters */
 
     public long getId() {
         return id;

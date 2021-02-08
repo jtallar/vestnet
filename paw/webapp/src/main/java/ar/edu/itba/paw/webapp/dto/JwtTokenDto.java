@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.components.JwtTokenResponse;
 import java.util.Collection;
 
 public class JwtTokenDto {
+
     private String accessToken;
     private int accessMinutes;
     private String refreshToken;
@@ -13,14 +14,17 @@ public class JwtTokenDto {
 
     public static JwtTokenDto fromJwtTokenResponse(JwtTokenResponse jwtTokenResponse) {
         final JwtTokenDto jwtTokenDto = new JwtTokenDto();
-        jwtTokenDto.accessToken = jwtTokenResponse.getAccessToken();
-        jwtTokenDto.accessMinutes = jwtTokenResponse.getAccessTokenExpMinutes();
-        jwtTokenDto.refreshToken = jwtTokenResponse.getRefreshToken();
-        jwtTokenDto.refreshMinutes = jwtTokenResponse.getRefreshTokenExpMinutes();
-        jwtTokenDto.roles = jwtTokenResponse.getUserRoles();
+
+        jwtTokenDto.setAccessToken(jwtTokenResponse.getAccessToken());
+        jwtTokenDto.setAccessMinutes(jwtTokenResponse.getAccessTokenExpMinutes());
+        jwtTokenDto.setRefreshToken(jwtTokenResponse.getRefreshToken());
+        jwtTokenDto.setRefreshMinutes(jwtTokenResponse.getRefreshTokenExpMinutes());
+        jwtTokenDto.setRoles(jwtTokenResponse.getUserRoles());
 
         return jwtTokenDto;
     }
+
+    /* Getters and setters */
 
     public String getAccessToken() {
         return accessToken;

@@ -13,12 +13,12 @@
 
       <div class="col-2 card chat-ficha">
         <a ng-href="#{{project.projectUrl}}" class="btn-link4"><h4 class="chat-p-name">{{project.name}}</h4></a>
-        <div ng-if="!project.portraitExists">
+        <div ng-if="!project.portraitAvailable">
           <a href="#{{project.projectUrl}}">
             <img ng-src="images/projectNoImage.png" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
           </a>
         </div>
-        <div ng-if="project.portraitExists">
+        <div ng-if="project.portraitAvailable">
           <a href="#{{project.projectUrl}}">
             <img ng-src="data:image/JPEG;base64,{{project.image}}" class="chat-p-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
           </a>
@@ -68,7 +68,7 @@
                     <div class="card chat-card-other col-">
                       <div class="card-body chat-other">
                         <div class="row">
-                          <div class="col-3 msg-offer cut-text">
+                          <div class="col-3 msg-offer continue-down">
                             <img src="images/down-arrow.png" alt="{{'msgTitleOffer' | translate}}">
                             <strong>{{chat.offer}}</strong>
                           </div>
@@ -118,12 +118,15 @@
                       <div class="card-body chat-me">
                           <div class="row">
                             <div class="col-4">
-                              <div class="msg-exp" ng-if="!chat.answered">
+                              <div class="msg-exp" ng-if="!chat.answered && chat.expInDays != 0">
                                 <img src="images/clock-icon.png" alt="{{'msgTitleRequest' | translate}}">
                                 {{'expireWithDays' | translate : { days: chat.expInDays } }}
                               </div>
+                              <div class="msg-exp" ng-if="!chat.answered && chat.expInDays == 0">
+                                  {{'expired' | translate }} ⚠️
+                              </div>
                             </div>
-                            <div class="col-3 cut-text msg-offer">
+                            <div class="col-3 msg-offer continue-down">
                               <strong>{{chat.offer}}</strong>
                               <img src="images/down-arrow.png" alt="{{'msgTitleOffer' | translate}}">
                             </div>

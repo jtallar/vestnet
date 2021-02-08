@@ -5,7 +5,7 @@
   <div class="col-3 center-vertical">
     <strong class="tab-title"> {{'reqTitle' | translate}} </strong>
   </div>
-  <div class="col-6" ng-if="lastPage !== 1">
+  <div class="col-6" ng-show="!loading">
     <pagination></pagination>
   </div>
   <div class="col-3"></div>
@@ -22,6 +22,10 @@
   </div>
 
   <span class="anchor-header"></span>
+  <div class="text-center" ng-if="loading">
+    <div ng-if="!safari()" class="spinner-grow text-dark loading-grow" role="status" style="margin-top:10px;"></div>
+    <div ng-if="safari()" class="spinner-border text-dark loading-border" role="status" style="margin-top:10px;"></div>
+  </div>
   <div class="card-group group-invest" ng-if="!noDealsFound">
     <div class="card card-invest" ng-repeat="message in messages">
       <div class="card-header header-grey">
@@ -30,12 +34,12 @@
           <img class="nav-icon" src="images/user-icon.png" alt="">
         </a>
       </div>
-      <div ng-if="!message.projectPortraitExists">
+      <div ng-if="!message.projectPortraitAvailable">
         <a href="#{{message.projectUrl}}">
           <img ng-src="images/projectNoImage.png" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
         </a>
       </div>
-      <div ng-if="message.projectPortraitExists">
+      <div ng-if="message.projectPortraitAvailable">
         <a href="#{{message.projectUrl}}">
           <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="img-invest" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
         </a>
@@ -52,7 +56,7 @@
       </div>
 
       <div class="dr-footer">
-        <p class="msg-date pull-right">{{getDate(message.publishDate)[0]}}</p>
+        <p class="msg-date pull-right">{{toLocaleDateString(message.publishDate)}}</p>
       </div>
 
     </div>

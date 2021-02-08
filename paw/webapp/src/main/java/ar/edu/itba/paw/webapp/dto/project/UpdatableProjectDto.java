@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 public class UpdatableProjectDto {
+
     private long id;
 
     @Size(min = 5, max = 50)
@@ -28,6 +29,8 @@ public class UpdatableProjectDto {
     @NotEmpty
     @Valid
     private List<CategoryDto> categories;
+
+    /* Getters and setters */
 
     public long getId() {
         return id;

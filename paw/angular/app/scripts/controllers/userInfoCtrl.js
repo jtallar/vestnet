@@ -87,7 +87,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/userService', 's
 
     this.setMaxPage = function (linkHeaders) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
-      var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+      var maxPage = parseInt(lastLink[0].split('p=')[1]);
       if (isNaN(maxPage)) maxPage = $scope.page;
       $scope.lastPage = maxPage;
     };
@@ -107,6 +107,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/userService', 's
           _this.processResponse(response.data);
           $scope.loadingSecondTab = false;
         }, function (errorResponse) {
+          $scope.loadingSecondTab = false;
           console.error(errorResponse);
         });
       }

@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 
 @EqualFields({"password", "repeatPassword"})
 public class FullUserWithPasswordDto extends FullUserDto {
+
     @Size(min = 1, max = 50)
     @NotBlank
     private String password;
@@ -25,6 +26,8 @@ public class FullUserWithPasswordDto extends FullUserDto {
                 new Location(new Country(userDto.getCountryId()), new State(userDto.getStateId()), new City(userDto.getCityId())),
                 userDto.getEmail(), userDto.getPhone(), userDto.getLinkedin(), null);
     }
+
+    /* Getters and setters */
 
     public String getPassword() {
         return password;

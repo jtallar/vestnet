@@ -6,9 +6,12 @@ import javax.validation.Valid;
 import java.util.List;
 
 public class SlideshowDto {
+
     @NotEmpty
     @Valid
     private List<ImageDto> slideshow;
+
+    /* Getters and setters */
 
     public List<ImageDto> getSlideshow() {
         return slideshow;

@@ -10,14 +10,6 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
       if (isNaN(param) || param <= 0) param = 1;
       $scope.page = param; $scope.lastPage = param;
 
-      $scope.getDate = function(date){
-        if(date !== undefined)
-          return date.toString().match(/.+?(?=T)/);
-
-        var today = new Date();
-        return (today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate());
-      };
-
       // Cannot use scope, too many changes to digest
       this.animate = function (id, start, end, duration) {
         if (start === end) return;
@@ -49,7 +41,7 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
 
       this.setMaxPage = function (linkHeaders) {
         var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
-        var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+        var maxPage = parseInt(lastLink[0].split('p=')[1]);
         if (isNaN(maxPage)) maxPage = page;
         $scope.lastPage = maxPage;
       };
@@ -61,21 +53,22 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
           map[$scope.messages[i].id] = i;
           $scope.messages[i].ownerUrl = PathService.get().user($scope.messages[i].ownerId).path;
           $scope.messages[i].projectUrl = PathService.get().singleProject($scope.messages[i].projectId).path;
-          $scope.messages[i].projectPortraitExists = false;
-          urlService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
-            $scope.messages[map[image.data.route]].projectImage = image.data.image;
-            $scope.messages[map[image.data.route]].projectPortraitExists = true;
-          }, function (errorResponse) {
-            if (errorResponse.status === 404) {
-              return;
-            }
-            console.error(errorResponse);
-          });
+          $scope.messages[i].projectPortraitAvailable = false;
+          if ($scope.messages[i].projectPortraitExists) {
+            urlService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
+              $scope.messages[map[image.data.route]].projectImage = image.data.image;
+              $scope.messages[map[image.data.route]].projectPortraitAvailable = true;
+            }, function (err) {
+              console.log("No image")
+            });
+          }
         }
       };
 
+      $scope.loading = true;
       this.fetchDeals = function () {
         messageService.getInvestorDeals($scope.page).then(function (response) {
+          $scope.loading = false;
           $scope.loadingPage = false;
           if (response.data.length === 0) {
             $scope.noDealsFound = true;
@@ -85,6 +78,8 @@ define(['paw2020a', 'services/messageService', 'services/projectService', 'servi
           _this.setMaxPage(response.headers().link);
           _this.processMessages(response.data);
         }, function (errorResponse) {
+          $scope.loading = false;
+          $scope.loadingPage = false;
           console.error(errorResponse);
         });
       };

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.dto.location;
 import ar.edu.itba.paw.model.location.Country;
 
 public class CountryDto {
+
     private int id;
     private String name;
     private String isoCode;
@@ -12,15 +13,18 @@ public class CountryDto {
 
     public static CountryDto fromCountry(Country country) {
         final CountryDto countryDto = new CountryDto();
-        countryDto.id = country.getId();
-        countryDto.name = country.getName();
-        countryDto.isoCode = country.getIsoCode();
-        countryDto.phoneCode = country.getPhoneCode();
-        countryDto.currency = country.getCurrency();
-        countryDto.locale = country.getLocale();
+
+        countryDto.setId(country.getId());
+        countryDto.setName(country.getName());
+        countryDto.setIsoCode(country.getIsoCode());
+        countryDto.setPhoneCode(country.getPhoneCode());
+        countryDto.setCurrency(country.getCurrency());
+        countryDto.setLocale(country.getLocale());
 
         return countryDto;
     }
+
+    /* Getters and setters */
 
     public int getId() {
         return id;
