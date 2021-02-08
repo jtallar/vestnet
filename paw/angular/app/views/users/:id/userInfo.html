@@ -21,7 +21,7 @@
       </div>
 
       <div ng-if="user.linkedin" class="text-center my-2">
-        <a href="{{user.linkedin}}" class="btn btn-linkedin">
+        <a href="{{getLinkedinUrl()}}" class="btn btn-linkedin">
           <img src="images/linkedin.png" style="height: 20px; width: auto"/>
           <label>{{'linkedinProfile' | translate}}</label>
         </a>
@@ -67,7 +67,7 @@
               <p>{{user.lastName}}</p>
             </div>
           </div>
-          <div ng-if="user.realId !== ''" class="row">
+          <div ng-if="user.realId" class="row">
             <div class="col-md-4">
               <label>{{'realId' | translate}}</label>
             </div>
@@ -75,7 +75,7 @@
               <p>{{user.realId}}</p>
             </div>
           </div>
-          <div ng-if="user.email !== ''" class="row">
+          <div ng-if="user.email" class="row">
             <div class="col-md-4">
               <label>{{'email' | translate}} </label>
             </div>
@@ -83,7 +83,7 @@
               <p>{{user.email}}</p>
             </div>
           </div>
-          <div ng-if="user.phone !== ''" class="row">
+          <div ng-if="user.phone" class="row">
             <div class="col-md-4">
               <label>{{'phone' | translate}} </label>
             </div>
@@ -91,7 +91,7 @@
               <p>{{user.phone}}</p>
             </div>
           </div>
-          <div ng-if="user.birthDate !== ''" class="row">
+          <div ng-if="user.birthDate" class="row">
             <div class="col-md-4">
               <label>{{'birthday' | translate}}</label>
             </div>
@@ -99,7 +99,7 @@
               <p>{{toLocaleDateString(user.birthDate)}}</p>
             </div>
           </div>
-          <div ng-if="user.country !== ''" class="row">
+          <div ng-if="user.country" class="row">
             <div class="col-md-4">
               <label>{{'country' | translate}} </label>
             </div>
@@ -107,7 +107,7 @@
               <p>{{user.country}}</p>
             </div>
           </div>
-          <div ng-if="user.city !== ''" class="row">
+          <div ng-if="user.city" class="row">
             <div class="col-md-4">
               <label>{{'city' | translate}} </label>
             </div>
@@ -115,7 +115,7 @@
               <p>{{user.city}}</p>
             </div>
           </div>
-          <div ng-if="user.state !== ''" class="row">
+          <div ng-if="user.state" class="row">
             <div class="col-md-4">
               <label>{{'state' | translate}}</label>
             </div>
