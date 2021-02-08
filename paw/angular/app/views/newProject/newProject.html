@@ -34,9 +34,20 @@
                 <div class="col-2">
                   <label>{{'currency' | translate}}</label>
                 </div>
-                <div class="col">
-                  <input name="cost" ng-model="controller.project.fundingTarget" type="number" class="form-control" id="new-project-cost"
-                    required min="{{projectFundingMin}}" max="{{projectFundingMax}}" step="1" no-float/>
+              </div>
+              <div class="row">
+                <div class="col-6" ng-class="{'has-error': newProjectForm.cost.$touched && newProjectForm.cost.$invalid}">
+                  <h6 class="form-label">{{'costRequired' | translate }}</h6>
+                  <p class="form-requirement">{{'betweenMoneyRequirement' | translate : { minQuantity: projectFundingMin, maxQuantity: projectFundingMax } }}</p>
+                  <div class="row justify-content-center">
+                    <div class="col-2">
+                      <label>{{'currency' | translate}}</label>
+                    </div>
+                    <div class="col">
+                      <input name="cost" ng-model="controller.project.fundingTarget" type="number" class="form-control" id="new-project-cost"
+                        required min="{{projectFundingMin}}" max="{{projectFundingMax}}" step="1" no-float/>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
