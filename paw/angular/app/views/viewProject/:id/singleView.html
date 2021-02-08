@@ -89,7 +89,7 @@
               <br/>
               <h6 class="card-title"><b>{{'funding' | translate}}</b></h6>
               <div class="text-center ">
-                  <h6 class="card-title">{{formatPrice(project.fundingCurrent)}} {{'of' | translate}} <b style="font-size: 25px"> {{'moneyarg' | translate : {m: formatPrice(project.fundingTarget)} }}</b></h6>
+                  <h6 class="card-title">{{formatPrice(project.fundingCurrent)}} {{'of' | translate}} <b style="font-size: 25px"> {{formatPrice(project.fundingTarget)}}</b></h6>
               </div>
               <div class="progress" style="height: 25px; margin: 5px 0 0 8px;">
                 <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="font-size: 15px;width:{{(project.fundingCurrent/project.fundingTarget)*100}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">

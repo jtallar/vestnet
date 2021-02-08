@@ -140,7 +140,7 @@
                     </a>
                     <div class="col-4">
                       <h4 style="text-align: center; font-size: 12px; margin-bottom: 2px !important;">
-                        {{'of' | translate : {of : formatPrice(project.fundingCurrent)} }} <b>{{'moneyarg'| translate : {m : formatPrice(project.fundingTarget)} }}</b></h4>
+                        {{formatPrice(project.fundingCurrent)}} {{'of' }} <b>{{formatPrice(project.fundingTarget)}}</b></h4>
                       <div class="progress" style="height: 10px; margin: 0 0 0 0;">
                         <div class="progress-bar progress-bar-striped progress-bar-animated my-bar" role="progressbar" style="width: {{project.percentage}}%" aria-valuenow="{{project.percentage}}" aria-valuemin="0" aria-valuemax="100">{{project.percentage}}%</div>
                       </div>
