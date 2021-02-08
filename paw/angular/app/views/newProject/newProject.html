@@ -7,40 +7,41 @@
       </div>
       <div class="dropdown-divider dropdown-np"></div>
       <ng-form name="newProjectForm" enctype="multipart/form-data">
-        <div class="d-flex justify-content-between flex-row mt-1">
-          <div class="d-flex flex-column">
             <h4>{{'projectOverviewTitle' | translate}}</h4>
             <h7>{{'projectOverviewSubtitle' | translate}}</h7>
             <div class="dropdown-divider dropdown-np"></div>
-
-            <div ng-class="{'has-error': newProjectForm.title.$touched && newProjectForm.title.$invalid}">
-              <h6 class="form-label">{{'titleRequired' | translate}}</h6>
-              <p class="form-requirement">{{'betweenCharactersRequirement' | translate : { minQuantity: projectNameMinLength, maxQuantity: projectNameMaxLength } }}</p>
-              <input name="title" ng-model="controller.project.name" type="text" class="form-control" placeholder="{{'projectTitlePlaceholder' | translate}}" id="new-project-title"
-                required ng-minlength="{{projectNameMinLength}}" ng-maxlength="{{projectNameMaxLength}}"/>
-            </div>
-
-            <div ng-class="{'has-error': newProjectForm.summary.$touched && newProjectForm.summary.$invalid}">
-              <h6 class="form-label">{{'summaryRequired' | translate}}</h6>
-              <p class="form-requirement">{{'betweenCharactersRequirement' | translate : { minQuantity: projectSummaryMinLength, maxQuantity: projectSummaryMaxLength } }}</p>
-              <textarea name="summary" ng-model="controller.project.summary" class="form-control" placeholder="{{'upToCharactersRequirement' | translate : { maxLength: projectSummaryMaxLength } }}" rows="4" id="new-project-summary"
-                required ng-minlength="{{projectSummaryMinLength}}" ng-maxlength="{{projectSummaryMaxLength}}"></textarea>
-            </div>
-
-            <div ng-class="{'has-error': newProjectForm.cost.$touched && newProjectForm.cost.$invalid}">
-              <h6 class="form-label">{{'costRequired' | translate }}</h6>
-              <p class="form-requirement">{{'betweenMoneyRequirement' | translate : { minQuantity: projectFundingMin, maxQuantity: projectFundingMax } }}</p>
-              <div class="row justify-content-center">
-                <div class="col-2">
-                  <label>{{'currency' | translate}}</label>
+            <div class="justify-content-between">
+              <div class="row">
+                <div class="col-6" ng-class="{'has-error': newProjectForm.title.$touched && newProjectForm.title.$invalid}">
+                  <h6 class="form-label">{{'titleRequired' | translate}}</h6>
+                  <p class="form-requirement">{{'betweenCharactersRequirement' | translate : { minQuantity: projectNameMinLength, maxQuantity: projectNameMaxLength } }}</p>
+                  <input name="title" ng-model="controller.project.name" type="text" class="form-control" placeholder="{{'projectTitlePlaceholder' | translate}}" id="new-project-title"
+                    required ng-minlength="{{projectNameMinLength}}" ng-maxlength="{{projectNameMaxLength}}"/>
                 </div>
-                <div class="col">
-                  <input name="cost" ng-model="controller.project.fundingTarget" type="number" class="form-control" id="new-project-cost"
-                    required min="{{projectFundingMin}}" max="{{projectFundingMax}}" step="1" no-float/>
+
+                <div class="col-6" ng-class="{'has-error': newProjectForm.summary.$touched && newProjectForm.summary.$invalid}">
+                  <h6 class="form-label">{{'summaryRequired' | translate}}</h6>
+                  <p class="form-requirement">{{'betweenCharactersRequirement' | translate : { minQuantity: projectSummaryMinLength, maxQuantity: projectSummaryMaxLength } }}</p>
+                  <textarea name="summary" ng-model="controller.project.summary" class="form-control" placeholder="{{'upToCharactersRequirement' | translate : { maxLength: projectSummaryMaxLength } }}" rows="4" id="new-project-summary"
+                    required ng-minlength="{{projectSummaryMinLength}}" ng-maxlength="{{projectSummaryMaxLength}}"></textarea>
                 </div>
               </div>
-            </div>
-          </div>
+              <div class="row">
+                <div class="col-6" ng-class="{'has-error': newProjectForm.cost.$touched && newProjectForm.cost.$invalid}">
+                  <h6 class="form-label">{{'costRequired' | translate }}</h6>
+                  <p class="form-requirement">{{'betweenMoneyRequirement' | translate : { minQuantity: projectFundingMin, maxQuantity: projectFundingMax } }}</p>
+                  <div class="row justify-content-center">
+                    <div class="col-2">
+                      <label>{{'currency' | translate}}</label>
+                    </div>
+                    <div class="col">
+                      <input name="cost" ng-model="controller.project.fundingTarget" type="number" class="form-control" id="new-project-cost"
+                        required min="{{projectFundingMin}}" max="{{projectFundingMax}}" step="1" no-float/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
           <div class="d-flex flex-column">
           </div>
         </div>

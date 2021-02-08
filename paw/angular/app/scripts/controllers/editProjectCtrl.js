@@ -37,18 +37,8 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           return;
         }
         // Fill up the rest of the form.
-        existingPortrait = false;
+        existingPortrait = $scope.project.portraitExists;
         $scope.disableSlideshow = !existingPortrait;
-        // Check if portraitImage exists to enable/disable slideshow
-        urlService.get($scope.project.portraitImage).then(function (image) {
-          existingPortrait = true;
-          $scope.disableSlideshow = !existingPortrait;
-        }, function (errorResponse) {
-          if (errorResponse.status === 404) {
-            return;
-          }
-          console.error(errorResponse);
-        });
 
         urlService.get($scope.project.categories).then(function (categories) {
           var ids = categories.data.reduce(function (map, obj) {
