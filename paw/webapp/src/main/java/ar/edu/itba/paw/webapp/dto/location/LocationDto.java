@@ -6,15 +6,12 @@ public class LocationDto {
 
     private Long id;
     private String country;
-
     private String state;
-
     private String city;
-
-
 
     public static LocationDto fromLocation(Location location){
         LocationDto locationDto = new LocationDto();
+
         locationDto.setId(location.getId());
         locationDto.setCountry(location.getCountry().getName());
         locationDto.setState(location.getState().getName());
@@ -22,6 +19,8 @@ public class LocationDto {
 
         return  locationDto;
     }
+
+    /* Getters and setters */
 
     public Long getId() {
         return id;

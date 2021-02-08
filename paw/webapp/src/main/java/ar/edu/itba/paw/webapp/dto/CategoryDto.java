@@ -20,6 +20,8 @@ public class CategoryDto {
         return categoryDto;
     }
 
+    /* Getters and setters */
+
     public long getId() {
         return id;
     }

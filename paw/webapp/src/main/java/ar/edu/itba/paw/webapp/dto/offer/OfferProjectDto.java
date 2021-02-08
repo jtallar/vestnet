@@ -56,6 +56,8 @@ public class OfferProjectDto extends OfferDto {
         return offerDto;
     }
 
+    /* Getters and setters */
+
     public String getProjectName() {
         return projectName;
     }

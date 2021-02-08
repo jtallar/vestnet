@@ -49,6 +49,8 @@ public class OfferInvestorDto extends OfferDto {
         return offerDto;
     }
 
+    /* Getters and setters */
+
     public String getFirstName() {
         return FirstName;
     }

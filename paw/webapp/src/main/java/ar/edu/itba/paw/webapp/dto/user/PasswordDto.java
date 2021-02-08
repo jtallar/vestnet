@@ -7,11 +7,14 @@ import javax.validation.constraints.Size;
 
 @EqualFields({"password", "repeatPassword"})
 public class PasswordDto extends TokenDto {
+
     @Size(max = 50)
     @NotEmpty
     private String password;
 
     private String repeatPassword;
+
+    /* Getters and setters */
 
     public String getPassword() {
         return password;

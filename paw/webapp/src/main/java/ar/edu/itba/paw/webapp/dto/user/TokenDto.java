@@ -3,8 +3,11 @@ package ar.edu.itba.paw.webapp.dto.user;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class TokenDto {
+
     @NotEmpty
     private String token;
+
+    /* Getters and setters */
 
     public String getToken() {
         return token;

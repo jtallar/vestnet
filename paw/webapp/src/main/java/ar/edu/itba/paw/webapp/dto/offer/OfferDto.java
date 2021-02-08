@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.Date;
 
 public class OfferDto {
+    
     private long id;
 
     @Size(max = 250)
@@ -48,28 +49,28 @@ public class OfferDto {
     public static OfferDto fromMessage(Message message, UriInfo uriInfo) {
         final OfferDto offerDto = new OfferDto();
 
-        offerDto.id = message.getId();
+        offerDto.setId(message.getId());
 
-        offerDto.comment = message.getContent().getComment();
-        offerDto.offer = message.getContent().getOffer();
-        offerDto.exchange = message.getContent().getInterest();
+        offerDto.setComment(message.getContent().getComment());
+        offerDto.setOffer(message.getContent().getOffer());
+        offerDto.setExchange(message.getContent().getInterest());
 
-        offerDto.publishDate = message.getPublishDate();
-        offerDto.expiryDate = message.getExpiryDate();
+        offerDto.setPublishDate(message.getPublishDate());
+        offerDto.setExpiryDate(message.getExpiryDate());
 
-        offerDto.seen = message.isSeen();
-        offerDto.seenAnswer = message.isSeenAnswer();
-        offerDto.direction = message.getDirection();
-        offerDto.accepted = message.getAccepted();
+        offerDto.setSeen(message.isSeen());
+        offerDto.setSeenAnswer(message.isSeenAnswer());
+        offerDto.setDirection(message.getDirection());
+        offerDto.setAccepted(message.getAccepted());
 
-        offerDto.investor = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getInvestorId())).build();
-        offerDto.owner = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getOwnerId())).build();
-        offerDto.project = uriInfo.getBaseUriBuilder().path("projects").path(String.valueOf(message.getProjectId())).build();
-        offerDto.chat = uriInfo.getBaseUriBuilder().path("messages").path("chat").path(String.valueOf(message.getProjectId())).path(String.valueOf(message.getInvestorId())).build();
+        offerDto.setInvestor(uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getInvestorId())).build());
+        offerDto.setOwner(uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getOwnerId())).build());
+        offerDto.setProject(uriInfo.getBaseUriBuilder().path("projects").path(String.valueOf(message.getProjectId())).build());
+        offerDto.setChat(uriInfo.getBaseUriBuilder().path("messages").path("chat").path(String.valueOf(message.getProjectId())).path(String.valueOf(message.getInvestorId())).build());
 
-        offerDto.investorId = message.getInvestorId();
-        offerDto.ownerId = message.getOwnerId();
-        offerDto.projectId = message.getProjectId();
+        offerDto.setInvestorId(message.getInvestorId());
+        offerDto.setOwnerId(message.getOwnerId());
+        offerDto.setProjectId(message.getProjectId());
 
         return offerDto;
     }
@@ -77,6 +78,8 @@ public class OfferDto {
     public static Message.MessageContent toMessageContent(OfferDto offerDto) {
         return new Message.MessageContent(offerDto.getComment(), offerDto.getOffer(), offerDto.getExchange());
     }
+
+    /* Getters and setters */
 
     public long getId() {
         return id;

@@ -77,6 +77,8 @@ public class ProjectDto {
         return projectDto;
     }
 
+    /* Getters and setters */
+
     public long getId() {
         return id;
     }

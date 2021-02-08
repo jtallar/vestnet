@@ -11,19 +11,21 @@ public class FavoriteDto {
 
     private Boolean add;
 
+    public static FavoriteDto fromFavorite(Favorite favorite) {
+        FavoriteDto favoriteDto = new FavoriteDto();
+        favoriteDto.setProjectId(favorite.getProjectId());
+
+        return  favoriteDto;
+    }
+
+    /* Getters and setters */
+
     public Boolean getAdd() {
         return add;
     }
 
     public void setAdd(Boolean add) {
         this.add = add;
-    }
-
-    public static FavoriteDto fromFavorite(Favorite favorite) {
-        FavoriteDto favoriteDto = new FavoriteDto();
-        favoriteDto.setProjectId(favorite.getProjectId());
-
-        return  favoriteDto;
     }
 
     public Long getProjectId() {

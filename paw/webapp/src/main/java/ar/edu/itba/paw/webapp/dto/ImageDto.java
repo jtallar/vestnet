@@ -16,21 +16,21 @@ public class ImageDto {
 
     public static ImageDto fromUserImage(UserImage userImage) {
         final ImageDto imageDto = new ImageDto();
-        if (userImage == null) return imageDto;
-        imageDto.image = userImage.getImage();
-
+        if (userImage != null) imageDto.setImage(userImage.getImage());
         return imageDto;
     }
 
     public static ImageDto fromProjectImage(ProjectImage projectImage) {
         final ImageDto imageDto = new ImageDto();
-        imageDto.image = projectImage.getImage();
-        imageDto.id = projectImage.getId();
-        imageDto.main = projectImage.isMain();
+
+        imageDto.setImage(projectImage.getImage());
+        imageDto.setId(projectImage.getId());
+        imageDto.setMain(projectImage.isMain());
 
         return imageDto;
     }
 
+    /* Getters and setters */
 
     public long getId() {
         return id;

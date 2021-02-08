@@ -24,6 +24,7 @@ public class ProjectStatsDto {
 
     public static ProjectStatsDto fromProjectStats(ProjectStats projectStats) {
         ProjectStatsDto statsDto = new ProjectStatsDto();
+
         statsDto.setClicksAvg(projectStats.getClicksAvg());
         statsDto.setSecondsAvg(projectStats.getSecondsAvg());
         statsDto.setSeen(projectStats.getSeen());
@@ -34,6 +35,7 @@ public class ProjectStatsDto {
         return statsDto;
     }
 
+    /* Getters and setters */
 
     public long getSeen() {
         return seen;

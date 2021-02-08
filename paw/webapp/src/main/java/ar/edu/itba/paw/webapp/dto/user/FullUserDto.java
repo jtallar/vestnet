@@ -50,6 +50,8 @@ public class FullUserDto extends UpdatableUserDto {
         return userDto;
     }
 
+    /* Getters and setters */
+
     public String getRole() {
         return role;
     }
