@@ -6,7 +6,7 @@
   <div class="col-3 center-vertical">
       <strong class="tab-title"> {{'hmessages' | translate}} </strong>
   </div>
-  <div class="col-6" ng-show="lastPage !== 1 && !loading">
+  <div class="col-6" ng-show="!loading">
     <pagination></pagination>
   </div>
   <div class="col-3"></div>
@@ -16,7 +16,7 @@
   <div class="spinner-grow text-dark loading-grow" role="status" style="margin-top: 10px"></div>
 </div>
 <div class="text-center" ng-if="loading && safari()">
-  <div class="spinner-border text-dark" role="status" style="margin-left: 51%; margin-top:200px; width: 3rem; height: 3rem;"></div>
+  <div class="spinner-border text-dark loading-border" role="status" style="margin-top: 10px"></div>
 </div>
 
 <div class="dashboard" ng-if="!noMessagesFound && !loading">
@@ -27,12 +27,12 @@
 
         <div class="row">
           <div class="col-1">
-            <div ng-if="!message.projectPortraitExists">
+            <div ng-if="!message.projectPortraitAvailable">
               <a ng-href="#{{message.projectUrl}}">
                 <img ng-src="images/projectNoImage.png" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
               </a>
             </div>
-            <div ng-if="message.projectPortraitExists">
+            <div ng-if="message.projectPortraitAvailable">
               <a ng-href="#{{message.projectUrl}}">
                 <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
               </a>

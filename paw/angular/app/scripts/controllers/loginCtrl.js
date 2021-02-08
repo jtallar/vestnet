@@ -14,6 +14,7 @@ define(['paw2020a', 'services/AuthenticationService', 'services/PathService', 's
       $scope.login = function (user) {
         $scope.loading = true;
         AuthenticationService.login(user).then(function () {
+          $scope.loading = false;
           $rootScope.$emit('credentialsChanged');
           PathService.get().setFullUrl(redirectUrl).go();
         }, function (errorResponse) {

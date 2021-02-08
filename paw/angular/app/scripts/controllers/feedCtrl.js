@@ -128,6 +128,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           _this.showProjects(projects.data);
           $window.scrollTo(0,0);
         }, function (errorResponse) {
+          $scope.loadingPage = false;
           console.error(errorResponse);
         });
       };
@@ -149,7 +150,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         var lastLink = string.split(',').filter(function (el) {
           return el.includes('last');
         });
-        $scope.lastPage = parseInt(lastLink[0].split('p=')[1][0]);
+        $scope.lastPage = parseInt(lastLink[0].split('p=')[1]);
       };
 
       this.showProjects = function (projects) {
@@ -166,16 +167,15 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         var map = {};
         for(var i = 0; i < $scope.projects.length; i++) {
           map[$scope.projects[i].id] = i;
-          $scope.projects[i].portraitExists = false;
-          urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
-            $scope.projects[map[image.data.route]].image = image.data.image;
-            $scope.projects[map[image.data.route]].portraitExists = true;
-          }, function (errorResponse) {
-            if (errorResponse.status === 404) {
-              return;
-            }
-            console.error(errorResponse);
-          });
+          $scope.projects[i].portraitAvailable = false;
+          if ($scope.projects[i].portraitExists) {
+            urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
+              $scope.projects[map[image.data.route]].image = image.data.image;
+              $scope.projects[map[image.data.route]].portraitAvailable = true;
+            }, function (err) {
+              console.log("No image")
+            });
+          }
         }
         $scope.loading = false;
         if(foot) {
@@ -236,6 +236,7 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
           _this.showProjects(projects.data);
           $window.scrollTo(0,0);
         }, function (errorResponse) {
+          $scope.loading = false;
           console.error(errorResponse);
         });
       };

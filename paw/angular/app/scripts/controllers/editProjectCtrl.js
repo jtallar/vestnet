@@ -66,6 +66,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           }
           $scope.loadingInfo = false;
         }, function (errorResponse) {
+          $scope.loadingInfo = false;
           console.error(errorResponse);
         });
       }, function (errorResponse) {
@@ -216,6 +217,7 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
           if (!params) params = {back:true};
           else params.back = true;
         }
+        $scope.loading = false;
         PathService.get().singleProject(projectId).replace(params);
       };
 
@@ -246,26 +248,24 @@ define(['paw2020a', 'services/projectService', 'services/imageService', 'service
       };
 
       $scope.updateProject = function (project) {
-        $scope.loading = true;
         if (_this.selectedCategories.length === 0) {
           $scope.categoryCountError = true;
-          $scope.loading = false;
           return;
         }
+        $scope.loading = true;
         project.categories = _this.selectedCategories;
         $scope.serverFormErrors = false;
         projectService.update(project).then(function (response) {
           _this.sendPortrait(project.id.toString());
         }, function (errorResponse) {
+          $scope.loading = false;
           if (errorResponse.status === 400) {
             $scope.serverFormErrors = true;
-            $scope.loading = false;
             return;
           } else if (errorResponse.status === 404) {
             PathService.get().error().go();
             return;
           }
-          $scope.loading = false;
           console.error(errorResponse);
         });
       };

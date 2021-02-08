@@ -12,6 +12,7 @@ define(['paw2020a', 'services/userService', 'services/PathService'], function(pa
         $scope.loading = false;
         PathService.get().login().go({code: 9});
       }, function (errorResponse) {
+        $scope.loading = false;
         if (errorResponse.status === 404 || errorResponse.status === 400) {
           $scope.invalidEmail = true;
           return;

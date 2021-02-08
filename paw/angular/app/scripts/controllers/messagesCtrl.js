@@ -16,7 +16,7 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
 
     this.setMaxPage = function (linkHeaders) {
       var lastLink = linkHeaders.split(',').filter(function (el) { return el.includes('last'); });
-      var maxPage = parseInt(lastLink[0].split('p=')[1][0]);
+      var maxPage = parseInt(lastLink[0].split('p=')[1]);
       if (isNaN(maxPage)) maxPage = page;
       $scope.lastPage = maxPage;
     };
@@ -31,20 +31,19 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
         $scope.messages[i].projectUrl = PathService.get().singleProject($scope.messages[i].projectId).path;
         $scope.messages[i].chatUrl = PathService.get().chat($scope.messages[i].projectId).path;
         $scope.messages[i].notification = (!$scope.messages[i].seen && !$scope.messages[i].direction) || (!$scope.messages[i].seenAnswer && $scope.messages[i].direction && $scope.messages[i].accepted != null);
-        $scope.messages[i].projectPortraitExists = false;
-        urlService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
-          $scope.messages[map[image.data.route]].projectImage = image.data.image;
-          $scope.messages[map[image.data.route]].projectPortraitExists = true;
-        }, function (errorResponse) {
-          if (errorResponse.status === 404) {
-            return;
-          }
-          console.error(errorResponse);
-        });
+        $scope.messages[i].projectPortraitAvailable = false;
+        if ($scope.messages[i].projectPortraitExists) {
+          urlService.get($scope.messages[i].projectPortraitImage, $scope.messages[i].id.toString()).then(function (image) {
+            $scope.messages[map[image.data.route]].projectImage = image.data.image;
+            $scope.messages[map[image.data.route]].projectPortraitAvailable = true;
+          }, function (err) {
+            console.log("No image");
+          });
+        }
       }
-      this.loading = false;
+      $scope.loading = false;
     };
-    this.loading = true;
+    $scope.loading = true;
 
     this.fetchChatList = function () {
       messageService.getInvestorChatList($scope.page).then(function (response) {
@@ -57,6 +56,8 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
         _this.setMaxPage(response.headers().link);
         _this.processMessages(response.data);
       }, function (errorResponse) {
+        $scope.loading = false;
+        $scope.loadingPage = false;
         console.error(errorResponse);
       });
     };
