@@ -20,9 +20,7 @@ public class LocationDto {
         locationDto.setState(location.getState().getName());
         locationDto.setCity(location.getCity().getName());
 
-
         return  locationDto;
-
     }
 
     public Long getId() {

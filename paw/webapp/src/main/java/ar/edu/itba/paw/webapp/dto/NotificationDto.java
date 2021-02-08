@@ -6,6 +6,7 @@ public class NotificationDto {
     public static NotificationDto fromNumber(long unreadCount) {
         NotificationDto dto = new NotificationDto();
         dto.unread = unreadCount;
+
         return dto;
     }
 

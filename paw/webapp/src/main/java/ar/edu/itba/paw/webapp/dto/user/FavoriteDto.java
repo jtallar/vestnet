@@ -22,6 +22,7 @@ public class FavoriteDto {
     public static FavoriteDto fromFavorite(Favorite favorite) {
         FavoriteDto favoriteDto = new FavoriteDto();
         favoriteDto.setProjectId(favorite.getProjectId());
+
         return  favoriteDto;
     }
 

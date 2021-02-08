@@ -18,6 +18,7 @@ public class ImageDto {
         final ImageDto imageDto = new ImageDto();
         if (userImage == null) return imageDto;
         imageDto.image = userImage.getImage();
+
         return imageDto;
     }
 
@@ -26,6 +27,7 @@ public class ImageDto {
         imageDto.image = projectImage.getImage();
         imageDto.id = projectImage.getId();
         imageDto.main = projectImage.isMain();
+
         return imageDto;
     }
 

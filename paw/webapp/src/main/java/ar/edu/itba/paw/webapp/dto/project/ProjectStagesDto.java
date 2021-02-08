@@ -30,6 +30,7 @@ public class ProjectStagesDto {
         stagesDto.setComment(projectStages.getComment());
         stagesDto.setCompleted(projectStages.isCompleted());
         if (stagesDto.isCompleted()) stagesDto.setCompletedDate(projectStages.getCompletedDate());
+
         return stagesDto;
     }
 

@@ -30,6 +30,7 @@ public class ProjectStatsDto {
         statsDto.setContactClicks(projectStats.getContactClicks());
         statsDto.setInvestorsSeen(projectStats.getInvestorsSeen());
         statsDto.setLastSeen(projectStats.getLastSeen());
+
         return statsDto;
     }
 
