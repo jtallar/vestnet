@@ -1039,8 +1039,14 @@ html {
   font-size: 18px !important;
 }
 
-.stat-title-aux {
+.stat-title-short{
+  font-size: 15px;
+  color: #505050;
+  font-variant: all-petite-caps;
+  display: inline-block;
   width: 50px !important;
+  white-space: pre-line;
+  line-height: 14px
 }
 
 .view-more{
