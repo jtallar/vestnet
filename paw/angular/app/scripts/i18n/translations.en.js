@@ -141,7 +141,7 @@ define([], function() {
     Printers_3D: 'Printers 3D',
     Matketplace: 'Marketplace',
     search: 'Search',
-    range: 'Range',
+    range: 'Funding Target',
     min: 'Min.',
     max: 'Max.',
     clear: 'Clear',
