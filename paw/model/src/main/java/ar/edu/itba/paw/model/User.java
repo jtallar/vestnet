@@ -226,6 +226,10 @@ public class User {
         this.imageId = imageId;
     }
 
+    public boolean hasImage() {
+        return imageId != null;
+    }
+
     public Set<Project> getOwnedProjects() {
         return ownedProjects;
     }

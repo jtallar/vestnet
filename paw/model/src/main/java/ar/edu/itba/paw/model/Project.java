@@ -3,9 +3,9 @@ package ar.edu.itba.paw.model;
 import ar.edu.itba.paw.model.image.ProjectImage;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Models a project with all its properties.
@@ -223,6 +223,30 @@ public class Project {
     public void setStats(ProjectStats stats) {
         this.stats = stats;
     }
+
+
+    /* Auxiliary functions for image handling */
+    private Boolean hasPortrait = null;
+    private Boolean hasSlideshow = null;
+
+    public boolean hasPortraitImage() {
+        setHasImage();
+        return hasPortrait;
+    }
+
+    public boolean hasSlideshowImages() {
+        setHasImage();
+        return hasSlideshow;
+    }
+
+    private void setHasImage() {
+        if (hasPortrait != null && hasSlideshow != null) return;
+        final Map<Boolean, Long> imageCount = this.getImages().stream().map(ProjectImage::isMain).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        this.hasPortrait = imageCount.get(true) != null;
+        this.hasSlideshow = imageCount.get(false) != null;
+    }
+
+
 
     @Override
     public String toString() {

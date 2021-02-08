@@ -63,26 +63,17 @@ public class ProjectDto {
 
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         if (uriInfo.getPathParameters().isEmpty()) builder.path(String.valueOf(projectDto.id));
-        builder.path("categories");
-        projectDto.setCategories(builder.build());
-
-        projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
-
-        projectDto.setPortraitExists(false);
-        projectDto.setSlideshowExists(false);
-        final Map<Boolean, Long> imageCount = project.getImages().stream().map(ProjectImage::isMain).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        Optional.ofNullable(imageCount.get(true)).ifPresent(aLong -> {
-            projectDto.setPortraitExists(true);
-            projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
-        });
-        Optional.ofNullable(imageCount.get(false)).ifPresent(aLong -> {
-            projectDto.setSlideshowExists(true);
-            projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
-        });
-
-        projectDto.setProjectStages(uriInfo.getBaseUriBuilder().path("/projects").path(String.valueOf(project.getId())).path("/stages").build());
+        projectDto.setCategories(builder.path("categories").build());
 
         projectDto.setNotGetByOwner();
+        projectDto.setOwner(uriInfo.getBaseUriBuilder().path("/users").path(String.valueOf(project.getOwnerId())).build());
+        projectDto.setProjectStages(uriInfo.getBaseUriBuilder().path("/projects").path(String.valueOf(project.getId())).path("/stages").build());
+
+        projectDto.setPortraitExists(project.hasPortraitImage());
+        if (project.hasPortraitImage()) projectDto.setPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).build());
+        projectDto.setSlideshowExists(project.hasSlideshowImages());
+        if (project.hasSlideshowImages()) projectDto.setSlideshowImages(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(projectDto.id)).path("/slideshow").build());
+
         return projectDto;
     }
 
