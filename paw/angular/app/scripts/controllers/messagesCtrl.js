@@ -51,6 +51,7 @@ define(['paw2020a', 'services/messageService', 'services/urlService', 'services/
         if (response.data.length === 0) {
           $scope.noMessagesFound = true;
           $scope.messages = [];
+          $scope.loading = false;
           return;
         }
         _this.setMaxPage(response.headers().link);
