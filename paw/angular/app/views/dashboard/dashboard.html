@@ -33,12 +33,12 @@
               </a>
             </div>
             <div class="col-1">
-              <div ng-if="project.portraitExists">
+              <div ng-if="project.portraitAvailable">
                 <a href="#/projects/{{project.id}}">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="p-img"/>
                 </a>
               </div>
-              <div ng-if="!project.portraitExists">
+              <div ng-if="!project.portraitAvailable">
                 <a href="#/projects/{{project.id}}">
                   <img ng-src="images/projectNoImage.png" class="p-img"/>
                 </a>

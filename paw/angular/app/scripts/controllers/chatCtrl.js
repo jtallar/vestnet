@@ -48,16 +48,15 @@ define(['paw2020a', 'services/projectService', 'services/urlService', 'services/
         $scope.project = response.data;
         $scope.project.projectUrl = PathService.get().singleProject(projectId).path;
         $scope.project.percentage = parseInt($scope.project.fundingCurrent * 100 / $scope.project.fundingTarget);
-        $scope.project.portraitExists = false;
-        urlService.get($scope.project.portraitImage).then(function (image) {
-          $scope.project.image = image.data.image;
-          $scope.project.portraitExists = true;
-        }, function (errorResponse) {
-          if (errorResponse.status === 404) {
-            return;
-          }
-          console.error(errorResponse);
-        });
+        $scope.project.portraitAvailable = false;
+        if ($scope.project.portraitExists) {
+          urlService.get($scope.project.portraitImage).then(function (image) {
+            $scope.project.image = image.data.image;
+            $scope.project.portraitAvailable = true;
+          }, function (err) {
+            console.log("No image")
+          });
+        }
         if (role === investor) {
           urlService.get($scope.project.owner).then(function (user) {
             _this.setUser(user.data);

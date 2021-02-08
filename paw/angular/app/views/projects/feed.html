@@ -151,12 +151,12 @@
           <div class="card-body feed-body clickable-element" ng-click="goToProject(project.id)">
             <div class="row">
               <div class="col-5">
-                <div ng-if="!project.portraitExists">
+                <div ng-if="!project.portraitAvailable">
                   <a href="#/projects/{{project.id}}">
                   <img ng-src="images/projectNoImage.png" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
                   </a>
                 </div>
-                <div ng-if="project.portraitExists">
+                <div ng-if="project.portraitAvailable">
                   <a href="#/projects/{{project.id}}">
                   <img ng-src="data:image/JPEG;base64,{{project.image}}" class="proj-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
                   </a>

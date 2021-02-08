@@ -167,16 +167,15 @@ define(['paw2020a','services/AuthenticationService','services/userService', 'ser
         var map = {};
         for(var i = 0; i < $scope.projects.length; i++) {
           map[$scope.projects[i].id] = i;
-          $scope.projects[i].portraitExists = false;
-          urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
-            $scope.projects[map[image.data.route]].image = image.data.image;
-            $scope.projects[map[image.data.route]].portraitExists = true;
-          }, function (errorResponse) {
-            if (errorResponse.status === 404) {
-              return;
-            }
-            console.error(errorResponse);
-          });
+          $scope.projects[i].portraitAvailable = false;
+          if ($scope.projects[i].portraitExists) {
+            urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
+              $scope.projects[map[image.data.route]].image = image.data.image;
+              $scope.projects[map[image.data.route]].portraitAvailable = true;
+            }, function (err) {
+              console.log("No image")
+            });
+          }
         }
         $scope.loading = false;
         if(foot) {

@@ -67,16 +67,16 @@ define(['paw2020a', 'directives/toggle',  'services/projectService', 'services/m
           $scope.projects[i].loadingOffers = false; $scope.projects[i].loadingMessages = false;
           $scope.projects[i].loadingStats = false;
           $scope.projects[i].editUrl = PathService.get().editProject($scope.projects[i].id).path;
-          $scope.projects[i].portraitExists = false;
-          urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
-            $scope.projects[map[image.data.route]].image = image.data.image;
-            $scope.projects[map[image.data.route]].portraitExists = true;
-          }, function (errorResponse) {
-            if (errorResponse.status === 404) {
-              return;
-            }
-            console.error(errorResponse);
-          });
+          $scope.projects[i].portraitAvailable = false;
+          if ($scope.projects[i].portraitExists) {
+            urlService.get($scope.projects[i].portraitImage, $scope.projects[i].id.toString()).then(function (image) {
+              $scope.projects[map[image.data.route]].image = image.data.image;
+              $scope.projects[map[image.data.route]].portraitAvailable = true;
+
+            }, function (err) {
+              console.log("No image");
+            });
+          }
           $scope.projects[i].msgCount = 0;
           messageService.projectNotificationCount($scope.projects[i].id).then(function (response) {
             $scope.projects[map[response.data.route]].msgCount = response.data.unread;

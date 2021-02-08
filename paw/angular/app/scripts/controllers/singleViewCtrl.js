@@ -130,29 +130,27 @@ define(['paw2020a','services/projectService', 'services/userService', 'services/
         console.error(errorResponse);
       });
 
-      $scope.project.portraitExists = false;
-      urlService.get(project.data.portraitImage).then(function (image) {
-        $scope.project.image = image.data.image;
-        $scope.project.portraitExists = true;
-      },function (errorResponse) {
-        if (errorResponse.status === 404) {
-          return;
-        }
-        console.error(errorResponse);
-      });
-      $scope.project.slideshowExists = false;
-      urlService.get(project.data.slideshowImages).then(function (response) {
-        $scope.project.slideshow = [];
-        for (var i = 0; i < response.data.length; i++){
-          $scope.project.slideshow.push(response.data[i].image);
-        }
-        $scope.project.slideshowExists = $scope.project.slideshow.length > 0;
-      },function (errorResponse) {
-        if (errorResponse.status === 404) {
-          return;
-        }
-        console.error(errorResponse);
-      });
+      $scope.project.portraitAvailable = false;
+      if($scope.project.portraitExists) {
+        urlService.get(project.data.portraitImage).then(function (image) {
+          $scope.project.image = image.data.image;
+          $scope.project.portraitAvailable = true;
+        },function (error) {
+          console.log("No image");
+        });
+      }
+      $scope.project.slideshowAvailable = false;
+      if($scope.project.slideshowExists) {
+        urlService.get(project.data.slideshowImages).then(function (response) {
+          $scope.project.slideshow = [];
+          for (var i = 0; i < response.data.length; i++){
+            $scope.project.slideshow.push(response.data[i].image);
+          }
+          $scope.project.slideshowAvailable = $scope.project.slideshow.length > 0;
+        },function (error) {
+          console.log("No slideshow");
+        });
+      }
     }, function (errorResponse) {
       if (errorResponse.status === 404) {
         $scope.addStatError = true;

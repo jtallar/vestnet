@@ -27,12 +27,12 @@
 
         <div class="row">
           <div class="col-1">
-            <div ng-if="!message.projectPortraitExists">
+            <div ng-if="!message.projectPortraitAvailable">
               <a ng-href="#{{message.projectUrl}}">
                 <img ng-src="images/projectNoImage.png" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
               </a>
             </div>
-            <div ng-if="message.projectPortraitExists">
+            <div ng-if="message.projectPortraitAvailable">
               <a ng-href="#{{message.projectUrl}}">
                 <img ng-src="data:image/JPEG;base64,{{message.projectImage}}" class="ww-img" alt="{{'projectImage' | translate}}" aria-placeholder="{{'projectImage' | translate}}"/>
               </a>

@@ -18,6 +18,8 @@ public class OfferProjectDto extends OfferDto {
     @NotBlank
     private String projectName;
 
+    private boolean projectPortraitExists;
+
     private URI projectPortraitImage;
 
 
@@ -48,7 +50,12 @@ public class OfferProjectDto extends OfferDto {
         offerDto.setProjectId(message.getProjectId());
         offerDto.setProjectName(message.getProject().getName());
 
-        offerDto.setProjectPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(message.getProjectId())).build());
+        offerDto.setProjectPortraitExists(false);
+        final Map<Boolean, Long> imageCount = message.getProject().getImages().stream().map(ProjectImage::isMain).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Optional.ofNullable(imageCount.get(true)).ifPresent(aLong -> {
+            offerDto.setProjectPortraitExists(true);
+            offerDto.setProjectPortraitImage(uriInfo.getBaseUriBuilder().path("/images/projects").path(String.valueOf(message.getProjectId())).build());
+        });
 
         return offerDto;
     }
@@ -59,6 +66,14 @@ public class OfferProjectDto extends OfferDto {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public boolean isProjectPortraitExists() {
+        return projectPortraitExists;
+    }
+
+    public void setProjectPortraitExists(boolean projectPortraitExists) {
+        this.projectPortraitExists = projectPortraitExists;
     }
 
     public URI getProjectPortraitImage() {
