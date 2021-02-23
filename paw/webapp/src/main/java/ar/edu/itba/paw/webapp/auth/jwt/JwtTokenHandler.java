@@ -31,13 +31,7 @@ public class JwtTokenHandler implements TokenHandler {
     /**
      * Key is used to sign JwtToken.
      */
-    private static final String TOKEN_SIGN_KEY = "" +
-            "" +
-            "" +
-            "" +
-            "" +
-            "" +
-            "";
+    private static final String TOKEN_SIGN_KEY = "";
 
     /**
      * JwtToken can be refreshed during this timeframe.
